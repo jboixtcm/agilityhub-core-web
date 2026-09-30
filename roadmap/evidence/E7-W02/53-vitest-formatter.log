@@ -1,0 +1,106 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+
+ ↓ src/format.test.ts > E6-W01 S10 §10 the Catalan personal article of a person (personArticle) > Laura (FEMALE) in ca → «la »
+ ↓ src/format.test.ts > E6-W01 S10 §10 the Catalan personal article of a person (personArticle) > Marc (MALE) in ca → «en »
+ ↓ src/format.test.ts > E6-W01 S10 §10 the Catalan personal article of a person (personArticle) > Anna (FEMALE) in ca → «l'»
+ ↓ src/format.test.ts > E6-W01 S10 §10 the Catalan personal article of a person (personArticle) > Eva (FEMALE) in ca → «l'»
+ ↓ src/format.test.ts > E6-W01 S10 §10 the Catalan personal article of a person (personArticle) > Hug (MALE) in ca → «l'»
+ ↓ src/format.test.ts > E6-W01 S10 §10 the Catalan personal article of a person (personArticle) > Laura (OTHER) in ca → «»
+ ↓ src/format.test.ts > E6-W01 S10 §10 the Catalan personal article of a person (personArticle) > Laura (null) in ca → «»
+ ↓ src/format.test.ts > E6-W01 S10 §10 the Catalan personal article of a person (personArticle) > Laura (FEMALE) in es → «»
+ ↓ src/format.test.ts > E6-W01 S10 §10 the Catalan personal article of a person (personArticle) > Marc (MALE) in en → «»
+ ✓ src/format.test.ts > E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone > 2026-08-02T15:58:00Z in Europe/Madrid → «fa 2 min» 10ms
+ ✓ src/format.test.ts > E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone > 2026-08-02T12:30:00Z in Europe/Madrid → «fa 3 h» 0ms
+ ✓ src/format.test.ts > E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone > 2026-08-02T06:00:00Z in Europe/Madrid → «avui 8:00» 0ms
+ ✓ src/format.test.ts > E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone > 2026-08-01T17:12:00Z in Europe/Madrid → «ahir 19:12» 0ms
+ ✓ src/format.test.ts > E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone > 2026-07-31T16:30:00Z in Europe/Madrid → «31/07 · 18:30» 0ms
+ ✓ src/format.test.ts > E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone > 2026-08-02T15:58:00Z in America/Argentina/Buenos_Aires → «fa 2 min» 0ms
+ ✓ src/format.test.ts > E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone > 2026-08-02T12:30:00Z in America/Argentina/Buenos_Aires → «fa 3 h» 0ms
+ ✓ src/format.test.ts > E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone > 2026-08-02T06:00:00Z in America/Argentina/Buenos_Aires → «avui 3:00» 0ms
+ ✓ src/format.test.ts > E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone > 2026-08-01T17:12:00Z in America/Argentina/Buenos_Aires → «ahir 14:12» 0ms
+ ✓ src/format.test.ts > E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone > 2026-07-31T16:30:00Z in America/Argentina/Buenos_Aires → «31/07 · 13:30» 0ms
+ ✓ src/format.test.ts > E7-W02 T-11-34 S11 §10 screen 11's times: the five branches of fmtDayRelative in the club's zone > draws the day line where the club's day ends, never the device's 1ms
+ ✓ src/format.test.ts > E6-W01 S10 R-10-05 how long ago, in the club's zone (fmtDayRelative) > now 2026-08-02T19:09:00Z in ca → «fa 5 min» 0ms
+ ✓ src/format.test.ts > E6-W01 S10 R-10-05 how long ago, in the club's zone (fmtDayRelative) > now 2026-08-02T22:05:00Z in ca → «fa 3 h» 0ms
+ ✓ src/format.test.ts > E6-W01 S10 R-10-05 how long ago, in the club's zone (fmtDayRelative) > now 2026-08-03T05:10:00Z in ca → «ahir 21:04» 0ms
+ ✓ src/format.test.ts > E6-W01 S10 R-10-05 how long ago, in the club's zone (fmtDayRelative) > now 2026-08-03T05:10:00Z in es → «ayer 21:04» 0ms
+ ✓ src/format.test.ts > E6-W01 S10 R-10-05 how long ago, in the club's zone (fmtDayRelative) > now 2026-08-03T05:10:00Z in en → «yesterday 21:04» 0ms
+ ✓ src/format.test.ts > E6-W01 S10 R-10-05 how long ago, in the club's zone (fmtDayRelative) > now 2026-08-05T05:10:00Z in ca → «02/08 · 21:04» 0ms
+ ✓ src/format.test.ts > E6-W01 S10 R-10-05 how long ago, in the club's zone (fmtDayRelative) > uses the club's days, never the device's: the same instants read differently in Buenos Aires 1ms
+ ↓ src/format.test.ts > E6-W01 S10 R-10-09 «fa 8 mesos» in the club's days (fmtMonthsSince) > 2025-12-03T09:00:00Z → now 2026-08-03T05:10:00Z in ca → «fa 8 mesos»
+ ↓ src/format.test.ts > E6-W01 S10 R-10-09 «fa 8 mesos» in the club's days (fmtMonthsSince) > 2025-12-03T09:00:00Z → now 2026-08-03T05:10:00Z in es → «hace 8 meses»
+ ↓ src/format.test.ts > E6-W01 S10 R-10-09 «fa 8 mesos» in the club's days (fmtMonthsSince) > 2025-12-03T09:00:00Z → now 2026-08-03T05:10:00Z in en → «8 months ago»
+ ↓ src/format.test.ts > E6-W01 S10 R-10-09 «fa 8 mesos» in the club's days (fmtMonthsSince) > 2026-07-03T09:00:00Z → now 2026-08-03T05:10:00Z in ca → «fa 1 mes»
+ ↓ src/format.test.ts > E6-W01 S10 R-10-09 «fa 8 mesos» in the club's days (fmtMonthsSince) > 2026-07-09T09:00:00Z → now 2026-08-03T05:10:00Z in ca → «fa 25 dies»
+ ↓ src/format.test.ts > E6-W01 S10 R-10-09 «fa 8 mesos» in the club's days (fmtMonthsSince) > 2026-08-02T09:00:00Z → now 2026-08-03T05:10:00Z in ca → «fa 1 dia»
+ ↓ src/format.test.ts > E6-W01 S10 R-10-09 «fa 8 mesos» in the club's days (fmtMonthsSince) > 2026-08-03T04:00:00Z → now 2026-08-03T05:10:00Z in ca → «avui»
+ ↓ src/format.test.ts > E6-W01 S10 R-10-09 «fa 8 mesos» in the club's days (fmtMonthsSince) > 2024-06-03T09:00:00Z → now 2026-08-03T05:10:00Z in ca → «fa 2 anys»
+ ↓ src/format.test.ts > E6-W01 S10 R-10-09 «fa 8 mesos» in the club's days (fmtMonthsSince) > 2024-06-03T09:00:00Z → now 2026-08-03T05:10:00Z in en → «2 years ago»
+ ↓ src/format.test.ts > E6-W01 S10 R-10-09 «fa 8 mesos» in the club's days (fmtMonthsSince) > counts whole months between club-local days: Madrid and Buenos Aires differ at midnight
+ ↓ src/format.test.ts > E5-W01 S08 §10 the Catalan personal article of a dog (dogArticle) > Duna (FEMALE) in ca → «la »
+ ↓ src/format.test.ts > E5-W01 S08 §10 the Catalan personal article of a dog (dogArticle) > Rock (MALE) in ca → «en »
+ ↓ src/format.test.ts > E5-W01 S08 §10 the Catalan personal article of a dog (dogArticle) > Ona (FEMALE) in ca → «l'»
+ ↓ src/format.test.ts > E5-W01 S08 §10 the Catalan personal article of a dog (dogArticle) > Àtila (MALE) in ca → «l'»
+ ↓ src/format.test.ts > E5-W01 S08 §10 the Catalan personal article of a dog (dogArticle) > Hug (MALE) in ca → «l'»
+ ↓ src/format.test.ts > E5-W01 S08 §10 the Catalan personal article of a dog (dogArticle) > Duna (FEMALE) in es → «»
+ ↓ src/format.test.ts > E5-W01 S08 §10 the Catalan personal article of a dog (dogArticle) > Rock (MALE) in en → «»
+ ↓ src/format.test.ts > E5-W01 S08 §10 the Catalan personal article of a dog (dogArticle) > Duna (null) in ca → «»
+ ↓ src/format.test.ts > E5-W01 R-08-10 a club-local class time as an instant (clubLocalInstant, R-06-14) > 2026-08-03T18:50 in Europe/Madrid → 2026-08-03T16:50:00.000Z
+ ↓ src/format.test.ts > E5-W01 R-08-10 a club-local class time as an instant (clubLocalInstant, R-06-14) > 2026-10-25T02:30 in Europe/Madrid → 2026-10-25T00:30:00.000Z
+ ↓ src/format.test.ts > E5-W01 R-08-10 a club-local class time as an instant (clubLocalInstant, R-06-14) > 2026-03-29T02:30 in Europe/Madrid → 2026-03-29T01:30:00.000Z
+ ↓ src/format.test.ts > E5-W01 R-08-10 a club-local class time as an instant (clubLocalInstant, R-06-14) > 2026-08-03T18:50 in America/Argentina/Buenos_Aires → 2026-08-03T21:50:00.000Z
+ ↓ src/format.test.ts > E5-W01 S08 §10 opening instants in the club zone (formatDayAtTime) > ca 2026-08-09T18:00:00Z in Europe/Madrid → «diumenge 9 a les 20 h»
+ ↓ src/format.test.ts > E5-W01 S08 §10 opening instants in the club zone (formatDayAtTime) > ca 2026-10-11T18:30:00Z in Europe/Madrid → «diumenge 11 a les 20:30»
+ ↓ src/format.test.ts > E5-W01 S08 §10 opening instants in the club zone (formatDayAtTime) > es 2026-08-09T18:00:00Z in Europe/Madrid → «domingo 9 a las 20 h»
+ ↓ src/format.test.ts > E5-W01 S08 §10 opening instants in the club zone (formatDayAtTime) > en 2026-08-09T18:00:00Z in Europe/Madrid → «Sunday 9 at 20:00»
+ ↓ src/format.test.ts > E5-W01 S08 §10 opening instants in the club zone (formatDayAtTime) > ca 2026-08-09T18:00:00Z in America/Argentina/Buenos_Aires → «diumenge 9 a les 15 h»
+ ↓ src/format.test.ts > club-aware formats > formats money in ca
+ ↓ src/format.test.ts > club-aware formats > formats money in es
+ ↓ src/format.test.ts > club-aware formats > formats money in en
+ ↓ src/format.test.ts > club-aware formats > E4-W11 joins weekday names as a list in ca
+ ↓ src/format.test.ts > club-aware formats > E4-W11 joins weekday names as a list in es
+ ↓ src/format.test.ts > club-aware formats > E4-W11 joins weekday names as a list in en
+ ↓ src/format.test.ts > club-aware formats > formats durations in ca
+ ↓ src/format.test.ts > club-aware formats > formats durations in es
+ ↓ src/format.test.ts > club-aware formats > formats durations in en
+ ↓ src/format.test.ts > club-aware formats > uses the club time zone for the same UTC instant
+ ↓ src/format.test.ts > club-aware formats > formats ISO week ranges in ca (E4-W01 D3 generation card)
+ ↓ src/format.test.ts > club-aware formats > formats ISO week ranges in es (E4-W01 D3 generation card)
+ ↓ src/format.test.ts > club-aware formats > formats ISO week ranges in en (E4-W01 D3 generation card)
+ ↓ src/format.test.ts > club-aware formats > formats numeric day and month and long weekday names
+ ↓ src/format.test.ts > club-aware formats > formats date ranges and binds branding values
+ ↓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in Pacific/Auckland
+ ↓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in Pacific/Kiritimati
+ ↓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in Europe/Madrid
+ ↓ src/format.test.ts > club-aware formats > R-06-14 formats business dates as the calendar day they name in America/Bogota
+ ↓ src/format.test.ts > club-aware formats > rejects "2026-13-01" as a business date
+ ↓ src/format.test.ts > club-aware formats > rejects "2026-08-32" as a business date
+ ↓ src/format.test.ts > club-aware formats > rejects "2026-02-30" as a business date
+ ↓ src/format.test.ts > club-aware formats > rejects "hola" as a business date
+ ↓ src/format.test.ts > club-aware formats > rejects "" as a business date
+ ↓ src/format.test.ts > club-aware formats > R-06-14 ranges keep business dates whole and refuse mixed ends in Pacific/Auckland
+ ↓ src/format.test.ts > club-aware formats > R-06-14 ranges keep business dates whole and refuse mixed ends in Pacific/Kiritimati
+ ↓ src/format.test.ts > club-aware formats > R-06-14 ranges keep business dates whole and refuse mixed ends in Europe/Madrid
+ ↓ src/format.test.ts > club-aware formats > R-06-14 ranges keep business dates whole and refuse mixed ends in America/Bogota
+ ↓ src/format.test.ts > club-aware formats > accepts real business dates, leap days included
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > lists 2026-08-07 18:30–20:30 as «dv 7 · 18:30–20:30»
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > lists 2026-09-12 09:00–13:00 as «ds 12/09 · 9:00–13:00»
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > lists 2026-09-19 09:00–null as «ds 19/09 · 9:00»
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > lists 2026-10-04 null–null as «dg 4/10»
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > formats the maintenance, 03 and 25 presentations
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > E4-W12 step 7: 03 (`day`) in ca reads 2026-10-17 on 2026-09-26 as «Dissabte 17 d’octubre · 18:30–20:30»
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > E4-W12 step 7: 03 (`day`) in ca reads 2026-10-17 on 2026-10-01 as «Dissabte 17 · 18:30–20:30»
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > E4-W12 step 7: 03 (`day`) in es reads 2026-10-17 on 2026-09-26 as «Sábado 17 de octubre · 18:30–20:30»
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > E4-W12 step 7: 03 (`day`) in en reads 2026-10-17 on 2026-09-26 as «Saturday, October 17 · 18:30–20:30»
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > E4-W12 step 7: 03 (`day`) in ca reads 2026-10-17 on 2026-09-30T22:30:00Z as «Dissabte 17 · 18:30–20:30»
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > formats the list date in es
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > formats the list date in en
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > T-07-31 a viewer in America/Bogota reads 18:30 for 2026-08-07T16:30:00Z (club Europe/Madrid)
+ ↓ src/format.test.ts > club-aware formats > R-07-13 activity dates > decides «the current month» in the club zone
+
+ Test Files  1 passed (1)
+      Tests  18 passed | 79 skipped (97)
+   Start at  23:03:40
+   Duration  215ms (transform 69%, import 20%, tests 11%, worker 1%)
+

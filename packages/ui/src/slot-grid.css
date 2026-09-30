@@ -131,6 +131,15 @@
   cursor: default;
 }
 
+/* A free cell of a disabled column: inert, dimmed like the column's header, no hover. */
+.ah-slot--free[data-disabled] {
+  opacity: 0.55;
+}
+
+.ah-slot--free[data-disabled]:hover {
+  background: transparent;
+}
+
 .ah-slot:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--ah-color-info) 70%, transparent);
   outline-offset: 2px;

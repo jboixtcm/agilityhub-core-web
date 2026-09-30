@@ -1,0 +1,68 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/signup-handlers.test.ts (32 tests | 2 failed | 30 skipped) 30ms
+   ❯ T-04-12 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) (9)
+     × E5-W05 step 22: the validation's dry run warns DOCUMENT_PENDING as GET /members/{id}/signup does: after the card is withdrawn it lists the pending card, after the replacement it does not 21ms
+     × E5-W05 step 22: PATCH /dogs/{id} compares the whole birthDate: the same month and another day is a change (the version grows, the day is kept); the same date is not 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > T-04-12 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) > E5-W05 step 22: the validation's dry run warns DOCUMENT_PENDING as GET /members/{id}/signup does: after the card is withdrawn it lists the pending card, after the replacement it does not
+AssertionError: expected { dryRun: false, view: true } to deeply equal { dryRun: true, view: true }
+
+- Expected
++ Received
+
+  {
+-   "dryRun": true,
++   "dryRun": false,
+    "view": true,
+  }
+
+ ❯ src/mocks/signup-handlers.test.ts:674:37
+    672|     // Withdraw the submitted card: the record has none, so the automa…
+    673|     expect((await patchDog({ documents: [{ files: [], type: "VACCINATI…
+    674|     expect(await documentPending()).toEqual({ dryRun: true, view: true…
+       |                                     ^
+    675|
+    676|     // Replace it with a new file: the card is RECEIVED again, and nei…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/signup-handlers.test.ts > T-04-12 E4-W13 step 5: the reused dog of a readmission and the signup dog documents, as the api answers (R-04-06, R-04-19; api E3-T17, E5-T19) > E5-W05 step 22: PATCH /dogs/{id} compares the whole birthDate: the same month and another day is a change (the version grows, the day is kept); the same date is not
+AssertionError: expected { body: { …(11) }, status: 200 } to match object { body: { …(2) }, status: 200 }
+(9 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "birthDate": "2024-04-15",
+-     "version": 2,
++     "birthDate": "2024-04-01",
++     "version": 1,
+    },
+    "status": 200,
+  }
+
+ ❯ src/mocks/signup-handlers.test.ts:696:75
+    694|
+    695|     const otherDay = `${dog.birthMonth}-15`;
+    696|     expect(await patchDog({ birthDate: otherDay, version: dog.version …
+       |                                                                           ^
+    697|       body: { birthDate: otherDay, version: dog.version + 1 },
+    698|       status: 200,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 30 skipped (32)
+   Start at  21:45:36
+   Duration  535ms (transform 56%, import 37%, tests 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/signup-handlers.test.ts -t E5-W05 step 22

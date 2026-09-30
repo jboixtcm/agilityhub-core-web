@@ -26,6 +26,14 @@ import { LocaleTabs, LoadFailure, useCatalogError } from "./shared";
 
 /** `jobs.<name>.enabled` (S15 §9): the process switches of the «Processos automàtics» card. */
 const JOB_SWITCH_KEY = /^jobs\.[A-Za-z]+\.enabled$/u;
+/** S15 R-15-01 (the «Hora» column): the parameters `GET /jobs` computes the schedules from. */
+const JOB_SCHEDULE_KEYS: ReadonlySet<string> = new Set([
+  "billing.remittanceReminderDay",
+  "bookings.weekOpensAt",
+  "classes.riskReviewTime",
+  "jobs.dailyTime",
+  "messaging.noShowNoticeTime",
+]);
 
 type ClubSettings = components["schemas"]["ClubSettings"];
 type Holiday = components["schemas"]["Holiday"];
@@ -920,6 +928,7 @@ export function ParameterSettings({
   levels,
   modules,
   onModulesChange,
+  onNavigate,
   plans,
 }: {
   client: ApiClient;
@@ -927,6 +936,8 @@ export function ParameterSettings({
   levels: readonly Level[];
   modules: readonly string[];
   onModulesChange: (modules: string[]) => void;
+  /** The app's in-app navigation, for the jobs card's links (R-15-21). */
+  onNavigate?: (path: string) => void;
   plans: readonly Plan[];
 }) {
   const formats = useClubFormats();
@@ -1071,8 +1082,19 @@ export function ParameterSettings({
   const jobsBlock = blocks.find((block) => block.key === "jobs");
   const otherBlocks = blocks.filter((block) => block.key !== "jobs");
   const jobsAfter = otherBlocks.findIndex((block) => block.key === "club");
+  // R-15-01: the parameters the processes' times come from; a saved one refreshes the card.
+  const scheduleKey = (data?.blocks ?? [])
+    .flatMap((block) => block.rows)
+    .filter((parameter) => JOB_SCHEDULE_KEYS.has(parameter.key))
+    .map((parameter) => `${parameter.key}:${String(parameter.version)}`)
+    .join("|");
   const jobsCard = (
-    <JobsCard client={client} key="jobs">
+    <JobsCard
+      client={client}
+      key="jobs"
+      {...(onNavigate === undefined ? {} : { onNavigate })}
+      scheduleKey={scheduleKey}
+    >
       {jobsBlock === undefined
         ? null
         : jobsBlock.rows

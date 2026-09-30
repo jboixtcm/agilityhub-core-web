@@ -1,0 +1,453 @@
+$ pnpm --filter clubs exec vitest run --reporter verbose
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > draws the mockup grid with identical ring columns, the date header and the week chips 241ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > draws the 04 block with the exact badges; the full row with waitlist stays tappable 221ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > shows n/n +e with the planned instructor, training names, the block and the cancelled class 278ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes» 125ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 omits the block without ACTIVITIES 17ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > drops «+e» when the club has no WAITLIST module 103ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > renders «Ocupada» + generic reason in grey without background and never a count 100ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > OPEN: [INSCRIU-M'HI] registers and then offers [ANUL·LA LA INSCRIPCIÓ] 187ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > uses the compact mark with the runtime club name 303ms
+ ✓ src/SignupPage.test.tsx > T-04-29 signup person and draft > persists a current draft, expires it after 24 hours and maps identity states 694ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > opens the risk balloon with the api riskText on tap and closes it on a second tap or elsewhere 256ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > uses the club's today (Europe/Madrid) whatever the device time zone 97ms
+ ✓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > mockup 25: the three dogs with «Tots» pressed by default, the four type chips, the window caption and the seven rows with their exact badges and lines 436ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > filters the six-tab mockup navigation by modules and roles 140ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > E4-W03 turns the «Avui» slot into «Visió global» for the instructor profile 43ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > never shows a count in the member view even when a cell carries occupancy 148ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > E5-W03 step 1 lists the class's registrants and the «En espera» line in the drawer, read-only (S08 §6) 413ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > FULL_WAITLIST: the waitlist dialog → toast «Ets a la llista d'espera» → [SURT DE LA LLISTA D'ESPERA] 276ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-08 an ACTIVITY_FULL answer with waitlistAvailable opens the waitlist dialog 46ms
+ ✓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > every other line of R-10-14's table: a cancelled future class on top, «ha avisat» late and in time, the club on the member's behalf, the system, a cancelled training, and a club cancellation without a message 102ms
+ ✓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > a detail kind this front does not know yet renders no line (forward compatibility); the empty history says so 72ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the fixed green tick under «App», the four e-mail switches with the product defaults and «+SMS» 572ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > mockup 20: the day chips, each class with n/n, the hourglass and its second line, the legend and the block with its reason and note 526ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > Duna: the chips without «Tots», the pack, the intro, the activities and the six mockup rows 589ms
+ ✓ src/booking/confirm.test.tsx > T-08-36 the 30 s hold counts on the api clock, not the device's (R-08-07) > a device clock 5 min ahead still starts at 0:30, reaches 0 at the right instant, then the red note returns to 04 478ms
+ ✓ src/SignupPage.test.tsx > T-04-29 signup person and draft > keeps the draft and refetches localized configuration after a language change 128ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > E6-W01 step 1: «El meu dia» and «Alumnes» lead to 20 and the student search; never while impersonating 89ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > omits Entrenaments when FREE_TRAINING is disabled 41ms
+ ✓ src/App.test.tsx > T-02-14 clubs shell > registers every mobile route from the frontend plan 1ms
+ ✓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > the detail's instant is read in the club's time zone, never the device's (a late cancellation near midnight) 50ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > mockup 26: the title, the private observations, the three tasks (the done one struck through with «feta per la Laura el 02-08»), the history link, the member's note read-only and [DESA] waiting for a change 562ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > renders mockup 11's six cards as delivered: icon, tone, texts, relative time, «i per SMS», the buttons 648ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > hides «+SMS» in a club without SMS (R-11-17) 112ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > E5-W05 steps 1 and 2: the drawer's chips read displayState («feta», «no presentat»), the level chip is levelCode (none when null), and «En espera: {guia} + {gos}» with the FIFO position 249ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: shows the mockup card, and a cancellation in time asks first and leaves the green note, which names no week («pots reservar una altra classe.») 698ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > «Reserva de pista» first with its four reasons; «Bloqueig» hides them and offers its two 746ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > the greeting and the bell, «Tots» last and pressed, the counters and the rows as the api delivers them 744ms
+ ✓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > a single accessible dog: no dog chips and no « · amb {gos}»; FREE_TRAINING and ACTIVITIES off: no type chips and no such rows 140ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > registered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text 194ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > an activity that is not visible shows «No disponible» 34ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: «Torneig d'Estiu 2026 · inscrita · Divendres 7 · 18:30–20:30 · totes les pistes», never a dog 54ms
+ ✓ src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup 166ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a chip changes the day (?date=); an empty day reads «Cap classe aquest dia»; the instructor chip offers no «Tot el club» and shows another's day 257ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > a future booking: title, state, line, who booked it, and the cancellation back to 03 808ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > without eligible dogs the tab is absent and /entrenaments goes back to 03 795ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > moves by chips and arrows (Sunday only by the arrows) and keeps ?date in the address 231ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the api «Sense» column as delivered and the activity cell 75ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the reminder select lists «Mai» and the club's options 121ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > T-10-25 «＋ Afegir» uploads the video through the signed url (TASK, the signed headers, no bearer) and creates one task with one Idempotency-Key, even on a double tap; 22's counters follow 228ms
+ ✓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > round 2 #5 (R-10-14, §9): a ?tipus= the club does not offer clears itself — historyNoModules with ?tipus=TRAINING drops it from the address and reads «Tot» again 60ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: a start-only activity (api endsAtLocal null) reads «9:00» and stays until midnight 33ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > E4-W12 step 7 (R-07-13): 03 names the month of a date in another month: «Dissabte 17 d’octubre · 18:30–20:30 · Central» 11ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: never shows a dog, even when the data carries one 11ms
+ ✓ src/SignupPage.test.tsx > T-04-29 signup person and draft > masks and validates the browser-independent birth date control 237ms
+ ✓ src/App.test.tsx > T-01-18 access screen > shows the Retry-After countdown and disables requests 98ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > inside the 4 h threshold the dialog warns, and the late note names «4 hores» 209ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > E5-W04 step 0 (mockup 03, api E5-T25): each class, waiting and training row carries its ring's dot in the api's `ringColor`; the activity row none 170ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a tap on a class opens 21; [RESERVAR O BLOQUEJAR PISTA] opens 24 on the day's first ring 124ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a cancelled class reads «anul·lada»; a closed day shows no «passar llista pendent» 68ms
+ ✓ src/booking/confirm.test.tsx > T-08-36 the 30 s hold counts on the api clock, not the device's (R-08-07) > 409 SEAT_HOLD_EXPIRED on the confirmation shows the same red note 409ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > never adds a «Sense» column of its own when the api does not send one 118ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > Rock: «Sense sessions» is inert with an expiring pack; Toby: the block banner and inert rows without a badge 386ms
+ ✓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > the chips drive `dogId` and `type` (↔ ?dogId= and ?tipus=); arriving with ?dogId= preselects that dog 102ms
+ ✓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > a dog that is not the member's (404 DOG_NOT_ACCESSIBLE) says so and goes back to «Tots» 60ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-11 omits the block with an empty bookable[] and draws a NOT_BOOKABLE row inert 66ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it 98ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: the threshold comes from the booking — a club with 90 minutes (`cancellableInTimeUntil` 17:20) at 2026-08-03T17:30:00+02:00 warns «Falten menys de 90 minuts»: true 104ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > every active ring (also those closed to training), the route's ring preselected 264ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > never prints «i per SMS» without the SMS module, even for an SMS the api lists 345ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > past cancellableUntil the button gives way to the notice; «Reservada pel club» for BACKOFFICE 213ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > WAITLIST off: no hourglass on the cards and no waiting part in the legend 79ms
+ ✓ src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants 199ms
+ ✓ src/SignupPage.test.tsx > T-04-29 signup person and draft > M2 checks the ES postal code and a past birth date from 1900 before any request 325ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-13-01 104ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > modules gate the page: ACTIVITIES off has no «Activitats» block, PACKS off has no pack card 113ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > R-07-08 ACTIVITY_FULL without a waitlist shows «Completa», no dialog 57ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the class drawer with the instructor projection of the tapped class 297ms
+ ✓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > the empty history, and a failed read with its retry 86ms
+ ✓ src/SignupPage.test.tsx > T-04-29 signup person and draft > focuses the first error after it renders and links each field to its message 112ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > the pencil edits the text with the version read; the ✕ asks «Vols eliminar aquesta tasca?» and deletes with its key; ✓ completes (feta per l'Estel) and ↺ reopens 327ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-08-32 147ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: the threshold comes from the booking — a club with 90 minutes (`cancellableInTimeUntil` 17:20) at 2026-08-03T17:10:00+02:00 warns «Falten menys de 90 minuts»: false 133ms
+ ✓ src/App.test.tsx > T-01-20 profile choice > shows cards for every available role and sends the remember choice 76ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog selected: its rows without « · amb …» and the member's activity still there (the api keeps it), its counters, and «Tots» brings them back 254ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > T-10-32 a viewer in America/Bogota at 0:30 club-local still asks for the club's day (Europe/Madrid) 83ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a failed read shows the error with a retry, which reads the day again 50ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > a waitlisted registration without a position reads «en llista d'espera», never «()» 59ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > decodes the detail path safely (a malformed /activitats/%E0 does not throw) 0ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 03: a waitlisted registration shows «en llista d'espera» 22ms
+ ✓ src/activities/activities.test.tsx > T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 > 25: «ds 12/07 · Seminari d'obstacles · feta» and «cancel·lada pel club» with the quoted notice 12ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > WAITLIST off: the full rows read «Completa» and do nothing 113ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the block drawer and cancels the block (POST /ring-blocks/{id}/cancellation) 265ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > cancelled by the club: its state, and nothing to do 248ms
+ ✓ src/App.test.tsx > E6-W01 round 2 #7 (ruling E71, mockup 20 V6): an instructor lands on 20 > a password login takes an instructor to /instructor/dia and a member-only account to /inici 125ms
+ ✓ src/App.test.tsx > E6-W01 round 2 #7 (ruling E71, mockup 20 V6): an instructor lands on 20 > 03b: «Com a instructora» opens 20 and «Com a alumna» keeps 03 92ms
+ ✓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > an impersonated session reads 25 with the banner; an instructor-only session does not get the page 198ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > with Rock and Toby the tab exists and Rock (defaultDogId) is the selected chip 406ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-02-30 114ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > a dog without reservations, for a member without activity registrations: «Encara no tens cap reserva» and a way to 04 151ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > an edit opened before another instructor's change is sent with its own version: STALE_VERSION (409), and the typed text stays 203ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > mockup 21: the title, n/n, «1 en espera», the instructor, the rows in the api's order, the status lines and the waiting list with its rule 157ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > SINGLE_CLASS: every badge carries the price (R-08-18) 142ms
+ ✓ src/activities/activities.test.tsx > T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; 400 VALIDATION_ERROR on reason (details.field, the core's shape) stays on the field 178ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > FREE_TRAINING off: no tab, and the route shows nothing of the module 233ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=hola 98ms
+ ✓ src/booking/confirm.test.tsx > T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) > single selection among the swappable bookings, the done one inert, the button names both days, then the swap is confirmed 466ms
+ ✓ src/SignupPage.test.tsx > T-04-29 signup person and draft > keeps fields typed while the town lookup is in flight 155ms
+ ✓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > T-10-32 (25): es and en read the rows with no missing key (the titles are the api's) 245ms
+ ✓ src/history/history.test.tsx > R-10-12 privacy: no member-facing surface can render the observations > screens 25 and 13 do not import the observations editor, nor read an `observations` field 21ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > errors by code inside the editor: TASK_ALREADY_DONE (422) after a completion the api refuses, then the list read again 103ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [CANVIA DE CLASSE] opens 04 with the notification's dog 283ms
+ ✓ src/activities/activities.test.tsx > T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; 400 VALIDATION_ERROR on reason (details.fieldErrors[]) stays on the field 99ms
+ ✓ src/activities/activities.test.tsx > T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09 a member session asks for no reason and keeps sending {} 61ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > only one accessible dog: no «Tots», its chip selected and its rows without « · amb …» (V3); nothing unread: the bell is still 195ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > rewrites an invalid ?date= after mounting, never during render (E4-W03 review #4) 124ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > a contiguous selection writes the summary and posts the block, then 23 with its toast 579ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > maps 409 INVALID_STATE and 422 RING_BLOCK_MANAGED_BY_ACTIVITY on the block cancellation 309ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > 422 TRAINING_CANCEL_TOO_LATE: the threshold and the minutes left, from the details, in the dialog 316ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > a booking cancelled by a swap, opened later: its state chip only, no «dins el termini» note (review #4) 494ms
+ ✓ src/activities/activities.test.tsx > T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09 the deadline is live: opened a minute before, the button becomes the contact text when it passes, without a remount 69ms
+ ✓ src/activities/activities.test.tsx > T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09 checks the deadline again before opening the confirmation (a clock that jumped past it) 71ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [AGAFA LA PLAÇA] reuses E5-W01's claim: the entry's seat hold, then the confirmation (06/29) 352ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a visible instructor is named; «es mostra 6 h abans» and «1,5 h» take the ICU `other` branch 118ms
+ ✓ src/SignupPage.test.tsx > T-04-29 signup person and draft > GENERIC profile: the first document type of the profile and an editable prefix 296ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Auckland: requested date, header and chips name the club's calendar day 191ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a tap changes the circle locally with no request; [DESA] sends only the changed items with the current version and a UUID key 322ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > answers 403 to a member asking for the instructor view 111ms
+ ✓ src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff 352ms
+ ✓ src/App.test.tsx > T-01-21 profile access rows and impersonation > keeps the impersonation banner visible from /me 30ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > WAITLIST_OPEN asks first, joins with the selected dog, then the row leaves the list with «Ets a la llista d'espera» 414ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > a CANCELLED booking cancelled by SYSTEM, opened later: its chip «anul·lada» only, no note (review #4) 99ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > a CANCELLED_LATE booking cancelled by MEMBER, opened later: its chip «anul·lada tard» only, no note (review #4) 89ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > [DESA] saves the observations with the version read and one key; a stale version (tasksStale) keeps the typed text to recover and saves it again on the new version 371ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > R-08-20: a non-whole number of hours reads with the reader's decimal comma 169ms
+ ✓ src/activities/activities.test.tsx > T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review > R-07-09 a confirmation left open past the deadline closes instead of sending 89ms
+ ✓ src/activities/activities.test.tsx > T-07-30 E4-W11 R-07-13 the app rows read the api's startTime/endTime (E5-T15) > 03 and 04: an activity from midnight reads «0:00–2:00» / «0:00», from its fields 10ms
+ ✓ src/activities/activities.test.tsx > T-07-30 E4-W11 R-07-13 the app rows read the api's startTime/endTime (E5-T15) > 03 and 04: a date-only activity (startTime and endTime null) shows no time, never «0:00» 12ms
+ ✓ src/activities/activities.test.tsx > T-07-30 E4-W14 R-07-13 the 04 row prints the activity's hours > 04: «{hh:mm}–{hh:mm}» when startTime and endTime are both present, only «{hh:mm}» without an end 15ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a saved «ha avisat» row is inert; «ha avisat» saved now shows its line from the answer 131ms
+ ✓ src/activities/activities.test.tsx > T-07-30 E4-W13 step 0 R-07-08 the app shows the live waitlist rank (api E5-T20) > the member's detail shows «en llista d'espera (1)» from waitlistRank once the entries ahead are promoted, although its position is 3 85ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [AGAFA LA PLAÇA] reads disabled, with its hint, once the seat is gone (enabled: false) 183ms
+ ✓ src/App.test.tsx > T-01-21 profile access rows and impersonation > E5-W05 step 24: the banner names the member the admin opened (/me impersonation.memberName), not the account, whose name differs in a family group 93ms
+ ✓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > uploads sequentially named vaccination pages and renders API plans 252ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > draws the api's cells: free outlined and pressable, struck, «classe» dimmed 435ms
+ ✓ src/booking/confirm.test.tsx > T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) > «CANCEL·LAR LA NOVA RESERVA» releases the hold (DELETE) and goes back to 04 524ms
+ ✓ src/booking/home.test.tsx > screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) > WAITLIST off: no waiting row 119ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 9 (mockup 07, api E5-T29): the ring's dot before the title, in the booking's `classSession.ringColor` 81ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 9: a ring without a colour (`ringColor` null) draws no dot 64ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > the circles are inert when canMarkPresence and canMarkNotice are false (window closed) and the yellow one alone without the notice 121ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Kiritimati: requested date, header and chips name the club's calendar day 198ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > 409 INVALID_STATE: the message and the booking read again (cancelled elsewhere) 349ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > a file the api refuses (FILE_TOO_LARGE) is said inside the editor; with the club's limits readable (ADMIN) it is refused before any signed url 180ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) > names the instructors (instructorNames[]) and the ring (ring.name) of GET /class-sessions/{id}, not of the tapped cell 269ms
+ ✓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > step 1: /entrar?handoff= takes the code out of the address, redeems it once, enters the session without refresh and opens 03 with the banner 158ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > the dog's photo opens full screen; a tap closes it and the screen is as before 101ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > round 2 #5 (review #6, AGENTS rule 6): the photo is a modal: Tab and Shift+Tab stay inside, the page behind is inert and does not scroll, Escape restores everything 64ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a hold refused with 409 SEAT_TAKEN shows E5-W01's message in the card 234ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > a refused join keeps its message inside the dialog (409 WAITLIST_LIMIT) 268ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Europe/Madrid: requested date, header and chips name the club's calendar day 161ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > es: 03 and 04 read in Spanish, with no Catalan article 124ms
+ ✓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > removes amounts without BILLING and the family offer and step without FAMILY_GROUP 117ms
+ ✓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > gates offerLabel by FAMILY_GROUP even when the configuration sends it 36ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > who booked it: another member of the group 64ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (api E5-T25): `BookedBy.self` decides, never the names — a namesake of the group is «Reservada per Biel» 69ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > es and en: the same page in the reader's language 191ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (api E5-T25): the reader's own booking reads «Reservada el …» whatever the name it carries 69ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > an observation file goes through the DOG_OBSERVATIONS upload and POST /attachments; a clip opens a fresh signed url 189ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > en: 04's badges and pack in English 134ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > each change shows at once and is saved as a partial PUT after the 300 ms pause 1413ms
+ ✓ src/booking/home.test.tsx > E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) > a viewer in America/Bogota still reads the club's times (Europe/Madrid): «18:50» and «20:14» 153ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) > a class without a ring (ring: null) has no «Pista» row; without names, no «Instructor» row 236ms
+ ✓ src/booking/confirm.test.tsx > T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) > the back gesture leaves the page and releases the hold too 350ms
+ ✓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > round 2 #1: a redeemed code whose /me keeps failing shows the error with a retry, never the admin's own session; the retry opens 03 with the banner 253ms
+ ✓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > step 1: a code already redeemed shows «Aquest enllaç ja no és vàlid» on 01 and opens no impersonated session 30ms
+ ✓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): a refused code (400 HANDOFF_INVALID) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload 32ms
+ ✓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > validates and normalises the chip per country profile and the birth month 270ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > a hold refused with any other code stays on 04 with its errors: message and the list read again 215ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > «Veure l'historial complet ›» reads every task, done ones included, in a read-only drawer 144ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > booked by the club reads «Reservada pel club el …» 84ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T16:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T16:00:00Z the dialog warns: false 94ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > 409 STALE_VERSION: the toast, the other's change kept, and only the caller's own edit sent again with the new version 216ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in America/Bogota: requested date, header and chips name the club's calendar day 193ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > an informative card opens its route on tap, without a button; one without an action is inert 274ms
+ ✓ src/training/TrainingDetailPage.test.tsx > E5-W05 step 13: the detail reaches DONE (E5-W02 round-2 review #3, S09 §5) > E5-W05 step 13: with a controlled clock the booking reads «fet» after its endsAt, without a remount 253ms
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the empty state (dayGridEmpty) and the error toast with retry 153ms
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > the app mounts 04 on /reservar with the «Reservar» tab active 218ms
+ ✓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): a 5xx from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload 47ms
+ ✓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): no answer (offline) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload 70ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T12:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T09:00:00Z the dialog warns: true 98ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > T-10-32 (26): es and en with no missing key 114ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a refusal is shown by its code and nothing is lost: ATTENDANCE_NOT_OPEN reads the list again 145ms
+ ✓ src/SignupPage.test.tsx > T-04-30 signup dog, uploads, plans and module gates > keeps fields typed while an upload is in flight 178ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > 409 RING_BLOCK_CONFLICT marks the conflicting cells, lists the overlaps and reads the grid again 926ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > BOOKING_NOT_CANCELLABLE (422) shows its message inside the dialog and reads the booking again 136ms
+ ✓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 round 2 #1 (review #1, E47): a tab reloaded while /oauth2/token has not answered the code sends no refresh_token grant, opens no session (not the tab's own cookie) and says «Aquest enllaç ja no és vàlid» 105ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > normal: no swap, «CONFIRMAR LA RESERVA», then the calendar links and the booking 339ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > entering calls read-all once, and 03's bell goes quiet 232ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > «Qualsevol» with two free rings asks which one, Muntanya first, and books with it 738ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > rolls a refused change back with its message (422 INVALID_REMINDER_OPTION) 409ms
+ ✓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #1 (CONVENCIONS_API §7, T-10-25): a network failure keeps the submission's key, so its retry creates one task 170ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > after a refusal the list is read again and the caller's choices are rebased: a row someone else changed meanwhile is theirs 178ms
+ ✓ src/SignupPage.test.tsx > T-04-31 signup family lookup > continues empty, resolves the fixture family and supports a pending lookup 167ms
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > BOOKING_NOT_CANCELLABLE (409) shows its message inside the dialog and reads the booking again 117ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a network failure keeps the choice and a retry sends the same payload with the same key 175ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > R-10-05 FIFO: the rule sentence with the confirmation minutes 33ms
+ ✓ src/SignupPage.test.tsx > T-04-31 signup family lookup > keeps the dog draft when returning from the family step 153ms
+ ✓ src/SignupPage.test.tsx > T-04-31 signup family lookup > prefills the account holder with the group holder when the group is found (R-04-10) 70ms
+ ✓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 round 2 #2: a background recovery that signs in before the retry's listener is attached still opens 03 249ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > the limit done this week (CURRENT, per dog): the mockup's «… per a la setmana vinent a partir de diumenge 9 a les 20 h», without a countdown 233ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > the card with «en llista d'espera», no position in ALL_AT_ONCE, and «SURT DE LA LLISTA D'ESPERA» back to 03 165ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a class cancelled by the club: the banner, every circle inert and no [DESA] 36ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > back on 03 from the browser's page cache, the bell reads GET /me/home again 296ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > E5-W05 step 6: the limit of next week reached on a next-week row («dl 10», NEXT, per dog): «La setmana vinent ja tens una classe amb la Duna» and B1's «Podràs reservar aquesta classe a partir de diumenge 9 a les 20 h», the coming opening 151ms
+ ✓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1: after a 5xx the retry sends the same code again (never the cookie) and opens 03 with the banner 139ms
+ ✓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > step 2: a 401 ends the impersonation with «La sessió com l'abonat ha caducat» and a close button, never a refresh — also after a reload of the tab 62ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > 422 RING_HAS_BOOKINGS: the instructor is told to ask the administration, and nothing forces it 381ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > the counter card reads the selected day's week and follows the dog 352ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > E5-W05 step 10: a NOTIFIED entry reads «plaça alliberada» with [AGAFA LA PLAÇA]; an ACTIVE one keeps «en llista d'espera» without it 159ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > renders API totals and payment conditions and submits only after privacy consent 138ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > «avís ja enviat» after the 8:00 batch; «2 tasques pendents» with TASKS, none without 110ms
+ ✓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > R-10-00: a dog led by its guide reads «Júlia Roca + Rock» with «(abonat: Laura Serra Vidal)» 38ms
+ ✓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #1 (E74): two deliberate submissions with the same text are two tasks, each with its own key 235ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a card tapped before read-all has landed is marked read on its own 227ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > E5-W05 step 9: the waiting entry's card (the same card as 07) carries its ring's dot before the title 70ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > after a refused PUT every circle and [DESA] stay locked until the list is read again; a tap or [DESA] meanwhile sends nothing 190ms
+ ✓ src/App.test.tsx > T-01-19 E4-W16 step 10 (INC-24, E49): password recovery after a RESET link > the reset screen sends {new, repeat} without `current` once; a second use says the link was used and offers «Recupera-la» 101ms
+ ✓ src/App.test.tsx > T-01-19 E4-W16 step 10 (INC-24, E49): password recovery after a RESET link > the session of a LOGIN link still needs `current` for an account with a password (the mock refuses it like the api) 5ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > shows each payment text only under its method (T-04-32, M7 web half) 151ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > the empty state: «Encara no tens cap avís» 110ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > a FIFO club's NOTIFIED entry: the position, the deadline and [AGAFA LA PLAÇA] 88ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > an entry no longer live is read-only with its state; leaving a dead one says so 64ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > a closed day says so and draws no grid 249ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > E5-W05 step 6: with `bookings.maxNextWeek = 0` (limit 0, unit DOG) the first sentence counts no class: «Encara no pots reservar classes de la setmana vinent.» and B1's second sentence 186ms
+ ✓ src/App.test.tsx > E4-W16 step 12 member-app fixes > (b) «Canviar de perfil · {perfil}» follows the membership's gender (ICU select, as 03b) 126ms
+ ✓ src/App.test.tsx > E4-W16 step 12 member-app fixes > (c) the onboarding offers only the club's languages and starts on the club's default when the account's is not offered 62ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > FREE_TRAINING off: only «Bloqueig», and the times are taken without a grid (the api validates) 350ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > redirects through checkout when Stripe is enabled 98ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > uses the member plan and payment method and posts the add-dog flow 82ms
+ ✓ src/today/OverviewPage.test.tsx > T-06-29 E4-W14 screen 23's drawer: the instructors' label follows the count, the names are a list > ca «Instructor: Marc» / «Instructors: Marc i Núria»; es «Instructores: Marc y Núria»; en «Instructors: Marc and Núria» 1163ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > 422 WAITLIST_ENTRY_NOT_LIVE on leaving shows its message and reads the entry again 113ms
+ ✓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > WAITLIST off: there is no waiting entry page 63ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > the hook refuses a save captured before the refusal while that read is in flight 125ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > keeps a newer choice when an older save answers late (the answer rebases the member's edits) 732ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > E5-W05 step 6: with `bookings.maxNextWeek = 0` (limit 0, unit MEMBER) the first sentence counts no class: «Encara no pots reservar classes de la setmana vinent.» and B1's second sentence 220ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > loads the second page when the list end shows (no page buttons) 173ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > the add-dog success page does not promise a welcome email 26ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > E4-W16 step 12a: the add-dog success page is titled «Afegeix un gos» and goes back to 13; the public one keeps «Apunta-t'hi» 41ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a failed read shows the error by its code, and [Torna-ho a provar] reads again 149ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > asks for the browser's permission only on interaction, never on mount, and registers the subscription 121ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > sends notesToInstructors from 17 and holderTaxId from 19 (§2, §3) 162ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > a read answered after a newer save is dropped: the sheet stays at version 5 with its draft and «Llista desada» 238ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > a dismissed prompt (no answer) also leaves the hint under the switch 92ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > the limit per person (unit MEMBER) names no dog: «Aquesta setmana ja has fet dues classes.» 200ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-39 screen 08 at the weekly limit (R-09-05) > with cancellable sessions: no button, the message and a link to each 350ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > drops the IBAN from the session draft when the method changes away from SEPA 66ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > checks the IBAN mod-97 before sending 72ms
+ ✓ src/dog-tasks-contrast.test.ts > E4-W16 round 2 #3 (AGENTS rule 6, R-03-18): a done task on 13 stays readable > no rule dims the task rows: the check mark and the strike-through mark a done task 3ms
+ ✓ src/dog-tasks-contrast.test.ts > E4-W16 round 2 #3 (AGENTS rule 6, R-03-18): a done task on 13 stays readable > the task text and «feta el …» reach 4.5:1 on the card in the dark (the club's fixture theme) palette 1ms
+ ✓ src/dog-tasks-contrast.test.ts > E4-W16 round 2 #3 (AGENTS rule 6, R-03-18): a done task on 13 stays readable > the task text and «feta el …» reach 4.5:1 on the card in the light (the product's default tokens) palette 1ms
+ ✓ src/dog-tasks-contrast.test.ts > E4-W16 round 2 #3 (AGENTS rule 6, R-03-18): a done task on 13 stays readable > E4-W18 step 4: the task text's paint is read from the stylesheet (`.dog-task p` → muted) 0ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > E5-W02 round 2 · review #5: without a grid the band's last half hour can be taken (13:30–14:00) 343ms
+ ✓ src/instructor/instructor.test.tsx > T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09) > mockup 22: the header, «C · fa 8 mesos», the three metrics, the five badges, the three blocks and the manage button 102ms
+ ✓ src/instructor/instructor.test.tsx > T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09) > no classes in the window reads «—»; TASKS off drops the three blocks and the button; FREE_TRAINING off drops the training tile 91ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > «Properament»: «Disponible a partir de diumenge 9 a les 20 h.» 142ms
+ ✓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #2 (R-10-10): with 52 tasks «Mostra'n més» reads the next page into the same list, whose tasks are managed like the rest — the oldest done one reopened, the oldest pending one edited, completed and deleted 893ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > omits planId and planIdRequested when the club has no signup plans (R-04-09) 132ms
+ ✓ src/App.test.tsx > T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an instructor-only session gets the usual no-access path: no detail, no /me/activities call 438ms
+ ✓ src/App.test.tsx > T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > a member session opens the detail 81ms
+ ✓ src/instructor/instructor.test.tsx > T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09) > a dog that left shows «baixa»; levels off shows no level chip; the search icon opens the student search 23ms
+ ✓ src/today/literals.test.ts > T-06-30 screens 10 / 23 vocabulary and ca literals > has no forbidden term nor internal code in home, instructor and enums (ca/es/en) 70ms
+ ✓ src/today/literals.test.ts > T-06-30 screens 10 / 23 vocabulary and ca literals > keeps the exact ca literals of mockups 10 and 23 23ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > has no forbidden term nor requirement code in training, instructor and enums (ca/es/en) 195ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > hides the honeypot from assistive technology and the tab order 37ms
+ ✓ src/SignupPage.test.tsx > T-04-32 signup payment, checkout and add-dog mode > reads the image-consent text from texts.imageConsent, then legal.imageConsentText 97ms
+ ✓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #4 (AGENTS rule 4): a clip that cannot be opened says why next to it — by its code, or «No s'ha pogut obrir el fitxer.» without an answer — on the list, the member's note and the history drawer 138ms
+ ✓ src/App.test.tsx > T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an impersonated session opens the detail and its cancellation asks for «Motiu» 78ms
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders configured fields and sends consent, profile data and image choice 67ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-39 screen 08 at the weekly limit (R-09-05) > without any cancellable session: the short message 259ms
+ ✓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #7 (ruling E74): an instructor cannot read the file limits, so a 30 MB file is checked by the signed-url request: FILE_TOO_LARGE by its code, and nothing is PUT nor registered — an observation file and a new task's file 138ms
+ ✓ src/instructor/tasks.test.tsx > 26's route (S10 §2): INSTRUCTOR and ADMIN, never an impersonation > an impersonated session reaching 26 reads «No es permet la suplantació.» and asks nothing 69ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > the three locales carry the same training and instructor keys, none empty 108ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > a denied permission still saves the preference, and the row says how to allow it 412ms
+ ✓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > a seat another hold takes: the retry note, and a retry that gets the seat shows the countdown 220ms
+ ✓ src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a DNI applicant with the identity-check document 72ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > while the block is sent the button is busy and the grid, kinds and rings are inert 385ms
+ ✓ src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > PAY_TO_BOOK: «PAGAR I CONFIRMAR (12,00 €)» opens the api's Checkout URL 221ms
+ ✓ src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a NIE applicant with the identity-check document 74ms
+ ✓ src/SignupPage.test.tsx > B1 identity document at submission (R-04-01) > submits a passport only applicant with the identity-check document 77ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > keeps the exact ca literals of mockups 08 and 24 and the S09 §10 keys 103ms
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement 152ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > the device label of Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1 is «iPhone · Safari» 4ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > the device label of Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0 Mobile Safari/537.36 is «Android · Chrome» 1ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > the device label of Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0 Safari/537.36 Edg/129.0 is «Windows · Edge» 1ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > the device label of Mozilla/5.0 (Macintosh; Intel Mac OS X 14.6; rv:130.0) Gecko/20100101 Firefox/130.0 is «Mac · Firefox» 0ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > turns the club's base64url VAPID key into the 65 bytes PushManager takes 4ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > tells an iPhone outside the installed app from a browser without push 2ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > never asks without the app's worker registration (mock mode: only MSW's worker exists) 1ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > subscribes with the key, upserts POST /push-subscriptions and keeps only the id 45ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > a denied permission is an outcome, and a 404 MODULE_DISABLED from a stale client is swallowed 11ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > logout sends the DELETE of this device's subscription, then logs out 21ms
+ ✓ src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > a DELETE that never answers never blocks the logout 35ms
+ ✓ src/InfoPage.test.tsx > T-05-CP-07 screen 30 Info > shows FAQ, rules and other active pages only 277ms
+ ✓ src/InfoPage.test.tsx > T-05-CP-07 screen 30 Info > T-11-36 keeps Info available without the FAQ module, omits the FAQ tab and never reads /faq-entries 25ms
+ ✓ src/InfoPage.test.tsx > T-11-36 screen 30 FAQ (S11 R-11-14, S05 R-05-22) > groups by category ordered by each group's lowest order, entries by order — never alphabetically nor as delivered 45ms
+ ✓ src/InfoPage.test.tsx > T-11-36 screen 30 FAQ (S11 R-11-14, S05 R-05-22) > opening one answer closes the previous; the answer is plain text with its line breaks 52ms
+ ✓ src/InfoPage.test.tsx > T-11-36 screen 30 FAQ (S11 R-11-14, S05 R-05-22) > says «El club encara no ha publicat preguntes» when there is none 30ms
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > reloads an outdated policy version before accepting it 114ms
+ ✓ src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > E5-W05 step 8: PAY_TO_BOOK with a swap keeps the price in view: «En confirmar, pagaràs aquesta classe (12,00 €).» above «ANUL·LA … I CONFIRMA …» (review #8) 50ms
+ ✓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > a time refusal is shown by code (400 INVALID_TIME_RANGE), and a lost answer keeps its key 360ms
+ ✓ src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > retries a lost 201 with the same Idempotency-Key and gets the same 201 111ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 409 SLOT_TAKEN: the message, the grid read again and the api's free rings offered 447ms
+ ✓ src/notifications/sw-logic.test.ts > E7-W02 step 5 · the service worker's push and click (S11 R-11-07) > shows the payload's title, body, icon and tag, and keeps its in-app route 2ms
+ ✓ src/notifications/sw-logic.test.ts > E7-W02 step 5 · the service worker's push and click (S11 R-11-07) > opens screen 11 when the payload names no route or another site, and shows nothing without a title 1ms
+ ✓ src/notifications/sw-logic.test.ts > E7-W02 step 5 · the service worker's push and click (S11 R-11-07) > focuses an open window of the app and takes it to the notification's route 1ms
+ ✓ src/notifications/sw-logic.test.ts > E7-W02 step 5 · the service worker's push and click (S11 R-11-07) > opens the route in a new window when none of the app is open 0ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > an iPhone outside the installed app gets the install hint and no permission prompt 399ms
+ ✓ src/UnsubscribePage.test.tsx > E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08) > 200: sends the token once and confirms, with a way to the «Avisos» of 12 for a session 216ms
+ ✓ src/UnsubscribePage.test.tsx > E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08) > 422 UNSUBSCRIBE_TOKEN_INVALID: the link is no longer valid, change it on 12 44ms
+ ✓ src/UnsubscribePage.test.tsx > E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08) > a link without its token is invalid and sends nothing 23ms
+ ✓ src/UnsubscribePage.test.tsx > E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08) > a network error offers a retry, which sends the token again 44ms
+ ✓ src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > changing a payload field after a failure uses a new key 114ms
+ ✓ src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > add-dog: a lost 201 is replayed, never DOG_CHIP_ALREADY_REGISTERED for the member's own dog 70ms
+ ✓ src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > CHARGE_ON_ATTENDANCE: the note above the normal button 209ms
+ ✓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English 200ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > no push toggle without PushManager in the browser, nor in a club without PUSH 123ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > formats in the club's zone, never the viewer's: an October 06:30Z slot reads «8:30» 501ms
+ ✓ src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS 138ms
+ ✓ src/App.test.tsx > T-03-40 mobile own dogs > E36 (R-04-25): a dog added from the app shows «pendent de validació» and has no actions 62ms
+ ✓ src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > a cancelled checkout returns to 19 with the data and retries only the checkout 138ms
+ ✓ src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > a confirmation that fails on the way stays on the page, and its retry sends the same key 189ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 409 TRAINING_LIMIT_REACHED on a stale counter: the R-09-05 message from the details 306ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > «Aprèn amb AgilityHub ›» after «Els meus gossos» only with LEARN_LINK 157ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > lists the active dogs as «{guia} + {gos} · {nivell}», asks the api for the typed text after 300 ms and opens 22 828ms
+ ✓ src/App.test.tsx > T-03-40 mobile own dogs > E4-W16 step 11 (INC-26, R-03-18): the task rows under the counter — pending with an inert checkbox and «dd-mm · instructor», done struck through with «feta el dd-mm», the clip with the attachments, dates in the club's zone 59ms
+ ✓ src/App.test.tsx > T-03-40 mobile own dogs > E4-W16 round 2 #5 (R-03-18): the task counter agrees in number with 1 and 2 — ICU plurals in ca, es and en 8ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_ID_DOCUMENT (400) → /apuntat-hi 74ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > ID_DOCUMENT_AMBIGUOUS (422) → /apuntat-hi 80ms
+ ✓ src/booking/confirm.test.tsx > R-08-15 the claim of a NOTIFIED waiting entry (step 5) > [AGAFA LA PLAÇA] holds with the entry, and the confirmation posts the claim with its key 123ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the language select writes Account.locale, switches the UI at once and says only new notices change 123ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > staff without the MEMBER role have no «Avisos» block and no request (S11 §6) 46ms
+ ✓ src/booking/confirm.test.tsx > R-08-15 the claim of a NOTIFIED waiting entry (step 5) > a claim that lost the seat (409 SEAT_TAKEN) goes back to 04 with its message 174ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_PHONE (400) → /apuntat-hi 90ms
+ ✓ src/App.test.tsx > T-03-40 mobile own dogs > E4-W16 step 6 (INC-22): «＋ DOC.» works again after a first upload, on another dog, with empty fields 157ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 422 codes show their message by code, never the api's text 272ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > INVALID_IBAN (400) → undefined 72ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > PLAN_NOT_AVAILABLE (422) → /apuntat-hi/gos 85ms
+ ✓ src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 1: «＋ DOC.» offers the club's three types of GET /me/dogs in order, «Assegurança» sends INSURANCE, and /parameters is never read 113ms
+ ✓ src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 1: the labels are the reader's (es), as GET /me/dogs resolves them 57ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > DOG_DOCUMENT_REQUIRED (422) → /apuntat-hi/gos 69ms
+ ✓ src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 2: «Nivell {codi}» only when the dog carries its level (none without levels.enabled), without reading /parameters 96ms
+Not implemented: navigation to another Document
+ ✓ src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing 138ms
+ ✓ src/App.test.tsx > T-03-41 mobile own data > validates DNI, NIE, phone and postal code from the country profile 1ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > FILE_NOT_FOUND (400) → /apuntat-hi/gos 73ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > DOG_CHIP_ALREADY_REGISTERED (422) → /apuntat-hi/gos 65ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > while the booking is sent the button is busy and the grid, days and dogs are inert 340ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > round 2 #2 (review #2): with 51 matching dogs the first page shows 50 and «Mostra'n més» appends the 51st from the next page 578ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > FAMILY_HOLDER_NOT_FOUND (422) → /apuntat-hi/familia 69ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > CONSENT_VERSION_OUTDATED (422) → undefined 78ms
+Not implemented: navigation to another Document
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription 502ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > logout deletes this device's subscription first, and never waits on it 86ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > MEMBER_ALREADY_EXISTS (409) → /apuntat-hi 69ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SIGNUP_ALREADY_PENDING (422) → /apuntat-hi 67ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SIGNUP_CLOSED (422) → undefined 46ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > a lost answer keeps its Idempotency-Key for the retry; an answer drops it 346ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > RATE_LIMITED (429) → undefined 59ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > PAYMENT_METHOD_NOT_AVAILABLE (422) → undefined 64ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > round 2 #2 and #4: a failed next page keeps the 50 rows, says why by its code, and «Mostra'n més» asks it again 544ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > E5-W05 step 23 (R-10-00): the guide is the owner's first name the api sends, a compound one whole («Joan Antoni + Toby»), and a dog led by another guide adds «(abonat: {nom i cognom})» 26ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, by its code > 20, 21, 22 and the search show the catalog message of NOT_FOUND and FORBIDDEN 50ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > SOMETHING_NEW (422) → undefined 62ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > VALIDATION_ERROR (400) → /apuntat-hi 70ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, by its code > without an answer from the api (offline) each screen keeps its own «No s'ha pogut carregar…» 43ms
+ ✓ src/instructor/instructor.test.tsx > T-10-32 (20/21/22) the three locales, with no missing key > es 73ms
+ ✓ src/SignupPage.test.tsx > M2 api errors land on their field and step (§2, CATALEG_ERRORS) > VALIDATION_ERROR (400) → /apuntat-hi/gos 61ms
+ ✓ src/SignupPage.test.tsx > M19 the consent version sent is the accepted one (R-04-17) > clears an acceptance of other legal texts and sends the version accepted again 72ms
+ ✓ src/SignupPage.test.tsx > M19 the consent version sent is the accepted one (R-04-17) > a saved acceptance of an older version is not carried into the new texts 30ms
+ ✓ src/SignupPage.test.tsx > E3-W06 round 2 > #1 an INVALID_IBAN from 19 stays on 19, on the IBAN field (production navigator) 94ms
+ ✓ src/instructor/instructor.test.tsx > T-10-32 (20/21/22) the three locales, with no missing key > en 70ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > an instructor opens 20 at /instructor/dia with «El meu dia» current in the mockup's four tabs 34ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03) > E5-W05 step 11: another member books the chosen slot; the focus refresh clears the choice and [Confirma] is disabled 305ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > an impersonated session reaching 21 directly reads «No es permet la suplantació.» and asks nothing 33ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > a member cannot open 22 (RequireRole); screen 26 is E6-W02's page under «Alumnes» 74ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03) > E5-W05 step 11: with «Qualsevol», the chosen ring taken meanwhile clears the choice and its chooser 283ms
+ ✓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > round 2 #3 (review #4, S10 §9) with E6-W02 step 5: TASKS off sends screen 26's route back to 22 with the MODULE_DISABLED note 35ms
+ ✓ src/instructor/instructor.test.tsx > E6-W03 step 11 on screen 21 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > a PUT refused with 422 ATTENDANCE_WINDOW_CLOSED whose re-read is closed leaves no choice behind and [DESA] disabled 77ms
+ ✓ src/SignupPage.test.tsx > E3-W06 round 2 > #1 an INVALID_ID_DOCUMENT routed to 16 survives the full page load and focuses the document 124ms
+ ✓ src/SignupPage.test.tsx > E3-W06 round 2 > #2 after a cancelled checkout 19 is read-only and the retry charges the committed signup 182ms
+ ✓ src/instructor/instructor.test.tsx > E6-W03 step 11 on screen 21 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > once the api has answered, a later save of the same payload sends a new Idempotency-Key (the mock replays a key's first answer) 126ms
+ ✓ src/SignupPage.test.tsx > E3-W06 round 2 > #3 the fingerprint is a SHA-256 digest and the IBAN leaves the draft after a failed submission 70ms
+ ✓ src/SignupPage.test.tsx > E3-W06 round 2 > #3 a config reload that drops SEPA removes the IBAN from the draft 23ms
+ ✓ src/SignupPage.test.tsx > E3-W06 round 2 > #4 a cleared FOUND claim gives the account holder back to the applicant (R-04-10) 44ms
+ ✓ src/SignupPage.test.tsx > E3-W06 round 2 > #4 a holder typed by the applicant is kept when the claim changes 17ms
+ ✓ src/instructor/instructor.test.tsx > E6-W03 step 13 (E6-W01 round-2 review #3): «Mostra'n més» after a new query > a next page still loading for the old query does not hold the new query's «Mostra'n més» 162ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W05 step 12: the offline copy blocks the booking (E5-W02 round-2 review #2, S09 §2) > E5-W05 step 12: a NETWORK answer while navigator.onLine is true: «pot no estar al dia», [Confirma] disabled, and the retry reads again 351ms
+ ✓ src/SignupPage.test.tsx > E3-W06 round 2 > #5 the birth date is checked against the club's today, not the browser's 123ms
+ ✓ src/SignupPage.test.tsx > E3-W06 round 2 > #5 the dog's birth month is checked against the club's month, not the browser's 59ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 05-08-2026 (before the split day): a full month today, half a month from the 16th 31ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 17-08-2026: half a month today, the 1st of September in full, a 130 € total; the total is never sent 56ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 31-12-2026: the alternative starts on the 1st of January (full month) 27ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W05 step 12: the offline copy blocks the booking (E5-W02 round-2 review #2, S09 §2) > E5-W05 step 12: the counter's offline copy blocks the booking too 239ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > Pack 6: the pack line and no start options; Teràpia: its 50 € entry fee only 44ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > a zero line of the quote is hidden (no «Entrada 0,00 €») 20ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > add-dog: on day 26 only TODAY (after billing.upfrontCutoffDay); on day 17 the 1st of next month pays the entry fee only 66ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 without network (S09 §2 «sense connexió») > keeps the last grid marked «pot no estar al dia» and blocks the booking 194ms
+ ✓ src/SignupPage.test.tsx > E3-W08 round 2: the card after the signup exists, and the line concepts > #3 submitted on 15-08 with a full month, retried on 16-08: the card keeps the frozen full month and its total 66ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #1: the offline copy of 08 is per club and person (S09 §6) > A's answers never show for B after a network failure, and B's session drops A's copy 159ms
+ ✓ src/SignupPage.test.tsx > E3-W08 round 2: the card after the signup exists, and the line concepts > #3 the core's result shape (`additionalDog: null`, paid amounts) still renders the frozen card 56ms
+ ✓ src/SignupPage.test.tsx > E3-W08 round 2: the card after the signup exists, and the line concepts > #3 a committed add-dog shows the api's frozen additional-dog choice 53ms
+ ✓ src/SignupPage.test.tsx > E3-W08 round 2: the card after the signup exists, and the line concepts > #4 every concept of a quote line has its label; the start concepts are left to the start options 26ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 2: signed uploads forward the upload-URL headers (R-04-08, M16) > public signup: the PUT carries every header the storage signed 38ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 2: signed uploads forward the upload-URL headers (R-04-08, M16) > add-dog: the PUT carries every header the storage signed 31ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-31 allowFamilyGroupPending=false: a NOT_FOUND claim offers no «Deixa-ho pendent» 33ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #1: the offline copy of 08 is per club and person (S09 §6) > an impersonated session never reads the answers the account's own session kept 151ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-31 allowFamilyGroupPending=true: the same claim can be left pending 38ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-30 requireDogDocumentAtSignup=true: 17 requires the vaccination card with an actionable error 60ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 4: the signup flags (R-04-08, R-04-12) > T-04-30 requireDogDocumentAtSignup=false: 17 continues without a file and shows the optional note 28ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > rights granted while away: the tab appears when the app regains focus 200ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > 17: each plan card shows its name, its conditions and its price, never the long description; no zero entry line 32ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > E4-W12 step 3 (R-04-09, S05 R-05-19): the Cànic's Teràpia shows its priceLabel in the price slot and its conditions in the body 28ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > E4-W12 step 3: the priceLabel comes in the reader's language and a plan without price or label leaves the slot empty 61ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > E4-W12 step 4 (T-04-32): the add-dog keeps the member's plan: one read-only line with its name and price, no cards and no selection 56ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > E4-W12 step 4, E4-W15 step 1 (R-04-09, api E5-T22): the plan the public offer hides comes listed and marked current: 17 names it read-only and requests it 31ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > round 2 #6: a maintenance plan without an entry fee shows its minimum fee and no «Entrada a compte: 0,00 €» 23ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > 16 (R-04-02, T-04-03): «Població» is free with no town, fixed with one and a selector with several 64ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > 16: the «Ja ets soci…» card carries its ⓘ icon; the language selector its globe 27ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > rights revoked while away: the tab goes when the app regains focus 153ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > the public footer reads «{legalName} · {taxId} · {city}» from /branding 57ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > a MODULE_DISABLED from any training read asks the rights again, and the tab goes 171ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > T-02-07 E3-W12 step 5 (S02 R-02-02, Jordi 25-09): the registered office from /branding legalAddress, below the first line 55ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > A32: the club's primary buttons have dark text, AA against the primary, and BrandingProvider does not warn 18ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #4: a failed counter (S09 §2 states) > shows its error and retry, and [Confirma] stays disabled until the summary is there 183ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review > #1 a slow full page load: the departing page never renders nor consumes the destination's error 412ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review > #2 a cancelled checkout is consumed once: cancel → retry → lost answer → reload → retry with the same key 144ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review > round 2 #2: a page restored from the back-forward cache shows its step again, with the draft the next page left 39ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review > round 2 #2: a pageshow that is not a bfcache restore changes nothing 26ms
+ ✓ src/SignupPage.test.tsx > E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review > #3 a passport-only applicant's INVALID_ID_DOCUMENT lands on the passport field 90ms
+ ✓ src/SignupPage.test.tsx > T-04-32 E4-W15 screen 17: the member's plan in add-dog mode, the therapy intro and the single-class price (R-04-09, R-05-19, api E5-T22) > step 1: the add-dog line follows the plan GET /signup marks current, not a plan id of its own 39ms
+ ✓ src/SignupPage.test.tsx > T-04-32 E4-W15 screen 17: the member's plan in add-dog mode, the therapy intro and the single-class price (R-04-09, R-05-19, api E5-T22) > step 2 (review #5): a member without a plan chooses one: the offered cards, [CONTINUA] disabled until then, and planIdRequested 57ms
+ ✓ src/SignupPage.test.tsx > T-04-32 E4-W15 screen 17: the member's plan in add-dog mode, the therapy intro and the single-class price (R-04-09, R-05-19, api E5-T22) > step 4 (review #2): the therapy intro is hidden above the member's read-only plan, and stays on the public form 37ms
+ ✓ src/SignupPage.test.tsx > T-04-32 E4-W15 screen 17: the member's plan in add-dog mode, the therapy intro and the single-class price (R-04-09, R-05-19, api E5-T22) > step 6 (review #4, R-05-19): a SINGLE_CLASS plan reads «{price}/classe» on its card and on the add-dog line 41ms
+
+ Test Files  24 passed (24)
+      Tests  440 passed (440)
+   Start at  21:53:19
+   Duration  12.59s (tests 51%, environment 19%, transform 16%, import 9%, setup 5%)
+
+exit 0

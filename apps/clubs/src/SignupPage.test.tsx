@@ -317,12 +317,15 @@ describe("T-04-29 signup person and draft", () => {
     await renderSignup({ path: "/apuntat-hi" });
     expect(screen.getByLabelText("Nom", { exact: true })).toHaveValue("Nora");
 
+    // E7-W02 round 2 #7: unmount first. The page writes its draft on every change (the answer of
+    // `GET /signup` included), and `cleanup` flushes a pending write: aged after it, the draft
+    // stays aged whatever the timing (CI saw it rewritten, «Nora» again).
+    cleanup();
     const saved = savedDraft();
     sessionStorage.setItem(
       DRAFT_KEY,
       JSON.stringify({ ...saved, savedAt: Date.now() - 24 * 60 * 60 * 1000 - 1 }),
     );
-    cleanup();
     await renderSignup({ path: "/apuntat-hi" });
     expect(screen.getByLabelText("Nom", { exact: true })).toHaveValue("");
   });

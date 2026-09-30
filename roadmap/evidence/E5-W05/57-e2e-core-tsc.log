@@ -1,0 +1,2 @@
+$ pnpm exec tsc -p e2e/core/tsconfig.json --noEmit
+exit 0

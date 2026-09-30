@@ -92,6 +92,7 @@ import {
   signupReviewPaymentMethods,
   signupDogDocuments,
   signupReviewVariant,
+  signupViewWarnings,
   storeSignupDogDocuments,
   withReadmissionValues,
 } from "./fixtures/signup-review";
@@ -230,6 +231,14 @@ const resolvedSignups = new Set<string>();
 // Signup file keys removed through `DELETE /dogs/{id}/documents/{docId}/files/{fileId}`: a D2
 // `PATCH /dogs/{id}` that sends one back answers 400 FILE_NOT_FOUND (api E5-T19/E5-T21).
 const removedSignupFileKeys = new Set<string>();
+// A signup dog's whole birth date: the D2 view keeps its month, and a `PATCH /dogs/{id}` may send
+// the day (`birthDate`, E4-W17 review #2). The first of the month until a PATCH sends another day.
+type SignupDogView = MemberSignupView["dogs"][number];
+const signupDogBirthDates = new WeakMap<SignupDogView, string>();
+function signupDogBirthDate(dog: SignupDogView): string {
+  const stored = signupDogBirthDates.get(dog);
+  return stored?.startsWith(`${dog.birthMonth}-`) === true ? stored : `${dog.birthMonth}-01`;
+}
 
 /** The D2 view of the Marta Roca signup for the current scenario's variant, with its edits. */
 function currentSignupReview(): MemberSignupView {
@@ -1439,7 +1448,11 @@ export const handlers = [
     });
   }),
   http.get("*/api/v1/me", ({ request }) => {
-    if (request.headers.get("Authorization") === "Bearer mock-impersonation-token") {
+    if (
+      request.headers.get("Authorization") === "Bearer mock-impersonation-token" &&
+      currentMockScenario().me.impersonation === undefined
+    ) {
+      // An impersonation scenario (e.g. `impersonatedFamily`) keeps its own `/me`.
       mockScenario("impersonated");
     }
     return HttpResponse.json(currentMockScenario().me);
@@ -1495,18 +1508,11 @@ export const handlers = [
     if (pending === undefined) return apiError("NOT_FOUND", "Signup not found", 404);
     const current = currentSignupReview();
     const view = id === current.member.id ? current : derivedSignupReview(current, pending);
-    // As the api's view: a pending document row of any dog raises DOCUMENT_PENDING.
-    const documentPending = view.dogs.some((dog) =>
-      dog.documents.some((document) => document.state === "PENDING"),
-    );
-    const warnings: MemberSignupView["warnings"] = [
-      ...view.warnings.filter((warning) => warning !== "DOCUMENT_PENDING"),
-      ...(documentPending ? (["DOCUMENT_PENDING"] as const) : []),
-    ];
+    // As the api's view, and as the validation's dry run computes them (one calculation).
     const body: MemberSignupView = {
       ...view,
       paymentMethods: signupReviewMethods(request, view),
-      warnings,
+      warnings: signupViewWarnings(view),
     };
     return HttpResponse.json(body);
   }),
@@ -2971,7 +2977,7 @@ export const handlers = [
       // As the api (`DogService.edit` returns on an empty diff; E5-T21 `saveDocuments`): step 17's
       // fields equal to the current values, with documents that change no file key (e.g.
       // `files: []` for the record's own row of the reused dog), write nothing and keep the version.
-      const sentBirthMonth = body.birthMonth ?? body.birthDate?.slice(0, 7);
+      // `birthDate` compares the whole date, as `DogService.edit` does (E4-W17 review #2).
       const stepFields = ["birthDate", "birthMonth", "breed", "chip", "name", "sex"];
       const unchanged =
         Object.keys(body).every(
@@ -2981,7 +2987,8 @@ export const handlers = [
         (body.breed === undefined || body.breed === signupDog.breed) &&
         (body.sex === undefined || body.sex === signupDog.sex) &&
         (body.chip === undefined || body.chip === signupDog.chip) &&
-        (sentBirthMonth === undefined || sentBirthMonth === signupDog.birthMonth) &&
+        (body.birthMonth === undefined || body.birthMonth === signupDog.birthMonth) &&
+        (body.birthDate === undefined || body.birthDate === signupDogBirthDate(signupDog)) &&
         (documents === undefined || documentKeys(documents) === documentKeys(signupDog.documents));
       // With signup.requireDogDocumentAtSignup a card sent without files is refused, unless the
       // reused dog has its own card with a file (api E5-T19).
@@ -3003,7 +3010,10 @@ export const handlers = [
         if (body.notesToInstructors !== undefined)
           signupDog.notesToInstructors = body.notesToInstructors;
         if (body.birthMonth !== undefined) signupDog.birthMonth = body.birthMonth;
-        else if (body.birthDate !== undefined) signupDog.birthMonth = body.birthDate.slice(0, 7);
+        else if (body.birthDate !== undefined) {
+          signupDog.birthMonth = body.birthDate.slice(0, 7);
+          signupDogBirthDates.set(signupDog, body.birthDate);
+        }
         if (documents !== undefined) signupDog.documents = documents;
         signupDog.version += 1;
       }
@@ -3026,7 +3036,7 @@ export const handlers = [
         });
       }
       return HttpResponse.json({
-        birthDate: `${signupDog.birthMonth}-01`,
+        birthDate: signupDogBirthDate(signupDog),
         breed: signupDog.breed,
         chip: signupDog.chip,
         id: signupDog.id,

@@ -400,7 +400,8 @@ function ImpersonationBanner({ authClient }: { authClient: AuthClient }) {
   }
   return (
     <div className="impersonation-banner" role="status">
-      <span>{t("auth:impersonation.banner", { member: me.account.name })}</span>
+      {/* The member the admin opened (ruling E73), not the account: a family group's differ. */}
+      <span>{t("auth:impersonation.banner", { member: me.impersonation.memberName })}</span>
       <button
         disabled={pending}
         onClick={() => {

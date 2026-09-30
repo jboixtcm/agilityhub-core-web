@@ -1,5 +1,10 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { JOBS_MOCK_NOW, mockScenario, resetDashboardMockState } from "@agilityhub/api-client/mocks";
+import {
+  JOBS_MOCK_NOW,
+  mockScenario,
+  resetDashboardMockState,
+  resetPlanningState,
+} from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
@@ -18,9 +23,11 @@ const branding: Branding = {
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
 });
-// Monday 10 August 2026, 8:12 in the club: the D1 fixture's day and the S15 §6 form A example.
+// Monday 10 August 2026, 8:12 in the club: the D1 fixture's day and the S15 §6 form A example. The
+// risk card reads the calendar world (E5-W05 step 15), built for that day rather than the import's.
 beforeEach(() => {
   vi.useFakeTimers({ now: new Date(JOBS_MOCK_NOW), shouldAdvanceTime: true, toFake: ["Date"] });
+  resetPlanningState();
 });
 afterEach(() => {
   cleanup();

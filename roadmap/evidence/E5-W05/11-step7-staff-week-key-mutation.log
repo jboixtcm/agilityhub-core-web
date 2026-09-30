@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/backoffice-handlers.test.ts (21 tests | 1 failed | 20 skipped) 125ms
+   ❯ E5-W05 step 7 · the staff lists' bookingWeekKey follows R-08-01 (the opening's hour) (1)
+     × E5-W05 step 7: Duna's class of Sunday 2 at 20:00 (mockup 06's done class) belongs to the week that opens then, 2026-08-02, as Monday 3's does 123ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 7 · the staff lists' bookingWeekKey follows R-08-01 (the opening's hour) > E5-W05 step 7: Duna's class of Sunday 2 at 20:00 (mockup 06's done class) belongs to the week that opens then, 2026-08-02, as Monday 3's does
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/mocks/backoffice-handlers.test.ts:536:72
+    534|     );
+    535|     expect(sunday.length).toBeGreaterThan(0);
+    536|     expect(sunday.every((row) => row.bookingWeekKey === "2026-08-02"))…
+       |                                                                        ^
+    537|     const monday = list.body.items.filter((row) =>
+    538|       (row.classStartsAt ?? "").startsWith("2026-08-03"),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 skipped (21)
+   Start at  21:56:11
+   Duration  1.02s (transform 50%, import 36%, tests 14%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/backoffice-handlers.test.ts -t E5-W05 step 7

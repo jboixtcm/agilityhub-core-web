@@ -1,0 +1,241 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/NotificationsPage.test.tsx (16 tests | 2 failed | 14 skipped) 14327ms
+   ❯ T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) (16)
+     × E7-W02 round 2 #3: a failed read-all is sent again (bounded retry), and its answer silences the bell 4178ms
+     × E7-W02 round 2 #3: a read-all answered after going back Home updates the bell there (Home reads GET /me/home again) 10146ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W02 round 2 #3: a failed read-all is sent again (bounded retry), and its answer silences the bell
+AssertionError: expected 1 to be 2 // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"clubs-shell__top"[39m
+        [36m/>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"clubs-shell__content"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"notifications-page"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"ah-app-bar notifications-page__bar"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__title"[39m
+              [36m>[39m
+                [36m<h1>[39m
+                  [0mNotificacions[0m
+                [36m</h1>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+              [36m/>[39m
+            [36m</header>[39m
+            [36m<ul[39m
+              [33maria-label[39m=[32m"Notificacions"[39m
+              [33mclass[39m=[32m"notifications-list"[39m
+            [36m>[39m
+              [36m<li>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-card notification-card notification-card--error notification-card--unread"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"notification-card__head"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon notification-card__icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [36m<h2[39m
+                      [33mclass[39m=[32m"notification-card__title"[39m
+                    [36m>[39m
+                      [0mClasse anul·lada pel club[0m
+                    [36m</h2>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"notification-card__unread"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-sr-only"[39m
+                      [36m>[39m
+                        [0mNova[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"notification-card__body"[39m
+                  [36m>[39m
+                    [0mDimecres 12 · 18:50 · B+C · Central, amb Duna. «La classe queda anul·lada per la pluja. Podeu reservar-ne una altra des de l'app. Disculpeu les molèsties!» — Cànic Agility. Aquesta sessió no compta al teu còmput.[0m
+                  [36m</p>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"notification-card__foot"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"notification-card__meta"[39m
+                    [36m>[39m
+                      [0mfa 2 min · i per SMS[0m
+                    [36m</span>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--primary notification-card__action"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mCANVIA DE CLASSE[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-card notification-card notification-card--accent notification-card--unread"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"notification-card__head"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon notification-card__icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-unlock"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [36m<h2[39m
+                      [33mclass[39m=[32m"notification-card__title"[39m
+                    [36m>[39m
+                      [0mS'ha alliberat una plaça![0m
+                    [36m</h2>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"notification-card__unread"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-sr-only"[39m
+                      [36m>[39m
+                        [0mNova[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"notification-card__body"[39m
+                  [36m>[39m
+                    [0mClasse C i superiors · dijous 6 · 20:00. Estàs a la llista d'espera — la plaça és per a qui confirmi primer.[0m
+                  [36m</p>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"notification-card__foot"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"notification-card__meta"[39m
+                    [36m>[39m
+     ...
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ timeout src/NotificationsPage.test.tsx:325:61
+    323|     await waitFor(
+    324|       () => {
+    325|         expect(count("POST", "/me/notifications/read-all")).toBe(2);
+       |                                                             ^
+    326|       },
+    327|       { timeout: 4000 },
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W02 round 2 #3: a read-all answered after going back Home updates the bell there (Home reads GET /me/home again)
+TestingLibraryElementError: Unable to find role="link" and name "Avisos"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"home-header"[39m
+          [36m>[39m
+            [36m<img[39m
+              [33malt[39m=[32m"Club Agility Cànic"[39m
+              [33mclass[39m=[32m"home-header__logo"[39m
+              [33msrc[39m=[32m"data:image/png;base64,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...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"home-header"[39m
+          [36m>[39m
+            [36m<img[39m
+              [33malt[39m=[32m"Club Agility Cànic"[39m
+              [33mclass[39m=[32m"home-header__logo"[39m
+              [33msrc[39m=[32m"data:image/png;base64,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...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/NotificationsPage.test.tsx:355:25
+    353|     const homeReads = count("GET", "/me/home");
+    354|     release();
+    355|     expect(await screen.findByRole("link", { name: "Avisos" })).toBeVi…
+       |                         ^
+    356|     expect(count("GET", "/me/home")).toBeGreaterThan(homeReads);
+    357|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 14 skipped (16)
+   Start at  22:54:20
+   Duration  15.80s (tests 91%, transform 4%, environment 3%, import 1%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/NotificationsPage.test.tsx -t round 2 #3

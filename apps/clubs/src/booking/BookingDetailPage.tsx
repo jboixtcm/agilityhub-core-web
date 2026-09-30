@@ -11,7 +11,7 @@ import {
   Skeleton,
   type Tone,
 } from "@agilityhub/ui";
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import "./booking.css";
@@ -34,6 +34,21 @@ export function thresholdText(t: Translate, minutes: number): string {
   return minutes % 60 === 0
     ? t("booking:detail.thresholdHours", { count: minutes / 60 })
     : t("booking:detail.thresholdMinutes", { count: minutes });
+}
+
+/**
+ * Mockup 07: the ring's dot before the card's title, in the colour the api sends with the class
+ * (`classSession.ringColor`, api E5-T29); none for a ring without a colour.
+ */
+export function RingDot({ color }: { color: string | null | undefined }) {
+  if (color === null || color === undefined || color === "") return null;
+  return (
+    <span
+      aria-hidden="true"
+      className="detail-card__dot"
+      style={{ "--class-row-ring": color } as CSSProperties}
+    />
+  );
 }
 
 export function BookingBar() {
@@ -182,6 +197,7 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
       <BookingBar />
       <Card className="detail-card">
         <p className="detail-card__line">
+          <RingDot color={session.ringColor} />
           <strong className="detail-card__title">{title}</strong>
           <Badge tone={STATE_TONES[displayState]}>{t(`enums:bookingState.${displayState}`)}</Badge>
         </p>

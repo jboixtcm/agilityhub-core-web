@@ -1,4 +1,4 @@
-import { createApiClient } from "@agilityhub/api-client";
+import { type components, createApiClient } from "@agilityhub/api-client";
 import {
   JOBS_MOCK_NOW,
   mockScenario,
@@ -81,15 +81,16 @@ describe("E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R
     const rows = within(panel)
       .getAllByRole("listitem")
       .map((item) => item.textContent);
+    // Each row: «{abonat} + {gos}», the level chip (E5-T29 `levelCode`) and the displayState chip.
     expect(rows.slice(0, 5)).toEqual([
-      "Laura + Dunaconfirmada",
-      "Marc + Chun-liconfirmada",
-      "Anna + Nassconfirmada",
-      "Eva + Fishconfirmada",
-      "Sergio + Thaianul·lada tard",
+      "Laura + DunaBconfirmada",
+      "Marc + Chun-liCconfirmada",
+      "Anna + NassBconfirmada",
+      "Eva + FishCconfirmada",
+      "Sergio + ThaiBanul·lada tard",
     ]);
-    // The waiting entry carries no member name (S08 §6 `WaitlistEntry`): the dog's.
-    expect(within(panel).getByText("En espera: Kira · Lluna")).toBeVisible();
+    // E5-W05 step 2: «{guia} + {gos}» (E5-T29 `memberFirstName`), mockup D12's line.
+    expect(within(panel).getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
     // Nothing to book, cancel or mark here (R-08-19, S10).
     expect(
       within(panel).queryByRole("button", { name: /reserva|assistència|anul·la/iu }),
@@ -103,7 +104,7 @@ describe("E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R
     ).toHaveLength(2);
     cleanup();
     const instructor = await renderPanel({ readOnly: true });
-    expect(within(instructor).getByText("En espera: Kira · Lluna")).toBeVisible();
+    expect(within(instructor).getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
     expect(within(instructor).queryByRole("button", { name: /Treu/u })).toBeNull();
   });
 
@@ -116,14 +117,16 @@ describe("E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R
       }
     });
     const panel = await renderPanel({ onChanged });
-    fireEvent.click(within(panel).getByRole("button", { name: "Treu Kira de la llista d'espera" }));
+    fireEvent.click(
+      within(panel).getByRole("button", { name: "Treu Júlia + Kira de la llista d'espera" }),
+    );
     const dialog = await screen.findByRole("dialog", { name: "Treure de la llista d'espera" });
     expect(
-      within(dialog).getByText("Kira deixarà d'estar en espera d'aquesta classe."),
+      within(dialog).getByText("Júlia + Kira deixarà d'estar en espera d'aquesta classe."),
     ).toBeVisible();
     fireEvent.click(within(dialog).getByRole("button", { name: "Treu de la llista" }));
     await waitFor(() => {
-      expect(within(panel).getByText("En espera: Lluna")).toBeVisible();
+      expect(within(panel).getByText("En espera: Roser + Lluna")).toBeVisible();
     });
     expect(removals).toEqual([`/api/v1/waitlist-entries/wl-${CLASS_ID}-0/cancellation`]);
     expect(onChanged).toHaveBeenCalledTimes(1);
@@ -141,7 +144,7 @@ describe("E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R
       ),
     );
     fireEvent.click(
-      within(panel).getByRole("button", { name: "Treu Lluna de la llista d'espera" }),
+      within(panel).getByRole("button", { name: "Treu Roser + Lluna de la llista d'espera" }),
     );
     const dialog = await screen.findByRole("dialog", { name: "Treure de la llista d'espera" });
     fireEvent.click(within(dialog).getByRole("button", { name: "Treu de la llista" }));
@@ -161,7 +164,9 @@ describe("E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R
         ),
       ),
     );
-    fireEvent.click(within(panel).getByRole("button", { name: "Treu Kira de la llista d'espera" }));
+    fireEvent.click(
+      within(panel).getByRole("button", { name: "Treu Júlia + Kira de la llista d'espera" }),
+    );
     const dialog = await screen.findByRole("dialog", { name: "Treure de la llista d'espera" });
     fireEvent.click(within(dialog).getByRole("button", { name: "Treu de la llista" }));
     expect(await within(dialog).findByRole("alert")).toHaveTextContent(
@@ -179,7 +184,7 @@ describe("E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R
       params: { path: { key: "waitlist.mode" } },
     });
     const panel = await renderPanel();
-    expect(within(panel).getByText("En espera: 1. Kira · 2. Lluna")).toBeVisible();
+    expect(within(panel).getByText("En espera: 1. Júlia + Kira · 2. Roser + Lluna")).toBeVisible();
   });
 
   it("S08 §9: without WAITLIST there is no waiting line and no waiting request", async () => {
@@ -192,5 +197,131 @@ describe("E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R
     });
     expect(within(panel).queryByText(/En espera/u)).toBeNull();
     expect(paths.some((path) => path.endsWith("/waitlist-entries"))).toBe(false);
+  });
+});
+
+type ClassBookingItem = components["schemas"]["ClassBookingItem"];
+type WaitlistEntry = components["schemas"]["WaitlistEntry"];
+
+/** A row of `GET /class-sessions/{id}/bookings` as the api sends it (E5-T29: displayState, levelCode). */
+function registrant(fields: Partial<ClassBookingItem> & Pick<ClassBookingItem, "id">) {
+  return {
+    bookedAt: "2026-08-09T10:00:00Z",
+    bookingWeekKey: "2026-08-09",
+    classSessionId: CLASS_ID,
+    classStartsAt: "2026-08-12T16:50:00Z",
+    displayState: "CONFIRMED",
+    dogId: `dog-${fields.id}`,
+    dogName: "Duna",
+    late: null,
+    levelCode: null,
+    memberId: `member-${fields.id}`,
+    memberName: "Laura",
+    origin: "APP",
+    state: "ACTIVE",
+    ...fields,
+  } satisfies ClassBookingItem;
+}
+
+/** An entry of `GET /class-sessions/{id}/waitlist-entries` (E5-T29: handlerName, memberFirstName). */
+function waiting(fields: Partial<WaitlistEntry> & Pick<WaitlistEntry, "dogName" | "id">) {
+  return {
+    bookingId: null,
+    cancelReason: null,
+    cancelledAt: null,
+    classSession: {
+      description: "B+C",
+      endsAtLocal: "2026-08-12T19:50",
+      instructorName: null,
+      ringName: null,
+      startsAtLocal: "2026-08-12T18:50",
+    },
+    classSessionId: CLASS_ID,
+    confirmBy: null,
+    dog: { id: `dog-${fields.id}`, name: fields.dogName ?? "", sex: "FEMALE" },
+    dogId: `dog-${fields.id}`,
+    handlerName: null,
+    joinedAt: "2026-08-10T08:00:00Z",
+    memberFirstName: null,
+    memberId: `member-${fields.id}`,
+    notifiedAt: null,
+    position: null,
+    state: "ACTIVE",
+    ...fields,
+  } satisfies WaitlistEntry;
+}
+
+describe("E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00)", () => {
+  it("E5-W05 step 1: each chip reads the api's displayState with 07's literals (a past booking «feta», a NO_SHOW mark «no presentat»), never `state`; the level chip is levelCode, none when null", async () => {
+    server.use(
+      http.get("*/api/v1/class-sessions/:id/bookings", () =>
+        HttpResponse.json({
+          items: [
+            registrant({ displayState: "DONE", id: "laura", levelCode: "C" }),
+            registrant({
+              displayState: "NO_SHOW",
+              dogName: "Chun-li",
+              id: "marc",
+              levelCode: "B",
+              memberName: "Marc",
+            }),
+            registrant({
+              displayState: "CANCELLED_LATE",
+              dogName: "Thai",
+              id: "sergio",
+              late: true,
+              memberName: "Sergio",
+              state: "CANCELLED_LATE",
+            }),
+          ],
+        }),
+      ),
+    );
+    const panel = await renderPanel();
+    const rows = within(panel).getAllByRole("listitem");
+    expect(rows.slice(0, 3).map((item) => item.textContent)).toEqual([
+      "Laura + DunaCfeta",
+      "Marc + Chun-liBno presentat",
+      "Sergio + Thaianul·lada tard",
+    ]);
+    expect(within(panel).queryByText("confirmada")).toBeNull();
+    expect(within(rows[1] ?? panel).getByText("no presentat")).toHaveClass("ah-tone--danger");
+    const levels = [...panel.querySelectorAll(".ah-registrants__level")].map(
+      (chip) => chip.textContent,
+    );
+    expect(levels).toEqual(["C", "B"]);
+  });
+
+  it("E5-W05 step 2: «En espera: {guia} + {gos}», the guide being handlerName ?? memberFirstName, with the position in a FIFO club (mockup D12)", async () => {
+    server.use(
+      http.get("*/api/v1/class-sessions/:id/waitlist-entries", () =>
+        HttpResponse.json({
+          items: [
+            waiting({ dogName: "Kira", id: "kira", memberFirstName: "Júlia", position: 1 }),
+            waiting({
+              dogName: "Llamp",
+              handlerName: "Gina Soler",
+              id: "llamp",
+              memberFirstName: "Oriol",
+              position: 2,
+            }),
+          ],
+        }),
+      ),
+    );
+    const panel = await renderPanel();
+    expect(
+      await within(panel).findByText("En espera: 1. Júlia + Kira · 2. Gina Soler + Llamp"),
+    ).toBeVisible();
+    expect(
+      within(panel).getByRole("button", {
+        name: "Treu 2. Gina Soler + Llamp de la llista d'espera",
+      }),
+    ).toBeVisible();
+  });
+
+  it("E5-W05 step 2: the mock's staff waitlist sends each entry's first name, as the api does: «En espera: Júlia + Kira · Roser + Lluna»", async () => {
+    const panel = await renderPanel();
+    expect(within(panel).getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
   });
 });

@@ -1,0 +1,77 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/backoffice-handlers.test.ts (20 tests | 3 failed | 16 skipped) 672ms
+   ❯ E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75) (4)
+     × E5-W05 step 5: registerMany has more than 1000 training bookings; «Nil Fictici Soler» is not in the first 1000, and GET /training-bookings/filter-values counts him over the whole set 318ms
+     × E5-W05 step 5: GET /ring-blocks/filter-values counts every block, «Cadells» (only after row 1000) included, labelled with the ring's name 299ms
+     × E5-W05 step 5: GET /bookings/filter-values counts the member's classes by state; GET /bookings has no search (a non-blank q is INVALID_FILTER, E75) 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75) > E5-W05 step 5: registerMany has more than 1000 training bookings; «Nil Fictici Soler» is not in the first 1000, and GET /training-bookings/filter-values counts him over the whole set
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ src/mocks/backoffice-handlers.test.ts:543:27
+    541|       `/training-bookings/filter-values?field=memberId&filter=${week}`,
+    542|     );
+    543|     expect(values.status).toBe(200);
+       |                           ^
+    544|     valid("FilterValues", values.body);
+    545|     expect(values.body.field).toBe("memberId");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75) > E5-W05 step 5: GET /ring-blocks/filter-values counts every block, «Cadells» (only after row 1000) included, labelled with the ring's name
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ src/mocks/backoffice-handlers.test.ts:591:27
+    589|       `/ring-blocks/filter-values?field=ringId&filter=${range}`,
+    590|     );
+    591|     expect(values.status).toBe(200);
+       |                           ^
+    592|     valid("FilterValues", values.body);
+    593|     expect(values.body.values).toContainEqual({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75) > E5-W05 step 5: GET /bookings/filter-values counts the member's classes by state; GET /bookings has no search (a non-blank q is INVALID_FILTER, E75)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ src/mocks/backoffice-handlers.test.ts:609:27
+    607|       `/bookings/filter-values?field=state&filter=${laura}`,
+    608|     );
+    609|     expect(values.status).toBe(200);
+       |                           ^
+    610|     valid("FilterValues", values.body);
+    611|     const list = await as<Page<components["schemas"]["BookingListItem"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed | 16 skipped (20)
+   Start at  21:46:08
+   Duration  1.41s (tests 50%, transform 29%, import 21%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/backoffice-handlers.test.ts -t E5-W05 step 5

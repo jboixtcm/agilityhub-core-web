@@ -6,7 +6,7 @@
     "blocks": "Bloqueos y reservas de pista"
   },
   "list": {
-    "when": "{day} · {time}",
+    "when": "{day} · {from}–{to}",
     "none": "—",
     "error": "No se ha podido cargar el listado.",
     "emptyDescription": "Cambia los filtros o la búsqueda para ver más.",
@@ -17,6 +17,7 @@
     "search": "Busca por abonado, perro o pista",
     "emptyTitle": "Ninguna reserva de entrenamiento",
     "selectRow": "Reserva de {name}",
+    "memberWithNumber": "{name} · {number}",
     "statusLabel": "Estado de la reserva",
     "statuses": {
       "all": "Todas"
@@ -33,7 +34,7 @@
   },
   "blocks": {
     "caption": "Bloqueos y reservas de pista",
-    "search": "Busca por nota o por quién lo creó",
+    "search": "Busca por pista o nota",
     "emptyTitle": "Ningún bloqueo ni reserva de pista",
     "selectRow": "Bloqueo de {when}",
     "statusLabel": "Estado del bloqueo",

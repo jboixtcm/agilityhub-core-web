@@ -1,0 +1,20 @@
+
+> agilityhub-core-web@0.0.0 api:generate /Users/jordib/dev/agilityhub/agilityhub-core-web
+> pnpm --filter @agilityhub/api-client api:generate
+
+
+> @agilityhub/api-client@0.0.0 api:generate /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> node scripts/generate.mjs
+
+Generated /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/generated/schema.d.ts from /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/openapi/openapi.json merged with /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/openapi/pending.json
+generate exit 0
+de18d1ba410c3df427f62859ba28b04e02d4df18a0e392e11b1ed536bc465ecc  packages/api-client/openapi/openapi.json
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+
+ Test Files  2 passed (2)
+      Tests  79 passed (79)
+   Start at  23:03:25
+   Duration  2.28s (tests 61%, transform 19%, import 19%)
+

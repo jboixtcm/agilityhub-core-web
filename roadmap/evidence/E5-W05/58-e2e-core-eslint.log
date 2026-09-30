@@ -1,0 +1,2 @@
+$ pnpm exec eslint e2e/core/
+exit 0

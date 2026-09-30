@@ -394,6 +394,7 @@
     "trainings": "Training",
     "columns": {
       "when": "Day and time",
+      "class": "Class",
       "ring": "Ring",
       "dog": "Dog",
       "state": "Status",

@@ -1,0 +1,15 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ✓ src/notifications/locales.test.tsx > E7-W02 round 2 #6 · screens 11, 12 and the unsubscribe page in es and en (Definition of Done) > E7-W02 round 2 #6 (es): the feed, its actions and a club without SMS 223ms
+ ✓ src/notifications/locales.test.tsx > E7-W02 round 2 #6 · screens 11, 12 and the unsubscribe page in es and en (Definition of Done) > E7-W02 round 2 #6 (en): the feed, its actions and a club without SMS 110ms
+ ✓ src/notifications/locales.test.tsx > E7-W02 round 2 #6 · screens 11, 12 and the unsubscribe page in es and en (Definition of Done) > E7-W02 round 2 #6 (es): 12's «Avisos», the reminder options and a refused permission 54ms
+ ✓ src/notifications/locales.test.tsx > E7-W02 round 2 #6 · screens 11, 12 and the unsubscribe page in es and en (Definition of Done) > E7-W02 round 2 #6 (en): 12's «Avisos», the reminder options and a refused permission 49ms
+ ✓ src/notifications/locales.test.tsx > E7-W02 round 2 #6 · screens 11, 12 and the unsubscribe page in es and en (Definition of Done) > E7-W02 round 2 #6 (es): the e-mail unsubscribe page, valid and expired 48ms
+ ✓ src/notifications/locales.test.tsx > E7-W02 round 2 #6 · screens 11, 12 and the unsubscribe page in es and en (Definition of Done) > E7-W02 round 2 #6 (en): the e-mail unsubscribe page, valid and expired 44ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  23:00:37
+   Duration  1.71s (transform 37%, tests 32%, environment 16%, import 12%, setup 3%)
+

@@ -9,6 +9,8 @@ import {
   type Response as PlaywrightResponse,
 } from "@playwright/test";
 
+import type { components } from "../../packages/api-client/src/generated/schema";
+
 import { expect, test } from "./oauth-token-log";
 import { brandingClub, expectPublicFooter } from "./public-footer";
 
@@ -1332,6 +1334,15 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       (document) => `${document.type}: ${document.files.map((file) => file.name).join(", ")}`,
     );
   const leftDogDocuments = documentFiles(leftLookup.documents);
+  // E5-W05 step 22 (E4-W17 review #3): the record's documents by their stable fields too, each
+  // document's type and state and its files' ids and names; never the signed URLs, which expire.
+  const stableDocuments = (documents: unknown) =>
+    ((documents ?? []) as components["schemas"]["DogDocument"][]).map((document) => ({
+      files: document.files.map((file) => ({ id: file.id, name: file.name })),
+      state: document.state,
+      type: document.type,
+    }));
+  const leftDogStableDocuments = stableDocuments(leftLookup.documents);
   // T-04-19: the reused dog's record card, the one a rejection must leave as it was. The seed's dog
   // may have it pending, without a file; D2 then reads «pendent» (no row at all: «—»).
   const oldCardRow = ((leftLookup.documents ?? []) as { files: { name: string }[]; type: string }[]).find(
@@ -1608,12 +1619,16 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       });
       expect(pick(dogAfter.dog as SeedDog)).toEqual(pick(leftDog));
       expect(documentFiles(dogAfter.documents)).toEqual(leftDogDocuments);
+      // E5-W05 step 22: every document keeps its state and its very files (their ids), so a file
+      // replaced by another with the same name fails here.
+      const dogAfterStableDocuments = stableDocuments(dogAfter.documents);
+      expect(dogAfterStableDocuments).toEqual(leftDogStableDocuments);
       // E4-W17 step 1: the record's card is exactly its own files, not the submitted card (their
-      // files plus the admin's upload).
-      const cardAfter = (dogAfter.documents as { files: { name: string }[]; type: string }[]).find(
-        (document) => document.type === "VACCINATION_CARD",
-      );
+      // files plus the admin's upload): by name, and (E5-W05 step 22) by file id and state.
+      const cardAfter = dogAfterStableDocuments.find((document) => document.type === "VACCINATION_CARD");
+      const cardBefore = leftDogStableDocuments.find((document) => document.type === "VACCINATION_CARD");
       expect(cardAfter?.files.map((file) => file.name) ?? []).toEqual(oldCardFiles);
+      expect(cardAfter).toEqual(cardBefore);
       await expect(admin.getByText("Retorn E3")).toHaveCount(0);
       await expect(admin.getByText(readmissionBreed)).toHaveCount(0);
       await screenshot(admin, "D10-after-rejected-readmission-core-1280.png");
@@ -1621,8 +1636,12 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
         join(evidenceDirectory, "readmission-core.json"),
         `${JSON.stringify(
           {
-            dogAfterRejection: { ...pick(dogAfter.dog as SeedDog), documents: documentFiles(dogAfter.documents) },
-            dogBefore: { ...pick(leftDog), documents: leftDogDocuments },
+            dogAfterRejection: {
+              ...pick(dogAfter.dog as SeedDog),
+              documents: documentFiles(dogAfter.documents),
+              stableDocuments: dogAfterStableDocuments,
+            },
+            dogBefore: { ...pick(leftDog), documents: leftDogDocuments, stableDocuments: leftDogStableDocuments },
             leftMemberWithDocument: true,
             phonesKeptAfterRejection: true,
             statusAfterRejection: after.status,

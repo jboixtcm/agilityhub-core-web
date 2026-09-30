@@ -1,0 +1,45 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > has no forbidden term nor requirement code in training, instructor and enums (ca/es/en) 84ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > the three locales carry the same training and instructor keys, none empty 40ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > keeps the exact ca literals of mockups 08 and 24 and the S09 §10 keys 43ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > without eligible dogs the tab is absent and /entrenaments goes back to 03 235ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > a future booking: title, state, line, who booked it, and the cancellation back to 03 218ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > past cancellableUntil the button gives way to the notice; «Reservada pel club» for BACKOFFICE 75ms
+ ✓ src/training/i18n.test.tsx > T-09-41 training and instructor vocabulary, locales and club time zone > formats in the club's zone, never the viewer's: an October 06:30Z slot reads «8:30» 279ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > cancelled by the club: its state, and nothing to do 83ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > with Rock and Toby the tab exists and Rock (defaultDogId) is the selected chip 149ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > 422 TRAINING_CANCEL_TOO_LATE: the threshold and the minutes left, from the details, in the dialog 104ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > FREE_TRAINING off: no tab, and the route shows nothing of the module 108ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > 409 INVALID_STATE: the message and the booking read again (cancelled elsewhere) 95ms
+ ✓ src/training/TrainingDetailPage.test.tsx > S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) > es and en: the same page in the reader's language 69ms
+ ✓ src/training/TrainingDetailPage.test.tsx > E5-W05 step 13: the detail reaches DONE (E5-W02 round-2 review #3, S09 §5) > E5-W05 step 13: with a controlled clock the booking reads «fet» after its endsAt, without a remount 114ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > draws the api's cells: free outlined and pressable, struck, «classe» dimmed 149ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > «Qualsevol» with two free rings asks which one, Muntanya first, and books with it 222ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > the counter card reads the selected day's week and follows the dog 121ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > a closed day says so and draws no grid 79ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-39 screen 08 at the weekly limit (R-09-05) > with cancellable sessions: no button, the message and a link to each 103ms
+ ✓ src/training/TrainingPage.test.tsx > T-09-39 screen 08 at the weekly limit (R-09-05) > without any cancellable session: the short message 91ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 409 SLOT_TAKEN: the message, the grid read again and the api's free rings offered 168ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 409 TRAINING_LIMIT_REACHED on a stale counter: the R-09-05 message from the details 138ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 422 codes show their message by code, never the api's text 134ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > while the booking is sent the button is busy and the grid, days and dogs are inert 185ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > a lost answer keeps its Idempotency-Key for the retry; an answer drops it 164ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03) > E5-W05 step 11: another member books the chosen slot; the focus refresh clears the choice and [Confirma] is disabled 150ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03) > E5-W05 step 11: with «Qualsevol», the chosen ring taken meanwhile clears the choice and its chooser 176ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W05 step 12: the offline copy blocks the booking (E5-W02 round-2 review #2, S09 §2) > E5-W05 step 12: a NETWORK answer while navigator.onLine is true: «pot no estar al dia», [Confirma] disabled, and the retry reads again 193ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W05 step 12: the offline copy blocks the booking (E5-W02 round-2 review #2, S09 §2) > E5-W05 step 12: the counter's offline copy blocks the booking too 132ms
+ ✓ src/training/TrainingPage.test.tsx > screen 08 without network (S09 §2 «sense connexió») > keeps the last grid marked «pot no estar al dia» and blocks the booking 108ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #1: the offline copy of 08 is per club and person (S09 §6) > A's answers never show for B after a network failure, and B's session drops A's copy 97ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #1: the offline copy of 08 is per club and person (S09 §6) > an impersonated session never reads the answers the account's own session kept 95ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > rights granted while away: the tab appears when the app regains focus 130ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > rights revoked while away: the tab goes when the app regains focus 97ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > a MODULE_DISABLED from any training read asks the rights again, and the tab goes 108ms
+ ✓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #4: a failed counter (S09 §2 states) > shows its error and retry, and [Confirma] stays disabled until the summary is there 115ms
+
+ Test Files  3 passed (3)
+      Tests  36 passed (36)
+   Start at  21:40:23
+   Duration  4.70s (tests 57%, transform 20%, environment 12%, import 8%, setup 2%)
+

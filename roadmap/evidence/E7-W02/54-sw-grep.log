@@ -1,0 +1,3 @@
+addEventListener(`push`,e=>{let t
+addEventListener(`notificationclick`,e=>{e.notification.close(),e.waitUntil(ee(self.clients,e.no
+exit 0

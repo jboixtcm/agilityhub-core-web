@@ -1037,7 +1037,7 @@ export const notificationLog: readonly StoredNotification[] = LOG_SEEDS.map(noti
 
 export function notificationListItem(item: StoredNotification): NotificationListItem {
   return {
-    audience: item.audience,
+    audience: item.audience ?? null,
     category: item.category,
     channels: item.channels,
     code: item.code,

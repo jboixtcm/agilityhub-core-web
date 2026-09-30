@@ -1,0 +1,228 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/training/TrainingDetailPage.test.tsx (7 tests | 1 failed | 6 skipped) 200ms
+   ❯ E5-W05 step 13: the detail reaches DONE (E5-W02 round-2 review #3, S09 §5) (1)
+     × E5-W05 step 13: with a controlled clock the booking reads «fet» after its endsAt, without a remount 199ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/TrainingDetailPage.test.tsx > E5-W05 step 13: the detail reaches DONE (E5-W02 round-2 review #3, S09 §5) > E5-W05 step 13: with a controlled clock the booking reads «fet» after its endsAt, without a remount
+TestingLibraryElementError: Unable to find an element with the text: fet. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back"[39m
+                [33mhref[39m=[32m"/inici"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mDetall de la reserva[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card detail-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__line"[39m
+            [36m>[39m
+              [36m<strong[39m
+                [33mclass[39m=[32m"detail-card__title"[39m
+              [36m>[39m
+                [0mEntrenament · amb Rock[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mconfirmada[0m
+              [36m</span>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__when"[39m
+            [36m>[39m
+              [0mDilluns 3 · 7:00–7:30 · Muntanya[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__booked"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mReservada pel club el diumenge 02/08 a les 20:05[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"booking-note booking-note--warning"[39m
+            [33mrole[39m=[32m"note"[39m
+          [36m>[39m
+            [0mJa no es pot anul·lar des de l'app: posa't en contacte amb el club.[0m
+          [36m</p>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/training/TrainingDetailPage.test.tsx:146:19
+    144|     });
+    145|     expect(Date.now()).toBeGreaterThan(endsAt);
+    146|     expect(screen.getByText("fet")).toBeVisible();
+       |                   ^
+    147|     expect(screen.queryByText("confirmada")).not.toBeInTheDocument();
+    148|     // A past booking offers nothing: neither the button nor the too-l…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  21:34:57
+   Duration  1.40s (transform 43%, environment 23%, tests 15%, import 15%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/training/TrainingDetailPage.test.tsx -t E5-W05 step 13

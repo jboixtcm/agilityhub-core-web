@@ -1211,6 +1211,21 @@ select {
   justify-self: start;
 }
 
+/* E5-W05 step 4: the class's ring, a dot in the ring's colour (E5-T29 `ringColor`) and its name. */
+.member-bookings__ring {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+}
+
+.member-bookings__dot {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--ah-ring-color, var(--ah-color-text-muted));
+  border-radius: var(--ah-radius-full);
+}
+
 .settings-card h2 {
   margin: 0 0 var(--ah-space-2);
   color: var(--ah-color-text-muted);

@@ -1,0 +1,263 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/history/ci-probe.test.tsx (2 tests | 1 failed) 579ms
+   ❯ probe · 25 read late (2)
+     × old assertion: getByRole('status') right after the heading 132ms
+ ❯ src/training/ci-probe.test.tsx (2 tests | 1 failed) 1576ms
+   ❯ probe · 08's counter read late (2)
+     × old helper: only the grid is awaited, then a slot is chosen 622ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/history/ci-probe.test.tsx > probe · 25 read late > old assertion: getByRole('status') right after the heading
+TestingLibraryElementError: Found multiple elements with the role "status"
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"impersonation-banner"[39m
+  [33mrole[39m=[32m"status"[39m
+[36m>[39m
+  [36m<span>[39m
+    [0mEstàs veient l'app com Laura Serra Vidal[0m
+  [36m</span>[39m
+  [36m<button[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [0mSurt[0m
+  [36m</button>[39m
+[36m</div>[39m
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-label[39m=[32m"Carregant l'històric"[39m
+  [33mclass[39m=[32m"ah-skeleton"[39m
+  [33mrole[39m=[32m"status"[39m
+  [33mstyle[39m=[32m"height: 18rem;"[39m
+[36m/>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"impersonation-banner"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mEstàs veient l'app com Laura Serra Vidal[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mSurt[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"history-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar history-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Torna"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button history-screen__back"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mHistòric[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Carregant l'històric"[39m
+            [33mclass[39m=[32m"ah-skeleton"[39m
+            [33mrole[39m=[32m"status"[39m
+            [33mstyle[39m=[32m"height: 18rem;"[39m
+          [36m/>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/history/ci-probe.test.tsx:21:19
+     19|     await renderApp("/historic", { scenario: "impersonated" });
+     20|     expect(await screen.findByRole("heading", { level: 1, name: "Histò…
+     21|     expect(screen.getByRole("status")).toHaveTextContent("Laura Serra …
+       |                   ^
+     22|   });
+     23|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/training/ci-probe.test.tsx > probe · 08's counter read late > old helper: only the grid is awaited, then a slot is chosen
+Error: [2mexpect([22m[31melement[39m[2m).toBeEnabled()[22m
+
+Received element is not enabled:
+  [31m<button
+  class="ah-button ah-button--primary training-confirm"
+  disabled=""
+  type="button"
+/>[39m
+ ❯ src/training/ci-probe.test.tsx:30:23
+     28|       }),
+     29|     );
+     30|     expect(confirm()).toBeEnabled();
+       |                       ^
+     31|   });
+     32|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 2 passed (4)
+   Start at  22:59:37
+   Duration  2.95s (tests 45%, transform 26%, environment 16%, import 9%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/history/ci-probe.test.tsx src/training/ci-probe.test.tsx

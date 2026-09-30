@@ -10,6 +10,7 @@ import { apiClient, canic, renderApp, renderPage, setupBookingWorld } from "./te
 
 setupBookingWorld();
 
+type BookingLimitReachedDetails = components["schemas"]["BookingLimitReachedDetails"];
 type SeatHoldResponse = components["schemas"]["SeatHoldResponse"];
 
 interface Recorded {
@@ -248,18 +249,23 @@ describe("29: the normal confirmation and the informative variants (S08 §2 29, 
     expect(screen.queryByRole("button", { name: "CONFIRMAR LA RESERVA" })).toBeNull();
   });
 
-  /** A hold refused with `409 BOOKING_LIMIT_REACHED` and no swappable booking (S08 §6). */
-  function limitReached(details: Record<string, unknown>) {
+  /**
+   * A hold refused with `409 BOOKING_LIMIT_REACHED` and no swappable booking (S08 §6), with the
+   * `nextBookableAt` the api sends at the clock (api E5-T29): the start of the next booking week,
+   * the coming opening, Sunday 9 at 20:00.
+   */
+  function limitReached(details: Omit<BookingLimitReachedDetails, "nextBookableAt" | "swappable">) {
+    const body: BookingLimitReachedDetails = {
+      nextBookableAt: "2026-08-09T18:00:00Z",
+      swappable: [],
+      ...details,
+    };
     server.use(
       http.post("*/api/v1/seat-holds", () =>
         HttpResponse.json(
           {
             code: "BOOKING_LIMIT_REACHED",
-            details: {
-              nextBookableAt: "2026-08-09T18:00:00Z",
-              swappable: [],
-              ...details,
-            },
+            details: body,
             message: "Booking limit reached",
             traceId: "t",
           },
@@ -269,29 +275,58 @@ describe("29: the normal confirmation and the informative variants (S08 §2 29, 
     );
   }
 
-  it("the limit of next week reached (NEXT, per dog): «La setmana vinent ja tens una classe amb la Duna» and B1's «Podràs reservar aquesta classe a partir de …»", async () => {
+  /** The class card of the refused hold: the row 04 left in the history entry. */
+  function refusedCard(): HTMLElement {
+    const card = document.querySelector(".confirm-card");
+    if (!(card instanceof HTMLElement)) throw new TypeError("Missing the class card");
+    return card;
+  }
+
+  it("E5-W05 step 6: the limit of next week reached on a next-week row («dl 10», NEXT, per dog): «La setmana vinent ja tens una classe amb la Duna» and B1's «Podràs reservar aquesta classe a partir de diumenge 9 a les 20 h», the coming opening", async () => {
+    // At the clock (Sunday 2 at 20:30) Monday 10 belongs to the next booking week. Duna's other
+    // class of that week waits for its payment: PAYMENT_PENDING counts and is never swappable, so
+    // the api lists it as LATE_WINDOW (R-08-02, R-08-09).
     limitReached({
       current: 1,
       limit: 1,
       notSelectable: [
         {
-          bookingId: "booking-duna-mon10",
-          description: "C",
+          bookingId: "booking-duna-wed12",
+          description: "B+C",
           reason: "LATE_WINDOW",
-          startsAtLocal: "2026-08-10T09:00",
+          startsAtLocal: "2026-08-12T18:50",
         },
       ],
       unit: "DOG",
       week: "NEXT",
     });
-    await tapRow(0);
+    await tapRow(4);
+    expect(within(refusedCard()).getByText("Dilluns 10 · 18:50–19:50")).toBeVisible();
+    // At `nextBookableAt` Monday 10 turns current, so B1's sentence is true (S08 §2 row 29).
     expect(
       screen.getByText(
         "La setmana vinent ja tens una classe amb la Duna. Podràs reservar aquesta classe a partir de diumenge 9 a les 20 h.",
       ),
     ).toBeVisible();
     expect(screen.queryByText(/Aquesta setmana ja has fet/u)).toBeNull();
+    expect(screen.queryByText(/Plaça bloquejada/u)).toBeNull();
   });
+
+  it.each(["DOG", "MEMBER"] as const)(
+    "E5-W05 step 6: with `bookings.maxNextWeek = 0` (limit 0, unit %s) the first sentence counts no class: «Encara no pots reservar classes de la setmana vinent.» and B1's second sentence",
+    async (unit) => {
+      // With a limit of 0 every next-week row is WEEKLY_LIMIT_DONE, with nothing counted.
+      limitReached({ current: 0, limit: 0, notSelectable: [], unit, week: "NEXT" });
+      await tapRow(4);
+      expect(within(refusedCard()).getByText("Dilluns 10 · 18:50–19:50")).toBeVisible();
+      expect(
+        screen.getByText(
+          "Encara no pots reservar classes de la setmana vinent. Podràs reservar aquesta classe a partir de diumenge 9 a les 20 h.",
+        ),
+      ).toBeVisible();
+      expect(screen.queryByText(/0 classes/u)).toBeNull();
+    },
+  );
 
   it("the limit per person (unit MEMBER) names no dog: «Aquesta setmana ja has fet dues classes.»", async () => {
     limitReached({
@@ -366,7 +401,7 @@ describe("R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-
     });
   });
 
-  it("PAY_TO_BOOK with a swap keeps the price in view: «En confirmar, pagaràs aquesta classe (12,00 €).» above «ANUL·LA … I CONFIRMA …» (review #8)", async () => {
+  it("E5-W05 step 8: PAY_TO_BOOK with a swap keeps the price in view: «En confirmar, pagaràs aquesta classe (12,00 €).» above «ANUL·LA … I CONFIRMA …» (review #8)", async () => {
     const serverNow = new Date().toISOString();
     const hold = heldSeat(serverNow, new Date(Date.parse(serverNow) + 30_000).toISOString());
     window.history.replaceState(
@@ -401,10 +436,14 @@ describe("R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-
       "/reservar/confirmar",
     );
     await renderPage(<ConfirmPage client={apiClient()} />, single);
-    expect(screen.getByText("En confirmar, pagaràs aquesta classe (12,00 €).")).toBeVisible();
-    expect(
-      screen.getByRole("button", { name: "ANUL·LA DILLUNS 3 I CONFIRMA DIMECRES 5" }),
-    ).toBeEnabled();
+    const note = screen.getByText("En confirmar, pagaràs aquesta classe (12,00 €).");
+    expect(note).toBeVisible();
+    const button = screen.getByRole("button", { name: "ANUL·LA DILLUNS 3 I CONFIRMA DIMECRES 5" });
+    expect(button).toBeEnabled();
+    // Above: the button follows the note in the document (E5-W01 round-2 review #4).
+    expect(note.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
   });
 
   it("CHARGE_ON_ATTENDANCE: the note above the normal button", async () => {

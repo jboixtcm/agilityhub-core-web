@@ -105,8 +105,11 @@ function required<Data>(data: Data | undefined): Data {
   return data;
 }
 
-/** `GET /me/home?dogId=` (03): no `dogId` = «Tots». */
-export function useMeHome(client: ApiClient, dogId: string | null) {
+/**
+ * `GET /me/home?dogId=` (03): no `dogId` = «Tots». A new `refresh` (a read-all that landed, S11
+ * R-11-10) reads it again with the rows kept on screen; an older answer is dropped.
+ */
+export function useMeHome(client: ApiClient, dogId: string | null, refresh = 0) {
   const load = useCallback(
     async () =>
       required(
@@ -116,7 +119,8 @@ export function useMeHome(client: ApiClient, dogId: string | null) {
           })
         ).data,
       ),
-    [client, dogId],
+    // `refresh` only asks for a new read.
+    [client, dogId, refresh],
   );
   return useLoader(load);
 }

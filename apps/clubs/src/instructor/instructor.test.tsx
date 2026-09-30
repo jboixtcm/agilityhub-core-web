@@ -915,7 +915,10 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
     expect(await screen.findByRole("link", { name: "Laura + Duna · C" })).toBeVisible();
     fireEvent.change(screen.getByLabelText("Cerca un alumne"), { target: { value: "Rock" } });
-    expect(await screen.findByRole("link", { name: "Júlia Roca + Rock · D" })).toBeVisible();
+    // R-10-00 (E5-W05 step 23): Rock's guide is not its owner, so the row names the owner too.
+    expect(
+      await screen.findByRole("link", { name: "Júlia Roca + Rock · D (abonat: Laura Serra)" }),
+    ).toBeVisible();
     await waitFor(() => {
       expect(screen.queryByRole("link", { name: "Laura + Duna · C" })).toBeNull();
     });
@@ -923,7 +926,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     expect(searches).toHaveLength(2);
     expect(decodeURIComponent(searches[1]?.line ?? "")).toContain("q=Rock");
     expect(decodeURIComponent(searches[1]?.line ?? "")).toContain("filter=status:eq:ACTIVE");
-    fireEvent.click(screen.getByRole("link", { name: "Júlia Roca + Rock · D" }));
+    fireEvent.click(screen.getByRole("link", { name: /^Júlia Roca \+ Rock · D/u }));
     expect(window.location.pathname).toBe("/instructor/alumnes/dog-rock");
   });
 
@@ -937,6 +940,7 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
         level: { code: "C", color: null, id: "00000000-0000-4000-8000-00000000000c", name: "C" },
         name: `Gos ${number}`,
         owner: {
+          firstName: "Clara",
           fullName: "Clara Font Pons",
           id: "00000000-0000-4000-8000-000000000c1a",
           status: "ACTIVE",
@@ -1002,7 +1006,55 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     expect(await screen.findByRole("link", { name: "Clara + Gos 51 · C" })).toBeVisible();
     expect(screen.queryByRole("alert")).toBeNull();
   });
+
+  it("E5-W05 step 23 (R-10-00): the guide is the owner's first name the api sends, a compound one whole («Joan Antoni + Toby»), and a dog led by another guide adds «(abonat: {nom i cognom})»", async () => {
+    server.use(http.get("*/api/v1/dogs", () => HttpResponse.json(compoundAndGuideDogs())));
+    await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    const toby = await screen.findByRole("link", { name: "Joan Antoni + Toby · B" });
+    expect(toby).toBeVisible();
+    expect(within(toby).queryByText(/abonat/u)).toBeNull();
+    const rock = screen.getByRole("link", { name: /^Júlia Roca \+ Rock · D/u });
+    expect(within(rock).getByText("(abonat: Laura Serra Vidal)")).toBeVisible();
+  });
 });
+
+/** `GET /dogs` in the instructor's projection (E5-T29 `owner.firstName`): a compound first name, and a dog led by another guide. */
+function compoundAndGuideDogs() {
+  const dogs = [
+    {
+      // No handlerName: the member leads the dog (the api leaves the key out).
+      id: "00000000-0000-4000-8000-00000000a001",
+      level: { code: "B", color: null, id: "00000000-0000-4000-8000-00000000000b", name: "B" },
+      name: "Toby",
+      owner: {
+        firstName: "Joan Antoni",
+        fullName: "Joan Antoni Puig Serra",
+        id: "00000000-0000-4000-8000-00000000b001",
+        status: "ACTIVE",
+      },
+    },
+    {
+      handlerName: "Júlia Roca",
+      id: "00000000-0000-4000-8000-00000000a002",
+      level: { code: "D", color: null, id: "00000000-0000-4000-8000-00000000000d", name: "D" },
+      name: "Rock",
+      owner: {
+        firstName: "Laura",
+        fullName: "Laura Serra Vidal",
+        id: "00000000-0000-4000-8000-00000000b002",
+        status: "ACTIVE",
+      },
+    },
+  ];
+  return {
+    appliedFilters: [{ field: "status", op: "eq", value: "ACTIVE" }],
+    items: dogs,
+    page: 0,
+    size: 50,
+    totalItems: dogs.length,
+    totalPages: 1,
+  };
+}
 
 describe("E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, by its code", () => {
   const refusal = (code: string, status: number) => () =>

@@ -15,6 +15,7 @@ import { server } from "./server";
 
 type SignupConfig = components["schemas"]["SignupConfig"];
 type MemberSignupView = components["schemas"]["MemberSignupView"];
+type ValidationDryRun = components["schemas"]["ValidationDryRun"];
 
 const origin = "http://localhost";
 
@@ -648,5 +649,60 @@ describe("T-04-12 E4-W13 step 5: the reused dog of a readmission and the signup 
       version: 2,
     });
     expect(stale).toMatchObject({ body: { code: "FILE_NOT_FOUND", details: {} }, status: 400 });
+  });
+
+  it("E5-W05 step 22: the validation's dry run warns DOCUMENT_PENDING as GET /members/{id}/signup does: after the card is withdrawn it lists the pending card, after the replacement it does not", async () => {
+    await view("adminSignupReviewReadmissionNoCard");
+    const documentPending = async () => {
+      const signup = (await (await fetch(`${origin}/api/v1/members/${marta}/signup`)).json()) as MemberSignupView;
+      const response = await fetch(`${origin}/api/v1/members/${marta}/validation?dryRun=true`, {
+        body: JSON.stringify({ dogs: signup.dogs.map((dog) => ({ dogId: dog.id })), version: signup.version }),
+        headers: json,
+        method: "POST",
+      });
+      expect(response.status).toBe(200);
+      const dryRun = (await response.json()) as ValidationDryRun;
+      return {
+        dryRun: dryRun.warnings.includes("DOCUMENT_PENDING"),
+        view: signup.warnings.includes("DOCUMENT_PENDING"),
+      };
+    };
+    expect(await documentPending()).toEqual({ dryRun: false, view: false });
+
+    // Withdraw the submitted card: the record has none, so the automatic empty card is back, pending.
+    expect((await patchDog({ documents: [{ files: [], type: "VACCINATION_CARD" }], version: 1 })).status).toBe(200);
+    expect(await documentPending()).toEqual({ dryRun: true, view: true });
+
+    // Replace it with a new file: the card is RECEIVED again, and neither warns.
+    const replacement = { fileKey: "mock-dog_document-cartilla_Kiwi_nova.jpg", name: "cartilla_Kiwi_nova.jpg" };
+    expect((await patchDog({ documents: [{ files: [replacement], type: "VACCINATION_CARD" }], version: 2 })).status).toBe(200);
+    expect((await view("adminSignupReviewReadmissionNoCard")).documents[0]).toMatchObject({
+      state: "RECEIVED",
+      type: "VACCINATION_CARD",
+    });
+    expect(await documentPending()).toEqual({ dryRun: false, view: false });
+  });
+
+  it("E5-W05 step 22: PATCH /dogs/{id} compares the whole birthDate: the same month and another day is a change (the version grows, the day is kept); the same date is not", async () => {
+    const dog = await view("admin");
+    // The dog's date as the PATCH answers it (the view keeps the month): sending it is no change.
+    const firstDay = `${dog.birthMonth}-01`;
+    expect(await patchDog({ birthDate: firstDay, version: dog.version })).toMatchObject({
+      body: { birthDate: firstDay, version: dog.version },
+      status: 200,
+    });
+
+    const otherDay = `${dog.birthMonth}-15`;
+    expect(await patchDog({ birthDate: otherDay, version: dog.version })).toMatchObject({
+      body: { birthDate: otherDay, version: dog.version + 1 },
+      status: 200,
+    });
+    expect((await view("admin")).version).toBe(dog.version + 1);
+    // The same date again writes nothing; the view keeps the month.
+    expect(await patchDog({ birthDate: otherDay, version: dog.version + 1 })).toMatchObject({
+      body: { birthDate: otherDay, version: dog.version + 1 },
+      status: 200,
+    });
+    expect((await view("admin")).birthMonth).toBe(dog.birthMonth);
   });
 });

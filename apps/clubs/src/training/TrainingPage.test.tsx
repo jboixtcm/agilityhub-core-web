@@ -25,6 +25,12 @@ function pressed(container: HTMLElement): string[] {
 async function openTraining(scenario: Parameters<typeof renderApp>[1] = {}) {
   await renderApp("/entrenaments", scenario);
   await screen.findByRole("group", { name: "Matí" });
+  // E7-W02 round 2 #7: [Confirma] waits for the week's counter (the limit is the api's); the
+  // grid may land first on a loaded runner, so the page is ready once the counter (or its error)
+  // is there too.
+  await waitFor(() => {
+    expect(document.querySelector(".training-counter")).not.toBeNull();
+  });
 }
 
 function confirmButton(): HTMLElement {
@@ -362,6 +368,101 @@ describe("screen 08 refusals by code (S09 §6, R-09-06)", () => {
     expect(await screen.findByText("Entrenament reservat")).toBeVisible();
     expect(requests.keys).toHaveLength(2);
     expect(requests.keys[1]).toBe(requests.keys[0]);
+  });
+});
+
+function slotReads(requests: { list: string[] }): number {
+  return requests.list.filter((line) => line.startsWith("GET /training-slots")).length;
+}
+
+describe("E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03)", () => {
+  it("E5-W05 step 11: another member books the chosen slot; the focus refresh clears the choice and [Confirma] is disabled", async () => {
+    const requests = recordRequests();
+    await openTraining();
+    fireEvent.click(within(group("Pista")).getByRole("button", { name: "Muntanya" }));
+    fireEvent.click(within(group("Matí")).getByRole("button", { name: "8:30, lliure" }));
+    expect(confirmButton()).toHaveTextContent("Confirma Dilluns 3 · 8:30–9:00 · Muntanya");
+    expect(confirmButton()).toBeEnabled();
+    // Another member takes Muntanya at 8:30; the app regains focus and reads the grid again.
+    bookedMeanwhile("ring-muntanya", "08:30");
+    fireEvent.focus(window);
+    await waitFor(() => {
+      expect(
+        within(group("Matí")).getByRole("button", { name: "8:30, entrenament" }),
+      ).toBeDisabled();
+    });
+    expect(slotReads(requests)).toBe(2);
+    expect(group("Matí").querySelector(".ah-slot--selected")).toBeNull();
+    expect(confirmButton()).toHaveTextContent(/^Confirma$/u);
+    expect(confirmButton()).toBeDisabled();
+  });
+
+  it("E5-W05 step 11: with «Qualsevol», the chosen ring taken meanwhile clears the choice and its chooser", async () => {
+    await openTraining();
+    fireEvent.click(within(group("Matí")).getByRole("button", { name: "8:30, lliure" }));
+    const chooser = screen.getAllByRole("group", { name: "Pista" })[1] ?? document.body;
+    expect(pressed(chooser)).toEqual(["Muntanya"]);
+    expect(confirmButton()).toBeEnabled();
+    bookedMeanwhile("ring-muntanya", "08:30");
+    fireEvent.focus(window);
+    await waitFor(() => {
+      expect(confirmButton()).toBeDisabled();
+    });
+    expect(confirmButton()).toHaveTextContent(/^Confirma$/u);
+    expect(screen.getAllByRole("group", { name: "Pista" })).toHaveLength(1);
+    // Carretera is still free at 8:30: the member can choose again.
+    const again = within(group("Matí")).getByRole("button", { name: "8:30, lliure" });
+    expect(again).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(again);
+    expect(confirmButton()).toHaveTextContent("Confirma Dilluns 3 · 8:30–9:00 · Carretera");
+    expect(confirmButton()).toBeEnabled();
+  });
+});
+
+describe("E5-W05 step 12: the offline copy blocks the booking (E5-W02 round-2 review #2, S09 §2)", () => {
+  it("E5-W05 step 12: a NETWORK answer while navigator.onLine is true: «pot no estar al dia», [Confirma] disabled, and the retry reads again", async () => {
+    const requests = recordRequests();
+    await openTraining();
+    fireEvent.click(within(group("Pista")).getByRole("button", { name: "Muntanya" }));
+    fireEvent.click(within(group("Matí")).getByRole("button", { name: "7:30, lliure" }));
+    expect(confirmButton()).toBeEnabled();
+    // The browser says online, but the api cannot be reached.
+    expect(navigator.onLine).toBe(true);
+    server.use(http.get("*/api/v1/training-slots", () => HttpResponse.error()));
+    fireEvent.focus(window);
+    expect(await screen.findByText("pot no estar al dia")).toBeVisible();
+    expect(navigator.onLine).toBe(true);
+    expect(within(group("Matí")).getByRole("button", { name: "7:30, lliure" })).toBeVisible();
+    expect(confirmButton()).toBeDisabled();
+
+    // The api answers again: the retry reads the grid again and the booking can go.
+    server.resetHandlers();
+    const before = slotReads(requests);
+    const retry = screen.getByRole("button", { name: "Torna-ho a provar" });
+    fireEvent.click(retry);
+    // Busy while the reads are out.
+    expect(retry).toHaveAttribute("aria-busy", "true");
+    expect(retry).toBeDisabled();
+    await waitFor(() => {
+      expect(screen.queryByText("pot no estar al dia")).not.toBeInTheDocument();
+    });
+    expect(slotReads(requests)).toBeGreaterThan(before);
+    expect(confirmButton()).toHaveTextContent("Confirma Dilluns 3 · 7:30–8:00 · Muntanya");
+    expect(confirmButton()).toBeEnabled();
+  });
+
+  it("E5-W05 step 12: the counter's offline copy blocks the booking too", async () => {
+    await openTraining();
+    fireEvent.click(within(group("Pista")).getByRole("button", { name: "Muntanya" }));
+    fireEvent.click(within(group("Matí")).getByRole("button", { name: "7:30, lliure" }));
+    expect(await screen.findByText("Portes 2/3 entrenaments aquesta setmana")).toBeVisible();
+    expect(confirmButton()).toBeEnabled();
+    server.use(http.get("*/api/v1/me/training-summary", () => HttpResponse.error()));
+    fireEvent.focus(window);
+    expect(await screen.findByText("pot no estar al dia")).toBeVisible();
+    // The kept counter stays on screen, and the booking waits for a fresh one.
+    expect(screen.getByText("Portes 2/3 entrenaments aquesta setmana")).toBeVisible();
+    expect(confirmButton()).toBeDisabled();
   });
 });
 

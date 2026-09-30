@@ -1,10 +1,11 @@
-import { createApiClient } from "@agilityhub/api-client";
+import { type components, createApiClient } from "@agilityhub/api-client";
 import { mockScenario } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
@@ -170,6 +171,60 @@ describe("E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10)", () => {
     expect(member).toMatch(/^Abonat = «Laura Serra Vidal, [^»]+»$/u);
     expect(member).not.toContain("member-");
     expect(chips).toContain("Data = «01/08/2026 – 31/08/2026»");
+  });
+
+  it("E5-W05 step 0: a row whose audience the api sends as null (written before E7-T02) shows the recipient without an audience label, in the list and in the detail", async () => {
+    const oldRow: components["schemas"]["NotificationDetail"] = {
+      audience: null,
+      body: "Text antic.",
+      category: "OPERATIONAL",
+      channels: [{ channel: "APP", status: "DELIVERED" }],
+      code: "N-08a",
+      createdAt: "2026-07-01T08:00:00Z",
+      deliveries: [],
+      id: "notification-old",
+      locale: "ca",
+      readAt: null,
+      recipient: { displayName: "Pau Fictici Soler", email: null, memberId: "member-pau" },
+      subject: {},
+      title: "Avís antic",
+    };
+    server.use(
+      http.get("*/api/v1/notifications", () =>
+        HttpResponse.json({
+          appliedFilters: [],
+          items: [
+            {
+              audience: null,
+              category: oldRow.category,
+              channels: oldRow.channels,
+              code: oldRow.code,
+              createdAt: oldRow.createdAt,
+              id: oldRow.id,
+              readAt: null,
+              recipient: oldRow.recipient,
+            },
+          ],
+          page: 0,
+          size: 50,
+          totalItems: 1,
+          totalPages: 1,
+        }),
+      ),
+      http.get("*/api/v1/notifications/:id", () => HttpResponse.json(oldRow)),
+    );
+    await renderLog();
+    await waitFor(() => {
+      expect(rows()).toHaveLength(1);
+    });
+    const recipient = rows()[0]?.querySelector(".messaging-log__recipient");
+    expect(recipient?.textContent).toBe("Pau Fictici Soler");
+    fireEvent.click(within(rows()[0] ?? document.body).getByText("N-08a"));
+    const drawer = await screen.findByRole("dialog", { name: "Avís N-08a" });
+    await within(drawer).findByText("Avís antic");
+    expect(drawer.textContent).toContain("Pau Fictici Soler");
+    expect(drawer.textContent).not.toContain("notificationAudience");
+    expect(drawer.textContent).not.toContain("Pau Fictici Soler ·");
   });
 
   it("masks an e-mail and a phone, never prints them whole", () => {

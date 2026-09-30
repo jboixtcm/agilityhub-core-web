@@ -230,6 +230,24 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
     expect(count("POST", "/seat-holds")).toBe(0);
   });
 
+  it("E7-W02 round 2 #4 (AGENTS rule 3): with WAITLIST off, a historical N-15 the api still lists is an informative card with no [AGAFA LA PLAÇA]", async () => {
+    await openFeed({ branding: { ...canic, modules: without("WAITLIST") } });
+    expect(cards()[1]).toBe("unlock | accent | S'ha alliberat una plaça! | fa 4 min | —");
+    expect(screen.queryByRole("button", { name: "AGAFA LA PLAÇA" })).toBeNull();
+    expect(screen.queryByText("Aquesta plaça ja no està disponible")).toBeNull();
+    // Inert: the claim is the waiting list's, and there is no other page to open.
+    expect(screen.queryByRole("link", { name: "S'ha alliberat una plaça!" })).toBeNull();
+    expect(count("POST", "/seat-holds")).toBe(0);
+    // The mock world of a club whose WAITLIST is off lists the historical N-15 as the api does.
+    cleanup();
+    resetNotificationMockState();
+    await openFeed({
+      branding: { ...canic, modules: without("WAITLIST") },
+      scenario: "bookingNoWaitlist",
+    });
+    expect(cards()[1]).toBe("unlock | accent | S'ha alliberat una plaça! | fa 4 min | —");
+  });
+
   it("a hold refused with 409 SEAT_TAKEN shows E5-W01's message in the card", async () => {
     server.use(
       http.post("*/api/v1/seat-holds", () =>
@@ -287,6 +305,55 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
     Object.defineProperty(shown, "persisted", { value: true });
     window.dispatchEvent(shown);
     expect(await screen.findByRole("link", { name: "Avisos" })).toBeVisible();
+  });
+
+  it("E7-W02 round 2 #3: a failed read-all is sent again (bounded retry), and its answer silences the bell", async () => {
+    let calls = 0;
+    server.use(
+      http.post("*/api/v1/me/notifications/read-all", () => {
+        calls += 1;
+        if (calls > 1) return undefined;
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "boom", traceId: "t" },
+          { status: 500 },
+        );
+      }),
+    );
+    await openFeed();
+    await waitFor(
+      () => {
+        expect(count("POST", "/me/notifications/read-all")).toBe(2);
+      },
+      { timeout: 4000 },
+    );
+    cleanup();
+    await renderApp("/inici");
+    expect(await screen.findByRole("link", { name: "Avisos" })).toBeVisible();
+  });
+
+  it("E7-W02 round 2 #3: a read-all answered after going back Home updates the bell there (Home reads GET /me/home again)", async () => {
+    let release: () => void = () => undefined;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      http.post("*/api/v1/me/notifications/read-all", async () => {
+        await gate;
+        return undefined;
+      }),
+    );
+    await openFeed();
+    await waitFor(() => {
+      expect(count("POST", "/me/notifications/read-all")).toBe(1);
+    });
+    cleanup();
+    await renderApp("/inici");
+    // The api has not read everything yet: 03 still shows two.
+    expect(await screen.findByRole("link", { name: "Avisos: 2 sense llegir" })).toBeVisible();
+    const homeReads = count("GET", "/me/home");
+    release();
+    expect(await screen.findByRole("link", { name: "Avisos" })).toBeVisible();
+    expect(count("GET", "/me/home")).toBeGreaterThan(homeReads);
   });
 
   it("a card tapped before read-all has landed is marked read on its own", async () => {

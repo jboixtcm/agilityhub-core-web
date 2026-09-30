@@ -1,0 +1,533 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/training/TrainingRegisterPage.test.tsx (13 tests | 4 failed | 8 skipped) 32990ms
+   ❯ E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values (5)
+     × E5-W05 step 3: «Dia i hora» reads «dl 3 · 7:00–7:30» with endsAtLocal, and «Abonat» «{nom complet} · {número}» 10158ms
+     × E5-W05 step 3: every block names its ring from the row (ringName, ringColor), a deactivated ring's included, for an INSTRUCTOR too 10059ms
+     × E5-W05 step 5: with more than 1000 rows, the member filter offers «Nil Fictici Soler», who appears only after row 1000, from GET /training-bookings/filter-values 1067ms
+     × E5-W05 step 5: with more than 1000 blocks, the ring filter offers «Cadells», which appears only after row 1000, from GET /ring-blocks/filter-values 10937ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/TrainingRegisterPage.test.tsx > E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values > E5-W05 step 3: «Dia i hora» reads «dl 3 · 7:00–7:30» with endsAtLocal, and «Abonat» «{nom complet} · {número}»
+TypeError: No row for Rock's Monday 7:00–7:30
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"training-register"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mEntrenaments[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-tabs"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Registre d'ús de pistes"[39m
+            [33mclass[39m=[32m"ah-tabs__list"[39m
+            [33mrole[39m=[32m"tablist"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_2_-panel-bookings"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_2_-tab-bookings"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mReserves d'entrenament[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_2_-panel-blocks"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_2_-tab-blocks"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mBloquejos i reserves de pista[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"_r_2_-tab-bookings"[39m
+            [33mclass[39m=[32m"ah-tabs__panel"[39m
+            [33mid[39m=[32m"_r_2_-panel-bookings"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+          [36m>[39m
+            [36m<section[39m
+              [33maria-label[39m=[32m"Reserves d'entrenament"[39m
+              [33mclass[39m=[32m"ah-universal-list"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-universal-list__search"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCerca per abonat, gos o pista[0m
+                  [36m</span>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<input[39m
+                    [33maria-label[39m=[32m"Cerca per abonat, gos o pista"[39m
+                    [33mplaceholder[39m=[32m"Cerca per abonat, gos o pista"[39m
+                    [33mtype[39m=[32m"search"[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Estat de la reserva"[39m
+                  [33mclass[39m=[32m"ah-universal-list__status"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m>[39m
+                    [0mTotes[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ACTIVE"[39m
+                  [36m>[39m
+                    [0mconfirmada[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"CANCELLED"[39m
+                  [36m>[39m
+                    [0manul·lada[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"CANCELLED_BY_CLUB"[39m
+                  [36m>[39m
+                    [0mcancel·lada pel club[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+                [36m<details[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+                [36m>[39m
+                  [36m<summary[39m
+                    [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [0mFiltre (1): Dia i hora = «3 al 9 d’agost»[0m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                    [36m>[39m
+                      [0m▾[0m
+                    [36m</span>[39m
+                  [36m</summary>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                    [36m>[39m
+                      [36m<span>[39m
+                        [0mDia i hora = «3 al 9 d’agost»[0m
+                      [36m</span>[39m
+                      [36m<button[39m
+                        [33maria-label[39m=[32m"Treu el filtre de Dia i hora"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+          ...
+ ❯ src/training/TrainingRegisterPage.test.tsx:396:38
+    394|           (row) => row.textContent.includes("dl 3 · 7:00–7:30") && row…
+    395|         );
+    396|       if (found === undefined) throw new TypeError("No row for Rock's …
+       |                                      ^
+    397|       return found;
+    398|     });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/training/TrainingRegisterPage.test.tsx > E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values > E5-W05 step 3: every block names its ring from the row (ringName, ringColor), a deactivated ring's included, for an INSTRUCTOR too
+TestingLibraryElementError: Unable to find an element with the text: Antiga. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<tr>[39m
+  [36m<td>[39m
+    [0mdl 3 · 6:00–7:00[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [0mpista desactivada[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [0mBloqueig[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [0mmanteniment[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [0mRetirada de la tanca[0m
+  [36m</td>[39m
+  [36m<td>[39m
+    [0mMarc[0m
+  [36m</td>[39m
+  [36m<td[39m
+    [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+  [36m/>[39m
+[36m</tr>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"training-register"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mEntrenaments[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-tabs"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Registre d'ús de pistes"[39m
+            [33mclass[39m=[32m"ah-tabs__list"[39m
+            [33mrole[39m=[32m"tablist"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_8_-panel-bookings"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_8_-tab-bookings"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mReserves d'entrenament[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_8_-panel-blocks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_8_-tab-blocks"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mBloquejos i reserves de pista[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"_r_8_-tab-blocks"[39m
+            [33mclass[39m=[32m"ah-tabs__panel"[39m
+            [33mid[39m=[32m"_r_8_-panel-blocks"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+          [36m>[39m
+            [36m<section[39m
+              [33maria-label[39m=[32m"Bloquejos i reserves de pista"[39m
+              [33mclass[39m=[32m"ah-universal-list"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-universal-list__search"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCerca per nota o per qui l'ha creat[0m
+                  [36m</span>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<input[39m
+                    [33maria-label[39m=[32m"Cerca per nota o per qui l'ha creat"[39m
+                    [33mplaceholder[39m=[32m"Cerca per nota o per qui l'ha creat"[39m
+                    [33mtype[39m=[32m"search"[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Estat del bloqueig"[39m
+                  [33mclass[39m=[32m"ah-universal-list__status"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m>[39m
+                    [0mTots[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ACTIVE"[39m
+                  [36m>[39m
+                    [0mactiu[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"CANCELLED"[39m
+                  [36m>[39m
+                    [0manul·lat[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+                [36m<details[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+                [36m>[39m
+                  [36m<summary[39m
+                    [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [0mFiltre (1): Dia i hora = «3 al 9 d’agost»[0m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                    [36m>[39m
+                      [0m▾[0m
+                    [36m</span>[39m
+                  [36m</summary>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                    [36m>[39m
+                      [36m<span>[39m
+                        [0mDia i hora = «3 al 9 d’agost»[0m
+                      [36m</span>[39m
+                      [36m<button[39m
+                        [33maria-label[39m=[32m"Treu el filtre de Dia i hora"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+         ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ src/training/TrainingRegisterPage.test.tsx:449:26
+    447|     const requests = recordRequests();
+    448|     await renderPage("instructor", "?vista=bloquejos");
+    449|     const antiga = await waitFor(() => within(rowOf("Retirada de la ta…
+       |                          ^
+    450|     expect(screen.queryByText("pista desactivada")).toBeNull();
+    451|     const dot = antiga.closest(".training-register__ring")?.querySelec…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/training/TrainingRegisterPage.test.tsx > E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values > E5-W05 step 5: with more than 1000 rows, the member filter offers «Nil Fictici Soler», who appears only after row 1000, from GET /training-bookings/filter-values
+AssertionError: expected [ 'Anna Ballart Consul (1)', …(7) ] to include 'Nil Fictici Soler (5)'
+ ❯ src/training/TrainingRegisterPage.test.tsx:465:21
+    463|     await screen.findAllByRole("link", { name: /^Pau Fictici Mas/u });
+    464|     const options = await filterOptions("memberId");
+    465|     expect(options).toContain("Nil Fictici Soler (5)");
+       |                     ^
+    466|     const values = requests.find((url) => url.pathname.endsWith("/trai…
+    467|     expect(values?.searchParams.get("field")).toBe("memberId");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/training/TrainingRegisterPage.test.tsx > E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values > E5-W05 step 5: with more than 1000 blocks, the ring filter offers «Cadells», which appears only after row 1000, from GET /ring-blocks/filter-values
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeDisabled()[22m
+
+Received element is disabled:
+  [31m<select
+  aria-busy="true"
+  disabled=""
+/>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"training-register"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mEntrenaments[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-tabs"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Registre d'ús de pistes"[39m
+            [33mclass[39m=[32m"ah-tabs__list"[39m
+            [33mrole[39m=[32m"tablist"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_e_-panel-bookings"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_e_-tab-bookings"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mReserves d'entrenament[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_e_-panel-blocks"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_e_-tab-blocks"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mBloquejos i reserves de pista[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"_r_e_-tab-blocks"[39m
+            [33mclass[39m=[32m"ah-tabs__panel"[39m
+            [33mid[39m=[32m"_r_e_-panel-blocks"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+          [36m>[39m
+            [36m<section[39m
+              [33maria-label[39m=[32m"Bloquejos i reserves de pista"[39m
+              [33mclass[39m=[32m"ah-universal-list"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-universal-list__search"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCerca per nota o per qui l'ha creat[0m
+                  [36m</span>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<input[39m
+                    [33maria-label[39m=[32m"Cerca per nota o per qui l'ha creat"[39m
+                    [33mplaceholder[39m=[32m"Cerca per nota o per qui l'ha creat"[39m
+                    [33mtype[39m=[32m"search"[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Estat del bloqueig"[39m
+                  [33mclass[39m=[32m"ah-universal-list__status"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m>[39m
+                    [0mTots[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ACTIVE"[39m
+                  [36m>[39m
+                    [0mactiu[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"CANCELLED"[39m
+                  [36m>[39m
+                    [0manul·lat[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+                [36m<details[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+                  [33mopen[39m=[32m""[39m
+                [36m>[39m
+                  [36m<summary[39m
+                    [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [0mFiltre (1): Dia i hora = «3 al 9 d’agost»[0m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                    [36m>[39m
+                      [0m▾[0m
+                    [36m</span>[39m
+                  [36m</summary>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                    [36m>[39m
+                      [36m<span>[39m
+                        [0mDia i hora = «3 al 9 d’agost»[0m
+                      [36m</span>[39m
+                      [36m<button[39m
+                        [33maria-label[39m=[32m"Treu el filtre de Dia i hora"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packag...
+ ❯ src/training/TrainingRegisterPage.test.tsx:378:23
+    376|   const value = screen.getByRole("combobox", { name: "Valor" });
+    377|   await waitFor(() => {
+    378|     expect(value).not.toBeDisabled();
+       |                       ^
+    379|     expect(within(value).getAllByRole("option").length).toBeGreaterTha…
+    380|   });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed | 8 skipped (13)
+   Start at  21:48:06
+   Duration  34.18s (tests 97%, transform 1%, environment 1%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/training/TrainingRegisterPage.test.tsx -t E5-W05

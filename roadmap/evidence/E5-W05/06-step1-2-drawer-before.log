@@ -1,0 +1,153 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/today/OverviewPage.test.tsx (11 tests | 2 failed | 9 skipped) 257ms
+   ❯ T-06-29 screen 23 «Visió global» (8)
+     × E5-W03 step 1 lists the class's registrants and the «En espera» line in the drawer, read-only (S08 §6) 187ms
+     × E5-W05 steps 1 and 2: the drawer's chips read displayState («feta», «no presentat»), the level chip is levelCode (none when null), and «En espera: {guia} + {gos}» with the FIFO position 68ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > E5-W03 step 1 lists the class's registrants and the «En espera» line in the drawer, read-only (S08 §6)
+TestingLibraryElementError: Unable to find an element with the text: En espera: Júlia + Kira · Roser + Lluna. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-label[39m=[32m"Inscrits (5/5)"[39m
+  [33mclass[39m=[32m"ah-registrants"[39m
+[36m>[39m
+  [36m<h3[39m
+    [33mclass[39m=[32m"ah-registrants__title"[39m
+  [36m>[39m
+    [0mInscrits (5/5)[0m
+  [36m</h3>[39m
+  [36m<ul[39m
+    [33mclass[39m=[32m"ah-registrants__list"[39m
+  [36m>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mLaura + Duna[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mMarc + Chun-li[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mAnna + Nass[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mEva + Fish[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mPau + Blat[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mSergio + Thai[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+      [36m>[39m
+        [0manul·lada tard[0m
+      [36m</span>[39m
+    [36m</li>[39m
+  [36m</ul>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-registrants__waiting"[39m
+  [36m>[39m
+    [36m<p>[39m
+      [0mEn espera: Kira · Lluna[0m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/today/OverviewPage.test.tsx:140:26
+    138|     ]);
+    139|     // E5-W05 step 2 (mockup D12): «{guia} + {gos}», the guide being t…
+    140|     expect(within(panel).getByText("En espera: Júlia + Kira · Roser + …
+       |                          ^
+    141|     // The removal is D4's (ADMIN); attendance is screen 21's (S10).
+    142|     expect(within(panel).queryByRole("button")).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > E5-W05 steps 1 and 2: the drawer's chips read displayState («feta», «no presentat»), the level chip is levelCode (none when null), and «En espera: {guia} + {gos}» with the FIFO position
+AssertionError: expected [ 'Laura + Dunaconfirmada', …(1) ] to deeply equal [ 'Laura + DunaCfeta', …(1) ]
+
+- Expected
++ Received
+
+  [
+-   "Laura + DunaCfeta",
+-   "Marc + Chun-lino presentat",
++   "Laura + Dunaconfirmada",
++   "Marc + Chun-liconfirmada",
+  ]
+
+ ❯ src/today/OverviewPage.test.tsx:233:7
+    231|         .getAllByRole("listitem")
+    232|         .map((item) => item.textContent),
+    233|     ).toEqual(["Laura + DunaCfeta", "Marc + Chun-lino presentat"]);
+       |       ^
+    234|     expect(within(panel).getByText("no presentat")).toHaveClass("ah-to…
+    235|     expect(within(panel).getByText("En espera: 1. Júlia + Kira · 2. Gi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 9 skipped (11)
+   Start at  21:38:59
+   Duration  1.23s (transform 32%, environment 26%, tests 22%, import 15%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/today/OverviewPage.test.tsx -t E5-W0

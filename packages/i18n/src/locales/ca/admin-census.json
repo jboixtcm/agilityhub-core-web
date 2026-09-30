@@ -409,6 +409,7 @@
     "trainings": "Entrenaments",
     "columns": {
       "when": "Dia i hora",
+      "class": "Classe",
       "ring": "Pista",
       "dog": "Gos",
       "state": "Estat",

@@ -632,6 +632,12 @@
   color: var(--ah-color-text-muted);
 }
 
+/* R-10-00: «(abonat: {nom i cognom})» after a dog led by another guide. */
+.instructor-students__owner {
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+}
+
 .instructor-students__error {
   margin: var(--ah-space-2) 0 0;
   color: var(--ah-color-danger);

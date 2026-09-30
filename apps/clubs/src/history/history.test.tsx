@@ -288,10 +288,14 @@ describe("T-10-31 screen 25 «Històric» (S10 §2, R-10-14)", () => {
     const lines = requests();
     await renderApp("/historic", { scenario: "impersonated" });
     expect(await screen.findByRole("heading", { level: 1, name: "Històric" })).toBeVisible();
-    expect(screen.getByRole("status")).toHaveTextContent("Laura Serra Vidal");
     await waitFor(() => {
       expect(historyRows()).toHaveLength(7);
     });
+    // E7-W02 round 2 #7: the banner by its own element; while 25 loads, its skeleton is another
+    // `role="status"` (CI read the page before its rows).
+    expect(document.querySelector(".impersonation-banner")).toHaveTextContent(
+      "Estàs veient l'app com Laura Serra Vidal",
+    );
     // Mockup 25: «Inici» stays lit.
     expect(screen.getByRole("link", { name: "Inici" })).toHaveAttribute("aria-current", "page");
     cleanup();

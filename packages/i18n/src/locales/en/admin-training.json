@@ -6,7 +6,7 @@
     "blocks": "Ring blocks and reservations"
   },
   "list": {
-    "when": "{day} · {time}",
+    "when": "{day} · {from}–{to}",
     "none": "—",
     "error": "The list could not be loaded.",
     "emptyDescription": "Change the filters or the search to see more.",
@@ -17,6 +17,7 @@
     "search": "Search by member, dog or ring",
     "emptyTitle": "No training bookings",
     "selectRow": "Booking of {name}",
+    "memberWithNumber": "{name} · {number}",
     "statusLabel": "Booking status",
     "statuses": {
       "all": "All"
@@ -33,7 +34,7 @@
   },
   "blocks": {
     "caption": "Ring blocks and reservations",
-    "search": "Search by note or by who created it",
+    "search": "Search by ring or note",
     "emptyTitle": "No ring blocks or reservations",
     "selectRow": "Block of {when}",
     "statusLabel": "Block status",

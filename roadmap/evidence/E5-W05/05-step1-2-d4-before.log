@@ -1,0 +1,431 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/planning/ClassRegistrantsPanel.test.tsx (10 tests | 3 failed | 7 skipped) 10313ms
+   ❯ E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00) (3)
+     × E5-W05 step 1: each chip reads the api's displayState with 07's literals (a past booking «feta», a NO_SHOW mark «no presentat»), never `state`; the level chip is levelCode, none when null 180ms
+     × E5-W05 step 2: «En espera: {guia} + {gos}», the guide being handlerName ?? memberFirstName, with the position in a FIFO club (mockup D12) 10063ms
+     × E5-W05 step 2: the mock's staff waitlist sends each entry's first name, as the api does: «En espera: Júlia + Kira · Roser + Lluna» 66ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/planning/ClassRegistrantsPanel.test.tsx > E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00) > E5-W05 step 1: each chip reads the api's displayState with 07's literals (a past booking «feta», a NO_SHOW mark «no presentat»), never `state`; the level chip is levelCode, none when null
+AssertionError: expected [ 'Laura + Dunaconfirmada', …(2) ] to deeply equal [ 'Laura + DunaCfeta', …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "Laura + DunaCfeta",
+-   "Marc + Chun-liBno presentat",
++   "Laura + Dunaconfirmada",
++   "Marc + Chun-liconfirmada",
+    "Sergio + Thaianul·lada tard",
+  ]
+
+ ❯ src/planning/ClassRegistrantsPanel.test.tsx:277:62
+    275|     const panel = await renderPanel();
+    276|     const rows = within(panel).getAllByRole("listitem");
+    277|     expect(rows.slice(0, 3).map((item) => item.textContent)).toEqual([
+       |                                                              ^
+    278|       "Laura + DunaCfeta",
+    279|       "Marc + Chun-liBno presentat",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/planning/ClassRegistrantsPanel.test.tsx > E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00) > E5-W05 step 2: «En espera: {guia} + {gos}», the guide being handlerName ?? memberFirstName, with the position in a FIFO club (mockup D12)
+TestingLibraryElementError: Unable to find an element with the text: En espera: 1. Júlia + Kira · 2. Gina Soler + Llamp. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-label[39m=[32m"Inscrits (4/5)"[39m
+  [33mclass[39m=[32m"ah-registrants"[39m
+[36m>[39m
+  [36m<h3[39m
+    [33mclass[39m=[32m"ah-registrants__title"[39m
+  [36m>[39m
+    [0mInscrits (4/5)[0m
+  [36m</h3>[39m
+  [36m<ul[39m
+    [33mclass[39m=[32m"ah-registrants__list"[39m
+  [36m>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mLaura + Duna[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mMarc + Chun-li[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mAnna + Nass[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mEva + Fish[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mSergio + Thai[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+      [36m>[39m
+        [0manul·lada tard[0m
+      [36m</span>[39m
+    [36m</li>[39m
+  [36m</ul>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-registrants__waiting"[39m
+  [36m>[39m
+    [36m<p>[39m
+      [0mEn espera: 1. Kira · 2. Llamp[0m
+    [36m</p>[39m
+    [36m<ul[39m
+      [33mclass[39m=[32m"ah-registrants__waiting-list"[39m
+    [36m>[39m
+      [36m<li>[39m
+        [36m<span>[39m
+          [0m1. Kira[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Treu 1. Kira de la llista d'espera"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTreu de la llista[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</li>[39m
+      [36m<li>[39m
+        [36m<span>[39m
+          [0m2. Llamp[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Treu 2. Llamp de la llista d'espera"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTreu de la llista[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</li>[39m
+    [36m</ul>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-label[39m=[32m"Inscrits (4/5)"[39m
+  [33mclass[39m=[32m"ah-registrants"[39m
+[36m>[39m
+  [36m<h3[39m
+    [33mclass[39m=[32m"ah-registrants__title"[39m
+  [36m>[39m
+    [0mInscrits (4/5)[0m
+  [36m</h3>[39m
+  [36m<ul[39m
+    [33mclass[39m=[32m"ah-registrants__list"[39m
+  [36m>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mLaura + Duna[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mMarc + Chun-li[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mAnna + Nass[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mEva + Fish[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mSergio + Thai[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+      [36m>[39m
+        [0manul·lada tard[0m
+      [36m</span>[39m
+    [36m</li>[39m
+  [36m</ul>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-registrants__waiting"[39m
+  [36m>[39m
+    [36m<p>[39m
+      [0mEn espera: 1. Kira · 2. Llamp[0m
+    [36m</p>[39m
+    [36m<ul[39m
+      [33mclass[39m=[32m"ah-registrants__waiting-list"[39m
+    [36m>[39m
+      [36m<li>[39m
+        [36m<span>[39m
+          [0m1. Kira[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Treu 1. Kira de la llista d'espera"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTreu de la llista[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</li>[39m
+      [36m<li>[39m
+        [36m<span>[39m
+          [0m2. Llamp[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Treu 2. Llamp de la llista d'espera"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTreu de la llista[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</li>[39m
+    [36m</ul>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/planning/ClassRegistrantsPanel.test.tsx:309:27
+    307|     const panel = await renderPanel();
+    308|     expect(
+    309|       await within(panel).findByText("En espera: 1. Júlia + Kira · 2. …
+       |                           ^
+    310|     ).toBeVisible();
+    311|     expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/planning/ClassRegistrantsPanel.test.tsx > E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00) > E5-W05 step 2: the mock's staff waitlist sends each entry's first name, as the api does: «En espera: Júlia + Kira · Roser + Lluna»
+TestingLibraryElementError: Unable to find an element with the text: En espera: Júlia + Kira · Roser + Lluna. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-label[39m=[32m"Inscrits (4/5)"[39m
+  [33mclass[39m=[32m"ah-registrants"[39m
+[36m>[39m
+  [36m<h3[39m
+    [33mclass[39m=[32m"ah-registrants__title"[39m
+  [36m>[39m
+    [0mInscrits (4/5)[0m
+  [36m</h3>[39m
+  [36m<ul[39m
+    [33mclass[39m=[32m"ah-registrants__list"[39m
+  [36m>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mLaura + Duna[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mMarc + Chun-li[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mAnna + Nass[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mEva + Fish[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+      [36m>[39m
+        [0mconfirmada[0m
+      [36m</span>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"ah-registrants__row"[39m
+    [36m>[39m
+      [36m<strong>[39m
+        [0mSergio + Thai[0m
+      [36m</strong>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+      [36m>[39m
+        [0manul·lada tard[0m
+      [36m</span>[39m
+    [36m</li>[39m
+  [36m</ul>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-registrants__waiting"[39m
+  [36m>[39m
+    [36m<p>[39m
+      [0mEn espera: Kira · Lluna[0m
+    [36m</p>[39m
+    [36m<ul[39m
+      [33mclass[39m=[32m"ah-registrants__waiting-list"[39m
+    [36m>[39m
+      [36m<li>[39m
+        [36m<span>[39m
+          [0mKira[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Treu Kira de la llista d'espera"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTreu de la llista[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</li>[39m
+      [36m<li>[39m
+        [36m<span>[39m
+          [0mLluna[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Treu Lluna de la llista d'espera"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTreu de la llista[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</li>[39m
+    [36m</ul>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/planning/ClassRegistrantsPanel.test.tsx:318:26
+    316|   it("E5-W05 step 2: the mock's staff waitlist sends each entry's firs…
+    317|     const panel = await renderPanel();
+    318|     expect(within(panel).getByText("En espera: Júlia + Kira · Roser + …
+       |                          ^
+    319|   });
+    320| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 7 skipped (10)
+   Start at  21:38:16
+   Duration  12.12s (tests 86%, transform 5%, environment 4%, import 3%, setup 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/planning/ClassRegistrantsPanel.test.tsx -t E5-W05

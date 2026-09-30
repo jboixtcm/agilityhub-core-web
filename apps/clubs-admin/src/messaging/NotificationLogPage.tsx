@@ -221,7 +221,7 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
       render: (row) => (
         <span className="messaging-log__recipient">
           {row.recipient?.displayName ?? ""}
-          {row.audience === undefined || row.audience === "MEMBER" ? null : (
+          {row.audience == null || row.audience === "MEMBER" ? null : (
             <small>{t(`enums:notificationAudience.${row.audience}`)}</small>
           )}
         </span>
@@ -428,8 +428,10 @@ function NotificationDrawer({
           <dl className="messaging-log__facts">
             <dt>{t("admin-messaging:log.detail.recipient")}</dt>
             <dd>
-              {state.detail.recipient.displayName} ·{" "}
-              {t(`enums:notificationAudience.${state.detail.audience}`)}
+              {state.detail.recipient.displayName}
+              {state.detail.audience == null
+                ? null
+                : ` · ${t(`enums:notificationAudience.${state.detail.audience}`)}`}
             </dd>
             <dt>{t("admin-messaging:log.detail.createdAt")}</dt>
             <dd>{dateTime(state.detail.createdAt)}</dd>

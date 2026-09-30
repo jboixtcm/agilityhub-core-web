@@ -1,11 +1,13 @@
 import type { ReactNode } from "react";
 
-import { Badge, Button, Skeleton, type Tone } from "./components";
+import { Badge, Button, Chip, Skeleton, type Tone } from "./components";
 
 export interface RegistrantsPanelRow {
   id: string;
   /** «Laura + Duna». */
   name: string;
+  /** The dog's level code (mockup D12's chip after the name); absent: no chip. */
+  level?: string | undefined;
   state: { label: string; tone: Tone };
 }
 
@@ -67,7 +69,12 @@ export function RegistrantsPanel({
             <ul className="ah-registrants__list">
               {rows.map((row) => (
                 <li className="ah-registrants__row" key={row.id}>
-                  <strong>{row.name}</strong>
+                  <span className="ah-registrants__who">
+                    <strong>{row.name}</strong>
+                    {row.level === undefined ? null : (
+                      <Chip className="ah-registrants__level">{row.level}</Chip>
+                    )}
+                  </span>
                   <Badge tone={row.state.tone}>{row.state.label}</Badge>
                 </li>
               ))}

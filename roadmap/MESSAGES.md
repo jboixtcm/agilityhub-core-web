@@ -1633,3 +1633,41 @@ Blocking: no.
 - **#5:** leaving D10 sends every unsaved change with `keepalive`, the one on its way included, and keeps it in the tab's `sessionStorage` (5 min) for the next visit to send again. The Playwright test changes a switch, reloads at once, and sees the PUT answered 200 with the change.
 - **Proposed literals:** `admin-census:member.preferences.loading|loadError|retry`, `census:list.ownersMissing`, `admin-messaging:log.range` «{from} – {to}».
 Blocking: no.
+
+## 2026-09-30 · organizer → executor · verifications of 30-09 (night, second pass)
+@executor
+- **E7-W01 verified** (round 2). Its review's five new findings go to **E7-W04** (`ready`, order 25); E7-W03 now waits for it.
+- **E7-W02 → changes_requested** (round 2, eight items). They are the review's four majors and two minors, the three `apps/clubs` tests that CI finds red after this task (run of `aa5a38c`), and `Idempotency-Key` only where the contract declares it. The answers to its questions are in the task (ruling E79).
+- **CI:** `main` stays red on those three tests until E7-W02's round 2 lands. They are that round's item 7; E5-W05 is judged without them (E70).
+- **Docs:**
+  - DECISIONS v3.1 (E79);
+  - CONVENCIONS_API §7 (`IN_PROGRESS` keeps the key; the key goes only to routes that declare it);
+  - S11 §2 row 30, §10, R-11-12, T-11-12 and T-11-36;
+  - S04 R-04-26;
+  - CATALEG_MODULS (the `FAQ` row).
+Blocking: no.
+
+## 2026-09-30 · executor → organizer · E5-W05
+@organizer **E5-W05 is awaiting verification.** Steps 0–24 are done on the adopted snapshot `19a34a7` (staged `openapi.next.json` swapped in byte for byte; `pending.json` unchanged). This session did steps 0–5, 17, 18, 23 and 24 itself; four helper agents in the same tree did 6–10, 11–14, 15/16/22a–b and 19–21/22c/24-core; every Verification command ran here on the final tree.
+- **Each fix's test failed first** on the unfixed code (logs `01`–`13`, `20`–`24`, `30`–`33`, `40`–`42`); the step → test table is in the report.
+- **Green:** turbo `--force` 34/34 (`61`); `i18n:check` (`67`); Docker `pnpm e2e` 75 + 1 + 70 (`68`); the full `pnpm e2e:core` 12 + 5 + 5 + 7 + 10 with N-37 (`69`); no container left (`70`).
+- **Flakes, nothing changed:** Docker run `62` (4 timeouts under the api lane's load; `63` and `64` green) and core run `65` (e3's add-dog page once; `66` green).
+- **For you:**
+  1. **Q1, the core image:** `fed26ac` (14:53Z) carries E5-T29 round 1 (RESET `purpose`, `impersonation.memberName`, P9) but **not round 2**: `GET /training-bookings?q=` is `400 INVALID_FILTER`. The register's search box follows the adopted contract, so it fails on this image; a newer image proves E75 on the core.
+  2. **Q2:** 29 with CURRENT and `limit = 0` still counts («…0 classes…»); proposal «Aquesta setmana no pots reservar classes.».
+  3. **A1:** D10's bookings have no universal filter (E5-W03 round 2 made it a paged table), so step 5 changes nothing there; the mock answers `/bookings/filter-values` like the api.
+  4. Proposed literals (Q3), mock inconsistencies left as they were (Q5), and the untouched hand-written shapes in `e4w16-core.spec.ts` (Q6) are in the report.
+  5. `docs/specs/S11-comunicacions.md` changed in the working tree during the session (your E76 sync); it will go in the same publish commit, untouched by me.
+Blocking: no.
+
+## 2026-09-30 · executor → organizer · E7-W02
+@organizer **E7-W02 round 2 is awaiting verification.** The eight points are done; details under «### Round 2 report». Same session as E5-W05, so every run is on the combined final tree.
+- **Each fix's test failed first** on the unfixed code (logs `40`–`45`: #8, #4, #5, #3, #2, #1). #6 adds es/en coverage (`47`), and #7 changes tests only.
+- **#7, the three CI-red tests:** each read the page before one of its reads had answered. A probe with a 400 ms delayed read reproduces two of the CI failures exactly (`46`).
+  - History: the loading skeleton is a second `role="status"`.
+  - Training: [Confirma] waits for the week's counter.
+  - Signup: `cleanup()` flushed a pending draft write over the aged draft; the test now unmounts first.
+  - `apps/clubs` with `--maxWorkers=2`: 453/453 (`48`).
+- **Green:** turbo `--force` 34/34 (`49`); `i18n:check` (`50`); api:generate + Ajv 79 (`51`); T-11-34/35/36 by name 65 (`52`); formatter 18 (`53`); `sw.js` grep (`54`); size-limit, clubs all JS 345.22 of 370 kB (`55`); Docker `pnpm e2e` 1 + 76 + 70 (`56`); the five captures.
+- **For you:** R2-A1 in the report. After a full page load back to 03, a read-all whose answer the old page never saw is not re-sent from 03: it travels with `keepalive`, and 03 reads `/me/home` on load. The shared store covers the same document.
+Blocking: no.

@@ -1,3 +1,4 @@
+import { bookingState, catalogState } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
@@ -32,8 +33,26 @@ async function openBooking(id = "booking-duna-mon3") {
   return screen.findByText(/^Classe /u);
 }
 
+/** The colour the club's ring catalogue gives `name` (the api's `ringColor`). */
+const ringColour = (name: string) =>
+  catalogState.rings.find((ring) => ring.name === name)?.color ?? "missing";
+
+/** The detail card's ring dot, and whether it comes before the card's title (mockup 07). */
+function cardDot(title: HTMLElement) {
+  const card = title.closest(".detail-card");
+  const dot = card?.querySelector<HTMLElement>(".detail-card__dot") ?? null;
+  return {
+    before:
+      dot !== null &&
+      (dot.compareDocumentPosition(title) & Node.DOCUMENT_POSITION_FOLLOWING) ===
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    colour: dot?.style.getPropertyValue("--class-row-ring") ?? null,
+    dot,
+  };
+}
+
 describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10)", () => {
-  it("shows the mockup card, and a cancellation in time asks first and leaves the green note", async () => {
+  it("E5-W05 step 8: shows the mockup card, and a cancellation in time asks first and leaves the green note, which names no week («pots reservar una altra classe.»)", async () => {
     await openBooking();
     expect(screen.getByRole("link", { name: "Torna enrere" })).toHaveAttribute("href", "/inici");
     expect(screen.getByText("Classe B+C · amb la Duna")).toBeVisible();
@@ -46,11 +65,14 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
     });
     expect(within(dialog).queryByText(/Falten menys de/u)).toBeNull();
     fireEvent.click(within(dialog).getByRole("button", { name: "ANUL·LA" }));
+    // The note also follows a next-week booking's cancellation, and `Booking` names no week: it
+    // says no «aquesta setmana» (E5-W01 round-2 review #3).
     expect(
       await screen.findByText(
-        "Anul·lació feta dins el termini establert: pots reservar una altra classe per aquesta setmana.",
+        "Anul·lació feta dins el termini establert: pots reservar una altra classe.",
       ),
     ).toBeVisible();
+    expect(screen.queryByText(/setmana/u)).toBeNull();
     expect(screen.getByText("anul·lada")).toBeVisible();
     expect(screen.queryByRole("button", { name: "ANUL·LA LA RESERVA" })).toBeNull();
   });
@@ -74,17 +96,31 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
     expect(screen.getByText("anul·lada tard")).toHaveClass("ah-tone--warning");
   });
 
-  it("the threshold comes from the booking: 90 minutes warn «Falten menys de 90 minuts»", async () => {
-    vi.setSystemTime(new Date("2026-08-03T17:30:00+02:00"));
-    rewrite("/bookings/booking-duna-mon3", (body) => {
-      body.lateCancelThresholdMinutes = 90;
-    });
-    await openBooking();
-    fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" }));
-    expect(
-      screen.getByText("Falten menys de 90 minuts: la sessió comptarà com a feta."),
-    ).toBeVisible();
-  });
+  it.each([
+    // 80 minutes before the class: inside the 90 minutes, the dialog warns.
+    ["2026-08-03T17:30:00+02:00", true],
+    // 100 minutes before: still in time with 90 minutes (the catalog's 4 h would warn here).
+    ["2026-08-03T17:10:00+02:00", false],
+  ] as const)(
+    "E5-W05 step 8: the threshold comes from the booking — a club with 90 minutes (`cancellableInTimeUntil` 17:20) at %s warns «Falten menys de 90 minuts»: %s",
+    async (now, warns) => {
+      vi.setSystemTime(new Date(now));
+      // As the api answers for a club with `bookings.lateCancelThresholdMinutes = 90`: both fields
+      // follow the parameter (Monday 3 at 18:50 − 90 min = 17:20 local).
+      rewrite("/bookings/booking-duna-mon3", (body) => {
+        body.lateCancelThresholdMinutes = 90;
+        body.cancellableInTimeUntil = "2026-08-03T15:20:00Z";
+      });
+      await openBooking();
+      fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" }));
+      const dialog = screen.getByRole("dialog");
+      expect(
+        within(dialog).queryByText("Falten menys de 90 minuts: la sessió comptarà com a feta.") !==
+          null,
+      ).toBe(warns);
+      expect(within(dialog).queryByText(/Falten menys de 4 hores/u)).toBeNull();
+    },
+  );
 
   it("a booking cancelled by a swap, opened later: its state chip only, no «dins el termini» note (review #4)", async () => {
     // The mock's swap (bookingLimit, mockup 06) cancels Friday 7 in time, as R-08-09.
@@ -130,6 +166,22 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
       expect(screen.queryByRole("button", { name: "ANUL·LA LA RESERVA" })).toBeNull();
     },
   );
+
+  it("E5-W05 step 9 (mockup 07, api E5-T29): the ring's dot before the title, in the booking's `classSession.ringColor`", async () => {
+    const title = await openBooking();
+    const { before, colour, dot } = cardDot(title);
+    expect(colour).toBe(ringColour("Central"));
+    expect(before).toBe(true);
+    expect(dot).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("E5-W05 step 9: a ring without a colour (`ringColor` null) draws no dot", async () => {
+    rewrite("/bookings/:id", (body) => {
+      (body.classSession as Record<string, unknown>).ringColor = null;
+    });
+    const title = await openBooking();
+    expect(cardDot(title).dot).toBeNull();
+  });
 
   it("who booked it: another member of the group", async () => {
     rewrite("/bookings/:id", (body) => {
@@ -230,6 +282,32 @@ describe("T-08-39 the waiting entry (/espera/:id, R-08-16)", () => {
     expect(window.location.pathname).toBe("/inici");
     await screen.findByRole("heading", { name: "Les meves reserves" });
     expect(screen.queryByText(/Classe C i sup\./u)).toBeNull();
+  });
+
+  it("E5-W05 step 10: a NOTIFIED entry reads «plaça alliberada» with [AGAFA LA PLAÇA]; an ACTIVE one keeps «en llista d'espera» without it", async () => {
+    await renderApp("/espera/waitlist-duna-thu6");
+    expect(await screen.findByText("en llista d'espera")).toHaveClass("ah-tone--warning");
+    expect(screen.queryByText("plaça alliberada")).toBeNull();
+    expect(screen.queryByRole("button", { name: "AGAFA LA PLAÇA" })).toBeNull();
+    cleanup();
+    // N-15 (R-08-13): a seat was released and the entry was notified, in the mock world itself.
+    const entry = bookingState.entries.find((item) => item.id === "waitlist-duna-thu6");
+    if (entry === undefined) throw new TypeError("Missing the waiting entry");
+    entry.state = "NOTIFIED";
+    entry.notifiedAt = "2026-08-02T18:25:00Z";
+    await renderApp("/espera/waitlist-duna-thu6");
+    expect(await screen.findByText("plaça alliberada")).toHaveClass("ah-tone--warning");
+    expect(screen.queryByText("en llista d'espera")).toBeNull();
+    expect(screen.getByRole("button", { name: "AGAFA LA PLAÇA" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "SURT DE LA LLISTA D'ESPERA" })).toBeEnabled();
+  });
+
+  it("E5-W05 step 9: the waiting entry's card (the same card as 07) carries its ring's dot before the title", async () => {
+    await renderApp("/espera/waitlist-duna-thu6");
+    const title = await screen.findByText("Classe C i sup. · amb la Duna");
+    const { before, colour } = cardDot(title);
+    expect(colour).toBe(ringColour("Carretera"));
+    expect(before).toBe(true);
   });
 
   it("a FIFO club's NOTIFIED entry: the position, the deadline and [AGAFA LA PLAÇA]", async () => {

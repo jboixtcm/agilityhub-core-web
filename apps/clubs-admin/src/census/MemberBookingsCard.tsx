@@ -1,7 +1,7 @@
 import { type ApiClient, type components, isApiError, listFields } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Badge, Button, Card, DataTable, type Tone, useBranding } from "@agilityhub/ui";
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { timeLabel } from "../planning/calendar-shared";
@@ -16,7 +16,17 @@ type TrainingRow = components["schemas"]["TrainingBookingListItem"];
  */
 const PAGE_SIZE = 20;
 
-const BOOKING_FIELDS = ["classStartsAt", "dogName", "state", "origin", "late"] as const;
+const BOOKING_FIELDS = [
+  "classStartsAt",
+  // E5-T29: the class's description in the reader's language, its ring and the ring's colour.
+  "classDescription",
+  "ringName",
+  "ringColor",
+  "dogName",
+  "state",
+  "origin",
+  "late",
+] as const;
 const TRAINING_FIELDS = [
   "date",
   "startsAtLocal",
@@ -272,6 +282,28 @@ export function MemberBookingsCard({
                       ),
                       time: timeLabel(formats.formatTime(row.classStartsAt)),
                     }),
+            },
+            {
+              header: t("admin-census:bookings.columns.class"),
+              key: "class",
+              render: (row) => row.classDescription ?? empty,
+            },
+            {
+              header: t("admin-census:bookings.columns.ring"),
+              key: "ring",
+              render: (row) =>
+                row.ringName === null || row.ringName === undefined ? (
+                  empty
+                ) : (
+                  <span className="member-bookings__ring">
+                    <span
+                      aria-hidden="true"
+                      className="member-bookings__dot"
+                      style={{ "--ah-ring-color": row.ringColor ?? undefined } as CSSProperties}
+                    />
+                    {row.ringName}
+                  </span>
+                ),
             },
             {
               header: t("admin-census:bookings.columns.dog"),

@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { errorText, navigateInApp } from "./booking/shared";
 import { startClaim } from "./booking/useSeatHold";
 import { changeClassHref, feedActionHref } from "./notifications/actions";
+import { READ_ALL_RETRY_DELAYS_MS, readAllNotifications } from "./notifications/unread";
 import "./notifications/notifications.css";
 
 type MeNotification = components["schemas"]["MeNotification"];
@@ -45,8 +46,11 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
   const [attempt, setAttempt] = useState(0);
   const [claiming, setClaiming] = useState<string>();
   const [claimError, setClaimError] = useState<{ id: string; message: string }>();
-  const readAllSent = useRef(false);
-  const readAllLanded = useRef(false);
+  // The visit's read-all (S11 §13-8): `done` once the api answered it; a failure goes back to
+  // `idle` and is sent again, a bounded number of times (E7-W02 round 2 #3).
+  const readAll = useRef<"done" | "idle" | "sending">("idle");
+  const readAllRetries = useRef(0);
+  const readAllTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const mounted = useRef(true);
   const sentinel = useRef<HTMLDivElement>(null);
   const staff =
@@ -57,8 +61,31 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
     mounted.current = true;
     return () => {
       mounted.current = false;
+      // The request on its way still lands (and silences the bell); no retry after leaving.
+      clearTimeout(readAllTimer.current);
     };
   }, []);
+
+  /** Idempotent on the api side; its answer's `unreadCount` reaches 03's bell (`unread.ts`). */
+  const sendReadAll = useCallback(() => {
+    function attempt() {
+      if (readAll.current !== "idle") return;
+      readAll.current = "sending";
+      readAllNotifications(client).then(
+        () => {
+          readAll.current = "done";
+        },
+        () => {
+          readAll.current = "idle";
+          const delay = READ_ALL_RETRY_DELAYS_MS[readAllRetries.current];
+          if (!mounted.current || delay === undefined) return;
+          readAllRetries.current += 1;
+          readAllTimer.current = setTimeout(attempt, delay);
+        },
+      );
+    }
+    attempt();
+  }, [client]);
 
   useEffect(() => {
     let current = true;
@@ -68,19 +95,9 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
         if (data === undefined) throw new TypeError("The feed response did not contain data");
         setFeed({ items: data.items, nextPage: 1, totalItems: data.totalItems });
         setStatus("ready");
-        // Once per visit, after the first successful read (S11 §13-8). A failure is retried by the
-        // next load; the call is idempotent on the api side.
-        if (!readAllSent.current) {
-          readAllSent.current = true;
-          client.POST("/me/notifications/read-all").then(
-            () => {
-              readAllLanded.current = true;
-            },
-            () => {
-              readAllSent.current = false;
-            },
-          );
-        }
+        // Once per visit, after the first successful read (S11 §13-8); a load after a failed one
+        // (a retry of the screen) sends it again.
+        sendReadAll();
       },
       (cause: unknown) => {
         if (!current) return;
@@ -91,7 +108,7 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
     return () => {
       current = false;
     };
-  }, [attempt, client]);
+  }, [attempt, client, sendReadAll]);
 
   const hasMore = feed !== undefined && feed.items.length < feed.totalItems;
 
@@ -141,7 +158,7 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
 
   /** A card tapped before the bulk read landed is marked read on its own (R-11-10). */
   const markRead = (item: MeNotification) => {
-    if (readAllLanded.current || item.readAt !== null) return;
+    if (readAll.current === "done" || item.readAt !== null) return;
     client
       .POST("/me/notifications/{id}/read", { params: { path: { id: item.id } } })
       .catch(() => undefined);
@@ -207,6 +224,9 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
   }
 
   const smsModule = branding.modules.includes("SMS");
+  // AGENTS rule 3, CATALEG_MODULS: the claim belongs to the waiting list. With WAITLIST off a
+  // historical N-15 stays in the feed as an informative card, with no button.
+  const waitlistModule = branding.modules.includes("WAITLIST");
 
   return (
     <section className="notifications-page">
@@ -225,7 +245,7 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
             smsModule && item.channels.includes("SMS")
               ? t("notifications:feed.viaSms", { time })
               : time;
-          const expired = action?.type === "CLAIM_SEAT" && !action.enabled;
+          const expired = waitlistModule && action?.type === "CLAIM_SEAT" && !action.enabled;
           const hintId = `notification-hint-${item.id}`;
           const open = (event: MouseEvent<HTMLAnchorElement>) => {
             if (href === undefined) return;
@@ -249,6 +269,7 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
             );
           } else if (
             action?.type === "CLAIM_SEAT" &&
+            waitlistModule &&
             // R-11-11: the claim needs the three ids; without them there is nothing to press.
             [
               action.params.classSessionId,

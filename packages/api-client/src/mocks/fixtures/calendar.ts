@@ -113,6 +113,8 @@ const MARC = "instructor-marc";
 const ANNA = "instructor-anna";
 
 interface SessionSpec {
+  /** The mock world's stand-in for the api's risk evaluation (`countedDogs < classes.minDogs`). */
+  atRisk?: boolean;
   /** 0 = Monday … 6 = Sunday. */
   day: number;
   start: string;
@@ -212,7 +214,7 @@ function sessionsOf(
     const slot = `cls-${date}-${item.start.replace(":", "")}`;
     const index = used.get(slot) ?? 0;
     used.set(slot, index + 1);
-    return classSession({
+    const session = classSession({
       booked: item.booked ?? 0,
       capacity: item.capacity,
       capacityMode: item.description === undefined ? "AUTO" : "MANUAL",
@@ -230,8 +232,12 @@ function sessionsOf(
       weekId: `week-${monday}`,
       ...(item.cancellation === undefined ? {} : { cancellation: item.cancellation }),
     });
+    return item.atRisk === true ? { ...session, atRisk: true } : session;
   });
 }
+
+/** The club-local time of the daily risk review (S15 R-15-12, `classes.riskReviewTime`). */
+const RISK_REVIEW_TIME = "07:30";
 
 const ABOVE_C = [C, D, E, F, G] as const;
 
@@ -239,9 +245,28 @@ const ABOVE_C = [C, D, E, F, G] as const;
  * D4 mockup week (validated, current): Monday classes already finished, the Wednesday 9:30
  * «Cadells» cancelled by the 7:30 review, the Wednesday 18:50 «B+C» with 4 booked + 2 waiting and
  * the Thursday 18:50 instructor double booking (Marc on Cadells and Petita).
+ *
+ * The Wednesday «Cadells» follows the world's clock (E5-W05 step 15): nobody books it, so it is an
+ * active class at risk until that Wednesday's review, which cancels it silently (S15 R-15-12's c4:
+ * D1's «s'anul·larà dc a les 7:30» before, «anul·lada» after; D4 is drawn after it).
  */
-function activeSpecs(monday: string): SessionSpec[] {
+function activeSpecs(monday: string, now: number): SessionSpec[] {
   const finished = { state: "FINISHED" as const };
+  const review = clubInstant(addDays(monday, 2), RISK_REVIEW_TIME);
+  const cadells: Partial<SessionSpec> =
+    now < Date.parse(review)
+      ? { atRisk: true }
+      : {
+          cancellation: {
+            adminText: null,
+            affectedBookings: 0,
+            affectedWaitlist: 0,
+            at: review,
+            byAccountId: "system",
+            reason: "RISK_REVIEW",
+          },
+          state: "CANCELLED",
+        };
   return [
     spec(0, "08:30", CEN, [A, B], LAURA, "A+B", 5, { ...finished, booked: 4 }),
     spec(0, "08:30", MUN, ABOVE_C, MARC, "C i sup.", 5, { ...finished, booked: 3 }),
@@ -256,17 +281,7 @@ function activeSpecs(monday: string): SessionSpec[] {
     spec(1, "18:50", CEN, [A, B], LAURA, "A+B", 5, { booked: 3 }),
     spec(2, "08:30", CEN, [A, B], LAURA, "A+B", 5, { booked: 5, waiting: 1 }),
     spec(2, "08:30", MUN, ABOVE_C, MARC, "C i sup.", 5, { booked: 4 }),
-    spec(2, "09:30", CAD, [P], ANNA, "Cadells", 5, {
-      cancellation: {
-        adminText: null,
-        affectedBookings: 1,
-        affectedWaitlist: 0,
-        at: `${addDays(monday, 2)}T05:30:00Z`,
-        byAccountId: "system",
-        reason: "RISK_REVIEW",
-      },
-      state: "CANCELLED",
-    }),
+    spec(2, "09:30", CAD, [P], ANNA, "Cadells", 5, cadells),
     spec(2, "18:50", CEN, [B, C], MARC, "B+C", 5, { booked: 4, waiting: 2 }),
     spec(2, "18:50", PET, [T], ANNA, "Teràpia", 1, { booked: 1, description: "Teràpia" }),
     spec(3, "17:40", CAR, [D, E], MARC, "D+E", 5, { booked: 2 }),
@@ -328,10 +343,13 @@ function inconsistentSpecs(): SessionSpec[] {
   ];
 }
 
-/** Class sessions of the three calendar weeks, relative to the club-local current Monday. */
-export function initialClassSessions(currentMonday: string): ClassSession[] {
+/**
+ * Class sessions of the three calendar weeks, relative to the club-local current Monday, as they
+ * stand at `now`.
+ */
+export function initialClassSessions(currentMonday: string, now = Date.now()): ClassSession[] {
   return [
-    ...sessionsOf(currentMonday, activeSpecs(currentMonday), "ACTIVE"),
+    ...sessionsOf(currentMonday, activeSpecs(currentMonday, now), "ACTIVE"),
     ...sessionsOf(addDays(currentMonday, 7), draftSpecs(), "DRAFT"),
     ...sessionsOf(addDays(currentMonday, 14), inconsistentSpecs(), "DRAFT"),
   ];
@@ -347,7 +365,8 @@ export const RISK_REVIEW_DAY = "2026-08-10";
  * The classes the risk review of `date` names, in the calendar's id scheme. The slot suffixes
  * give each class the registrants the review notified (the staff reads take a slice of the pool
  * by start time and slot): c2 is Laura + Duna, c3 Pau + Blat. c4, two days later at 9:30 on
- * Cadells, is the calendar's own Wednesday class (the one the Wednesday review cancels).
+ * Cadells, is the calendar's own Wednesday class: active, at risk and without registrants until
+ * the Wednesday review cancels it (`activeSpecs`).
  */
 export function riskReviewClassIds(date: string) {
   return {

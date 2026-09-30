@@ -53,10 +53,24 @@ export E1_CORE_PASSWORD="${E1_CORE_PASSWORD:-$(openssl rand -hex 24)}"
 export CORE_EVIDENCE_SUBDIRECTORY="$evidence_subdirectory"
 export COMPOSE_PROJECT_NAME="$core_project_name"
 
+# E5-W05 step 20 (E5-W04 question R2-3): `down` names the `e2e` profile, so a Playwright one-off
+# container (`run playwright`, a service of that profile) left by an interrupted stage goes with
+# the stack; without the profile `down` does not see that service's containers.
 cleanup() {
-  docker compose -f "$compose_file" down --volumes --remove-orphans >/dev/null 2>&1 || true
+  docker compose -f "$compose_file" --profile e2e down --volumes --remove-orphans >/dev/null 2>&1 || true
 }
-trap cleanup EXIT INT TERM
+# An INT or TERM cleans up and ends the script (130 / 143): the handler exits instead of returning
+# to the script, which went on with the next stage after a TERM (E5-W04 run 46). Bash runs the
+# handler once the foreground command (the stage's `docker compose run`) has returned.
+stop_on_signal() {
+  trap - EXIT INT TERM
+  echo "e2e-core: $1 received, cleaning up and exiting" >&2
+  cleanup
+  exit "$2"
+}
+trap cleanup EXIT
+trap 'stop_on_signal INT 130' INT
+trap 'stop_on_signal TERM 143' TERM
 
 # E4-W14: the tail of the seed container's log goes to the evidence folder (`seed-<stage>.log`), so a
 # run proves what the seed did with its options (`seed:demo --week-start`); the run's generated

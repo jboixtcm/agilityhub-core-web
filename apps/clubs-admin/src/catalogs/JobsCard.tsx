@@ -19,7 +19,8 @@ import {
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { clubInstant } from "../planning/calendar-shared";
+import { addDays, clubInstant, isIsoDate } from "../planning/calendar-shared";
+import { mondayOf } from "../planning/shared";
 
 type JobSummary = components["schemas"]["JobSummary"];
 type JobRun = components["schemas"]["JobRun"];
@@ -138,25 +139,31 @@ function RunsDrawer({
   client,
   job,
   onClose,
+  onNavigate,
 }: {
   client: ApiClient;
   job: JobSummary;
   onClose: () => void;
+  onNavigate: (path: string) => void;
 }) {
   const formats = useClubFormats();
   const branding = useBranding();
   const { t } = useTranslation(["admin-settings", "enums", "errors"]);
   const [filters, setFilters] = useState<RunFilters>(NO_RUN_FILTERS);
   const [page, setPage] = useState(0);
+  // [Torna-ho a provar] reads the same page again.
+  const [attempt, setAttempt] = useState(0);
   const timeZone = branding.timeZone;
   // An answer for other filters or another page than the ones shown now is dropped.
-  const queryKey = JSON.stringify([runFilterParams(filters, timeZone), page]);
+  const queryKey = JSON.stringify([runFilterParams(filters, timeZone), page, attempt]);
   const [runs, setRuns] = useState<{
     error?: string;
     items?: JobRunListItem[];
     key: string;
     totalPages?: number;
   }>({ key: "" });
+  // The pages the last answer counted: a failed page keeps the pager (S15 §2 error and retry).
+  const [knownPages, setKnownPages] = useState(0);
   const [detail, setDetail] = useState<{ error?: string; run?: JobRun; runId: string }>();
 
   useEffect(() => {
@@ -177,6 +184,7 @@ function RunsDrawer({
         ({ data }) => {
           if (current) {
             setRuns({ items: data?.items ?? [], key: queryKey, totalPages: data?.totalPages ?? 0 });
+            setKnownPages(data?.totalPages ?? 0);
           }
         },
         (cause: unknown) => {
@@ -186,10 +194,10 @@ function RunsDrawer({
     return () => {
       current = false;
     };
-  }, [client, filters, job.name, page, queryKey, t, timeZone]);
+  }, [attempt, client, filters, job.name, page, queryKey, t, timeZone]);
 
   const loading = runs.key !== queryKey;
-  const totalPages = runs.totalPages ?? 0;
+  const totalPages = runs.totalPages ?? knownPages;
   const filtered = Object.values(filters).some((value) => value !== "");
   const change = (next: Partial<RunFilters>) => {
     setFilters((current) => ({ ...current, ...next }));
@@ -310,7 +318,19 @@ function RunsDrawer({
           {t("admin-settings:jobs.runs.clear")}
         </Button>
       </div>
-      {loading || runs.error === undefined ? null : <p role="alert">{runs.error}</p>}
+      {loading || runs.error === undefined ? null : (
+        <p className="jobs-card__runs-error" role="alert">
+          {runs.error}{" "}
+          <Button
+            onClick={() => {
+              setAttempt((value) => value + 1);
+            }}
+            variant="ghost"
+          >
+            {t("admin-settings:jobs.retry")}
+          </Button>
+        </p>
+      )}
       {!loading && runs.error !== undefined ? null : (
         <DataTable<JobRunListItem>
           caption={t("admin-settings:jobs.runs.caption")}
@@ -404,7 +424,7 @@ function RunsDrawer({
               <Skeleton label={t("admin-settings:common.loading")} />
             ) : null
           ) : (
-            <RunEffects run={detail.run} />
+            <RunEffects client={client} onNavigate={onNavigate} run={detail.run} />
           )}
         </section>
       )}
@@ -412,10 +432,76 @@ function RunsDrawer({
   );
 }
 
+type JobEffectItem = JobRun["effects"]["items"][number];
+
+/** D4 on a class's week with the class selected (D1's rows link the same way, S14 §2). */
+function classPath(session: { date: string; id: string; state: string }): string {
+  const query = new URLSearchParams({
+    classe: session.id,
+    estat:
+      session.state === "CANCELLED"
+        ? "anul·lades"
+        : session.state === "DRAFT"
+          ? "esborrany"
+          : "actives",
+    setmana: mondayOf(session.date),
+  });
+  return `/calendari?${query.toString()}`;
+}
+
+/**
+ * R-15-21: where the back office has a page for an effect's entity, the item links to it. A class
+ * opens in D4 (its week comes from `GET /class-sessions/{id}`), a week in D4, a member in D10.
+ */
+function directPath(item: JobEffectItem): string | undefined {
+  if (item.entityType === "Week" && isIsoDate(item.entityId)) {
+    // The booking week's key is the day it opens (S08 R-08-01); D4 shows its Monday's week.
+    return `/calendari?${new URLSearchParams({ setmana: mondayOf(addDays(item.entityId, 1)) }).toString()}`;
+  }
+  if (item.entityType === "Member") return `/abonats/${encodeURIComponent(item.entityId)}`;
+  return undefined;
+}
+
 /** A run's effects as the api delivers them: items «{entityType} {entityId} · {action}», counters, errors. */
-function RunEffects({ run }: { run: JobRun }) {
+function RunEffects({
+  client,
+  onNavigate,
+  run,
+}: {
+  client: ApiClient;
+  onNavigate: (path: string) => void;
+  run: JobRun;
+}) {
   const { t } = useTranslation(["admin-settings", "enums", "errors"]);
   const counters = counterTexts(t, run.effects.counters);
+  const [opening, setOpening] = useState<string>();
+  const [openError, setOpenError] = useState<string>();
+  // A lookup answered after the sheet closed (or showed another run) navigates nowhere.
+  const shownRun = useRef<string | undefined>(run.runId);
+  useEffect(() => {
+    shownRun.current = run.runId;
+    return () => {
+      shownRun.current = undefined;
+    };
+  }, [run.runId]);
+
+  const openClass = async (item: JobEffectItem) => {
+    const forRun = run.runId;
+    setOpening(item.entityId);
+    setOpenError(undefined);
+    try {
+      const result = await client.GET("/class-sessions/{id}", {
+        params: { path: { id: item.entityId } },
+      });
+      if (result.data === undefined) throw new TypeError("The class response had no data");
+      if (shownRun.current === forRun) onNavigate(classPath(result.data));
+    } catch (cause) {
+      if (shownRun.current === forRun) setOpenError(errorText(t, cause));
+    } finally {
+      setOpening((value) => (value === item.entityId ? undefined : value));
+    }
+  };
+
   return (
     <div className="jobs-card__effects">
       <p>
@@ -426,17 +512,45 @@ function RunEffects({ run }: { run: JobRun }) {
         <p>{t("admin-settings:jobs.noItems")}</p>
       ) : (
         <ul>
-          {run.effects.items.map((item) => (
-            <li key={`${item.entityType}-${item.entityId}-${item.action}`}>
-              {t("admin-settings:jobs.item", {
-                action: item.action,
-                entityId: item.entityId,
-                entityType: item.entityType,
-              })}
-            </li>
-          ))}
+          {run.effects.items.map((item) => {
+            const text = t("admin-settings:jobs.item", {
+              action: item.action,
+              entityId: item.entityId,
+              entityType: item.entityType,
+            });
+            const path = directPath(item);
+            return (
+              <li key={`${item.entityType}-${item.entityId}-${item.action}`}>
+                {item.entityType === "ClassSession" ? (
+                  <button
+                    aria-busy={opening === item.entityId}
+                    className="jobs-card__link"
+                    disabled={opening !== undefined}
+                    onClick={() => void openClass(item)}
+                    type="button"
+                  >
+                    {text}
+                  </button>
+                ) : path === undefined ? (
+                  text
+                ) : (
+                  <a
+                    className="jobs-card__link"
+                    href={path}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      onNavigate(path);
+                    }}
+                  >
+                    {text}
+                  </a>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
+      {openError === undefined ? null : <p role="alert">{openError}</p>}
       {run.errors.length === 0 ? null : (
         <ul className="jobs-card__errors">
           {run.errors.map((error) => (
@@ -470,7 +584,24 @@ interface Confirm {
  * [Executa ara] (R-15-08, R-15-09). ADMIN only; an impersonation token cannot use the routes, so
  * the api's `403 IMPERSONATION_DENIED` hides the rows and says why.
  */
-export function JobsCard({ children, client }: { children?: ReactNode; client: ApiClient }) {
+export function JobsCard({
+  children,
+  client,
+  onNavigate = (path) => {
+    window.location.assign(path);
+  },
+  scheduleKey = "",
+}: {
+  children?: ReactNode;
+  client: ApiClient;
+  /** Opens a run effect's entity (R-15-21: D4, D10). */
+  onNavigate?: (path: string) => void;
+  /**
+   * The versions of the parameters the processes' times come from (R-15-01): a saved change reads
+   * `GET /jobs` again, so the new cadence shows at once.
+   */
+  scheduleKey?: string;
+}) {
   const formats = useClubFormats();
   const { t } = useTranslation(["admin-settings", "enums", "errors"]);
   const [impersonating, setImpersonating] = useState(false);
@@ -508,7 +639,7 @@ export function JobsCard({ children, client }: { children?: ReactNode; client: A
     return () => {
       current = false;
     };
-  }, [client, reload, t]);
+  }, [client, reload, scheduleKey, t]);
 
   const jobName = (job: JobSummary) => t(`admin-settings:jobs.name.${job.jobName}`);
 
@@ -811,7 +942,7 @@ export function JobsCard({ children, client }: { children?: ReactNode; client: A
         {plan === undefined ? null : (
           <>
             <p className="jobs-card__note">{t("admin-settings:jobs.dryRunNote")}</p>
-            <RunEffects run={plan.run} />
+            <RunEffects client={client} onNavigate={onNavigate} run={plan.run} />
           </>
         )}
       </Modal>
@@ -823,6 +954,7 @@ export function JobsCard({ children, client }: { children?: ReactNode; client: A
           onClose={() => {
             setRunsOf(undefined);
           }}
+          onNavigate={onNavigate}
         />
       )}
     </Card>

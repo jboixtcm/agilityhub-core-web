@@ -1,0 +1,422 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/booking/detail.test.tsx (24 tests | 1 failed | 23 skipped) 10272ms
+   ❯ T-08-39 the waiting entry (/espera/:id, R-08-16) (7)
+     × E5-W05 step 10: a NOTIFIED entry reads «plaça alliberada» with [AGAFA LA PLAÇA]; an ACTIVE one keeps «en llista d'espera» without it 10265ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > E5-W05 step 10: a NOTIFIED entry reads «plaça alliberada» with [AGAFA LA PLAÇA]; an ACTIVE one keeps «en llista d'espera» without it
+TestingLibraryElementError: Unable to find an element with the text: plaça alliberada. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back"[39m
+                [33mhref[39m=[32m"/inici"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mDetall de la reserva[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card detail-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__line"[39m
+            [36m>[39m
+              [36m<strong[39m
+                [33mclass[39m=[32m"detail-card__title"[39m
+              [36m>[39m
+                [0mClasse C i sup. · amb la Duna[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0men llista d'espera[0m
+              [36m</span>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__when"[39m
+            [36m>[39m
+              [0mDijous 6 · 20:00 · Carretera[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAGAFA LA PLAÇA[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mSURT DE LA LLISTA D'ESPERA[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back"[39m
+                [33mhref[39m=[32m"/inici"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mDetall de la reserva[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card detail-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__line"[39m
+            [36m>[39m
+              [36m<strong[39m
+                [33mclass[39m=[32m"detail-card__title"[39m
+              [36m>[39m
+                [0mClasse C i sup. · amb la Duna[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0men llista d'espera[0m
+              [36m</span>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__when"[39m
+            [36m>[39m
+              [0mDijous 6 · 20:00 · Carretera[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mAGAFA LA PLAÇA[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mSURT DE LA LLISTA D'ESPERA[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/booking/detail.test.tsx:299:25
+    297|     entry.notifiedAt = "2026-08-02T18:25:00Z";
+    298|     await renderApp("/espera/waitlist-duna-thu6");
+    299|     expect(await screen.findByText("plaça alliberada")).toHaveClass("a…
+       |                         ^
+    300|     expect(screen.queryByText("en llista d'espera")).toBeNull();
+    301|     expect(screen.getByRole("button", { name: "AGAFA LA PLAÇA" })).toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 23 skipped (24)
+   Start at  21:43:23
+   Duration  13.04s (tests 80%, transform 12%, environment 4%, import 3%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/booking/detail.test.tsx -t E5-W05 step 10

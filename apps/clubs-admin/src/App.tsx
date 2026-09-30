@@ -585,7 +585,7 @@ function routeContent(
     return <TeamPage client={client} />;
   }
   if (route.path === "/parametres") {
-    return <SettingsPage client={client} />;
+    return <SettingsPage client={client} onNavigate={onNavigate} />;
   }
   if (route.path === "/modalitats") {
     return <PlansPage client={client} />;

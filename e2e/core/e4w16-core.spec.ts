@@ -4,12 +4,15 @@ import { join, resolve } from "node:path";
 
 import { type Browser, type BrowserContext, type Page } from "@playwright/test";
 
+import type { components } from "../../packages/api-client/src/generated/schema";
+
 import { expect, test } from "./oauth-token-log";
 
 // E4-W16 real-core stage (steps 11, 10, 1, 5 and 7), on its own fresh core and seed. Steps 1 and
 // 10 need api E5-T27 (the impersonation `launchUrl` with a handoff code; the RESET mark), which the
-// image carries: since E4-W18 step 3 both fail without it. Only the RESET link's own `purpose`
-// waits for api E5-T29 (E5-W05 step 21) and is reported as pending real-core proof.
+// image carries: since E4-W18 step 3 both fail without it. Since E5-W05 (api E5-T29) the RESET link
+// the api delivers carries `&purpose=reset` itself (step 21), and `/me` names the member an
+// impersonation opened (`impersonation.memberName`, step 24): both fail without them.
 
 const clubsUrl = "http://127.0.0.1:4173";
 const adminUrl = "http://127.0.0.1:4174";
@@ -17,8 +20,11 @@ const corePassword = requiredEnvironment("E1_CORE_PASSWORD");
 const mailboxDirectory = requiredEnvironment("E1_MAILBOX_DIRECTORY");
 const evidenceDirectory =
   process.env.CORE_EVIDENCE_DIRECTORY ?? resolve(process.cwd(), "roadmap/evidence/E4-W16");
+// The seed's login member. Its member record's name is read from the api (D5's own answer), never
+// written here: the seed names its account apart from it (E5-W05 step 24).
 const memberEmail = "member@example.test";
-const memberName = "Laia Fictici006";
+
+type Schemas = components["schemas"];
 
 interface MailMessage {
   html?: string;
@@ -105,16 +111,31 @@ async function navigateSpa(page: Page, path: string): Promise<void> {
   await expect(page).toHaveURL(new RegExp(`${path.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")}$`, "u"));
 }
 
-/** D10's address of the seeded member, from D5's search. */
-async function memberRecordPath(admin: Page): Promise<string> {
+/**
+ * D10's address and the member record's name of the seeded member, from D5's search: the name is
+ * the one row of the list's own `GET /members?q=` answer (`fullName`), and its link opens D10.
+ */
+async function memberRecord(admin: Page): Promise<{ name: string; path: string }> {
   await navigateSpa(admin, "/abonats");
   const search = admin.getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" });
+  const listed = admin.waitForResponse(
+    (response) =>
+      response.request().method() === "GET" &&
+      new URL(response.url()).pathname === "/api/v1/members" &&
+      new URL(response.url()).searchParams.get("q") === memberEmail,
+  );
   await search.fill(memberEmail);
-  const link = admin.getByRole("link", { exact: true, name: memberName });
+  const answer = await listed;
+  expect(answer.status()).toBe(200);
+  const { items } = (await answer.json()) as Pick<Schemas["ListPageMemberListItem"], "items">;
+  expect(items).toHaveLength(1);
+  const name = items[0]?.fullName ?? "";
+  expect(name, "D5's row of the seeded member carries its record's fullName").not.toBe("");
+  const link = admin.getByRole("link", { exact: true, name });
   await expect(link).toBeVisible();
   const href = await link.getAttribute("href");
   if (href === null) throw new Error("The member row did not contain a record URL");
-  return href;
+  return { name, path: href };
 }
 
 function deliveredLink(recipient: string, previous: ReadonlySet<string>): URL | undefined {
@@ -220,7 +241,7 @@ test("T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones str
   // The seed gives this member's dogs no tasks (E3-W09 capture: «0 pendents · 0 fetes»): the club
   // adds two (POST /tasks, ADMIN, S10) and the member completes one (POST /tasks/{id}/completion).
   const { admin } = await sharedAdmin(browser);
-  const recordPath = await memberRecordPath(admin);
+  const recordPath = (await memberRecord(admin)).path;
   const adminBearer = await bearerOf(admin, () => navigateSpa(admin, recordPath));
   const texts = [
     "Treballar el balancí amb calma (E4-W16)",
@@ -357,35 +378,33 @@ test("T-01-19 E4-W16 step 10 · a RESET link sets the new password once without 
     )
     .toBe(true);
   if (link === undefined) throw new Error("The RESET link was not delivered");
-  // S01 R-01-04 (ruling E70): a RESET link carries `&purpose=reset`, which api E5-T29 adds. The
-  // link is single-use, so on an image without it the run opens the delivered link once with
-  // that parameter, as the api will send it: the E5-T27 half (a RESET session sets the password
-  // once without `current`, E49) is then proven on the core; the link's own shape stays pending.
+  // E5-W05 step 21 (S01 R-01-04, ruling E70): the api builds the RESET link with `&purpose=reset`
+  // itself (api E5-T29 step 10), and 02 is opened with the link exactly as delivered: the run no
+  // longer adds the parameter, so a link without it fails here.
   const deliveredPurpose = link.searchParams.get("purpose");
-  const opened = new URL(link.toString());
-  if (deliveredPurpose === null) opened.searchParams.set("purpose", "reset");
-  await page.goto(`${clubsUrl}${opened.pathname}${opened.search}`);
-  const heading = page.getByRole("heading", { level: 1 });
-  await expect(heading).toBeVisible();
   // The link's shape (path, parameter names and `purpose`), never its token.
   writeEvidence("recovery-link-core.json", {
-    heading: await heading.textContent(),
-    openedWithPurpose: opened.searchParams.get("purpose"),
     parameters: [...link.searchParams.keys()],
     path: link.pathname,
     purpose: deliveredPurpose,
   });
-  if (deliveredPurpose === null) {
-    test.info().annotations.push({
-      description:
-        "the api's RESET link carries no purpose yet (api E5-T29): opened with &purpose=reset",
-      type: "pending real-core proof",
-    });
-  }
-  // The password form never asks for `current`.
+  expect(link.pathname).toBe("/activacio");
+  expect(deliveredPurpose, "api E5-T29: the RESET link carries &purpose=reset").toBe("reset");
+  await page.goto(`${clubsUrl}${link.pathname}${link.search}`);
+  const heading = page.getByRole("heading", { level: 1 });
+  await expect(heading).toBeVisible();
+  writeEvidence("recovery-link-core.json", {
+    heading: await heading.textContent(),
+    openedAsDelivered: true,
+    parameters: [...link.searchParams.keys()],
+    path: link.pathname,
+    purpose: deliveredPurpose,
+  });
+  // Screen 02's reset variant: «Ja hi ets», and the password form never asks for `current`.
+  await expect(page.getByRole("heading", { level: 1, name: "Ja hi ets" })).toBeVisible();
+  await expect(page.getByText("Compte activat")).toHaveCount(0);
   await expect(page.getByLabel("contrasenya actual")).toHaveCount(0);
   await expect(page.getByLabel("nova contrasenya")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Ja hi ets" })).toBeVisible();
   // The same password as the seed's (member.2 has one), so later logins keep working.
   const first = page.waitForResponse(
     (response) =>
@@ -409,21 +428,23 @@ test("T-01-19 E4-W16 step 10 · a RESET link sets the new password once without 
   );
   await page.getByRole("button", { name: "DESA LA CONTRASENYA" }).click();
   expect((await second).status()).toBe(401);
-  await expect(page.getByRole("alert")).toContainText(
-    "L'enllaç ja s'ha fet servir: demana'n un altre",
-  );
-  writeEvidence("recovery-core.json", { firstPut: 200, secondPut: 401 });
+  // The used link's message, with «Recupera-la» back to the recovery on 01.
+  const used = page.getByRole("alert").filter({ hasText: "L'enllaç ja s'ha fet servir" });
+  await expect(used).toContainText("L'enllaç ja s'ha fet servir: demana'n un altre");
+  await expect(used.getByRole("link", { name: "Recupera-la" })).toHaveAttribute("href", "/entrar");
+  writeEvidence("recovery-core.json", { firstPut: 200, purpose: deliveredPurpose, secondPut: 401 });
   await screenshot(page, "02-recuperacio-core-375.png");
   await context.close();
 });
 
-test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through the one-time code, once", async ({
+test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through the one-time code, once; E5-W05 step 24 · its banner names the member record, not the account", async ({
   browser,
 }) => {
   test.setTimeout(150_000);
   const { admin } = await sharedAdmin(browser);
-  await navigateSpa(admin, await memberRecordPath(admin));
-  await expect(admin.getByRole("heading", { name: memberName })).toBeVisible();
+  const record = await memberRecord(admin);
+  await navigateSpa(admin, record.path);
+  await expect(admin.getByRole("heading", { name: record.name })).toBeVisible();
 
   await admin.getByRole("button", { name: "Entra com l'abonat" }).click();
   const dialog = admin.getByRole("dialog", { name: "Entra com l'abonat" });
@@ -457,11 +478,7 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
   await dialog.getByRole("button", { name: "Entra com l'abonat" }).click();
   const answer = await tokenAnswer;
   expect(answer.status()).toBe(201);
-  const body = (await answer.json()) as {
-    expiresAt?: string;
-    launchUrl?: null | string;
-    token: string;
-  };
+  const body = (await answer.json()) as Schemas["ImpersonationTokenResponse"];
   // E4-W18 step 3: the image carries api E5-T27, so the answer must carry the club app's
   // `launchUrl` with a one-time code; its absence fails the stage (no fallback any more).
   const launchUrl = body.launchUrl ?? "";
@@ -481,11 +498,13 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
       clubsGrants.push(new URLSearchParams(request.postData() ?? "").get("grant_type") ?? "");
     }
   });
-  // What the club app's `/me` answered (status, the impersonation mark, whose name): the shape
-  // the banner reads, never a token.
+  // What the club app's `/me` answered (status, the impersonation mark, the account's and the
+  // member's names, the member id): the shape the banner reads, never a token.
   const clubsMe: {
     accountName: null | string;
     impersonation: null | string[];
+    memberId: null | string;
+    memberName: null | string;
     page: string;
     status: number;
   }[] = [];
@@ -501,35 +520,42 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
       .json()
       .catch(() => ({}))
       .then((payload: unknown) => {
-        const me = payload as { account?: { name?: string }; impersonation?: object | null };
+        const me = payload as Partial<Schemas["Me"]>;
         clubsMe.push({
           accountName: me.account?.name ?? null,
-          impersonation:
-            me.impersonation === undefined || me.impersonation === null
-              ? null
-              : Object.keys(me.impersonation).sort(),
+          impersonation: me.impersonation ? Object.keys(me.impersonation).sort() : null,
+          memberId: me.membership?.memberId ?? null,
+          memberName: me.impersonation?.memberName ?? null,
           page,
           status: response.status(),
         });
       });
   });
   await clubs.waitForURL((url) => url.pathname === "/inici", { timeout: 30_000 });
-  // The banner names the account `/me` carries (its only name). The seed names the account of
-  // member@example.test apart from its member record (question Q5 of the round 2 report).
   await expect
     .poll(() => clubsMe.find((answer) => answer.page === "/inici")?.status ?? 0)
     .toBe(200);
   const restored = clubsMe.find((answer) => answer.page === "/inici");
-  expect(restored?.impersonation).toEqual(["actorName"]);
-  const bannerName = restored?.accountName ?? "";
-  expect(bannerName).not.toBe("");
-  await expect(clubs.getByText(`Estàs veient l'app com ${bannerName}`)).toBeVisible();
+  // E5-W05 step 24 (ruling E73, api E5-T29 step 14): `/me` names the member the admin opened
+  // (`impersonation.memberName`, the record's name as D10 shows it), and the banner shows it. The
+  // seed names the account of member@example.test apart from its member record, so a banner that
+  // showed the account's name fails here.
+  expect(restored?.impersonation).toEqual(["actorName", "memberName"]);
+  expect(restored?.memberName).toBe(record.name);
+  const accountName = restored?.accountName ?? "";
+  expect(accountName).not.toBe("");
+  expect(accountName, "the seed's account name differs from its member record's").not.toBe(
+    record.name,
+  );
+  // The banner's text is exactly the record's name, so never the account's.
+  const bannerText = clubs.getByRole("status").getByText(/^Estàs veient l'app com /u);
+  await expect(bannerText).toHaveText(`Estàs veient l'app com ${record.name}`);
   expect(failedMe).toBe(1);
   await admin.context().unroute("**/api/v1/me");
 
   // One member action, as the member (the api audits it with both ids, origin BACKOFFICE).
   await clubs.goto(`${clubsUrl}/gossos`);
-  await expect(clubs.getByText(`Estàs veient l'app com ${bannerName}`)).toBeVisible();
+  await expect(bannerText).toHaveText(`Estàs veient l'app com ${record.name}`);
   const note = clubs.getByLabel(/Notes als instructors/u).first();
   await note.fill("Nota desada des del backoffice (E4-W16)");
   const noteAnswer = clubs.waitForResponse(
@@ -558,8 +584,11 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
   // The impersonated tab never refreshed (no refresh_token grant, before or after the reload).
   expect(clubsGrants.filter((grant) => grant === "refresh_token")).toEqual([]);
   writeEvidence("impersonation-core.json", {
+    banner: `Estàs veient l'app com ${record.name}`,
     clubsMe,
     clubsRefreshGrants: clubsGrants.filter((grant) => grant === "refresh_token").length,
+    d5RecordName: record.name,
+    d10MemberId: record.path.split("/").at(-1) ?? null,
     firstMeAnswered503: failedMe === 1,
     launchUrl: `${launch.origin}${launch.pathname}?handoff=<redacted>`,
     memberAction: "PUT /me/dogs/{id}/instructor-note 200",
@@ -638,8 +667,9 @@ test("T-03-34 (front) E4-W16 step 7 · D10 keeps the block, «Inactivitat», «B
     const response = await fetch("/api/v1/branding");
     return ((await response.json()) as { modules: string[] }).modules;
   });
-  await navigateSpa(admin, await memberRecordPath(admin));
-  await expect(admin.getByRole("heading", { name: memberName })).toBeVisible();
+  const record = await memberRecord(admin);
+  await navigateSpa(admin, record.path);
+  await expect(admin.getByRole("heading", { name: record.name })).toBeVisible();
 
   await expect(
     admin.getByRole("button", { name: /^(Bloqueja|Desbloqueja) les reserves$/u }),

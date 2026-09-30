@@ -1,0 +1,122 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/booking-handlers.test.ts (15 tests | 4 failed | 11 skipped) 35ms
+   ❯ E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them (4)
+     × E5-W05 step 7: at Sunday 2 at 20:30 (weekOpensAt SUNDAY 20:00) W0 is 2026-08-02 and W1 2026-08-09: Monday 3 counts in the current week, Monday 10 is next, Monday 17 opens with W1, and the limit refusal names the coming opening 3ms
+     × E5-W05 step 7: 06's done class belongs to W0 at the clock (it began at the week's opening, Sunday 2 at 20:00): the hold lists it as DONE beside the two cancellable ones 16ms
+     × E5-W05 step 7: one minute before the opening (Sunday 2 at 19:59) the weeks are one earlier: Wednesday 5 to Saturday 8 are next week's, Monday 10 opens at 20:00, and Monday 17 is not listed yet 8ms
+     × E5-W05 step 7: the weeks come from `bookings.weekOpensAt` (T-08-44, a club whose week opens on Monday at 00:00) 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: at Sunday 2 at 20:30 (weekOpensAt SUNDAY 20:00) W0 is 2026-08-02 and W1 2026-08-09: Monday 3 counts in the current week, Monday 10 is next, Monday 17 opens with W1, and the limit refusal names the coming opening
+AssertionError: expected 1785664800000 to be 1785695400000 // Object.is equality
+
+- Expected
++ Received
+
+- 1785695400000
++ 1785664800000
+
+ ❯ src/mocks/booking-handlers.test.ts:444:42
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: 06's done class belongs to W0 at the clock (it began at the week's opening, Sunday 2 at 20:00): the hold lists it as DONE beside the two cancellable ones
+AssertionError: expected [ { …(4) } ] to deeply equal [ { …(4) } ]
+
+- Expected
++ Received
+
+  [
+    {
+      "bookingId": "booking-duna-done",
+      "description": "B+C",
+      "reason": "DONE",
+-     "startsAtLocal": "2026-08-02T20:00",
++     "startsAtLocal": "2026-08-02T10:00",
+    },
+  ]
+
+ ❯ src/mocks/booking-handlers.test.ts:496:38
+    494|       "2026-08-07T20:00",
+    495|     ]);
+    496|     expect(hold.limit.notSelectable).toEqual([
+       |                                      ^
+    497|       {
+    498|         bookingId: "booking-duna-done",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: one minute before the opening (Sunday 2 at 19:59) the weeks are one earlier: Wednesday 5 to Saturday 8 are next week's, Monday 10 opens at 20:00, and Monday 17 is not listed yet
+AssertionError: expected { …(3) } to deeply equal { …(3) }
+
+- Expected
++ Received
+
+  {
+    "currentWeek": {
+-     "count": 0,
++     "count": 1,
+      "max": 2,
+-     "weekKey": "2026-07-26",
++     "weekKey": "2026-08-02",
+    },
+    "nextWeek": {
+      "count": 1,
+      "max": 1,
+-     "weekKey": "2026-08-02",
++     "weekKey": "2026-08-09",
+    },
+    "unit": "DOG",
+  }
+
+ ❯ src/mocks/booking-handlers.test.ts:508:35
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: the weeks come from `bookings.weekOpensAt` (T-08-44, a club whose week opens on Monday at 00:00)
+AssertionError: expected { …(3) } to deeply equal { …(3) }
+
+- Expected
++ Received
+
+  {
+    "currentWeek": {
+-     "count": 0,
++     "count": 1,
+      "max": 2,
+-     "weekKey": "2026-07-27",
++     "weekKey": "2026-08-02",
+    },
+    "nextWeek": {
+      "count": 1,
+      "max": 1,
+-     "weekKey": "2026-08-03",
++     "weekKey": "2026-08-09",
+    },
+    "unit": "DOG",
+  }
+
+ ❯ src/mocks/booking-handlers.test.ts:544:35
+    542|     if (parameter === undefined) throw new TypeError("Missing bookings…
+    543|     parameter.value = { dayOfWeek: "MONDAY", time: "00:00" };
+    544|     expect((await home()).limits).toEqual({
+       |                                   ^
+    545|       currentWeek: { count: 0, max: 2, weekKey: "2026-07-27" },
+    546|       nextWeek: { count: 1, max: 1, weekKey: "2026-08-03" },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 11 skipped (15)
+   Start at  21:42:08
+   Duration  535ms (transform 50%, import 42%, tests 8%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/booking-handlers.test.ts -t E5-W05 step 7

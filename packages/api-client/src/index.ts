@@ -22,6 +22,7 @@ export {
   isLiveWaitlistEntry,
   removeWaitlistEntry,
   useClassRegistrants,
+  waitlistEntryGuide,
 } from "./class-registrants";
 export { apiClient, createApiClient, type ApiClient, type ApiClientOptions } from "./client";
 export { getPublicClubPage, type PublicClubPageRequest } from "./club-pages";
@@ -82,6 +83,7 @@ export {
 export {
   STUDENT_SEARCH_PAGE_SIZE,
   type StudentSearchDog,
+  studentSearchGuide,
   useStudentSearch,
 } from "./student-search";
 export {

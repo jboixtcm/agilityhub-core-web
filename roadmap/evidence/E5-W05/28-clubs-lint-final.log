@@ -1,0 +1,6 @@
+$ pnpm --filter clubs lint
+
+> clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> eslint . --max-warnings 0 --config ../../eslint.config.mjs
+
+exit 0

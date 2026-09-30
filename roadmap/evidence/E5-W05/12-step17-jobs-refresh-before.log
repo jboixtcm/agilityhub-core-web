@@ -1,0 +1,244 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/JobsCard.test.tsx (19 tests | 1 failed | 18 skipped) 10316ms
+   ❯ E5-W05 step 17 · D11 after a schedule change (R-15-01) (1)
+     × E5-W05 step 17: saving jobs.dailyTime reads GET /jobs again, so «Venciments» and «Neteja tècnica» show the new time at once 10314ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > E5-W05 step 17 · D11 after a schedule change (R-15-01) > E5-W05 step 17: saving jobs.dailyTime reads GET /jobs again, so «Venciments» and «Neteja tècnica» show the new time at once
+TestingLibraryElementError: Unable to find an element with the text: cada dia a les 6:30. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"expirations"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mCaducitats[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mcada dia a les 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mfa 2 h · parcial[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Caducitats activat"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simula Caducitats"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimula[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Executa ara Caducitats"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mExecuta ara[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"catalog-page__header settings-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mParàmetres[0m
+        [36m</h1>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"audit-last-change"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0múltim canvi: jobs.dailyTime · 09/09 · Jordi[0m
+          [36m</span>[39m
+          [0m [0m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m—[0m
+          [36m</span>[39m
+          [0m [0m
+          [36m<a[39m
+            [33mhref[39m=[32m"/auditoria?entityType=Parameter"[39m
+          [36m>[39m
+            [0mamb històric[0m
+          [36m</a>[39m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"settings-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card settings-card"[39m
+        [36m>[39m
+          [36m<h2>[39m
+            [0mClasses[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"settings-parameters"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mMàx. classes setmana en curs (per gos)[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0m2[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana en curs (per gos)"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edita Màx. classes setmana en curs (per gos)"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"settings-parameter__main"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mMàx. classes setmana següent[0m
+                [36m</span>[39m
+                [36m<strong>[39m
+                  [0m1[0m
+                [36m</strong>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Mostra l'històric de Màx. classes setmana següent"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Edita Màx. classes setmana següent"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"settings-parameter"[39m
+            [36m>[3...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ src/catalogs/JobsCard.test.tsx:552:11
+    550|     fireEvent.click(within(drawer).getByRole("button", { name: "DESA" …
+    551|
+    552|     await waitFor(() => {
+       |           ^
+    553|       expect(within(rowOf(card, "Caducitats")).getByText("cada dia a l…
+    554|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 skipped (19)
+   Start at  21:57:33
+   Duration  12.28s (tests 85%, transform 9%, environment 3%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/JobsCard.test.tsx -t E5-W05 step 17

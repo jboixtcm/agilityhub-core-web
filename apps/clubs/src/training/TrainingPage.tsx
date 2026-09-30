@@ -40,6 +40,7 @@ import {
   reportTrainingRefusal,
   ringCell,
   shortTime,
+  slotStillFree,
   type TrainingRing,
   type TrainingSlot,
   useOnline,
@@ -132,9 +133,18 @@ export function TrainingPage({ client }: { client: ApiClient }) {
     selectedDog !== null && selectedDay !== null,
   );
   const [ringFilter, setRingFilter] = useState(ANY_COLUMN);
-  const [choice, setChoice] = useState<Choice>();
+  const [picked, setChoice] = useState<Choice>();
   /** «Qualsevol» with more than one free ring, or the free rings of a `SLOT_TAKEN`. */
   const [chooser, setChooser] = useState<{ ringIds: string[]; startsAt: string }>();
+  // R-09-03: the choice holds only while the grid shown (read again on focus, after a refusal or a
+  // retry) still has that ring free at that time; otherwise it is cleared (during this render, so
+  // it never comes back with a later grid) and [Confirma] is disabled.
+  const choice =
+    picked !== undefined && slotStillFree(slots.data, selectedDay, picked) ? picked : undefined;
+  if (picked !== undefined && choice === undefined) {
+    setChoice(undefined);
+    setChooser(undefined);
+  }
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<Failure>();
   const [booked, setBooked] = useState(false);
@@ -206,7 +216,12 @@ export function TrainingPage({ client }: { client: ApiClient }) {
   const current = days.find((item) => item.date === selectedDay);
   const filter =
     ringFilter === ANY_COLUMN || ringById(ringFilter) !== undefined ? ringFilter : ANY_COLUMN;
-  const stale = slots.stale || !online;
+  // S09 §2 «sense connexió»: a required read (the dogs, the grid, the counter) shows its offline
+  // copy, or the navigator is offline. The api may be unreachable while `navigator.onLine` is
+  // true, so the copy itself blocks the booking until a read succeeds again.
+  const reads = [eligibility, slots, counter] as const;
+  const stale = reads.some((read) => read.stale) || !online;
+  const refreshing = reads.some((read) => read.status === "ready" && read.refreshing === true);
   const summary = counter.status === "ready" ? counter.data : undefined;
   const atLimit = summary !== undefined && summary.counter.remaining <= 0;
 
@@ -462,9 +477,18 @@ export function TrainingPage({ client }: { client: ApiClient }) {
           ))}
       </div>
       {stale ? (
-        <p className="booking-note booking-note--neutral training-stale" role="status">
-          {t("training:grid.stale")}
-        </p>
+        <div className="booking-note booking-note--neutral training-stale">
+          <p role="status">{t("training:grid.stale")}</p>
+          <Button
+            className="training-stale__retry"
+            loading={refreshing}
+            loadingLabel={t("training:loading")}
+            onClick={refetchAll}
+            variant="secondary"
+          >
+            {t("training:retry")}
+          </Button>
+        </div>
       ) : null}
       {current === undefined || current.closed ? (
         <Card className="training-closed">
@@ -503,7 +527,12 @@ export function TrainingPage({ client }: { client: ApiClient }) {
           <div aria-label={t("training:rings.label")} className="training-chips" role="group">
             {chooser.ringIds.map((id) => {
               const ring = ringById(id);
-              if (ring === undefined) return null;
+              // Only the rings still free in the grid shown are offered (R-09-03).
+              const free = slotStillFree(grid, selectedDay, {
+                ringId: id,
+                startsAt: chooser.startsAt,
+              });
+              if (ring === undefined || !free) return null;
               const pressed = choice?.ringId === id;
               return (
                 <button
@@ -576,7 +605,7 @@ export function TrainingPage({ client }: { client: ApiClient }) {
             chosenSlot === undefined ||
             chosenRing === undefined ||
             summary === undefined ||
-            !online
+            stale
           }
           loading={pending}
           loadingLabel={t("training:confirm.sending")}

@@ -145,6 +145,87 @@ describe("E7-W02 step 5 · web push in context (S11 R-11-07)", () => {
     expect(deletes).toHaveLength(1);
   });
 
+  /** A subscription whose `POST /push-subscriptions` waits for `release()`. */
+  function slowSubscription() {
+    let release: () => void = () => undefined;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let started: () => void = () => undefined;
+    const posted = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+    server.use(
+      http.post("*/api/v1/push-subscriptions", async () => {
+        started();
+        await gate;
+        return undefined;
+      }),
+    );
+    const unsubscribe = vi.fn(() => Promise.resolve(true));
+    const subscribe = vi.fn(() =>
+      Promise.resolve({
+        toJSON: () => ({
+          endpoint: "https://push.example.test/send/device",
+          keys: { auth: "A".repeat(22), p256dh: "B".repeat(87) },
+        }),
+        unsubscribe,
+      }),
+    );
+    setPushRegistration({ pushManager: { subscribe } } as unknown as ServiceWorkerRegistration);
+    return { posted, release, unsubscribe };
+  }
+
+  function deletedIds(): string[] {
+    const ids: string[] = [];
+    server.events.on("request:start", ({ request }) => {
+      if (request.method === "DELETE")
+        ids.push(new URL(request.url).pathname.split("/").at(-1) ?? "");
+    });
+    return ids;
+  }
+
+  it("E7-W02 round 2 #2: a subscription in flight at logout is deleted when it lands within the wait, and its id is never stored", async () => {
+    browserWithPush("granted");
+    const { posted, release, unsubscribe } = slowSubscription();
+    const deleted = deletedIds();
+    const subscribing = subscribeToPush(client, publicKey);
+    await posted;
+    const logout = vi.fn(() => Promise.resolve());
+    const out = logoutWithPush(client, logout, 2000);
+    release();
+    await out;
+    await subscribing;
+    expect(deleted).toEqual(["push-1"]);
+    expect(logout).toHaveBeenCalledTimes(1);
+    expect(localStorage.getItem(PUSH_SUBSCRIPTION_STORAGE_KEY)).toBeNull();
+    expect(unsubscribe).not.toHaveBeenCalled();
+  });
+
+  it("E7-W02 round 2 #2: a subscription that lands after the logout (the session gone) is unsubscribed in the browser, and its id is never stored", async () => {
+    browserWithPush("granted");
+    const { posted, release, unsubscribe } = slowSubscription();
+    const subscribing = subscribeToPush(client, publicKey);
+    await posted;
+    const logout = vi.fn(() => Promise.resolve());
+    // The logout waits a bounded time only: here the POST is still out when it ends.
+    await logoutWithPush(client, logout, 30);
+    expect(logout).toHaveBeenCalledTimes(1);
+    // The session is gone: the api refuses the DELETE.
+    server.use(
+      http.delete("*/api/v1/push-subscriptions/:id", () =>
+        HttpResponse.json(
+          { code: "UNAUTHENTICATED", details: {}, message: "No session", traceId: "t" },
+          { status: 401 },
+        ),
+      ),
+    );
+    release();
+    await subscribing;
+    expect(unsubscribe).toHaveBeenCalledTimes(1);
+    expect(localStorage.getItem(PUSH_SUBSCRIPTION_STORAGE_KEY)).toBeNull();
+  });
+
   it("a DELETE that never answers never blocks the logout", async () => {
     localStorage.setItem(PUSH_SUBSCRIPTION_STORAGE_KEY, JSON.stringify({ id: "push-9" }));
     server.use(

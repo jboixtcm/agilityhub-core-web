@@ -1,0 +1,14 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+ Test Files  25 passed (25)
+      Tests  453 passed (453)
+   Start at  23:01:56
+   Duration  25.92s (tests 71%, environment 14%, import 9%, transform 3%, setup 3%)
+
+    Isolate  25 workers spawned · ~352ms startup each (spawn + environment, per file)
+             at least ~4.05s faster with isolate: false — reuses workers across files instead of one per file
+

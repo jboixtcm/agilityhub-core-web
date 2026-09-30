@@ -4,6 +4,7 @@ import type { components } from "../generated/schema";
 
 import {
   bookingState,
+  bookingWeekKeyOf,
   classBookingItems,
   classWaitlistEntries,
   findClass,
@@ -21,6 +22,7 @@ import {
   jobSummary,
   manualRun,
   resetJobsState,
+  RISK_REVIEW_DEFAULTS,
   riskReviewForm,
   type StoredJob,
 } from "./fixtures/jobs";
@@ -37,6 +39,7 @@ import { apiError, planningState } from "./planning-handlers";
 import {
   currentMockScenario,
   currentMockScenarioName,
+  MOCK_CLUB_ID,
   type MockScenarioDefinition,
 } from "./scenarios";
 
@@ -79,6 +82,14 @@ function moduleOff(scenario: MockScenarioDefinition, module: string) {
     : apiError("MODULE_DISABLED", "Module disabled", 404);
 }
 
+/**
+ * The tenant comes from the JWT: the calendar and day-grid worlds are one club's records
+ * (`MOCK_CLUB_ID`), and a token of another club finds none of them (E5-W05 step 16).
+ */
+function callerClubOwnsTheWorld(scenario: MockScenarioDefinition): boolean {
+  return scenario.me.membership?.clubId === MOCK_CLUB_ID;
+}
+
 function nowMs(): number {
   return Date.now();
 }
@@ -109,8 +120,11 @@ interface ListSpec<Item> {
   filterable: readonly string[];
   /** Values of a field of an item, as strings (dates and instants compare as ISO strings). */
   values: (item: Item, field: string) => string[];
-  /** Free-text `q` over the item. */
-  search: (item: Item) => string;
+  /**
+   * Free-text `q` over the item; absent for a list without search, where a non-blank `q` is
+   * `400 INVALID_FILTER` (CONVENCIONS_API §4, ruling E75).
+   */
+  search?: (item: Item) => string;
   /** `x-sortable`. */
   sortable: readonly string[];
 }
@@ -189,9 +203,11 @@ function selectItems<Item>(
     if (!spec.sortable.includes(field) || !["asc", "desc"].includes(direction)) return invalid;
     sorts.push({ direction: direction === "desc" ? -1 : 1, field });
   }
-  const q = normalized(url.searchParams.get("q") ?? "");
+  const q = normalized((url.searchParams.get("q") ?? "").trim());
+  const search = spec.search;
+  if (q !== "" && search === undefined) return invalid;
   const selected = items
-    .filter((item) => q === "" || normalized(spec.search(item)).includes(q))
+    .filter((item) => q === "" || search === undefined || normalized(search(item)).includes(q))
     .filter((item) => filters.every((filter) => matches(spec.values(item, filter.field), filter)));
   selected.sort((left, right) => {
     for (const sort of sorts) {
@@ -202,6 +218,18 @@ function selectItems<Item>(
     return 0;
   });
   return { filters, items: selected };
+}
+
+/**
+ * `appliedFilters` as the api echoes them: a list (`in`, `nin`) and a range (`between`) as JSON
+ * arrays (CONVENCIONS_API §4: «JSON scalar or array»), the rest as the scalar it received.
+ */
+function echoedFilters(filters: readonly { field: string; op: string; value: string }[]): Filter[] {
+  return filters.map((filter) => ({
+    field: filter.field,
+    op: filter.op as Filter["op"],
+    value: ["between", "in", "nin"].includes(filter.op) ? filter.value.split(",") : filter.value,
+  }));
 }
 
 function listResponse<Item extends object>(
@@ -219,18 +247,58 @@ function listResponse<Item extends object>(
   if (projection === undefined) return apiError("INVALID_FILTER", "Invalid fields", 400);
   const selected = selectItems(url, items, spec);
   if (selected.error !== undefined) return selected.error;
-  const appliedFilters: Filter[] = selected.filters.map((filter) => ({
-    field: filter.field,
-    op: filter.op as Filter["op"],
-    value: filter.value,
-  }));
   return HttpResponse.json({
-    appliedFilters,
+    appliedFilters: echoedFilters(selected.filters),
     items: selected.items.slice(page * size, (page + 1) * size).map(projection ?? ((item) => item)),
     page,
     size,
     totalItems: selected.items.length,
     totalPages: Math.ceil(selected.items.length / size),
+  });
+}
+
+/**
+ * `GET /{list}/filter-values` (CONVENCIONS_API §4): the top 50 values of `field` (one of the list's
+ * `x-filterable`), each counted over the whole set that the other filters and `q` select, never one
+ * page; the filters on `field` itself are left out. `label` names a value as the api does.
+ */
+function filterValuesResponse<Item>(
+  request: Request,
+  items: readonly Item[],
+  spec: ListSpec<Item>,
+  label: (item: Item, field: string, value: string) => string,
+) {
+  const url = new URL(request.url);
+  const field = url.searchParams.get("field") ?? "";
+  if (!spec.filterable.includes(field)) {
+    return apiError("INVALID_FILTER", "Invalid filter field", 400);
+  }
+  const others = new URL(url);
+  others.searchParams.delete("field");
+  others.searchParams.delete("filter");
+  for (const filter of url.searchParams.getAll("filter")) {
+    if (!filter.startsWith(`${field}:`)) others.searchParams.append("filter", filter);
+  }
+  const selected = selectItems(others, items, spec);
+  if (selected.error !== undefined) return selected.error;
+  const counted = new Map<string, { count: number; label: string }>();
+  for (const item of selected.items) {
+    for (const value of new Set(spec.values(item, field))) {
+      const current = counted.get(value);
+      counted.set(value, {
+        count: (current?.count ?? 0) + 1,
+        label: current?.label ?? label(item, field, value),
+      });
+    }
+  }
+  return HttpResponse.json({
+    field,
+    values: [...counted.entries()]
+      .sort(([leftValue, left], [rightValue, right]) =>
+        left.count === right.count ? leftValue.localeCompare(rightValue) : right.count - left.count,
+      )
+      .slice(0, 50)
+      .map(([value, entry]) => ({ count: entry.count, label: entry.label, value })),
   });
 }
 
@@ -247,8 +315,9 @@ export { type ListSpec, refuse, selectItems, text as listValues };
 // ---------------------------------------------------------------------------------------------
 // S08 staff reads: class registrants, waiting entries and the universal `GET /bookings`.
 
-/** A class of the calendar world (D4) or of the day-grid world (screen 23). */
-function findSession(id: string): ClassSession | undefined {
+/** A class of the caller's club: of the calendar world (D4) or of the day-grid world (screen 23). */
+function findSession(scenario: MockScenarioDefinition, id: string): ClassSession | undefined {
+  if (!callerClubOwnsTheWorld(scenario)) return undefined;
   return (
     planningState.sessions.find((session) => session.id === id) ??
     dayGridClassSessions().find((session) => session.id === id)
@@ -286,13 +355,11 @@ function bookingListItems(): Required<BookingListItem>[] {
     const item = findClass(booking.classSessionId);
     const dog = findDog(booking.dogId);
     if (item === undefined || dog === undefined) return [];
-    const date = item.startsAtLocal.slice(0, 10);
-    const weekday = (new Date(`${date}T12:00:00Z`).getUTCDay() + 6) % 7;
-    const monday = new Date(Date.parse(`${date}T12:00:00Z`) - weekday * 86_400_000);
     return [
       {
         bookedAt: booking.bookedAt,
-        bookingWeekKey: new Date(monday.getTime() - 86_400_000).toISOString().slice(0, 10),
+        // R-08-01: the week the class's start falls in, the opening's hour included.
+        bookingWeekKey: bookingWeekKeyOf(localInstant(item.startsAtLocal)),
         classDescription: item.description,
         classSessionId: booking.classSessionId,
         classStartsAt: localInstant(item.startsAtLocal),
@@ -359,7 +426,7 @@ const BOOKING_SPEC: ListSpec<Required<BookingListItem>> = {
     "origin",
     "classStartsAt",
   ],
-  search: (item) => `${item.memberName} ${item.dogName}`,
+  // No free-text search: `q` is INVALID_FILTER (E75).
   sortable: ["classStartsAt", "bookedAt"],
   values: (item, field) => text((item as Record<string, unknown>)[field]),
 };
@@ -367,14 +434,64 @@ const BOOKING_SPEC: ListSpec<Required<BookingListItem>> = {
 // ---------------------------------------------------------------------------------------------
 // S09 ring-usage register: `GET /training-bookings` and `GET /ring-blocks`.
 
+/** The week of Monday 3 August (the S09 world's): the days the `registerMany` rows fall on. */
+const REGISTER_MANY_DAYS = [
+  "2026-08-03",
+  "2026-08-04",
+  "2026-08-05",
+  "2026-08-06",
+  "2026-08-07",
+  "2026-08-08",
+];
+const REGISTER_MANY_EARLY = 1000;
+const REGISTER_MANY_LATE = 5;
+
+/**
+ * `registerMany` (E5-W05 step 5): 1005 more training bookings in the week, in the api's order of
+ * storage; «Nil Fictici Soler» with Coco comes only after row 1000.
+ */
+function manyTrainingRows(): ReturnType<typeof trainingBookingListItems> {
+  return Array.from({ length: REGISTER_MANY_EARLY + REGISTER_MANY_LATE }, (_, index) => {
+    const late = index >= REGISTER_MANY_EARLY;
+    const date = REGISTER_MANY_DAYS[index % REGISTER_MANY_DAYS.length] ?? "2026-08-03";
+    const minutes = 9 * 60 + (index % 16) * 30;
+    const time = (value: number) =>
+      `${String(Math.floor(value / 60)).padStart(2, "0")}:${String(value % 60).padStart(2, "0")}`;
+    return {
+      createdAt: "2026-08-01T09:00:00Z",
+      date,
+      dogId: late ? "dog-coco-many" : "dog-blat-many",
+      dogName: late ? "Coco" : "Blat",
+      endsAt: localInstant(`${date}T${time(minutes + 30)}`),
+      endsAtLocal: time(minutes + 30),
+      id: `training-many-${String(index)}`,
+      memberId: late ? "member-nil-many" : "member-pau-many",
+      memberName: late ? "Nil Fictici Soler" : "Pau Fictici Mas",
+      memberNumber: null,
+      origin: "APP",
+      ringId: "ring-central",
+      ringName: "Central",
+      startsAt: localInstant(`${date}T${time(minutes)}`),
+      startsAtLocal: time(minutes),
+      state: "ACTIVE",
+    };
+  });
+}
+
 const trainingRows = () =>
-  trainingBookingListItems(nowMs()).map((item) => {
+  [
+    ...trainingBookingListItems(nowMs()),
+    ...(currentMockScenarioName() === "registerMany" ? manyTrainingRows() : []),
+  ].map((item) => {
     const memberId = censusMemberId(item.memberId);
+    const member = censusMembers.find((candidate) => candidate.id === memberId);
     return {
       ...item,
       memberId,
+      // The register names the member by its full name, as D10 does (the core's register).
+      memberName: member?.fullName ?? item.memberName,
       // Member.memberNumber from the census (E5-T29); null for a member without one.
-      memberNumber: censusMembers.find((member) => member.id === memberId)?.memberNumber ?? null,
+      memberNumber: member?.memberNumber ?? null,
     };
   });
 
@@ -446,10 +563,59 @@ function ringBlockSpec(member: boolean): ListSpec<RingBlockRow> {
       ...(member ? [] : ["note", "createdByName"]),
     ],
     filterable: ["id", "ringId", "kind", "reason", "state", "from", "to"],
-    search: (item) => `${item.note ?? ""} ${item.createdByName} ${item.activityTitle ?? ""}`,
+    // The ring's name and, for ADMIN and INSTRUCTOR, the note (S09 §2, E75).
+    search: (item) => `${item.ringName ?? ""} ${member ? "" : (item.note ?? "")}`,
     sortable: ["from"],
     values: (item, field) => text((item as Record<string, unknown>)[field]),
   };
+}
+
+/**
+ * `registerMany` (E5-W05 step 5): 1005 more blocks in the week; the last 5, after row 1000, are the
+ * only ones on «Cadells».
+ */
+function manyBlocks(): RingBlock[] {
+  return Array.from({ length: REGISTER_MANY_EARLY + REGISTER_MANY_LATE }, (_, index) => {
+    const late = index >= REGISTER_MANY_EARLY;
+    const date = REGISTER_MANY_DAYS[index % REGISTER_MANY_DAYS.length] ?? "2026-08-03";
+    const hour = String(6 + (index % 14)).padStart(2, "0");
+    const next = String(7 + (index % 14)).padStart(2, "0");
+    return {
+      activityId: null,
+      activityTitle: null,
+      createdByName: "Marc",
+      date,
+      from: localInstant(`${date}T${hour}:00`),
+      fromLocal: `${hour}:00`,
+      id: `rb-many-${String(index)}`,
+      kind: "BLOCK",
+      note: late ? "Canvi de la tanca" : `Revisió ${String(index + 1)}`,
+      reason: "MAINTENANCE",
+      ringId: late ? "ring-cadells" : "ring-central",
+      state: "ACTIVE",
+      to: localInstant(`${date}T${next}:00`),
+      toLocal: `${next}:00`,
+      version: 1,
+    };
+  });
+}
+
+/** The rows of `GET /ring-blocks`: each block with its ring's name and colour (E5-T29). */
+function ringBlockRows(member: boolean): RingBlockRow[] {
+  const blocks = [
+    ...ringBlockListItems(),
+    ...(currentMockScenarioName() === "registerMany" ? manyBlocks() : []),
+  ];
+  return blocks.map((stored): RingBlockRow => {
+    // The ring's name and colour, a deactivated ring's included (E5-T29).
+    const { ringColor, ringName } = ringFields({ id: stored.ringId });
+    const block = { ...stored, ringColor, ringName };
+    return member
+      ? (Object.fromEntries(
+          Object.entries(block).filter(([key]) => !MEMBER_BLOCK_KEYS.has(key)),
+        ) as RingBlockRow)
+      : block;
+  });
 }
 
 function isRegisterBlock(id: string): boolean {
@@ -494,7 +660,7 @@ const RUN_SPEC: ListSpec<StoredJob["runs"][number]> = {
     "errorCount",
   ],
   filterable: ["status", "scheduledFor", "trigger", "dryRun"],
-  search: (item) => item.status,
+  // No free-text search: `q` is INVALID_FILTER (E75).
   sortable: ["scheduledFor", "startedAt"],
   values: (item, field) => text((item as Record<string, unknown>)[field]),
 };
@@ -504,13 +670,22 @@ function clubToday(): string {
   return clubLocalDate(new Date(nowMs()));
 }
 
+/** A club parameter's value, or the product default when the mock club does not list it. */
+function parameterValue<Value extends boolean | number | string>(
+  key: string,
+  fallback: Value,
+): Value {
+  const value = findParameter(key)?.value;
+  return typeof value === typeof fallback ? (value as Value) : fallback;
+}
+
 export const backofficeHandlers = [
   // S08 §6: every booking of the class, any state (INSTRUCTOR and ADMIN).
   http.get("*/api/v1/class-sessions/:id/bookings", ({ params }) => {
     const scenario = currentMockScenario();
     const refused = refuse(scenario, ["INSTRUCTOR", "ADMIN"]);
     if (refused !== undefined) return refused;
-    const session = findSession(String(params.id));
+    const session = findSession(scenario, String(params.id));
     if (session === undefined) return apiError("NOT_FOUND", "Class not found", 404);
     return HttpResponse.json({ items: classBookingItems(session) });
   }),
@@ -519,7 +694,7 @@ export const backofficeHandlers = [
     const scenario = currentMockScenario();
     const refused = refuse(scenario, ["INSTRUCTOR", "ADMIN"]) ?? moduleOff(scenario, "WAITLIST");
     if (refused !== undefined) return refused;
-    const session = findSession(String(params.id));
+    const session = findSession(scenario, String(params.id));
     if (session === undefined) return apiError("NOT_FOUND", "Class not found", 404);
     return HttpResponse.json({ items: classWaitlistEntries(session, fifo()) });
   }),
@@ -532,7 +707,8 @@ export const backofficeHandlers = [
     const scenario = currentMockScenario();
     const disabled = moduleOff(scenario, "WAITLIST");
     if (disabled !== undefined) return disabled;
-    if (findSession(entry.classSessionId) === undefined) {
+    // An entry of a class of the caller's club only (E5-W05 step 16).
+    if (findSession(scenario, entry.classSessionId) === undefined) {
       return apiError("NOT_FOUND", "Waitlist entry not found", 404);
     }
     const memberId = scenario.me.membership?.memberId;
@@ -567,6 +743,22 @@ export const backofficeHandlers = [
     if (refused !== undefined) return refused;
     return listResponse(request, bookingListItems(), BOOKING_SPEC);
   }),
+  // Its universal filter (E5-T29): the dog's and the member's names, the class's start and
+  // description; any other field its value.
+  http.get("*/api/v1/bookings/filter-values", ({ request }) => {
+    const scenario = currentMockScenario();
+    const refused = refuse(scenario, ["INSTRUCTOR", "ADMIN"]);
+    if (refused !== undefined) return refused;
+    return filterValuesResponse(request, bookingListItems(), BOOKING_SPEC, (item, field, value) =>
+      field === "dogId"
+        ? item.dogName
+        : field === "memberId"
+          ? item.memberName
+          : field === "classSessionId"
+            ? `${item.classStartsAt} · ${item.classDescription}`
+            : value,
+    );
+  }),
   // S09 §6 ring-usage register (INSTRUCTOR, ADMIN; requires FREE_TRAINING).
   http.get("*/api/v1/training-bookings", ({ request }) => {
     const scenario = currentMockScenario();
@@ -575,21 +767,39 @@ export const backofficeHandlers = [
     if (refused !== undefined) return refused;
     return listResponse(request, trainingRows(), TRAINING_SPEC);
   }),
+  // The register's universal filter (E5-T29): the ring's, the member's and the dog's names.
+  http.get("*/api/v1/training-bookings/filter-values", ({ request }) => {
+    const scenario = currentMockScenario();
+    const refused =
+      refuse(scenario, ["INSTRUCTOR", "ADMIN"]) ?? moduleOff(scenario, "FREE_TRAINING");
+    if (refused !== undefined) return refused;
+    return filterValuesResponse(request, trainingRows(), TRAINING_SPEC, (item, field, value) =>
+      field === "ringId"
+        ? item.ringName
+        : field === "memberId"
+          ? item.memberName
+          : field === "dogId"
+            ? item.dogName
+            : value,
+    );
+  }),
   // S06/S09 §6: every role; the MEMBER projection is redacted and cannot ask for the hidden keys.
   http.get("*/api/v1/ring-blocks", ({ request }) => {
     const scenario = currentMockScenario();
     const member = isImpersonation(scenario) || !hasRole(scenario, ["INSTRUCTOR", "ADMIN"]);
-    const items = ringBlockListItems().map((stored): RingBlockRow => {
-      // The ring's name and colour, a deactivated ring's included (E5-T29).
-      const { ringColor, ringName } = ringFields({ id: stored.ringId });
-      const block = { ...stored, ringColor, ringName };
-      return member
-        ? (Object.fromEntries(
-            Object.entries(block).filter(([key]) => !MEMBER_BLOCK_KEYS.has(key)),
-          ) as RingBlockRow)
-        : block;
-    });
-    return listResponse(request, items, ringBlockSpec(member));
+    return listResponse(request, ringBlockRows(member), ringBlockSpec(member));
+  }),
+  // The register's universal filter (E5-T29, staff only): the ring's name, a deactivated one's too.
+  http.get("*/api/v1/ring-blocks/filter-values", ({ request }) => {
+    const scenario = currentMockScenario();
+    const refused = refuse(scenario, ["INSTRUCTOR", "ADMIN"]);
+    if (refused !== undefined) return refused;
+    return filterValuesResponse(
+      request,
+      ringBlockRows(false),
+      ringBlockSpec(false),
+      (item, field, value) => (field === "ringId" ? (item.ringName ?? value) : value),
+    );
   }),
   // R-06-11 / R-09-13 for this world's blocks (the calendar world answers its own).
   http.post("*/api/v1/ring-blocks/:id/cancellation", ({ params }) => {
@@ -615,7 +825,12 @@ export const backofficeHandlers = [
     const scenario = currentMockScenario();
     const refused = refuse(scenario, ["ADMIN"]);
     if (refused !== undefined) return refused;
-    return HttpResponse.json({ items: visibleJobs(scenario).map(jobSummary) });
+    // Each schedule at its parameter's local time (R-15-01), so a saved change shows at once.
+    return HttpResponse.json({
+      items: visibleJobs(scenario).map((job) =>
+        jobSummary(job, (key) => findParameter(key)?.value),
+      ),
+    });
   }),
   http.get("*/api/v1/jobs/:name/runs", ({ params, request }) => {
     const scenario = currentMockScenario();
@@ -650,10 +865,7 @@ export const backofficeHandlers = [
     const ids = new Set(selected.items.map((item) => item.runId));
     const items = rows.filter((row) => ids.has(row.runId));
     return HttpResponse.json({
-      appliedFilters: selected.filters.map((filter) => ({
-        ...filter,
-        op: filter.op as Filter["op"],
-      })),
+      appliedFilters: echoedFilters(selected.filters),
       items: items.slice(page * size, (page + 1) * size).map(projection ?? ((item) => item)),
       page,
       size,
@@ -729,6 +941,29 @@ export const backofficeHandlers = [
         fieldErrors: [{ code: "INVALID", field: "date" }],
       });
     }
-    return HttpResponse.json(riskReviewForm(date, currentMockScenarioName() === "riskReviewEmpty"));
+    // Computed from the caller's club's classes (E5-W05 step 15): the calendar world's.
+    const classes =
+      callerClubOwnsTheWorld(scenario) && currentMockScenarioName() !== "riskReviewEmpty"
+        ? planningState.sessions
+        : [];
+    return HttpResponse.json(
+      riskReviewForm(date, {
+        autoCancelSameDay: parameterValue(
+          "classes.riskAutoCancelSameDay",
+          RISK_REVIEW_DEFAULTS.autoCancelSameDay,
+        ),
+        enabled: jobsState.jobs.find((job) => job.entry.name === "risk-review")?.enabled ?? true,
+        lookaheadDays: parameterValue(
+          "classes.riskLookaheadDays",
+          RISK_REVIEW_DEFAULTS.lookaheadDays,
+        ),
+        minDogs: parameterValue("classes.minDogs", RISK_REVIEW_DEFAULTS.minDogs),
+        now: nowMs(),
+        registrants: (session) => classBookingItems(session),
+        reviewTime: parameterValue("classes.riskReviewTime", RISK_REVIEW_DEFAULTS.reviewTime),
+        ringName: (session) => ringFields({ id: session.ringId }).ringName,
+        sessions: classes,
+      }),
+    );
   }),
 ];

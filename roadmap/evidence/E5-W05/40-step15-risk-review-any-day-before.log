@@ -1,0 +1,84 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/backoffice-handlers.test.ts (16 tests | 4 failed | 12 skipped) 197ms
+   ❯ E5-W05 step 15 · the risk review's rows are classes of the calendar world on any day (4)
+     × E5-W05 step 15: on S15's example day (dl 10 at 8:12) each row is a class of its week in the state its status implies, and the WILL_CANCEL class is still active 64ms
+     × E5-W05 step 15: on dt 11-08 at 9:00, the day after the example each row is a class of its week in the state its status implies 44ms
+     × E5-W05 step 15: on dc 23-09 at 10:00, after that day's review each row is a class of its week in the state its status implies 43ms
+     × E5-W05 step 15: on dg 27-09 at 12:00, the review's probe day (no active class ahead) each row is a class of its week in the state its status implies 43ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 15 · the risk review's rows are classes of the calendar world on any day > E5-W05 step 15: on S15's example day (dl 10 at 8:12) each row is a class of its week in the state its status implies, and the WILL_CANCEL class is still active
+AssertionError: cls-2026-08-12-0930-0: expected [ 'CANCELLED', false ] to deeply equal [ 'ACTIVE', true ]
+
+- Expected
++ Received
+
+  [
+-   "ACTIVE",
+-   true,
++   "CANCELLED",
++   false,
+  ]
+
+ ❯ riskRowsInTheirWeeks src/mocks/backoffice-handlers.test.ts:272:61
+    270|     } else {
+    271|       // AT_RISK, WILL_CANCEL and WILL_REVIEW name a class that is sti…
+    272|       expect([session.state, session.atRisk], item.classId).toEqual(["…
+       |                                                             ^
+    273|       expect(item.bookedCount).toBe(session.counters.booked);
+    274|       expect(names("ACTIVE")).toEqual(expect.arrayContaining(notified)…
+ ❯ src/mocks/backoffice-handlers.test.ts:289:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 15 · the risk review's rows are classes of the calendar world on any day > E5-W05 step 15: on dt 11-08 at 9:00, the day after the example each row is a class of its week in the state its status implies
+AssertionError: AUTO_CANCELLED cls-2026-08-11-0930-7 is a class of its week: expected undefined to be defined
+ ❯ riskRowsInTheirWeeks src/mocks/backoffice-handlers.test.ts:250:78
+    248|     );
+    249|     const session = week.body.classes.find((candidate) => candidate.id…
+    250|     expect(session, `${item.status} ${item.classId} is a class of its …
+       |                                                                              ^
+    251|     if (session === undefined) continue;
+    252|     expect([session.date, session.startTime, session.displayDescriptio…
+ ❯ src/mocks/backoffice-handlers.test.ts:314:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 15 · the risk review's rows are classes of the calendar world on any day > E5-W05 step 15: on dc 23-09 at 10:00, after that day's review each row is a class of its week in the state its status implies
+AssertionError: AUTO_CANCELLED cls-2026-09-23-0930-7 is a class of its week: expected undefined to be defined
+ ❯ riskRowsInTheirWeeks src/mocks/backoffice-handlers.test.ts:250:78
+    248|     );
+    249|     const session = week.body.classes.find((candidate) => candidate.id…
+    250|     expect(session, `${item.status} ${item.classId} is a class of its …
+       |                                                                              ^
+    251|     if (session === undefined) continue;
+    252|     expect([session.date, session.startTime, session.displayDescriptio…
+ ❯ src/mocks/backoffice-handlers.test.ts:314:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 15 · the risk review's rows are classes of the calendar world on any day > E5-W05 step 15: on dg 27-09 at 12:00, the review's probe day (no active class ahead) each row is a class of its week in the state its status implies
+AssertionError: AUTO_CANCELLED cls-2026-09-27-0930-7 is a class of its week: expected undefined to be defined
+ ❯ riskRowsInTheirWeeks src/mocks/backoffice-handlers.test.ts:250:78
+    248|     );
+    249|     const session = week.body.classes.find((candidate) => candidate.id…
+    250|     expect(session, `${item.status} ${item.classId} is a class of its …
+       |                                                                              ^
+    251|     if (session === undefined) continue;
+    252|     expect([session.date, session.startTime, session.displayDescriptio…
+ ❯ src/mocks/backoffice-handlers.test.ts:314:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 12 skipped (16)
+   Start at  21:45:20
+   Duration  949ms (transform 43%, import 34%, tests 23%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/backoffice-handlers.test.ts -t E5-W05 step 15

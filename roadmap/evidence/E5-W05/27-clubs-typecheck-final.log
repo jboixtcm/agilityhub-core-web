@@ -1,0 +1,6 @@
+$ pnpm --filter clubs typecheck
+
+> clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> tsc --noEmit
+
+exit 0

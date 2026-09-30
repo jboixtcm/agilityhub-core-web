@@ -411,19 +411,23 @@ function RefusedView({
   if (state.code === "BOOKING_LIMIT_REACHED") {
     const details = state.details as Partial<BookingLimitReachedDetails>;
     // S08 §2 row 29 (amended 26-09): both sentences follow the week of the limit, and a limit per
-    // person names no dog. With CURRENT the class is over by `nextBookableAt`: the mockup's «per a
-    // la setmana vinent»; with NEXT the class turns current then: B1's «aquesta classe».
+    // person names no dog. `nextBookableAt` is the api's start of the next booking week (E5-T29).
+    // With CURRENT the class is over by then: the mockup's «per a la setmana vinent»; with NEXT the
+    // class turns current then: B1's «aquesta classe».
     const week = details.week === "NEXT" ? "NEXT" : "CURRENT";
     note = (
       <p className="booking-note booking-note--warning">
         <Icon aria-hidden="true" name="warn" />
-        {t("booking:confirm.limitDone", {
-          count: details.current ?? details.limit ?? 0,
-          dogArticle: article,
-          dogName: state.dog.name,
-          unit: details.unit === "DOG" ? "DOG" : "MEMBER",
-          week,
-        })}
+        {week === "NEXT" && details.limit === 0
+          ? // `bookings.maxNextWeek = 0`: no class to count, whoever the limit is for (E5-W05 step 6).
+            t("booking:confirm.limitNoneNextWeek")
+          : t("booking:confirm.limitDone", {
+              count: details.current ?? details.limit ?? 0,
+              dogArticle: article,
+              dogName: state.dog.name,
+              unit: details.unit === "DOG" ? "DOG" : "MEMBER",
+              week,
+            })}
         {typeof details.nextBookableAt === "string" &&
         (details.week === "CURRENT" || details.week === "NEXT")
           ? ` ${t("booking:confirm.nextBookableAt", {

@@ -429,7 +429,14 @@ function FaqForm({
   );
 }
 
-export function SettingsPage({ client }: { client: ApiClient }) {
+export function SettingsPage({
+  client,
+  onNavigate,
+}: {
+  client: ApiClient;
+  /** The app's in-app navigation (a run effect opens D4 or D10, R-15-21). */
+  onNavigate?: (path: string) => void;
+}) {
   const branding = useBranding();
   const { t } = useTranslation("admin-catalogs");
   const messageForError = useCatalogError();
@@ -637,6 +644,7 @@ export function SettingsPage({ client }: { client: ApiClient }) {
         levels={levels.items}
         modules={activeModules}
         onModulesChange={setActiveModules}
+        {...(onNavigate === undefined ? {} : { onNavigate })}
         plans={plans.items}
       />
       <CatalogFeedback

@@ -4,7 +4,8 @@ import { resolve } from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4173";
-const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E5-W01");
+// E5-W05 step 7 refreshes the captures that the new mock clock changes.
+const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E5-W05");
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -14,8 +15,9 @@ const brandingCanic: unknown = JSON.parse(
     "utf8",
   ),
 );
-// The S08 mock world is drawn at Sunday 2 August 2026, noon (Europe/Madrid): `BOOKING_MOCK_NOW`.
-const bookingNow = new Date("2026-08-02T12:00:00+02:00");
+// The S08 mock world is drawn at Sunday 2 August 2026, 20:30 (Europe/Madrid), after the club's
+// week opened at 20:00 (R-08-01): `BOOKING_MOCK_NOW` (E5-W05 step 7).
+const bookingNow = new Date("2026-08-02T20:30:00+02:00");
 
 test.use({ viewport: { height: 812, width: 375 } });
 
@@ -88,7 +90,10 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await login(page);
     await expect(page.getByRole("heading", { level: 1, name: "Hola, Laura!" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Tots", pressed: true })).toBeVisible();
-    await expect(page.locator(".reservation-row, .activity-row")).toHaveCount(5);
+    // After the week opened: Rock's Monday 3 training (booked at 20:05) is there too, and Monday
+    // 3's instructor shows (R-08-20); Monday 10's does not yet.
+    await expect(page.locator(".reservation-row, .activity-row")).toHaveCount(6);
+    await expect(page.getByText("Dilluns 3 · 18:50–19:50 · Central · Marc")).toBeVisible();
     await expect(page.getByText("instructor: es mostra el dia abans").first()).toBeVisible();
     await shot(page, "03-inici-375.png");
     await openReserve(page);
@@ -120,7 +125,8 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await login(page);
     await openReserve(page);
     await tapRow(page, "ds 8 · 9:00");
-    // This week's limit (CURRENT): the class is over by Sunday, so the mockup's sentence.
+    // This week's limit (CURRENT at the clock, R-08-01): the class is over by Sunday 9 at 20:00,
+    // the coming opening (`nextBookableAt`), so the mockup's sentence.
     await expect(
       page.getByText(
         "Aquesta setmana ja has fet dues classes amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
@@ -186,6 +192,8 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
       .click();
     await expect(page.getByRole("heading", { name: "Detall de la reserva" })).toBeVisible();
     await expect(page.getByText("Reservada el dijous 30/07 a les 20:14")).toBeVisible();
+    // E5-W05 step 9: the ring's dot before the title, as mockup 07.
+    await expect(page.locator(".detail-card .detail-card__dot")).toHaveCount(1);
     await shot(page, "07-detall-375.png");
     await page.goto(`${baseUrl}/espera/waitlist-duna-thu6`);
     await expect(page.getByText("Classe C i sup. · amb la Duna")).toBeVisible();

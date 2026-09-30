@@ -1,13 +1,15 @@
 import type { components } from "../../generated/schema";
 
-import { clubInstant } from "./calendar";
+import { clubInstant, clubLocalDateOf } from "./calendar";
 import { catalogState } from "./catalogs";
-import { trainingReservationRows } from "./training";
+import { addDays } from "./planning";
+import { trainingParameters, trainingReservationRows, trainingWeekOf } from "./training";
 
 type Booking = components["schemas"]["Booking"];
 type BookableClass = components["schemas"]["BookableClass"];
 type BookableClasses = components["schemas"]["BookableClasses"];
 type BookingClassSession = components["schemas"]["BookingClassSession"];
+type BookingLimitReachedDetails = components["schemas"]["BookingLimitReachedDetails"];
 type HomeDog = components["schemas"]["HomeDog"];
 type LimitStatus = components["schemas"]["LimitStatus"];
 type MeHome = components["schemas"]["MeHome"];
@@ -20,11 +22,13 @@ type SwapOption = components["schemas"]["SwapOption"];
 type WaitlistEntry = components["schemas"]["WaitlistEntry"];
 
 /**
- * The club-local instant the S08 world is drawn at: Sunday 2 August 2026, noon (Europe/Madrid).
- * The 03 row «Dilluns 3 · 18:50» still hides its instructor (R-08-20: 24 h before), and every
- * row of 03/04 is in the future. The Playwright and Vitest suites pin their clock here.
+ * The club-local instant the S08 world is drawn at: Sunday 2 August 2026, 20:30 (Europe/Madrid),
+ * half an hour after the club's week opened (`bookings.weekOpensAt` = Sunday 20:00, E5-W05 step 7).
+ * So, by R-08-01, the current booking week (W0) is 2026-08-02 (Monday 3 to Saturday 8 and 06's
+ * done class of Sunday 2 at 20:00), the next one (W1) 2026-08-09, and Monday 17 opens on Sunday 9.
+ * Every row of 03/04 is in the future. The Playwright and Vitest suites pin their clock here.
  */
-export const BOOKING_MOCK_NOW = "2026-08-02T12:00:00+02:00";
+export const BOOKING_MOCK_NOW = "2026-08-02T20:30:00+02:00";
 
 export const BOOKING_DOG_IDS = { duna: "dog-duna", rock: "dog-rock", toby: "dog-toby" } as const;
 
@@ -80,7 +84,10 @@ const DOGS: readonly MockDog[] = [
   },
 ];
 
-/** A class session as the booking world knows it; `week` is the api's booking week (R-08-01). */
+/**
+ * A class session as the booking world knows it. Its booking week is not stored: the api derives
+ * it from the clock and `bookings.weekOpensAt` on every read (R-08-01, `classWeek`).
+ */
 interface MockClass {
   description: string;
   endsAtLocal: string;
@@ -89,7 +96,6 @@ interface MockClass {
   levelNames: string[];
   ringName: string;
   startsAtLocal: string;
-  week: "CURRENT" | "LATER" | "NEXT";
 }
 
 function mockClass(
@@ -99,7 +105,6 @@ function mockClass(
   description: string,
   levelNames: string[],
   ringName: string,
-  week: MockClass["week"],
   suffix = "",
 ): MockClass {
   return {
@@ -110,24 +115,17 @@ function mockClass(
     levelNames,
     ringName,
     startsAtLocal: `${date}T${start}`,
-    week,
   };
 }
 
 const CLASSES = {
-  done: mockClass("2026-08-02", "10:00", "11:00", "B+C", ["B", "C"], "Central", "CURRENT"),
-  mon3: mockClass("2026-08-03", "18:50", "19:50", "B+C", ["B", "C"], "Central", "CURRENT"),
-  tobyTue4: mockClass("2026-08-04", "18:00", "19:00", "A+B", ["A", "B"], "Cadells", "CURRENT"),
-  wed5: mockClass("2026-08-05", "18:50", "19:50", "B+C", ["B", "C"], "Central", "CURRENT"),
-  wed5Rock: mockClass(
-    "2026-08-05",
-    "19:00",
-    "20:00",
-    "D i sup.",
-    ["D", "E", "F", "G"],
-    "Muntanya",
-    "CURRENT",
-  ),
+  // Mockup 06's done class: the first class of the week that opened at 20:00, begun at the clock
+  // (`notSelectable{DONE}`: `startsAt ≤ now`, R-08-09). It counts in W0 (E5-W05 step 7).
+  done: mockClass("2026-08-02", "20:00", "21:00", "B+C", ["B", "C"], "Central"),
+  mon3: mockClass("2026-08-03", "18:50", "19:50", "B+C", ["B", "C"], "Central"),
+  tobyTue4: mockClass("2026-08-04", "18:00", "19:00", "A+B", ["A", "B"], "Cadells"),
+  wed5: mockClass("2026-08-05", "18:50", "19:50", "B+C", ["B", "C"], "Central"),
+  wed5Rock: mockClass("2026-08-05", "19:00", "20:00", "D i sup.", ["D", "E", "F", "G"], "Muntanya"),
   thu6Waitlist: mockClass(
     "2026-08-06",
     "20:00",
@@ -135,15 +133,14 @@ const CLASSES = {
     "C i sup.",
     ["C", "D", "E", "F", "G"],
     "Carretera",
-    "CURRENT",
   ),
-  thu6: mockClass("2026-08-06", "20:00", "21:00", "C+D", ["C", "D"], "Muntanya", "CURRENT", "-cd"),
-  tobyThu6: mockClass("2026-08-06", "18:00", "19:00", "B", ["B"], "Central", "CURRENT"),
-  fri7Therapy: mockClass("2026-08-07", "17:40", "18:40", "Teràpia", ["C"], "Petita", "CURRENT"),
-  fri7: mockClass("2026-08-07", "20:00", "21:00", "C", ["C"], "Carretera", "CURRENT"),
-  sat8: mockClass("2026-08-08", "09:00", "10:00", "C", ["C"], "Muntanya", "CURRENT"),
-  sat8Notified: mockClass("2026-08-08", "11:00", "12:00", "C", ["C"], "Central", "CURRENT"),
-  mon10: mockClass("2026-08-10", "18:50", "19:50", "B+C", ["B", "C"], "Central", "NEXT"),
+  thu6: mockClass("2026-08-06", "20:00", "21:00", "C+D", ["C", "D"], "Muntanya", "-cd"),
+  tobyThu6: mockClass("2026-08-06", "18:00", "19:00", "B", ["B"], "Central"),
+  fri7Therapy: mockClass("2026-08-07", "17:40", "18:40", "Teràpia", ["C"], "Petita"),
+  fri7: mockClass("2026-08-07", "20:00", "21:00", "C", ["C"], "Carretera"),
+  sat8: mockClass("2026-08-08", "09:00", "10:00", "C", ["C"], "Muntanya"),
+  sat8Notified: mockClass("2026-08-08", "11:00", "12:00", "C", ["C"], "Central"),
+  mon10: mockClass("2026-08-10", "18:50", "19:50", "B+C", ["B", "C"], "Central"),
   mon10Rock: mockClass(
     "2026-08-10",
     "19:00",
@@ -151,7 +148,6 @@ const CLASSES = {
     "D i sup.",
     ["D", "E", "F", "G"],
     "Muntanya",
-    "NEXT",
   ),
   wed12Rock: mockClass(
     "2026-08-12",
@@ -160,23 +156,70 @@ const CLASSES = {
     "D i sup.",
     ["D", "E", "F", "G"],
     "Muntanya",
-    "NEXT",
   ),
-  mon17: mockClass("2026-08-17", "09:30", "10:30", "C", ["C"], "Muntanya", "LATER"),
+  mon17: mockClass("2026-08-17", "09:30", "10:30", "C", ["C"], "Muntanya"),
 } as const satisfies Record<string, MockClass>;
 
 const ALL_CLASSES: readonly MockClass[] = Object.values(CLASSES);
 
-/** The row a dog's 04 shows for a class (R-08-03, decided by the api). */
+/** The booking week of a class relative to now's (R-08-01): W0, W1, or W2+ («Properament»). */
+type BookingWeek = BookableClass["week"];
+
+const WEEK_MS = 7 * 86_400_000;
+
+/**
+ * R-08-01: the booking week `[O, O + 7 days)` holding `instant`, `O` the last opening of the club's
+ * `bookings.weekOpensAt` (local day and time) at or before it; `key` is `bookingWeekKey`, the local
+ * date of `O`. The same weeks S09 counts trainings in (R-09-05): one shared calculation.
+ */
+function bookingWeekOf(instant: number): { end: string; key: string; start: string } {
+  const week = trainingWeekOf(new Date(instant).toISOString());
+  return { ...week, key: clubLocalDateOf(week.start) };
+}
+
+/** `bookingWeekKey` of a class that starts at `startsAt` (R-08-01, the opening's hour included). */
+export function bookingWeekKeyOf(startsAt: string): string {
+  return bookingWeekOf(Date.parse(startsAt)).key;
+}
+
+/** How many booking weeks after now's the class's week is (0 = W0; negative = a past week). */
+function weekIndex(item: MockClass, now: number): number {
+  const classKey = bookingWeekOf(Date.parse(localInstant(item.startsAtLocal))).key;
+  const nowKey = bookingWeekOf(now).key;
+  return Math.round((Date.parse(classKey) - Date.parse(nowKey)) / WEEK_MS);
+}
+
+/** The class's booking week at `now` (R-08-01); `undefined` for a class of a past week. */
+export function classWeek(item: MockClass, now: number): BookingWeek | undefined {
+  const index = weekIndex(item, now);
+  if (index < 0) return undefined;
+  return index === 0 ? "CURRENT" : index === 1 ? "NEXT" : "LATER";
+}
+
+/** A «Properament» class opens with the week before its own: `opensAt = start(W(class)) − 7 days`. */
+function opensAtOf(item: MockClass): string {
+  const classWeekKey = bookingWeekOf(Date.parse(localInstant(item.startsAtLocal))).key;
+  return clubInstant(addDays(classWeekKey, -7), trainingParameters().weekOpensAt.time);
+}
+
+/**
+ * The row a dog's 04 shows for a class (R-08-03, decided by the api). The week and «Properament»
+ * come from the clock (`listedRow`); the fixture holds the rest of the row's state.
+ */
 interface MockRow {
   classId: string;
   freeSeats: number;
   /** Another dog's live hold takes the last seat: the hold answers `CLASS_FULL{heldOnly}`. */
   heldByOther?: boolean;
   notBookableReason?: "BLOCKED";
-  opensAt?: string;
   state: BookableClass["state"];
   waiting?: number;
+}
+
+/** A row as 04 lists it at `now`: with its booking week and, in W2+, its opening. */
+interface ListedRow extends MockRow {
+  opensAt: string | null;
+  week: BookingWeek;
 }
 
 // What the api derives on every read is not stored: the class, the dog, the calendar links,
@@ -256,8 +299,8 @@ function initialBookings(limit: boolean): StoredBooking[] {
       "ACTIVE",
       "2026-07-31T07:40:00Z",
     ),
-    // `bookingLimit` (mockup 06): a second cancellable class this week, and this morning's class,
-    // already done (`notSelectable{DONE}`, R-08-09).
+    // `bookingLimit` (mockup 06): a second cancellable class this week, and tonight's first class
+    // of the week (Sunday 2 at 20:00), already begun (`notSelectable{DONE}`, R-08-09).
     ...(limit
       ? [
           booking(
@@ -374,6 +417,8 @@ function bookingClassSession(item: MockClass, now: number): BookingClassSession 
     endsAtLocal: item.endsAtLocal,
     instructorName: visibleInstructor(item, now),
     instructorVisibleAt: instructorVisibleAt(item),
+    // api E5-T29: the ring's colour for 07's dot (the booking's and the waiting entry's card).
+    ringColor: ringColor(item.ringName),
     ringName: item.ringName,
     startsAtLocal: item.startsAtLocal,
   };
@@ -401,10 +446,15 @@ function counts(item: StoredBooking): boolean {
   );
 }
 
-function weekCount(dogIds: readonly string[], week: MockClass["week"]): number {
+/** Whether the class of `item` belongs to `week` at `now` (R-08-01). */
+function inWeek(item: StoredBooking, week: BookingWeek, now: number): boolean {
+  const session = findClass(item.classSessionId);
+  return session !== undefined && classWeek(session, now) === week;
+}
+
+function weekCount(dogIds: readonly string[], week: BookingWeek, now: number): number {
   return bookingState.bookings.filter(
-    (item) =>
-      dogIds.includes(item.dogId) && counts(item) && findClass(item.classSessionId)?.week === week,
+    (item) => dogIds.includes(item.dogId) && counts(item) && inWeek(item, week, now),
   ).length;
 }
 
@@ -464,7 +514,8 @@ export function meHome(
     }
   }
   // S09 rows (FREE_TRAINING): the live trainings of the S09 world (E5-W02), as the api lists
-  // them; on Sunday 2 at noon only Rock's Tuesday 4 exists, as the mockup.
+  // them; at the clock (Sunday 2 at 20:30) Rock's Tuesday 4, as the mockup, and his Monday 3 at
+  // 7:00, booked at 20:05 once the week opened.
   if (options.modules.includes("FREE_TRAINING")) {
     rows.push(
       ...trainingReservationRows(
@@ -482,13 +533,23 @@ export function meHome(
     (left.startsAt ?? left.startsAtLocal).localeCompare(right.startsAt ?? right.startsAtLocal),
   );
   const limitDogs = filter;
+  // R-08-01: W0 is the booking week of now, W1 the one that starts when W0 ends.
+  const current = bookingWeekOf(options.now);
   return {
     dogs: dogs.map(homeDog),
     history: { monthsVisible: 2 },
     impersonation: null,
     limits: {
-      currentWeek: { count: weekCount(limitDogs, "CURRENT"), max: 2, weekKey: "2026-08-02" },
-      nextWeek: { count: weekCount(limitDogs, "NEXT"), max: 1, weekKey: "2026-08-09" },
+      currentWeek: {
+        count: weekCount(limitDogs, "CURRENT", options.now),
+        max: 2,
+        weekKey: current.key,
+      },
+      nextWeek: {
+        count: weekCount(limitDogs, "NEXT", options.now),
+        max: 1,
+        weekKey: clubLocalDateOf(current.end),
+      },
       unit: "DOG",
     },
     member: { firstName: MEMBER.firstName, gender: MEMBER.gender, id: MEMBER.id },
@@ -540,14 +601,30 @@ function rowsFor(dogId: string, options: BookingOptions): MockRow[] {
       state: options.limit ? "BOOKABLE" : "WEEKLY_LIMIT_DONE",
     },
     { classId: CLASSES.mon10.id, freeSeats: 4, state: "BOOKABLE" },
-    // «Properament»: opens with its booking week, Sunday 9 at 20:00 (R-08-01).
-    {
-      classId: CLASSES.mon17.id,
-      freeSeats: 5,
-      opensAt: localInstant("2026-08-09T20:00"),
-      state: "NOT_YET_OPEN",
-    },
+    // In W2 at the clock: «Properament» until Sunday 9 at 20:00 (R-08-01, `listedRow`).
+    { classId: CLASSES.mon17.id, freeSeats: 5, state: "BOOKABLE" },
   ];
+}
+
+/**
+ * The row as 04 lists it at `now` (R-08-04, R-08-01, R-08-03): only classes that start after now,
+ * up to the end of W2; a W2 row is «Properament» (`NOT_YET_OPEN`, after `NOT_BOOKABLE` in the
+ * order of R-08-03) with `opensAt`. `undefined` when 04 does not list the class.
+ */
+function listedRow(row: MockRow, options: BookingOptions): ListedRow | undefined {
+  const session = findClass(row.classId);
+  if (session === undefined) return undefined;
+  if (Date.parse(localInstant(session.startsAtLocal)) <= options.now) return undefined;
+  const index = weekIndex(session, options.now);
+  if (index < 0 || index > 2) return undefined;
+  const week = classWeek(session, options.now) ?? "CURRENT";
+  const soon = week === "LATER" && row.state !== "NOT_BOOKABLE";
+  return {
+    ...row,
+    opensAt: soon ? opensAtOf(session) : null,
+    state: soon ? "NOT_YET_OPEN" : rowState(row, options.modules),
+    week,
+  };
 }
 
 const SINGLE_CLASS_PRICE: Money = { amountMinor: 1200, currency: "EUR" };
@@ -625,8 +702,8 @@ export function bookableClasses(
     .filter((row) => !taken.has(row.classId))
     .flatMap((row): BookableClass[] => {
       const session = findClass(row.classId);
-      if (session === undefined) return [];
-      const state = rowState(row, options.modules);
+      const listed = listedRow(row, options);
+      if (session === undefined || listed === undefined) return [];
       return [
         {
           description: session.description,
@@ -634,15 +711,15 @@ export function bookableClasses(
           freeSeats: row.freeSeats,
           id: session.id,
           notBookableReason: row.notBookableReason ?? null,
-          opensAt: row.opensAt ?? null,
+          opensAt: listed.opensAt,
           price: single ? SINGLE_CLASS_PRICE : null,
           ringColor: ringColor(session.ringName),
           ringName: session.ringName,
           startsAtLocal: session.startsAtLocal,
-          state,
+          state: listed.state,
           waiting: waitlist ? (row.waiting ?? 0) : null,
           waitlistMax: waitlist ? 3 : null,
-          week: session.week,
+          week: listed.week,
         },
       ];
     });
@@ -667,14 +744,14 @@ export function bookableClasses(
   };
 }
 
-/** The row a dog's 04 shows for a class, or `undefined` when it is not listed there. */
+/** The row a dog's 04 shows for a class at the clock, or `undefined` when it is not listed there. */
 export function bookableRow(
   dogId: string,
   classId: string,
   options: BookingOptions,
-): (MockRow & { state: BookableClass["state"] }) | undefined {
+): ListedRow | undefined {
   const row = rowsFor(dogId, options).find((item) => item.classId === classId);
-  return row === undefined ? undefined : { ...row, state: rowState(row, options.modules) };
+  return row === undefined ? undefined : listedRow(row, options);
 }
 
 function swapOption(item: StoredBooking): SwapOption[] {
@@ -697,12 +774,12 @@ function swapOption(item: StoredBooking): SwapOption[] {
  */
 export function limitStatus(
   dogId: string,
-  week: MockClass["week"],
+  week: BookingWeek,
   options: BookingOptions,
 ): LimitStatus {
   const max = week === "NEXT" ? 1 : 2;
   const counted = bookingState.bookings.filter(
-    (item) => item.dogId === dogId && counts(item) && findClass(item.classSessionId)?.week === week,
+    (item) => item.dogId === dogId && counts(item) && inWeek(item, week, options.now),
   );
   const swappable: SwapOption[] = [];
   const notSelectable: NotSelectable[] = [];
@@ -741,20 +818,21 @@ export function limitStatus(
 }
 
 /**
- * `409 BOOKING_LIMIT_REACHED` details (S08 §6) of a `WEEKLY_LIMIT_DONE` row: no swappable
- * booking, and the start of the next booking week (`nextBookableAt`, decision B1/A19).
+ * `409 BOOKING_LIMIT_REACHED` details (S08 §6) of a `WEEKLY_LIMIT_DONE` row at `now`: the class's
+ * week and its limit, no swappable booking, and `nextBookableAt` = the start of the next booking
+ * week, the coming opening, for a CURRENT class and a NEXT one alike (api E5-T29, R-08-01).
  */
-export function limitReachedDetails(week: MockClass["week"]) {
+export function limitReachedDetails(week: BookingWeek, now: number): BookingLimitReachedDetails {
   return {
     current: week === "NEXT" ? 1 : 2,
     limit: week === "NEXT" ? 1 : 2,
-    nextBookableAt: localInstant("2026-08-09T20:00"),
+    nextBookableAt: bookingWeekOf(now).end,
     notSelectable: [
-      { bookingId: "booking-duna-past-1", reason: "DONE" as const },
-      { bookingId: "booking-duna-past-2", reason: "DONE" as const },
+      { bookingId: "booking-duna-past-1", reason: "DONE" },
+      { bookingId: "booking-duna-past-2", reason: "DONE" },
     ],
     swappable: [],
-    unit: "DOG" as const,
+    unit: "DOG",
     week,
   };
 }
@@ -766,8 +844,9 @@ export function seatHoldResponse(
 ): SeatHoldResponse | undefined {
   const session = findClass(hold.classSessionId);
   const dog = findDog(hold.dogId);
-  if (session === undefined || dog === undefined) return undefined;
-  const limit = limitStatus(dog.id, session.week, options);
+  const week = session === undefined ? undefined : classWeek(session, options.now);
+  if (session === undefined || dog === undefined || week === undefined) return undefined;
+  const limit = limitStatus(dog.id, week, options);
   const pack = packFor(dog.id, options);
   return {
     classSession: {
@@ -804,7 +883,8 @@ export function createHold(
     (hold) => !(hold.classSessionId === classSessionId && hold.dogId === dogId),
   );
   const session = findClass(classSessionId);
-  const limit = session === undefined ? undefined : limitStatus(dogId, session.week, options);
+  const week = session === undefined ? undefined : classWeek(session, options.now);
+  const limit = week === undefined ? undefined : limitStatus(dogId, week, options);
   const hold: StoredHold = {
     classSessionId,
     dogId,
@@ -918,10 +998,11 @@ function registrantsOf(session: ClassSession, count: number) {
     (_, index) => REGISTRANT_POOL[(offset + index) % REGISTRANT_POOL.length] ?? LATE_CANCELLER,
   );
 }
-const WAITING_POOL: readonly (readonly [string, string, "FEMALE" | "MALE"])[] = [
-  ["Júlia", "Kira", "FEMALE"],
-  ["Roser", "Lluna", "FEMALE"],
-  ["Oriol", "Llamp", "MALE"],
+/** [member's first name, dog, sex, the guide when it is not the member (`Dog.handlerName`)]. */
+const WAITING_POOL: readonly (readonly [string, string, "FEMALE" | "MALE", string | null])[] = [
+  ["Júlia", "Kira", "FEMALE", null],
+  ["Roser", "Lluna", "FEMALE", null],
+  ["Oriol", "Llamp", "MALE", "Gina Soler"],
 ];
 
 const slug = (value: string) =>
@@ -930,13 +1011,6 @@ const slug = (value: string) =>
     .replaceAll(/\p{Diacritic}/gu, "")
     .toLowerCase()
     .replaceAll(/[^a-z]+/gu, "-");
-
-/** `bookingWeekKey`: the Sunday the class's booking week opens (S08 R-08-01). */
-function bookingWeekKey(date: string): string {
-  const day = new Date(`${date}T12:00:00Z`);
-  day.setUTCDate(day.getUTCDate() - ((day.getUTCDay() + 6) % 7) - 1);
-  return day.toISOString().slice(0, 10);
-}
 
 /**
  * `GET /class-sessions/{id}/bookings` (S08 §6) of a class of the calendar or day-grid world: its
@@ -952,7 +1026,8 @@ export function classBookingItems(session: ClassSession, now = Date.now()): Clas
     state: ClassBookingItem["state"],
   ): ClassBookingItem => ({
     bookedAt: new Date(Date.parse(session.startsAt) - (72 + index * 5) * 3_600_000).toISOString(),
-    bookingWeekKey: bookingWeekKey(session.date),
+    // R-08-01: the week the class's start falls in, the opening's hour included.
+    bookingWeekKey: bookingWeekKeyOf(session.startsAt),
     classSessionId: session.id,
     classStartsAt: session.startsAt,
     displayState:
@@ -1002,7 +1077,7 @@ export function classWaitlistEntries(session: ClassSession, fifo: boolean): Wait
   const stored = registrantsState.entries.get(session.id);
   if (stored !== undefined) return stored;
   const entries = WAITING_POOL.slice(0, session.counters.waiting).map(
-    ([member, dog, sex], index): WaitlistEntry => ({
+    ([member, dog, sex, handler], index): WaitlistEntry => ({
       bookingId: null,
       cancelReason: null,
       cancelledAt: null,
@@ -1018,8 +1093,11 @@ export function classWaitlistEntries(session: ClassSession, fifo: boolean): Wait
       dog: { id: `dog-${slug(dog)}`, name: dog, sex },
       dogId: `dog-${slug(dog)}`,
       dogName: dog,
+      // E5-T29 (S10 R-10-00): the guide when it is not the member, and the member's first name.
+      handlerName: handler,
       id: `wl-${session.id}-${String(index)}`,
       joinedAt: new Date(Date.parse(session.startsAt) - (48 - index) * 3_600_000).toISOString(),
+      memberFirstName: member,
       memberId: `member-${slug(member)}`,
       notifiedAt: null,
       position: fifo ? index + 1 : null,

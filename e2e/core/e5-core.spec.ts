@@ -3,6 +3,8 @@ import { join, resolve } from "node:path";
 
 import type { Browser, BrowserContext, Locator, Page, Response } from "@playwright/test";
 
+import type { components } from "../../packages/api-client/src/generated/schema";
+
 import { expect, test } from "./oauth-token-log";
 
 // E5-W04 · T-08-40 and T-09-40 end to end against the published core with the E5 demo seed (api
@@ -65,8 +67,8 @@ const text = {
     done: "Reserva confirmada. Afegeix-la al calendari:",
     email: "Correu electrònic",
     hold: /^Plaça bloquejada per a tu · 0:(?:30|[0-2]\d)$/u,
-    inTime:
-      "Anul·lació feta dins el termini establert: pots reservar una altra classe per aquesta setmana.",
+    // E5-W05 step 8: the note no longer names the week.
+    inTime: "Anul·lació feta dins el termini establert: pots reservar una altra classe.",
     join: "APUNTA'M",
     // A substring: the same text as a regex name (with its apostrophe) failed to parse as a role
     // selector in Playwright 1.63 (`InvalidSelectorError`).
@@ -74,6 +76,8 @@ const text = {
     joined: "Ets a la llista d'espera",
     password: "Contrasenya",
     submit: "CONFIRMAR LA RESERVA",
+    /** 03's state of a CLASS_WAITLIST row (`enums:reservationState.WAITLISTED`). */
+    waitlisted: "en llista d'espera",
   },
   es: {
     calendar: /^Google$/u,
@@ -85,13 +89,12 @@ const text = {
     done: "Reserva confirmada. Añádela al calendario:",
     email: "Correo electrónico",
     hold: /^Plaza bloqueada para ti · 0:(?:30|[0-2]\d)$/u,
-    inTime:
-      "Anulación hecha dentro del plazo establecido: puedes reservar otra clase para esta semana.",
     join: "APÚNTAME",
     joinDialog: "¿Quieres apuntarte a la lista de espera de ",
     joined: "Estás en la lista de espera",
     password: "Contraseña",
     submit: "CONFIRMAR LA RESERVA",
+    waitlisted: "en lista de espera",
   },
 } as const;
 
@@ -106,119 +109,42 @@ interface CoreAnswer<Body> {
   status: number;
 }
 
-interface ApiProblem {
-  code?: string;
-  details?: Record<string, unknown>;
-}
-
-interface Dog {
-  id: string;
-  name: string;
-}
-
-interface ReservationRow {
-  dogName?: string | null;
-  id: string;
-  startsAtLocal: string;
-  state: string;
-  title: string;
-  type: string;
-}
-
-interface MeHome {
-  dogs: Dog[];
-  limits: { currentWeek: { count: number }; nextWeek: { count: number } };
-  reservations: ReservationRow[];
-}
-
-interface BookableRow {
-  description: string;
-  id: string;
-  opensAt?: string | null;
-  startsAtLocal: string;
-  state: string;
-}
-
-interface BookableClasses {
-  classes: BookableRow[];
-  dog: Dog;
-  dogs: Dog[];
-}
-
-interface SeatHold {
-  expiresAt: string;
-  id: string;
-  limit: {
-    notSelectable: { bookingId: string }[];
-    reached: boolean;
-    swappable: { bookingId: string; startsAtLocal: string }[];
-  };
-  serverNow: string;
-}
-
-interface Booking {
-  cancellation?: { late?: boolean } | null;
-  id: string;
-  state: string;
-}
-
-interface WaitlistEntry {
-  id: string;
-  position?: number | null;
-  state: string;
-}
-
-interface TrainingSlot {
-  anyFree: boolean;
-  bookable: boolean;
-  endsAtLocal: string;
-  rings: Record<string, { reason?: string | null; state: string } | undefined>;
-  startsAt: string;
-  startsAtLocal: string;
-}
-
-interface TrainingSlots {
-  days: { closed?: boolean; date: string; slots: TrainingSlot[] }[];
-  rings: { id: string; name: string }[];
-}
-
-interface TrainingSummary {
-  cancellableBookings: { id: string }[];
-  counter: { limit: number; remaining: number; used: number };
-  defaultDogId?: string | null;
-  eligibleDogs: Dog[];
-}
-
-interface TrainingBookingItem {
-  date: string;
-  dogId: string;
-  id: string;
-  ringId: string;
-  ringName: string;
-  startsAt: string;
-  startsAtLocal: string;
-  state: string;
-}
-
-interface RiskReviewItem {
-  classId: string;
-  notified: { dogName: string; memberName: string }[];
-  status: string;
-}
-
-interface JobEffectItem {
-  action: string;
-  entityId: string;
-  entityType: string;
-}
-
+// E5-W05 step 19 (E5-W04 round-2 review #4, AGENTS rule 4): the api's answers are the generated
+// contract's types (`packages/api-client/src/generated/schema.d.ts`), with `Pick` where the run
+// reads a few fields. Only the run's own records (sessions, answers, the registry) are local.
+type Schemas = components["schemas"];
+/** A refusal's `ApiError` fields the run reads (a success body has neither). */
+type ApiProblem = Partial<Pick<Schemas["ApiError"], "code" | "details">>;
+type HomeDog = Schemas["HomeDog"];
+type MeHome = Pick<Schemas["MeHome"], "dogs" | "limits" | "reservations">;
+type BookableRow = Schemas["BookableClass"];
+type BookableClasses = Pick<Schemas["BookableClasses"], "classes" | "dog" | "dogs">;
+type SeatHold = Pick<Schemas["SeatHoldResponse"], "expiresAt" | "id" | "limit" | "serverNow">;
+type Booking = Pick<Schemas["Booking"], "cancellation" | "id" | "state">;
+type WaitlistEntry = Pick<
+  Schemas["WaitlistEntry"],
+  "confirmBy" | "id" | "notifiedAt" | "position" | "state"
+>;
+type TrainingSlots = Pick<Schemas["TrainingSlots"], "days" | "rings">;
+type TrainingSummary = Pick<
+  Schemas["TrainingSummary"],
+  "cancellableBookings" | "counter" | "defaultDogId" | "eligibleDogs"
+>;
+/** `GET /me/training-bookings` items and the `POST /training-bookings` answer (`TrainingBooking`). */
+type TrainingBooking = Pick<
+  Schemas["TrainingBooking"],
+  "date" | "dogId" | "id" | "ringId" | "ringName" | "startsAt" | "startsAtLocal" | "state"
+>;
+type MemberTrainingBookings = Schemas["MemberTrainingBookings"];
+type RingBlock = Pick<Schemas["RingBlock"], "id" | "state">;
+type RiskReviewItem = Schemas["RiskReviewItem"];
+type RiskReviewForm = Pick<Schemas["RiskReviewForm"], "items">;
+type JobEffectItem = Schemas["JobEffectItem"];
 /** `JobRun` (S15 §3): what `POST /jobs/{name}/trigger` answers. */
-interface JobRunAnswer {
-  dryRun: boolean;
-  effects: { counters: Record<string, number>; items: JobEffectItem[] };
-  runId: string;
-  status: string;
-}
+type JobRunAnswer = Pick<Schemas["JobRun"], "dryRun" | "effects" | "runId" | "status">;
+type JobRunItem = Schemas["JobRunListItem"];
+type JobRuns = Pick<Schemas["ListPageJobRunListItem"], "items">;
+type JobSummaries = Pick<Schemas["JobSummaries"], "items">;
 
 interface RunRecord {
   created: Record<string, string>;
@@ -672,8 +598,8 @@ async function bookableOf(session: Session, dogId: string): Promise<BookableClas
 /** The first of the member's dogs whose 04 has a row in `state` (read-only api reads). */
 async function dogWithState(
   session: Session,
-  state: string,
-): Promise<{ dog: Dog; row: BookableRow; rows: BookableRow[] }> {
+  state: BookableRow["state"],
+): Promise<{ dog: HomeDog; row: BookableRow; rows: BookableRow[] }> {
   const home = await meHome(session);
   for (const dog of home.dogs) {
     const rows = (await bookableOf(session, dog.id)).classes;
@@ -681,6 +607,15 @@ async function dogWithState(
     if (row !== undefined) return { dog, row, rows };
   }
   throw new Error(`No dog of the account has a ${state} row`);
+}
+
+/** 03 by address: the page's own `GET /me/home` answer, the one its rows are drawn from. */
+async function open03(page: Page): Promise<MeHome> {
+  const read = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/home$/u));
+  await navigateClubRoute(page, "/inici");
+  const response = await read;
+  expect(response.status()).toBe(200);
+  return (await response.json()) as MeHome;
 }
 
 /** 04 by address: the page's own `GET /me/bookable-classes` answer. */
@@ -765,10 +700,110 @@ async function cancelFrom07(page: Page, bookingId: string, locale: Locale = "ca"
   return (await response.json()) as Booking;
 }
 
-async function entryState(session: Session, entryId: string): Promise<string> {
-  const answer = await call<WaitlistEntry>(session, `/waitlist-entries/${entryId}`);
+/** The records the run creates and cancels: where they live and their live states. */
+const cancellable = {
+  booking: {
+    live: ["ACTIVE", "PAYMENT_PENDING"] satisfies Booking["state"][],
+    path: "/bookings",
+  },
+  entry: {
+    live: ["ACTIVE", "NOTIFIED"] satisfies WaitlistEntry["state"][],
+    path: "/waitlist-entries",
+  },
+  ringBlock: { live: ["ACTIVE"] satisfies RingBlock["state"][], path: "/ring-blocks" },
+  training: { live: ["ACTIVE"] satisfies TrainingBooking["state"][], path: "/training-bookings" },
+};
+type CancellableRecord = Booking | RingBlock | TrainingBooking | WaitlistEntry;
+
+/** A record's `state` as the api answers it now, or the refusal's status. */
+async function stateAt(session: Session, path: string): Promise<string> {
+  const answer = await call<Pick<CancellableRecord, "state">>(session, path);
   return answer.status === 200 ? answer.body.state : `HTTP ${String(answer.status)}`;
 }
+
+async function entryState(session: Session, entryId: string): Promise<string> {
+  return stateAt(session, `${cancellable.entry.path}/${entryId}`);
+}
+
+interface CleanupOutcome {
+  cancellation: number | null;
+  state: string;
+}
+
+/**
+ * Cancels a record of `kind` while its state is a live one (`POST {path}/{id}/cancellation`), and
+ * reads its state again: never deleted.
+ */
+function cancelRecord(owner: () => Promise<Session>, kind: keyof typeof cancellable) {
+  const { live, path } = cancellable[kind];
+  return async (id: string): Promise<CleanupOutcome> => {
+    const session = await owner();
+    const before = await stateAt(session, `${path}/${id}`);
+    if (!(live as string[]).includes(before)) return { cancellation: null, state: before };
+    const answer = await call(session, `${path}/${id}/cancellation`, "POST", {});
+    return { cancellation: answer.status, state: await stateAt(session, `${path}/${id}`) };
+  };
+}
+
+/**
+ * Gate (h), E5-W05 step 19 (E5-W04 round-2 review #2): every booking, waiting entry, training
+ * booking and ring block the week-0 flows created (`e5-core-run.json` `created`) is cancelled. Each
+ * record is tried even when another one fails, and their final states are asserted together. It is
+ * the week-0 group's `afterAll`, which Playwright runs after the group's last test and after a
+ * failed one alike, while the core's clock is still at `demoNow` (the Sunday tests move it later).
+ */
+async function cancelWeekZeroRecords(browser: Browser): Promise<void> {
+  const { created } = readRecord();
+  const outcome: Record<string, CleanupOutcome> = {};
+  const expected: Record<string, unknown> = {};
+  const settle = async (
+    key: string,
+    finalState: unknown,
+    run: (id: string) => Promise<CleanupOutcome>,
+  ) => {
+    const id = created[key];
+    if (id === undefined) return;
+    expected[key] = expect.objectContaining({ state: finalState });
+    try {
+      outcome[key] = await run(id);
+    } catch (error) {
+      const reason = error instanceof Error ? (error.message.split("\n")[0] ?? "") : String(error);
+      outcome[key] = { cancellation: null, state: `not settled: ${reason}` };
+    }
+  };
+  const member =
+    (email: string, locale: Locale = "ca") =>
+    () =>
+      clubsSession(browser, email, "/inici", locale);
+  const instructor = () => clubsSession(browser, INSTRUCTOR, "/instructor/dia");
+  const cancelled = expect.stringMatching(/^CANCELLED/u);
+  await settle("swapBooking", cancelled, cancelRecord(member(SWAPPER), "booking"));
+  await settle("waiterClaim", cancelled, cancelRecord(member(WAITER), "booking"));
+  await settle("esBooking", cancelled, cancelRecord(member(ES_MEMBER, "es"), "booking"));
+  await settle("esClaim", cancelled, cancelRecord(member(ES_MEMBER, "es"), "booking"));
+  await settle("bookerBooking", cancelled, cancelRecord(member(BOOKER), "booking"));
+  // Review #3: the run's two waiting entries end consolidated by their claim; one left waiting by
+  // a failed flow is cancelled here instead, so no entry of the run stays waiting.
+  await settle(
+    "waiterEntry",
+    created.waiterClaim === undefined ? "CANCELLED" : "CONSOLIDATED",
+    cancelRecord(member(WAITER), "entry"),
+  );
+  await settle(
+    "esEntry",
+    created.esClaim === undefined ? "CANCELLED" : "CONSOLIDATED",
+    cancelRecord(member(ES_MEMBER, "es"), "entry"),
+  );
+  for (const key of ["training", "anyRingTraining"]) {
+    await settle(key, cancelled, cancelRecord(member(BOOKER), "training"));
+  }
+  await settle("ringBlock", "CANCELLED", cancelRecord(instructor, "ringBlock"));
+  note("h-cleanup", outcome);
+  expect(outcome).toEqual(expected);
+}
+
+/** R-09-05's Monday training until its own cancellation answered: `afterAll` cancels it then. */
+let liveMondayTraining: string | undefined;
 
 /** The processes the first test switched off (`e5-core-run.json`), for `afterAll`. */
 const JOBS_SWITCHED_OFF = "jobs-switched-off";
@@ -781,9 +816,12 @@ async function switchJobs(
 ): Promise<Record<string, { enabled: boolean | null; status: number }>> {
   const answers: Record<string, { enabled: boolean | null; status: number }> = {};
   for (const name of names) {
-    const answer = await call<{ enabled?: boolean }>(admin, `/jobs/${name}/switch`, "PUT", {
-      enabled,
-    });
+    const answer = await call<Partial<Schemas["JobSwitchResponse"]>>(
+      admin,
+      `/jobs/${name}/switch`,
+      "PUT",
+      { enabled },
+    );
     answers[name] = { enabled: answer.body.enabled ?? null, status: answer.status };
   }
   return answers;
@@ -794,6 +832,20 @@ test.describe.configure({ mode: "serial" });
 // Review #10 and #7: the processes go back on and the core's clock back to the real instant, even
 // when a test failed (the stack is removed after the run anyway, but a failure must not hide either).
 test.afterAll(async ({ browser }) => {
+  // A Monday training that R-09-05 booked and did not cancel (a failure in between): cancelled
+  // before the clock goes back, while the class is still ahead.
+  let mondayLeftover: CleanupOutcome | undefined;
+  if (liveMondayTraining !== undefined) {
+    const id = liveMondayTraining;
+    mondayLeftover = await cancelRecord(
+      () => clubsSession(browser, BOOKER),
+      "training",
+    )(id).catch((error: unknown) => ({
+      cancellation: null,
+      state: `not settled: ${String(error)}`,
+    }));
+    note("r-09-05-leftover", mondayLeftover);
+  }
   await closeSessions();
   const switchedOff = (readRecord().steps[JOBS_SWITCHED_OFF] as string[] | undefined) ?? [];
   let switchedOn: Record<string, { enabled: boolean | null; status: number }> = {};
@@ -808,6 +860,7 @@ test.afterAll(async ({ browser }) => {
   for (const answer of Object.values(switchedOn)) {
     expect(answer).toEqual({ enabled: true, status: 200 });
   }
+  if (mondayLeftover !== undefined) expect(mondayLeftover.state).toMatch(/^CANCELLED/u);
 });
 
 test("E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read", async ({
@@ -819,7 +872,7 @@ test("E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow,
   // so its processes are switched off first, at the real instant and before any clock move; the
   // manual [Executa ara] still runs them (S15 R-15-09). `afterAll` switches them back on.
   const before = await adminSession(browser);
-  const listed = await call<{ items: { enabled: boolean; name: string }[] }>(before, "/jobs");
+  const listed = await call<JobSummaries>(before, "/jobs");
   expect(listed.status).toBe(200);
   const enabledJobs = listed.body.items.filter((job) => job.enabled).map((job) => job.name);
   note(JOBS_SWITCHED_OFF, enabledJobs);
@@ -846,7 +899,10 @@ test("E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow,
     "training.bookingWindowDays",
     "classes.riskReviewTime",
   ]) {
-    const answer = await call<{ value?: unknown } | null>(admin, `/parameters/${key}`);
+    const answer = await call<Partial<Pick<Schemas["Parameter"], "value">> | null>(
+      admin,
+      `/parameters/${key}`,
+    );
     expect(answer.status).toBe(200);
     parameters[key] = answer.body?.value;
   }
@@ -859,7 +915,7 @@ test("E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow,
     "waitlist.mode": "ALL_AT_ONCE",
     "waitlist.notifyThresholdMinutes": 30,
   });
-  const jobs = await call<{ items: { enabled: boolean; name: string }[] }>(admin, "/jobs");
+  const jobs = await call<JobSummaries>(admin, "/jobs");
   note(
     "jobs",
     jobs.body.items.map((job) => ({ enabled: job.enabled, name: job.name })),
@@ -868,945 +924,966 @@ test("E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow,
   expect(jobs.body.items.filter((job) => job.enabled).map((job) => job.name)).toEqual([]);
 });
 
-test("T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation", async ({
-  browser,
-}) => {
-  test.setTimeout(300_000);
-  const member = await clubsSession(browser, BOOKER);
-  const { page } = member;
-
-  // 03 from the page's own answer: the seeded rows and the counters.
-  const homeRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/home$/u));
-  await navigateClubRoute(page, "/inici");
-  const home = (await (await homeRead).json()) as MeHome;
-  await expect(page.getByRole("heading", { level: 1, name: /^Hola, .+!$/u })).toBeVisible();
-  const links = { CLASS: "/reserves/", CLASS_WAITLIST: "/espera/", TRAINING: "/entrenaments/" };
-  const types = home.reservations.map((row) => row.type);
-  expect(types).toEqual(
-    expect.arrayContaining(["CLASS", "TRAINING", "CLASS_WAITLIST", "ACTIVITY"]),
-  );
-  for (const row of home.reservations) {
-    const prefix = links[row.type as keyof typeof links] as string | undefined;
-    if (prefix !== undefined) {
-      await expect(page.locator(`a[href="${prefix}${row.id}"]`)).toBeVisible();
-    }
-  }
-  const counters = page.getByRole("group", { name: "Classes reservades" });
-  await expect(counters.locator(".home-limits__count--current")).toHaveText(
-    String(home.limits.currentWeek.count),
-  );
-  await shot(page, "03-inici-core-375.png");
-
-  // 04: the default dog's rows are the api's, state by state (`data-bookable-state`).
-  const bookable = await open04(member);
-  expect(await rowStates(page)).toEqual(bookable.classes.map((row) => row.state));
-  const defaultStates = new Set(bookable.classes.map((row) => row.state));
-  for (const state of ["BOOKABLE", "WAITLIST_FULL", "NOT_YET_OPEN"]) {
-    expect(defaultStates.has(state)).toBe(true);
-  }
-  await expect(
-    page.locator('.class-row[data-bookable-state="NOT_YET_OPEN"]').first(),
-  ).toContainText("Properament");
-  await shot(page, "04-reservar-core-375.png");
-  // WAITLIST_OPEN lives on another dog of the account (the seed's Thursday 17:40 class).
-  const waitlistDog = await dogWithState(member, "WAITLIST_OPEN");
-  await chooseDog(page, waitlistDog.dog.name);
-  await expect(classRow(page, waitlistDog.row.id)).toHaveAttribute(
-    "data-bookable-state",
-    "WAITLIST_OPEN",
-  );
-  await chooseDog(page, bookable.dog.name);
-
-  // (a) A BOOKABLE row from Thursday on (more than 4 h ahead of demoNow), confirmed in the hold.
-  const target = bookable.classes.find(
-    (row) =>
-      row.state === "BOOKABLE" &&
-      row.startsAtLocal.slice(0, 10) >= addDays(weekStart, 3) &&
-      row.startsAtLocal.slice(0, 10) < addDays(weekStart, 7),
-  );
-  if (target === undefined) throw new Error("The seed has no BOOKABLE row from Thursday on");
-  const { booking, heldMs, hold } = await bookInsideHold(page, target.id, "ca");
-  remember("bookerBooking", booking.id);
-  await navigateClubRoute(page, "/inici");
-  await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toBeVisible();
-
-  // (b) In time: the green note, then the row is gone from 03. Review #2: 03 shows a skeleton until
-  // its own `GET /me/home` answers, so the check reads that answer and waits for a rendered row
-  // before it counts the cancelled one.
-  const inTime = await cancelFrom07(page, booking.id);
-  expect(inTime.state).toBe("CANCELLED");
-  await expect(page.getByText(text.ca.inTime)).toBeVisible();
-  const homeAfterRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/home$/u));
-  await navigateClubRoute(page, "/inici");
-  const homeAfterResponse = await homeAfterRead;
-  expect(homeAfterResponse.status()).toBe(200);
-  const homeAfter = (await homeAfterResponse.json()) as MeHome;
-  expect(homeAfter.reservations.map((row) => row.id)).not.toContain(booking.id);
-  const stillListed = homeAfter.reservations.find((row) => row.type in links);
-  if (stillListed === undefined) throw new Error("03 lists no other row after the cancellation");
-  await expect(
-    page.locator(`a[href="${links[stillListed.type as keyof typeof links]}${stillListed.id}"]`),
-  ).toBeVisible();
-  await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toHaveCount(0);
-  note("a-b-booker", {
-    booked: {
-      classStartsAtLocal: target.startsAtLocal,
-      heldMs,
-      holdTtlMs: Date.parse(hold.expiresAt) - Date.parse(hold.serverNow),
-      status: 201,
-    },
-    cancelledInTime: { late: inTime.cancellation?.late ?? null, state: inTime.state },
-    home: { counters: home.limits, types },
-    rowStates: [...defaultStates],
+// The flows on week 0 at `demoNow`, then their cleanup (h) in the group's failure-safe `afterAll`.
+test.describe("week 0 at demoNow", () => {
+  test.afterAll(async ({ browser }) => {
+    test.setTimeout(300_000);
+    await cancelWeekZeroRecords(browser);
   });
 
-  // (b) Late: the seeded Monday 08:30 booking of ordinal 7, 1 h 30 before the class.
-  const limited = await clubsSession(browser, LIMITED);
-  const limitedHome = await meHome(limited);
-  const monday = limitedHome.reservations.find(
-    (row) => row.type === "CLASS" && row.startsAtLocal === `${weekStart}T08:30`,
-  );
-  if (monday === undefined) throw new Error("The seed's Monday 08:30 booking is missing");
-  await navigateClubRoute(limited.page, `/reserves/${monday.id}`);
-  // `BookedBy.self`: the reader booked it (api E5-T25), so no name.
-  await expect(limited.page.getByText(/^Reservada el /u)).toBeVisible();
-  const late = await cancelFrom07(limited.page, monday.id);
-  expect(late.state).toBe("CANCELLED_LATE");
-  await expect(
-    limited.page.getByText(/^Anul·lació feta amb menys de 4 hores d'antelació\./u),
-  ).toBeVisible();
-  await expect(limited.page.getByText("anul·lada tard", { exact: true })).toBeVisible();
-  await shot(limited.page, "07-anullada-tard-core-375.png");
-  note("b-late", { late: late.cancellation?.late ?? null, state: late.state });
-});
+  test("T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation", async ({
+    browser,
+  }) => {
+    test.setTimeout(300_000);
+    const member = await clubsSession(browser, BOOKER);
+    const { page } = member;
 
-test("T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29", async ({
-  browser,
-}) => {
-  test.setTimeout(300_000);
-  const swapper = await clubsSession(browser, SWAPPER);
-  const { page } = swapper;
-  const home = await meHome(swapper);
-  // The swappable booking: this week's ACTIVE class more than 4 h ahead (Wednesday 08:30).
-  const old = home.reservations.find(
-    (row) =>
-      row.type === "CLASS" &&
-      row.startsAtLocal.slice(0, 10) > addDays(weekStart, 1) &&
-      row.startsAtLocal.slice(0, 10) < addDays(weekStart, 7),
-  );
-  if (old === undefined) throw new Error("The seed's swappable booking is missing");
-  const dog = home.dogs.find((item) => item.name === old.dogName);
-  if (dog === undefined) throw new Error("The swappable booking's dog is not the account's");
-  const rows = (await bookableOf(swapper, dog.id)).classes;
-  const target = rows
-    .filter(
+    // 03 from the page's own answer: the seeded rows and the counters.
+    const homeRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/home$/u));
+    await navigateClubRoute(page, "/inici");
+    const home = (await (await homeRead).json()) as MeHome;
+    await expect(page.getByRole("heading", { level: 1, name: /^Hola, .+!$/u })).toBeVisible();
+    const links = { CLASS: "/reserves/", CLASS_WAITLIST: "/espera/", TRAINING: "/entrenaments/" };
+    const types = home.reservations.map((row) => row.type);
+    expect(types).toEqual(
+      expect.arrayContaining(["CLASS", "TRAINING", "CLASS_WAITLIST", "ACTIVITY"]),
+    );
+    for (const row of home.reservations) {
+      const prefix = links[row.type as keyof typeof links] as string | undefined;
+      if (prefix !== undefined) {
+        await expect(page.locator(`a[href="${prefix}${row.id}"]`)).toBeVisible();
+      }
+    }
+    const counters = page.getByRole("group", { name: "Classes reservades" });
+    await expect(counters.locator(".home-limits__count--current")).toHaveText(
+      String(home.limits.currentWeek.count),
+    );
+    await shot(page, "03-inici-core-375.png");
+
+    // 04: the default dog's rows are the api's, state by state (`data-bookable-state`).
+    const bookable = await open04(member);
+    expect(await rowStates(page)).toEqual(bookable.classes.map((row) => row.state));
+    const defaultStates = new Set(bookable.classes.map((row) => row.state));
+    for (const state of ["BOOKABLE", "WAITLIST_FULL", "NOT_YET_OPEN"] as const) {
+      expect(defaultStates.has(state)).toBe(true);
+    }
+    await expect(
+      page.locator('.class-row[data-bookable-state="NOT_YET_OPEN"]').first(),
+    ).toContainText("Properament");
+    await shot(page, "04-reservar-core-375.png");
+    // WAITLIST_OPEN lives on another dog of the account (the seed's Thursday 17:40 class).
+    const waitlistDog = await dogWithState(member, "WAITLIST_OPEN");
+    await chooseDog(page, waitlistDog.dog.name);
+    await expect(classRow(page, waitlistDog.row.id)).toHaveAttribute(
+      "data-bookable-state",
+      "WAITLIST_OPEN",
+    );
+    await chooseDog(page, bookable.dog.name);
+
+    // (a) A BOOKABLE row from Thursday on (more than 4 h ahead of demoNow), confirmed in the hold.
+    const target = bookable.classes.find(
       (row) =>
         row.state === "BOOKABLE" &&
-        row.startsAtLocal.slice(0, 10) > old.startsAtLocal.slice(0, 10) &&
+        row.startsAtLocal.slice(0, 10) >= addDays(weekStart, 3) &&
         row.startsAtLocal.slice(0, 10) < addDays(weekStart, 7),
-    )
-    .at(-1);
-  if (target === undefined) throw new Error("No BOOKABLE row after the swappable booking");
-  await open04(swapper);
-  await chooseDog(page, dog.name);
-  const holding = page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
-  await classRow(page, target.id).getByRole("button").click();
-  const holdResponse = await holding;
-  expect(holdResponse.status()).toBe(201);
-  const hold = (await holdResponse.json()) as SeatHold;
-  expect(hold.limit.reached).toBe(true);
-  expect(hold.limit.swappable.map((option) => option.bookingId)).toContain(old.id);
-  await expect(
-    page.getByText(/^Ja tens \d+ classes aquesta setmana amb .+ \(límit per gos\)\.$/u),
-  ).toBeVisible();
-  await expect(page.getByText("Tria quina anul·les per fer-li lloc")).toBeVisible();
-  const radios = page.getByRole("radio");
-  await expect(radios).toHaveCount(hold.limit.swappable.length);
-  // Review #2: the seed gives this member an inert card (its Monday 08:30 cancelled late: `DONE`,
-  // R-08-09), so the count below cannot pass on an empty list.
-  expect(hold.limit.notSelectable.length).toBeGreaterThan(0);
-  await expect(page.locator(".confirm-option--inert")).toHaveCount(hold.limit.notSelectable.length);
-  // Review #11: the swap card is chosen by tapping its radio (the first one is preselected).
-  const oldRadio = radios.nth(
-    hold.limit.swappable.findIndex((option) => option.bookingId === old.id),
-  );
-  await oldRadio.click();
-  await expect(oldRadio).toHaveAttribute("aria-checked", "true");
-  const oldDay = old.startsAtLocal.slice(0, 10);
-  const newDay = target.startsAtLocal.slice(0, 10);
-  const swapButton = page.getByRole("button", {
-    name: new RegExp(
-      `^ANUL·LA ${escapeRegExp(upperDay(oldDay))}(?: D.+)? I CONFIRMA ${escapeRegExp(upperDay(newDay))}(?: D.+)?$`,
-      "u",
-    ),
-  });
-  await expect(swapButton).toBeVisible();
-  await shot(page, "06-confirmar-canvi-core-375.png");
-  const posted = page.waitForResponse(isCall("POST", /\/api\/v1\/bookings$/u));
-  await swapButton.click();
-  const swapResponse = await posted;
-  expect(swapResponse.status()).toBe(201);
-  expect(swapResponse.request().postDataJSON()).toEqual({
-    seatHoldId: hold.id,
-    swapBookingId: old.id,
-  });
-  const swapped = (await swapResponse.json()) as Booking;
-  remember("swapBooking", swapped.id);
-  await expect(page.getByText(text.ca.done)).toBeVisible();
-  await navigateClubRoute(page, "/inici");
-  await expect(page.locator(`a[href="/reserves/${swapped.id}"]`)).toBeVisible();
-  await expect(page.locator(`a[href="/reserves/${old.id}"]`)).toHaveCount(0);
-  note("c-swap", {
-    newClass: target.startsAtLocal,
-    notSelectable: hold.limit.notSelectable.length,
-    // R-08-09: `DONE` for a past or CANCELLED_LATE booking, `LATE_WINDOW` inside the threshold.
-    notSelectableItems: await Promise.all(
-      hold.limit.notSelectable.map(async (item) => ({
-        ...item,
-        bookingState: (await call<Booking>(swapper, `/bookings/${item.bookingId}`)).body.state,
-      })),
-    ),
-    oldClass: old.startsAtLocal,
-    status: swapResponse.status(),
-    swappable: hold.limit.swappable.length,
-  });
+    );
+    if (target === undefined) throw new Error("The seed has no BOOKABLE row from Thursday on");
+    const { booking, heldMs, hold } = await bookInsideHold(page, target.id, "ca");
+    remember("bookerBooking", booking.id);
+    await navigateClubRoute(page, "/inici");
+    await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toBeVisible();
 
-  // 29: the limit reached with nothing to swap (ordinal 7): the api's `details.week` decides.
-  const limited = await clubsSession(browser, LIMITED);
-  const done = await dogWithState(limited, "WEEKLY_LIMIT_DONE");
-  await open04(limited);
-  await chooseDog(limited.page, done.dog.name);
-  const refused = limited.page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
-  await classRow(limited.page, done.row.id).getByRole("button").click();
-  const refusal = await refused;
-  expect(refusal.status()).toBe(409);
-  const problem = (await refusal.json()) as ApiProblem;
-  expect(problem.code).toBe("BOOKING_LIMIT_REACHED");
-  const week = problem.details?.week;
-  const second =
-    week === "NEXT"
-      ? "Podràs reservar aquesta classe a partir de "
-      : "Podràs reservar per a la setmana vinent a partir de ";
-  await expect(
-    limited.page.getByText(
-      new RegExp(
-        `^${week === "NEXT" ? "La setmana vinent ja tens" : "Aquesta setmana ja has fet"} .+ amb .+\\. ${escapeRegExp(second)}.+\\.$`,
-        "u",
-      ),
-    ),
-  ).toBeVisible();
-  await shot(limited.page, "29-limit-core-375.png");
-  note("c-29", { code: problem.code, details: problem.details, status: refusal.status() });
-});
-
-test("T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim", async ({
-  browser,
-}) => {
-  test.setTimeout(420_000);
-  const waiter = await clubsSession(browser, WAITER);
-  const open = await dogWithState(waiter, "WAITLIST_OPEN");
-  const full = open.row;
-  await open04(waiter);
-  await chooseDog(waiter.page, open.dog.name);
-  await classRow(waiter.page, full.id).getByRole("button").click();
-  const dialog = waiter.page.getByRole("dialog", { name: text.ca.joinDialog });
-  const joining = waiter.page.waitForResponse(isCall("POST", /\/api\/v1\/waitlist-entries$/u));
-  await dialog.getByRole("button", { name: text.ca.join }).click();
-  const joined = await joining;
-  expect(joined.status()).toBe(201);
-  const entry = (await joined.json()) as WaitlistEntry;
-  remember("waiterEntry", entry.id);
-  await expect(waiter.page.getByText(text.ca.joined)).toBeVisible();
-  await expect(classRow(waiter.page, full.id)).toHaveCount(0);
-  await navigateClubRoute(waiter.page, "/inici");
-  await expect(waiter.page.locator(`a[href="/espera/${entry.id}"]`)).toContainText(
-    "en llista d'espera",
-  );
-  const entryRead = waiter.page.waitForResponse(
-    isCall("GET", new RegExp(`/api/v1/waitlist-entries/${entry.id}$`, "u")),
-  );
-  await navigateClubRoute(waiter.page, `/espera/${entry.id}`);
-  const shown = (await (await entryRead).json()) as WaitlistEntry;
-  note("d-entry", shown);
-  await expect(waiter.page.locator(".detail-card")).toContainText(open.dog.name);
-  await expect(waiter.page.locator(".detail-card")).toContainText("en llista d'espera");
-  if (shown.position !== null && shown.position !== undefined) {
+    // (b) In time: the green note, then the row is gone from 03. Review #2: 03 shows a skeleton until
+    // its own `GET /me/home` answers, so the check reads that answer and waits for a rendered row
+    // before it counts the cancelled one.
+    const inTime = await cancelFrom07(page, booking.id);
+    expect(inTime.state).toBe("CANCELLED");
+    await expect(page.getByText(text.ca.inTime)).toBeVisible();
+    const homeAfterRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/home$/u));
+    await navigateClubRoute(page, "/inici");
+    const homeAfterResponse = await homeAfterRead;
+    expect(homeAfterResponse.status()).toBe(200);
+    const homeAfter = (await homeAfterResponse.json()) as MeHome;
+    expect(homeAfter.reservations.map((row) => row.id)).not.toContain(booking.id);
+    const stillListed = homeAfter.reservations.find((row) => row.type in links);
+    if (stillListed === undefined) throw new Error("03 lists no other row after the cancellation");
     await expect(
-      waiter.page.getByText(`Ets el número ${String(shown.position)} de la llista`),
+      page.locator(`a[href="${links[stillListed.type as keyof typeof links]}${stillListed.id}"]`),
     ).toBeVisible();
-  }
+    await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toHaveCount(0);
+    note("a-b-booker", {
+      booked: {
+        classStartsAtLocal: target.startsAtLocal,
+        heldMs,
+        holdTtlMs: Date.parse(hold.expiresAt) - Date.parse(hold.serverNow),
+        status: 201,
+      },
+      cancelledInTime: { late: inTime.cancellation?.late ?? null, state: inTime.state },
+      home: { counters: home.limits, types },
+      rowStates: [...defaultStates],
+    });
 
-  // The class's registrants in D4 (E5-W03), with the member who holds the seat and the waiting dogs.
-  const holder = await clubsSession(browser, SEAT_HOLDER);
-  const holderHome = await meHome(holder);
-  const seat = holderHome.reservations.find(
-    (row) => row.type === "CLASS" && row.startsAtLocal === full.startsAtLocal,
-  );
-  if (seat === undefined) throw new Error("The seed's seat holder is not booked in that class");
-  const admin = await adminSession(browser);
-  await navigateSpa(admin.page, `/calendari?estat=actives&setmana=${weekStart}`);
-  const grid = admin.page.getByRole("table", { name: /^Calendari de classes · del /u });
-  await expect(grid).toBeVisible();
-  const date = full.startsAtLocal.slice(0, 10);
-  await grid
-    .getByRole("button", {
+    // (b) Late: the seeded Monday 08:30 booking of ordinal 7, 1 h 30 before the class.
+    const limited = await clubsSession(browser, LIMITED);
+    const limitedHome = await meHome(limited);
+    const monday = limitedHome.reservations.find(
+      (row) => row.type === "CLASS" && row.startsAtLocal === `${weekStart}T08:30`,
+    );
+    if (monday === undefined) throw new Error("The seed's Monday 08:30 booking is missing");
+    await navigateClubRoute(limited.page, `/reserves/${monday.id}`);
+    // `BookedBy.self`: the reader booked it (api E5-T25), so no name.
+    await expect(limited.page.getByText(/^Reservada el /u)).toBeVisible();
+    const late = await cancelFrom07(limited.page, monday.id);
+    expect(late.state).toBe("CANCELLED_LATE");
+    await expect(
+      limited.page.getByText(/^Anul·lació feta amb menys de 4 hores d'antelació\./u),
+    ).toBeVisible();
+    await expect(limited.page.getByText("anul·lada tard", { exact: true })).toBeVisible();
+    await shot(limited.page, "07-anullada-tard-core-375.png");
+    note("b-late", { late: late.cancellation?.late ?? null, state: late.state });
+  });
+
+  test("T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29", async ({
+    browser,
+  }) => {
+    test.setTimeout(300_000);
+    const swapper = await clubsSession(browser, SWAPPER);
+    const { page } = swapper;
+    const home = await meHome(swapper);
+    // The swappable booking: this week's ACTIVE class more than 4 h ahead (Wednesday 08:30).
+    const old = home.reservations.find(
+      (row) =>
+        row.type === "CLASS" &&
+        row.startsAtLocal.slice(0, 10) > addDays(weekStart, 1) &&
+        row.startsAtLocal.slice(0, 10) < addDays(weekStart, 7),
+    );
+    if (old === undefined) throw new Error("The seed's swappable booking is missing");
+    const dog = home.dogs.find((item) => item.name === old.dogName);
+    if (dog === undefined) throw new Error("The swappable booking's dog is not the account's");
+    const rows = (await bookableOf(swapper, dog.id)).classes;
+    const target = rows
+      .filter(
+        (row) =>
+          row.state === "BOOKABLE" &&
+          row.startsAtLocal.slice(0, 10) > old.startsAtLocal.slice(0, 10) &&
+          row.startsAtLocal.slice(0, 10) < addDays(weekStart, 7),
+      )
+      .at(-1);
+    if (target === undefined) throw new Error("No BOOKABLE row after the swappable booking");
+    await open04(swapper);
+    await chooseDog(page, dog.name);
+    const holding = page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
+    await classRow(page, target.id).getByRole("button").click();
+    const holdResponse = await holding;
+    expect(holdResponse.status()).toBe(201);
+    const hold = (await holdResponse.json()) as SeatHold;
+    expect(hold.limit.reached).toBe(true);
+    expect(hold.limit.swappable.map((option) => option.bookingId)).toContain(old.id);
+    await expect(
+      page.getByText(/^Ja tens \d+ classes aquesta setmana amb .+ \(límit per gos\)\.$/u),
+    ).toBeVisible();
+    await expect(page.getByText("Tria quina anul·les per fer-li lloc")).toBeVisible();
+    const radios = page.getByRole("radio");
+    await expect(radios).toHaveCount(hold.limit.swappable.length);
+    // Review #2: the seed gives this member an inert card (its Monday 08:30 cancelled late: `DONE`,
+    // R-08-09), so the count below cannot pass on an empty list.
+    expect(hold.limit.notSelectable.length).toBeGreaterThan(0);
+    await expect(page.locator(".confirm-option--inert")).toHaveCount(
+      hold.limit.notSelectable.length,
+    );
+    // Review #11: the swap card is chosen by tapping its radio (the first one is preselected).
+    const oldRadio = radios.nth(
+      hold.limit.swappable.findIndex((option) => option.bookingId === old.id),
+    );
+    await oldRadio.click();
+    await expect(oldRadio).toHaveAttribute("aria-checked", "true");
+    const oldDay = old.startsAtLocal.slice(0, 10);
+    const newDay = target.startsAtLocal.slice(0, 10);
+    const swapButton = page.getByRole("button", {
       name: new RegExp(
-        `^${escapeRegExp(shortDay(date))} ${escapeRegExp(shortTime(full.startsAtLocal.slice(11, 16)))} · ${escapeRegExp(full.description)}`,
+        `^ANUL·LA ${escapeRegExp(upperDay(oldDay))}(?: D.+)? I CONFIRMA ${escapeRegExp(upperDay(newDay))}(?: D.+)?$`,
         "u",
       ),
-    })
-    .first()
-    .click();
-  const card = admin.page.getByRole("region", { name: /^Classe seleccionada/u });
-  const panel = card.getByRole("region", { name: /^Inscrits \(/u });
-  // Review #2: an empty name would make the check below pass on any panel.
-  const seatDog = seat.dogName ?? "";
-  expect(seatDog).not.toBe("");
-  await expect(panel).toContainText(seatDog);
-  await expect(panel.getByText(/^En espera: /u)).toContainText(open.dog.name);
-  await shotOf(card, admin.page, "D4-inscrits-core-1280.png");
+    });
+    await expect(swapButton).toBeVisible();
+    await shot(page, "06-confirmar-canvi-core-375.png");
+    const posted = page.waitForResponse(isCall("POST", /\/api\/v1\/bookings$/u));
+    await swapButton.click();
+    const swapResponse = await posted;
+    expect(swapResponse.status()).toBe(201);
+    expect(swapResponse.request().postDataJSON()).toEqual({
+      seatHoldId: hold.id,
+      swapBookingId: old.id,
+    });
+    const swapped = (await swapResponse.json()) as Booking;
+    remember("swapBooking", swapped.id);
+    await expect(page.getByText(text.ca.done)).toBeVisible();
+    await navigateClubRoute(page, "/inici");
+    await expect(page.locator(`a[href="/reserves/${swapped.id}"]`)).toBeVisible();
+    await expect(page.locator(`a[href="/reserves/${old.id}"]`)).toHaveCount(0);
+    note("c-swap", {
+      newClass: target.startsAtLocal,
+      notSelectable: hold.limit.notSelectable.length,
+      // R-08-09: `DONE` for a past or CANCELLED_LATE booking, `LATE_WINDOW` inside the threshold.
+      notSelectableItems: await Promise.all(
+        hold.limit.notSelectable.map(async (item) => ({
+          ...item,
+          bookingState: (await call<Booking>(swapper, `/bookings/${item.bookingId}`)).body.state,
+        })),
+      ),
+      oldClass: old.startsAtLocal,
+      status: swapResponse.status(),
+      swappable: hold.limit.swappable.length,
+    });
 
-  // ALL_AT_ONCE (R-08-13): the booker's seeded entry of the same class is notified too.
-  const booker = await clubsSession(browser, BOOKER);
-  const bookerEntry = (await meHome(booker)).reservations.find(
-    (row) => row.type === "CLASS_WAITLIST" && row.startsAtLocal === full.startsAtLocal,
-  );
-
-  // The seat holder cancels in time (days ahead: more than the 30 min of R-08-11).
-  const released = await cancelFrom07(holder.page, seat.id);
-  expect(released.state).toBe("CANCELLED");
-  await expect(holder.page.getByText(text.ca.inTime)).toBeVisible();
-  await expect.poll(() => entryState(waiter, entry.id), { timeout: 30_000 }).toBe("NOTIFIED");
-  const bookerEntryState =
-    bookerEntry === undefined ? "none" : await entryState(booker, bookerEntry.id);
-  expect(bookerEntryState).toBe("NOTIFIED");
-
-  // N-15 is E7's feed (screen 11): the entry's own page shows the NOTIFIED state and the claim;
-  // the deadline line only when the api sends `confirmBy`.
-  const notifiedRead = waiter.page.waitForResponse(
-    isCall("GET", new RegExp(`/api/v1/waitlist-entries/${entry.id}$`, "u")),
-  );
-  await navigateClubRoute(waiter.page, `/espera/${entry.id}`);
-  const notified = (await (await notifiedRead).json()) as WaitlistEntry & {
-    confirmBy?: string | null;
-    notifiedAt?: string | null;
-  };
-  expect(notified.state).toBe("NOTIFIED");
-  if (notified.confirmBy !== null && notified.confirmBy !== undefined) {
+    // 29: the limit reached with nothing to swap (ordinal 7): the api's `details.week` decides.
+    const limited = await clubsSession(browser, LIMITED);
+    const done = await dogWithState(limited, "WEEKLY_LIMIT_DONE");
+    await open04(limited);
+    await chooseDog(limited.page, done.dog.name);
+    const refused = limited.page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
+    await classRow(limited.page, done.row.id).getByRole("button").click();
+    const refusal = await refused;
+    expect(refusal.status()).toBe(409);
+    const problem = (await refusal.json()) as ApiProblem;
+    expect(problem.code).toBe("BOOKING_LIMIT_REACHED");
+    const week = problem.details?.week;
+    const second =
+      week === "NEXT"
+        ? "Podràs reservar aquesta classe a partir de "
+        : "Podràs reservar per a la setmana vinent a partir de ";
     await expect(
-      waiter.page.getByText(/^Tens temps fins a les \d+:\d{2} per agafar la plaça\.$/u),
+      limited.page.getByText(
+        new RegExp(
+          `^${week === "NEXT" ? "La setmana vinent ja tens" : "Aquesta setmana ja has fet"} .+ amb .+\\. ${escapeRegExp(second)}.+\\.$`,
+          "u",
+        ),
+      ),
     ).toBeVisible();
-  }
-  const claim = waiter.page.getByRole("button", { name: text.ca.claim });
-  await expect(claim).toBeVisible();
-  await shot(waiter.page, "07-espera-notificada-core-375.png");
-  const holding = waiter.page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
-  await claim.click();
-  expect((await holding).status()).toBe(201);
-  await expect(waiter.page.getByText(text.ca.hold)).toBeVisible();
-  const claiming = waiter.page.waitForResponse(
-    isCall("POST", new RegExp(`/api/v1/waitlist-entries/${entry.id}/claim$`, "u")),
-  );
-  await waiter.page.getByRole("button", { name: text.ca.submit }).click();
-  const claimed = await claiming;
-  expect(claimed.status()).toBe(201);
-  const claimedBooking = (await claimed.json()) as Booking;
-  remember("waiterClaim", claimedBooking.id);
-  await expect(waiter.page.getByText(text.ca.done)).toBeVisible();
-  // R-08-15: the claim books the seat and consolidates the entry (gate line 2).
-  expect(claimedBooking.state).toBe("ACTIVE");
-  const consolidated = await entryState(waiter, entry.id);
-  expect(consolidated).toBe("CONSOLIDATED");
-  await navigateClubRoute(waiter.page, "/inici");
-  await expect(waiter.page.locator(`a[href="/reserves/${claimedBooking.id}"]`)).toBeVisible();
-  note("d-waitlist", {
-    bookerEntryAfterRelease: bookerEntryState,
-    claim: {
-      bookingState: claimedBooking.state,
-      entryState: consolidated,
-      status: claimed.status(),
-    },
-    join: { status: joined.status() },
-    notified: { confirmBy: notified.confirmBy ?? null, notifiedAt: notified.notifiedAt ?? null },
-    release: { state: released.state },
+    await shot(limited.page, "29-limit-core-375.png");
+    note("c-29", { code: problem.code, details: problem.details, status: refusal.status() });
   });
-});
 
-test("T-08-40 (g) · the same flows in es: a booking inside the hold, and a waiting entry claimed", async ({
-  browser,
-}) => {
-  test.setTimeout(420_000);
-  const member = await clubsSession(browser, ES_MEMBER, "/inici", "es");
-  const { page } = member;
-  const bookable = await open04(member, "es");
-  const target = bookable.classes.find(
-    (row) =>
-      row.state === "BOOKABLE" &&
-      row.startsAtLocal.slice(0, 10) >= addDays(weekStart, 3) &&
-      row.startsAtLocal.slice(0, 10) < addDays(weekStart, 7),
-  );
-  if (target === undefined) throw new Error("The es member has no BOOKABLE row from Thursday on");
-  const { booking } = await bookInsideHold(page, target.id, "es");
-  remember("esBooking", booking.id);
+  test("T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim", async ({
+    browser,
+  }) => {
+    test.setTimeout(420_000);
+    const waiter = await clubsSession(browser, WAITER);
+    const open = await dogWithState(waiter, "WAITLIST_OPEN");
+    const full = open.row;
+    await open04(waiter);
+    await chooseDog(waiter.page, open.dog.name);
+    await classRow(waiter.page, full.id).getByRole("button").click();
+    const dialog = waiter.page.getByRole("dialog", { name: text.ca.joinDialog });
+    const joining = waiter.page.waitForResponse(isCall("POST", /\/api\/v1\/waitlist-entries$/u));
+    await dialog.getByRole("button", { name: text.ca.join }).click();
+    const joined = await joining;
+    expect(joined.status()).toBe(201);
+    const entry = (await joined.json()) as WaitlistEntry;
+    remember("waiterEntry", entry.id);
+    await expect(waiter.page.getByText(text.ca.joined)).toBeVisible();
+    await expect(classRow(waiter.page, full.id)).toHaveCount(0);
+    await navigateClubRoute(waiter.page, "/inici");
+    await expect(waiter.page.locator(`a[href="/espera/${entry.id}"]`)).toContainText(
+      text.ca.waitlisted,
+    );
+    const entryRead = waiter.page.waitForResponse(
+      isCall("GET", new RegExp(`/api/v1/waitlist-entries/${entry.id}$`, "u")),
+    );
+    await navigateClubRoute(waiter.page, `/espera/${entry.id}`);
+    const shown = (await (await entryRead).json()) as WaitlistEntry;
+    note("d-entry", shown);
+    await expect(waiter.page.locator(".detail-card")).toContainText(open.dog.name);
+    await expect(waiter.page.locator(".detail-card")).toContainText(text.ca.waitlisted);
+    if (shown.position !== null && shown.position !== undefined) {
+      await expect(
+        waiter.page.getByText(`Ets el número ${String(shown.position)} de la llista`),
+      ).toBeVisible();
+    }
 
-  // A full class with room on its waiting list, and a login member booked in it who frees a seat.
-  const open = await dogWithState(member, "WAITLIST_OPEN");
-  await open04(member, "es");
-  await chooseDog(page, open.dog.name);
-  await classRow(page, open.row.id).getByRole("button").click();
-  const joining = page.waitForResponse(isCall("POST", /\/api\/v1\/waitlist-entries$/u));
-  await page
-    .getByRole("dialog", { name: text.es.joinDialog })
-    .getByRole("button", { name: text.es.join })
-    .click();
-  const joined = await joining;
-  expect(joined.status()).toBe(201);
-  const entry = (await joined.json()) as WaitlistEntry;
-  remember("esEntry", entry.id);
-  await expect(page.getByText(text.es.joined)).toBeVisible();
+    // The class's registrants in D4 (E5-W03), with the member who holds the seat and the waiting dogs.
+    const holder = await clubsSession(browser, SEAT_HOLDER);
+    const holderHome = await meHome(holder);
+    const seat = holderHome.reservations.find(
+      (row) => row.type === "CLASS" && row.startsAtLocal === full.startsAtLocal,
+    );
+    if (seat === undefined) throw new Error("The seed's seat holder is not booked in that class");
+    const admin = await adminSession(browser);
+    await navigateSpa(admin.page, `/calendari?estat=actives&setmana=${weekStart}`);
+    const grid = admin.page.getByRole("table", { name: /^Calendari de classes · del /u });
+    await expect(grid).toBeVisible();
+    const date = full.startsAtLocal.slice(0, 10);
+    await grid
+      .getByRole("button", {
+        name: new RegExp(
+          `^${escapeRegExp(shortDay(date))} ${escapeRegExp(shortTime(full.startsAtLocal.slice(11, 16)))} · ${escapeRegExp(full.description)}`,
+          "u",
+        ),
+      })
+      .first()
+      .click();
+    const card = admin.page.getByRole("region", { name: /^Classe seleccionada/u });
+    const panel = card.getByRole("region", { name: /^Inscrits \(/u });
+    // Review #2: an empty name would make the check below pass on any panel.
+    const seatDog = seat.dogName ?? "";
+    expect(seatDog).not.toBe("");
+    await expect(panel).toContainText(seatDog);
+    await expect(panel.getByText(/^En espera: /u)).toContainText(open.dog.name);
+    await shotOf(card, admin.page, "D4-inscrits-core-1280.png");
 
-  const freeing = await clubsSession(browser, WAITER);
-  const seat = (await meHome(freeing)).reservations.find(
-    (row) => row.type === "CLASS" && row.startsAtLocal === open.row.startsAtLocal,
-  );
-  if (seat === undefined) throw new Error("No login member of the waiter's family holds a seat");
-  const released = await call<Booking>(freeing, `/bookings/${seat.id}/cancellation`, "POST", {});
-  expect(released.status).toBe(200);
-  await expect.poll(() => entryState(member, entry.id), { timeout: 30_000 }).toBe("NOTIFIED");
+    // ALL_AT_ONCE (R-08-13): the booker's seeded entry of the same class is notified too.
+    const booker = await clubsSession(browser, BOOKER);
+    const bookerEntry = (await meHome(booker)).reservations.find(
+      (row) => row.type === "CLASS_WAITLIST" && row.startsAtLocal === full.startsAtLocal,
+    );
 
-  await navigateClubRoute(page, `/espera/${entry.id}`);
-  const holding = page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
-  await page.getByRole("button", { name: text.es.claim }).click();
-  expect((await holding).status()).toBe(201);
-  await expect(page.getByText(text.es.hold)).toBeVisible();
-  const claiming = page.waitForResponse(
-    isCall("POST", new RegExp(`/api/v1/waitlist-entries/${entry.id}/claim$`, "u")),
-  );
-  await page.getByRole("button", { name: text.es.submit }).click();
-  const claimed = await claiming;
-  expect(claimed.status()).toBe(201);
-  const claimedBooking = (await claimed.json()) as Booking;
-  remember("esClaim", claimedBooking.id);
-  await expect(page.getByText(text.es.done)).toBeVisible();
-  expect(claimedBooking.state).toBe("ACTIVE");
-  expect(await entryState(member, entry.id)).toBe("CONSOLIDATED");
-  note("g-es", {
-    booking: 201,
-    claim: claimed.status(),
-    join: joined.status(),
-    release: released.body.state,
+    // The seat holder cancels in time (days ahead: more than the 30 min of R-08-11).
+    const released = await cancelFrom07(holder.page, seat.id);
+    expect(released.state).toBe("CANCELLED");
+    await expect(holder.page.getByText(text.ca.inTime)).toBeVisible();
+    await expect.poll(() => entryState(waiter, entry.id), { timeout: 30_000 }).toBe("NOTIFIED");
+    const bookerEntryState =
+      bookerEntry === undefined ? "none" : await entryState(booker, bookerEntry.id);
+    expect(bookerEntryState).toBe("NOTIFIED");
+
+    // N-15 is E7's feed (screen 11): the entry's own page shows the NOTIFIED state and the claim;
+    // the deadline line only when the api sends `confirmBy`.
+    const notifiedRead = waiter.page.waitForResponse(
+      isCall("GET", new RegExp(`/api/v1/waitlist-entries/${entry.id}$`, "u")),
+    );
+    await navigateClubRoute(waiter.page, `/espera/${entry.id}`);
+    const notified = (await (await notifiedRead).json()) as WaitlistEntry;
+    expect(notified.state).toBe("NOTIFIED");
+    if (notified.confirmBy !== null && notified.confirmBy !== undefined) {
+      await expect(
+        waiter.page.getByText(/^Tens temps fins a les \d+:\d{2} per agafar la plaça\.$/u),
+      ).toBeVisible();
+    }
+    const claim = waiter.page.getByRole("button", { name: text.ca.claim });
+    await expect(claim).toBeVisible();
+    await shot(waiter.page, "07-espera-notificada-core-375.png");
+    const holding = waiter.page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
+    await claim.click();
+    expect((await holding).status()).toBe(201);
+    await expect(waiter.page.getByText(text.ca.hold)).toBeVisible();
+    const claiming = waiter.page.waitForResponse(
+      isCall("POST", new RegExp(`/api/v1/waitlist-entries/${entry.id}/claim$`, "u")),
+    );
+    await waiter.page.getByRole("button", { name: text.ca.submit }).click();
+    const claimed = await claiming;
+    expect(claimed.status()).toBe(201);
+    const claimedBooking = (await claimed.json()) as Booking;
+    remember("waiterClaim", claimedBooking.id);
+    await expect(waiter.page.getByText(text.ca.done)).toBeVisible();
+    // R-08-15: the claim books the seat and consolidates the entry (gate line 2).
+    expect(claimedBooking.state).toBe("ACTIVE");
+    const consolidated = await entryState(waiter, entry.id);
+    expect(consolidated).toBe("CONSOLIDATED");
+    await navigateClubRoute(waiter.page, "/inici");
+    await expect(waiter.page.locator(`a[href="/reserves/${claimedBooking.id}"]`)).toBeVisible();
+    note("d-waitlist", {
+      bookerEntryAfterRelease: bookerEntryState,
+      claim: {
+        bookingState: claimedBooking.state,
+        entryState: consolidated,
+        status: claimed.status(),
+      },
+      join: { status: joined.status() },
+      notified: { confirmBy: notified.confirmBy ?? null, notifiedAt: notified.notifiedAt ?? null },
+      release: { state: released.state },
+    });
   });
-});
 
-test("T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24 blocks a ring, never over bookings", async ({
-  browser,
-}) => {
-  test.setTimeout(420_000);
-  const member = await clubsSession(browser, BOOKER);
-  const { page } = member;
-  const slotsRead = page.waitForResponse(isCall("GET", /\/api\/v1\/training-slots$/u));
-  const summaryRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/training-summary$/u));
-  await navigateClubRoute(page, "/entrenaments");
-  const slots = (await (await slotsRead).json()) as TrainingSlots;
-  const eligibility = (await (await summaryRead).json()) as TrainingSummary;
-  // R-09-04: today + 3 days, cut by the api (`training.bookingWindowDays = 3`).
-  expect(slots.days.map((day) => day.date)).toEqual([0, 1, 2, 3].map((n) => addDays(weekStart, n)));
-  const days = page.getByRole("group", { name: "Dia" });
-  await expect(days.getByRole("button")).toHaveCount(4);
-  const dogChips = page.getByRole("button", {
-    name: new RegExp(
-      `^(?:${eligibility.eligibleDogs.map((dog) => escapeRegExp(dog.name)).join("|")})(?: ·| \\(|$)`,
-      "u",
-    ),
+  test("T-08-40 (g) · the same flows in es: (a) a booking inside the hold, on 03; (d) a waiting entry, gone from 04 and on 03, claimed", async ({
+    browser,
+  }) => {
+    test.setTimeout(420_000);
+    const member = await clubsSession(browser, ES_MEMBER, "/inici", "es");
+    const { page } = member;
+    const bookable = await open04(member, "es");
+    const target = bookable.classes.find(
+      (row) =>
+        row.state === "BOOKABLE" &&
+        row.startsAtLocal.slice(0, 10) >= addDays(weekStart, 3) &&
+        row.startsAtLocal.slice(0, 10) < addDays(weekStart, 7),
+    );
+    if (target === undefined) throw new Error("The es member has no BOOKABLE row from Thursday on");
+    const { booking } = await bookInsideHold(page, target.id, "es");
+    remember("esBooking", booking.id);
+    // E5-W05 step 19 (E5-W04 round-2 review #3): (a) in es, the new booking is on 03.
+    const homeAfterBooking = await open03(page);
+    expect(homeAfterBooking.reservations.map((row) => row.id)).toContain(booking.id);
+    await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toBeVisible();
+
+    // A full class with room on its waiting list, and a login member booked in it who frees a seat.
+    const open = await dogWithState(member, "WAITLIST_OPEN");
+    await open04(member, "es");
+    await chooseDog(page, open.dog.name);
+    await classRow(page, open.row.id).getByRole("button").click();
+    const joining = page.waitForResponse(isCall("POST", /\/api\/v1\/waitlist-entries$/u));
+    await page
+      .getByRole("dialog", { name: text.es.joinDialog })
+      .getByRole("button", { name: text.es.join })
+      .click();
+    const joined = await joining;
+    expect(joined.status()).toBe(201);
+    const entry = (await joined.json()) as WaitlistEntry;
+    remember("esEntry", entry.id);
+    await expect(page.getByText(text.es.joined)).toBeVisible();
+    // (d) in es: the class leaves 04 once joined, and 03 lists the waiting entry.
+    await expect(classRow(page, open.row.id)).toHaveCount(0);
+    const homeAfterJoin = await open03(page);
+    expect(homeAfterJoin.reservations).toContainEqual(
+      expect.objectContaining({ id: entry.id, type: "CLASS_WAITLIST" }),
+    );
+    await expect(page.locator(`a[href="/espera/${entry.id}"]`)).toContainText(text.es.waitlisted);
+    await shot(page, "03-espera-core-es-375.png");
+
+    const freeing = await clubsSession(browser, WAITER);
+    const seat = (await meHome(freeing)).reservations.find(
+      (row) => row.type === "CLASS" && row.startsAtLocal === open.row.startsAtLocal,
+    );
+    if (seat === undefined) throw new Error("No login member of the waiter's family holds a seat");
+    const released = await call<Booking>(freeing, `/bookings/${seat.id}/cancellation`, "POST", {});
+    expect(released.status).toBe(200);
+    await expect.poll(() => entryState(member, entry.id), { timeout: 30_000 }).toBe("NOTIFIED");
+
+    await navigateClubRoute(page, `/espera/${entry.id}`);
+    const holding = page.waitForResponse(isCall("POST", /\/api\/v1\/seat-holds$/u));
+    await page.getByRole("button", { name: text.es.claim }).click();
+    expect((await holding).status()).toBe(201);
+    await expect(page.getByText(text.es.hold)).toBeVisible();
+    const claiming = page.waitForResponse(
+      isCall("POST", new RegExp(`/api/v1/waitlist-entries/${entry.id}/claim$`, "u")),
+    );
+    await page.getByRole("button", { name: text.es.submit }).click();
+    const claimed = await claiming;
+    expect(claimed.status()).toBe(201);
+    const claimedBooking = (await claimed.json()) as Booking;
+    remember("esClaim", claimedBooking.id);
+    await expect(page.getByText(text.es.done)).toBeVisible();
+    expect(claimedBooking.state).toBe("ACTIVE");
+    const esEntryState = await entryState(member, entry.id);
+    expect(esEntryState).toBe("CONSOLIDATED");
+    // Both new bookings of the es pass are on 03.
+    const homeAfterClaim = await open03(page);
+    expect(homeAfterClaim.reservations.map((row) => row.id)).toEqual(
+      expect.arrayContaining([booking.id, claimedBooking.id]),
+    );
+    await expect(page.locator(`a[href="/reserves/${booking.id}"]`)).toBeVisible();
+    await expect(page.locator(`a[href="/reserves/${claimedBooking.id}"]`)).toBeVisible();
+    await shot(page, "03-inici-core-es-375.png");
+    note("g-es", {
+      booking: 201,
+      claim: claimed.status(),
+      entryState: esEntryState,
+      home: {
+        afterBooking: homeAfterBooking.reservations.some((row) => row.id === booking.id),
+        afterClaim: [booking.id, claimedBooking.id].map((id) =>
+          homeAfterClaim.reservations.some((row) => row.id === id),
+        ),
+        afterJoin: homeAfterJoin.reservations.find((row) => row.id === entry.id)?.type ?? null,
+      },
+      join: joined.status(),
+      release: released.body.state,
+    });
   });
-  await expect(dogChips).toHaveCount(eligibility.eligibleDogs.length);
-  await expect(page.getByText("Portes 2/3 entrenaments aquesta setmana")).toBeVisible();
-  await shot(page, "08-entrenaments-core-375.png");
 
-  // Wednesday (day +2), «Qualsevol» (the default ring chip), the first free morning cell.
-  const counterRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/training-summary$/u));
-  await days.getByRole("button").nth(2).click();
-  expect((await counterRead).status()).toBe(200);
-  await expect(
-    page
+  test("T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24 blocks a ring, never over bookings", async ({
+    browser,
+  }) => {
+    test.setTimeout(420_000);
+    const member = await clubsSession(browser, BOOKER);
+    const { page } = member;
+    const slotsRead = page.waitForResponse(isCall("GET", /\/api\/v1\/training-slots$/u));
+    const summaryRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/training-summary$/u));
+    await navigateClubRoute(page, "/entrenaments");
+    const slots = (await (await slotsRead).json()) as TrainingSlots;
+    const eligibility = (await (await summaryRead).json()) as TrainingSummary;
+    // R-09-04: today + 3 days, cut by the api (`training.bookingWindowDays = 3`).
+    expect(slots.days.map((day) => day.date)).toEqual(
+      [0, 1, 2, 3].map((n) => addDays(weekStart, n)),
+    );
+    const days = page.getByRole("group", { name: "Dia" });
+    await expect(days.getByRole("button")).toHaveCount(4);
+    const dogChips = page.getByRole("button", {
+      name: new RegExp(
+        `^(?:${eligibility.eligibleDogs.map((dog) => escapeRegExp(dog.name)).join("|")})(?: ·| \\(|$)`,
+        "u",
+      ),
+    });
+    await expect(dogChips).toHaveCount(eligibility.eligibleDogs.length);
+    await expect(page.getByText("Portes 2/3 entrenaments aquesta setmana")).toBeVisible();
+    await shot(page, "08-entrenaments-core-375.png");
+
+    // Wednesday (day +2), «Qualsevol» (the default ring chip), the first free morning cell.
+    const counterRead = page.waitForResponse(isCall("GET", /\/api\/v1\/me\/training-summary$/u));
+    await days.getByRole("button").nth(2).click();
+    expect((await counterRead).status()).toBe(200);
+    await expect(
+      page
+        .getByRole("group", { name: "Pista" })
+        .getByRole("button", { exact: true, name: "Qualsevol" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    const morning = page.getByRole("group", { name: "Matí" });
+    const cell = morning.locator('[data-slot-state="free"]').first();
+    const label = (await cell.getAttribute("aria-label")) ?? "";
+    const time = label.split(",")[0] ?? "";
+    await cell.click();
+    const posting = page.waitForResponse(isCall("POST", /\/api\/v1\/training-bookings$/u));
+    await page.getByRole("button", { name: /^Confirma /u }).click();
+    const posted = await posting;
+    expect(posted.status()).toBe(201);
+    const training = (await posted.json()) as TrainingBooking;
+    remember("training", training.id);
+    // R-09-07 on 08: under «Qualsevol» the app sends the first FREE ring of the slot in the api's ring
+    // order (S09 §2 row 08: «la preseleccionada»; R-09-07: «La UI … envia `ringId`»).
+    const wednesday = slots.days[2];
+    const postedBody = posted.request().postDataJSON() as Schemas["TrainingBookingRequest"];
+    const tapped = wednesday?.slots.find((slot) => slot.startsAt === postedBody.startsAt);
+    if (tapped === undefined) throw new Error("The booked cell is not a slot of Wednesday's grid");
+    const firstFree = slots.rings.find((ring) => tapped.rings[ring.id]?.state === "FREE");
+    expect(postedBody).toEqual({
+      dogId: eligibility.defaultDogId,
+      ringId: firstFree?.id,
+      startsAt: tapped.startsAt,
+    });
+    expect(training.ringId).toBe(firstFree?.id);
+    // E5-W05 step 19 (E5-W04 round-2 review #1): the booking's own ring in that slot, as the api
+    // answers it for the booked dog. The Cànic's rings take one dog per slot (S09 R-09-02), so the
+    // booking fills that ring's cell, and its cancellation must free that very cell.
+    const bookedRing = slots.rings.find((ring) => ring.id === training.ringId);
+    if (bookedRing === undefined)
+      throw new Error("The booking's ring is not one of the grid's rings");
+    expect(bookedRing.capacity).toBe(1);
+    const bookedRingCell = async () => {
+      const answer = await call<TrainingSlots>(
+        member,
+        `/training-slots?from=${weekStart}&to=${addDays(weekStart, 3)}&dogId=${encodeURIComponent(training.dogId)}`,
+      );
+      expect(answer.status).toBe(200);
+      const slot = answer.body.days
+        .flatMap((day) => day.slots)
+        .find((item) => Date.parse(item.startsAt) === Date.parse(training.startsAt));
+      return slot?.rings[training.ringId] ?? null;
+    };
+    const whileBooked = await bookedRingCell();
+    expect(whileBooked).toMatchObject({
+      bookingId: training.id,
+      reason: "OWN_TRAINING",
+      state: "BOOKED",
+    });
+    await expect(page.getByText("Entrenament reservat")).toBeVisible();
+    await expect(page.getByText("Portes 3/3 entrenaments aquesta setmana")).toBeVisible();
+    await expect(
+      page.getByText(
+        "Has arribat al límit de 3 reserves per aquesta setmana: anul·la alguna de les properes per reservar-ne una altra.",
+      ),
+    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /^Confirma/u })).toHaveCount(0);
+    // A fourth, straight to the api: `409 TRAINING_LIMIT_REACHED` with the cancellable bookings.
+    // Review #3: the seed's Wednesday has more free slots, so a missing one fails the test.
+    const other = wednesday?.slots.find(
+      (slot) => slot.anyFree && slot.bookable && slot.startsAt !== training.startsAt,
+    );
+    if (other === undefined)
+      throw new Error("Wednesday has no other free slot for a fourth booking");
+    const fourth = await call(member, "/training-bookings", "POST", {
+      dogId: eligibility.defaultDogId,
+      startsAt: other.startsAt,
+    });
+    expect(fourth.status).toBe(409);
+    expect(fourth.body.code).toBe("TRAINING_LIMIT_REACHED");
+    // The new booking's link in the limit message → its detail → cancel: back to 2/3 and FREE.
+    await page.locator(`a[href="/entrenaments/${training.id}"]`).click();
+    await page.waitForURL(`**/entrenaments/${training.id}`);
+    const cancelling = page.waitForResponse(
+      isCall("POST", new RegExp(`/api/v1/training-bookings/${training.id}/cancellation$`, "u")),
+    );
+    await page.getByRole("button", { name: "ANUL·LA LA RESERVA" }).click();
+    await page.getByRole("dialog").getByRole("button", { exact: true, name: "ANUL·LA" }).click();
+    expect((await cancelling).status()).toBe(200);
+    await page.waitForURL("**/inici");
+    await expect(page.getByText("Entrenament anul·lat")).toBeVisible();
+    // E5-W05 step 19 (review #1): the cancelled booking's own ring is FREE in that slot, never only
+    // «Qualsevol» (some ring free): in the api's answer, and on 08 with that ring's chip pressed.
+    const afterCancel = await bookedRingCell();
+    expect(afterCancel?.state).toBe("FREE");
+    expect(afterCancel?.bookingId ?? null).toBeNull();
+    await navigateClubRoute(page, "/entrenaments");
+    await page.getByRole("group", { name: "Dia" }).getByRole("button").nth(2).click();
+    await expect(page.getByText("Portes 2/3 entrenaments aquesta setmana")).toBeVisible();
+    const ringChip = page
       .getByRole("group", { name: "Pista" })
-      .getByRole("button", { exact: true, name: "Qualsevol" }),
-  ).toHaveAttribute("aria-pressed", "true");
-  const morning = page.getByRole("group", { name: "Matí" });
-  const cell = morning.locator('[data-slot-state="free"]').first();
-  const label = (await cell.getAttribute("aria-label")) ?? "";
-  const time = label.split(",")[0] ?? "";
-  await cell.click();
-  const posting = page.waitForResponse(isCall("POST", /\/api\/v1\/training-bookings$/u));
-  await page.getByRole("button", { name: /^Confirma /u }).click();
-  const posted = await posting;
-  expect(posted.status()).toBe(201);
-  const training = (await posted.json()) as { id: string; ringId: string; startsAt: string };
-  remember("training", training.id);
-  // R-09-07 on 08: under «Qualsevol» the app sends the first FREE ring of the slot in the api's ring
-  // order (S09 §2 row 08: «la preseleccionada»; R-09-07: «La UI … envia `ringId`»).
-  const wednesday = slots.days[2];
-  const postedBody = posted.request().postDataJSON() as {
-    dogId: string;
-    ringId?: string;
-    startsAt: string;
-  };
-  const tapped = wednesday?.slots.find((slot) => slot.startsAt === postedBody.startsAt);
-  if (tapped === undefined) throw new Error("The booked cell is not a slot of Wednesday's grid");
-  const firstFree = slots.rings.find((ring) => tapped.rings[ring.id]?.state === "FREE");
-  expect(postedBody).toEqual({
-    dogId: eligibility.defaultDogId,
-    ringId: firstFree?.id,
-    startsAt: tapped.startsAt,
-  });
-  expect(training.ringId).toBe(firstFree?.id);
-  await expect(page.getByText("Entrenament reservat")).toBeVisible();
-  await expect(page.getByText("Portes 3/3 entrenaments aquesta setmana")).toBeVisible();
-  await expect(
-    page.getByText(
-      "Has arribat al límit de 3 reserves per aquesta setmana: anul·la alguna de les properes per reservar-ne una altra.",
-    ),
-  ).toBeVisible();
-  await expect(page.getByRole("button", { name: /^Confirma/u })).toHaveCount(0);
-  // A fourth, straight to the api: `409 TRAINING_LIMIT_REACHED` with the cancellable bookings.
-  // Review #3: the seed's Wednesday has more free slots, so a missing one fails the test.
-  const other = wednesday?.slots.find(
-    (slot) => slot.anyFree && slot.bookable && slot.startsAt !== training.startsAt,
-  );
-  if (other === undefined) throw new Error("Wednesday has no other free slot for a fourth booking");
-  const fourth = await call(member, "/training-bookings", "POST", {
-    dogId: eligibility.defaultDogId,
-    startsAt: other.startsAt,
-  });
-  expect(fourth.status).toBe(409);
-  expect(fourth.body.code).toBe("TRAINING_LIMIT_REACHED");
-  // The new booking's link in the limit message → its detail → cancel: back to 2/3 and FREE.
-  await page.locator(`a[href="/entrenaments/${training.id}"]`).click();
-  await page.waitForURL(`**/entrenaments/${training.id}`);
-  const cancelling = page.waitForResponse(
-    isCall("POST", new RegExp(`/api/v1/training-bookings/${training.id}/cancellation$`, "u")),
-  );
-  await page.getByRole("button", { name: "ANUL·LA LA RESERVA" }).click();
-  await page.getByRole("dialog").getByRole("button", { exact: true, name: "ANUL·LA" }).click();
-  expect((await cancelling).status()).toBe(200);
-  await page.waitForURL("**/inici");
-  await expect(page.getByText("Entrenament anul·lat")).toBeVisible();
-  await navigateClubRoute(page, "/entrenaments");
-  await page.getByRole("group", { name: "Dia" }).getByRole("button").nth(2).click();
-  await expect(page.getByText("Portes 2/3 entrenaments aquesta setmana")).toBeVisible();
-  await expect(
-    page.getByRole("group", { name: "Matí" }).getByRole("button", { name: `${time}, lliure` }),
-  ).toHaveAttribute("data-slot-state", "free");
-  // R-09-07 on the core: a `POST` without `ringId` takes the first FREE ring in catalog order,
-  // which is the order the api lists its rings in. Cancelled at once (h).
-  const anyRing = await call<{ id?: string; ringId?: string }>(
-    member,
-    "/training-bookings",
-    "POST",
-    { dogId: eligibility.defaultDogId, startsAt: other.startsAt },
-  );
-  const anyRingCancelled =
-    anyRing.body.id === undefined
-      ? undefined
-      : await call(member, `/training-bookings/${anyRing.body.id}/cancellation`, "POST", {});
-  const otherFirstFree = slots.rings.find((ring) => other.rings[ring.id]?.state === "FREE");
-  expect(anyRing.status).toBe(201);
-  expect(anyRing.body.ringId).toBe(otherFirstFree?.id);
-  expect(anyRingCancelled?.status).toBe(200);
-  const trainings = await call<{ items: TrainingBookingItem[] }>(member, "/me/training-bookings");
-  const seeded = trainings.body.items.find((item) => item.date === addDays(weekStart, 1));
-  if (seeded === undefined) throw new Error("The seed's Tuesday training booking is missing");
-  note("e-training", {
-    anyRing: {
-      cancelled: anyRingCancelled?.status ?? null,
-      expectedRing: otherFirstFree?.name ?? null,
-      ringId: anyRing.body.ringId ?? null,
-      status: anyRing.status,
-    },
-    booked: posted.status(),
-    fourth: { code: fourth.body.code, status: fourth.status },
-    posted: { ring: firstFree?.name ?? null, withRingId: postedBody.ringId !== undefined },
-    ringOrder: slots.rings.map((ring) => ring.name),
-    window: slots.days.map((day) => day.date),
-  });
-
-  // 24 (instructor, 375): «Bloqueig» on the seeded training's ring, two contiguous cells.
-  const instructor = await clubsSession(browser, INSTRUCTOR, "/instructor/dia");
-  const ip = instructor.page;
-  const blockDay = addDays(weekStart, 2);
-  await navigateClubRoute(ip, `/instructor/pistes/${seeded.ringId}/reservar`);
-  await expect(ip.getByRole("heading", { name: "Reservar o bloquejar pista" })).toBeVisible();
-  await ip.getByRole("combobox", { name: "Dia" }).selectOption(blockDay);
-  await ip.getByRole("combobox", { name: "Franja" }).selectOption("morning");
-  await ip.getByRole("group", { name: "Tipus" }).getByRole("button", { name: "Bloqueig" }).click();
-  await expect(ip.getByRole("group", { name: "Motiu" }).getByRole("button")).toHaveText([
-    "Manteniment",
-    "Altres",
-  ]);
-  await expect(ip.getByRole("button", { name: "Classe particular" })).toHaveCount(0);
-  const cells = ip.getByRole("group", { name: "Hores de la franja" });
-  await expect(cells.locator('[data-slot-state="free"]').first()).toBeVisible();
-  const freeTimes = await cells
-    .locator('[data-slot-state="free"]')
-    .evaluateAll((buttons) =>
-      buttons.map((button) => (button.getAttribute("aria-label") ?? "").split(",")[0] ?? ""),
-    );
-  const pad = (value: string) => value.padStart(5, "0");
-  const pairs = freeTimes
-    .map((value, index) => [value, freeTimes[index + 1] ?? ""] as const)
-    .filter(([first, next]) => next !== "" && addMinutes(pad(first), 30) === pad(next));
-  const [first, second] = pairs[0] ?? ["", ""];
-  if (first === "") throw new Error("No two contiguous free cells on the ring that morning");
-  await cells.getByRole("button", { name: `${first}, lliure` }).click();
-  await cells.getByRole("button", { name: `${second}, lliure` }).click();
-  await ip.getByRole("textbox", { name: "Nota" }).fill(`E5 ${runId}`);
-  const to = shortTime(addMinutes(pad(second), 30));
-  await expect(
-    ip.getByText(
-      `Ocupa la pista ${seeded.ringName} de ${first} a ${to}, surt al quadre global i al registre d'ús de pistes. No es vincula a cap alumne.`,
-    ),
-  ).toBeVisible();
-  await shot(ip, "24-bloqueig-core-375.png");
-  const blocking = ip.waitForResponse(isCall("POST", /\/api\/v1\/ring-blocks$/u));
-  await ip.getByRole("button", { name: "Bloqueja la pista" }).click();
-  const blocked = await blocking;
-  expect(blocked.status()).toBe(201);
-  const block = (await blocked.json()) as { id: string };
-  remember("ringBlock", block.id);
-  await ip.waitForURL(`**/instructor/avui?date=${blockDay}`);
-  await expect(ip.getByText("Pista bloquejada")).toBeVisible();
-  await expect(ip.locator(".ah-day-grid").getByText("Bloq.").first()).toBeVisible();
-
-  // Over the seeded live training booking (Tuesday 11:00): `422 RING_HAS_BOOKINGS`, no force.
-  const over = await call(instructor, "/ring-blocks", "POST", {
-    from: clubInstant(seeded.date, seeded.startsAtLocal),
-    kind: "BLOCK",
-    note: `E5 ${runId}`,
-    reason: "MAINTENANCE",
-    ringId: seeded.ringId,
-    to: clubInstant(seeded.date, addMinutes(seeded.startsAtLocal, 60)),
-  });
-  expect(over.status).toBe(422);
-  expect(over.body.code).toBe("RING_HAS_BOOKINGS");
-  await navigateClubRoute(ip, `/instructor/pistes/${seeded.ringId}/reservar`);
-  await ip.getByRole("combobox", { name: "Dia" }).selectOption(seeded.date);
-  await ip.getByRole("combobox", { name: "Franja" }).selectOption("morning");
-  const taken = ip.getByRole("group", { name: "Hores de la franja" }).getByRole("button", {
-    name: new RegExp(`^${escapeRegExp(shortTime(seeded.startsAtLocal))}, `, "u"),
-  });
-  // No force option: the taken cell cannot be picked (R-09-11, the instructor cannot force).
-  await expect(taken).toBeDisabled();
-  await expect(taken).not.toHaveAttribute("data-slot-state", "free");
-  note("e-ring-block", {
-    blocked: blocked.status(),
-    over: { code: over.body.code, status: over.status },
-  });
-
-  // The block in the admin's week (D4) and in the ring-usage register (E5-W03). The register
-  // starts on the device's week, so the address carries week 0 (`filter`, as D10's link does).
-  const admin = await adminSession(browser);
-  await navigateSpa(admin.page, `/calendari?estat=actives&setmana=${weekStart}`);
-  const week = admin.page.getByRole("table", { name: /^Calendari de classes · del /u });
-  const hour = (value: string) => escapeRegExp(value).replace(/^0/u, "0?");
-  await expect(
-    week.getByRole("button", {
-      name: new RegExp(
-        `^${escapeRegExp(seeded.ringName)} bloquejada · .+ ${hour(pad(first))}–${hour(addMinutes(pad(second), 30))}$`,
-        "u",
-      ),
-    }),
-  ).toHaveCount(1);
-  const weekDates = `date:between:${weekStart},${addDays(weekStart, 6)}`;
-  await navigateSpa(
-    admin.page,
-    `/entrenaments?vista=reserves&filter=${encodeURIComponent(weekDates)}`,
-  );
-  const register = admin.page.getByRole("region", { name: "Reserves d'entrenament" });
-  await expect(
-    register.getByRole("row").filter({ hasText: seeded.ringName }).first(),
-  ).toBeVisible();
-  await shot(admin.page, "entrenaments-registre-core-1280.png");
-  const weekInstants = `from:between:${clubInstant(weekStart, "00:00")},${clubInstant(addDays(weekStart, 7), "00:00")}`;
-  await navigateSpa(admin.page, "/tauler");
-  await navigateSpa(
-    admin.page,
-    `/entrenaments?vista=bloquejos&filter=${encodeURIComponent(weekInstants)}`,
-  );
-  await expect(
-    admin.page
-      .getByRole("region", { name: "Bloquejos i reserves de pista" })
-      .getByRole("row")
-      .filter({ hasText: `E5 ${runId}` }),
-  ).toHaveCount(1);
-});
-
-/**
- * Step 5: the known candidates for a contract discrepancy, answered by the core itself (no UI
- * offers them). Each must carry its code with the status the snapshot documents for it
- * (`openapi.json`, the generated types' source): a different status is a proposal for the report.
- */
-test("E5-W04 step 5 · the core's statuses for JOB_UNKNOWN, SLOT_NOT_ON_GRID, DOG_ALREADY_BOOKED and OVERRIDE_NOT_ALLOWED", async ({
-  browser,
-}) => {
-  test.setTimeout(300_000);
-  const member = await clubsSession(browser, BOOKER);
-  const trainings = await call<{ items: TrainingBookingItem[] }>(member, "/me/training-bookings");
-  expect(trainings.status).toBe(200);
-  // The seeded Tuesday training (live: (e) cancelled only its own booking).
-  const seeded = trainings.body.items.find(
-    (item) => item.date === addDays(weekStart, 1) && item.state === "ACTIVE",
-  );
-  if (seeded === undefined) throw new Error("The seed's Tuesday training booking is missing");
-  const slots = await call<TrainingSlots>(
-    member,
-    `/training-slots?from=${weekStart}&to=${addDays(weekStart, 3)}&dogId=${encodeURIComponent(seeded.dogId)}`,
-  );
-  expect(slots.status).toBe(200);
-  const otherRing = slots.body.rings.find((ring) => ring.id !== seeded.ringId);
-  const free = slots.body.days
-    .flatMap((day) => day.slots)
-    .find((slot) => slot.anyFree && slot.bookable && slot.startsAt !== seeded.startsAt);
-  if (otherRing === undefined || free === undefined) {
-    throw new Error("The window has no other ring or no free slot to probe with");
-  }
-  const created: string[] = [];
-  const probe = async (path: string, body: unknown, session: Session = member) => {
-    const answer = await call<ApiProblem & { id?: string }>(session, path, "POST", body);
-    if (answer.status === 201 && answer.body.id !== undefined) created.push(answer.body.id);
-    return { code: answer.body.code ?? null, status: answer.status };
-  };
-  const observed = {
-    // S09 R-09-03: a start off the 30 min grid.
-    slotNotOnGrid: await probe("/training-bookings", {
-      dogId: seeded.dogId,
-      startsAt: new Date(Date.parse(free.startsAt) + 10 * 60_000).toISOString(),
-    }),
-    // S09 R-09-06 (T-09-18): the same dog, the same start, on another ring.
-    dogAlreadyBooked: await probe("/training-bookings", {
-      dogId: seeded.dogId,
-      ringId: otherRing.id,
-      startsAt: seeded.startsAt,
-    }),
-    // S09 R-09-16 (T-09-23): `override` with a token that is not an impersonation.
-    overrideNotAllowed: await probe("/training-bookings", {
-      dogId: seeded.dogId,
-      override: { limit: true, reason: `E5 ${runId}` },
-      startsAt: free.startsAt,
-    }),
-    // S15 §6: a process name that does not exist.
-    jobUnknown: await probe(
-      "/jobs/e5-unknown-process/trigger",
-      { dryRun: true },
-      await adminSession(browser),
-    ),
-  };
-  // A probe the core accepted would leave a booking behind: it is cancelled at once, and the test fails.
-  for (const id of created) {
-    await call(member, `/training-bookings/${id}/cancellation`, "POST", {});
-  }
-  note("step5-statuses", observed);
-  expect(created).toEqual([]);
-  expect(observed).toEqual({
-    dogAlreadyBooked: { code: "DOG_ALREADY_BOOKED", status: 422 },
-    jobUnknown: { code: "JOB_UNKNOWN", status: 404 },
-    overrideNotAllowed: { code: "OVERRIDE_NOT_ALLOWED", status: 403 },
-    slotNotOnGrid: { code: "SLOT_NOT_ON_GRID", status: 400 },
-  });
-});
-
-test("T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk review; D1 reports it; P9 by its run", async ({
-  browser,
-}) => {
-  test.setTimeout(300_000);
-  const admin = await adminSession(browser);
-  const { page } = admin;
-  await navigateSpa(page, "/parametres#processos");
-  const card = page.getByRole("region", { name: "Processos automàtics" });
-  const jobs = await call<{ items: { name: string }[] }>(admin, "/jobs");
-  await expect(card.locator("li[data-job]")).toHaveCount(jobs.body.items.length);
-  await expect(card.getByText("cada dia a les 7:30")).toBeVisible();
-
-  const statuses = async () =>
-    (await call<{ items: RiskReviewItem[] }>(admin, "/risk-review")).body.items.map(
-      (item) => `${item.classId}:${item.status}`,
-    );
-  const before = await statuses();
-  const simulating = page.waitForResponse(
-    isCall("POST", /\/api\/v1\/jobs\/risk-review\/trigger$/u),
-  );
-  await card.getByRole("button", { name: "Simula Revisió de classes en risc" }).click();
-  const simulated = await simulating;
-  expect(simulated.status()).toBe(200);
-  const simulatedRun = (await simulated.json()) as JobRunAnswer;
-  expect(simulatedRun.dryRun).toBe(true);
-  const plan = page.getByRole("dialog", {
-    name: "Simulació: què faria ara · Revisió de classes en risc",
-  });
-  await expect(plan.getByText("Simulació: no s'ha aplicat cap canvi.")).toBeVisible();
-  // Review #3: the modal lists every planned item (it waits for the list, never counts early).
-  expect(simulatedRun.effects.items.length).toBeGreaterThan(0);
-  const planList = plan.locator(".jobs-card__effects > ul:not(.jobs-card__errors) > li");
-  await expect(planList).toHaveCount(simulatedRun.effects.items.length);
-  const planItems = await planList.count();
-  await plan.getByRole("button", { name: "Tanca" }).click();
-  // R-15-08: a dry run writes nothing.
-  expect(await statuses()).toEqual(before);
-
-  const running = page.waitForResponse(isCall("POST", /\/api\/v1\/jobs\/risk-review\/trigger$/u));
-  await card.getByRole("button", { name: "Executa ara Revisió de classes en risc" }).click();
-  await page
-    .getByRole("dialog", { name: "Executar «Revisió de classes en risc» ara" })
-    .getByRole("button", { name: "Executa ara" })
-    .click();
-  const ran = await running;
-  expect(ran.status()).toBe(200);
-  const ranRun = (await ran.json()) as JobRunAnswer;
-  await expect(card.getByText(/^Revisió de classes en risc: /u)).toBeVisible();
-  // R-15-08 (T-15-06): the plan is what the real run then does, on the same data (the scheduler is
-  // off, so nothing ran in between): as many items, the same ones without the `WOULD_` prefix.
-  const itemKey = (item: JobEffectItem) =>
-    `${item.entityType}:${item.entityId}:${item.action.replace(/^WOULD_/u, "")}`;
-  expect(ranRun).toMatchObject({ dryRun: false, status: "SUCCEEDED" });
-  expect(ranRun.effects.items).toHaveLength(planItems);
-  expect(ranRun.effects.items.map(itemKey).sort()).toEqual(
-    simulatedRun.effects.items.map(itemKey).sort(),
-  );
-  const after = await call<{ items: RiskReviewItem[] }>(admin, "/risk-review");
-
-  // D1 (T-15-33): the card's first six rows, each with the status of the api's form A item.
-  const riskRead = page.waitForResponse(isCall("GET", /\/api\/v1\/risk-review$/u));
-  await navigateSpa(page, "/tauler");
-  const shown = ((await (await riskRead).json()) as { items: RiskReviewItem[] }).items;
-  const risk = page.locator(".dashboard-risk");
-  const statusOf = (item: RiskReviewItem): RegExp | string => {
-    const names = item.notified.map((person) => `${person.memberName} + ${person.dogName}`);
-    if (item.status === "AUTO_CANCELLED") {
-      return names.length === 0 ? "anul·lada" : `anul·lada · avisada ${names.join(", ")}`;
-    }
-    if (item.status === "AT_RISK") {
-      return names.length === 0 ? "en risc" : `en risc · avisats ${names.join(", ")}`;
-    }
-    if (item.status === "WILL_CANCEL") return /^s'anul·larà \S+ a les \d+:\d{2}$/u;
-    return "el club decidirà";
-  };
-  for (const item of shown.slice(0, 6)) {
-    await expect(
-      risk.locator(`.dashboard-risk__row[data-class-id="${item.classId}"] .ah-badge`),
-    ).toHaveText(statusOf(item));
-  }
-  if (shown.length > 6) {
-    await expect(risk.getByText(`+${String(shown.length - 6)} més`)).toBeVisible();
-  }
-  await shotOf(risk, page, "D1-risc-core-1280.png");
-
-  // P9 `cleanup`: the seed's stack has no run of it yet at this instant, so [Executa ara]
-  // (R-15-09) leaves one, and the card's runs drawer lists that JobRun.
-  await navigateSpa(page, "/parametres#processos");
-  const cleaning = page.waitForResponse(isCall("POST", /\/api\/v1\/jobs\/cleanup\/trigger$/u));
-  await card.getByRole("button", { name: "Executa ara Neteja tècnica" }).click();
-  await page
-    .getByRole("dialog", { name: "Executar «Neteja tècnica» ara" })
-    .getByRole("button", { name: "Executa ara" })
-    .click();
-  const cleaned = await cleaning;
-  expect(cleaned.status()).toBe(200);
-  const cleanupRun = (await cleaned.json()) as { runId: string; status: string };
-  await expect(card.getByText(/^Neteja tècnica: /u)).toBeVisible();
-  // The card reports the run's own status (the report records it: an api-side outcome).
-  const runStatus: Record<string, string> = {
-    FAILED: "fallida",
-    PARTIAL: "parcial",
-    SKIPPED: "omesa",
-    SUCCEEDED: "correcta",
-  };
-  await expect(card.locator('li[data-job="cleanup"] .jobs-card__last')).toContainText(
-    runStatus[cleanupRun.status] ?? cleanupRun.status,
-  );
-  await expect(card.locator('li[data-job="risk-review"] .jobs-card__last')).toContainText(
-    "correcta",
-  );
-  await shotOf(card, page, "D11-processos-core-1280.png");
-  await card.locator('li[data-job="cleanup"] .jobs-card__last').click();
-  const drawer = page.getByRole("dialog", { name: "Execucions · Neteja tècnica" });
-  await expect(drawer.getByRole("row").filter({ hasText: "manual" }).first()).toBeVisible();
-  const cleanupRuns = await call<{ items: { runId: string; status: string; trigger: string }[] }>(
-    admin,
-    "/jobs/cleanup/runs",
-  );
-  expect(cleanupRuns.body.items.map((run) => run.runId)).toContain(cleanupRun.runId);
-  note("f-risk", {
-    after: after.body.items.map((item) => item.status),
-    before: before.map((value) => value.split(":")[1]),
-    cleanupRun,
-    dryRun: {
-      actions: [...new Set(simulatedRun.effects.items.map((item) => item.action))],
-      planItems,
-      status: simulated.status(),
-    },
-    run: { body: ranRun, status: ran.status() },
-  });
-});
-
-test("E5-W04 (h) · cleanup: every booking, entry, training booking and block the run created is cancelled", async ({
-  browser,
-}) => {
-  test.setTimeout(300_000);
-  const { created } = readRecord();
-  const outcome: Record<string, unknown> = {};
-  const cancelBooking = async (email: string, key: string, locale: Locale = "ca") => {
-    const id = created[key];
-    if (id === undefined) return;
-    const session = await clubsSession(browser, email, "/inici", locale);
-    const answer = await call<Booking>(session, `/bookings/${id}/cancellation`, "POST", {});
-    const current = await call<Booking>(session, `/bookings/${id}`);
-    outcome[key] = { cancellation: answer.status, state: current.body.state };
-    expect(current.body.state).toMatch(/^CANCELLED/u);
-  };
-  await cancelBooking(SWAPPER, "swapBooking");
-  await cancelBooking(WAITER, "waiterClaim");
-  await cancelBooking(ES_MEMBER, "esBooking", "es");
-  await cancelBooking(ES_MEMBER, "esClaim", "es");
-  // Review #3: the run's two waiting entries end consolidated by their claim; one left live by a
-  // failed flow is cancelled here instead (never deleted), so no entry of the run stays waiting.
-  const closeEntry = async (email: string, key: string, claimKey: string, locale: Locale) => {
-    const id = created[key];
-    if (id === undefined) return;
-    const session = await clubsSession(browser, email, "/inici", locale);
-    let state = await entryState(session, id);
-    let cancellation: number | undefined;
-    if (state === "ACTIVE" || state === "NOTIFIED") {
-      cancellation = (await call(session, `/waitlist-entries/${id}/cancellation`, "POST", {}))
-        .status;
-      state = await entryState(session, id);
-    }
-    outcome[key] = { cancellation: cancellation ?? null, state };
-    expect(state).toBe(created[claimKey] === undefined ? "CANCELLED" : "CONSOLIDATED");
-  };
-  await closeEntry(WAITER, "waiterEntry", "waiterClaim", "ca");
-  await closeEntry(ES_MEMBER, "esEntry", "esClaim", "es");
-  const bookerBooking = created.bookerBooking;
-  if (bookerBooking !== undefined) await cancelBooking(BOOKER, "bookerBooking");
-  const training = created.training;
-  if (training !== undefined) {
-    const session = await clubsSession(browser, BOOKER);
-    const answer = await call(session, `/training-bookings/${training}/cancellation`, "POST", {});
-    const current = await call<{ state: string }>(session, `/training-bookings/${training}`);
-    outcome.training = { cancellation: answer.status, state: current.body.state };
-    expect(current.body.state).toMatch(/^CANCELLED/u);
-  }
-  const blockId = created.ringBlock;
-  if (blockId !== undefined) {
-    const session = await clubsSession(browser, INSTRUCTOR, "/instructor/dia");
-    const answer = await call<{ state?: string }>(
-      session,
-      `/ring-blocks/${blockId}/cancellation`,
+      .getByRole("button", { exact: true, name: bookedRing.name });
+    await ringChip.click();
+    await expect(ringChip).toHaveAttribute("aria-pressed", "true");
+    const ringCellShown = page
+      .getByRole("group", { name: "Matí" })
+      .locator(`[data-ring="${training.ringId}"]`)
+      .and(page.getByRole("button", { name: new RegExp(`^${escapeRegExp(time)}, `, "u") }));
+    await expect(ringCellShown).toHaveAttribute("data-slot-state", "free");
+    await expect(ringCellShown).toHaveAccessibleName(`${time}, lliure`);
+    // R-09-07 on the core: a `POST` without `ringId` takes the first FREE ring in catalog order,
+    // which is the order the api lists its rings in. Cancelled at once, and by (h) after a failure.
+    const anyRing = await call<Partial<Pick<TrainingBooking, "id" | "ringId">>>(
+      member,
+      "/training-bookings",
       "POST",
-      {},
+      { dogId: eligibility.defaultDogId, startsAt: other.startsAt },
     );
-    outcome.ringBlock = { cancellation: answer.status, state: answer.body.state };
-    expect(answer.status).toBe(200);
-  }
-  note("h-cleanup", outcome);
+    if (anyRing.body.id !== undefined) remember("anyRingTraining", anyRing.body.id);
+    const anyRingCancelled =
+      anyRing.body.id === undefined
+        ? undefined
+        : await call(member, `/training-bookings/${anyRing.body.id}/cancellation`, "POST", {});
+    const otherFirstFree = slots.rings.find((ring) => other.rings[ring.id]?.state === "FREE");
+    expect(anyRing.status).toBe(201);
+    expect(anyRing.body.ringId).toBe(otherFirstFree?.id);
+    expect(anyRingCancelled?.status).toBe(200);
+    const trainings = await call<MemberTrainingBookings>(member, "/me/training-bookings");
+    const seeded = trainings.body.items.find((item) => item.date === addDays(weekStart, 1));
+    if (seeded === undefined) throw new Error("The seed's Tuesday training booking is missing");
+    note("e-training", {
+      anyRing: {
+        cancelled: anyRingCancelled?.status ?? null,
+        expectedRing: otherFirstFree?.name ?? null,
+        ringId: anyRing.body.ringId ?? null,
+        status: anyRing.status,
+      },
+      booked: posted.status(),
+      bookedRing: {
+        afterCancel,
+        name: bookedRing.name,
+        whileBooked,
+      },
+      fourth: { code: fourth.body.code, status: fourth.status },
+      posted: { ring: firstFree?.name ?? null, withRingId: postedBody.ringId !== undefined },
+      ringOrder: slots.rings.map((ring) => ring.name),
+      window: slots.days.map((day) => day.date),
+    });
+
+    // 24 (instructor, 375): «Bloqueig» on the seeded training's ring, two contiguous cells.
+    const instructor = await clubsSession(browser, INSTRUCTOR, "/instructor/dia");
+    const ip = instructor.page;
+    const blockDay = addDays(weekStart, 2);
+    await navigateClubRoute(ip, `/instructor/pistes/${seeded.ringId}/reservar`);
+    await expect(ip.getByRole("heading", { name: "Reservar o bloquejar pista" })).toBeVisible();
+    await ip.getByRole("combobox", { name: "Dia" }).selectOption(blockDay);
+    await ip.getByRole("combobox", { name: "Franja" }).selectOption("morning");
+    await ip
+      .getByRole("group", { name: "Tipus" })
+      .getByRole("button", { name: "Bloqueig" })
+      .click();
+    await expect(ip.getByRole("group", { name: "Motiu" }).getByRole("button")).toHaveText([
+      "Manteniment",
+      "Altres",
+    ]);
+    await expect(ip.getByRole("button", { name: "Classe particular" })).toHaveCount(0);
+    const cells = ip.getByRole("group", { name: "Hores de la franja" });
+    await expect(cells.locator('[data-slot-state="free"]').first()).toBeVisible();
+    const freeTimes = await cells
+      .locator('[data-slot-state="free"]')
+      .evaluateAll((buttons) =>
+        buttons.map((button) => (button.getAttribute("aria-label") ?? "").split(",")[0] ?? ""),
+      );
+    const pad = (value: string) => value.padStart(5, "0");
+    const pairs = freeTimes
+      .map((value, index) => [value, freeTimes[index + 1] ?? ""] as const)
+      .filter(([first, next]) => next !== "" && addMinutes(pad(first), 30) === pad(next));
+    const [first, second] = pairs[0] ?? ["", ""];
+    if (first === "") throw new Error("No two contiguous free cells on the ring that morning");
+    await cells.getByRole("button", { name: `${first}, lliure` }).click();
+    await cells.getByRole("button", { name: `${second}, lliure` }).click();
+    await ip.getByRole("textbox", { name: "Nota" }).fill(`E5 ${runId}`);
+    const to = shortTime(addMinutes(pad(second), 30));
+    await expect(
+      ip.getByText(
+        `Ocupa la pista ${seeded.ringName} de ${first} a ${to}, surt al quadre global i al registre d'ús de pistes. No es vincula a cap alumne.`,
+      ),
+    ).toBeVisible();
+    await shot(ip, "24-bloqueig-core-375.png");
+    const blocking = ip.waitForResponse(isCall("POST", /\/api\/v1\/ring-blocks$/u));
+    await ip.getByRole("button", { name: "Bloqueja la pista" }).click();
+    const blocked = await blocking;
+    expect(blocked.status()).toBe(201);
+    const block = (await blocked.json()) as RingBlock;
+    remember("ringBlock", block.id);
+    await ip.waitForURL(`**/instructor/avui?date=${blockDay}`);
+    await expect(ip.getByText("Pista bloquejada")).toBeVisible();
+    await expect(ip.locator(".ah-day-grid").getByText("Bloq.").first()).toBeVisible();
+
+    // Over the seeded live training booking (Tuesday 11:00): `422 RING_HAS_BOOKINGS`, no force.
+    const over = await call(instructor, "/ring-blocks", "POST", {
+      from: clubInstant(seeded.date, seeded.startsAtLocal),
+      kind: "BLOCK",
+      note: `E5 ${runId}`,
+      reason: "MAINTENANCE",
+      ringId: seeded.ringId,
+      to: clubInstant(seeded.date, addMinutes(seeded.startsAtLocal, 60)),
+    });
+    expect(over.status).toBe(422);
+    expect(over.body.code).toBe("RING_HAS_BOOKINGS");
+    await navigateClubRoute(ip, `/instructor/pistes/${seeded.ringId}/reservar`);
+    await ip.getByRole("combobox", { name: "Dia" }).selectOption(seeded.date);
+    await ip.getByRole("combobox", { name: "Franja" }).selectOption("morning");
+    const taken = ip.getByRole("group", { name: "Hores de la franja" }).getByRole("button", {
+      name: new RegExp(`^${escapeRegExp(shortTime(seeded.startsAtLocal))}, `, "u"),
+    });
+    // No force option: the taken cell cannot be picked (R-09-11, the instructor cannot force).
+    await expect(taken).toBeDisabled();
+    await expect(taken).not.toHaveAttribute("data-slot-state", "free");
+    note("e-ring-block", {
+      blocked: blocked.status(),
+      over: { code: over.body.code, status: over.status },
+    });
+
+    // The block in the admin's week (D4) and in the ring-usage register (E5-W03). The register
+    // starts on the device's week, so the address carries week 0 (`filter`, as D10's link does).
+    const admin = await adminSession(browser);
+    await navigateSpa(admin.page, `/calendari?estat=actives&setmana=${weekStart}`);
+    const week = admin.page.getByRole("table", { name: /^Calendari de classes · del /u });
+    const hour = (value: string) => escapeRegExp(value).replace(/^0/u, "0?");
+    await expect(
+      week.getByRole("button", {
+        name: new RegExp(
+          `^${escapeRegExp(seeded.ringName)} bloquejada · .+ ${hour(pad(first))}–${hour(addMinutes(pad(second), 30))}$`,
+          "u",
+        ),
+      }),
+    ).toHaveCount(1);
+    const weekDates = `date:between:${weekStart},${addDays(weekStart, 6)}`;
+    await navigateSpa(
+      admin.page,
+      `/entrenaments?vista=reserves&filter=${encodeURIComponent(weekDates)}`,
+    );
+    const register = admin.page.getByRole("region", { name: "Reserves d'entrenament" });
+    await expect(
+      register.getByRole("row").filter({ hasText: seeded.ringName }).first(),
+    ).toBeVisible();
+    await shot(admin.page, "entrenaments-registre-core-1280.png");
+    const weekInstants = `from:between:${clubInstant(weekStart, "00:00")},${clubInstant(addDays(weekStart, 7), "00:00")}`;
+    await navigateSpa(admin.page, "/tauler");
+    await navigateSpa(
+      admin.page,
+      `/entrenaments?vista=bloquejos&filter=${encodeURIComponent(weekInstants)}`,
+    );
+    await expect(
+      admin.page
+        .getByRole("region", { name: "Bloquejos i reserves de pista" })
+        .getByRole("row")
+        .filter({ hasText: `E5 ${runId}` }),
+    ).toHaveCount(1);
+  });
+
+  /**
+   * Step 5: the known candidates for a contract discrepancy, answered by the core itself (no UI
+   * offers them). Each must carry its code with the status the snapshot documents for it
+   * (`openapi.json`, the generated types' source): a different status is a proposal for the report.
+   */
+  test("E5-W04 step 5 · the core's statuses for JOB_UNKNOWN, SLOT_NOT_ON_GRID, DOG_ALREADY_BOOKED and OVERRIDE_NOT_ALLOWED", async ({
+    browser,
+  }) => {
+    test.setTimeout(300_000);
+    const member = await clubsSession(browser, BOOKER);
+    const trainings = await call<MemberTrainingBookings>(member, "/me/training-bookings");
+    expect(trainings.status).toBe(200);
+    // The seeded Tuesday training (live: (e) cancelled only its own booking).
+    const seeded = trainings.body.items.find(
+      (item) => item.date === addDays(weekStart, 1) && item.state === "ACTIVE",
+    );
+    if (seeded === undefined) throw new Error("The seed's Tuesday training booking is missing");
+    const slots = await call<TrainingSlots>(
+      member,
+      `/training-slots?from=${weekStart}&to=${addDays(weekStart, 3)}&dogId=${encodeURIComponent(seeded.dogId)}`,
+    );
+    expect(slots.status).toBe(200);
+    const otherRing = slots.body.rings.find((ring) => ring.id !== seeded.ringId);
+    const free = slots.body.days
+      .flatMap((day) => day.slots)
+      .find((slot) => slot.anyFree && slot.bookable && slot.startsAt !== seeded.startsAt);
+    if (otherRing === undefined || free === undefined) {
+      throw new Error("The window has no other ring or no free slot to probe with");
+    }
+    const created: string[] = [];
+    const probe = async (path: string, body: unknown, session: Session = member) => {
+      const answer = await call<ApiProblem & Partial<Pick<TrainingBooking, "id">>>(
+        session,
+        path,
+        "POST",
+        body,
+      );
+      if (answer.status === 201 && answer.body.id !== undefined) created.push(answer.body.id);
+      return { code: answer.body.code ?? null, status: answer.status };
+    };
+    const observed = {
+      // S09 R-09-03: a start off the 30 min grid.
+      slotNotOnGrid: await probe("/training-bookings", {
+        dogId: seeded.dogId,
+        startsAt: new Date(Date.parse(free.startsAt) + 10 * 60_000).toISOString(),
+      }),
+      // S09 R-09-06 (T-09-18): the same dog, the same start, on another ring.
+      dogAlreadyBooked: await probe("/training-bookings", {
+        dogId: seeded.dogId,
+        ringId: otherRing.id,
+        startsAt: seeded.startsAt,
+      }),
+      // S09 R-09-16 (T-09-23): `override` with a token that is not an impersonation.
+      overrideNotAllowed: await probe("/training-bookings", {
+        dogId: seeded.dogId,
+        override: { limit: true, reason: `E5 ${runId}` },
+        startsAt: free.startsAt,
+      }),
+      // S15 §6: a process name that does not exist.
+      jobUnknown: await probe(
+        "/jobs/e5-unknown-process/trigger",
+        { dryRun: true },
+        await adminSession(browser),
+      ),
+    };
+    // A probe the core accepted would leave a booking behind: it is cancelled at once, and the test fails.
+    for (const id of created) {
+      await call(member, `/training-bookings/${id}/cancellation`, "POST", {});
+    }
+    note("step5-statuses", observed);
+    expect(created).toEqual([]);
+    expect(observed).toEqual({
+      dogAlreadyBooked: { code: "DOG_ALREADY_BOOKED", status: 422 },
+      jobUnknown: { code: "JOB_UNKNOWN", status: 404 },
+      overrideNotAllowed: { code: "OVERRIDE_NOT_ALLOWED", status: 403 },
+      slotNotOnGrid: { code: "SLOT_NOT_ON_GRID", status: 400 },
+    });
+  });
+
+  test("T-15-32/T-15-33 (f) · D11 simulates (nothing changes) and runs the risk review; D1 reports it; P9 by its run", async ({
+    browser,
+  }) => {
+    test.setTimeout(300_000);
+    const admin = await adminSession(browser);
+    const { page } = admin;
+    await navigateSpa(page, "/parametres#processos");
+    const card = page.getByRole("region", { name: "Processos automàtics" });
+    const jobs = await call<JobSummaries>(admin, "/jobs");
+    await expect(card.locator("li[data-job]")).toHaveCount(jobs.body.items.length);
+    await expect(card.getByText("cada dia a les 7:30")).toBeVisible();
+
+    const statuses = async () =>
+      (await call<RiskReviewForm>(admin, "/risk-review")).body.items.map(
+        (item) => `${item.classId}:${item.status}`,
+      );
+    const before = await statuses();
+    const simulating = page.waitForResponse(
+      isCall("POST", /\/api\/v1\/jobs\/risk-review\/trigger$/u),
+    );
+    await card.getByRole("button", { name: "Simula Revisió de classes en risc" }).click();
+    const simulated = await simulating;
+    expect(simulated.status()).toBe(200);
+    const simulatedRun = (await simulated.json()) as JobRunAnswer;
+    expect(simulatedRun.dryRun).toBe(true);
+    const plan = page.getByRole("dialog", {
+      name: "Simulació: què faria ara · Revisió de classes en risc",
+    });
+    await expect(plan.getByText("Simulació: no s'ha aplicat cap canvi.")).toBeVisible();
+    // Review #3: the modal lists every planned item (it waits for the list, never counts early).
+    expect(simulatedRun.effects.items.length).toBeGreaterThan(0);
+    const planList = plan.locator(".jobs-card__effects > ul:not(.jobs-card__errors) > li");
+    await expect(planList).toHaveCount(simulatedRun.effects.items.length);
+    const planItems = await planList.count();
+    await plan.getByRole("button", { name: "Tanca" }).click();
+    // R-15-08: a dry run writes nothing.
+    expect(await statuses()).toEqual(before);
+
+    const running = page.waitForResponse(isCall("POST", /\/api\/v1\/jobs\/risk-review\/trigger$/u));
+    await card.getByRole("button", { name: "Executa ara Revisió de classes en risc" }).click();
+    await page
+      .getByRole("dialog", { name: "Executar «Revisió de classes en risc» ara" })
+      .getByRole("button", { name: "Executa ara" })
+      .click();
+    const ran = await running;
+    expect(ran.status()).toBe(200);
+    const ranRun = (await ran.json()) as JobRunAnswer;
+    await expect(card.getByText(/^Revisió de classes en risc: /u)).toBeVisible();
+    // R-15-08 (T-15-06): the plan is what the real run then does, on the same data (the scheduler is
+    // off, so nothing ran in between): as many items, the same ones without the `WOULD_` prefix.
+    const itemKey = (item: JobEffectItem) =>
+      `${item.entityType}:${item.entityId}:${item.action.replace(/^WOULD_/u, "")}`;
+    expect(ranRun).toMatchObject({ dryRun: false, status: "SUCCEEDED" });
+    expect(ranRun.effects.items).toHaveLength(planItems);
+    expect(ranRun.effects.items.map(itemKey).sort()).toEqual(
+      simulatedRun.effects.items.map(itemKey).sort(),
+    );
+    const after = await call<RiskReviewForm>(admin, "/risk-review");
+
+    // D1 (T-15-33): the card's first six rows, each with the status of the api's form A item.
+    const riskRead = page.waitForResponse(isCall("GET", /\/api\/v1\/risk-review$/u));
+    await navigateSpa(page, "/tauler");
+    const shown = ((await (await riskRead).json()) as RiskReviewForm).items;
+    const risk = page.locator(".dashboard-risk");
+    const statusOf = (item: RiskReviewItem): RegExp | string => {
+      const names = item.notified.map((person) => `${person.memberName} + ${person.dogName}`);
+      if (item.status === "AUTO_CANCELLED") {
+        return names.length === 0 ? "anul·lada" : `anul·lada · avisada ${names.join(", ")}`;
+      }
+      if (item.status === "AT_RISK") {
+        return names.length === 0 ? "en risc" : `en risc · avisats ${names.join(", ")}`;
+      }
+      if (item.status === "WILL_CANCEL") return /^s'anul·larà \S+ a les \d+:\d{2}$/u;
+      return "el club decidirà";
+    };
+    for (const item of shown.slice(0, 6)) {
+      await expect(
+        risk.locator(`.dashboard-risk__row[data-class-id="${item.classId}"] .ah-badge`),
+      ).toHaveText(statusOf(item));
+    }
+    if (shown.length > 6) {
+      await expect(risk.getByText(`+${String(shown.length - 6)} més`)).toBeVisible();
+    }
+    await shotOf(risk, page, "D1-risc-core-1280.png");
+
+    // P9 `cleanup`: the seed's stack has no run of it yet at this instant, so [Executa ara]
+    // (R-15-09) leaves one, and the card's runs drawer lists that JobRun.
+    await navigateSpa(page, "/parametres#processos");
+    const cleaning = page.waitForResponse(isCall("POST", /\/api\/v1\/jobs\/cleanup\/trigger$/u));
+    await card.getByRole("button", { name: "Executa ara Neteja tècnica" }).click();
+    await page
+      .getByRole("dialog", { name: "Executar «Neteja tècnica» ara" })
+      .getByRole("button", { name: "Executa ara" })
+      .click();
+    const cleaned = await cleaning;
+    expect(cleaned.status()).toBe(200);
+    const cleanupRun = (await cleaned.json()) as JobRunAnswer;
+    await expect(card.getByText(/^Neteja tècnica: /u)).toBeVisible();
+    // The card reports the run's own status (the report records it: an api-side outcome).
+    const runStatus: Record<string, string> = {
+      FAILED: "fallida",
+      PARTIAL: "parcial",
+      SKIPPED: "omesa",
+      SUCCEEDED: "correcta",
+    };
+    await expect(card.locator('li[data-job="cleanup"] .jobs-card__last')).toContainText(
+      runStatus[cleanupRun.status] ?? cleanupRun.status,
+    );
+    await expect(card.locator('li[data-job="risk-review"] .jobs-card__last')).toContainText(
+      "correcta",
+    );
+    await shotOf(card, page, "D11-processos-core-1280.png");
+    await card.locator('li[data-job="cleanup"] .jobs-card__last').click();
+    const drawer = page.getByRole("dialog", { name: "Execucions · Neteja tècnica" });
+    await expect(drawer.getByRole("row").filter({ hasText: "manual" }).first()).toBeVisible();
+    const cleanupRuns = await call<JobRuns>(admin, "/jobs/cleanup/runs");
+    expect(cleanupRuns.body.items.map((run) => run.runId)).toContain(cleanupRun.runId);
+    note("f-risk", {
+      after: after.body.items.map((item) => item.status),
+      before: before.map((value) => value.split(":")[1]),
+      cleanupRun,
+      dryRun: {
+        actions: [...new Set(simulatedRun.effects.items.map((item) => item.action))],
+        planItems,
+        status: simulated.status(),
+      },
+      run: { body: ranRun, status: ran.status() },
+    });
+  });
 });
 
 test("R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter", async ({
@@ -1859,12 +1936,13 @@ test("R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches t
   await trainingPage.getByRole("button", { name: /^Confirma / }).click();
   const mondayPosted = await mondayPosting;
   expect(mondayPosted.status()).toBe(201);
-  const mondayTraining = (await mondayPosted.json()) as { date: string; id: string };
+  const mondayTraining = (await mondayPosted.json()) as TrainingBooking;
+  liveMondayTraining = mondayTraining.id;
   expect(mondayTraining.date).toBe(monday);
   await expect(trainingPage.getByText("Portes 1/3 entrenaments aquesta setmana")).toBeVisible();
   const sessionDate = { monday: await usedOn(monday), sunday: await usedOn(opening) };
   expect(sessionDate).toEqual({ monday: 1, sunday: sundayBefore });
-  // Idempotence (h): cancelled at once, never left behind.
+  // Idempotence (h): cancelled at once, never left behind (`afterAll` cancels it after a failure).
   const mondayCancelled = await call(
     member,
     `/training-bookings/${mondayTraining.id}/cancellation`,
@@ -1872,6 +1950,7 @@ test("R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches t
     {},
   );
   expect(mondayCancelled.status).toBe(200);
+  liveMondayTraining = undefined;
   expect(await usedOn(monday)).toBe(0);
   note("r-09-05", {
     after: sessionDate,
@@ -1920,26 +1999,16 @@ test("R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:0
   await expect(classRow(member.page, row.id)).toHaveAttribute("data-bookable-state", "BOOKABLE");
 
   // No scheduled run opened the week before [Executa ara] (they are all SKIPPED while it is off).
-  interface RunItem {
-    counters?: Record<string, number>;
-    dryRun: boolean;
-    scheduledFor: string;
-    skipReason?: string | null;
-    status: string;
-    trigger: string;
-  }
+  // A run without `scheduledFor`, `trigger` or `dryRun` counts as a scheduled one in the window.
   const admin = await adminSession(browser);
-  const runsBefore = await call<{ items: RunItem[] }>(admin, "/jobs/week-opening/runs");
+  const runsBefore = await call<JobRuns>(admin, "/jobs/week-opening/runs");
   expect(runsBefore.status).toBe(200);
-  expect(
-    runsBefore.body.items.filter(
-      (run) =>
-        run.trigger !== "MANUAL" &&
-        !run.dryRun &&
-        run.status === "SUCCEEDED" &&
-        Date.parse(run.scheduledFor) >= Date.parse(opensAt),
-    ),
-  ).toEqual([]);
+  const scheduledOpenings = (run: JobRunItem) =>
+    run.trigger !== "MANUAL" &&
+    run.dryRun !== true &&
+    run.status === "SUCCEEDED" &&
+    Date.parse(run.scheduledFor ?? opensAt) >= Date.parse(opensAt);
+  expect(runsBefore.body.items.filter(scheduledOpenings)).toEqual([]);
 
   // P1's own effects (R-15-11, T-15-11): the run from D11 opens the week keyed by the next Sunday
   // (`WeekOpened.openedWeekKey`), over the active classes of that week.
@@ -1962,7 +2031,7 @@ test("R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:0
   );
   expect(triggerBody.effects.counters.activeClasses).toBeGreaterThan(0);
   await expect(card.getByText(/^Obertura de la setmana: /u)).toBeVisible();
-  const runs = await call<{ items: RunItem[] }>(admin, "/jobs/week-opening/runs");
+  const runs = await call<JobRuns>(admin, "/jobs/week-opening/runs");
   note("f-p1", {
     before: { details: notYetOpen.details, status: refusal.status() },
     byClock: { state: rowByClock?.state ?? null },

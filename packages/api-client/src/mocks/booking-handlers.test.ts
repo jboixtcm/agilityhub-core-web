@@ -3,6 +3,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import type { components } from "../generated/schema";
 
 import { BOOKING_MOCK_NOW } from "./fixtures/bookings";
+import { findParameter, resetSettingsState } from "./fixtures/settings";
 import {
   bookingState,
   mockScenario,
@@ -67,16 +68,23 @@ describe("E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATA
     expect(
       all.reservations.map((row) => `${row.type} ${row.startsAtLocal} ${row.dogName ?? "—"}`),
     ).toEqual([
+      // E5-W05 step 7: at Sunday 2 at 20:30 Rock's Monday 3 training (booked at 20:05) exists.
+      "TRAINING 2026-08-03T07:00 Rock",
       "CLASS 2026-08-03T18:50 Duna",
       "TRAINING 2026-08-04T08:00 Rock",
       "CLASS_WAITLIST 2026-08-06T20:00 Duna",
       "ACTIVITY 2026-08-07T18:30 —",
       "CLASS 2026-08-10T19:00 Rock",
     ]);
-    // R-08-20: 24 h before the class the instructor is still hidden.
-    expect(all.reservations[0]).toMatchObject({
-      instructorName: null,
+    // R-08-20: the instructor shows 24 h before the class: Monday 3's since Sunday 2 at 18:50,
+    // Monday 10's still hidden.
+    expect(all.reservations[1]).toMatchObject({
+      instructorName: "Marc",
       instructorVisibleAt: "2026-08-02T16:50:00.000Z",
+    });
+    expect(all.reservations[5]).toMatchObject({
+      instructorName: null,
+      instructorVisibleAt: "2026-08-09T17:00:00.000Z",
     });
     expect(all.limits).toMatchObject({
       currentWeek: { count: 1, max: 2 },
@@ -266,8 +274,9 @@ describe("E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATA
       "2026-08-03T18:50",
       "2026-08-07T20:00",
     ]);
+    // The week's first class, Sunday 2 at 20:00, has begun (E5-W05 step 7).
     expect(hold.limit.notSelectable).toMatchObject([
-      { reason: "DONE", startsAtLocal: "2026-08-02T10:00" },
+      { reason: "DONE", startsAtLocal: "2026-08-02T20:00" },
     ]);
     expect(await call("POST", "/bookings", { seatHoldId: hold.id })).toMatchObject({
       body: { code: "SWAP_NOT_ALLOWED" },
@@ -425,5 +434,133 @@ describe("E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATA
         dogId: "dog-duna",
       }),
     ).toMatchObject({ status: 404 });
+  });
+});
+
+describe("E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them", () => {
+  /** «{startsAtLocal} {week} {state}[ {opensAt}]» of Duna's 04 rows. */
+  const rows = (view: BookableClasses) =>
+    view.classes.map((row) =>
+      [row.startsAtLocal, row.week, row.state, row.opensAt ?? ""].join(" ").trim(),
+    );
+
+  afterEach(() => {
+    resetSettingsState();
+  });
+
+  it("E5-W05 step 7: at Sunday 2 at 20:30 (weekOpensAt SUNDAY 20:00) W0 is 2026-08-02 and W1 2026-08-09: Monday 3 counts in the current week, Monday 10 is next, Monday 17 opens with W1, and the limit refusal names the coming opening", async () => {
+    expect(Date.parse(BOOKING_MOCK_NOW)).toBe(Date.parse("2026-08-02T20:30:00+02:00"));
+    // «Tots»: Duna's Monday 3 in W0, Rock's Monday 10 in W1 (R-08-02).
+    expect((await home()).limits).toEqual({
+      currentWeek: { count: 1, max: 2, weekKey: "2026-08-02" },
+      nextWeek: { count: 1, max: 1, weekKey: "2026-08-09" },
+      unit: "DOG",
+    });
+    expect(rows(await bookable())).toEqual([
+      "2026-08-05T18:50 CURRENT BOOKABLE",
+      "2026-08-06T20:00 CURRENT WAITLIST_OPEN",
+      "2026-08-07T17:40 CURRENT WAITLIST_FULL",
+      "2026-08-08T09:00 CURRENT WEEKLY_LIMIT_DONE",
+      "2026-08-10T18:50 NEXT BOOKABLE",
+      // W2 opens a week before its own start: Sunday 9 at 20:00 (R-08-01).
+      "2026-08-17T09:30 LATER NOT_YET_OPEN 2026-08-09T18:00:00Z",
+    ]);
+    // Saturday 8 is a class of W0: the refusal is CURRENT, with maxCurrentWeek, and
+    // `nextBookableAt` is the start of the next booking week (api E5-T29).
+    expect(
+      await call("POST", "/seat-holds", {
+        classSessionId: "class-2026-08-08-0900",
+        dogId: "dog-duna",
+      }),
+    ).toMatchObject({
+      body: {
+        code: "BOOKING_LIMIT_REACHED",
+        details: { limit: 2, nextBookableAt: "2026-08-09T18:00:00Z", week: "CURRENT" },
+      },
+      status: 409,
+    });
+    const next = (
+      await call("POST", "/seat-holds", {
+        classSessionId: "class-2026-08-10-1850",
+        dogId: "dog-duna",
+      })
+    ).body as SeatHoldResponse;
+    expect(next.limit).toMatchObject({ count: 0, max: 1, reached: false, week: "NEXT" });
+  });
+
+  it("E5-W05 step 7: 06's done class belongs to W0 at the clock (it began at the week's opening, Sunday 2 at 20:00): the hold lists it as DONE beside the two cancellable ones", async () => {
+    mockScenario("bookingLimit");
+    const hold = (
+      await call("POST", "/seat-holds", {
+        classSessionId: "class-2026-08-08-0900",
+        dogId: "dog-duna",
+      })
+    ).body as SeatHoldResponse;
+    expect(hold.limit).toMatchObject({ count: 2, max: 2, reached: true, week: "CURRENT" });
+    expect(hold.limit.swappable.map((option) => option.startsAtLocal)).toEqual([
+      "2026-08-03T18:50",
+      "2026-08-07T20:00",
+    ]);
+    expect(hold.limit.notSelectable).toEqual([
+      {
+        bookingId: "booking-duna-done",
+        description: "B+C",
+        reason: "DONE",
+        startsAtLocal: "2026-08-02T20:00",
+      },
+    ]);
+  });
+
+  it("E5-W05 step 7: one minute before the opening (Sunday 2 at 19:59) the weeks are one earlier: Wednesday 5 to Saturday 8 are next week's, Monday 10 opens at 20:00, and Monday 17 is not listed yet", async () => {
+    vi.setSystemTime(new Date("2026-08-02T19:59:00+02:00"));
+    expect((await home()).limits).toEqual({
+      currentWeek: { count: 0, max: 2, weekKey: "2026-07-26" },
+      nextWeek: { count: 1, max: 1, weekKey: "2026-08-02" },
+      unit: "DOG",
+    });
+    expect(rows(await bookable())).toEqual([
+      "2026-08-05T18:50 NEXT BOOKABLE",
+      "2026-08-06T20:00 NEXT WAITLIST_OPEN",
+      "2026-08-07T17:40 NEXT WAITLIST_FULL",
+      "2026-08-08T09:00 NEXT WEEKLY_LIMIT_DONE",
+      "2026-08-10T18:50 LATER NOT_YET_OPEN 2026-08-02T18:00:00Z",
+    ]);
+    expect(
+      await call("POST", "/seat-holds", {
+        classSessionId: "class-2026-08-08-0900",
+        dogId: "dog-duna",
+      }),
+    ).toMatchObject({
+      body: { details: { limit: 1, nextBookableAt: "2026-08-02T18:00:00Z", week: "NEXT" } },
+      status: 409,
+    });
+    expect(
+      await call("POST", "/seat-holds", {
+        classSessionId: "class-2026-08-10-1850",
+        dogId: "dog-duna",
+      }),
+    ).toMatchObject({
+      body: { code: "NOT_YET_OPEN", details: { opensAt: "2026-08-02T18:00:00Z" } },
+      status: 422,
+    });
+  });
+
+  it("E5-W05 step 7: the weeks come from `bookings.weekOpensAt` (T-08-44, a club whose week opens on Monday at 00:00)", async () => {
+    const parameter = findParameter("bookings.weekOpensAt");
+    if (parameter === undefined) throw new TypeError("Missing bookings.weekOpensAt");
+    parameter.value = { dayOfWeek: "MONDAY", time: "00:00" };
+    expect((await home()).limits).toEqual({
+      currentWeek: { count: 0, max: 2, weekKey: "2026-07-27" },
+      nextWeek: { count: 1, max: 1, weekKey: "2026-08-03" },
+      unit: "DOG",
+    });
+    expect(rows(await bookable())).toEqual([
+      "2026-08-05T18:50 NEXT BOOKABLE",
+      "2026-08-06T20:00 NEXT WAITLIST_OPEN",
+      "2026-08-07T17:40 NEXT WAITLIST_FULL",
+      "2026-08-08T09:00 NEXT WEEKLY_LIMIT_DONE",
+      // Monday 3 at 00:00 local, summer time.
+      "2026-08-10T18:50 LATER NOT_YET_OPEN 2026-08-02T22:00:00Z",
+    ]);
   });
 });

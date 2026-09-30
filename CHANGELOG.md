@@ -131,6 +131,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Screens 11 and 12 and web push (E7-W02 round 2):
+  - leaving 12 sends every unsaved preference at once with `keepalive` (the one on its way included), the latest choice wins over an older `PUT` that answers last, and a change left behind is sent again on the next visit of the same account and club (`sessionStorage`, 5 min);
+  - a logout waits (bounded) for a push subscription still on its way and drops it when it lands: deleted, or unsubscribed in the browser once the session is gone; its id is never stored;
+  - a failed read-all of 11 is sent again (0.5 s, 2 s, 6 s), with `keepalive`, and its `unreadCount` makes 03 read `GET /me/home` again (`notifications/unread.ts`);
+  - [AGAFA LA PLAÇA] only with `WAITLIST`: a historical N-15 is an inert card (the mock lists it with `enabled: false`);
+  - 12 reads `Notification.permission` at mount (never prompting) and explains a refusal on arrival; the headless browser's quirk lives in the e2e setup;
+  - `read`, `read-all` and `push-subscriptions` send no `Idempotency-Key` (not declared, E79);
+  - es and en tests of 11, 12 and the unsubscribe page; three `apps/clubs` tests made deterministic on a loaded runner.
+- E5 follow-ups and api E5-T29 (E5-W05), on the adopted api snapshot `19a34a7`:
+  - the registrants of D4 and of screen 23's drawer read the api's `displayState` with 07's literals («feta», «no presentat» in red) and a level chip from `levelCode`; «En espera: {guia} + {gos}» takes `handlerName ?? memberFirstName`, with the FIFO position;
+  - the register reads «dl 3 · 7:00–7:30» (`endsAtLocal`), «{nom complet} · {número}» (`memberNumber`) and every block's own ring (`ringName`, `ringColor`), a deactivated one's included; both tabs' filters read `GET /training-bookings/filter-values` and `/ring-blocks/filter-values`, and the week chip reads the api's array echo of `between`; the blocks' search box says «pista o nota»;
+  - D10's «Classes» table names each class and its ring (dot and name);
+  - D11's jobs card reads `GET /jobs` again after a saved schedule parameter; the run drawer keeps its pager and offers «Torna-ho a provar» on a failed page, and a run's classes open in D4 on their week (R-15-21);
+  - the student search (app and back office) writes the owner's first name the api sends (a compound one whole) and adds «(abonat: {nom i cognom})» when another guide leads the dog; the impersonation banner names `/me`'s `impersonation.memberName`;
+  - 29's NEXT limit note uses the coming opening, and «Encara no pots reservar classes de la setmana vinent.» with `bookings.maxNextWeek = 0`; 07 and `/espera/:id` draw the ring's dot; a NOTIFIED entry reads «plaça alliberada»; `booking:detail.cancelledInTime` no longer names the week;
+  - 08 clears a choice its refreshed grid no longer offers, keeps [Confirma] disabled while a read shows its offline copy (with a retry), the training detail reaches «fet» after `endsAt` without a remount, and `SlotGrid` disables a disabled column's cells;
+  - the notification log shows a `null` audience (rows written before E7-T02) without a label;
+  - MSW: the booking world's clock is Sunday 2 August 20:30 with the weeks computed by R-08-01 (`bookingWeekKey` too); the three `filter-values` routes; lists without search refuse `q` (E75); `appliedFilters` echo lists and ranges as arrays; the risk review names real classes on any day; the back office finds classes and waiting entries in the caller's club only; the dry run's pending-document warning and the dog `PATCH`'s whole `birthDate`; `/jobs` schedules from their parameters; scenarios `registerMany`, `impersonatedFamily`, `adminOtherClub`;
+  - the real-core stages: E5's (e) checks the booking's own ring, its cleanup is an `afterAll`, the Spanish pass repeats (a) and (d), and the spec uses the generated types; the RESET link's own `&purpose=reset` and the banner's member name are proven on the core; e3 compares the kept card by file ids and state; `scripts/e2e-core.sh` removes the Playwright one-off container and stops on INT/TERM.
 - D9, the log, D10 and «Enviar comunicat» (E7-W01 round 2):
   - the log's exports ask for the export's own columns (`createdAt, code, recipient, channels, readAt`), and MSW checks them as the api does;
   - the send's confirmation belongs to the dry run that finished last: another template, or the same one again, needs a new tick;

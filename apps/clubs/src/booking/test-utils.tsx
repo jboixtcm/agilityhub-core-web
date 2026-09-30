@@ -17,8 +17,11 @@ import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 
 import { App } from "../App";
 
-/** The club-local instant the S08 mock world is drawn at (`BOOKING_MOCK_NOW`, Sunday 2-08 noon). */
-export const BOOKING_NOW = new Date("2026-08-02T12:00:00+02:00");
+/**
+ * The club-local instant the S08 mock world is drawn at (`BOOKING_MOCK_NOW`, Sunday 2-08 at 20:30,
+ * after the club's week opened at 20:00: E5-W05 step 7).
+ */
+export const BOOKING_NOW = new Date("2026-08-02T20:30:00+02:00");
 
 export const canic: Branding = {
   ...brandingCanicFixture,

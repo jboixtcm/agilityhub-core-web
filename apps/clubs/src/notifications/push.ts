@@ -27,6 +27,15 @@ export function pushSupport(): PushSupport {
     : "unsupported";
 }
 
+/** The browser's notification permission as it stands, read without prompting (R-11-07). */
+export function pushPermission(): NotificationPermission | undefined {
+  try {
+    return "Notification" in window ? Notification.permission : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * The api's `deviceLabel` («iPhone · Safari»), from the user agent; `undefined` when nothing is
  * recognised (the api derives it then).
@@ -98,14 +107,61 @@ function storedSubscriptionId(): string | undefined {
 }
 
 /**
+ * Each logout starts a new epoch: a subscription that lands after it belongs to the session that
+ * left, so it is never kept (E7-W02 round 2 #2).
+ */
+let sessionEpoch = 0;
+/** The subscriptions on their way, which a logout waits for (a bounded time only). */
+const subscriptionsInFlight = new Set<Promise<PushOutcome>>();
+
+/**
+ * A subscription that landed after its session logged out: `DELETE` it while the api still takes
+ * the old token; once the session is gone, unsubscribe it in the browser, so this device never
+ * receives the former session's notifications. Its id is never stored.
+ */
+async function dropLateSubscription(
+  client: ApiClient,
+  id: string | undefined,
+  subscription: PushSubscription,
+): Promise<void> {
+  if (id !== undefined) {
+    try {
+      await client.DELETE("/push-subscriptions/{id}", { params: { path: { id } } });
+      return;
+    } catch {
+      // The session is gone (401): the browser side goes instead.
+    }
+  }
+  try {
+    await subscription.unsubscribe();
+  } catch {
+    // Nothing more to do: the api expires a subscription the push service refuses (404/410).
+  }
+}
+
+/**
  * Subscribes this device to web push **in context** (R-11-07): called only right after the member
  * turns the push toggle on or picks a reminder other than «Mai», never at start-up. Asks for the
  * permission, subscribes with the club's VAPID key and upserts `POST /push-subscriptions`. Never
- * throws: a failure (a `404 MODULE_DISABLED` from a stale client included) is an outcome.
+ * throws: a failure (a `404 MODULE_DISABLED` from a stale client included) is an outcome. A logout
+ * while it travels drops it when it lands (`logoutWithPush`).
  */
-export async function subscribeToPush(
+export function subscribeToPush(
   client: ApiClient,
   publicKey: string | null | undefined,
+): Promise<PushOutcome> {
+  const run = subscribe(client, publicKey, sessionEpoch);
+  subscriptionsInFlight.add(run);
+  void run.finally(() => {
+    subscriptionsInFlight.delete(run);
+  });
+  return run;
+}
+
+async function subscribe(
+  client: ApiClient,
+  publicKey: string | null | undefined,
+  epoch: number,
 ): Promise<PushOutcome> {
   const registration = pushRegistration;
   if (
@@ -125,11 +181,21 @@ export async function subscribeToPush(
   }
   if (permission === "denied") return "denied";
   if (permission !== "granted") return "dismissed";
+  let subscription: PushSubscription;
   try {
-    const subscription = await registration.pushManager.subscribe({
+    subscription = await registration.pushManager.subscribe({
       applicationServerKey: applicationServerKey(publicKey),
       userVisibleOnly: true,
     });
+  } catch {
+    return "failed";
+  }
+  if (epoch !== sessionEpoch) {
+    // Logged out while the browser subscribed: nothing reached the api.
+    await dropLateSubscription(client, undefined, subscription);
+    return "failed";
+  }
+  try {
     const { endpoint, keys } = subscription.toJSON();
     const p256dh = keys?.p256dh;
     const auth = keys?.auth;
@@ -142,9 +208,15 @@ export async function subscribeToPush(
         ...(label === undefined ? {} : { deviceLabel: label }),
       },
     });
+    if (epoch !== sessionEpoch) {
+      // Logged out while the subscription travelled: it is never kept for the next session.
+      await dropLateSubscription(client, data?.id, subscription);
+      return "failed";
+    }
     if (data !== undefined) storeSubscriptionId(data.id);
     return "subscribed";
   } catch {
+    if (epoch !== sessionEpoch) await dropLateSubscription(client, undefined, subscription);
     return "failed";
   }
 }
@@ -167,16 +239,19 @@ export async function unsubscribeFromPush(client: ApiClient): Promise<void> {
 
 /**
  * Logs out after the device's push unsubscription has been sent, never waiting for it more than
- * `waitMs` (push never blocks a logout).
+ * `waitMs` (push never blocks a logout). A subscription still on its way belongs to the session
+ * that leaves: the logout waits for it within the same bound, and when it lands it is dropped
+ * (deleted, or unsubscribed in the browser once the session is gone; E7-W02 round 2 #2).
  */
 export async function logoutWithPush(
   client: ApiClient,
   logout: () => Promise<unknown>,
   waitMs = 1500,
 ): Promise<void> {
+  sessionEpoch += 1;
   let timer: ReturnType<typeof setTimeout> | undefined;
   await Promise.race([
-    unsubscribeFromPush(client),
+    Promise.allSettled([unsubscribeFromPush(client), ...subscriptionsInFlight]),
     new Promise((resolve) => {
       timer = setTimeout(resolve, waitMs);
     }),

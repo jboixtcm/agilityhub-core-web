@@ -66,14 +66,22 @@ export interface MockScenarioDefinition {
 
 const canic = brandingCanic as Branding;
 const minimal = brandingMinim as Branding;
+const admin = meAdmin as Me;
 const member = meMember as Me;
 const multiProfile = meMultiProfile as Me;
 const accountSessions = sessions;
+const adminMembership = admin.membership;
 const memberMembership = member.membership;
 
-if (memberMembership === undefined) {
-  throw new TypeError("The member mock fixture requires a club membership");
+if (adminMembership === undefined || memberMembership === undefined) {
+  throw new TypeError("The admin and member mock fixtures require a club membership");
 }
+
+/**
+ * The club the mock worlds' records belong to: the tenant of the fixtures' memberships (the JWT's
+ * club). A token of another club finds none of them (`adminOtherClub`, E5-W05 step 16).
+ */
+export const MOCK_CLUB_ID = adminMembership.clubId;
 
 const scenarios = {
   admin: {
@@ -83,6 +91,15 @@ const scenarios = {
   },
   adminAllLocales: {
     branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /**
+   * E5-W05 step 5: the ring-usage register with more than 1000 rows in the week of Monday 3, where
+   * one member and one ring appear only after row 1000 (`backoffice-handlers.ts`).
+   */
+  registerMany: {
+    branding: canic,
     me: meAdmin as Me,
     sessions: accountSessions,
   },
@@ -449,6 +466,18 @@ const scenarios = {
     me: meAdmin as Me,
     sessions: accountSessions,
   },
+  /**
+   * E5-W05 step 16 (tenant isolation): an ADMIN of another club, the «club mínim» (WAITLIST on).
+   * The token's club is not the one the mock worlds belong to, so none of their records is found.
+   */
+  adminOtherClub: {
+    branding: { ...minimal, locales: ["ca", "es", "en"] },
+    me: {
+      ...admin,
+      membership: { ...adminMembership, clubId: "50000000-0000-4000-8000-000000000002" },
+    },
+    sessions: accountSessions,
+  },
   catalogsNoFaq: {
     branding: {
       ...canic,
@@ -505,6 +534,19 @@ const scenarios = {
   impersonated: {
     branding: canic,
     me: meImpersonated as Me,
+    sessions: accountSessions,
+  },
+  /**
+   * E5-W05 step 24 (ruling E73): a family group's account opened on another member's record. The
+   * account is the parent's; `/me`'s `impersonation.memberName` names the member the admin opened.
+   */
+  impersonatedFamily: {
+    branding: canic,
+    me: {
+      ...(meImpersonated as Me),
+      account: { ...(meImpersonated as Me).account, name: "Marta Vidal Roca" },
+      impersonation: { actorName: "Jordi Soler", memberName: "Laura Serra Vidal" },
+    },
     sessions: accountSessions,
   },
   onboarding: {

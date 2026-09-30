@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import { expect, test } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4173";
-const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E5-W03");
+const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E5-W05");
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -21,6 +21,8 @@ test.beforeAll(() => {
 
 test.describe("E5-W03 step 1 · screen 23's class drawer lists the registrants (S08 §6)", () => {
   test("an INSTRUCTOR reads who is booked and who waits, without actions", async ({ page }) => {
+    // E5-W05 step 1: after the evening classes of Monday 3, so the api reads their bookings DONE.
+    await page.clock.setFixedTime(new Date("2026-08-03T21:00:00+02:00"));
     await page.addInitScript(
       ({ cachedBranding }) => {
         localStorage.setItem("agilityhub.locale", "ca");
@@ -45,7 +47,9 @@ test.describe("E5-W03 step 1 · screen 23's class drawer lists the registrants (
     const drawer = page.getByRole("dialog", { name: "B+C" });
     const panel = drawer.getByRole("region", { name: "Inscrits (5/5)" });
     await expect(panel.getByRole("listitem")).toHaveCount(6);
-    await expect(panel.getByText("En espera: Kira · Lluna")).toBeVisible();
+    // E5-W05 steps 1 and 2: the api's displayState («feta») and «{guia} + {gos}».
+    await expect(panel.getByRole("listitem").first()).toHaveText("Laura + Dunafeta");
+    await expect(panel.getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
     await expect(panel.getByRole("button")).toHaveCount(0);
     await panel.scrollIntoViewIfNeeded();
     await page.screenshot({ path: resolve(evidenceDirectory, "23-classe-inscrits-375.png") });

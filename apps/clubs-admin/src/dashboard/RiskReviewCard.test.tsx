@@ -27,9 +27,11 @@ const branding: Branding = {
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
 });
-// Monday 10 August 2026 at 8:12 in the club (the S15 §6 example day).
+// Monday 10 August 2026 at 8:12 in the club (the S15 §6 example day). The risk review reads the
+// calendar world (E5-W05 step 15), which is built for that day rather than for the import's.
 beforeEach(() => {
   vi.useFakeTimers({ now: new Date(JOBS_MOCK_NOW), shouldAdvanceTime: true, toFake: ["Date"] });
+  resetPlanningState();
 });
 afterEach(() => {
   cleanup();
@@ -172,10 +174,6 @@ describe("T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A", () =>
 });
 
 describe("T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world)", () => {
-  beforeEach(() => {
-    // The calendar world drawn on the example day holds the review's classes.
-    resetPlanningState();
-  });
   afterEach(() => {
     vi.useRealTimers();
     resetPlanningState();

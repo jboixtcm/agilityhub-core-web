@@ -1,0 +1,41 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/backoffice-handlers.test.ts (16 tests | 1 failed | 15 skipped) 43ms
+   ❯ E5-W05 step 16 · the back-office mock finds classes and waiting entries in the caller's club only (1)
+     × E5-W05 step 16: an ADMIN of another club cannot cancel the entry (404), nor read the class's registrants and waiting list, nor see its classes in the risk review 42ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 16 · the back-office mock finds classes and waiting entries in the caller's club only > E5-W05 step 16: an ADMIN of another club cannot cancel the entry (404), nor read the class's registrants and waiting list, nor see its classes in the risk review
+AssertionError: expected [ 200, undefined ] to deeply equal [ 404, 'NOT_FOUND' ]
+
+- Expected
++ Received
+
+  [
+-   404,
+-   "NOT_FOUND",
++   200,
++   undefined,
+  ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:326:53
+    324|     const path = `/waitlist-entries/${entryId}/cancellation`;
+    325|     const cancelled = await as<ApiError>("adminOtherClub", "POST", pat…
+    326|     expect([cancelled.status, cancelled.body.code]).toEqual([404, "NOT…
+       |                                                     ^
+    327|     valid("ApiError", cancelled.body);
+    328|     for (const read of ["bookings", "waitlist-entries"]) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+   Start at  21:45:32
+   Duration  813ms (transform 54%, import 39%, tests 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/backoffice-handlers.test.ts -t E5-W05 step 16

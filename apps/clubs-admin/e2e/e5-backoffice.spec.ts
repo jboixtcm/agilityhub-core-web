@@ -4,7 +4,8 @@ import { resolve } from "node:path";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4174";
-const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E5-W03");
+// E5-W05 refreshes E5-W03's captures (registrants, register, D10, D11, D1) in its own folder.
+const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E5-W05");
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -66,9 +67,10 @@ test.describe("E5-W03 D4 · the registrants of the selected class (S08 §6, R-08
     await page.getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/5 \+2/u }).click();
     const card = page.getByRole("region", { name: /^Classe seleccionada/u });
     const panel = card.getByRole("region", { name: "Inscrits (4/5)" });
-    await expect(panel.getByRole("listitem").first()).toHaveText("Laura + Dunaconfirmada");
+    // E5-W05 steps 1 and 2: the level chip (levelCode), the displayState chip and «{guia} + {gos}».
+    await expect(panel.getByRole("listitem").first()).toHaveText("Laura + DunaBconfirmada");
     await expect(panel.getByText("Sergio + Thai")).toBeVisible();
-    await expect(panel.getByText("En espera: Kira · Lluna")).toBeVisible();
+    await expect(panel.getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
     await card.scrollIntoViewIfNeeded();
     await expectIconsPainted(card);
     await card.screenshot({ path: resolve(evidenceDirectory, "D4-inscrits-1280.png") });
@@ -76,13 +78,13 @@ test.describe("E5-W03 D4 · the registrants of the selected class (S08 §6, R-08
     const removal = page.waitForRequest(
       (request) => request.method() === "POST" && request.url().includes("/waitlist-entries/"),
     );
-    await panel.getByRole("button", { name: "Treu Kira de la llista d'espera" }).click();
+    await panel.getByRole("button", { name: "Treu Júlia + Kira de la llista d'espera" }).click();
     const dialog = page.getByRole("dialog", { name: "Treure de la llista d'espera" });
     await dialog.getByRole("button", { name: "Treu de la llista" }).click();
     expect((await removal).url()).toMatch(
       /\/waitlist-entries\/wl-cls-2026-08-12-1850-0-0\/cancellation$/u,
     );
-    await expect(panel.getByText("En espera: Lluna")).toBeVisible();
+    await expect(panel.getByText("En espera: Roser + Lluna")).toBeVisible();
     // The calendar reads the class's counters again (R-08-02: the api counts).
     await expect(
       page.getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/5 \+1/u }),
@@ -94,7 +96,7 @@ test.describe("E5-W03 D4 · the registrants of the selected class (S08 §6, R-08
     await page.goto(`${baseUrl}/calendari`);
     await page.getByRole("button", { name: /^dc 12 18:50 · B\+C/u }).click();
     const panel = page.getByRole("region", { name: "Inscrits (4/5)" });
-    await expect(panel.getByText("En espera: Kira · Lluna")).toBeVisible();
+    await expect(panel.getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
     await expect(panel.getByRole("button")).toHaveCount(0);
   });
 });
@@ -109,6 +111,13 @@ test.describe("E5-W03 «Entrenaments» · the ring-usage register (S09 §2, §13
     await expect(page.getByRole("heading", { level: 1, name: "Entrenaments" })).toBeVisible();
     const bookings = page.getByRole("region", { name: "Reserves d'entrenament" });
     await expect(bookings.getByRole("row").filter({ hasText: "Rock" }).first()).toBeVisible();
+    // E5-W05 step 3: the slot's end (endsAtLocal) and «{nom complet} · {número}» (memberNumber).
+    await expect(
+      bookings
+        .getByRole("row")
+        .filter({ hasText: "dl 3 · 7:00–7:30" })
+        .filter({ hasText: "Laura Serra Vidal · 87" }),
+    ).toBeVisible();
     await expect(page.getByText("Excel · PDF")).toBeVisible();
     await expectIconsPainted(page.locator("main"));
     await page.screenshot({ path: resolve(evidenceDirectory, "entrenaments-registre-1280.png") });
@@ -154,6 +163,10 @@ test.describe("E5-W03 D10 · «Reserves» of the member (S08 §2, R-08-19)", () 
     const card = page.getByRole("region", { name: "Reserves" });
     await expect(
       card.getByRole("table", { name: "Classes" }).getByRole("row").nth(1),
+    ).toBeVisible();
+    // E5-W05 step 4: each class booking names its class and its ring (E5-T29).
+    await expect(
+      card.getByRole("table", { name: "Classes" }).getByRole("columnheader", { name: "Classe" }),
     ).toBeVisible();
     await expect(
       card.getByRole("table", { name: "Entrenaments" }).getByText("Muntanya").first(),

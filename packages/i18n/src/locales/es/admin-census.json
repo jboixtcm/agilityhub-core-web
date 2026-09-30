@@ -394,6 +394,7 @@
     "trainings": "Entrenamientos",
     "columns": {
       "when": "Día y hora",
+      "class": "Clase",
       "ring": "Pista",
       "dog": "Perro",
       "state": "Estado",

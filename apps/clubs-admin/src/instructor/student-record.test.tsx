@@ -424,4 +424,66 @@ describe("«Alumnes» of the back office (mockups D12–D14, S10 §13-9)", () =>
       true,
     );
   });
+
+  it("E5-W05 step 23 (R-10-00): «Alumnes» writes the owner's first name the api sends, a compound one whole («Joan Antoni + Toby»), and adds «(abonat: {nom i cognom})» to a dog led by another guide", async () => {
+    const dogs = [
+      {
+        // No handlerName: the member leads the dog (the api leaves the key out).
+        id: "00000000-0000-4000-8000-00000000a001",
+        level: { code: "B", color: null, id: "00000000-0000-4000-8000-00000000000b", name: "B" },
+        name: "Toby",
+        owner: {
+          firstName: "Joan Antoni",
+          fullName: "Joan Antoni Puig Serra",
+          id: "00000000-0000-4000-8000-00000000b001",
+          status: "ACTIVE",
+        },
+      },
+      {
+        handlerName: "Júlia Roca",
+        id: "00000000-0000-4000-8000-00000000a002",
+        level: { code: "D", color: null, id: "00000000-0000-4000-8000-00000000000d", name: "D" },
+        name: "Rock",
+        owner: {
+          firstName: "Laura",
+          fullName: "Laura Serra Vidal",
+          id: "00000000-0000-4000-8000-00000000b002",
+          status: "ACTIVE",
+        },
+      },
+    ];
+    server.use(
+      http.get("*/api/v1/dogs", () =>
+        HttpResponse.json({
+          appliedFilters: [{ field: "status", op: "eq", value: "ACTIVE" }],
+          items: dogs,
+          page: 0,
+          size: 50,
+          totalItems: dogs.length,
+          totalPages: 1,
+        }),
+      ),
+    );
+    mockScenario("instructor");
+    const i18n = await createI18n({
+      branding: canic,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["instructor", "enums", "errors", "common"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={canic}>
+          <StudentsPage
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            onNavigate={vi.fn()}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    const toby = await screen.findByRole("link", { name: "Joan Antoni + Toby · B" });
+    expect(within(toby).queryByText(/abonat/u)).toBeNull();
+    const rock = screen.getByRole("link", { name: /^Júlia Roca \+ Rock · D/u });
+    expect(within(rock).getByText("(abonat: Laura Serra Vidal)")).toBeVisible();
+  });
 });

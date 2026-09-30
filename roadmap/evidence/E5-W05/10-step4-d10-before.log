@@ -1,0 +1,43 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/MemberBookingsCard.test.tsx (5 tests | 1 failed | 4 skipped) 345ms
+   ❯ E5-W05 step 4 · D10's «Classes» table names each class and its ring (E5-T29) (1)
+     × E5-W05 step 4: each row reads the class's description and its ring (dot in the ring's colour and name), as E5-W03 step 3 asks 341ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/MemberBookingsCard.test.tsx > E5-W05 step 4 · D10's «Classes» table names each class and its ring (E5-T29) > E5-W05 step 4: each row reads the class's description and its ring (dot in the ring's colour and name), as E5-W03 step 3 asks
+AssertionError: expected [ 'Dia i hora', 'Gos', 'Estat', …(1) ] to deeply equal [ 'Dia i hora', 'Classe', …(4) ]
+
+- Expected
++ Received
+
+  [
+    "Dia i hora",
+-   "Classe",
+-   "Pista",
+    "Gos",
+    "Estat",
+    "Origen",
+  ]
+
+ ❯ src/census/MemberBookingsCard.test.tsx:87:7
+     85|         .getAllByRole("columnheader")
+     86|         .map((cell) => cell.textContent),
+     87|     ).toEqual(["Dia i hora", "Classe", "Pista", "Gos", "Estat", "Orige…
+       |       ^
+     88|     // What the api sends for the newest booking (the mock world's, re…
+     89|     const answer = (await (
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 skipped (5)
+   Start at  21:53:22
+   Duration  3.25s (transform 51%, environment 19%, import 12%, tests 11%, setup 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/MemberBookingsCard.test.tsx -t E5-W05 step 4

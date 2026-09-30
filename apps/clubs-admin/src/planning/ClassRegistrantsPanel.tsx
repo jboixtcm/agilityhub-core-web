@@ -6,6 +6,7 @@ import {
   isLiveWaitlistEntry,
   removeWaitlistEntry,
   useClassRegistrants,
+  waitlistEntryGuide,
 } from "@agilityhub/api-client";
 import {
   Button,
@@ -27,14 +28,31 @@ export const BOOKING_STATE_TONES: Readonly<Record<ClassBookingItem["state"], Ton
   PAYMENT_PENDING: "warning",
 };
 
+/**
+ * The chip of a registrant: the api's derived `displayState` (S08 §6, E5-T29), with 07's literals
+ * (`enums:bookingState.*`): a past booking reads «feta», a NO_SHOW mark «no presentat» (red).
+ */
+export const BOOKING_DISPLAY_STATE_TONES: Readonly<Record<ClassBookingItem["displayState"], Tone>> =
+  {
+    CANCELLED: "neutral",
+    CANCELLED_BY_CLUB: "danger",
+    CANCELLED_LATE: "warning",
+    CONFIRMED: "success",
+    DONE: "neutral",
+    NO_SHOW: "danger",
+    PAYMENT_PENDING: "warning",
+  };
+
 type Translate = ReturnType<typeof useTranslation>["t"];
 
 /**
- * «Kira», or «1. Kira» in a FIFO club (R-08-12 `position`, `null` with ALL_AT_ONCE). The waiting
- * entry carries no member name (S08 §6 `WaitlistEntry`): only the dog's.
+ * «Júlia + Kira» (S10 R-10-00: `handlerName ?? memberFirstName`, E5-T29), or «1. Júlia + Kira» in
+ * a FIFO club (R-08-12 `position`, `null` with ALL_AT_ONCE). Without a guide, the dog alone.
  */
 export function waitingLabel(t: Translate, entry: ClassWaitlistEntry): string {
-  const name = entry.dogName ?? entry.dog.name;
+  const dog = entry.dogName ?? entry.dog.name;
+  const guide = waitlistEntryGuide(entry);
+  const name = guide === "" ? dog : t("admin-scheduling:registrants.name", { dog, member: guide });
   return entry.position === null || entry.position === undefined
     ? name
     : t("admin-scheduling:registrants.position", { name, position: entry.position });
@@ -139,13 +157,14 @@ export function ClassRegistrantsPanel({
           registrants.status === "ready"
             ? registrants.bookings.map((item) => ({
                 id: item.id,
+                level: item.levelCode ?? undefined,
                 name: t("admin-scheduling:registrants.name", {
                   dog: item.dogName,
                   member: item.memberName,
                 }),
                 state: {
-                  label: t(`enums:bookingState.${item.state}`),
-                  tone: BOOKING_STATE_TONES[item.state],
+                  label: t(`enums:bookingState.${item.displayState}`),
+                  tone: BOOKING_DISPLAY_STATE_TONES[item.displayState],
                 },
               }))
             : []

@@ -231,6 +231,12 @@
   background: var(--ah-color-surface-2);
 }
 
+/* R-10-00: «(abonat: {nom i cognom})» after a dog led by another guide. */
+.students-page__owner {
+  color: var(--ah-color-text-muted);
+  font-size: 0.85rem;
+}
+
 .students-page__more {
   justify-self: center;
 }

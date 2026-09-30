@@ -225,3 +225,69 @@ describe("SlotGrid presenter (S09 screens 08 and 24)", () => {
     expect(screen.getAllByRole("cell")).toHaveLength(2);
   });
 });
+
+describe("E5-W05 step 14: SlotGrid's disabled columns (E5-W02 round-2 review #4)", () => {
+  it("E5-W05 step 14: a disabled single column disables its free cells and never calls onCellPress", () => {
+    const onCellPress = vi.fn();
+    const onSelectionChange = vi.fn();
+    render(
+      <SlotGrid
+        columns={[{ disabled: true, id: "ring-mun", label: "Muntanya" }]}
+        labels={labels}
+        mode="single"
+        onCellPress={onCellPress}
+        onSelectionChange={onSelectionChange}
+        rows={[row("07:30"), row("08:00")]}
+        selection={{ cellIds: [] }}
+      />,
+    );
+    expect(screen.getByRole("group", { name: "Hores" })).toHaveClass("ah-slot-grid--flow");
+    const cells = ["7:30, lliure", "8:00, lliure"].map((name) =>
+      screen.getByRole("button", { name }),
+    );
+    for (const free of cells) fireEvent.click(free);
+    expect(onCellPress).not.toHaveBeenCalled();
+    expect(onSelectionChange).not.toHaveBeenCalled();
+    for (const free of cells) {
+      expect(free).toBeDisabled();
+      expect(free).not.toHaveAttribute("aria-pressed");
+    }
+  });
+
+  it("E5-W05 step 14: in the table only the disabled column's cells are inert; the others still press", () => {
+    const onCellPress = vi.fn();
+    const onSelectionChange = vi.fn();
+    const both = (time: string): SlotGridRow => ({
+      cells: [cell(time), cell(time, { columnId: "ring-cen", id: `ring-cen_${time}` })],
+      time,
+    });
+    render(
+      <SlotGrid
+        columns={[
+          { id: "ring-mun", label: "Muntanya" },
+          { disabled: true, id: "ring-cen", label: "Central" },
+        ]}
+        labels={labels}
+        mode="contiguous"
+        onCellPress={onCellPress}
+        onSelectionChange={onSelectionChange}
+        rows={[both("08:30"), both("09:00")]}
+        selection={{ cellIds: [] }}
+      />,
+    );
+    const table = screen.getByRole("table", { name: "Hores" });
+    const central = [...table.querySelectorAll<HTMLButtonElement>('[data-ring="ring-cen"]')];
+    const muntanya = [...table.querySelectorAll<HTMLButtonElement>('[data-ring="ring-mun"]')];
+    expect(central).toHaveLength(2);
+    expect(muntanya).toHaveLength(2);
+    for (const button of central) fireEvent.click(button);
+    expect(onCellPress).not.toHaveBeenCalled();
+    expect(onSelectionChange).not.toHaveBeenCalled();
+    for (const button of central) expect(button).toBeDisabled();
+    for (const button of muntanya) expect(button).toBeEnabled();
+    fireEvent.click(muntanya[0] ?? table);
+    expect(onCellPress).toHaveBeenCalledTimes(1);
+    expect(onCellPress).toHaveBeenCalledWith(expect.objectContaining({ id: "ring-mun_08:30" }));
+    expect(onSelectionChange).toHaveBeenCalledWith(["ring-mun_08:30"]);
+  });
+});

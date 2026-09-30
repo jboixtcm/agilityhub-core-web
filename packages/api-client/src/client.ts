@@ -44,11 +44,9 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   "/followup/read-all",
   // S11 «Enviar comunicat» and its dryRun (R-11-13).
   /^\/message-templates\/[^/]+\/send$/,
-  // S11 screen 11 (R-11-10: a card read, the read-all on entering) and 12's push subscription
-  // (R-11-07), as E7-W02 step 0 lists them.
-  "/me/notifications/read-all",
-  /^\/me\/notifications\/[^/]+\/read$/,
-  "/push-subscriptions",
+  // Not S11's member writes (screen 11's read and read-all, 12's push subscription): their
+  // contract declares no Idempotency-Key, and a key goes only where it is declared (CONVENCIONS_API
+  // §7, E79; E7-W02 round 2 #8).
 ];
 
 type MaybePromise<T> = Promise<T> | T;

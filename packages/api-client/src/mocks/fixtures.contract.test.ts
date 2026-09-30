@@ -718,7 +718,10 @@ describe("E5-W01 step 10 · the booking world follows the S08 contract (MeHome, 
     for (const item of bookingState.entries) {
       expect(entry(waitlistResource(item, options)), JSON.stringify(entry.errors, null, 2)).toBe(true);
     }
-    expect(limit(limitReachedDetails("CURRENT")), JSON.stringify(limit.errors, null, 2)).toBe(true);
+    expect(
+      limit(limitReachedDetails("CURRENT", options.now)),
+      JSON.stringify(limit.errors, null, 2),
+    ).toBe(true);
   });
 });
 

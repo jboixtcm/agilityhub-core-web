@@ -1,8 +1,10 @@
 import type { components } from "../../generated/schema";
 
 import { clubInstant, RISK_REVIEW_DAY, riskReviewClassIds } from "./calendar";
-import { addDays } from "./planning";
+import { addDays, clubLocalDate } from "./planning";
 
+type ClassBookingItem = components["schemas"]["ClassBookingItem"];
+type ClassSession = components["schemas"]["ClassSession"];
 type JobSummary = components["schemas"]["JobSummary"];
 type JobRun = components["schemas"]["JobRun"];
 type JobEffectItem = components["schemas"]["JobEffectItem"];
@@ -28,6 +30,11 @@ interface CatalogEntry {
   /** The `jobs.<name>.enabled` parameter the switch writes (S15 §9). */
   parameter: string;
   schedule: JobSummary["schedule"];
+  /**
+   * R-15-01 (the «Hora» column): the parameter the api reads the local time from (and, for the
+   * week's opening, the day), so a saved change shows in `GET /jobs` at once.
+   */
+  timeParameter?: string;
 }
 
 const daily = (localTime: string): JobSummary["schedule"] => ({
@@ -55,6 +62,7 @@ export const JOB_CATALOG: readonly CatalogEntry[] = [
     name: "week-opening",
     parameter: "jobs.weekOpening.enabled",
     schedule: { dayOfMonth: null, dayOfWeek: "SUNDAY", kind: "WEEKLY", localTime: "20:00" },
+    timeParameter: "bookings.weekOpensAt",
   },
   {
     jobName: "RISK_REVIEW",
@@ -62,6 +70,7 @@ export const JOB_CATALOG: readonly CatalogEntry[] = [
     name: "risk-review",
     parameter: "jobs.riskReview.enabled",
     schedule: daily("07:30"),
+    timeParameter: "classes.riskReviewTime",
   },
   {
     jobName: "NO_SHOW_NOTICES",
@@ -83,6 +92,7 @@ export const JOB_CATALOG: readonly CatalogEntry[] = [
     name: "expirations",
     parameter: "jobs.expirations.enabled",
     schedule: daily("06:00"),
+    timeParameter: "jobs.dailyTime",
   },
   {
     jobName: "WAITLIST_FIFO",
@@ -111,6 +121,7 @@ export const JOB_CATALOG: readonly CatalogEntry[] = [
     name: "cleanup",
     parameter: "jobs.cleanup.enabled",
     schedule: daily("06:00"),
+    timeParameter: "jobs.dailyTime",
   },
   {
     jobName: "BILLING_REMINDER",
@@ -118,6 +129,7 @@ export const JOB_CATALOG: readonly CatalogEntry[] = [
     name: "billing-reminder",
     parameter: "jobs.billingReminder.enabled",
     schedule: { dayOfMonth: 22, dayOfWeek: null, kind: "MONTHLY", localTime: "06:00" },
+    timeParameter: "jobs.dailyTime",
   },
 ];
 
@@ -483,7 +495,36 @@ export function resetJobsState(): void {
   jobsState.sequence = 0;
 }
 
-export function jobSummary(job: StoredJob): JobSummary {
+/**
+ * The process's schedule as the api computes it (R-15-01): the catalog's cadence at the local time
+ * of its parameter (`jobs.dailyTime`, `classes.riskReviewTime`, the week's opening day and time).
+ */
+function scheduleOf(
+  entry: CatalogEntry,
+  parameterValue: (key: string) => unknown,
+): JobSummary["schedule"] {
+  if (entry.timeParameter === undefined) return entry.schedule;
+  const value = parameterValue(entry.timeParameter);
+  if (typeof value === "string" && /^\d{2}:\d{2}$/u.test(value)) {
+    return { ...entry.schedule, localTime: value };
+  }
+  if (typeof value === "object" && value !== null) {
+    const { dayOfWeek, time } = value as { dayOfWeek?: unknown; time?: unknown };
+    return {
+      ...entry.schedule,
+      ...(typeof dayOfWeek === "string"
+        ? { dayOfWeek: dayOfWeek as NonNullable<JobSummary["schedule"]["dayOfWeek"]> }
+        : {}),
+      ...(typeof time === "string" ? { localTime: time } : {}),
+    };
+  }
+  return entry.schedule;
+}
+
+export function jobSummary(
+  job: StoredJob,
+  parameterValue: (key: string) => unknown = () => undefined,
+): JobSummary {
   const last = job.runs[0];
   return {
     enabled: job.enabled,
@@ -502,7 +543,7 @@ export function jobSummary(job: StoredJob): JobSummary {
     module: job.entry.module,
     name: job.entry.name,
     nextScheduledForLocal: NEXT_LOCAL[job.entry.name] ?? null,
-    schedule: job.entry.schedule,
+    schedule: scheduleOf(job.entry, parameterValue),
   };
 }
 
@@ -542,77 +583,112 @@ export function manualRun(job: StoredJob, dryRun: boolean, now: number): JobRun 
   };
 }
 
+/** What `GET /risk-review` reads: the caller's club's classes and the review's parameters. */
+export interface RiskReviewWorld {
+  /** `classes.riskAutoCancelSameDay`. */
+  autoCancelSameDay: boolean;
+  /** Whether the process runs (`jobs.riskReview.enabled`). */
+  enabled: boolean;
+  /** `classes.riskLookaheadDays`. */
+  lookaheadDays: number;
+  /** `classes.minDogs`. */
+  minDogs: number;
+  now: number;
+  /** A class's bookings, any state (`GET /class-sessions/{id}/bookings`). */
+  registrants: (session: ClassSession) => readonly ClassBookingItem[];
+  /** `classes.riskReviewTime`, club-local `HH:mm`. */
+  reviewTime: string;
+  ringName: (session: ClassSession) => string | null;
+  /** The club's classes (the calendar world). */
+  sessions: readonly ClassSession[];
+}
+
+/** The risk review's defaults (S15 §9) for the parameters the mock club does not list. */
+export const RISK_REVIEW_DEFAULTS = {
+  autoCancelSameDay: RISK_PARAMETERS["classes.riskAutoCancelSameDay"],
+  lookaheadDays: RISK_PARAMETERS["classes.riskLookaheadDays"],
+  minDogs: RISK_PARAMETERS["classes.minDogs"],
+  reviewTime: RISK_PARAMETERS["classes.riskReviewTime"],
+};
+
 /**
- * `GET /risk-review` (S15 §6 form A) for the club-local `date`: the four items of the spec's
- * example (AUTO_CANCELLED without and with `notified`, AT_RISK, WILL_CANCEL) on that day, the next
- * one and the one after, as the api orders them (by `startsAt`).
+ * `GET /risk-review` (S15 §6 form A) for the club-local `date`, computed from the club's classes as
+ * the api does (E5-W05 step 15): the ACTIVE classes at risk and the CANCELLED{RISK_REVIEW} ones of
+ * `date` … `date + lookaheadDays`, by `startsAt`. The mock world's `atRisk` mark stands for the
+ * api's risk evaluation, so D1's rows and D4's warnings agree. `notified`: the bookings the
+ * cancellation affected; for an active class, its registrants once a review has already covered
+ * its day. `WILL_CANCEL`/`WILL_REVIEW` only when P2 will still review the class and nobody was
+ * notified yet (E37); otherwise `AT_RISK`. On the example day the calendar world holds the spec's
+ * c1…c4 (`riskReviewSessions`), so the form is S15's example.
  */
-export function riskReviewForm(date: string, empty: boolean): RiskReviewForm {
-  const tomorrow = addDays(date, 1);
-  const after = addDays(date, 2);
-  const reviewAt = (day: string) => clubInstant(day, "07:30");
-  // On the example day these are the calendar world's classes (`riskReviewSessions`).
-  const ids = riskReviewClassIds(date);
-  const items: RiskReviewItem[] = [
-    {
-      bookedCount: 0,
-      cancelledAt: plusMs(reviewAt(date), 2_000),
-      classId: ids.c1,
-      date,
-      dayLabel: "TODAY",
-      displayDescription: "Cadells",
-      notified: [],
-      reviewAt: reviewAt(date),
-      ringName: "Cadells",
-      startTime: "09:30",
-      status: "AUTO_CANCELLED",
-    },
-    {
-      bookedCount: 1,
-      cancelledAt: plusMs(reviewAt(date), 3_000),
-      classId: ids.c2,
-      date,
-      dayLabel: "TODAY",
-      displayDescription: "Nivell D",
-      notified: [{ dogName: "Duna", memberName: "Laura" }],
-      reviewAt: reviewAt(date),
-      ringName: "Petita",
-      startTime: "17:40",
-      status: "AUTO_CANCELLED",
-    },
-    {
-      bookedCount: 1,
+export function riskReviewForm(date: string, world: RiskReviewWorld): RiskReviewForm {
+  const reviewAt = (day: string) => clubInstant(day, world.reviewTime);
+  const today = clubLocalDate(new Date(world.now));
+  // The last review that ran: today's once its time has passed, else yesterday's.
+  const lastReview = Date.parse(reviewAt(today)) <= world.now ? today : addDays(today, -1);
+  const coveredUpTo = addDays(lastReview, world.lookaheadDays);
+  const last = addDays(date, world.lookaheadDays);
+  const dayLabel = (day: string): RiskReviewItem["dayLabel"] =>
+    day === date ? "TODAY" : day === addDays(date, 1) ? "TOMORROW" : "OTHER";
+  const people = (session: ClassSession, state: ClassBookingItem["state"]) =>
+    world
+      .registrants(session)
+      .filter((booking) => booking.state === state)
+      .map((booking) => ({ dogName: booking.dogName, memberName: booking.memberName }));
+  const item = (session: ClassSession): RiskReviewItem => {
+    const review = reviewAt(session.date);
+    const common = {
+      classId: session.id,
+      date: session.date,
+      dayLabel: dayLabel(session.date),
+      displayDescription: session.displayDescription,
+      reviewAt: review,
+      ringName: world.ringName(session),
+      startTime: session.startTime,
+    };
+    if (session.state === "CANCELLED") {
+      return {
+        ...common,
+        bookedCount: session.cancellation?.affectedBookings ?? 0,
+        cancelledAt: session.cancellation?.at ?? null,
+        notified: people(session, "CANCELLED_BY_CLUB"),
+        status: "AUTO_CANCELLED",
+      };
+    }
+    const notified = session.date <= coveredUpTo ? people(session, "ACTIVE") : [];
+    const willReview =
+      world.enabled &&
+      Date.parse(review) > world.now &&
+      Date.parse(session.startsAt) > Date.parse(review);
+    return {
+      ...common,
+      bookedCount: session.counters.booked,
       cancelledAt: null,
-      classId: ids.c3,
-      date: tomorrow,
-      dayLabel: "TOMORROW",
-      displayDescription: "F i G",
-      notified: [{ dogName: "Blat", memberName: "Pau" }],
-      reviewAt: reviewAt(tomorrow),
-      ringName: "Carretera",
-      startTime: "20:00",
-      status: "AT_RISK",
-    },
-    {
-      bookedCount: 0,
-      cancelledAt: null,
-      classId: ids.c4,
-      date: after,
-      dayLabel: "OTHER",
-      displayDescription: "Cadells",
-      notified: [],
-      reviewAt: reviewAt(after),
-      ringName: "Cadells",
-      startTime: "09:30",
-      status: "WILL_CANCEL",
-    },
-  ];
+      notified,
+      status:
+        willReview && notified.length === 0
+          ? world.autoCancelSameDay
+            ? "WILL_CANCEL"
+            : "WILL_REVIEW"
+          : "AT_RISK",
+    };
+  };
   return {
-    autoCancelSameDay: true,
+    autoCancelSameDay: world.autoCancelSameDay,
     date,
-    items: empty ? [] : items,
-    lookaheadDays: 2,
-    minDogs: 2,
-    reviewTime: "07:30",
+    items: world.sessions
+      .filter(
+        (session) =>
+          session.date >= date &&
+          session.date <= last &&
+          (session.state === "CANCELLED"
+            ? session.cancellation?.reason === "RISK_REVIEW"
+            : session.state === "ACTIVE" && session.atRisk && !session.riskExempt),
+      )
+      .sort((left, right) => left.startsAt.localeCompare(right.startsAt))
+      .map(item),
+    lookaheadDays: world.lookaheadDays,
+    minDogs: world.minDogs,
+    reviewTime: world.reviewTime,
   };
 }

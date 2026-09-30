@@ -30,6 +30,17 @@
   font-size: 0.85rem;
 }
 
+.ah-registrants__who {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+  min-width: 0;
+}
+
+.ah-registrants__level {
+  font-size: 0.7rem;
+}
+
 .ah-registrants__empty,
 .ah-registrants__waiting p {
   margin: 0;

@@ -1,0 +1,196 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/training/TrainingRegisterPage.test.tsx (14 tests | 1 failed | 13 skipped) 253ms
+   ❯ E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values (6)
+     × E5-W05 step 5: the week filter the api echoes as a JSON array (`between`) reads «Dia i hora = «3 al 9 d’agost»», never «» 249ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/TrainingRegisterPage.test.tsx > E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values > E5-W05 step 5: the week filter the api echoes as a JSON array (`between`) reads «Dia i hora = «3 al 9 d’agost»», never «»
+TestingLibraryElementError: Unable to find an element with the text: /^Filtre \(1\): Dia i hora = «3 al 9 d.agost»$/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"training-register"[39m
+    [36m>[39m
+      [36m<h1>[39m
+        [0mEntrenaments[0m
+      [36m</h1>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Registre d'ús de pistes"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_2_-panel-bookings"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_2_-tab-bookings"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mReserves d'entrenament[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_2_-panel-blocks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_2_-tab-blocks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mBloquejos i reserves de pista[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_2_-tab-bookings"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_2_-panel-bookings"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Reserves d'entrenament"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mCerca per abonat, gos o pista[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Cerca per abonat, gos o pista"[39m
+                  [33mplaceholder[39m=[32m"Cerca per abonat, gos o pista"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Estat de la reserva"[39m
+                [33mclass[39m=[32m"ah-universal-list__status"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTotes[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ACTIVE"[39m
+                [36m>[39m
+                  [0mconfirmada[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"CANCELLED"[39m
+                [36m>[39m
+                  [0manul·lada[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"CANCELLED_BY_CLUB"[39m
+                [36m>[39m
+                  [0mcancel·lada pel club[0m
+                [36m</option>[39m
+              [36m</select>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mFiltre (1): Dia i hora = «»[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mDia i hora = «»[0m
+                    [36m</span>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Treu el filtre de Dia i hora"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mColumna[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"ringId"[39m
+                      [36m>[39m
+                        [0mPista[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"date"[39m
+                      [36m>[39m
+                        [0mDia i hora[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"memberId"[39m
+               ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/training/TrainingRegisterPage.test.tsx:495:19
+    493|     const answer = (await requests[0]) as { appliedFilters: { value: u…
+    494|     expect(answer.appliedFilters[0]?.value).toEqual(["2026-08-03", "20…
+    495|     expect(screen.getByText(/^Filtre \(1\): Dia i hora = «3 al 9 d.ago…
+       |                   ^
+    496|   });
+    497|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 skipped (14)
+   Start at  21:52:42
+   Duration  2.07s (transform 42%, environment 26%, import 14%, tests 13%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/training/TrainingRegisterPage.test.tsx -t JSON array

@@ -1,11 +1,11 @@
 import { server } from "@agilityhub/api-client/mocks/server";
-import { fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { act, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { renderApp } from "../booking/test-utils";
 
-import { recordRequests, setupTrainingWorld } from "./test-utils";
+import { recordRequests, setupTrainingWorld, TRAINING_NOW } from "./test-utils";
 
 setupTrainingWorld();
 
@@ -116,5 +116,39 @@ describe("S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-1
     await openDetail("training-rock-tue4", "es");
     expect(screen.getByText("Entrenamiento · con Rock")).toBeVisible();
     expect(screen.getByText("confirmada")).toBeVisible();
+  });
+});
+
+describe("E5-W05 step 13: the detail reaches DONE (E5-W02 round-2 review #3, S09 §5)", () => {
+  it("E5-W05 step 13: with a controlled clock the booking reads «fet» after its endsAt, without a remount", async () => {
+    // A controlled clock: the page's timers fire exactly at the instant they were set for.
+    vi.useRealTimers();
+    vi.useFakeTimers({
+      now: TRAINING_NOW,
+      shouldAdvanceTime: true,
+      toFake: ["Date", "setTimeout", "clearTimeout"],
+    });
+    // Monday 3, Muntanya 7:00–7:30 (`endsAt` 05:30Z); the clock is at 7:10.
+    await openDetail("training-rock-mon3");
+    const title = screen.getByText("Entrenament · amb Rock");
+    expect(screen.getByText("confirmada")).toBeVisible();
+    const endsAt = Date.parse("2026-08-03T05:30:00Z");
+    expect(Date.now()).toBeLessThan(endsAt);
+
+    // The clock reaches the end, then a minute more: the same page, now «fet».
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(endsAt - Date.now());
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(60_000);
+    });
+    expect(Date.now()).toBeGreaterThan(endsAt);
+    expect(screen.getByText("fet")).toBeVisible();
+    expect(screen.queryByText("confirmada")).not.toBeInTheDocument();
+    // A past booking offers nothing: neither the button nor the too-late notice.
+    expect(screen.queryByRole("button", { name: "ANUL·LA LA RESERVA" })).not.toBeInTheDocument();
+    expect(screen.queryByText(/Ja no es pot anul·lar/u)).not.toBeInTheDocument();
+    // Not remounted: the title is the node that was on screen before.
+    expect(screen.getByText("Entrenament · amb Rock")).toBe(title);
   });
 });

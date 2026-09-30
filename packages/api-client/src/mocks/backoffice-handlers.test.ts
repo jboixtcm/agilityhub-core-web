@@ -9,6 +9,7 @@ import {
   JOBS_MOCK_NOW,
   mockScenario,
   resetBackofficeMockState,
+  resetBookingMockState,
   resetPlanningState,
   resetSettingsState,
   resetTrainingMockState,
@@ -17,9 +18,13 @@ import {
 import { server } from "./server";
 
 type ApiError = components["schemas"]["ApiError"];
+type ClassBookings = components["schemas"]["ClassBookings"];
+type ClassWaitlist = components["schemas"]["ClassWaitlist"];
 type JobRun = components["schemas"]["JobRun"];
 type JobSummaries = components["schemas"]["JobSummaries"];
 type RiskReviewForm = components["schemas"]["RiskReviewForm"];
+type WaitlistEntry = components["schemas"]["WaitlistEntry"];
+type WeekCalendar = components["schemas"]["WeekCalendar"];
 
 const origin = "http://localhost";
 const schemaId = "https://agilityhub.local/openapi.json";
@@ -208,14 +213,137 @@ describe("E5-W03 step 8 · S15 §6 form A (GET /risk-review)", () => {
       );
     }
     // The notified members are the registrants of the classes the review cancelled or flagged.
-    // c4 is the calendar's own Wednesday class, which that world (drawn on the Wednesday) already
-    // shows cancelled by that day's review.
+    // c4 is the calendar's own Wednesday class: active and without registrants until the Wednesday
+    // review cancels it (E5-W05 step 15; before, the world showed it already cancelled here).
     expect(seen).toEqual([
       "AUTO_CANCELLED: ",
       "AUTO_CANCELLED: Laura + Duna CANCELLED_BY_CLUB",
       "AT_RISK: Pau + Blat ACTIVE",
-      "WILL_CANCEL: Irene + Kai CANCELLED_BY_CLUB",
+      "WILL_CANCEL: ",
     ]);
+  });
+});
+
+/** The club-local Monday of a date: the calendar world's weeks are `week-{monday}`. */
+function mondayOf(date: string): string {
+  const day = new Date(`${date}T12:00:00Z`);
+  day.setUTCDate(day.getUTCDate() - ((day.getUTCDay() + 6) % 7));
+  return day.toISOString().slice(0, 10);
+}
+
+/**
+ * The admin's `GET /risk-review` rows, each found in D4's week of its date (`GET /weeks/{id}/
+ * calendar`) in the state its status implies (S15 §6 form A: an ACTIVE class at risk, or a
+ * CANCELLED{RISK_REVIEW} one), with the registrants the row names.
+ */
+async function riskRowsInTheirWeeks(): Promise<string[]> {
+  const review = await as<RiskReviewForm>("admin", "GET", "/risk-review");
+  expect(review.status).toBe(200);
+  valid("RiskReviewForm", review.body);
+  const rows: string[] = [];
+  for (const item of review.body.items) {
+    const week = await as<WeekCalendar>(
+      "admin",
+      "GET",
+      `/weeks/week-${mondayOf(item.date)}/calendar?filter=ACTIVE`,
+    );
+    const session = week.body.classes.find((candidate) => candidate.id === item.classId);
+    expect(session, `${item.status} ${item.classId} is a class of its week`).toBeDefined();
+    if (session === undefined) continue;
+    expect([session.date, session.startTime, session.displayDescription]).toEqual([
+      item.date,
+      item.startTime,
+      item.displayDescription,
+    ]);
+    const registrants = (
+      await as<ClassBookings>("admin", "GET", `/class-sessions/${item.classId}/bookings`)
+    ).body.items;
+    const names = (state: string) =>
+      registrants
+        .filter((booking) => booking.state === state)
+        .map((booking) => `${booking.memberName} + ${booking.dogName}`);
+    const notified = item.notified.map((person) => `${person.memberName} + ${person.dogName}`);
+    if (item.status === "AUTO_CANCELLED") {
+      expect([session.state, session.cancellation?.reason]).toEqual(["CANCELLED", "RISK_REVIEW"]);
+      expect(item.cancelledAt).toBe(session.cancellation?.at);
+      expect(item.bookedCount).toBe(session.cancellation?.affectedBookings);
+      expect(notified).toEqual(names("CANCELLED_BY_CLUB"));
+    } else {
+      // AT_RISK, WILL_CANCEL and WILL_REVIEW name a class that is still active, at risk in D4.
+      expect([session.state, session.atRisk], item.classId).toEqual(["ACTIVE", true]);
+      expect(item.bookedCount).toBe(session.counters.booked);
+      expect(names("ACTIVE")).toEqual(expect.arrayContaining(notified));
+    }
+    if (item.status === "WILL_CANCEL" || item.status === "WILL_REVIEW") {
+      // P2 still reviews it (E37): its review is ahead and the class starts after it.
+      const reviewAt = Date.parse(item.reviewAt ?? "");
+      expect(reviewAt).toBeGreaterThan(Date.now());
+      expect(Date.parse(session.startsAt)).toBeGreaterThan(reviewAt);
+    }
+    rows.push(`${item.status} ${item.dayLabel} ${session.state} ${item.classId}`);
+  }
+  return rows;
+}
+
+describe("E5-W05 step 15 · the risk review's rows are classes of the calendar world on any day", () => {
+  it("E5-W05 step 15: on S15's example day (dl 10 at 8:12) each row is a class of its week in the state its status implies, and the WILL_CANCEL class is still active", async () => {
+    expect(await riskRowsInTheirWeeks()).toEqual([
+      "AUTO_CANCELLED TODAY CANCELLED cls-2026-08-10-0930-7",
+      "AUTO_CANCELLED TODAY CANCELLED cls-2026-08-10-1740-9",
+      "AT_RISK TOMORROW ACTIVE cls-2026-08-11-2000-10",
+      "WILL_CANCEL OTHER ACTIVE cls-2026-08-12-0930-0",
+    ]);
+  });
+
+  it.each([
+    [
+      "dt 11-08 at 9:00, the day after the example",
+      "2026-08-11T09:00:00+02:00",
+      ["WILL_CANCEL TOMORROW ACTIVE cls-2026-08-12-0930-0"],
+    ],
+    [
+      "dc 23-09 at 10:00, after that day's review",
+      "2026-09-23T10:00:00+02:00",
+      ["AUTO_CANCELLED TODAY CANCELLED cls-2026-09-23-0930-0"],
+    ],
+    [
+      "dg 27-09 at 12:00, the review's probe day (no active class ahead)",
+      "2026-09-27T12:00:00+02:00",
+      [],
+    ],
+  ])(
+    "E5-W05 step 15: on %s each row is a class of its week in the state its status implies",
+    async (_day, now, rows) => {
+      vi.setSystemTime(new Date(now));
+      resetPlanningState();
+      expect(await riskRowsInTheirWeeks()).toEqual(rows);
+    },
+  );
+});
+
+describe("E5-W05 step 16 · the back-office mock finds classes and waiting entries in the caller's club only", () => {
+  it("E5-W05 step 16: an ADMIN of another club cannot cancel the entry (404), nor read the class's registrants and waiting list, nor see its classes in the risk review", async () => {
+    const list = () =>
+      as<ClassWaitlist>("admin", "GET", `/class-sessions/${D4_CLASS}/waitlist-entries`);
+    const entryId = (await list()).body.items[0]?.id ?? "";
+    const path = `/waitlist-entries/${entryId}/cancellation`;
+    const cancelled = await as<ApiError>("adminOtherClub", "POST", path);
+    expect([cancelled.status, cancelled.body.code]).toEqual([404, "NOT_FOUND"]);
+    valid("ApiError", cancelled.body);
+    for (const read of ["bookings", "waitlist-entries"]) {
+      const answer = await as<ApiError>(
+        "adminOtherClub",
+        "GET",
+        `/class-sessions/${D4_CLASS}/${read}`,
+      );
+      expect([answer.status, answer.body.code], read).toEqual([404, "NOT_FOUND"]);
+    }
+    const review = await as<RiskReviewForm>("adminOtherClub", "GET", "/risk-review");
+    expect([review.status, review.body.items]).toEqual([200, []]);
+    // Nothing was written: the club's own ADMIN still finds the entry live, and removes it.
+    expect((await list()).body.items.find((item) => item.id === entryId)?.state).toBe("ACTIVE");
+    const removed = await as<WaitlistEntry>("admin", "POST", path);
+    expect(removed.body).toMatchObject({ cancelReason: "ADMIN", state: "CANCELLED" });
   });
 });
 
@@ -386,5 +514,166 @@ describe("E5-W03 step 8 · S09 ring-usage register (GET /training-bookings, GET 
       {},
     );
     expect([twice.status, twice.body.code]).toEqual([409, "INVALID_STATE"]);
+  });
+});
+
+describe("E5-W05 step 7 · the staff lists' bookingWeekKey follows R-08-01 (the opening's hour)", () => {
+  it("E5-W05 step 7: Duna's class of Sunday 2 at 20:00 (mockup 06's done class) belongs to the week that opens then, 2026-08-02, as Monday 3's does", async () => {
+    // Mockup 06's member world (`bookingLimit`) holds the booking of Sunday 2 at 20:00.
+    expect((await as<unknown>("bookingLimit", "GET", "/me/home")).status).toBe(200);
+    const list = await as<{
+      items: { bookingWeekKey?: string; classSessionId?: string; classStartsAt?: string }[];
+    }>(
+      "admin",
+      "GET",
+      `/bookings?filter=${encodeURIComponent("memberId:eq:member-laura")}&size=1000&fields=classSessionId,classStartsAt,bookingWeekKey`,
+    );
+    expect(list.status).toBe(200);
+    const sunday = list.body.items.filter((row) =>
+      (row.classStartsAt ?? "").startsWith("2026-08-02T18:00"),
+    );
+    expect(sunday.length).toBeGreaterThan(0);
+    expect(sunday.every((row) => row.bookingWeekKey === "2026-08-02")).toBe(true);
+    const monday = list.body.items.filter((row) =>
+      (row.classStartsAt ?? "").startsWith("2026-08-03"),
+    );
+    expect(monday.every((row) => row.bookingWeekKey === "2026-08-02")).toBe(true);
+    const registrants = await as<ClassBookings>(
+      "admin",
+      "GET",
+      `/class-sessions/${D4_CLASS}/bookings`,
+    );
+    expect(registrants.body.items.every((row) => row.bookingWeekKey === "2026-08-09")).toBe(true);
+    resetBookingMockState();
+  });
+});
+
+describe("E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75)", () => {
+  type FilterValues = components["schemas"]["FilterValues"];
+  interface Page<Item> {
+    items: Item[];
+    totalItems: number;
+  }
+  type TrainingRow = components["schemas"]["TrainingBookingListItem"];
+  type BlockRow = components["schemas"]["RingBlockListItem"];
+  const week = encodeURIComponent("date:between:2026-08-03,2026-08-09");
+
+  beforeEach(() => {
+    vi.setSystemTime(new Date("2026-08-03T07:10:00+02:00"));
+  });
+
+  it("E5-W05 step 5: registerMany has more than 1000 training bookings; «Nil Fictici Soler» is not in the first 1000, and GET /training-bookings/filter-values counts him over the whole set", async () => {
+    const first = await as<Page<TrainingRow>>(
+      "registerMany",
+      "GET",
+      `/training-bookings?filter=${week}&page=0&size=1000&fields=memberId,memberName`,
+    );
+    expect(first.status).toBe(200);
+    expect(first.body.totalItems).toBeGreaterThan(1000);
+    expect(first.body.items.some((row) => row.memberName === "Nil Fictici Soler")).toBe(false);
+    const values = await as<FilterValues>(
+      "registerMany",
+      "GET",
+      `/training-bookings/filter-values?field=memberId&filter=${week}`,
+    );
+    expect(values.status).toBe(200);
+    valid("FilterValues", values.body);
+    expect(values.body.field).toBe("memberId");
+    expect(values.body.values).toContainEqual({
+      count: 5,
+      label: "Nil Fictici Soler",
+      value: "member-nil-many",
+    });
+    expect(values.body.values).toContainEqual({
+      count: 1000,
+      label: "Pau Fictici Mas",
+      value: "member-pau-many",
+    });
+    // The filters on the field itself are left out; q narrows the set as the list's search does.
+    const narrowed = await as<FilterValues>(
+      "registerMany",
+      "GET",
+      `/training-bookings/filter-values?field=memberId&filter=${week}&filter=${encodeURIComponent("memberId:eq:member-pau-many")}&q=Coco`,
+    );
+    expect(narrowed.body.values.map((value) => value.label)).toEqual(["Nil Fictici Soler"]);
+    const refused = await as<ApiError>(
+      "registerMany",
+      "GET",
+      "/training-bookings/filter-values?field=note",
+    );
+    expect([refused.status, refused.body.code]).toEqual([400, "INVALID_FILTER"]);
+    const member = await as<ApiError>(
+      "member",
+      "GET",
+      "/training-bookings/filter-values?field=memberId",
+    );
+    expect(member.status).toBe(403);
+  });
+
+  it("E5-W05 step 5: GET /ring-blocks/filter-values counts every block, «Cadells» (only after row 1000) included, labelled with the ring's name", async () => {
+    const range = encodeURIComponent("from:between:2026-08-02T22:00:00Z,2026-08-09T22:00:00Z");
+    const first = await as<Page<BlockRow>>(
+      "registerMany",
+      "GET",
+      `/ring-blocks?filter=${range}&page=0&size=1000&fields=ringId,ringName`,
+    );
+    expect(first.body.totalItems).toBeGreaterThan(1000);
+    expect(first.body.items.some((row) => row.ringId === "ring-cadells")).toBe(false);
+    const values = await as<FilterValues>(
+      "registerMany",
+      "GET",
+      `/ring-blocks/filter-values?field=ringId&filter=${range}`,
+    );
+    expect(values.status).toBe(200);
+    valid("FilterValues", values.body);
+    expect(values.body.values).toContainEqual({
+      count: 5,
+      label: "Cadells",
+      value: "ring-cadells",
+    });
+    const member = await as<ApiError>("member", "GET", "/ring-blocks/filter-values?field=ringId");
+    expect(member.status).toBe(403);
+  });
+
+  it("E5-W05 step 5: GET /bookings/filter-values counts the member's classes by state; GET /bookings has no search (a non-blank q is INVALID_FILTER, E75)", async () => {
+    const laura = encodeURIComponent("memberId:eq:member-laura");
+    const values = await as<FilterValues>(
+      "admin",
+      "GET",
+      `/bookings/filter-values?field=state&filter=${laura}`,
+    );
+    expect(values.status).toBe(200);
+    valid("FilterValues", values.body);
+    const list = await as<Page<components["schemas"]["BookingListItem"]>>(
+      "admin",
+      "GET",
+      `/bookings?filter=${laura}&size=1000&fields=state`,
+    );
+    const counted = new Map<string, number>();
+    for (const row of list.body.items) {
+      counted.set(row.state ?? "", (counted.get(row.state ?? "") ?? 0) + 1);
+    }
+    expect(counted.size).toBeGreaterThan(0);
+    expect(
+      Object.fromEntries(values.body.values.map((value) => [value.value, value.count])),
+    ).toEqual(Object.fromEntries(counted));
+    const searched = await as<ApiError>("admin", "GET", "/bookings?q=Duna");
+    expect([searched.status, searched.body.code]).toEqual([400, "INVALID_FILTER"]);
+    const blank = await as<Page<unknown>>("admin", "GET", "/bookings?q=%20");
+    expect(blank.status).toBe(200);
+  });
+
+  it("E5-W05 step 5: a ring block's search reads its ring's name and, for staff, its note (S09 §2, E75)", async () => {
+    const byRing = await as<Page<BlockRow>>(
+      "admin",
+      "GET",
+      "/ring-blocks?q=carretera&fields=ringName",
+    );
+    expect(byRing.body.items.length).toBeGreaterThan(0);
+    expect(byRing.body.items.every((row) => row.ringName === "Carretera")).toBe(true);
+    const byNote = await as<Page<BlockRow>>("admin", "GET", "/ring-blocks?q=sorra&fields=note");
+    expect(byNote.body.items.map((row) => row.note)).toContain("Reg de la sorra");
+    const memberNote = await as<Page<BlockRow>>("member", "GET", "/ring-blocks?q=sorra");
+    expect(memberNote.body.items).toEqual([]);
   });
 });

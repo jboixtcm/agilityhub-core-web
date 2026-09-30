@@ -5,15 +5,15 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import "./booking.css";
-import { BookingBar } from "./BookingDetailPage";
+import { BookingBar, RingDot } from "./BookingDetailPage";
 import { errorText, localParts, navigateInApp, useWaitlistEntry } from "./shared";
 import { startClaim } from "./useSeatHold";
 
 /**
  * The waiting entry's detail (`/espera/:id`, S08 §2 07; `WAITLIST`): the class card with «en
- * llista d'espera», the FIFO position and deadline when the api sends them, [AGAFA LA PLAÇA] for
- * a NOTIFIED entry (the claim of R-08-15 until screen 11 exists) and [SURT DE LA LLISTA
- * D'ESPERA]. An entry that is no longer live is read-only with its state.
+ * llista d'espera», or «plaça alliberada» with [AGAFA LA PLAÇA] once the entry is NOTIFIED (the
+ * claim of R-08-15), the FIFO position and deadline when the api sends them, and [SURT DE LA
+ * LLISTA D'ESPERA]. An entry that is no longer live is read-only with its state.
  */
 export function WaitlistDetailPage({ client, entryId }: { client: ApiClient; entryId: string }) {
   const { t } = useTranslation(["booking", "enums", "errors", "common"]);
@@ -120,9 +120,12 @@ export function WaitlistDetailPage({ client, entryId }: { client: ApiClient; ent
       <BookingBar />
       <Card className="detail-card">
         <p className="detail-card__line">
+          <RingDot color={session.ringColor} />
           <strong className="detail-card__title">{title}</strong>
+          {/* ACTIVE «en llista d'espera»; NOTIFIED «plaça alliberada» (E5-W05 step 10); the rest
+              their own state. */}
           <Badge tone={live ? "warning" : "neutral"}>
-            {live ? t("enums:reservationState.WAITLISTED") : t(`enums:waitlistState.${data.state}`)}
+            {t(`enums:waitlistState.${data.state}`)}
           </Badge>
         </p>
         <p className="detail-card__when">{line}</p>

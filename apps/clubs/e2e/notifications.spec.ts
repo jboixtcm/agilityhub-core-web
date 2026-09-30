@@ -69,6 +69,18 @@ async function standInPushRegistration(context: BrowserContext) {
   );
 }
 
+/**
+ * Headless Chromium reports `Notification.permission = "denied"` whatever the context allows (log
+ * 17 of E7-W02). The app reads it at mount (R-11-07, round 2 #5), so the run makes the page report
+ * what a real browser would: «granted» with the permission, «default» before any decision, «denied»
+ * after a refusal. The quirk stays here, in the test setup (E7-W02 round 2 #5).
+ */
+async function reportPermission(context: BrowserContext, permission: NotificationPermission) {
+  await context.addInitScript((value) => {
+    Object.defineProperty(Notification, "permission", { configurable: true, get: () => value });
+  }, permission);
+}
+
 /** Signs in (03 is the landing page) with the clock pinned at the feed world's instant. */
 async function login(page: Page, scenario = "member") {
   await page.clock.setFixedTime(notificationsNow);
@@ -204,6 +216,7 @@ test.describe("E7-W02 T-11-35 screen 12 «Avisos», push and «Idioma» (S11 R-1
   }) => {
     const context = await browser.newContext({ viewport: { height: 812, width: 375 } });
     await context.grantPermissions(["notifications"], { origin: baseUrl });
+    await reportPermission(context, "granted");
     await standInPushRegistration(context);
     const page = await context.newPage();
     await login(page);
@@ -242,12 +255,18 @@ test.describe("E7-W02 T-11-35 screen 12 «Avisos», push and «Idioma» (S11 R-1
     browser,
   }) => {
     // A context without the notifications permission: headless Chromium answers the request with
-    // «default» (a dismissed prompt; log 17 of E7-W02), which the row treats like a refusal.
+    // «default» (a dismissed prompt; log 17 of E7-W02), which the row treats like a refusal. Before
+    // the request nothing was decided («default»): no explanation on arrival.
     const context = await browser.newContext({ viewport: { height: 812, width: 375 } });
+    await reportPermission(context, "default");
     await standInPushRegistration(context);
     const page = await context.newPage();
     await login(page);
     await page.goto(`${baseUrl}/perfil`);
+    await expect(page.getByText("Operativa (reserves i canvis que has fet tu)")).toBeVisible();
+    await expect(
+      page.getByText("Activa les notificacions al navegador per rebre-les al mòbil"),
+    ).toHaveCount(0);
     const push = page.getByRole("switch", {
       name: "Vull rebre notificacions al mòbil quan hi hagi comunicats del club",
     });
@@ -264,6 +283,21 @@ test.describe("E7-W02 T-11-35 screen 12 «Avisos», push and «Idioma» (S11 R-1
       page.getByText("Activa les notificacions al navegador per rebre-les al mòbil"),
     ).toBeVisible();
     await shot(page, "12-push-denegat-375.png");
+    await context.close();
+  });
+
+  test("E7-W02 round 2 #5: a permission refused before this visit shows the explanation on arrival, without a prompt", async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ viewport: { height: 812, width: 375 } });
+    await reportPermission(context, "denied");
+    await standInPushRegistration(context);
+    const page = await context.newPage();
+    await login(page);
+    await page.goto(`${baseUrl}/perfil`);
+    await expect(
+      page.getByText("Activa les notificacions al navegador per rebre-les al mòbil"),
+    ).toBeVisible();
     await context.close();
   });
 

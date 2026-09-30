@@ -51,16 +51,18 @@ const BLOCK_LIST_KEY = "ring-blocks";
 /** The keys each column asks for (`fields`, CONVENCIONS_API §4); the export takes the same. */
 const TRAINING_COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
   createdAt: ["createdAt"],
-  date: ["date", "startsAtLocal"],
+  // «dj 8 · 18:30–19:00»: the slot's end is the api's (E5-T29 `endsAtLocal`).
+  date: ["date", "startsAtLocal", "endsAtLocal"],
   dogName: ["dogName"],
-  memberName: ["memberId", "memberName"],
+  // «{nom complet} · {número}» (E5-T29 `memberNumber`, null without one).
+  memberName: ["memberId", "memberName", "memberNumber"],
   origin: ["origin"],
   ringName: ["ringId", "ringName"],
   state: ["state"],
 };
 const TRAINING_EXPORT_COLUMNS: Readonly<Record<string, readonly string[]>> = {
   ...TRAINING_COLUMN_FIELDS,
-  memberName: ["memberName"],
+  memberName: ["memberName", "memberNumber"],
   ringName: ["ringName"],
 };
 const TRAINING_DEFAULT_COLUMNS = ["date", "ringName", "memberName", "dogName", "state", "origin"];
@@ -72,7 +74,8 @@ const BLOCK_COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = {
   kind: ["kind"],
   note: ["note"],
   reason: ["reason", "activityTitle"],
-  ringId: ["ringId"],
+  // The row's own ring, a deactivated one's included (E5-T29 `ringName`, `ringColor`).
+  ringId: ["ringId", "ringName", "ringColor"],
   state: ["state"],
 };
 const BLOCK_DEFAULT_COLUMNS = ["from", "ringId", "kind", "reason", "note", "createdByName"];
@@ -95,7 +98,12 @@ const TRAINING_STATE_TONES: Readonly<Record<NonNullable<TrainingRow["state"]>, T
   CANCELLED_BY_CLUB: "danger",
 };
 
+/**
+ * A filter value as the list's state writes it. The api echoes a list (`in`, `nin`) and a range
+ * (`between`) as JSON arrays (CONVENCIONS_API §4), the rest as the scalar it received.
+ */
 function filterValue(value: unknown): string {
+  if (Array.isArray(value)) return value.map(filterValue).join(",");
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean"
     ? String(value)
     : "";
@@ -115,27 +123,27 @@ function listError(t: Translate, error: unknown): string | undefined {
     : t("admin-training:list.error");
 }
 
+type FilterValues = components["schemas"]["FilterValues"];
+
 /**
- * The values of a field with their counts, counted over the rows of the other filters (the api
- * publishes no `filter-values` for these lists): up to the 1000 rows of one page.
+ * The universal filter's values (CONVENCIONS_API §4, api E5-T29): `GET /{list}/filter-values`
+ * counts each value over the whole set the other filters select, never one page. `label` names a
+ * value the api labels by its code (enums, dates); names keep the api's label. Dates read in
+ * calendar order, the rest by label.
  */
-function countValues<Row>(
-  rows: readonly Row[],
-  value: (row: Row) => string | undefined,
-  label: (row: Row, value: string) => string,
+function filterOptions(
+  answer: FilterValues,
+  label: (value: string, apiLabel: string) => string,
 ): UniversalFilterValue[] {
-  const counted = new Map<string, UniversalFilterValue>();
-  for (const row of rows) {
-    const key = value(row);
-    if (key === undefined || key === "") continue;
-    const current = counted.get(key);
-    counted.set(key, {
-      count: (current?.count ?? 0) + 1,
-      label: current?.label ?? label(row, key),
-      value: key,
-    });
-  }
-  return [...counted.values()].sort((left, right) => left.label.localeCompare(right.label));
+  const values = answer.values
+    .map((item) => {
+      const value = filterValue(item.value);
+      return { count: item.count, label: label(value, item.label), value };
+    })
+    .filter((item) => item.value !== "");
+  return /^\d{4}-\d{2}-\d{2}/u.test(values[0]?.value ?? "")
+    ? values.sort((left, right) => left.value.localeCompare(right.value))
+    : values.sort((left, right) => left.label.localeCompare(right.label));
 }
 
 function RingName({ color, name }: { color: string | undefined; name: string }) {
@@ -206,11 +214,12 @@ function TrainingBookingsList({
         key: "date",
         label: t("admin-training:bookings.columns.date"),
         render: (row) =>
-          row.date === undefined || row.startsAtLocal === undefined
+          row.date === undefined || row.startsAtLocal === undefined || row.endsAtLocal === undefined
             ? empty
             : t("admin-training:list.when", {
                 day: dayLabel(row.date, formats.formatPlainDate),
-                time: timeLabel(row.startsAtLocal),
+                from: timeLabel(row.startsAtLocal),
+                to: timeLabel(row.endsAtLocal),
               }),
         sortKey: "startsAt",
       },
@@ -228,10 +237,18 @@ function TrainingBookingsList({
         key: "memberName",
         label: t("admin-training:bookings.columns.member"),
         // D10 is ADMIN's: an INSTRUCTOR reads the name only.
-        render: (row) =>
-          row.memberName === undefined ? (
-            empty
-          ) : admin && row.memberId !== undefined ? (
+        render: (row) => {
+          if (row.memberName === undefined) return empty;
+          // «Laura Serra Vidal · 87»; without a number, the name alone.
+          const member =
+            row.memberNumber === null || row.memberNumber === undefined
+              ? row.memberName
+              : t("admin-training:bookings.memberWithNumber", {
+                  name: row.memberName,
+                  // An identifier, never grouped («1234», not «1.234»).
+                  number: String(row.memberNumber),
+                });
+          return admin && row.memberId !== undefined ? (
             <a
               href={`/abonats/${row.memberId}`}
               onClick={(event) => {
@@ -239,11 +256,12 @@ function TrainingBookingsList({
                 onNavigate(`/abonats/${row.memberId ?? ""}`);
               }}
             >
-              {row.memberName}
+              {member}
             </a>
           ) : (
-            row.memberName
-          ),
+            member
+          );
+        },
       },
       {
         key: "dogName",
@@ -311,11 +329,10 @@ function TrainingBookingsList({
     { key: "origin", label: t("admin-training:bookings.columns.origin"), type: "enum" },
   ];
 
-  const valueLabel = (
-    field: string,
-    value: string,
-    rows: readonly TrainingRow[] = data?.items ?? [],
-  ) => {
+  // The names the api gave each filter value (`filter-values` labels), for the applied chips.
+  const [learned, setLearned] = useState<Readonly<Record<string, string>>>({});
+
+  const valueLabel = (field: string, value: string) => {
     if (field === "state") return t(`enums:trainingBookingState.${value}`, { defaultValue: value });
     if (field === "origin") return t(`enums:trainingOrigin.${value}`, { defaultValue: value });
     if (field === "date" && /^\d{4}-\d{2}-\d{2}$/u.test(value))
@@ -326,7 +343,7 @@ function TrainingBookingsList({
         ? formats.formatWeekRange(start, end)
         : value;
     }
-    const row = rows.find((item) =>
+    const row = (data?.items ?? []).find((item) =>
       field === "ringId"
         ? item.ringId === value
         : field === "memberId"
@@ -338,38 +355,34 @@ function TrainingBookingsList({
         ? row?.ringName
         : field === "memberId"
           ? row?.memberName
-          : row?.dogName) ?? value
+          : row?.dogName) ??
+      learned[`${field}:${value}`] ??
+      value
     );
   };
 
   const loadFilterValues = useCallback(
     async (field: string) => {
-      const label: Readonly<Record<string, string>> = {
-        dogId: "dogName",
-        memberId: "memberName",
-        ringId: "ringName",
-      };
-      const result = await client.GET("/training-bookings", {
+      const result = await client.GET("/training-bookings/filter-values", {
         params: {
           query: {
-            fields: listFields([field, ...(label[field] === undefined ? [] : [label[field]])]),
+            field,
             filter: apiFilters(state.filters.filter((filter) => filter.field !== field)),
-            page: 0,
             ...(state.q === "" ? {} : { q: state.q }),
-            size: 1000,
-            sort: [],
           },
         },
       });
       if (result.data === undefined) throw new TypeError("Training values without data");
-      const rows = result.data.items;
-      return countValues(
-        rows,
-        (row) => filterValue((row as Record<string, unknown>)[field]),
-        (_row, value) => valueLabel(field, value, rows),
+      const options = filterOptions(result.data, (value, apiLabel) =>
+        ["date", "origin", "state"].includes(field) ? valueLabel(field, value) : apiLabel,
       );
+      setLearned((current) => ({
+        ...current,
+        ...Object.fromEntries(options.map((option) => [`${field}:${option.value}`, option.label])),
+      }));
+      return options;
     },
-    // `valueLabel` only reads `t` and `formats`.
+    // `valueLabel` reads `t` and `formats` for these fields.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [client, formats, state.filters, state.q, t],
   );
@@ -526,20 +539,13 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
     {
       key: "ringId",
       label: t("admin-training:blocks.columns.ring"),
-      render: (row) => {
-        const found = ring(row.ringId);
-        // An ADMIN reads every ring (`includeInactive`); an instructor only the active ones, so a
-        // ring it cannot see is a deactivated one (never its id).
-        return found === undefined ? (
-          row.ringId === undefined ? (
-            empty
-          ) : (
-            t("admin-training:blocks.inactiveRing")
-          )
+      // The row's own ring (E5-T29), a deactivated one's included, for every role; never its id.
+      render: (row) =>
+        row.ringName === null || row.ringName === undefined ? (
+          empty
         ) : (
-          <RingName color={found.color} name={found.name} />
-        );
-      },
+          <RingName color={row.ringColor ?? undefined} name={row.ringName} />
+        ),
     },
     {
       key: "kind",
@@ -630,11 +636,22 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
   const dayRange = (date: string) =>
     `${clubInstant(date, "00:00", branding.timeZone)},${clubInstant(addDays(date, 1), "00:00", branding.timeZone)}`;
 
+  // The names the api gave each filter value (`filter-values` labels), for the applied chips.
+  const [learned, setLearned] = useState<Readonly<Record<string, string>>>({});
+
   const valueLabel = (field: string, value: string) => {
     if (field === "kind") return t(`enums:ringBlockKind.${value}`, { defaultValue: value });
     if (field === "reason") return t(`enums:ringBlockReason.${value}`, { defaultValue: value });
     if (field === "state") return t(`enums:ringBlockState.${value}`, { defaultValue: value });
-    if (field === "ringId") return ring(value)?.name ?? t("admin-training:blocks.inactiveRing");
+    if (field === "ringId") {
+      // The rows' own ring name, else the api's filter label, else the catalog; never the id.
+      return (
+        data?.items.find((row) => row.ringId === value)?.ringName ??
+        learned[`${field}:${value}`] ??
+        ring(value)?.name ??
+        t("admin-training:blocks.inactiveRing")
+      );
+    }
     if (field === "from") {
       const [start = "", end = ""] = value.split(",");
       if (start === "" || end === "") return value;
@@ -648,32 +665,41 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
 
   const loadFilterValues = useCallback(
     async (field: string) => {
-      const result = await client.GET("/ring-blocks", {
+      const result = await client.GET("/ring-blocks/filter-values", {
         params: {
           query: {
-            fields: listFields(field === "from" ? ["date"] : [field]),
+            field,
             filter: apiFilters(state.filters.filter((filter) => filter.field !== field)),
-            page: 0,
             ...(state.q === "" ? {} : { q: state.q }),
-            size: 1000,
-            sort: [],
           },
         },
       });
       if (result.data === undefined) throw new TypeError("Ring block values without data");
-      return countValues(
-        result.data.items,
-        (row) =>
-          field === "from"
-            ? row.date === undefined
-              ? undefined
-              : dayRange(row.date)
-            : filterValue((row as Record<string, unknown>)[field]),
-        (row, value) =>
-          field === "from" && row.date !== undefined
-            ? dayLabel(row.date, formats.formatPlainDate)
-            : valueLabel(field, value),
+      if (field === "from") {
+        // Each value is a block's start: the filter offers whole club-local days, each counted
+        // with the api's counts of the starts it holds.
+        const days = new Map<string, UniversalFilterValue>();
+        for (const item of result.data.values) {
+          const instant = filterValue(item.value);
+          if (instant === "") continue;
+          const date = clubToday(branding.timeZone, new Date(instant));
+          const value = dayRange(date);
+          days.set(value, {
+            count: (days.get(value)?.count ?? 0) + item.count,
+            label: dayLabel(date, formats.formatPlainDate),
+            value,
+          });
+        }
+        return [...days.values()].sort((left, right) => left.value.localeCompare(right.value));
+      }
+      const options = filterOptions(result.data, (value, apiLabel) =>
+        field === "ringId" ? apiLabel : valueLabel(field, value),
       );
+      setLearned((current) => ({
+        ...current,
+        ...Object.fromEntries(options.map((option) => [`${field}:${option.value}`, option.label])),
+      }));
+      return options;
     },
     // `dayRange` and `valueLabel` read the zone, `formats`, `rings` and `t` only.
     // eslint-disable-next-line react-hooks/exhaustive-deps

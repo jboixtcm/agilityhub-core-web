@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/App.test.tsx (46 tests | 1 failed | 45 skipped) 60ms
+   ❯ T-01-21 profile access rows and impersonation (3)
+     × E5-W05 step 24: the banner names the member the admin opened (/me impersonation.memberName), not the account, whose name differs in a family group 57ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-01-21 profile access rows and impersonation > E5-W05 step 24: the banner names the member the admin opened (/me impersonation.memberName), not the account, whose name differs in a family group
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Estàs veient l'app com Laura Serra Vidal[39m
+Received:
+[31m  Estàs veient l'app com Marta Vidal RocaSurt[39m
+ ❯ src/App.test.tsx:547:20
+    545|
+    546|     const banner = document.querySelector(".impersonation-banner");
+    547|     expect(banner).toHaveTextContent("Estàs veient l'app com Laura Ser…
+       |                    ^
+    548|     expect(banner).not.toHaveTextContent("Marta Vidal Roca");
+    549|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 45 skipped (46)
+   Start at  21:32:23
+   Duration  1.37s (transform 48%, environment 26%, import 17%, setup 5%, tests 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t E5-W05 step 24

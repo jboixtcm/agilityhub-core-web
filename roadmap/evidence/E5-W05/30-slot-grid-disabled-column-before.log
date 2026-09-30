@@ -1,0 +1,95 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ❯ src/slot-grid.test.tsx (8 tests | 2 failed) 94ms
+   ❯ E5-W05 step 14: SlotGrid's disabled columns (E5-W02 round-2 review #4) (2)
+     × E5-W05 step 14: a disabled single column disables its free cells and never calls onCellPress 5ms
+     × E5-W05 step 14: in the table only the disabled column's cells are inert; the others still press 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/slot-grid.test.tsx > E5-W05 step 14: SlotGrid's disabled columns (E5-W02 round-2 review #4) > E5-W05 step 14: a disabled single column disables its free cells and never calls onCellPress
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "columnId": "ring-mun",
+        "id": "ring-mun_07:30",
+        "state": "FREE",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      Object {
+        "columnId": "ring-mun",
+        "id": "ring-mun_08:00",
+        "state": "FREE",
+      },
+    ]
+
+
+Number of calls: 2
+
+ ❯ src/slot-grid.test.tsx:249:29
+    247|     );
+    248|     for (const free of cells) fireEvent.click(free);
+    249|     expect(onCellPress).not.toHaveBeenCalled();
+       |                             ^
+    250|     expect(onSelectionChange).not.toHaveBeenCalled();
+    251|     for (const free of cells) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/slot-grid.test.tsx > E5-W05 step 14: SlotGrid's disabled columns (E5-W02 round-2 review #4) > E5-W05 step 14: in the table only the disabled column's cells are inert; the others still press
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "columnId": "ring-cen",
+        "id": "ring-cen_08:30",
+        "state": "FREE",
+      },
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      Object {
+        "columnId": "ring-cen",
+        "id": "ring-cen_09:00",
+        "state": "FREE",
+      },
+    ]
+
+
+Number of calls: 2
+
+ ❯ src/slot-grid.test.tsx:284:29
+    282|     expect(muntanya).toHaveLength(2);
+    283|     for (const button of central) fireEvent.click(button);
+    284|     expect(onCellPress).not.toHaveBeenCalled();
+       |                             ^
+    285|     expect(onSelectionChange).not.toHaveBeenCalled();
+    286|     for (const button of central) expect(button).toBeDisabled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 passed (8)
+   Start at  21:33:49
+   Duration  506ms (environment 56%, tests 22%, setup 12%, transform 8%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/slot-grid.test.tsx

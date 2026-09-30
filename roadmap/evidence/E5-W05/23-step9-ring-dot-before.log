@@ -1,0 +1,58 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/booking/detail.test.tsx (24 tests | 2 failed | 21 skipped) 380ms
+   ❯ T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) (17)
+     × E5-W05 step 9 (mockup 07, api E5-T29): the ring's dot before the title, in the booking's `classSession.ringColor` 248ms
+   ❯ T-08-39 the waiting entry (/espera/:id, R-08-16) (7)
+     × E5-W05 step 9: the waiting entry's card (the same card as 07) carries its ring's dot before the title 61ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 9 (mockup 07, api E5-T29): the ring's dot before the title, in the booking's `classSession.ringColor`
+AssertionError: expected null to be '#8FCE8F' // Object.is equality
+
+- Expected:
+"#8FCE8F"
+
++ Received:
+null
+
+ ❯ src/booking/detail.test.tsx:173:20
+    171|     const title = await openBooking();
+    172|     const { before, colour, dot } = cardDot(title);
+    173|     expect(colour).toBe(ringColour("Central"));
+       |                    ^
+    174|     expect(before).toBe(true);
+    175|     expect(dot).toHaveAttribute("aria-hidden", "true");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > E5-W05 step 9: the waiting entry's card (the same card as 07) carries its ring's dot before the title
+AssertionError: expected null to be '#C9CDD3' // Object.is equality
+
+- Expected:
+"#C9CDD3"
+
++ Received:
+null
+
+ ❯ src/booking/detail.test.tsx:309:20
+    307|     const title = await screen.findByText("Classe C i sup. · amb la Du…
+    308|     const { before, colour } = cardDot(title);
+    309|     expect(colour).toBe(ringColour("Carretera"));
+       |                    ^
+    310|     expect(before).toBe(true);
+    311|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed | 21 skipped (24)
+   Start at  21:43:15
+   Duration  3.49s (transform 54%, environment 18%, import 13%, tests 11%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/booking/detail.test.tsx -t E5-W05 step 9

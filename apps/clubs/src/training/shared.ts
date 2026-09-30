@@ -74,13 +74,15 @@ export function useOnline(): boolean {
 const MAX_TIMER_MS = 2_147_483_647;
 
 /**
- * The clock, read again when the next of `deadlines` passes (the detail's `cancellableUntil` and
- * `endsAt`), so the page changes without a remount.
+ * The clock, read again once the next of `deadlines` has passed (the detail's `cancellableUntil`
+ * and `endsAt`), so the page changes without a remount. «Passed» is strict (`deadline < now`, as
+ * «fet» = `endsAt < now`): a clock that stops exactly on a deadline still waits for it, and the
+ * update is scheduled one millisecond past it.
  */
 export function useNowUntil(deadlines: readonly number[]): number {
   const [now, setNow] = useState(() => Date.now());
   const next = deadlines
-    .filter((deadline) => Number.isFinite(deadline) && deadline > now)
+    .filter((deadline) => Number.isFinite(deadline) && deadline >= now)
     .sort((left, right) => left - right)[0];
   useEffect(() => {
     if (next === undefined) return undefined;
@@ -88,7 +90,7 @@ export function useNowUntil(deadlines: readonly number[]): number {
       () => {
         setNow(Date.now());
       },
-      Math.min(Math.max(next - Date.now(), 0), MAX_TIMER_MS),
+      Math.min(Math.max(next + 1 - Date.now(), 0), MAX_TIMER_MS),
     );
     return () => {
       window.clearTimeout(timer);
@@ -97,7 +99,10 @@ export function useNowUntil(deadlines: readonly number[]): number {
   return now;
 }
 
-/** Calls `onFocus` when the tab comes back (S09 §2: the grid is read again on focus). */
+/**
+ * Calls `onFocus` when the tab comes back and when the navigator is back online (S09 §2: the grid
+ * is read again on focus, and the offline copy is replaced once the network returns).
+ */
 export function useWindowFocus(onFocus: () => void): void {
   const latest = useRef(onFocus);
   useEffect(() => {
@@ -108,16 +113,22 @@ export function useWindowFocus(onFocus: () => void): void {
       if (document.visibilityState !== "hidden") latest.current();
     };
     window.addEventListener("focus", handle);
+    window.addEventListener("online", handle);
     document.addEventListener("visibilitychange", handle);
     return () => {
       window.removeEventListener("focus", handle);
+      window.removeEventListener("online", handle);
       document.removeEventListener("visibilitychange", handle);
     };
   }, []);
 }
 
+/**
+ * A read's state. `stale` = the offline copy (the read failed without network, S09 §2);
+ * `refreshing` = the data on screen is being read again.
+ */
 export type CachedLoad<Data> =
-  | { data: Data; error?: undefined; stale: boolean; status: "ready" }
+  | { data: Data; error?: undefined; refreshing?: boolean; stale: boolean; status: "ready" }
   | { data?: undefined; error: unknown; stale: false; status: "error" }
   | { data?: undefined; error?: undefined; stale: false; status: "loading" };
 
@@ -208,7 +219,9 @@ export function useCachedLoad<Data>(key: string | null, load: () => Promise<Data
     let current = true;
     setState((previous) =>
       previous.key === fullKey && previous.status === "ready"
-        ? previous
+        ? previous.refreshing === true
+          ? previous
+          : { ...previous, refreshing: true }
         : { key: fullKey, stale: false, status: "loading" },
     );
     load().then(
@@ -299,6 +312,8 @@ function loadEligibility(force: boolean): void {
   eligibility.generation += 1;
   const generation = eligibility.generation;
   const key = scopedKey(scope, "eligibility");
+  const previous = eligibility.snapshot.state;
+  if (previous.status === "ready") publishEligibility({ ...previous, refreshing: true });
   const settle = (state: CachedLoad<TrainingSummary>) => {
     if (generation !== eligibility.generation) return;
     eligibility.inflight = false;
@@ -446,6 +461,27 @@ export function useTrainingBooking(client: ApiClient, id: string) {
 export function useTrainingTab(client: ApiClient, enabled: boolean): boolean {
   const eligibility = useTrainingEligibility(client, enabled);
   return enabled && eligibility.status === "ready" && eligibility.data.eligibleDogs.length > 0;
+}
+
+/**
+ * Whether a chosen ring and start can still be booked in the grid shown (R-09-03): the day is
+ * open, the slot is still `bookable`, the ring is still listed and its cell is `FREE`. The grid is
+ * the api's; the front only reads it.
+ */
+export function slotStillFree(
+  grid: TrainingSlots | undefined,
+  date: string | null,
+  choice: { ringId: string; startsAt: string },
+): boolean {
+  const day = grid?.days.find((item) => item.date === date);
+  if (grid === undefined || day === undefined || day.closed) return false;
+  const slot = day.slots.find((item) => item.startsAt === choice.startsAt);
+  return (
+    slot !== undefined &&
+    slot.bookable &&
+    grid.rings.some((ring) => ring.id === choice.ringId) &&
+    slot.rings[choice.ringId]?.state === "FREE"
+  );
 }
 
 /** The rings whose cell is `FREE` at a slot, in the api's (catalog) order (R-09-07). */

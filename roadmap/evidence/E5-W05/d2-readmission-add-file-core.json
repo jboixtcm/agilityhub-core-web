@@ -1,0 +1,35 @@
+{
+  "sent": [
+    {
+      "files": [
+        {
+          "fileKey": "ebb47d64-f007-42b5-b6e2-5ef86168fe9a",
+          "name": "demo-document.pdf"
+        },
+        {
+          "fileKey": "a6b78474-a63a-4a48-acef-f98435e971fc",
+          "name": "cartilla_retorn_2.jpg"
+        }
+      ],
+      "type": "VACCINATION_CARD"
+    }
+  ],
+  "status": 200,
+  "timings": {
+    "patch": {
+      "responseEndMs": 18,
+      "sentAfterClickMs": 82,
+      "status": 200
+    },
+    "put": {
+      "responseEndMs": 6,
+      "sentAfterClickMs": 73,
+      "status": 204
+    },
+    "signed": {
+      "responseEndMs": 13,
+      "sentAfterClickMs": 59,
+      "status": 201
+    }
+  }
+}

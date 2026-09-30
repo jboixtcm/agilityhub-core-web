@@ -6,7 +6,7 @@
     "blocks": "Bloquejos i reserves de pista"
   },
   "list": {
-    "when": "{day} · {time}",
+    "when": "{day} · {from}–{to}",
     "none": "—",
     "error": "No s'ha pogut carregar el llistat.",
     "emptyDescription": "Canvia els filtres o la cerca per veure'n més.",
@@ -17,6 +17,7 @@
     "search": "Cerca per abonat, gos o pista",
     "emptyTitle": "Cap reserva d'entrenament",
     "selectRow": "Reserva de {name}",
+    "memberWithNumber": "{name} · {number}",
     "statusLabel": "Estat de la reserva",
     "statuses": {
       "all": "Totes"
@@ -33,7 +34,7 @@
   },
   "blocks": {
     "caption": "Bloquejos i reserves de pista",
-    "search": "Cerca per nota o per qui l'ha creat",
+    "search": "Cerca per pista o nota",
     "emptyTitle": "Cap bloqueig ni reserva de pista",
     "selectRow": "Bloqueig de {when}",
     "statusLabel": "Estat del bloqueig",

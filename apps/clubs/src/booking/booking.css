@@ -625,6 +625,15 @@ button.confirm-option {
   min-width: 0;
 }
 
+/* Mockup 07: the ring's dot before the title (the ring's colour arrives as `--class-row-ring`). */
+.detail-card__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  flex: none;
+  background: var(--class-row-ring, var(--ah-color-text-muted));
+  border-radius: var(--ah-radius-full);
+}
+
 .detail-card__when {
   color: var(--ah-color-text-muted);
   font-size: 0.85rem;

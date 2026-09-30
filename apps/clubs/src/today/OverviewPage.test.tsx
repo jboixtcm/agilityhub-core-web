@@ -1,4 +1,4 @@
-import { createApiClient } from "@agilityhub/api-client";
+import { type components, createApiClient } from "@agilityhub/api-client";
 import {
   catalogState,
   mockScenario,
@@ -12,7 +12,7 @@ import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { OverviewPage } from "./OverviewPage";
 
@@ -31,6 +31,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   server.resetHandlers();
   window.history.replaceState(null, "", "/");
 });
@@ -110,6 +111,12 @@ describe("T-06-29 screen 23 «Visió global»", () => {
   });
 
   it("E5-W03 step 1 lists the class's registrants and the «En espera» line in the drawer, read-only (S08 §6)", async () => {
+    // The morning of the day shown: its classes have not started, so the api reads CONFIRMED.
+    vi.useFakeTimers({
+      now: new Date("2026-08-03T08:00:00+02:00"),
+      shouldAdvanceTime: true,
+      toFake: ["Date"],
+    });
     resetBackofficeMockState();
     await renderOverview();
     fireEvent.click(screen.getByRole("button", { name: /B\+C/u }));
@@ -129,9 +136,107 @@ describe("T-06-29 screen 23 «Visió global»", () => {
       "Pau + Blatconfirmada",
       "Sergio + Thaianul·lada tard",
     ]);
-    expect(within(panel).getByText("En espera: Kira · Lluna")).toBeVisible();
+    // E5-W05 step 2 (mockup D12): «{guia} + {gos}», the guide being the entry's first name.
+    expect(within(panel).getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
     // The removal is D4's (ADMIN); attendance is screen 21's (S10).
     expect(within(panel).queryByRole("button")).toBeNull();
+  });
+
+  it("E5-W05 steps 1 and 2: the drawer's chips read displayState («feta», «no presentat»), the level chip is levelCode (none when null), and «En espera: {guia} + {gos}» with the FIFO position", async () => {
+    const base = {
+      bookedAt: "2026-07-31T10:00:00Z",
+      bookingWeekKey: "2026-08-02",
+      classSessionId: "any",
+      classStartsAt: "2026-08-03T16:50:00Z",
+      late: null,
+      origin: "APP",
+      state: "ACTIVE",
+    } as const;
+    const bookings: components["schemas"]["ClassBookingItem"][] = [
+      {
+        ...base,
+        displayState: "DONE",
+        dogId: "dog-duna",
+        dogName: "Duna",
+        id: "b-laura",
+        levelCode: "C",
+        memberId: "member-laura",
+        memberName: "Laura",
+      },
+      {
+        ...base,
+        displayState: "NO_SHOW",
+        dogId: "dog-chun-li",
+        dogName: "Chun-li",
+        id: "b-marc",
+        levelCode: null,
+        memberId: "member-marc",
+        memberName: "Marc",
+      },
+    ];
+    const entry = {
+      bookingId: null,
+      cancelReason: null,
+      cancelledAt: null,
+      classSession: {
+        description: "B+C",
+        endsAtLocal: "2026-08-03T19:50",
+        instructorName: null,
+        ringName: null,
+        startsAtLocal: "2026-08-03T18:50",
+      },
+      classSessionId: "any",
+      confirmBy: null,
+      joinedAt: "2026-08-01T08:00:00Z",
+      notifiedAt: null,
+      state: "ACTIVE",
+    } as const;
+    const entries: components["schemas"]["WaitlistEntry"][] = [
+      {
+        ...entry,
+        dog: { id: "dog-kira", name: "Kira", sex: "FEMALE" },
+        dogId: "dog-kira",
+        dogName: "Kira",
+        handlerName: null,
+        id: "wl-kira",
+        memberFirstName: "Júlia",
+        memberId: "member-julia",
+        position: 1,
+      },
+      {
+        ...entry,
+        dog: { id: "dog-llamp", name: "Llamp", sex: "MALE" },
+        dogId: "dog-llamp",
+        dogName: "Llamp",
+        handlerName: "Gina Soler",
+        id: "wl-llamp",
+        memberFirstName: "Oriol",
+        memberId: "member-oriol",
+        position: 2,
+      },
+    ];
+    server.use(
+      http.get("*/api/v1/class-sessions/:id/bookings", () =>
+        HttpResponse.json({ items: bookings }),
+      ),
+      http.get("*/api/v1/class-sessions/:id/waitlist-entries", () =>
+        HttpResponse.json({ items: entries }),
+      ),
+    );
+    await renderOverview();
+    fireEvent.click(screen.getByRole("button", { name: /B\+C/u }));
+    const drawer = await screen.findByRole("dialog", { name: "B+C" });
+    const panel = await within(drawer).findByRole("region", { name: "Inscrits (5/5)" });
+    await within(panel).findByText("Laura + Duna");
+    expect(
+      within(panel)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual(["Laura + DunaCfeta", "Marc + Chun-lino presentat"]);
+    expect(within(panel).getByText("no presentat")).toHaveClass("ah-tone--danger");
+    expect(
+      within(panel).getByText("En espera: 1. Júlia + Kira · 2. Gina Soler + Llamp"),
+    ).toBeVisible();
   });
 
   it("opens the class drawer with the instructor projection of the tapped class", async () => {

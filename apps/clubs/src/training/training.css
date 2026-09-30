@@ -46,6 +46,18 @@
 }
 
 .training-stale {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+}
+
+/* The offline copy's retry: compact, inside the note. */
+.training-stale__retry {
+  min-height: 2rem;
+  padding: var(--ah-space-1) var(--ah-space-3);
   font-size: 0.75rem;
 }
 

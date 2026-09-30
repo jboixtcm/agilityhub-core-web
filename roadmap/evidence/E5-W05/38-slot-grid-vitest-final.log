@@ -1,0 +1,17 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > draws each variant of the api's state and reason, and only a bookable FREE cell is pressable 61ms
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > names why a taken cell is taken when the page gives the reasons 4ms
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > fills the selected cell 3ms
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > contiguous selection extends a run, shrinks it from an end and never keeps a gap 0ms
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > in contiguous mode the grid hands the next run to the page 11ms
+ ✓ src/slot-grid.test.tsx > SlotGrid presenter (S09 screens 08 and 24) > several rings make a time × ring table with identical columns 4ms
+ ✓ src/slot-grid.test.tsx > E5-W05 step 14: SlotGrid's disabled columns (E5-W02 round-2 review #4) > E5-W05 step 14: a disabled single column disables its free cells and never calls onCellPress 2ms
+ ✓ src/slot-grid.test.tsx > E5-W05 step 14: SlotGrid's disabled columns (E5-W02 round-2 review #4) > E5-W05 step 14: in the table only the disabled column's cells are inert; the others still press 3ms
+
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Start at  21:40:22
+   Duration  574ms (environment 61%, tests 18%, setup 12%, transform 8%, import 1%)
+

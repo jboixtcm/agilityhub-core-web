@@ -482,12 +482,27 @@ function quoteUpfront(
   return upfront;
 }
 
+/**
+ * The view's warnings as the api computes them, for `GET /members/{id}/signup` and for the
+ * validation's dry run alike (one calculation, E4-W17 review #1): a pending document row of any
+ * dog raises `DOCUMENT_PENDING`, whatever the stored view said.
+ */
+export function signupViewWarnings(view: MemberSignupView): Warning[] {
+  const documentPending = view.dogs.some((dog) =>
+    dog.documents.some((document) => document.state === "PENDING"),
+  );
+  return [
+    ...view.warnings.filter((warning) => warning !== "DOCUMENT_PENDING"),
+    ...(documentPending ? (["DOCUMENT_PENDING"] as const) : []),
+  ];
+}
+
 /** `POST /members/{id}/validation?dryRun=true` of the mock world. */
 export function signupReviewDryRun(view: MemberSignupView, body: ValidationRequest): ValidationDryRun {
   const planId = body.planId ?? view.proposals.planId ?? view.signup.planIdRequested ?? "";
   const plan = view.planOptions.find((option) => option.planId === planId);
   const price = plan?.prices.find((candidate) => candidate.priceId === body.priceId) ?? plan?.prices[0];
-  const warnings: Warning[] = view.warnings.filter((warning) => warning !== "UPFRONT_UNPAID");
+  const warnings: Warning[] = signupViewWarnings(view).filter((warning) => warning !== "UPFRONT_UNPAID");
   const checkoutPending = (view.upfront?.lines ?? []).some((line) => line.status === "CHECKOUT_PENDING");
   if (checkoutPending && planId !== view.signup.planIdRequested) warnings.push("CHECKOUT_PENDING");
   const upfront = quoteUpfront(view, planId, warnings, price?.priceId);

@@ -35,6 +35,7 @@ export interface SlotGridColumn {
   id: string;
   label: string;
   color?: string | null;
+  /** The whole column is inert: none of its cells can be pressed (in both layouts). */
   disabled?: boolean;
 }
 
@@ -141,8 +142,14 @@ export function SlotGrid({
   selection,
 }: SlotGridProps) {
   const selected = selection?.cellIds ?? [];
+  const disabledColumns = new Set(
+    columns.filter((column) => column.disabled === true).map((column) => column.id),
+  );
+  /** A bookable `FREE` cell of a column that is not disabled. */
+  const pressableHere = (cell: SlotCellModel) =>
+    isSlotCellPressable(cell) && !disabledColumns.has(cell.columnId);
   const press = (cell: SlotCellModel) => {
-    if (!isSlotCellPressable(cell)) return;
+    if (!pressableHere(cell)) return;
     onCellPress?.(cell);
     if (onSelectionChange === undefined) return;
     if (mode === "single") {
@@ -172,12 +179,14 @@ export function SlotGrid({
     ]
       .filter(Boolean)
       .join(" ");
-    const pressable = variant === "free";
+    const pressable = pressableHere(cell);
     return (
       <button
         aria-label={labels.cell(time, state)}
         aria-pressed={pressable ? isSelected : undefined}
         className={className}
+        // Dimmed like its column's header when the column is disabled.
+        data-disabled={disabledColumns.has(cell.columnId) ? "" : undefined}
         // Stable hooks for the real-core E2E (E5-W04): the cell's variant and its column (ring).
         data-ring={cell.columnId}
         data-slot-state={variant}

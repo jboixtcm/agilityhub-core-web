@@ -81,6 +81,8 @@ function actionEnabled(item: StoredFeedItem, request: Request): boolean {
   const action = item.action;
   if (action === null) return false;
   if (action.type === "CLAIM_SEAT") {
+    // Without WAITLIST nothing can be claimed (a historical N-15 stays in the feed).
+    if (!moduleOn("WAITLIST")) return false;
     const entry = feedWaitlistEntry(request, action.params.waitlistEntryId ?? "");
     if (entry?.state !== "NOTIFIED") return false;
     const confirmBy = entry.confirmBy;
@@ -94,10 +96,10 @@ function actionEnabled(item: StoredFeedItem, request: Request): boolean {
 
 /**
  * The channels the api lists (R-11-10, R-11-17): SMS and PUSH only when their module was on, so a
- * club without SMS never shows «i per SMS»; without WAITLIST no N-15 exists.
+ * club without SMS never shows «i per SMS». A notification stays in the feed after its module is
+ * turned off: a historical N-15 is listed with `enabled: false` (E7-W02 round 2 #4).
  */
-function visible(item: StoredFeedItem): StoredFeedItem | undefined {
-  if (item.action?.type === "CLAIM_SEAT" && !moduleOn("WAITLIST")) return undefined;
+function visible(item: StoredFeedItem): StoredFeedItem {
   return {
     ...item,
     channels: item.channels.filter(
@@ -162,7 +164,7 @@ export const notificationHandlers = [
     const audience = url.searchParams.get("audience");
     const all = [...current.items]
       .sort((left, right) => right.createdAt.localeCompare(left.createdAt))
-      .flatMap((item) => visible(item) ?? [])
+      .map(visible)
       // Every notification of this world is addressed to the member (audience MEMBER).
       .filter(() => audience === null || audience === "MEMBER");
     const items = all

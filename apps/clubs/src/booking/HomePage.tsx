@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 
 import { ActivityReservationRow } from "../activities/ActivityReservationRow";
 import { useMeActivities } from "../activities/shared";
+import { useUnreadCount } from "../notifications/unread";
 
 import "./booking.css";
 import { DogChips } from "./DogChips";
@@ -29,7 +30,10 @@ export function HomePage({ client }: { client: ApiClient }) {
   const { t } = useTranslation(["home", "booking", "enums", "errors", "training"]);
   const branding = useBranding();
   const [dogId, setDogId] = useState<string | null>(null);
-  const home = useMeHome(client, dogId);
+  // S11 R-11-10 (E7-W02 round 2 #3): a read-all of screen 11 that lands while 03 is shown reads
+  // `GET /me/home` again, so the bell and the page show what the api holds.
+  const unread = useUnreadCount();
+  const home = useMeHome(client, dogId, unread.version);
   const activitiesEnabled = branding.modules.includes("ACTIVITIES");
   // S07 rows keep E4-W04's `ActivityReservationRow`: its registration comes from `mine[]`.
   const activities = useMeActivities(client, activitiesEnabled);

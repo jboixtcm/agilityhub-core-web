@@ -1,0 +1,181 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/planning/calendar-literals.test.ts > T-06-30 D4 / D4b / D4c literals (admin-scheduling, ca) > keeps the exact mockup texts of the footers, the validation card and the D4c modal 57ms
+ ✓ src/planning/calendar-literals.test.ts > T-06-30 D4 / D4b / D4c literals (admin-scheduling, ca) > keeps the D4 / D4b grid and card literals 5ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > labels days and weekdays without shifting them in Pacific/Auckland 11ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > labels days and weekdays without shifting them in Pacific/Kiritimati 1ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > labels days and weekdays without shifting them in Europe/Madrid 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > labels days and weekdays without shifting them in America/Bogota 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > rejects 2026-13-01 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > rejects 2026-08-32 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > rejects 2026-02-30 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > rejects hola 0ms
+ ✓ src/planning/plain-dates.test.ts > R-06-14 planning business dates are calendar dates in every club zone > parses masked dates only when they are real 1ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > uses the offset in force on each side of the DST changes 36ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > resolves an ambiguous local time (autumn overlap) to its first occurrence 5ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > moves a local time inside the spring gap forward by the gap length (ZonedDateTime.of) 7ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > works for other club zones (Canary Islands, one west of UTC) 6ms
+ ✓ src/planning/calendar-shared.test.ts > R-06-14 clubInstant (club-local date + time → UTC instant) > finds both sides of a transition that is more than 12 h away from wall-time-as-UTC 9ms
+ ✓ src/planning/calendar-shared.test.ts > S06 §3 time options on slot boundaries (E4-W09) > S06 §3 an opening at 07:05 with 10-minute slots starts at 07:10 and never passes the closing time 0ms
+ ✓ src/planning/calendar-shared.test.ts > S06 §3 time options on slot boundaries (E4-W09) > S06 §3 R-06-11 T-06-32 a range keeps at least its minimum length on slot boundaries (classes, and ring blocks of training.slotMinutes) 1ms
+ ✓ src/planning/calendar-shared.test.ts > S06 §3 time options on slot boundaries (E4-W09) > R-02-09 a weekday absent from club.openingHours is closed: no window, no options 0ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > builds «B+C», «D i sup.», «A+C» and «Cadells» from the catalog order 31ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > E29: a level outside the progression joins with «+» and never ends a «… i sup.» run 9ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > ignores inactive levels when deciding the last active level 3ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > uses the es form of «i sup.» 10ms
+ ✓ src/planning/description.test.ts > T-06-02 R-06-03 automatic description preview (D3 class card) > uses the en form of «i sup.» 5ms
+ ✓ src/planning/description.test.ts > T-06-30 D3 literals and vocabulary (admin-scheduling, ca) > keeps the exact mockup literals 3ms
+ ✓ src/planning/description.test.ts > T-06-30 D3 literals and vocabulary (admin-scheduling, ca) > uses no forbidden vocabulary or requirement codes in the three locales 19ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > lists every booking as the api orders it, with its state, and the D12 «En espera: …» line 163ms
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > shows only the rings used that day in catalog order, plus «Sense» when a class has no ring 219ms
+ ✓ src/planning/CalendarDayPage.test.tsx > T-06-28 D4 day view (/calendari/dia/:date, form D) > takes the api's «Sense» column as delivered and never adds its own 183ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run 203ms
+ ✓ src/planning/CalendarDayPage.test.tsx > T-06-28 D4 day view (/calendari/dia/:date, form D) > shows exactly one «Sense» column for a ringless class of the stateful mock 93ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > renders the four statuses with the mockup's exact literals and «4 avisos» 147ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > WILL_REVIEW (`autoCancelSameDay = false`) reads «el club decidirà» 47ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > offers [Treu de la llista] only to an ADMIN; an INSTRUCTOR reads the same panel 85ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > renders the server aggregate, all risk rows, pending signups, and accessible chart 245ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > hides nullable module blocks and refetches when the window regains the focus 79ms
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > drops unused rings and the «Sense» column on a day without them 62ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > paints a failed last run in the danger tone 42ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 dims a disabled process and keeps its [Executa ara] (and [Simula]) 37ms
+ ✓ src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > shows the member's class bookings (newest first) and training bookings, read-only, with the «Entra com l'abonat» note 231ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > opens D4 on the class's week with the class selected (a cancelled one under «Anul·lades») 72ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > says «Cap classe en risc» when the api lists none 48ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > R-08-16 removes a waiting entry after the confirmation, reads the list again and tells the host 103ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > 422 WAITLIST_ENTRY_NOT_LIVE shows why inside the panel and reads the list again 78ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > S14 R-14-06: a null `riskReview` block shows no risk card and never asks for GET /risk-review 58ms
+ ✓ src/dashboard/DashboardPage.test.tsx > T-14-25 D1 dashboard > uses the same ICU day plural as D2 in the pending signups card 60ms
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > switches to one column per instructor with a class that day 82ms
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > moves between days and goes back to the weekly view of the same template 60ms
+ ✓ src/planning/CalendarPage.test.tsx > E3-W07 step 9 a D1 risk row opens D4 on its class > selects the class of `?classe=` in the week of `?setmana=` 278ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > asks before disabling (S15 §2 literal) and writes PUT /jobs/{name}/switch {enabled: false} only after the confirmation 119ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A > an error shows its message and a retry 62ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > another error stays inside the confirmation, where the admin is 77ms
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > rewrites an unsupported day in the URL to the template's first day 56ms
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > rewrites an unknown day in the URL to the template's first day 57ms
+ ✓ src/planning/TemplateDayPage.test.tsx > T-06-27 D3b day view per ring / per instructor > shows the Saturday template with its single day 59ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > gives each VALIDA its own accessible name 58ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > marks an add-dog row «(nou gos)» 62ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-08 [Simula] shows the plan of the response (the WOULD_* items as delivered) and says nothing was applied 64ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 [Executa ara] asks, runs {dryRun: false} and shows the run's summary, then reads the list again 79ms
+ ✓ src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > E5-W03 round 2 · review #4: «Mostra'n més» pages through the member's class bookings, never asking for 1000 328ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world) > «Cadells · avui 9:30 · Cadells» → D4 «anul·lades», that week, that class selected 199ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > R-08-14 shows each waiting entry's position in a FIFO club (`waitlist.mode = FIFO`) 65ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > S08 §9: without WAITLIST there is no waiting line and no waiting request 52ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > R-14-05 paints the submission date red only when pendingDays > warnDays 57ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > signs the members delta 3 as «+3 aquest mes» 58ms
+ ✓ src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > «Mostra'n més» is busy while its page is read 103ms
+ ✓ src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > S09 §9: without FREE_TRAINING the training table is absent and never asked for 62ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00) > E5-W05 step 1: each chip reads the api's displayState with 07's literals (a past booking «feta», a NO_SHOW mark «no presentat»), never `state`; the level chip is levelCode, none when null 54ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00) > E5-W05 step 2: «En espera: {guia} + {gos}», the guide being handlerName ?? memberFirstName, with the position in a FIFO club (mockup D12) 57ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > keeps one Idempotency-Key per payload while the outcome is unknown: a retry after a lost answer reuses it 112ms
+ ✓ src/planning/ClassRegistrantsPanel.test.tsx > E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00) > E5-W05 step 2: the mock's staff waitlist sends each entry's first name, as the api does: «En espera: Júlia + Kira · Roser + Lluna» 53ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > signs the members delta -2 as «−2 aquest mes» 60ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > signs the members delta 0 as «0 aquest mes» 65ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > opens «Esborrany» on the first week with drafts, with the validation card and its count 357ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > 409 JOB_ALREADY_RUNNING shows its message inside the confirmation and reads the list again 75ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > JOB_UNKNOWN (404: S15 writes 404, rule 0 implies 422) shows its message and reads the list again 60ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world) > «Nivell D · avui 17:40 · Petita» → D4 «anul·lades», that week, that class selected 182ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > counts 1 risk alert(s) with an ICU plural 61ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > counts 4 risk alert(s) with an ICU plural 60ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > JOB_UNKNOWN (422: S15 writes 404, rule 0 implies 422) shows its message and reads the list again 57ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world) > «F i G · demà 20:00 · Carretera» → D4 «actives», that week, that class selected 206ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > writes times as «7:30» and links each risk row to D4 on its class 73ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band 698ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > opens a process's run history and a run's sheet (effects and errors) 91ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [VALIDAR LA SETMANA] turns every draft of the week active at once 301ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > shows at most 6 risk rows, then «+{n} més» to D4 on the first hidden one 79ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > puts the warning icon on the risk card title 65ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world) > «Cadells · dc 9:30 · Cadells» → D4 «actives», that week, that class selected 190ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-34 the risk card in es and en, and in club-local time on a device in another zone > renders the statuses in es 54ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > E35 paints one column per progression level with the level name as tooltip, never `others` 78ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 1 in the chart legend 58ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-34 the risk card in es and en, and in club-local time on a device in another zone > renders the statuses in en 55ms
+ ✓ src/dashboard/RiskReviewCard.test.tsx > T-15-34 the risk card in es and en, and in club-local time on a device in another zone > reads `reviewAt` in the club's zone (Europe/Madrid), not the device's (America/Bogota) 47ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > E5-W03 round 2 · review #1: the run history pages through the api's list, and its filters narrow it 277ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > E5-W03 round 2 · E68: P1's and P8's counters read with their own labels 65ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 an impersonation token cannot manage the processes: the card says why and lists none 20ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > has every admin-settings:jobs.* and admin-dashboard:risk.* key in the three locales, none empty and none forbidden 13ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 2 in the chart legend 56ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 3 in the chart legend 54ms
+ ✓ src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > R-04-23 keeps the refund notice after a rejection with a collected payment 54ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > renders the card in es 32ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > renders the card in en 29ms
+ ✓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > shows the cadence in club-local time whatever the device's time zone 34ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES» 370ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > saves every change of a full cell at once with the template version 615ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [ELIMINA] of an active class goes through the same D4c modal 345ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > queues two quick changes of a full cell and sends each PATCH with the latest version 373ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > reloads the template and remounts the card on STALE_VERSION 372ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card 425ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > puts the form back to the saved class when a PATCH fails 229ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps the INVALID_STATE message of the «Exempta…» toggle after the refetch 203ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows a failed load of the weeks and the coverage with [Torna-ho a provar] instead of a loading table 237ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-05 moving a class onto training bookings asks first and resends with cancelBookings 245ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-10 D4c with only a waitlist: no «0 alumnes», a waitlist intro and button 135ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows each band error on the field that caused it 173ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer starts on the club-local today and a Saturday date offers Saturday's hours only 125ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > marks the inconsistency on the cells and in the footer note and blocks the generation 228ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe] clamps its start and end times to a Saturday's hours 135ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > confirms «Es generaran com a esborrany les classes de la setmana del …» and generates the proposed week 211ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > hides every action from INSTRUCTOR and keeps the cells inert (A22 c) 105ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 a new ring after RING_HAS_BOOKINGS drops the confirmation: no cancelBookings for a ring not shown 223ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows the coverage table with the D3 vocabulary and one-decimal places 120ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 offers instructor chips with maxInstructorsPerClass = 2 96ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation 326ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 hides levels and coverage with levels.enabled = false and requires a manual description 100ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review > R-06-02 #3 «Treu de la plantilla» waits for the level PATCH queued before it: the DELETE never overtakes it 235ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped 321ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review > S06 §3 #4 without the opening hours, OUTSIDE_OPENING_HOURS lands on the time the admin moved; a new band gets it without a field 265ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer locks ring, date and times until a delayed RING_HAS_BOOKINGS arrives 271ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review > R-06-02 #7 a failed chip PATCH puts back only the chips: the text still being typed in «Descripció» and «Límit» stays 147ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 coverage of the progression levels (E4-W06 review #8) > R-06-06 the coverage table lists only the progression levels: Teràpia and Pendent never, Cadells not once it leaves the progression 138ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps every editor disabled from [ACCEPTA] until the saved version is shown 236ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the value the class holds: inactive ring and instructor stay selected 104ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 coverage of the progression levels (E4-W06 review #8) > R-06-06 T-06-05 E4-W14 round 2 (review nit #8) a level put into the progression gets its row: no dogs yet, so «sense gossos» and no ratios 92ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows a RESERVATION block as it is when FREE_TRAINING was turned off later 111ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without WAITLIST there is no «+e» in the cell nor in the card 97ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without FREE_TRAINING [Bloqueja pista] offers only «Bloqueig» 110ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) > R-06-02 «Esborra la franja» (removeBand) waits in the queue for the level PATCH before it; then the drawer closes 325ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 with levels.enabled=false the card has no «Nivells» chip 115ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 INSTRUCTOR (no /parameters) sees «Nivells» only on a class with levels 123ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) > R-06-02 a band removal never drops a class change queued after it: the PATCH is sent once the DELETE answers 368ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer 290ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) > R-06-02 a failed «Treu de la plantilla» keeps the change queued after it: its PATCH is sent 312ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > INSTRUCTOR reads the calendar without actions and with inert chips (A22 c) 198ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the week warnings and selects the class of a warning; day headers open the day view 150ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) > R-06-02 #7 a change dropped after a failed PATCH is never left on screen: its chip goes back and the first error stays 263ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > S06 §3 R-06-09 an opening at 07:05 with 10-minute slots: «Hora» and [Crear classe] offer 07:10 first, and the class is sent on slot boundaries 421ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-11 T-06-32 an opening at 07:05: [Bloqueja pista] offers 07:10–07:40 first and saves on slot boundaries 179ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) > R-06-02 class B's chip change, queued behind class A's removal, is saved with the template's new version 477ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) > R-06-02 class B's change queued behind class A's refused PATCH is sent; A's error goes to the page, since A's form is gone 374ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 after STALE_VERSION every editor stays locked until the refetched version is shown, so no edit is lost 329ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 after INVALID_STATE on «Exempta…» every editor stays locked until the refetched class is shown 173ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) > R-06-02 a change of class A queued after A's own removal is dropped with a message: the class no longer exists 286ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 a conflict refetch that fails unlocks the card with the admin's edit kept 209ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-02-09 Sunday absent from club.openingHours is closed: the card and [Crear classe] offer no times there, say so and do not submit 218ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) > R-06-01 R-02-09 a template whose kind has a closed day takes no band: the drawer says which day and sends nothing; the Saturday template still takes one 382ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-02-09 R-06-11 Sunday absent from club.openingHours: [Bloqueja pista] offers no times there, says so and does not submit 191ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) > S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] instead of assuming 07:00–22:00; after the retry the closed Monday is named again 267ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W10 D4 follow-ups of the E4-W09 review > R-02-09 R-06-09 on a closed day [Crear classe] does not say «Els alumnes la veuran de seguida» 206ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W11 D3 follow-ups of the E4-W10 review > R-06-01 R-02-09 the closed days read as a label with the days joined as a list: «Dies de tancament: dilluns i dimarts. …» 299ms
+ ✓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W11 D3 follow-ups of the E4-W10 review > MATRIU_PERMISOS an INSTRUCTOR on D3 never calls GET /club/opening-hours (read-only) 121ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W10 D4 follow-ups of the E4-W09 review > S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] and offers no times until it loads 228ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W11 D4 follow-ups of the E4-W10 review > S06 §3 R-02-09 R-06-09 on a closed Sunday only «Notes» is editable: every chip editor is disabled, and [ACCEPTA] saves the notes alone 177ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W11 D4 follow-ups of the E4-W10 review > S06 §3 an open day keeps the chip editors enabled 111ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W11 D4 follow-ups of the E4-W10 review > MATRIU_PERMISOS an INSTRUCTOR on D4 never calls GET /club/opening-hours (read-only) 150ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W14 D4 follow-ups of the E4-W11 review > S06 §3 R-02-09 on a closed Sunday the disabled chip editors look disabled (muted, not-allowed); an open day's do not 185ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W14 D4 follow-ups of the E4-W11 review > S06 §3 R-06-09 on a closed Sunday the «Exempta de la revisió de les 7:30» chip stays enabled and is saved through its own action 145ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W12 D4 real-core follow-ups of E4-W05 > S06 §2 D4: an activity that blocks every ring of a band is one cell «Activitat · {title} · totes les pistes» 75ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W12 D4 real-core follow-ups of E4-W05 > S06 §2 D4: an activity on some rings keeps one cell per ring 73ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is one ICU key > AGENTS rule 1: the accessible name follows calendar.cell.activityAllRings, whatever its word order 73ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is one ICU key > in es the all-rings cell reads «Actividad · Torneig d'Estiu 2026 · todas las pistas» 69ms
+ ✓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is one ICU key > in en the all-rings cell reads «Activity · Torneig d'Estiu 2026 · all rings» 72ms
+
+ Test Files  13 passed (13)
+      Tests  172 passed (172)
+   Start at  21:52:14
+   Duration  11.15s (tests 48%, environment 23%, transform 15%, import 9%, setup 6%)
+

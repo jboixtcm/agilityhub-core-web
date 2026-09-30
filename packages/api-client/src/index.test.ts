@@ -310,7 +310,7 @@ describe("typed API client", () => {
     ]);
   });
 
-  it("E7-W02 step 0 (R-11-10, R-11-07) sends an Idempotency-Key on 11's reads and 12's push subscription, never on their GETs, the preferences or the unsubscription", async () => {
+  it("E7-W02 round 2 #8 (CONVENCIONS_API §7, E79): 11's reads, 12's preferences and the push subscription declare no Idempotency-Key, so none is sent", async () => {
     const keys: string[] = [];
     const record =
       (name: string, body: Record<string, unknown> = {}) =>
@@ -349,14 +349,7 @@ describe("typed API client", () => {
     });
     await client.DELETE("/push-subscriptions/{id}", { params: { path: { id: "push-1" } } });
 
-    expect(keys).toEqual([
-      "feed:",
-      "read-all:123e4567-e89b-42d3-a456-426614174007",
-      "read:123e4567-e89b-42d3-a456-426614174007",
-      "prefs:",
-      "subscribe:123e4567-e89b-42d3-a456-426614174007",
-      "unsubscribe:",
-    ]);
+    expect(keys).toEqual(["feed:", "read-all:", "read:", "prefs:", "subscribe:", "unsubscribe:"]);
   });
 
   it("E6-W01 step 0 (R-10-04, ruling E46) sends a UUID Idempotency-Key on PUT /class-sessions/{id}/attendance, never on its GET", async () => {
@@ -625,7 +618,9 @@ describe("MSW bootstrap handlers", () => {
     // read-all, 12's preferences GET and PUT, the push subscription and its deletion, the e-mail
     // unsubscribe page).
     // E7-W01 round 2: + `GET /members/{id}/notification-preferences` (D10's block, pending.json).
-    expect(handlers).toHaveLength(259);
+    // E5-W05: + the three universal filters' `filter-values` of `backoffice-handlers.ts`
+    // (`/bookings`, `/training-bookings`, `/ring-blocks`, api E5-T29).
+    expect(handlers).toHaveLength(262);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

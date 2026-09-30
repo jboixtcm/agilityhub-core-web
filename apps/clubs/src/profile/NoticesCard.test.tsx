@@ -14,6 +14,8 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { canic, renderApp, without } from "../booking/test-utils";
 import { PUSH_SUBSCRIPTION_STORAGE_KEY, setPushRegistration } from "../notifications/push";
 
+import { NOTICES_OUTBOX_KEY } from "./preferences-saver";
+
 interface Seen {
   body: unknown;
   method: string;
@@ -67,6 +69,7 @@ afterEach(async () => {
   Reflect.deleteProperty(navigator, "standalone");
   Reflect.deleteProperty(navigator, "userAgent");
   localStorage.removeItem(PUSH_SUBSCRIPTION_STORAGE_KEY);
+  sessionStorage.removeItem(NOTICES_OUTBOX_KEY);
   // The language test stores its choice, as the app does.
   localStorage.removeItem(LOCALE_STORAGE_KEY);
   resetBookingMockState();
@@ -247,6 +250,69 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     expect(select).toHaveValue("1440");
   });
 
+  it("E7-W02 round 2 #1: leaving 12 while a PUT is on its way sends the waiting change at once, and the latest choice (120) is what the api keeps even when the older PUT answers last", async () => {
+    let release: (() => void) | undefined;
+    let first = true;
+    server.use(
+      http.put("*/api/v1/me/notification-preferences", async () => {
+        if (first) {
+          first = false;
+          await new Promise<void>((resolve) => {
+            release = resolve;
+          });
+        }
+        return undefined;
+      }),
+    );
+    await openProfile();
+    const select = screen.getByRole("combobox", { name: "Recordatori de classe" });
+    fireEvent.change(select, { target: { value: "60" } });
+    await waitFor(() => {
+      expect(release).toBeDefined();
+    });
+    fireEvent.change(select, { target: { value: "120" } });
+    // The member leaves at once: the page may be gone before the first PUT answers.
+    cleanup();
+    await waitFor(() => {
+      expect(puts()).toEqual([{ reminderMinutesBefore: 60 }, { reminderMinutesBefore: 120 }]);
+    });
+    // The older PUT lands last at the api (60 over 120) and answers after the newer one.
+    release?.();
+    await waitFor(async () => {
+      const stored = (await (await fetch(`${window.location.origin}${PREFERENCES}`)).json()) as {
+        reminderMinutesBefore: number | null;
+      };
+      expect(stored.reminderMinutesBefore).toBe(120);
+    });
+  });
+
+  it("E7-W02 round 2 #1: a change kept across a reload is sent again on the next visit of the same account and club only", async () => {
+    const outbox = (accountId: string) =>
+      JSON.stringify({
+        accountId,
+        at: Date.now(),
+        clubId: "50000000-0000-4000-8000-000000000001",
+        patch: { reminderMinutesBefore: 720 },
+      });
+    sessionStorage.setItem(NOTICES_OUTBOX_KEY, outbox("10000000-0000-4000-8000-000000000099"));
+    await openProfile();
+    await new Promise((resolve) => {
+      setTimeout(resolve, 400);
+    });
+    expect(puts()).toEqual([]);
+    expect(screen.getByRole("combobox", { name: "Recordatori de classe" })).toHaveValue("");
+    cleanup();
+    sessionStorage.setItem(NOTICES_OUTBOX_KEY, outbox("10000000-0000-4000-8000-000000000002"));
+    await openProfile();
+    await waitFor(() => {
+      expect(puts()).toEqual([{ reminderMinutesBefore: 720 }]);
+    });
+    expect(screen.getByRole("combobox", { name: "Recordatori de classe" })).toHaveValue("720");
+    await waitFor(() => {
+      expect(sessionStorage.getItem(NOTICES_OUTBOX_KEY)).toBeNull();
+    });
+  });
+
   it("asks for the browser's permission only on interaction, never on mount, and registers the subscription", async () => {
     const { requestPermission, subscribe } = browserWithPush("granted");
     await openProfile();
@@ -304,15 +370,15 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     expect(requests.some((item) => item.path === "/api/v1/push-subscriptions")).toBe(false);
   });
 
-  it("a denied permission still saves the preference, and the row says how to allow it", async () => {
+  it("E7-W02 round 2 #5: a permission already refused shows the explanation on arrival (read at mount, never asked), and a change still saves", async () => {
     const { requestPermission } = browserWithPush("denied");
-    // What the browser reports before any request is not shown (headless Chromium says «denied»
-    // while it grants): the row explains a refusal of the member's own request only.
+    // A returning member whose browser refused earlier: `pushClubNews` is on (the default).
     vi.stubGlobal("Notification", { permission: "denied", requestPermission });
     await openProfile();
     expect(
-      screen.queryByText("Activa les notificacions al navegador per rebre-les al mòbil"),
-    ).toBeNull();
+      await screen.findByText("Activa les notificacions al navegador per rebre-les al mòbil"),
+    ).toBeVisible();
+    expect(requestPermission).not.toHaveBeenCalled();
     const push = screen.getByRole("switch", {
       name: "Vull rebre notificacions al mòbil quan hi hagi comunicats del club",
     });

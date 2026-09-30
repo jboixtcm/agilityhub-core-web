@@ -6,6 +6,15 @@ import type { components } from "./generated/schema";
 export type ClassBookingItem = components["schemas"]["ClassBookingItem"];
 export type ClassWaitlistEntry = components["schemas"]["WaitlistEntry"];
 
+/**
+ * S10 R-10-00 for a staff-read waiting entry (E5-T29): the «{guia}» of «{guia} + {gos}» is the
+ * dog's `handlerName`, else the member's first name (`memberFirstName`); empty when the api sends
+ * neither, so the line names the dog alone.
+ */
+export function waitlistEntryGuide(entry: ClassWaitlistEntry): string {
+  return entry.handlerName ?? entry.memberFirstName ?? "";
+}
+
 /** The waiting entries that still hold their place (R-08-12): the rest are history. */
 export function isLiveWaitlistEntry(entry: ClassWaitlistEntry): boolean {
   return entry.state === "ACTIVE" || entry.state === "NOTIFIED";

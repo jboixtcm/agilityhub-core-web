@@ -1,0 +1,52 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/notifications/push.test.ts (13 tests | 2 failed | 11 skipped) 31ms
+   ❯ E7-W02 step 5 · web push in context (S11 R-11-07) (13)
+     × E7-W02 round 2 #2: a subscription in flight at logout is deleted when it lands within the wait, and its id is never stored 22ms
+     × E7-W02 round 2 #2: a subscription that lands after the logout (the session gone) is unsubscribed in the browser, and its id is never stored 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > E7-W02 round 2 #2: a subscription in flight at logout is deleted when it lands within the wait, and its id is never stored
+AssertionError: expected [] to deeply equal [ 'push-1' ]
+
+- Expected
++ Received
+
+- [
+-   "push-1",
+- ]
++ []
+
+ ❯ src/notifications/push.test.ts:198:21
+    196|     await out;
+    197|     await subscribing;
+    198|     expect(deleted).toEqual(["push-1"]);
+       |                     ^
+    199|     expect(logout).toHaveBeenCalledTimes(1);
+    200|     expect(localStorage.getItem(PUSH_SUBSCRIPTION_STORAGE_KEY)).toBeNu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/notifications/push.test.ts > E7-W02 step 5 · web push in context (S11 R-11-07) > E7-W02 round 2 #2: a subscription that lands after the logout (the session gone) is unsubscribed in the browser, and its id is never stored
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/notifications/push.test.ts:224:25
+    222|     release();
+    223|     await subscribing;
+    224|     expect(unsubscribe).toHaveBeenCalledTimes(1);
+       |                         ^
+    225|     expect(localStorage.getItem(PUSH_SUBSCRIPTION_STORAGE_KEY)).toBeNu…
+    226|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 11 skipped (13)
+   Start at  22:54:50
+   Duration  916ms (environment 37%, transform 31%, import 19%, setup 8%, tests 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/notifications/push.test.ts -t round 2 #2

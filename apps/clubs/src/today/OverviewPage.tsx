@@ -5,6 +5,7 @@ import {
   isApiError,
   isLiveWaitlistEntry,
   useClassRegistrants,
+  waitlistEntryGuide,
 } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
@@ -79,11 +80,17 @@ function isStaffSession(value: ClassSession | ClassSessionMemberView): value is 
   return "counters" in value;
 }
 
-const BOOKING_STATE_TONES: Readonly<Record<ClassBookingItem["state"], Tone>> = {
-  ACTIVE: "success",
+/**
+ * The chip of a registrant: the api's derived `displayState` (S08 §6, E5-T29), with 07's literals
+ * (`enums:bookingState.*`), in D4's tones: a past booking «feta», a NO_SHOW mark «no presentat».
+ */
+const BOOKING_DISPLAY_STATE_TONES: Readonly<Record<ClassBookingItem["displayState"], Tone>> = {
   CANCELLED: "neutral",
   CANCELLED_BY_CLUB: "danger",
   CANCELLED_LATE: "warning",
+  CONFIRMED: "success",
+  DONE: "neutral",
+  NO_SHOW: "danger",
   PAYMENT_PENDING: "warning",
 };
 
@@ -100,7 +107,11 @@ function ClassRegistrants({ client, session }: { client: ApiClient; session: Cla
   const entries =
     registrants.status === "ready"
       ? (registrants.waitlist ?? []).filter(isLiveWaitlistEntry).map((entry) => {
-          const name = entry.dogName ?? entry.dog.name;
+          // «Júlia + Kira» (S10 R-10-00, E5-T29); the dog alone when the api names no guide.
+          const dog = entry.dogName ?? entry.dog.name;
+          const guide = waitlistEntryGuide(entry);
+          const name =
+            guide === "" ? dog : t("admin-scheduling:registrants.name", { dog, member: guide });
           return {
             id: entry.id,
             label:
@@ -131,13 +142,14 @@ function ClassRegistrants({ client, session }: { client: ApiClient; session: Cla
         registrants.status === "ready"
           ? registrants.bookings.map((item) => ({
               id: item.id,
+              level: item.levelCode ?? undefined,
               name: t("admin-scheduling:registrants.name", {
                 dog: item.dogName,
                 member: item.memberName,
               }),
               state: {
-                label: t(`enums:bookingState.${item.state}`),
-                tone: BOOKING_STATE_TONES[item.state],
+                label: t(`enums:bookingState.${item.displayState}`),
+                tone: BOOKING_DISPLAY_STATE_TONES[item.displayState],
               },
             }))
           : []

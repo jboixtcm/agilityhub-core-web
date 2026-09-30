@@ -8,6 +8,22 @@ export type StudentSearchDog = components["schemas"]["DogListItem"];
 /** CONVENCIONS_API §4: the list's page size; «Mostra'n més» reads the next page. */
 export const STUDENT_SEARCH_PAGE_SIZE = 50;
 
+/**
+ * S10 R-10-00 for a search row: the «{guia}» of «{guia} + {gos}» is `handlerName`, else the owner's
+ * first name as the api sends it (`owner.firstName`, a compound one whole, E5-T29); when another
+ * guide leads the dog, `ownerFullName` names the member for «(abonat: {nom i cognom})».
+ */
+export function studentSearchGuide(dog: StudentSearchDog): {
+  guide: string;
+  ownerFullName?: string;
+} {
+  const handler = dog.handlerName?.trim() ?? "";
+  if (handler === "") return { guide: dog.owner?.firstName ?? "" };
+  return dog.owner === undefined || dog.owner.fullName === handler
+    ? { guide: handler }
+    : { guide: handler, ownerFullName: dog.owner.fullName };
+}
+
 interface SearchPages {
   /** A failed first page (the screen's error) or a failed next page (the rows stay). */
   error?: unknown;

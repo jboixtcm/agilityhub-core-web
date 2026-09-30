@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/messaging/NotificationLogPage.test.tsx (6 tests | 1 failed | 5 skipped) 176ms
+   ❯ E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) (6)
+     × E5-W05 step 0: a row whose audience the api sends as null (written before E7-T02) shows the recipient without an audience label, in the list and in the detail 174ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/messaging/NotificationLogPage.test.tsx > E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) > E5-W05 step 0: a row whose audience the api sends as null (written before E7-T02) shows the recipient without an audience label, in the list and in the detail
+AssertionError: expected 'Pau Fictici SolernotificationAudience…' to be 'Pau Fictici Soler' // Object.is equality
+
+Expected: "Pau Fictici Soler"
+Received: "Pau Fictici SolernotificationAudience.null"
+
+ ❯ src/messaging/NotificationLogPage.test.tsx:221:36
+    219|     });
+    220|     const recipient = rows()[0]?.querySelector(".messaging-log__recipi…
+    221|     expect(recipient?.textContent).toBe("Pau Fictici Soler");
+       |                                    ^
+    222|     fireEvent.click(within(rows()[0] ?? document.body).getByText("N-08…
+    223|     const drawer = await screen.findByRole("dialog", { name: "Avís N-0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+   Start at  21:27:15
+   Duration  1.48s (transform 36%, environment 27%, import 17%, tests 13%, setup 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/messaging/NotificationLogPage.test.tsx -t step 0

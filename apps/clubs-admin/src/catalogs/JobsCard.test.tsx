@@ -4,6 +4,7 @@ import {
   mockScenario,
   type MockScenario,
   resetBackofficeMockState,
+  resetPlanningState,
   resetSettingsState,
 } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
@@ -23,6 +24,7 @@ import dashboardEs from "../../../../packages/i18n/src/locales/es/admin-dashboar
 import settingsEs from "../../../../packages/i18n/src/locales/es/admin-settings.json";
 
 import { JobsCard } from "./JobsCard";
+import { ParameterSettings } from "./ParameterSettings";
 
 const branding: Branding = {
   ...brandingCanicFixture,
@@ -507,3 +509,125 @@ async function waitForRow(card: HTMLElement, name: string): Promise<HTMLElement>
   await within(card).findByText(name);
   return rowOf(card, name);
 }
+
+describe("E5-W05 step 18 · the run drawer (S15 §2, R-15-21)", () => {
+  it("E5-W05 step 18: a failed history page keeps the pager and offers a retry, the drawer stays open, and the retry shows page 2", async () => {
+    let refused = false;
+    server.use(
+      http.get("*/api/v1/jobs/:name/runs", ({ request }) => {
+        if (new URL(request.url).searchParams.get("page") !== "1" || refused) return undefined;
+        refused = true;
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "boom", traceId: "t" },
+          { status: 500 },
+        );
+      }),
+    );
+    const card = await renderCard();
+    fireEvent.click(
+      within(await waitForRow(card, "Neteja tècnica")).getByRole("button", { name: /correcta/u }),
+    );
+    const drawer = await screen.findByRole("dialog", { name: "Execucions · Neteja tècnica" });
+    expect(await within(drawer).findByText("Pàgina 1 de 2")).toBeVisible();
+    fireEvent.click(within(drawer).getByRole("button", { name: "Pàgina següent" }));
+    expect(await within(drawer).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat.",
+    );
+    // The pager stays, on the page that failed, and the drawer is still open.
+    expect(within(drawer).getByText("Pàgina 2 de 2")).toBeVisible();
+    expect(within(drawer).getByRole("button", { name: "Pàgina anterior" })).toBeEnabled();
+    expect(screen.getByRole("dialog", { name: "Execucions · Neteja tècnica" })).toBeVisible();
+    fireEvent.click(within(drawer).getByRole("button", { name: "Torna-ho a provar" }));
+    expect(await within(drawer).findByRole("button", { name: "14/07/2026 6:00" })).toBeVisible();
+    expect(within(drawer).queryByRole("alert")).toBeNull();
+  });
+
+  it("E5-W05 step 18 (R-15-21, T-15-35): a risk-review run's cancelled class opens in D4 on its week with the class selected, as D1's rows do", async () => {
+    resetPlanningState();
+    mockScenario("jobsFullClub");
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-settings", "enums", "errors"],
+      storage: undefined,
+    });
+    const onNavigate = vi.fn();
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <JobsCard
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            onNavigate={onNavigate}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    const card = await screen.findByRole("region", { name: "Processos automàtics" });
+    fireEvent.click(
+      within(await waitForRow(card, "Revisió de classes en risc")).getByRole("button", {
+        name: /correcta/u,
+      }),
+    );
+    const drawer = await screen.findByRole("dialog", {
+      name: "Execucions · Revisió de classes en risc",
+    });
+    fireEvent.click(await within(drawer).findByRole("button", { name: "10/08/2026 7:30" }));
+    const sheet = await within(drawer).findByRole("region", { name: "Fitxa de l'execució" });
+    const cancelled = await within(sheet).findByRole("button", {
+      name: /cls-2026-08-10-1740-9 · CANCEL$/u,
+    });
+    fireEvent.click(cancelled);
+    await waitFor(() => {
+      expect(onNavigate).toHaveBeenCalledWith(
+        "/calendari?classe=cls-2026-08-10-1740-9&estat=anul%C2%B7lades&setmana=2026-08-10",
+      );
+    });
+  });
+});
+
+describe("E5-W05 step 17 · D11 after a schedule change (R-15-01)", () => {
+  it("E5-W05 step 17: saving jobs.dailyTime reads GET /jobs again, so «Caducitats» and «Neteja tècnica» show the new time at once", async () => {
+    mockScenario("admin");
+    const requests = recordRequests();
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-settings", "enums", "errors", "auth"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <ParameterSettings
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            levels={[]}
+            modules={branding.modules}
+            onModulesChange={() => undefined}
+            plans={[]}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    const card = await screen.findByRole("region", { name: "Processos automàtics" });
+    const expirations = await waitForRow(card, "Caducitats");
+    expect(within(expirations).getByText("cada dia a les 6:00")).toBeVisible();
+    const jobsReads = () =>
+      requests.filter(
+        (request) => request.method === "GET" && request.url.pathname.endsWith("/jobs"),
+      ).length;
+    const before = jobsReads();
+
+    fireEvent.click(within(card).getByRole("button", { name: "Edita Hora dels processos diaris" }));
+    const drawer = await screen.findByRole("dialog", { name: "Hora dels processos diaris" });
+    fireEvent.change(within(drawer).getByLabelText("Hora dels processos diaris"), {
+      target: { value: "06:30" },
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "DESA" }));
+
+    await waitFor(() => {
+      expect(within(rowOf(card, "Caducitats")).getByText("cada dia a les 6:30")).toBeVisible();
+    });
+    expect(within(rowOf(card, "Neteja tècnica")).getByText("cada dia a les 6:30")).toBeVisible();
+    expect(jobsReads()).toBeGreaterThan(before);
+  });
+});

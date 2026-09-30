@@ -1,0 +1,212 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/instructor.test.tsx (42 tests | 1 failed | 37 skipped) 11283ms
+   ❯ E6-W01 step 6 the instructor's student search (S10 §2, §13-9) (4)
+     × E5-W05 step 23 (R-10-00): the guide is the owner's first name the api sends, a compound one whole («Joan Antoni + Toby»), and a dog led by another guide adds «(abonat: {nom i cognom})» 10016ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > E5-W05 step 23 (R-10-00): the guide is the owner's first name the api sends, a compound one whole («Joan Antoni + Toby»), and a dog led by another guide adds «(abonat: {nom i cognom})»
+TestingLibraryElementError: Unable to find role="link" and name "Joan Antoni + Toby · B"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"instructor-screen instructor-students"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mAlumnes[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"instructor-students__search"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mCerca un alumne[0m
+        [36m</span>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card instructor-students__list"[39m
+      [36m>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-00000000a001"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mJoan + Toby · B[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-00000000a002"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mJúlia Roca + Rock · D[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"instructor-screen instructor-students"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mAlumnes[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"instructor-students__search"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mCerca un alumne[0m
+        [36m</span>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card instructor-students__list"[39m
+      [36m>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-00000000a001"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mJoan + Toby · B[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-00000000a002"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mJúlia Roca + Rock · D[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/instructor/instructor.test.tsx:1012:31
+    1010|     );
+    1011|     await renderScreen(<StudentSearchPage client={client()} />, { path…
+    1012|     const toby = await screen.findByRole("link", { name: "Joan Antoni …
+       |                               ^
+    1013|     expect(toby).toBeVisible();
+    1014|     expect(within(toby).queryByText(/abonat/u)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed | 37 skipped (42)
+   Start at  21:33:47
+   Duration  12.43s (tests 91%, transform 5%, environment 2%, import 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/instructor.test.tsx -t student search

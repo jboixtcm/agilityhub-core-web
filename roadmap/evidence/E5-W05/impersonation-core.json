@@ -1,0 +1,55 @@
+{
+  "banner": "Estàs veient l'app com Laia Fictici006",
+  "clubsMe": [
+    {
+      "accountName": null,
+      "impersonation": null,
+      "memberId": null,
+      "memberName": null,
+      "page": "/entrar",
+      "status": 503
+    },
+    {
+      "accountName": null,
+      "impersonation": null,
+      "memberId": null,
+      "memberName": null,
+      "page": "/entrar",
+      "status": 200
+    },
+    {
+      "accountName": "Aina Example",
+      "impersonation": [
+        "actorName",
+        "memberName"
+      ],
+      "memberId": "4cfeb83b-644f-3e56-95b6-caf82f70af88",
+      "memberName": "Laia Fictici006",
+      "page": "/inici",
+      "status": 200
+    },
+    {
+      "accountName": "Aina Example",
+      "impersonation": [
+        "actorName",
+        "memberName"
+      ],
+      "memberId": "4cfeb83b-644f-3e56-95b6-caf82f70af88",
+      "memberName": "Laia Fictici006",
+      "page": "/gossos",
+      "status": 200
+    }
+  ],
+  "clubsRefreshGrants": 0,
+  "d5RecordName": "Laia Fictici006",
+  "d10MemberId": "4cfeb83b-644f-3e56-95b6-caf82f70af88",
+  "firstMeAnswered503": true,
+  "launchUrl": "https://app.example.test/entrar?handoff=<redacted>",
+  "memberAction": "PUT /me/dogs/{id}/instructor-note 200",
+  "opened": true,
+  "secondRedemption": {
+    "code": "HANDOFF_INVALID",
+    "status": 400
+  },
+  "status": 201
+}

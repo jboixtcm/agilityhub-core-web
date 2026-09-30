@@ -108,21 +108,21 @@ describe("E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 an
       "aria-selected",
       "true",
     );
-    await screen.findAllByText("dl 3 · 7:00");
+    await screen.findAllByText("dl 3 · 7:00–7:30");
     const list = requests.find(
       (url) => url.pathname.endsWith("/training-bookings") && url.searchParams.get("size") === "50",
     );
     expect(list?.searchParams.getAll("filter")).toEqual(["date:between:2026-08-03,2026-08-09"]);
     expect(list?.searchParams.getAll("sort")).toEqual(["startsAt,desc"]);
     expect(list?.searchParams.get("fields")).toBe(
-      "id,date,startsAtLocal,ringId,ringName,memberId,memberName,dogName,state,origin",
+      "id,date,startsAtLocal,endsAtLocal,ringId,ringName,memberId,memberName,memberNumber,dogName,state,origin",
     );
     // Rock's Monday 7:00, booked by the club for Laura (R-09-16 `origin: BACKOFFICE`).
     const rock = screen
       .getAllByRole("row")
       .find((row) => row.textContent.includes("dl 3 · 7:00") && row.textContent.includes("Rock"));
     if (rock === undefined) throw new TypeError("No row for Rock's Monday 7:00");
-    const link = within(rock).getByRole("link", { name: "Laura" });
+    const link = within(rock).getByRole("link", { name: "Laura Serra Vidal · 87" });
     expect(link).toHaveAttribute("href", "/abonats/member-laura");
     fireEvent.click(link);
     expect(onNavigate).toHaveBeenCalledWith("/abonats/member-laura");
@@ -131,9 +131,9 @@ describe("E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 an
     expect(within(rock).getByText("confirmada")).toBeVisible();
   });
 
-  it("offers the api's values with their counts in the universal filter (no filter-values route: counted from the list)", async () => {
+  it("offers the api's values with their counts in the universal filter (E5-W05: GET /training-bookings/filter-values)", async () => {
     await renderPage();
-    await screen.findAllByText("dl 3 · 7:00");
+    await screen.findAllByText("dl 3 · 7:00–7:30");
     // The week the list starts with is an applied filter, labelled in the club's words.
     fireEvent.click(screen.getByText(/^Filtre \(1\): Dia i hora = «3 .*agost»$/u));
     const value = screen.getByRole("combobox", { name: "Valor" });
@@ -157,7 +157,7 @@ describe("E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 an
   it("S14 R-14-12 exports the list's filters and columns (ADMIN) and never for an INSTRUCTOR", async () => {
     const requests = recordRequests();
     await renderPage();
-    await screen.findAllByText("dl 3 · 7:00");
+    await screen.findAllByText("dl 3 · 7:00–7:30");
     fireEvent.click(screen.getByText("Excel · PDF"));
     fireEvent.click(screen.getByRole("button", { name: "Excel" }));
     await waitFor(() => {
@@ -166,16 +166,17 @@ describe("E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 an
     const exported = requests.find((url) => url.pathname.endsWith("/training-bookings/export"));
     expect(exported?.searchParams.get("format")).toBe("xlsx");
     expect(exported?.searchParams.get("columns")).toBe(
-      "date,startsAtLocal,ringName,memberName,dogName,state,origin",
+      "date,startsAtLocal,endsAtLocal,ringName,memberName,memberNumber,dogName,state,origin",
     );
     expect(exported?.searchParams.getAll("filter")).toEqual(["date:between:2026-08-03,2026-08-09"]);
 
     cleanup();
     await renderPage("instructor");
-    await screen.findAllByText("dl 3 · 7:00");
+    await screen.findAllByText("dl 3 · 7:00–7:30");
     expect(screen.queryByText("Excel · PDF")).toBeNull();
     // D10 is ADMIN's: the INSTRUCTOR reads the name only.
-    expect(screen.queryByRole("link", { name: "Laura" })).toBeNull();
+    expect(screen.queryByRole("link", { name: /^Laura/u })).toBeNull();
+    expect(screen.getAllByText("Laura Serra Vidal · 87").length).toBeGreaterThan(0);
   });
 
   it("T-08-47/T-09-24 pattern: an undeclared filter shows the list's own INVALID_FILTER message", async () => {
@@ -241,7 +242,7 @@ describe("E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 an
   it("E5-W03 round 2 · review #9: the date and relation filters offer only operators that take one value, and the query says so", async () => {
     const requests = recordRequests();
     await renderPage();
-    await screen.findAllByText("dl 3 · 7:00");
+    await screen.findAllByText("dl 3 · 7:00–7:30");
     fireEvent.click(screen.getByText(/^Filtre \(1\):/u));
     const field = screen.getByRole("combobox", { name: "Columna" });
     const operator = screen.getByRole("combobox", { name: "Operador" });
@@ -357,11 +358,165 @@ describe("E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 an
     await renderPage("instructor", "?vista=bloquejos");
     await screen.findByText("Retirada de la tanca");
     await screen.findAllByText("Carretera");
-    expect(within(rowOf("Retirada de la tanca")).getByText("pista desactivada")).toBeVisible();
+    // E5-W05 step 3: the row names its own ring (E5-T29 `ringName`), for an INSTRUCTOR too.
+    expect(within(rowOf("Retirada de la tanca")).getByText("Antiga")).toBeVisible();
     expect(screen.queryByText("ring-antiga")).toBeNull();
     expect(
       instructorRequests.some(
         (url) => url.pathname.endsWith("/rings") && url.searchParams.has("includeInactive"),
+      ),
+    ).toBe(false);
+  });
+});
+
+/** The values the universal filter offers for `field`, as «{label} ({count})». */
+async function filterOptions(field: string): Promise<string[]> {
+  fireEvent.click(screen.getByText(/^Filtre \(1\):/u));
+  fireEvent.change(screen.getByRole("combobox", { name: "Columna" }), {
+    target: { value: field },
+  });
+  const value = screen.getByRole("combobox", { name: "Valor" });
+  await waitFor(() => {
+    expect(value).not.toBeDisabled();
+    expect(within(value).getAllByRole("option").length).toBeGreaterThan(1);
+  });
+  return within(value)
+    .getAllByRole("option")
+    .map((option) => option.textContent);
+}
+
+describe("E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values", () => {
+  it("E5-W05 step 3: «Dia i hora» reads «dl 3 · 7:00–7:30» with endsAtLocal, and «Abonat» «{nom complet} · {número}»", async () => {
+    const requests = recordRequests();
+    await renderPage();
+    const rock = await waitFor(() => {
+      const found = screen
+        .getAllByRole("row")
+        .find(
+          (row) => row.textContent.includes("dl 3 · 7:00–7:30") && row.textContent.includes("Rock"),
+        );
+      if (found === undefined) throw new TypeError("No row for Rock's Monday 7:00–7:30");
+      return found;
+    });
+    expect(within(rock).getByRole("link", { name: "Laura Serra Vidal · 87" })).toHaveAttribute(
+      "href",
+      "/abonats/member-laura",
+    );
+    const list = requests.find(
+      (url) => url.pathname.endsWith("/training-bookings") && url.searchParams.get("size") === "50",
+    );
+    expect(list?.searchParams.get("fields")).toBe(
+      "id,date,startsAtLocal,endsAtLocal,ringId,ringName,memberId,memberName,memberNumber,dogName,state,origin",
+    );
+  });
+
+  it("E5-W05 step 3: a member without a number reads the name alone, without « · »", async () => {
+    await renderPage("registerMany");
+    const rows = await screen.findAllByRole("link", { name: /^Pau Fictici Mas/u });
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.every((link) => link.textContent === "Pau Fictici Mas")).toBe(true);
+  });
+
+  it("E5-W05 step 3: every block names its ring from the row (ringName, ringColor), a deactivated ring's included, for an INSTRUCTOR too", async () => {
+    const template = catalogState.rings[0];
+    // The deactivated ring keeps a colour of its own (the last ring's, from the catalog fixture).
+    const color = catalogState.rings.at(-1)?.color;
+    if (template === undefined || color === undefined) {
+      throw new TypeError("No coloured ring in the catalog");
+    }
+    catalogState.rings.push({
+      ...template,
+      active: false,
+      color,
+      id: "ring-antiga",
+      name: "Antiga",
+      order: 90,
+      shortName: "ANT",
+    });
+    trainingState.blocks.push({
+      activityId: null,
+      activityTitle: null,
+      createdByName: "Marc",
+      date: "2026-08-03",
+      from: "2026-08-03T04:00:00Z",
+      fromLocal: "06:00",
+      id: "rb-2026-08-03-0600-antiga",
+      kind: "BLOCK",
+      note: "Retirada de la tanca",
+      reason: "MAINTENANCE",
+      ringId: "ring-antiga",
+      state: "ACTIVE",
+      to: "2026-08-03T05:00:00Z",
+      toLocal: "07:00",
+      version: 1,
+    });
+    const requests = recordRequests();
+    await renderPage("instructor", "?vista=bloquejos");
+    const antiga = await waitFor(() => within(rowOf("Retirada de la tanca")).getByText("Antiga"));
+    expect(screen.queryByText("pista desactivada")).toBeNull();
+    const dot = antiga
+      .closest(".training-register__ring")
+      ?.querySelector(".training-register__dot");
+    expect(dot?.getAttribute("style")).toContain(`--ah-ring-color: ${color}`);
+    const list = requests.find((url) => url.pathname.endsWith("/ring-blocks"));
+    expect(list?.searchParams.get("fields")?.split(",")).toEqual(
+      expect.arrayContaining(["ringId", "ringName", "ringColor"]),
+    );
+  });
+
+  it("E5-W05 step 5: with more than 1000 rows, the member filter offers «Nil Fictici Soler», who appears only after row 1000, from GET /training-bookings/filter-values", async () => {
+    const requests = recordRequests();
+    await renderPage("registerMany");
+    // Newest first: the first page is Saturday's, all of them Pau's.
+    await screen.findAllByRole("link", { name: /^Pau Fictici Mas/u });
+    const options = await filterOptions("memberId");
+    expect(options).toContain("Nil Fictici Soler (5)");
+    const values = requests.find(
+      (url) =>
+        url.pathname.endsWith("/training-bookings/filter-values") &&
+        url.searchParams.get("field") === "memberId",
+    );
+    expect(values).toBeDefined();
+    // The other filters narrow the values (the week the list starts with).
+    expect(values?.searchParams.getAll("filter")).toEqual(["date:between:2026-08-03,2026-08-09"]);
+    expect(
+      requests.some(
+        (url) =>
+          url.pathname.endsWith("/training-bookings") && url.searchParams.get("size") === "1000",
+      ),
+    ).toBe(false);
+  });
+
+  it("E5-W05 step 5: the week filter the api echoes as a JSON array (`between`) reads «Dia i hora = «3 al 9 d’agost»», never «»", async () => {
+    const requests: Promise<unknown>[] = [];
+    server.events.on("response:mocked", ({ request, response }) => {
+      if (new URL(request.url).pathname.endsWith("/training-bookings")) {
+        requests.push(response.clone().json());
+      }
+    });
+    await renderPage();
+    await screen.findAllByText("dl 3 · 7:00–7:30");
+    const answer = (await requests[0]) as { appliedFilters: { value: unknown }[] };
+    expect(answer.appliedFilters[0]?.value).toEqual(["2026-08-03", "2026-08-09"]);
+    expect(screen.getByText(/^Filtre \(1\): Dia i hora = «3 al 9 d.agost»$/u)).toBeVisible();
+  });
+
+  it("E5-W05 step 5: with more than 1000 blocks, the ring filter offers «Cadells», which appears only after row 1000, from GET /ring-blocks/filter-values", async () => {
+    const requests = recordRequests();
+    await renderPage("registerMany", "?vista=bloquejos");
+    await screen.findAllByText(/^Revisió \d+$/u);
+    const options = await filterOptions("ringId");
+    expect(options).toContain("Cadells (5)");
+    expect(
+      requests.some(
+        (url) =>
+          url.pathname.endsWith("/ring-blocks/filter-values") &&
+          url.searchParams.get("field") === "ringId",
+      ),
+    ).toBe(true);
+    expect(
+      requests.some(
+        (url) => url.pathname.endsWith("/ring-blocks") && url.searchParams.get("size") === "1000",
       ),
     ).toBe(false);
   });

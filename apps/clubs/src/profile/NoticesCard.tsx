@@ -5,14 +5,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { errorText } from "../booking/shared";
-import { pushSupport, subscribeToPush } from "../notifications/push";
+import { pushPermission, pushSupport, subscribeToPush } from "../notifications/push";
 
 import {
   type Category,
   createPreferencesSaver,
   type Edits,
+  readNoticesOutbox,
   type SaverState,
   shownPreferences,
+  writeNoticesOutbox,
 } from "./preferences-saver";
 
 /**
@@ -36,16 +38,25 @@ export function NoticesCard({ client }: { client: ApiClient }) {
   const [saverState, setSaverState] = useState<SaverState>();
   const [failure, setFailure] = useState<{ cause: unknown }>();
   const [support] = useState(pushSupport);
-  // Set by an in-context request only: `Notification.permission` read at mount is not reliable
-  // (headless Chromium reports «denied» while granting the request).
-  const [pushDenied, setPushDenied] = useState(false);
+  // R-11-07: a permission the browser already refused is read at mount (never asked) so the row
+  // explains it on arrival; an in-context request updates it (E7-W02 round 2 #5).
+  const [pushDenied, setPushDenied] = useState(
+    () => support === "supported" && pushPermission() === "denied",
+  );
   const mounted = useRef(true);
+  // The account and club a change belongs to (a change kept across a reload is sent again for them
+  // only, E7-W02 round 2 #1).
+  const accountId = session.me?.account.id ?? "";
+  const clubId = session.me?.membership?.clubId ?? "";
   const saver = useMemo(
     () =>
       createPreferencesSaver({
         changed: setSaverState,
         failed: (cause) => {
           setFailure({ cause });
+        },
+        kept: (unsaved) => {
+          writeNoticesOutbox({ accountId, clubId }, unsaved);
         },
         save: async (body, keepalive) =>
           (
@@ -55,14 +66,15 @@ export function NoticesCard({ client }: { client: ApiClient }) {
             })
           ).data,
       }),
-    [client],
+    [accountId, client, clubId],
   );
 
   useEffect(() => {
     mounted.current = true;
-    // A change still in its pause is sent when the page is left (unmount or a full navigation).
+    // Leaving the page (another route: the unmount; a full navigation or a reload: `pagehide`)
+    // sends every unsaved change at once, the one on its way included (R-11-04).
     const leave = () => {
-      saver.flushNow();
+      saver.leave();
     };
     window.addEventListener("pagehide", leave);
     return () => {
@@ -80,6 +92,13 @@ export function NoticesCard({ client }: { client: ApiClient }) {
         if (!current || data === undefined) return;
         saver.load(data);
         setStatus("ready");
+        // What the last visit of this account and club left unsaved is sent again (a partial PUT
+        // of values the api already has changes nothing).
+        const kept = readNoticesOutbox({ accountId, clubId });
+        if (kept !== undefined) {
+          writeNoticesOutbox({ accountId, clubId }, undefined);
+          saver.edit(kept);
+        }
       },
       () => {
         if (current) setStatus("error");
@@ -88,7 +107,7 @@ export function NoticesCard({ client }: { client: ApiClient }) {
     return () => {
       current = false;
     };
-  }, [attempt, client, reader, saver]);
+  }, [accountId, attempt, client, clubId, reader, saver]);
 
   if (!reader) return null;
 

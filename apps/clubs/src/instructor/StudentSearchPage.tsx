@@ -1,4 +1,4 @@
-import { type ApiClient, useStudentSearch } from "@agilityhub/api-client";
+import { type ApiClient, studentSearchGuide, useStudentSearch } from "@agilityhub/api-client";
 import { AppBar, Button, Card, Icon, Input, Skeleton, Toast } from "@agilityhub/ui";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -76,12 +76,9 @@ export function StudentSearchPage({ client }: { client: ApiClient }) {
           <ul>
             {dogs.items.map((dog) => {
               const path = `/instructor/alumnes/${encodeURIComponent(dog.id)}`;
-              // R-10-00: the guide, else the owner's first name (the list carries the full name).
-              const name = studentName(t, {
-                dogName: dog.name ?? "",
-                handlerName: dog.handlerName,
-                memberFirstName: dog.owner?.fullName.split(" ")[0] ?? "",
-              });
+              // R-10-00: the guide, else the owner's first name the api sends (E5-T29).
+              const { guide, ownerFullName } = studentSearchGuide(dog);
+              const name = studentName(t, { dogName: dog.name ?? "", memberFirstName: guide });
               return (
                 <li key={dog.id}>
                   <a
@@ -95,6 +92,14 @@ export function StudentSearchPage({ client }: { client: ApiClient }) {
                       {dog.level === undefined
                         ? name
                         : t("instructor:student.withLevel", { level: dog.level.code, name })}
+                      {ownerFullName === undefined ? null : (
+                        <>
+                          {" "}
+                          <span className="instructor-students__owner">
+                            {t("instructor:student.owner", { name: ownerFullName })}
+                          </span>
+                        </>
+                      )}
                     </span>
                     <Icon aria-hidden="true" name="chev" />
                   </a>

@@ -535,6 +535,18 @@ describe("T-01-21 profile access rows and impersonation", () => {
     expect(screen.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
     expect(screen.getByRole("button", { name: "Surt" })).toBeVisible();
   });
+
+  it("E5-W05 step 24: the banner names the member the admin opened (/me impersonation.memberName), not the account, whose name differs in a family group", async () => {
+    mockScenario("impersonatedFamily");
+    const client = authClient();
+    await client.acceptImpersonation("mock-impersonation-token");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+
+    const banner = document.querySelector(".impersonation-banner");
+    expect(banner).toHaveTextContent("Estàs veient l'app com Laura Serra Vidal");
+    expect(banner).not.toHaveTextContent("Marta Vidal Roca");
+  });
 });
 
 /** The grants the page sends to `/oauth2/token`, in order. */

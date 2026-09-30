@@ -75,6 +75,39 @@ async function renderCard(modules: readonly string[] = branding.modules) {
   return { card, onNavigate };
 }
 
+describe("E5-W05 step 4 · D10's «Classes» table names each class and its ring (E5-T29)", () => {
+  it("E5-W05 step 4: each row reads the class's description and its ring (dot in the ring's colour and name), as E5-W03 step 3 asks", async () => {
+    const requests = recordRequests();
+    const { card } = await renderCard();
+    const classes = within(card).getByRole("table", { name: "Classes" });
+    expect(
+      within(classes)
+        .getAllByRole("columnheader")
+        .map((cell) => cell.textContent),
+    ).toEqual(["Dia i hora", "Classe", "Pista", "Gos", "Estat", "Origen"]);
+    // What the api sends for the newest booking (the mock world's, read the same way).
+    const answer = (await (
+      await fetch(
+        `${window.location.origin}/api/v1/bookings?filter=memberId%3Aeq%3Amember-laura&sort=classStartsAt%2Cdesc&size=20&fields=classDescription%2CringName%2CringColor`,
+      )
+    ).json()) as { items: { classDescription: string; ringColor: string; ringName: string }[] };
+    const newest = answer.items[0];
+    if (newest === undefined) throw new TypeError("Laura has no class booking");
+    const firstRow = within(classes).getAllByRole("row")[1];
+    if (firstRow === undefined) throw new TypeError("No first row");
+    const cells = within(firstRow).getAllByRole("cell");
+    expect(cells[1]?.textContent).toBe(newest.classDescription);
+    expect(cells[2]?.textContent).toBe(newest.ringName);
+    expect(cells[2]?.querySelector(".member-bookings__dot")?.getAttribute("style")).toContain(
+      `--ah-ring-color: ${newest.ringColor}`,
+    );
+    const bookings = requests.find((url) => url.pathname.endsWith("/api/v1/bookings"));
+    expect(bookings?.searchParams.get("fields")?.split(",")).toEqual(
+      expect.arrayContaining(["classDescription", "ringName", "ringColor"]),
+    );
+  });
+});
+
 describe("E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19)", () => {
   it("shows the member's class bookings (newest first) and training bookings, read-only, with the «Entra com l'abonat» note", async () => {
     const requests = recordRequests();
@@ -88,7 +121,7 @@ describe("E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19)", () => 
     const firstRow = within(classes).getAllByRole("row")[1];
     // Saturday 15 at 8:30 is the latest class of the current week the api lists for Laura, booked
     // by the club for her (`origin: BACKOFFICE`).
-    expect(firstRow?.textContent).toBe("ds 15/08 · 8:30Dunaconfirmadaclub");
+    expect(firstRow?.textContent).toBe("ds 15/08 · 8:30B+CCentralDunaconfirmadaclub");
     const bookings = requests.find((url) => url.pathname.endsWith("/api/v1/bookings"));
     expect(bookings?.searchParams.getAll("filter")).toEqual(["memberId:eq:member-laura"]);
     expect(bookings?.searchParams.getAll("sort")).toEqual(["classStartsAt,desc"]);
