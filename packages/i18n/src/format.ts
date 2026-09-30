@@ -82,13 +82,36 @@ function dateFormatter(
   });
 }
 
+/**
+ * A date in a presentation. `dayMonthNumeric` is always zero-padded «03/08», as ca and the
+ * mockups write it: CLDR's es pattern for a two-digit day and month is `d/M` («3/8»), so the day
+ * and the month are padded here, in the locale's own order and separator (E6-W05).
+ */
+function formatWith(
+  formatter: Intl.DateTimeFormat,
+  presentation: DatePresentation,
+  date: Date | number,
+): string {
+  if (presentation !== "dayMonthNumeric") return formatter.format(date);
+  return formatter
+    .formatToParts(date)
+    .map((part) =>
+      part.type === "day" || part.type === "month" ? part.value.padStart(2, "0") : part.value,
+    )
+    .join("");
+}
+
 export function formatDate(
   value: DateInput,
   locale: Locale,
   timeZone: string,
   presentation: DatePresentation = "short",
 ): string {
-  return dateFormatter(locale, zoneOf(value, timeZone), presentation).format(toDate(value));
+  return formatWith(
+    dateFormatter(locale, zoneOf(value, timeZone), presentation),
+    presentation,
+    toDate(value),
+  );
 }
 
 /**
@@ -103,7 +126,7 @@ export function formatPlainDate(
 ): string {
   const date = parsePlainDate(value);
   if (date === undefined) throw new RangeError(`Invalid plain date: ${value}`);
-  return dateFormatter(locale, "UTC", presentation).format(date);
+  return formatWith(dateFormatter(locale, "UTC", presentation), presentation, date);
 }
 
 export function formatTime(value: DateInput, locale: Locale, timeZone: string): string {

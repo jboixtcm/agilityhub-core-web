@@ -99,6 +99,7 @@
     "sending": "Sending",
     "done": "Announcement sent to {count, plural, one {# member} other {# members}}",
     "error": "The announcement could not be sent. Try again.",
+    "inProgress": "The announcement is still being sent. Try again in a moment.",
     "cancel": "Cancel",
     "close": "Close"
   },

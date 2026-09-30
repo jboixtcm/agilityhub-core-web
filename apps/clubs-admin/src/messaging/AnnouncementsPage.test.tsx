@@ -1,5 +1,6 @@
 import { createApiClient } from "@agilityhub/api-client";
 import {
+  handlers,
   mockScenario,
   type MockScenario,
   resetMessagingMockState,
@@ -9,7 +10,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { http } from "msw";
+import { getResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -377,6 +378,80 @@ describe("T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12)", () => {
     fireEvent.click(screen.getByRole("button", { name: /^Comunicació de baixa com a associat/u }));
     await waitFor(() => {
       expect(body().value).toBe("Un text més nou, encara sense desar.");
+    });
+  });
+
+  it("E7-W04 step 5 (R-11-12): two completed saves of one template whose answers arrive in reverse order — the newer version stays, no draft is lost, and the next save carries the newer version", async () => {
+    let release: () => void = () => undefined;
+    const late = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let held = false;
+    let lateAnswered = false;
+    server.use(
+      http.put("*/api/v1/message-templates/:id", async ({ params, request }) => {
+        if (params.id !== "tpl-n-28" || held) return undefined;
+        held = true;
+        // The api saves the first one at once; its answer reaches the page last.
+        const response = await getResponse(handlers, request.clone());
+        await late;
+        lateAnswered = true;
+        return response;
+      }),
+    );
+    const requests = recordRequests();
+    await renderD9();
+    await editor();
+    fireEvent.change(body(), { target: { value: "Primer text desat de la baixa." } });
+    fireEvent.click(save());
+    await waitFor(() => {
+      expect(body()).toHaveAttribute("readonly");
+    });
+    // Another template, then this one again: it is read with the first save in it.
+    fireEvent.click(screen.getByRole("button", { name: "Canvi de nivell (N-09)" }));
+    await waitFor(() => {
+      expect(title().value).toBe("Canvi de nivell");
+    });
+    fireEvent.click(screen.getByRole("button", { name: /^Comunicació de baixa com a associat/u }));
+    await waitFor(() => {
+      expect(title().value).toBe("Comunicació de baixa com a associat");
+    });
+    expect(body()).not.toHaveAttribute("readonly");
+    fireEvent.change(body(), { target: { value: "Segon text desat de la baixa." } });
+    fireEvent.click(save());
+    await waitFor(() => {
+      expect(screen.queryByText("sense desar")).toBeNull();
+    });
+    await waitFor(() => {
+      expect(body()).not.toHaveAttribute("readonly");
+    });
+    // A draft written after the second save, then the first save's answer arrives.
+    fireEvent.change(body(), { target: { value: "Un esborrany posterior." } });
+    release();
+    await waitFor(() => {
+      expect(lateAnswered).toBe(true);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(body().value).toBe("Un esborrany posterior.");
+    fireEvent.click(save());
+    await waitFor(() => {
+      expect(screen.queryByText("sense desar")).toBeNull();
+    });
+    expect(screen.queryByText(/Algú ha modificat aquesta plantilla/u)).toBeNull();
+    const versions = requests
+      .filter((request) => request.line === "PUT /message-templates/tpl-n-28")
+      .map((request) => (request.body as { version: number }).version);
+    expect(versions).toHaveLength(3);
+    expect(versions[1]).toBe((versions[0] ?? 0) + 1);
+    expect(versions[2]).toBe((versions[1] ?? 0) + 1);
+    // Read again from the api, it is the third save.
+    fireEvent.click(screen.getByRole("button", { name: "Canvi de nivell (N-09)" }));
+    await waitFor(() => {
+      expect(title().value).toBe("Canvi de nivell");
+    });
+    fireEvent.click(screen.getByRole("button", { name: /^Comunicació de baixa com a associat/u }));
+    await waitFor(() => {
+      expect(body().value).toBe("Un esborrany posterior.");
     });
   });
 

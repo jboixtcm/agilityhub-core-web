@@ -81,6 +81,16 @@ export function AnnouncementsPage({
   useEffect(() => {
     selectedRef.current = selectedId;
   }, [selectedId]);
+  // The newest version of each template the page has received (R-11-12): a save answered after a
+  // newer one, or a read that crossed a newer save, is older and never replaces it (E7-W04).
+  const newest = useRef(new Map<string, Detail>());
+  /** `data`, or the newer version of the same template the page already has. */
+  const freshest = useCallback((data: Detail): Detail => {
+    const known = newest.current.get(data.id);
+    if (known !== undefined && known.version > data.version) return known;
+    newest.current.set(data.id, data);
+    return data;
+  }, []);
 
   const errorText = useCallback(
     (cause: unknown, fallback: string) =>
@@ -116,7 +126,7 @@ export function AnnouncementsPage({
     let current = true;
     client.GET("/message-templates/{id}", { params: { path: { id: selectedId } } }).then(
       ({ data }) => {
-        if (current && data !== undefined) setDetail({ data, status: "ready" });
+        if (current && data !== undefined) setDetail({ data: freshest(data), status: "ready" });
       },
       (error: unknown) => {
         if (current) setDetail({ error, status: "error" });
@@ -125,7 +135,7 @@ export function AnnouncementsPage({
     return () => {
       current = false;
     };
-  }, [client, detailReload, selectedId]);
+  }, [client, detailReload, freshest, selectedId]);
 
   const select = (id: string | null) => {
     if (id === selectedId) return;
@@ -310,6 +320,10 @@ export function AnnouncementsPage({
                 setDetailReload((value) => value + 1);
               }}
               onSaved={(saved, options) => {
+                setListReload((value) => value + 1);
+                // An answer older than a version already received (a save answered after a newer
+                // one) changes nothing: neither the detail shown nor a draft.
+                if (freshest(saved) !== saved) return;
                 // The answer of a template no longer open never replaces the one shown; reopening
                 // it reads it again.
                 if (selectedRef.current === saved.id) setDetail({ data: saved, status: "ready" });
@@ -322,7 +336,6 @@ export function AnnouncementsPage({
                       : current,
                   );
                 }
-                setListReload((value) => value + 1);
               }}
             />
           )}
@@ -338,7 +351,7 @@ export function AnnouncementsPage({
           onCreated={(created) => {
             setCreating(false);
             selectedRef.current = created.id;
-            setDetail({ data: created, status: "ready" });
+            setDetail({ data: freshest(created), status: "ready" });
             setSelectedId(created.id);
             writeTemplateParam(created.id);
             setListReload((value) => value + 1);

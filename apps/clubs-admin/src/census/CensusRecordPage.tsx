@@ -747,6 +747,8 @@ function MemberSummary({
             `MemberOverview.notificationPreferences` and never disappears. */}
         <NotificationPreferencesBlock
           client={client}
+          // One block per member: its saves on their way never mix with another member's.
+          key={member.id}
           memberId={member.id}
           onFeedback={onFeedback}
         />

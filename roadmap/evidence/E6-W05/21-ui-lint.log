@@ -1,0 +1,4 @@
+
+> @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+> eslint src --max-warnings 0 --config ../../eslint.config.mjs
+

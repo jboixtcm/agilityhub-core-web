@@ -246,6 +246,26 @@ describe("club-aware formats", () => {
     expect(formatDate("2026-08-19T12:00:00Z", "en", "UTC", "weekdayLong")).toBe("Wednesday");
   });
 
+  it("E6-W05 step 7: es writes day-month dates zero-padded «03/08», as ca and the mockups do (CLDR's es pattern is «3/8»)", () => {
+    // Monday 3 August at 09:12 in Madrid, and the business date of the same day.
+    expect(formatDate("2026-08-03T07:12:00Z", "es", "Europe/Madrid", "dayMonthNumeric")).toBe(
+      "03/08",
+    );
+    expect(formatPlainDate("2026-08-03", "es", "dayMonthNumeric")).toBe("03/08");
+    expect(formatPlainDate("2026-12-25", "es", "dayMonthNumeric")).toBe("25/12");
+    // The club's day, never the device's: 23:30 UTC of the 2nd is the 3rd in Madrid.
+    expect(formatDate("2026-08-02T23:30:00Z", "es", "Europe/Madrid", "dayMonthNumeric")).toBe(
+      "03/08",
+    );
+    // «02/08 · 21:04» of the waiting list (R-10-05) in es too.
+    expect(
+      fmtDayRelative("2026-08-02T19:04:00Z", "es", "Europe/Madrid", "2026-08-05T05:10:00Z"),
+    ).toBe("02/08 · 21:04");
+    // ca and en keep theirs.
+    expect(formatPlainDate("2026-08-03", "ca", "dayMonthNumeric")).toBe("03/08");
+    expect(formatPlainDate("2026-08-03", "en", "dayMonthNumeric")).toBe("08/03");
+  });
+
   it("formats date ranges and binds branding values", () => {
     const formats = createClubFormats("en", "Europe/Madrid", "EUR");
 

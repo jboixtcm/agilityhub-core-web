@@ -1,0 +1,26 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants (R-10-14) > the member reads the seven rows of mockup 25 with three dogs, «Tots» and the two months
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants (R-10-14) > filters by dog (activities with «Tots» only) and by type; a dog outside the member's is 404 DOG_NOT_ACCESSIBLE
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants (R-10-14) > the single-dog member, the club without FREE_TRAINING and ACTIVITIES, every detail kind and the empty history
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants (R-10-14) > FAMILY_GROUP off leaves the member's own dogs only (S10 §9)
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants (R-10-14) > the impersonated session reads it as the member; an instructor gets 403
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > GET /tasks lists mockup 26's three tasks, newest first, the video on the first
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > tasksMany (round 2 #2): 52 tasks in pages of 50, the two oldest — one done, one pending — on the second page; the card counts all of them
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > T-10-25 «＋ Afegir» with an uploaded video creates one task, even when the same key is sent twice; the card counts it
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > the pencil, the ✕, the completion and the reopening, with their business errors at 422 (rule 0)
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > DOG_NOT_ACTIVE, ATTACHMENT_ENTITY_MISMATCH and ATTACHMENT_LIMIT_REACHED are 422; a refused attachment leaves no task
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > a member cannot create (403), an impersonation token gets IMPERSONATION_DENIED, and TASKS off is 404 MODULE_DISABLED
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > [DESA] saves the observations with their version; the card shows them; the same key replays
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > tasksStale: another instructor saved first, so the caller's version is stale (409)
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > the upload url validates type and size (FILE_TYPE_NOT_ALLOWED, FILE_TOO_LARGE{maxSizeMb}); the storage wants the signed headers and no bearer
+ ✓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > E6-W05 step 1 (R-10-11): an upload's grant lasts five minutes — the storage refuses a late PUT (403) and a late claim is 409 INVALID_STATE, on a task and on an attachment; the same claim replays after it 19ms
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > POST /attachments registers an observation file, GET lists it with a signed url, DELETE retires it
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > R-10-12 privacy: no /me/* answer of the member carries the observations
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 16 skipped (17)
+   Start at  23:48:43
+   Duration  651ms (transform 56%, import 40%, tests 4%)
+

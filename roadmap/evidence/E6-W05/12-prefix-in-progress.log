@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/tasks.test.tsx (23 tests | 1 failed | 22 skipped) 188ms
+   ❯ E6-W05 (reviews of E6-W02's round 2): screen 26 (7)
+     × step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the submission's answer — its retry keeps the key and the files, and one task is created 186ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the submission's answer — its retry keeps the key and the files, and one task is created
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/instructor/tasks.test.tsx:841:63
+    839|     const posts = requests.filter((request) => request.line === "POST …
+    840|     expect(posts).toHaveLength(3);
+    841|     expect(new Set(posts.map((request) => request.key)).size).toBe(1);
+       |                                                               ^
+    842|     expect(posts[2]?.body).toEqual(posts[0]?.body);
+    843|     expect(writes(requests).filter((line) => line.startsWith("POST /at…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 22 skipped (23)
+   Start at  23:41:25
+   Duration  1.26s (transform 45%, environment 20%, tests 16%, import 15%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/tasks.test.tsx -t IN_PROGRESS

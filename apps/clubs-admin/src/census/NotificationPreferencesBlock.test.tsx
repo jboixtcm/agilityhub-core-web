@@ -354,6 +354,102 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     );
   });
 
+  it("E7-W04 step 3 (R-11-04): PERSONAL = false on its way, set back to true and the page left, the answers in reverse order — true is saved, and the recovery entry stays until it is", async () => {
+    let releaseFirst: () => void = () => undefined;
+    const firstMayLand = new Promise<void>((resolve) => {
+      releaseFirst = resolve;
+    });
+    let first = true;
+    const landed: unknown[] = [];
+    server.use(
+      http.put("*/api/v1/members/:id/notification-preferences", async ({ request }) => {
+        const body: unknown = await request.clone().json();
+        if (first) {
+          first = false;
+          // The older PUT reaches the api after the newer one: it lands last.
+          await firstMayLand;
+        }
+        landed.push(body);
+        return undefined;
+      }),
+    );
+    const puts = recordPutRequests();
+    await renderBlock();
+    const personal = () => screen.getByRole("switch", { name: "Correu: Comunicats personals" });
+    fireEvent.click(personal());
+    await waitFor(() => {
+      expect(puts).toHaveLength(1);
+    });
+    fireEvent.click(personal());
+    expect(personal()).toHaveAttribute("aria-checked", "true");
+    window.dispatchEvent(new Event("pagehide"));
+    // The newer PUT (true) lands and is answered first.
+    await waitFor(() => {
+      expect(landed).toEqual([{ emailByCategory: { PERSONAL: true } }]);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    // The older one has not answered: the change is not safe yet.
+    expect(JSON.parse(sessionStorage.getItem(PREFERENCES_OUTBOX_KEY) ?? "null")).toMatchObject({
+      memberId: "member-laura",
+      patch: { emailByCategory: { PERSONAL: true } },
+    });
+    releaseFirst();
+    await waitFor(() => {
+      expect(sessionStorage.getItem(PREFERENCES_OUTBOX_KEY)).toBeNull();
+    });
+    // The latest choice was sent again after the older one landed.
+    expect(landed).toEqual([
+      { emailByCategory: { PERSONAL: true } },
+      { emailByCategory: { PERSONAL: false } },
+      { emailByCategory: { PERSONAL: true } },
+    ]);
+    const { data } = await createApiClient({ baseUrl: `${window.location.origin}/api/v1` }).GET(
+      "/members/{id}/notification-preferences",
+      { params: { path: { id: "member-laura" } } },
+    );
+    expect(data?.emailByCategory.PERSONAL).toBe(true);
+  });
+
+  it("E7-W04 step 4 (R-11-04): after a back-forward cache restore, leaving still saves — pagehide(persisted) → pageshow(persisted) → a change → leave at once: the PUT is sent and the outbox holds it", async () => {
+    const puts = recordPutRequests();
+    await renderBlock();
+    const transition = (type: "pagehide" | "pageshow", persisted: boolean) => {
+      const event = new Event(type);
+      Object.defineProperty(event, "persisted", { value: persisted });
+      window.dispatchEvent(event);
+    };
+    fireEvent.click(
+      screen.getByRole("switch", {
+        name: "Correu: Operativa (reserves i canvis fets per l'abonat)",
+      }),
+    );
+    // The page goes into the back-forward cache, then comes back.
+    transition("pagehide", true);
+    await waitFor(() => {
+      expect(puts).toEqual([{ body: { emailByCategory: { OPERATIONAL: true } }, keepalive: true }]);
+    });
+    await waitFor(() => {
+      expect(sessionStorage.getItem(PREFERENCES_OUTBOX_KEY)).toBeNull();
+    });
+    transition("pageshow", true);
+    // A change, and the page is left before its 300 ms are over.
+    fireEvent.click(screen.getByRole("switch", { name: "Correu: Comunicats personals" }));
+    transition("pagehide", false);
+    expect(JSON.parse(sessionStorage.getItem(PREFERENCES_OUTBOX_KEY) ?? "null")).toMatchObject({
+      memberId: "member-laura",
+      patch: { emailByCategory: { PERSONAL: false } },
+    });
+    await waitFor(() => {
+      expect(puts).toHaveLength(2);
+    });
+    await waitFor(() => {
+      expect(puts[1]).toEqual({
+        body: { emailByCategory: { PERSONAL: false } },
+        keepalive: true,
+      });
+    });
+  });
+
   it("without SMS and PUSH (the api's `modules`): no «+SMS» and no push toggle", async () => {
     await renderBlock({ ...PREFERENCES, modules: { push: false, sms: false } });
     expect(screen.queryByText("+SMS")).toBeNull();

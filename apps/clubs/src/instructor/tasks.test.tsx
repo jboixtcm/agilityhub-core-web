@@ -531,9 +531,7 @@ describe("E6-W02 round 2 (review of 30-09): screen 26", () => {
     });
     expect(screen.queryByText(/^Repàs 49/u)).toBeNull();
     expect(
-      requests
-        .filter((request) => !request.line.startsWith("GET"))
-        .map((request) => request.line),
+      requests.filter((request) => !request.line.startsWith("GET")).map((request) => request.line),
     ).toEqual([
       "POST /tasks/t-repas-48/reopening",
       "PATCH /tasks/t-repas-49",
@@ -597,9 +595,9 @@ describe("E6-W02 round 2 (review of 30-09): screen 26", () => {
     const requests = recordRequests();
     await renderTasks();
     await waitFor(() => {
-      expect(requests.filter((request) => request.line.startsWith("GET /parameters/"))).toHaveLength(
-        3,
-      );
+      expect(
+        requests.filter((request) => request.line.startsWith("GET /parameters/")),
+      ).toHaveLength(3);
     });
     const big = () => file("vídeo_llarg.mp4", "video/mp4", 30 * 1024 * 1024);
     fireEvent.change(firstPicker(), { target: { files: [big()] } });
@@ -625,6 +623,288 @@ describe("E6-W02 round 2 (review of 30-09): screen 26", () => {
     ).toBe(false);
     expect(within(form).getByLabelText("Text de la tasca nova")).toHaveValue("Salts amb calma");
     expect(within(form).getByRole("button", { name: "vídeo_llarg.mp4" })).toBeVisible();
+  });
+});
+
+describe("E6-W05 (reviews of E6-W02's round 2): screen 26", () => {
+  const newTask = (text: string, files: File[] = []) => {
+    fireEvent.click(screen.getByRole("button", { name: "Afegir" }));
+    const form = screen.getByRole("form", { name: "Nova tasca" });
+    fireEvent.change(within(form).getByLabelText("Text de la tasca nova"), {
+      target: { value: text },
+    });
+    if (files.length > 0) {
+      fireEvent.change(within(form).getByLabelText("Adjunta un fitxer", { selector: "input" }), {
+        target: { files },
+      });
+    }
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    return form;
+  };
+  const tasksBlock = () =>
+    present(screen.getByRole("heading", { name: "Tasques" }).closest<HTMLElement>("section"));
+  const writes = (requests: Recorded[]) =>
+    requests
+      .filter((request) => !request.line.startsWith("GET"))
+      .map((request) => request.line.replace(/mock-uploads\/.+$/u, "mock-uploads/…"));
+  const fileKeys = (request: Recorded | undefined) =>
+    (request?.body as { attachmentIds?: string[] } | undefined)?.attachmentIds ?? [];
+  /** The five minutes of a signed upload (R-10-11) have gone by. */
+  const pastTheGrant = () => {
+    vi.setSystemTime(Date.now() + 6 * 60_000);
+  };
+
+  it("step 1 (R-10-11): after a refused creation, a retry past the upload's five minutes uploads the file again and creates the task", async () => {
+    let refuse = true;
+    server.use(
+      http.post("*/api/v1/tasks", () => {
+        if (!refuse) return undefined;
+        refuse = false;
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "Internal error", traceId: "t-500" },
+          { status: 500 },
+        );
+      }),
+    );
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
+    expect(await within(tasksBlock()).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat.",
+    );
+    pastTheGrant();
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(4);
+    });
+    expect(cardText(cards()[0])).toBe("pendent | Salts amb calma | 03-08 · Estel · vídeo_salt.mp4");
+    expect(writes(requests)).toEqual([
+      "POST /attachments/upload-url",
+      "PUT /mock-uploads/…",
+      "POST /tasks",
+      "POST /attachments/upload-url",
+      "PUT /mock-uploads/…",
+      "POST /tasks",
+    ]);
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(fileKeys(posts[1])).toHaveLength(1);
+    expect(fileKeys(posts[1])).not.toEqual(fileKeys(posts[0]));
+    expect(posts[1]?.key).not.toBe(posts[0]?.key);
+  });
+
+  it("step 1: within the five minutes the retry reuses the uploaded file (one upload)", async () => {
+    let refuse = true;
+    server.use(
+      http.post("*/api/v1/tasks", () => {
+        if (!refuse) return undefined;
+        refuse = false;
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "Internal error", traceId: "t-500" },
+          { status: 500 },
+        );
+      }),
+    );
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
+    expect(await within(tasksBlock()).findByRole("alert")).toBeVisible();
+    vi.setSystemTime(Date.now() + 2 * 60_000);
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(4);
+    });
+    expect(writes(requests)).toEqual([
+      "POST /attachments/upload-url",
+      "PUT /mock-uploads/…",
+      "POST /tasks",
+      "POST /tasks",
+    ]);
+  });
+
+  it("step 1 (E74): an unanswered creation is retried past the five minutes with its own key and files; the api had created it, so it replays one task", async () => {
+    let lost = true;
+    server.use(
+      http.post("*/api/v1/tasks", async ({ request }) => {
+        if (!lost) return undefined;
+        lost = false;
+        // The api creates the task and its answer never arrives.
+        await getResponse(handlers, request.clone());
+        return HttpResponse.error();
+      }),
+    );
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
+    expect(await within(tasksBlock()).findByRole("alert")).toBeVisible();
+    pastTheGrant();
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(4);
+    });
+    expect(writes(requests)).toEqual([
+      "POST /attachments/upload-url",
+      "PUT /mock-uploads/…",
+      "POST /tasks",
+      "POST /tasks",
+    ]);
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(posts[1]?.key).toBe(posts[0]?.key);
+    expect(posts[1]?.body).toEqual(posts[0]?.body);
+    expect(cards().filter((item) => item.textContent.includes("Salts amb calma"))).toHaveLength(1);
+  });
+
+  it("step 1 (E74): an unanswered creation the api never received is retried as it was; the expired file is refused (409 INVALID_STATE), uploaded again and the task created once", async () => {
+    let lost = true;
+    server.use(
+      http.post("*/api/v1/tasks", () => {
+        if (!lost) return undefined;
+        lost = false;
+        // The request never reached the api.
+        return HttpResponse.error();
+      }),
+    );
+    const statuses: string[] = [];
+    server.events.on("response:mocked", ({ request, response }) => {
+      if (request.method === "POST" && new URL(request.url).pathname === "/api/v1/tasks") {
+        statuses.push(String(response.status));
+      }
+    });
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
+    expect(await within(tasksBlock()).findByRole("alert")).toBeVisible();
+    pastTheGrant();
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(4);
+    });
+    expect(writes(requests)).toEqual([
+      "POST /attachments/upload-url",
+      "PUT /mock-uploads/…",
+      "POST /tasks",
+      "POST /tasks",
+      "POST /attachments/upload-url",
+      "PUT /mock-uploads/…",
+      "POST /tasks",
+    ]);
+    expect(statuses.slice(-2)).toEqual(["409", "201"]);
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    // The retry of the unanswered submission: its key and its payload.
+    expect(posts[1]?.key).toBe(posts[0]?.key);
+    expect(posts[1]?.body).toEqual(posts[0]?.body);
+    // Refused, it is over: the file uploaded again is a new submission with a new key.
+    expect(posts[2]?.key).not.toBe(posts[1]?.key);
+    expect(fileKeys(posts[2])).not.toEqual(fileKeys(posts[1]));
+    expect(cards().filter((item) => item.textContent.includes("Salts amb calma"))).toHaveLength(1);
+    expect(within(tasksBlock()).queryByRole("alert")).toBeNull();
+  });
+
+  it("step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the submission's answer — its retry keeps the key and the files, and one task is created", async () => {
+    let answers = 0;
+    server.use(
+      http.post("*/api/v1/tasks", () => {
+        answers += 1;
+        if (answers === 1) return HttpResponse.error();
+        if (answers === 2) {
+          return HttpResponse.json(
+            {
+              code: "IDEMPOTENCY_KEY_REUSED",
+              details: { reason: "IN_PROGRESS" },
+              message: "Idempotency key reused",
+              traceId: "t-409",
+            },
+            { status: 409 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
+    expect(await within(tasksBlock()).findByRole("alert")).toBeVisible();
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(requests.filter((request) => request.line === "POST /tasks")).toHaveLength(2);
+    });
+    await waitFor(() => {
+      expect(within(form).getByRole("button", { name: "Afegeix" })).toBeEnabled();
+    });
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(4);
+    });
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(posts).toHaveLength(3);
+    expect(new Set(posts.map((request) => request.key)).size).toBe(1);
+    expect(posts[2]?.body).toEqual(posts[0]?.body);
+    expect(writes(requests).filter((line) => line.startsWith("POST /attachments"))).toHaveLength(1);
+  });
+
+  it("step 2: a mixed selection keeps the refused file's message while the accepted one uploads — on the observations and on an open task", async () => {
+    const requests = recordRequests();
+    await renderTasks({ scenario: "admin" });
+    await waitFor(() => {
+      expect(
+        requests.filter((request) => request.line.startsWith("GET /parameters/files.")),
+      ).toHaveLength(3);
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    fireEvent.change(firstPicker(), {
+      target: {
+        files: [file("espatlla.jpg", "image/jpeg"), file("prog.exe", "application/x-msdownload")],
+      },
+    });
+    expect(await screen.findByRole("button", { name: "espatlla.jpg" })).toBeVisible();
+    // The upload and its registration are over (the pickers wait while a write runs).
+    await waitFor(() => {
+      expect(firstPicker()).toBeEnabled();
+    });
+    expect(screen.getAllByRole("alert").map((alert) => alert.textContent)).toEqual([
+      "prog.exe: Aquest tipus de fitxer no està permès.",
+    ]);
+    fireEvent.click(within(card(1)).getByRole("button", { name: "Edita la tasca" }));
+    fireEvent.change(within(card(1)).getByLabelText("Adjunta un fitxer", { selector: "input" }), {
+      target: {
+        files: [file("contactes.jpg", "image/jpeg"), file("eina.exe", "application/x-msdownload")],
+      },
+    });
+    expect(await within(card(1)).findByRole("button", { name: "contactes.jpg" })).toBeVisible();
+    await waitFor(() => {
+      expect(card(1)).not.toHaveAttribute("aria-busy");
+    });
+    expect(within(tasksBlock()).getByRole("alert")).toHaveTextContent(
+      "eina.exe: Aquest tipus de fitxer no està permès.",
+    );
+    expect(
+      requests.filter((request) => request.line === "POST /attachments").map((r) => r.body),
+    ).toEqual([
+      expect.objectContaining({ entityType: "DOG_OBSERVATIONS", name: "espatlla.jpg" }),
+      expect.objectContaining({ entityId: "t2", entityType: "TASK", name: "contactes.jpg" }),
+    ]);
+  });
+
+  it("step 4: a refused deletion says why inside its confirmation, which stays open", async () => {
+    server.use(
+      http.delete("*/api/v1/tasks/:id", () =>
+        HttpResponse.json(
+          { code: "NOT_FOUND", details: {}, message: "Task not found", traceId: "t-404" },
+          { status: 404 },
+        ),
+      ),
+    );
+    await renderTasks();
+    fireEvent.click(within(card(1)).getByRole("button", { name: "Elimina la tasca" }));
+    const dialog = screen.getByRole("dialog", { name: "Vols eliminar aquesta tasca?" });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Elimina" }));
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "No s'ha trobat l'element sol·licitat.",
+    );
+    expect(screen.getByRole("dialog", { name: "Vols eliminar aquesta tasca?" })).toBe(dialog);
+    // Said once, where the user is: not again behind the confirmation.
+    expect(screen.getAllByRole("alert")).toHaveLength(1);
   });
 });
 

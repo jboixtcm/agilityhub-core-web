@@ -67,6 +67,16 @@ export function AnnouncementSent({
 const unansweredSends = new Map<string, string>();
 
 /**
+ * `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}`: the send's first request is still running at
+ * the api. It is not the send's answer (CONVENCIONS_API §7, E79).
+ */
+function inProgress(cause: unknown): boolean {
+  if (!isApiError(cause, "IDEMPOTENCY_KEY_REUSED")) return false;
+  const details = cause.details as { reason?: unknown } | null | undefined;
+  return details?.reason === "IN_PROGRESS";
+}
+
+/**
  * «Enviar comunicat» (S11 §2 D9, R-11-13), from D9 or from a D5/D15 selection or filter set: the
  * sendable templates, the recipients as the admin chose them, and «S'enviarà a {n} abonats» from
  * the api's `dryRun` — never from the rows on screen. [ENVIA] waits for that count and the
@@ -94,10 +104,10 @@ export function SendAnnouncementDialog({
   const [sendError, setSendError] = useState<string>();
   const countRequest = useRef(0);
   const recipientsKey = JSON.stringify(recipientsOf(audience));
-  // The count belongs to one template and one set of recipients: another of either shows none
-  // until its own `dryRun` answers. The tick belongs to the one dry run it confirmed (its request
-  // number): coming back to a template after another one asks again, and the new count needs a
-  // new tick (E7-W01 round 2 #2).
+  // The count belongs to the latest dry run: another template or other recipients drop it at once,
+  // and none shows until the new `dryRun` answers (E7-W04). The tick belongs to the one dry run it
+  // confirmed (its request number): coming back to a template after another one asks again, and
+  // the new count needs a new tick (E7-W01 round 2 #2).
   const question = `${templateId}|${recipientsKey}`;
   const [answer, setAnswer] = useState<{ count: Count; question: string; request: number }>();
   const [confirmedRequest, setConfirmedRequest] = useState<number>();
@@ -139,7 +149,7 @@ export function SendAnnouncementDialog({
   useEffect(() => {
     countRequest.current += 1;
     const current = countRequest.current;
-    if (templateId === "") return;
+    if (templateId === "") return undefined;
     const asked = `${templateId}|${recipientsKey}`;
     client
       .POST("/message-templates/{id}/send", {
@@ -165,6 +175,12 @@ export function SendAnnouncementDialog({
           }
         },
       );
+    return () => {
+      // Another template or other recipients (E7-W04): this dry run's count, and a tick on it, are
+      // gone at once — coming back to them later asks again, and nothing can be sent until the
+      // newest dry run answers.
+      setAnswer(undefined);
+    };
     // `errorText` only reads `t`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [client, recipientsKey, templateId]);
@@ -185,9 +201,16 @@ export function SendAnnouncementDialog({
       unansweredSends.delete(signature);
       onSent(data?.recipientCount ?? count.count);
     } catch (cause) {
-      // An answer retires the key; a request that got none keeps it for the retry.
-      if (isApiError(cause) && cause.status !== 0) unansweredSends.delete(signature);
-      setSendError(errorText(cause, t("admin-messaging:send.error")));
+      // An answer retires the key; a request that got none keeps it for the retry, and so does
+      // `IN_PROGRESS` (the first request is still running): the next [ENVIA] sends the same key.
+      if (isApiError(cause) && cause.status !== 0 && !inProgress(cause)) {
+        unansweredSends.delete(signature);
+      }
+      setSendError(
+        inProgress(cause)
+          ? t("admin-messaging:send.inProgress")
+          : errorText(cause, t("admin-messaging:send.error")),
+      );
     } finally {
       setSending(false);
     }

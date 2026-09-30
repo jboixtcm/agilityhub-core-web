@@ -174,10 +174,22 @@ describe("base components", () => {
     function Parent() {
       const [value, setValue] = useState("");
       return (
-        <Drawer closeLabel="Tanca" onClose={() => { closed(value); }} open title="Detall">
+        <Drawer
+          closeLabel="Tanca"
+          onClose={() => {
+            closed(value);
+          }}
+          open
+          title="Detall"
+        >
           <label>
             Nom
-            <input onChange={(event) => { setValue(event.currentTarget.value); }} value={value} />
+            <input
+              onChange={(event) => {
+                setValue(event.currentTarget.value);
+              }}
+              value={value}
+            />
           </label>
         </Drawer>
       );
@@ -192,6 +204,73 @@ describe("base components", () => {
     // Escape still reaches the latest `onClose`.
     fireEvent.keyDown(document, { key: "Escape" });
     expect(closed).toHaveBeenCalledExactlyOnceWith("Ki");
+  });
+
+  describe("E6-W05 step 3: Escape closes only the topmost overlay (AGENTS rule 6)", () => {
+    function Stacked({
+      confirmDismissible = true,
+      confirmOpen = false,
+    }: {
+      confirmDismissible?: boolean;
+      confirmOpen?: boolean;
+    }) {
+      const [drawer, setDrawer] = useState(true);
+      const [confirm, setConfirm] = useState(confirmOpen);
+      return (
+        <Drawer
+          closeLabel="Tanca"
+          onClose={() => {
+            setDrawer(false);
+          }}
+          open={drawer}
+          title="Gestionar"
+        >
+          <button
+            onClick={() => {
+              setConfirm(true);
+            }}
+          >
+            Elimina
+          </button>
+          <Modal
+            closeLabel="Tanca la confirmació"
+            dismissible={confirmDismissible}
+            onClose={() => {
+              setConfirm(false);
+            }}
+            open={confirm}
+            title="Segur?"
+          >
+            <button>Accepta</button>
+          </Modal>
+        </Drawer>
+      );
+    }
+
+    it("a confirmation opened over a drawer: the first Escape closes the confirmation, the second the drawer", () => {
+      render(<Stacked />);
+      fireEvent.click(screen.getByRole("button", { name: "Elimina" }));
+      expect(screen.getByRole("dialog", { name: "Segur?" })).toBeInTheDocument();
+      fireEvent.keyDown(document, { key: "Escape" });
+      expect(screen.queryByRole("dialog", { name: "Segur?" })).not.toBeInTheDocument();
+      expect(screen.getByRole("dialog", { name: "Gestionar" })).toBeInTheDocument();
+      fireEvent.keyDown(document, { key: "Escape" });
+      expect(screen.queryByRole("dialog", { name: "Gestionar" })).not.toBeInTheDocument();
+    });
+
+    it("a drawer and its confirmation open together: the inner one is on top", () => {
+      render(<Stacked confirmOpen />);
+      fireEvent.keyDown(document, { key: "Escape" });
+      expect(screen.queryByRole("dialog", { name: "Segur?" })).not.toBeInTheDocument();
+      expect(screen.getByRole("dialog", { name: "Gestionar" })).toBeInTheDocument();
+    });
+
+    it("a confirmation that needs an explicit action keeps Escape from the drawer below it", () => {
+      render(<Stacked confirmDismissible={false} confirmOpen />);
+      fireEvent.keyDown(document, { key: "Escape" });
+      expect(screen.getByRole("dialog", { name: "Segur?" })).toBeInTheDocument();
+      expect(screen.getByRole("dialog", { name: "Gestionar" })).toBeInTheDocument();
+    });
   });
 
   it("Toast exposes status and dismissal", () => {

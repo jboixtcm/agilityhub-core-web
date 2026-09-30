@@ -54,18 +54,30 @@ export function attachmentRejection(
   return undefined;
 }
 
+/** A file the picker refused, and why. */
+export interface AttachmentRefusal {
+  file: File;
+  reason: AttachmentRejection;
+}
+
 export interface AttachmentPickerProps extends AttachmentLimits {
   /** How many the entity has already (live and picked): the limit counts them. */
   current: number;
   disabled?: boolean;
   label: string;
   onPick: (files: File[]) => void;
-  onReject: (reason: AttachmentRejection, file: File) => void;
+  /**
+   * Every refusal of one selection at once (an empty list when it had none), before its accepted
+   * files go to `onPick`: the messages of a selection replace the last one's and stay while its
+   * accepted files upload (E6-W05).
+   */
+  onReject: (refusals: readonly AttachmentRefusal[]) => void;
 }
 
 /**
  * The clip button of 26 and D13: picks files and checks each against the club's limits before any
- * signed url is asked for; the refused ones go to `onReject` with the reason, the rest to `onPick`.
+ * signed url is asked for; the refused ones go to `onReject` with their reasons, the rest to
+ * `onPick`.
  */
 export function AttachmentPicker({
   allowedTypes,
@@ -82,12 +94,15 @@ export function AttachmentPicker({
   const change = (event: ChangeEvent<HTMLInputElement>) => {
     const files = [...(event.currentTarget.files ?? [])];
     event.currentTarget.value = "";
+    if (files.length === 0) return;
     const accepted: File[] = [];
+    const refused: AttachmentRefusal[] = [];
     for (const file of files) {
       const reason = attachmentRejection(file, limits, current + accepted.length);
       if (reason === undefined) accepted.push(file);
-      else onReject(reason, file);
+      else refused.push({ file, reason });
     }
+    onReject(refused);
     if (accepted.length > 0) onPick(accepted);
   };
   return (
@@ -268,7 +283,8 @@ export interface TasksPanelProps<Task extends TaskPanelItem> {
   /** `baseVersion`: the task's version when the pencil was tapped (never a later read's). */
   onPatch?:
     ((task: Task, text: string, baseVersion: number | undefined) => Promise<boolean>) | undefined;
-  onReject?: ((message: string) => void) | undefined;
+  /** A selection's refused files, as messages (an empty list when it had none). */
+  onReject?: ((messages: readonly string[]) => void) | undefined;
   onReopen?: ((task: Task) => Promise<boolean>) | undefined;
 }
 
@@ -313,10 +329,19 @@ export function TasksPanel<Task extends TaskPanelItem>({
     text: string;
   }>();
   const [removing, setRemoving] = useState<Task>();
+  // The confirmation's own deletion was refused: its failure (`error`) is said inside it, where
+  // the user is, and not behind it (E6-W05).
+  const [removeFailed, setRemoveFailed] = useState(false);
   const locked = busy !== undefined;
-  const reject = (reason: AttachmentRejection, file: File) => {
-    onReject?.(labels.rejection(reason, file));
+  const reject = (refusals: readonly AttachmentRefusal[]) => {
+    onReject?.(refusals.map(({ file, reason }) => labels.rejection(reason, file)));
   };
+  const closeRemoval = () => {
+    setRemoving(undefined);
+    setRemoveFailed(false);
+  };
+  const hasError = error !== undefined && error !== null;
+  const errorInDialog = removing !== undefined && removeFailed && hasError;
   // The form opens on a tap of «＋ Afegir» or of the pencil: the caret goes where the user types.
   const editingId = editing?.id;
   useEffect(() => {
@@ -363,7 +388,7 @@ export function TasksPanel<Task extends TaskPanelItem>({
           </Button>
         ) : null}
       </header>
-      {error === undefined || error === null ? null : (
+      {!hasError || errorInDialog ? null : (
         <div className="ah-tasks__error" role="alert">
           {error}
         </div>
@@ -484,6 +509,7 @@ export function TasksPanel<Task extends TaskPanelItem>({
                         icon="x"
                         label={labels.remove}
                         onClick={() => {
+                          setRemoveFailed(false);
                           setRemoving(task);
                         }}
                       />
@@ -595,21 +621,18 @@ export function TasksPanel<Task extends TaskPanelItem>({
       )}
       <Modal
         closeLabel={labels.close}
-        onClose={() => {
-          setRemoving(undefined);
-        }}
+        onClose={closeRemoval}
         open={removing !== undefined}
         title={labels.removeTitle}
       >
         <p className="ah-tasks__confirm-text">{removing?.text}</p>
+        {errorInDialog ? (
+          <div className="ah-tasks__error" role="alert">
+            {error}
+          </div>
+        ) : null}
         <div className="ah-task__form-actions">
-          <Button
-            disabled={locked}
-            onClick={() => {
-              setRemoving(undefined);
-            }}
-            variant="ghost"
-          >
+          <Button disabled={locked} onClick={closeRemoval} variant="ghost">
             {labels.cancel}
           </Button>
           <Button
@@ -618,8 +641,10 @@ export function TasksPanel<Task extends TaskPanelItem>({
             onClick={() => {
               const task = removing;
               if (task === undefined || onDelete === undefined || locked) return;
+              setRemoveFailed(false);
               void onDelete(task).then((deleted) => {
-                if (deleted) setRemoving(undefined);
+                if (deleted) closeRemoval();
+                else setRemoveFailed(true);
               });
             }}
             variant="danger"
@@ -681,7 +706,8 @@ export interface FollowupEditorProps<Task extends TaskPanelItem> {
   onHistory?: (() => void) | undefined;
   /** «Veure l'historial complet ›»: where the focus goes back when the history closes. */
   historyLinkRef?: Ref<HTMLButtonElement> | undefined;
-  onReject: (message: string) => void;
+  /** A selection's refused observation files, as messages (an empty list when it had none). */
+  onReject: (messages: readonly string[]) => void;
   rejection: (reason: AttachmentRejection, file: File) => string;
   /** The tasks block: the same `TasksPanel` as everywhere (26 and D13's drawer). */
   tasks: TasksPanelProps<Task>;
@@ -759,8 +785,8 @@ export function FollowupEditor<Task extends TaskPanelItem>({
             disabled={locked}
             label={labels.attach}
             onPick={observations.onAttach}
-            onReject={(reason, file) => {
-              onReject(rejection(reason, file));
+            onReject={(refusals) => {
+              onReject(refusals.map(({ file, reason }) => rejection(reason, file)));
             }}
           />
         </div>
@@ -916,27 +942,41 @@ export function DogFollowupEditor<Task extends TaskPanelItem>({
   onHistory: () => void;
   texts: DogFollowupTexts<Task>;
 }) {
-  const [refusedFile, setRefusedFile] = useState<{ message: string; scope: FollowupScope }>();
+  // The refused files of the last selection, said where it was made.
+  const [refused, setRefused] = useState<{ messages: readonly string[]; scope: FollowupScope }>();
   const [scope, setScope] = useState<FollowupScope>("observations");
   const card = model.card.status === "ready" ? model.card.data : undefined;
   const note = card?.instructorNote;
   const { tasks, tasksPaging } = model;
-  // Each new action clears the last refusal and says where its own failure will show; a failed
-  // write stays until the next one (one write runs at a time).
-  const act = <Result,>(from: FollowupScope, action: () => Result): Result => {
-    setRefusedFile(undefined);
+  // Each new action clears the last refusals and says where its own failure will show; a failed
+  // write stays until the next one (one write runs at a time). The upload of a selection's
+  // accepted files keeps that selection's refusals: they are said while it runs and after it
+  // (`picked`, E6-W05).
+  const act = <Result,>(from: FollowupScope, action: () => Result, picked = false): Result => {
+    if (!picked) setRefused(undefined);
     setScope(from);
     return action();
   };
-  const refuse = (from: FollowupScope) => (message: string) => {
-    setRefusedFile({ message, scope: from });
+  const refuse = (from: FollowupScope) => (messages: readonly string[]) => {
+    setRefused(messages.length === 0 ? undefined : { messages, scope: from });
   };
   const writeError =
     model.error === undefined || (model.observations.stale && texts.staleVersion(model.error))
       ? undefined
       : texts.errorText(model.error, texts.writeError);
-  const said = (from: FollowupScope) =>
-    refusedFile?.scope === from ? refusedFile.message : scope === from ? writeError : undefined;
+  // A block's refusals and its write's failure, one line each.
+  const said = (from: FollowupScope): ReactNode => {
+    const lines = [
+      ...(refused?.scope === from ? refused.messages : []),
+      ...(scope === from && writeError !== undefined ? [writeError] : []),
+    ];
+    if (lines.length <= 1) return lines[0];
+    return lines.map((line, index) => (
+      <span className="ah-followup__line" key={`${String(index)}:${line}`}>
+        {line}
+      </span>
+    ));
+  };
   const tasksError = said("tasks");
   return (
     <FollowupEditor<Task>
@@ -958,7 +998,11 @@ export function DogFollowupEditor<Task extends TaskPanelItem>({
         attachments: card?.observations?.attachments ?? [],
         dirty: model.observations.dirty,
         onAttach: (files) =>
-          void act("observations", () => model.addAttachments("DOG_OBSERVATIONS", dogId, files)),
+          void act(
+            "observations",
+            () => model.addAttachments("DOG_OBSERVATIONS", dogId, files),
+            true,
+          ),
         onChange: model.observations.setText,
         onDetach: (attachment) =>
           void act("observations", () => model.removeAttachment(attachment.id)),
@@ -1001,7 +1045,8 @@ export function DogFollowupEditor<Task extends TaskPanelItem>({
                 onMore: () => void model.readMoreTasks(),
               }
             : undefined,
-        onAttach: (task, files) => act("tasks", () => model.addAttachments("TASK", task.id, files)),
+        onAttach: (task, files) =>
+          act("tasks", () => model.addAttachments("TASK", task.id, files), true),
         onComplete: (task) => act("tasks", () => model.completeTask(task)),
         onCreate: (text, files) => act("tasks", () => model.createTask(text, files)),
         onDelete: (task) => act("tasks", () => model.deleteTask(task)),

@@ -9,6 +9,7 @@ import {
   dogTasks,
   findTask,
   FOLLOWUP_MAX_ATTACHMENTS,
+  FOLLOWUP_UPLOAD_GRANT_MS,
   FOLLOWUP_UPLOAD_PATH,
   followupDogStatus,
   followupState,
@@ -26,6 +27,7 @@ import {
   syncFollowupVariant,
   syncInboxVariant,
   taskView,
+  uploadGrantLive,
 } from "./fixtures/followup";
 import { fieldsProjection } from "./list-fields";
 import { apiError, levelsEnabled, validationError } from "./planning-handlers";
@@ -268,6 +270,10 @@ export const followupHandlers = [
         // A refused attachment leaves no task (the api's single transaction).
         return failure(422, "ATTACHMENT_ENTITY_MISMATCH");
       }
+      // The claim of an upload whose five minutes are over (R-10-11): the api's `INVALID_STATE`.
+      if (uploads.some((upload) => upload !== undefined && !uploadGrantLive(upload))) {
+        return failure(409, "INVALID_STATE");
+      }
       const now = new Date().toISOString().replace(/\.\d{3}Z$/u, "Z");
       const task = {
         createdAt: now,
@@ -429,7 +435,9 @@ export const followupHandlers = [
       return apiError("FILE_TOO_LARGE", "File too large", 400, { maxSizeMb: MAX_SIZE_MB });
     }
     const fileKey = `${body.purpose.toLocaleLowerCase()}/mock/${nextFollowupId("upload")}`;
+    const expiresAt = Date.now() + FOLLOWUP_UPLOAD_GRANT_MS;
     followupState.uploads.set(fileKey, {
+      expiresAt,
       fileName: body.fileName,
       mimeType: body.mimeType,
       purpose: body.purpose,
@@ -438,7 +446,7 @@ export const followupHandlers = [
     const origin = new URL(request.url).origin;
     return HttpResponse.json(
       {
-        expiresAt: new Date(Date.now() + 5 * 60_000).toISOString(),
+        expiresAt: new Date(expiresAt).toISOString(),
         fileKey,
         headers: { "Content-Type": body.mimeType, "If-None-Match": "*" },
         uploadUrl: `${origin}${FOLLOWUP_UPLOAD_PATH}${encodeURIComponent(fileKey)}`,
@@ -452,7 +460,9 @@ export const followupHandlers = [
     const upload = followupState.uploads.get(decodeURIComponent(String(params.fileKey)));
     if (upload === undefined) return new HttpResponse(null, { status: 404 });
     if (request.headers.has("Authorization")) return new HttpResponse(null, { status: 400 });
+    // An expired signature is refused like a bad one (CONVENCIONS_API §5).
     if (
+      !uploadGrantLive(upload) ||
       request.headers.get("Content-Type") !== upload.mimeType ||
       request.headers.get("If-None-Match") !== "*"
     ) {
@@ -515,6 +525,8 @@ export const followupHandlers = [
         (item) => item.fileKey === body.fileKey && item.removedAt === null,
       );
       if (known !== undefined) return { body: attachmentView(known), status: 201 };
+      // The claim of an upload whose five minutes are over (R-10-11): the api's `INVALID_STATE`.
+      if (!uploadGrantLive(upload)) return failure(409, "INVALID_STATE");
       if (liveAttachments(body.entityType, body.entityId).length >= FOLLOWUP_MAX_ATTACHMENTS) {
         return failure(422, "ATTACHMENT_LIMIT_REACHED", { max: FOLLOWUP_MAX_ATTACHMENTS });
       }

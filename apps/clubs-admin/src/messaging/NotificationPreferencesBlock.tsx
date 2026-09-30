@@ -121,68 +121,114 @@ export function NotificationPreferencesBlock({
   const [base, setBase] = useState<Preferences>();
   const [overlay, setOverlay] = useState<Patch>({});
   const waiting = useRef<Patch>({});
-  const inFlight = useRef<Patch>(undefined);
-  const sending = useRef<Promise<void>>(undefined);
+  // The `PUT`s on their way, oldest first (one at a time while the page is open; the departure's
+  // may join one still travelling).
+  const pending = useRef<{ body: Patch; done: Promise<void>; seq: number }[]>([]);
+  const sequence = useRef(0);
+  // The newest request the api accepted, and the newest one it answered at all.
+  const applied = useRef(0);
+  const settled = useRef(0);
+  // The newest body sent (it carries every change made so far), and whether it went again.
+  const newest = useRef<{ body: Patch; resent: boolean; seq: number }>(undefined);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const flushRef = useRef<() => Promise<void>>(() => Promise.resolve());
+  const sendRef = useRef<(body: Patch, keepalive: boolean) => Promise<void>>(() =>
+    Promise.resolve(),
+  );
   // The page was left: the keepalive request and the outbox own what was unsaved.
   const left = useRef(false);
 
-  const save = async (body: Patch) => {
-    inFlight.current = body;
-    try {
-      const { data } = await client.PUT("/members/{id}/notification-preferences", {
-        body,
-        params: { path: { id: memberId } },
-      });
-      if (data === undefined) throw new TypeError("Preference response did not contain data");
-      setBase(data);
-      onFeedback({ message: t("admin-census:member.feedback.preferences"), tone: "success" });
-    } catch (error) {
-      // The refused change goes back to what the api holds; a later one still waits.
-      onFeedback({
-        message: isApiError(error)
-          ? t(`errors:${error.code}`, { defaultValue: t("admin-census:common.genericError") })
-          : t("admin-census:common.genericError"),
-        tone: "danger",
-      });
-    } finally {
-      inFlight.current = undefined;
-      sending.current = undefined;
-      setOverlay(waiting.current);
-      if (left.current) {
-        // Nothing more from here: the keepalive request and the outbox carry the rest.
-      } else if (isEmpty(waiting.current)) {
-        clearOutbox(memberId);
-      } else {
-        timer.current = setTimeout(() => {
-          void flushRef.current();
-        }, 300);
+  const pendingPatch = () =>
+    pending.current.reduce<Patch>((all, sent) => combined(all, sent.body), {});
+
+  /**
+   * One `PUT` (R-11-04). The answer of the newest request so far is the api's state. An older
+   * request answered after a newer one may have landed last, over the newer values: the newest body
+   * goes again, once (E7-W04). The outbox is dropped only when nothing is unsaved any more and the
+   * newest body was answered — never while an older request can still land after it.
+   */
+  const send = (body: Patch, keepalive: boolean, resend = false): Promise<void> => {
+    sequence.current += 1;
+    const seq = sequence.current;
+    if (!resend) newest.current = { body, resent: false, seq };
+    const done = (async () => {
+      try {
+        const { data } = await client.PUT("/members/{id}/notification-preferences", {
+          body,
+          ...(keepalive ? { keepalive: true } : {}),
+          params: { path: { id: memberId } },
+        });
+        if (data === undefined) throw new TypeError("Preference response did not contain data");
+        settled.current = Math.max(settled.current, seq);
+        if (seq > applied.current) {
+          applied.current = seq;
+          setBase(data);
+          if (!left.current) {
+            onFeedback({ message: t("admin-census:member.feedback.preferences"), tone: "success" });
+          }
+        } else if (
+          newest.current !== undefined &&
+          !newest.current.resent &&
+          newest.current.seq > seq
+        ) {
+          newest.current.resent = true;
+          void send(newest.current.body, left.current, true);
+        }
+      } catch (error) {
+        // An answer (a refusal) settles the request; no answer leaves it for the outbox.
+        if (isApiError(error) && error.status !== 0) {
+          settled.current = Math.max(settled.current, seq);
+        }
+        // The refused change goes back to what the api holds; a later one still waits.
+        if (!left.current) {
+          onFeedback({
+            message: isApiError(error)
+              ? t(`errors:${error.code}`, { defaultValue: t("admin-census:common.genericError") })
+              : t("admin-census:common.genericError"),
+            tone: "danger",
+          });
+        }
+      } finally {
+        pending.current = pending.current.filter((sent) => sent.seq !== seq);
+        setOverlay(combined(pendingPatch(), waiting.current));
+        const nothingLeft = pending.current.length === 0 && isEmpty(waiting.current);
+        if (nothingLeft && settled.current >= (newest.current?.seq ?? 0)) clearOutbox(memberId);
+        if (
+          !left.current &&
+          pending.current.length === 0 &&
+          !isEmpty(waiting.current) &&
+          timer.current === undefined
+        ) {
+          timer.current = setTimeout(() => {
+            void flushRef.current();
+          }, 300);
+        }
       }
-    }
+    })();
+    pending.current = [...pending.current, { body, done, seq }];
+    return done;
   };
-  /** Sends what waits (one request at a time); resolves when the request on its way is answered. */
+  /** Sends what waits (one request at a time); resolves when the requests on their way answer. */
   const flush = () => {
     timer.current = undefined;
-    if (sending.current !== undefined || isEmpty(waiting.current)) {
-      return sending.current ?? Promise.resolve();
+    if (pending.current.length > 0 || isEmpty(waiting.current)) {
+      return Promise.all(pending.current.map((sent) => sent.done)).then(() => undefined);
     }
     const body = waiting.current;
     waiting.current = {};
-    const request = save(body);
-    sending.current = request;
-    return request;
+    return send(body, false);
   };
-  // The timers call the latest `flush` (it closes over this render's props).
+  // The timers and the departure call the latest `flush` and `send` (this render's props).
   useEffect(() => {
     flushRef.current = flush;
+    sendRef.current = send;
   });
 
   /** Sends at once what waits for the debounce, then waits until nothing is left unsaved. */
   const settle = async (): Promise<void> => {
     if (timer.current !== undefined) clearTimeout(timer.current);
     timer.current = undefined;
-    if (sending.current === undefined && isEmpty(waiting.current)) return;
+    if (pending.current.length === 0 && isEmpty(waiting.current)) return;
     await flushRef.current();
     await settle();
   };
@@ -225,35 +271,35 @@ export function NotificationPreferencesBlock({
 
   // Leaving the record — another route of the app (unmount) or a full page load (`pagehide`: a
   // link, the browser's back, a reload) — sends everything unsaved, also the request on its way,
-  // with `keepalive` so it outlives the page, and keeps it for the next visit to send again.
+  // with `keepalive` so it outlives the page, and keeps it for the next visit to send again. The
+  // request on its way may still land after it: `send` then sends the newest body again, and the
+  // outbox stays until that is answered (E7-W04).
   useEffect(() => {
     const leave = () => {
       // Once: `pagehide` and the unmount that may follow it.
       if (left.current) return;
       if (timer.current !== undefined) clearTimeout(timer.current);
       timer.current = undefined;
-      const unsaved = combined(inFlight.current ?? {}, waiting.current);
+      const unsaved = combined(pendingPatch(), waiting.current);
       if (isEmpty(unsaved)) return;
       left.current = true;
       waiting.current = {};
       writeOutbox(memberId, unsaved);
-      void client
-        .PUT("/members/{id}/notification-preferences", {
-          body: unsaved,
-          keepalive: true,
-          params: { path: { id: memberId } },
-        })
-        .then(
-          () => {
-            // Answered while this page is still alive (another route of the app): done.
-            clearOutbox(memberId);
-          },
-          () => undefined,
-        );
+      void sendRef.current(unsaved, true);
+    };
+    // Back from the back-forward cache (`persisted`): the page lives again and saves as before.
+    // What its departure kept and nobody confirmed meanwhile goes again as a normal save (E7-W04).
+    const restore = (event: PageTransitionEvent) => {
+      if (!event.persisted || !left.current) return;
+      left.current = false;
+      const kept = readOutbox(memberId);
+      if (kept !== undefined) change(kept);
     };
     window.addEventListener("pagehide", leave);
+    window.addEventListener("pageshow", restore);
     return () => {
       window.removeEventListener("pagehide", leave);
+      window.removeEventListener("pageshow", restore);
       leave();
     };
   }, [client, memberId]);
@@ -383,8 +429,8 @@ export function NotificationPreferencesBlock({
         href={logPath}
         onClick={(event) => {
           // A change still waiting for its save is sent (and answered) before the log is opened.
-          const pending = timer.current !== undefined || sending.current !== undefined;
-          if (onNavigate === undefined && !pending) return;
+          const unsaved = timer.current !== undefined || pending.current.length > 0;
+          if (onNavigate === undefined && !unsaved) return;
           event.preventDefault();
           void settle().then(() => {
             if (onNavigate === undefined) window.location.assign(logPath);

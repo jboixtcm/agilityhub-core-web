@@ -23,11 +23,7 @@ import { useTranslation } from "react-i18next";
 import { useSavedViews } from "../activities/shared";
 
 import "./followup.css";
-import {
-  FollowUpReadFailureNotice,
-  useUnreadFollowUp,
-  useUnreadFollowUpContext,
-} from "./unread";
+import { FollowUpReadFailureNotice, useUnreadFollowUp, useUnreadFollowUpContext } from "./unread";
 
 type FollowupItem = components["schemas"]["FollowupItem"];
 type Translate = ReturnType<typeof useTranslation>["t"];
@@ -272,6 +268,18 @@ export function FollowUpPage({
     // The request identity is `requestKey` (the state and the retries).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [client, requestKey]);
+
+  // A read the shell's retry got through (R-10-13): this list showed the row before it, so the row
+  // loses its highlight at once and the list is read again (an older read on its way is dropped).
+  const { onRetried } = unread;
+  useEffect(
+    () =>
+      onRetried((id) => {
+        setReadIds((current) => new Set([...current, id]));
+        setReload((value) => value + 1);
+      }),
+    [onRetried],
+  );
 
   const loading = list.key !== requestKey;
   const error = loading ? undefined : list.error;

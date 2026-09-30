@@ -1,0 +1,271 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ❯ src/components.test.tsx (31 tests | 3 failed) 159ms
+   ❯ base components (31)
+     ❯ E6-W05 step 3: Escape closes only the topmost overlay (AGENTS rule 6) (3)
+       × a confirmation opened over a drawer: the first Escape closes the confirmation, the second the drawer 8ms
+       × a drawer and its confirmation open together: the inner one is on top 3ms
+       × a confirmation that needs an explicit action keeps Escape from the drawer below it 2ms
+ ❯ src/tasks-panel.test.tsx (14 tests | 2 failed) 245ms
+   ❯ E6-W02 step 2 · attachmentRejection with the api's numbers (R-10-11) (3)
+     × E6-W05 step 2: a selection reports all its refusals at once, before its accepted files; a selection with none reports an empty list (it replaces the last one's messages) 22ms
+   ❯ E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) (9)
+     × E6-W05 step 4: a refused deletion says why inside the confirmation, which stays open; an earlier failure is not shown there 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components.test.tsx > base components > E6-W05 step 3: Escape closes only the topmost overlay (AGENTS rule 6) > a confirmation opened over a drawer: the first Escape closes the confirmation, the second the drawer
+TestingLibraryElementError: Unable to find an accessible element with the role "dialog" and name "Gestionar"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components.test.tsx:244:21
+    242|       fireEvent.keyDown(document, { key: "Escape" });
+    243|       expect(screen.queryByRole("dialog", { name: "Segur?" })).not.toB…
+    244|       expect(screen.getByRole("dialog", { name: "Gestionar" })).toBeIn…
+       |                     ^
+    245|       fireEvent.keyDown(document, { key: "Escape" });
+    246|       expect(screen.queryByRole("dialog", { name: "Gestionar" })).not.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/components.test.tsx > base components > E6-W05 step 3: Escape closes only the topmost overlay (AGENTS rule 6) > a drawer and its confirmation open together: the inner one is on top
+TestingLibraryElementError: Unable to find an accessible element with the role "dialog" and name "Gestionar"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components.test.tsx:253:21
+    251|       fireEvent.keyDown(document, { key: "Escape" });
+    252|       expect(screen.queryByRole("dialog", { name: "Segur?" })).not.toB…
+    253|       expect(screen.getByRole("dialog", { name: "Gestionar" })).toBeIn…
+       |                     ^
+    254|     });
+    255|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/components.test.tsx > base components > E6-W05 step 3: Escape closes only the topmost overlay (AGENTS rule 6) > a confirmation that needs an explicit action keeps Escape from the drawer below it
+TestingLibraryElementError: Unable to find an accessible element with the role "dialog" and name "Segur?"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/components.test.tsx:259:21
+    257|       render(<Stacked confirmDismissible={false} confirmOpen />);
+    258|       fireEvent.keyDown(document, { key: "Escape" });
+    259|       expect(screen.getByRole("dialog", { name: "Segur?" })).toBeInThe…
+       |                     ^
+    260|       expect(screen.getByRole("dialog", { name: "Gestionar" })).toBeIn…
+    261|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/tasks-panel.test.tsx > E6-W02 step 2 · attachmentRejection with the api's numbers (R-10-11) > E6-W05 step 2: a selection reports all its refusals at once, before its accepted files; a selection with none reports an empty list (it replaces the last one's messages)
+AssertionError: expected [ 'pick altra.jpg' ] to deeply equal [ …(4) ]
+
+- Expected
++ Received
+
+  [
+-   "reject FILE_TYPE_NOT_ALLOWED prog.exe,FILE_TYPE_NOT_ALLOWED doc.zip",
+-   "pick foto.jpg",
+-   "reject ",
+    "pick altra.jpg",
+  ]
+
+ ❯ src/tasks-panel.test.tsx:146:19
+    144|     });
+    145|     fireEvent.change(input, { target: { files: [file("altra.jpg", "ima…
+    146|     expect(calls).toEqual([
+       |                   ^
+    147|       "reject FILE_TYPE_NOT_ALLOWED prog.exe,FILE_TYPE_NOT_ALLOWED doc…
+    148|       "pick foto.jpg",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > E6-W05 step 4: a refused deletion says why inside the confirmation, which stays open; an earlier failure is not shown there
+TestingLibraryElementError: Unable to find an accessible element with the role "alert"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Vols eliminar aquesta tasca?":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_f_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"ah-tasks__confirm-text"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Cancel·la":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Elimina":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_f_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_f_"[39m
+    [36m>[39m
+      [0mVols eliminar aquesta tasca?[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"ah-tasks__confirm-text"[39m
+    [36m>[39m
+      [0mAquesta setmana practiqueu el balancí amb calma[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-task__form-actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mElimina[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/tasks-panel.test.tsx:340:27
+    338|       await Promise.resolve();
+    339|     });
+    340|     expect(within(dialog).getByRole("alert")).toHaveTextContent(
+       |                           ^
+    341|       "No s'ha trobat l'element sol·licitat.",
+    342|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: refusals.map is not a function
+ ❯ onReject src/tasks-panel.test.tsx:130:32
+    128|         onReject={(refusals) =>
+    129|           calls.push(
+    130|             `reject ${refusals.map(({ file: item, reason }) => `${reas…
+       |                                ^
+    131|           )
+    132|         }
+ ❯ change src/tasks-panel.tsx:89:12
+ ❯ executeDispatch ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:19116:9
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ processDispatchQueue ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:19166:19
+ ❯ ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:19767:9
+ ❯ batchedUpdates$1 ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:3255:40
+ ❯ dispatchEventForPluginEventSystem ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:19320:7
+ ❯ dispatchEvent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:23585:11
+ ❯ dispatchDiscreteEvent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:23553:11
+
+This error originated in "src/tasks-panel.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "E6-W05 step 2: a selection reports all its refusals at once, before its accepted files; a selection with none reports an empty list (it replaces the last one's messages)". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 40 passed (45)
+     Errors  1 error
+   Start at  23:35:10
+   Duration  990ms (environment 52%, tests 25%, setup 12%, transform 10%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/components.test.tsx src/tasks-panel.test.tsx

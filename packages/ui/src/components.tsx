@@ -216,8 +216,40 @@ interface OverlayProps {
   dismissible?: boolean;
 }
 
+/** The overlays open now (their root elements): Escape belongs to the topmost one only. */
+const openOverlays = new Set<{ current: HTMLElement | null }>();
+/** The overlay an Escape was meant for, decided once per key press (see `topOverlay`). */
+const escapeTargets = new WeakMap<Event, { current: HTMLElement | null } | undefined>();
+
+/**
+ * The topmost open overlay when `event` started: the last one in document order (a confirmation
+ * inside a drawer comes after it, and two siblings paint in that order). Decided at the first
+ * listener and kept for the others, so the order in which the overlays' listeners run, or a close
+ * applied between two of them, never lets one Escape close two overlays (AGENTS rule 6).
+ */
+function topOverlay(event: Event): { current: HTMLElement | null } | undefined {
+  if (!escapeTargets.has(event)) {
+    let top: { current: HTMLElement | null } | undefined;
+    for (const overlay of openOverlays) {
+      const element = overlay.current;
+      if (!element?.isConnected) continue;
+      const current = top?.current;
+      if (
+        current === null ||
+        current === undefined ||
+        current.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING
+      ) {
+        top = overlay;
+      }
+    }
+    escapeTargets.set(event, top);
+  }
+  return escapeTargets.get(event);
+}
+
 function useOverlay(open: boolean, onClose: () => void, dismissible: boolean) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   // The latest `onClose`, read on Escape: a parent that passes a new closure on every render must
   // not re-run the focus effect, which moved the focus to the close button (and scrolled a drawer
   // back to its top) after each keystroke or change inside it.
@@ -233,8 +265,12 @@ function useOverlay(open: boolean, onClose: () => void, dismissible: boolean) {
 
     const previousFocus =
       document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
+    // Every open overlay takes part, the ones that need an explicit action too: an Escape over
+    // them closes nothing below.
+    openOverlays.add(rootRef);
     const onKeyDown = (event: KeyboardEvent) => {
-      if (dismissible && event.key === "Escape") {
+      if (event.key !== "Escape" || topOverlay(event) !== rootRef) return;
+      if (dismissible) {
         onCloseRef.current();
       }
     };
@@ -243,12 +279,13 @@ function useOverlay(open: boolean, onClose: () => void, dismissible: boolean) {
       closeRef.current?.focus();
     }
     return () => {
+      openOverlays.delete(rootRef);
       document.removeEventListener("keydown", onKeyDown);
       previousFocus?.focus();
     };
   }, [dismissible, open]);
 
-  return closeRef;
+  return { closeRef, rootRef };
 }
 
 export function Modal({
@@ -260,13 +297,13 @@ export function Modal({
   title,
 }: OverlayProps) {
   const titleId = useId();
-  const closeRef = useOverlay(open, onClose, dismissible);
+  const { closeRef, rootRef } = useOverlay(open, onClose, dismissible);
   if (!open) {
     return null;
   }
 
   return (
-    <div className="ah-overlay">
+    <div className="ah-overlay" ref={rootRef}>
       <section aria-labelledby={titleId} aria-modal="true" className="ah-modal" role="dialog">
         <div className="ah-overlay__header">
           <h2 id={titleId}>{title}</h2>
@@ -289,13 +326,13 @@ export function Modal({
 
 export function Drawer({ children, closeLabel, onClose, open, title }: OverlayProps) {
   const titleId = useId();
-  const closeRef = useOverlay(open, onClose, true);
+  const { closeRef, rootRef } = useOverlay(open, onClose, true);
   if (!open) {
     return null;
   }
 
   return (
-    <div className="ah-overlay ah-overlay--drawer">
+    <div className="ah-overlay ah-overlay--drawer" ref={rootRef}>
       <aside aria-labelledby={titleId} aria-modal="true" className="ah-drawer" role="dialog">
         <div className="ah-overlay__header">
           <h2 id={titleId}>{title}</h2>
@@ -530,7 +567,9 @@ export function Sidebar({ groups, label }: { groups: SidebarGroup[]; label: stri
               >
                 <Icon aria-hidden="true" name={entry.icon} />
                 <span>{entry.label}</span>
-                {entry.count === undefined ? null : <Badge className="ah-sidebar__count">{entry.count}</Badge>}
+                {entry.count === undefined ? null : (
+                  <Badge className="ah-sidebar__count">{entry.count}</Badge>
+                )}
               </a>
             ))}
           </section>
@@ -713,12 +752,18 @@ export function BarChart({
       <table className="ah-sr-only">
         <caption>{label}</caption>
         <thead>
-          <tr><th scope="col">{label}</th><th scope="col">{totalLabel}</th><th scope="col">{highlightedLabel}</th></tr>
+          <tr>
+            <th scope="col">{label}</th>
+            <th scope="col">{totalLabel}</th>
+            <th scope="col">{highlightedLabel}</th>
+          </tr>
         </thead>
         <tbody>
           {data.map((item) => (
             <tr key={item.label} title={item.title}>
-              <th scope="row">{item.label}</th><td>{item.total}</td><td>{item.highlighted}</td>
+              <th scope="row">{item.label}</th>
+              <td>{item.total}</td>
+              <td>{item.highlighted}</td>
             </tr>
           ))}
         </tbody>

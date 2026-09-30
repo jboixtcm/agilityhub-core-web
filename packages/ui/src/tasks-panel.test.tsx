@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import {
@@ -116,6 +117,40 @@ describe("E6-W02 step 2 · attachmentRejection with the api's numbers (R-10-11)"
     );
   });
 
+  it("E6-W05 step 2: a selection reports all its refusals at once, before its accepted files; a selection with none reports an empty list (it replaces the last one's messages)", () => {
+    const calls: string[] = [];
+    render(
+      <AttachmentPicker
+        allowedTypes={["image/*"]}
+        current={0}
+        label="Adjunta un fitxer"
+        onPick={(files) => calls.push(`pick ${files.map((item) => item.name).join(",")}`)}
+        onReject={(refusals) =>
+          calls.push(
+            `reject ${refusals.map(({ file: item, reason }) => `${reason} ${item.name}`).join(",")}`,
+          )
+        }
+      />,
+    );
+    const input = screen.getByLabelText("Adjunta un fitxer", { selector: "input" });
+    fireEvent.change(input, {
+      target: {
+        files: [
+          file("foto.jpg", "image/jpeg"),
+          file("prog.exe", "application/x-msdownload"),
+          file("doc.zip", "application/zip"),
+        ],
+      },
+    });
+    fireEvent.change(input, { target: { files: [file("altra.jpg", "image/jpeg")] } });
+    expect(calls).toEqual([
+      "reject FILE_TYPE_NOT_ALLOWED prog.exe,FILE_TYPE_NOT_ALLOWED doc.zip",
+      "pick foto.jpg",
+      "reject ",
+      "pick altra.jpg",
+    ]);
+  });
+
   it("the picker passes the accepted files and reports each refused one with its reason", () => {
     const onPick = vi.fn();
     const onReject = vi.fn();
@@ -138,8 +173,11 @@ describe("E6-W02 step 2 · attachmentRejection with the api's numbers (R-10-11)"
     const fourth = file("quarta.jpg", "image/jpeg");
     fireEvent.change(input, { target: { files: [big, exe, ok, third, fourth] } });
     expect(onPick).toHaveBeenCalledWith([ok, third]);
+    expect(onReject).toHaveBeenCalledOnce();
     expect(
-      onReject.mock.calls.map(([reason, item]) => `${String(reason)} ${(item as File).name}`),
+      (onReject.mock.calls[0]?.[0] as { file: File; reason: string }[]).map(
+        ({ file: item, reason }) => `${reason} ${item.name}`,
+      ),
     ).toEqual([
       "FILE_TOO_LARGE gran.jpg",
       "FILE_TYPE_NOT_ALLOWED prog.exe",
@@ -270,7 +308,46 @@ describe("E6-W02 step 2 · TasksPanel (R-10-10, mockup 26)", () => {
     fireEvent.change(screen.getByLabelText("Adjunta un fitxer", { selector: "input" }), {
       target: { files: [file("prog.exe", "application/x-msdownload")] },
     });
-    expect(onReject).toHaveBeenCalledWith("FILE_TYPE_NOT_ALLOWED prog.exe");
+    expect(onReject).toHaveBeenCalledWith(["FILE_TYPE_NOT_ALLOWED prog.exe"]);
+  });
+
+  it("E6-W05 step 4: a refused deletion says why inside the confirmation, which stays open; an earlier failure is not shown there", async () => {
+    function Controlled() {
+      const [error, setError] = useState<string | undefined>("Aquesta tasca ja està completada.");
+      return (
+        <TasksPanel
+          canEdit
+          error={error}
+          labels={labels}
+          limits={{}}
+          onDelete={() => {
+            setError("No s'ha trobat l'element sol·licitat.");
+            return Promise.resolve(false);
+          }}
+          onOpenAttachment={vi.fn()}
+          tasks={tasks}
+        />
+      );
+    }
+    render(<Controlled />);
+    const [remove] = screen.getAllByRole("button", { name: "Elimina la tasca" });
+    if (remove === undefined) throw new TypeError("A ✕ expected");
+    fireEvent.click(remove);
+    const dialog = screen.getByRole("dialog", { name: "Vols eliminar aquesta tasca?" });
+    // The earlier failure stays in the panel, not in the new confirmation.
+    expect(within(dialog).queryByRole("alert")).toBeNull();
+    await act(async () => {
+      fireEvent.click(within(dialog).getByRole("button", { name: "Elimina" }));
+      await Promise.resolve();
+    });
+    expect(within(dialog).getByRole("alert")).toHaveTextContent(
+      "No s'ha trobat l'element sol·licitat.",
+    );
+    expect(screen.getAllByRole("alert")).toHaveLength(1);
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+    // Closed, the failure is said in the panel.
+    expect(screen.getByRole("alert")).toHaveTextContent("No s'ha trobat l'element sol·licitat.");
   });
 
   it("round 2 #2: «Mostra'n més» below the list reads the next page, waits while it reads and says why a page failed", () => {

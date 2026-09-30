@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/SendAnnouncementDialog.test.tsx (8 tests | 1 failed | 7 skipped) 160ms
+   ❯ T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) (8)
+     × E7-W04 step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the send's answer — a network failure, a retry answered IN_PROGRESS and another retry all carry one key, and the api makes one batch 159ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/SendAnnouncementDialog.test.tsx > T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) > E7-W04 step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the send's answer — a network failure, a retry answered IN_PROGRESS and another retry all carry one key, and the api makes one batch
+AssertionError: expected 2 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/census/SendAnnouncementDialog.test.tsx:354:62
+    352|     const sent = sends(requests).filter((request) => request.body?.dry…
+    353|     expect(sent).toHaveLength(3);
+    354|     expect(new Set(sent.map((request) => request.key)).size).toBe(1);
+       |                                                              ^
+    355|     // The answer that reached the dialog replays the first send's bat…
+    356|     await vi.waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  23:56:20
+   Duration  1.01s (transform 38%, environment 24%, tests 17%, import 16%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/SendAnnouncementDialog.test.tsx -t E7-W04 step 1

@@ -271,6 +271,164 @@ describe("T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13)", () =
     expect(submit).toBeDisabled();
   });
 
+  it("E7-W04 step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the send's answer — a network failure, a retry answered IN_PROGRESS and another retry all carry one key, and the api makes one batch", async () => {
+    let releaseFirst: () => void = () => undefined;
+    const firstMayFinish = new Promise<void>((resolve) => {
+      releaseFirst = resolve;
+    });
+    let firstDone: Promise<unknown> = Promise.resolve();
+    let real = 0;
+    server.use(
+      http.post("*/api/v1/message-templates/:id/send", async ({ request }) => {
+        const body = (await request.clone().json()) as { dryRun: boolean };
+        if (body.dryRun) return undefined;
+        real += 1;
+        if (real === 1) {
+          // The api takes the send and is still working on it; its answer never arrives.
+          const copy = request.clone();
+          firstDone = firstMayFinish.then(() => getResponse(handlers, copy));
+          return HttpResponse.error();
+        }
+        if (real === 2) {
+          return HttpResponse.json(
+            {
+              code: "IDEMPOTENCY_KEY_REUSED",
+              details: { reason: "IN_PROGRESS" },
+              message: "Idempotency key reused",
+              traceId: "t-409",
+            },
+            { status: 409 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    const batches: unknown[] = [];
+    server.events.on("response:mocked", ({ request, response }) => {
+      if (request.method !== "POST" || response.status !== 202) return;
+      void response
+        .clone()
+        .json()
+        .then((json: { batchId?: unknown }) => batches.push(json.batchId));
+    });
+    const requests = record();
+    const onSent = vi.fn();
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-messaging", "errors"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <SendAnnouncementDialog
+            audience={{ kind: "selection", memberIds: ["member-laura", "member-anna"] }}
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            initialTemplateId="tpl-n-24"
+            onClose={() => undefined}
+            onSent={onSent}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    const modal = await dialog();
+    fireEvent.click(await within(modal).findByRole("checkbox", { name: confirmation(2) }));
+    const submit = within(modal).getByRole("button", { name: "ENVIA" });
+    fireEvent.click(submit);
+    expect(await within(modal).findByRole("alert")).toHaveTextContent(
+      "No s'ha pogut enviar el comunicat. Torna-ho a provar.",
+    );
+    fireEvent.click(submit);
+    expect(await within(modal).findByText(/encara està en curs/u)).toHaveTextContent(
+      "L'enviament encara està en curs. Torna-ho a provar d'aquí a un moment.",
+    );
+    releaseFirst();
+    await firstDone;
+    fireEvent.click(submit);
+    await vi.waitFor(() => {
+      expect(onSent).toHaveBeenCalledWith(2);
+    });
+    const sent = sends(requests).filter((request) => request.body?.dryRun === false);
+    expect(sent).toHaveLength(3);
+    expect(new Set(sent.map((request) => request.key)).size).toBe(1);
+    // The answer that reached the dialog replays the first send's batch: the api made one.
+    await vi.waitFor(() => {
+      expect(batches).toEqual(["batch-0001"]);
+    });
+  });
+
+  it("E7-W04 step 2 (R-11-13): the count and the tick belong to the latest dry run — A answers 11, B is asked, back to A before B answers: no count, ENVIA off, nothing sent; A's new answer shows its count unticked", async () => {
+    const holds: (() => void)[] = [];
+    const counts = [11, 22, 33];
+    server.use(
+      http.post("*/api/v1/message-templates/:id/send", async ({ request }) => {
+        const body = (await request.clone().json()) as { dryRun: boolean };
+        if (!body.dryRun) return undefined;
+        const count = counts.shift() ?? 0;
+        if (count !== 11) {
+          await new Promise<void>((resolve) => {
+            holds.push(resolve);
+          });
+        }
+        return HttpResponse.json({ batchId: null, recipientCount: count });
+      }),
+    );
+    const requests = record();
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-messaging", "errors"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <SendAnnouncementDialog
+            audience={{ kind: "selection", memberIds: ["member-laura", "member-anna"] }}
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            initialTemplateId="tpl-n-24"
+            onClose={() => undefined}
+            onSent={() => undefined}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    const modal = await dialog();
+    const submit = within(modal).getByRole("button", { name: "ENVIA" });
+    fireEvent.click(await within(modal).findByRole("checkbox", { name: confirmation(11) }));
+    expect(submit).toBeEnabled();
+    fireEvent.change(within(modal).getByLabelText("Plantilla"), {
+      target: { value: "tpl-custom-1" },
+    });
+    await vi.waitFor(() => {
+      expect(holds).toHaveLength(1);
+    });
+    // Back to A before B answers: A's old count is not the latest dry run's.
+    fireEvent.change(within(modal).getByLabelText("Plantilla"), {
+      target: { value: "tpl-n-24" },
+    });
+    await vi.waitFor(() => {
+      expect(holds).toHaveLength(2);
+    });
+    expect(within(modal).getByText("Comptant els destinataris")).toBeVisible();
+    expect(within(modal).queryByText("S'enviarà a 11 abonats")).toBeNull();
+    expect(within(modal).queryByRole("checkbox")).toBeNull();
+    expect(submit).toBeDisabled();
+    fireEvent.click(submit);
+    // B's late answer changes nothing.
+    holds[0]?.();
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    expect(within(modal).queryByText("S'enviarà a 22 abonats")).toBeNull();
+    expect(submit).toBeDisabled();
+    // A's new answer: its count, unticked.
+    holds[1]?.();
+    const tick = await within(modal).findByRole("checkbox", { name: confirmation(33) });
+    expect(tick).not.toBeChecked();
+    expect(submit).toBeDisabled();
+    expect(sends(requests).filter((request) => request.body?.dryRun === false)).toHaveLength(0);
+  });
+
   it("D15's selection is dogs: the dialog reads their owners and sends to each once («2 gossos · 1 abonat»)", async () => {
     const requests = record();
     await renderPage("dogs");

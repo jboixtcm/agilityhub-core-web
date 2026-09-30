@@ -139,3 +139,44 @@ test.describe("E6-W02 T-10-28 D13 «Fitxa d'alumne» (desktop) against MSW", () 
     await expect(drawer.getByRole("button", { name: "Veure l'historial complet ›" })).toBeFocused();
   });
 });
+
+test.describe("E6-W05 step 3: Escape closes only the topmost overlay (AGENTS rule 6)", () => {
+  test("Escape in the delete confirmation over D13's drawer closes the confirmation only: the drawer keeps its unsaved task text, and the next Escape closes the drawer", async ({
+    page,
+  }) => {
+    const evidence = resolve(import.meta.dirname, "../../../roadmap/evidence/E6-W05");
+    mkdirSync(evidence, { recursive: true });
+    const deletions: string[] = [];
+    page.on("request", (request) => {
+      if (request.method() === "DELETE") deletions.push(request.url());
+    });
+    await signIn(page);
+    await page.getByRole("link", { exact: true, name: "Alumnes" }).click();
+    await page.getByPlaceholder("Cerca un alumne").fill("Duna");
+    await page.getByRole("link", { name: "Laura + Duna · C" }).click();
+    await page.waitForURL("**/alumnes/dog-duna");
+    await page.getByRole("button", { name: "Gestionar tasques i notes" }).click();
+    const drawer = page.getByRole("dialog", { name: "Gestionar tasques i notes" });
+    await expect(drawer.locator(".ah-tasks__list > .ah-task")).toHaveCount(3);
+    await drawer.getByRole("button", { name: "Afegir" }).click();
+    await drawer.getByLabel("Text de la tasca nova").fill("Salts amb calma");
+    await drawer
+      .locator(".ah-tasks__list > .ah-task")
+      .nth(1)
+      .getByRole("button", { name: "Elimina la tasca" })
+      .click();
+    const confirmation = page.getByRole("dialog", { name: "Vols eliminar aquesta tasca?" });
+    await expect(confirmation).toBeVisible();
+    await iconsPainted(page);
+    await page.screenshot({
+      path: resolve(evidence, "D13-confirmacio-sobre-calaix-1280.png"),
+    });
+    await page.keyboard.press("Escape");
+    await expect(confirmation).toBeHidden();
+    await expect(drawer).toBeVisible();
+    await expect(drawer.getByLabel("Text de la tasca nova")).toHaveValue("Salts amb calma");
+    await page.keyboard.press("Escape");
+    await expect(drawer).toBeHidden();
+    expect(deletions).toEqual([]);
+  });
+});

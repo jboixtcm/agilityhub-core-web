@@ -99,6 +99,7 @@
     "sending": "Enviant",
     "done": "Comunicat enviat a {count, plural, one {# abonat} other {# abonats}}",
     "error": "No s'ha pogut enviar el comunicat. Torna-ho a provar.",
+    "inProgress": "L'enviament encara està en curs. Torna-ho a provar d'aquí a un moment.",
     "cancel": "Cancel·la",
     "close": "Tanca"
   },

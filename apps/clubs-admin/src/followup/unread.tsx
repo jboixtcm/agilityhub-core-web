@@ -43,13 +43,21 @@ export interface UnreadFollowUp {
   refresh: () => void;
   /** Sends the failed read again (its key kept only when the api never answered it). */
   retry: () => void;
+  /**
+   * Hears each row a retry has read (R-10-13): a mounted D14 marks it read and reads its list
+   * again, since the row it shows was read before the retry. Returns the unsubscription.
+   */
+  onRetried: (listener: (id: string) => void) => () => void;
 }
 
 /**
  * The menu counter of «Seguiment alumnes» (S10 §2 row D14, R-10-13): `GET /followup/unread-count`
  * on mount, on window focus and every 60 s, for an INSTRUCTOR or ADMIN of a club with `TASKS`
- * (`enabled`). A local change (a row read, read-all) wins over an answer requested before it. It
- * also owns the rows' reads, so a failure is said wherever the user went.
+ * (`enabled`). A local change (a row read, read-all) wins over an answer requested before it, and
+ * an answer requested while a read is on its way (it may or may not count that read) is not shown.
+ * It also owns the rows' reads, so a failure is said wherever the user went: each read that took
+ * one off the counter gives it back when it fails, whatever the counter's own refresh does
+ * (offline, it fails too), until the api's count answers.
  */
 export function useUnreadFollowUp(client: ApiClient, enabled: boolean): UnreadFollowUp {
   const [count, setCount] = useState<number>();
@@ -58,8 +66,21 @@ export function useUnreadFollowUp(client: ApiClient, enabled: boolean): UnreadFo
   const [failure, setFailure] = useState<FollowUpReadFailure>();
   // Every read and every local change takes a number: only the newest one's answer is shown.
   const sequence = useRef(0);
+  // The counter as shown, for the local changes that depend on it (a decrement given back).
+  const shown = useRef<number | undefined>(undefined);
   // CONVENCIONS_API §7: a read's key is kept only after a network failure (no answer), by row.
   const unansweredKeys = useRef(new Map<string, string>());
+  // The reads on their way, by row: the one running (a second read of the row joins it), and
+  // whether it took one off the counter (given back if it fails).
+  const inFlight = useRef(new Map<string, { decremented: boolean; done: Promise<boolean> }>());
+  const retried = useRef(new Set<(id: string) => void>());
+
+  /** A local change of the counter: it wins over every answer requested before it. */
+  const change = useCallback((next: (value: number | undefined) => number | undefined) => {
+    sequence.current += 1;
+    shown.current = next(shown.current);
+    setCount(shown.current);
+  }, []);
 
   useEffect(() => {
     if (!enabled || denied) return undefined;
@@ -67,9 +88,13 @@ export function useUnreadFollowUp(client: ApiClient, enabled: boolean): UnreadFo
     const load = () => {
       sequence.current += 1;
       const seq = sequence.current;
+      // A read on its way may or may not be in this answer: it waits for the read's own refresh.
+      const settled = inFlight.current.size === 0;
       client.GET("/followup/unread-count").then(
         ({ data }) => {
-          if (active && seq === sequence.current && data !== undefined) setCount(data.count);
+          if (!active || !settled || seq !== sequence.current || data === undefined) return;
+          shown.current = data.count;
+          setCount(data.count);
         },
         (error: unknown) => {
           if (active && isApiError(error, "IMPERSONATION_DENIED")) setDenied(true);
@@ -90,41 +115,69 @@ export function useUnreadFollowUp(client: ApiClient, enabled: boolean): UnreadFo
     setRequest((value) => value + 1);
   }, []);
   const markOneRead = useCallback(() => {
-    sequence.current += 1;
-    setCount((value) => (value === undefined ? value : Math.max(0, value - 1)));
-  }, []);
+    change((value) => (value === undefined ? value : Math.max(0, value - 1)));
+  }, [change]);
   const markAllRead = useCallback(() => {
-    sequence.current += 1;
-    setCount(0);
-  }, []);
+    change(() => 0);
+    // Everything is read now: a read on its way has nothing to give back if it fails.
+    for (const entry of inFlight.current.values()) entry.decremented = false;
+  }, [change]);
 
   const read = useCallback(
-    async (item: FollowUpReadItem): Promise<boolean> => {
+    (item: FollowUpReadItem): Promise<boolean> => {
       setFailure((current) => (current?.item.id === item.id ? undefined : current));
-      if (item.unread) markOneRead();
+      const running = inFlight.current.get(item.id);
+      if (running !== undefined) return running.done;
+      // One off the counter for a row shown unread, if the counter has one to give.
+      const entry = { decremented: false, done: Promise.resolve(false) };
+      if (item.unread && shown.current !== undefined && shown.current > 0) {
+        entry.decremented = true;
+        markOneRead();
+      }
       const key = unansweredKeys.current.get(item.id) ?? crypto.randomUUID();
       unansweredKeys.current.delete(item.id);
-      try {
-        await client.POST("/followup/{id}/read", {
+      entry.done = client
+        .POST("/followup/{id}/read", {
           params: { header: { "Idempotency-Key": key }, path: { id: item.id } },
-        });
-        refresh();
-        return true;
-      } catch (error) {
-        if (!isApiError(error) || error.status === 0) unansweredKeys.current.set(item.id, key);
-        // The optimistic decrement is undone by the api's own count.
-        refresh();
-        setFailure({ error, item });
-        return false;
-      }
+        })
+        .then(
+          () => {
+            inFlight.current.delete(item.id);
+            refresh();
+            return true;
+          },
+          (error: unknown) => {
+            inFlight.current.delete(item.id);
+            if (!isApiError(error) || error.status === 0) unansweredKeys.current.set(item.id, key);
+            // The decrement is given back here, whatever the refresh below does (offline it
+            // fails too); the api's count replaces it when it answers.
+            if (entry.decremented) change((value) => (value === undefined ? value : value + 1));
+            refresh();
+            setFailure({ error, item });
+            return false;
+          },
+        );
+      inFlight.current.set(item.id, entry);
+      return entry.done;
     },
-    [client, markOneRead, refresh],
+    [change, client, markOneRead, refresh],
   );
   const retry = useCallback(() => {
-    if (failure !== undefined) void read(failure.item);
+    if (failure === undefined) return;
+    const { item } = failure;
+    void read(item).then((accepted) => {
+      if (!accepted) return;
+      for (const listener of retried.current) listener(item.id);
+    });
   }, [failure, read]);
   const dismissFailure = useCallback(() => {
     setFailure(undefined);
+  }, []);
+  const onRetried = useCallback((listener: (id: string) => void) => {
+    retried.current.add(listener);
+    return () => {
+      retried.current.delete(listener);
+    };
   }, []);
 
   return {
@@ -134,6 +187,7 @@ export function useUnreadFollowUp(client: ApiClient, enabled: boolean): UnreadFo
     failure,
     markAllRead,
     markOneRead,
+    onRetried,
     read,
     refresh,
     retry,

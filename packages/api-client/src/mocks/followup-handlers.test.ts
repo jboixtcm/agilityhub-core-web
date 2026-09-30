@@ -394,6 +394,55 @@ describe("E6-W02 step 7 · observations and attachments (R-10-11, R-10-12)", () 
     });
   });
 
+  it("E6-W05 step 1 (R-10-11): an upload's grant lasts five minutes — the storage refuses a late PUT (403) and a late claim is 409 INVALID_STATE, on a task and on an attachment; the same claim replays after it", async () => {
+    const granted = await signed("TASK");
+    expect(Date.parse(granted.data?.expiresAt ?? "") - Date.now()).toBe(5 * 60_000);
+    const late = granted.data;
+    if (late === undefined) throw new TypeError("No upload");
+    const taskKey = await uploadedKey("TASK");
+    const observationsKey = await uploadedKey("DOG_OBSERVATIONS", "image/jpeg");
+    const registered = await client.POST("/attachments", {
+      body: {
+        entityId: "dog-duna",
+        entityType: "DOG_OBSERVATIONS",
+        fileKey: observationsKey,
+        name: "a.jpg",
+      },
+    });
+    expect(registered.response.status).toBe(201);
+    vi.setSystemTime(Date.now() + 5 * 60_000);
+    const put = await fetch(late.uploadUrl, { body: "x", headers: late.headers, method: "PUT" });
+    expect(put.status).toBe(403);
+    await expect(
+      failure(create({ attachmentIds: [taskKey], dogId: "dog-duna", text: "Salts" })),
+    ).resolves.toEqual({ code: "INVALID_STATE", details: {}, status: 409 });
+    expect((await tasks()).data?.items).toHaveLength(3);
+    const otherKey = await uploadedKey("DOG_OBSERVATIONS", "image/jpeg");
+    vi.setSystemTime(Date.now() + 5 * 60_000 + 1);
+    await expect(
+      failure(
+        client.POST("/attachments", {
+          body: {
+            entityId: "dog-duna",
+            entityType: "DOG_OBSERVATIONS",
+            fileKey: otherKey,
+            name: "b.jpg",
+          },
+        }),
+      ),
+    ).resolves.toEqual({ code: "INVALID_STATE", details: {}, status: 409 });
+    // The file registered in time is still the same attachment (R-10-11: the same fileKey again).
+    const again = await client.POST("/attachments", {
+      body: {
+        entityId: "dog-duna",
+        entityType: "DOG_OBSERVATIONS",
+        fileKey: observationsKey,
+        name: "a.jpg",
+      },
+    });
+    expect(again.data?.id).toBe(registered.data?.id);
+  });
+
   it("POST /attachments registers an observation file, GET lists it with a signed url, DELETE retires it", async () => {
     const fileKey = await uploadedKey("DOG_OBSERVATIONS", "image/jpeg");
     const added = await client.POST("/attachments", {

@@ -175,6 +175,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - D12's attendance badge has its own foreground and background tokens (the state's colour pulled towards the text colour, on the state's tint over the surface): 4.5:1 or more in the light and dark themes and in the club fixtures;
   - a D12 training cell keeps its half height; its whole «{hora} Reserva · {pista} — {guia} + {gos}» is its accessible name and tooltip, and it grows over the next row on hover, on focus and while pressed;
   - the MSW scenario `followupMany` (52 more unread notes, so the first page holds only unread notes) and `updateFollowupNoteMock`.
+- Follow-ups of the E6-W02 and E6-W03 round-2 reviews (E6-W05):
+  - 26 and D13 keep an uploaded file's key only while its five-minute grant lasts (minus 30 s), or while a submission the api has not answered holds it (E74). A reused key the api refuses as expired (`409 INVALID_STATE`) is uploaded again and sent as a new submission, once. `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` keeps the submission's key (E79). MSW enforces the grant: a late `PUT` is 403, a late claim (`POST /tasks`, `POST /attachments`) is 409 `INVALID_STATE`.
+  - The attachment picker reports all the refusals of one selection at once. 26 and D13 keep those messages, one per line, while the selection's accepted files upload.
+  - Escape closes only the topmost overlay (`Modal`, `Drawer`): the last open one in document order. An overlay that needs an explicit action keeps Escape from the ones below it.
+  - A refused task deletion says why inside its confirmation, which stays open; once it is closed, the failure shows in the tasks block.
+  - D14's counter gives back each read's decrement when the read fails, even when the counter's own refresh fails too (offline). A counter answer requested while a read was on its way is not shown. A successful retry of a failed read marks D14's row read and reads the list again.
+  - es writes numeric day-month dates zero-padded («03/08», `dayMonthNumeric`), as ca and the mockups do.
+- Follow-ups of E7-W01's round-2 review (E7-W04):
+  - «Enviar comunicat»: `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` keeps the send's key and says «L'enviament encara està en curs. Torna-ho a provar d'aquí a un moment.» (`admin-messaging:send.inProgress`, ca/es/en). The next [ENVIA] sends the same key.
+  - The count, its tick and ENVIA belong to the latest dry run: another template or other recipients drop the count at once, and a late answer of an older dry run is ignored.
+  - D10's preferences: an older `PUT` answered after a newer one makes the block send the newest body again. The recovery entry stays until the newest body is answered. After a back-forward cache restore (`pageshow` with `persisted`) the block saves again, and what the departure kept is re-sent. D10 mounts one block per member.
+  - D9 keeps the newest version of each template it has received: a late save answer or a detail read that crossed a newer save never replaces it, nor drops a draft.
+  - `NotificationLogPage.test.tsx` «#7» waits for its chips (it read them one render early on a loaded runner).
 - The attendance sheet after a refusal (E6-W03 steps 11–14, E6-W01 round-2 review): a list read again drops the choices it no longer allows (`mergeSheet` takes the sheet's permissions and its base rows are required), a save's `Idempotency-Key` is kept only after a network failure, the student search's «Mostra'n més» answers at once after a new query, and a save no longer fades every circle (only those the api refuses).
 
 - Corrections of the global audit of 26-09 (E4-W16; INC-15 web half, INC-18…INC-22, INC-24 web half, INC-26…INC-29):

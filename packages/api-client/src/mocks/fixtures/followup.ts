@@ -226,6 +226,8 @@ export const FOLLOWUP_INACTIVE_DOG_ID = "dog-lluna-baixa";
 export const FOLLOWUP_MAX_ATTACHMENTS = 10;
 /** Signed uploads go to the page's own origin (MSW answers them): no request leaves it. */
 export const FOLLOWUP_UPLOAD_PATH = "/mock-uploads/";
+/** A signed upload's grant lasts five minutes (R-10-11; the contract's «URLs last five minutes»). */
+export const FOLLOWUP_UPLOAD_GRANT_MS = 5 * 60_000;
 
 const ESTEL: Actor = {
   accountId: "account-estel",
@@ -279,10 +281,17 @@ interface StoredObservations {
 }
 
 interface StoredUpload {
+  /** The grant's end (epoch ms, the mock clock): the storage and a claim refuse it afterwards. */
+  expiresAt: number;
   fileName: string;
   mimeType: string;
   purpose: UploadPurpose;
   sizeBytes: number;
+}
+
+/** A grant still in force at the mock clock's `now` (R-10-11). */
+export function uploadGrantLive(upload: { expiresAt: number }, now = Date.now()): boolean {
+  return now < upload.expiresAt;
 }
 
 interface Replay {

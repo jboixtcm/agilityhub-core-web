@@ -332,8 +332,8 @@ describe("E6-W02 round 2 (review of 30-09): D13", () => {
       "86% | Asistencia · últimos 30 días | 1 no presentado · 1 avisado",
       "7 | Clases · últimos 30 días | mes móvil",
       "2,3 | Entrenamientos / semana | media 30 días",
-      // The club's es day-month format (CLDR «d/M», packages/i18n `dayMonthNumeric`).
-      "lun 3/8 | Última clase | A+B · Central · Estel",
+      // E6-W05 step 7: es writes day and month zero-padded, as ca and the mockups («03/08»).
+      "lun 03/08 | Última clase | A+B · Central · Estel",
     ]);
     expect(
       screen.getByRole("heading", { name: "Notas a los instructores — del alumno" }),
@@ -346,7 +346,7 @@ describe("E6-W02 round 2 (review of 30-09): D13", () => {
     expect(within(tasks).getByText("1 hecha")).toBeVisible();
     expect(
       [...tasks.querySelectorAll("li")].map((row) => clean(row.lastElementChild?.textContent)),
-    ).toEqual(["pendiente", "pendiente", "hecha el 2-8"]);
+    ).toEqual(["pendiente", "pendiente", "hecha el 02-08"]);
     expect(
       screen.getByRole("heading", {
         name: "Observaciones — privadas (instructores y administración)",
@@ -365,6 +365,33 @@ describe("E6-W02 round 2 (review of 30-09): D13", () => {
         .map((row) => row.querySelector("td:last-child")?.textContent),
     ).toEqual(["presente", "presente", "presente", "avisado", "no presentado"]);
     expect(document.body.textContent).not.toMatch(/instructor:|enums:|errors:/u);
+  });
+});
+
+describe("E6-W05 (review of E6-W02's round 2): D13's drawer", () => {
+  it("step 3 (AGENTS rule 6): Escape in the delete confirmation closes the confirmation only; the drawer stays open with its unsaved task text and deletes nothing", async () => {
+    const lines = requestLines();
+    await renderRecord();
+    fireEvent.click(screen.getByRole("button", { name: "Gestionar tasques i notes" }));
+    const drawer = await screen.findByRole("dialog", { name: "Gestionar tasques i notes" });
+    await waitFor(() => {
+      expect(drawer.querySelectorAll(".ah-tasks__list > .ah-task")).toHaveLength(3);
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Afegir" }));
+    fireEvent.change(within(drawer).getByLabelText("Text de la tasca nova"), {
+      target: { value: "Salts amb calma" },
+    });
+    const [remove] = within(drawer).getAllByRole("button", { name: "Elimina la tasca" });
+    fireEvent.click(present(remove));
+    expect(screen.getByRole("dialog", { name: "Vols eliminar aquesta tasca?" })).toBeVisible();
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Vols eliminar aquesta tasca?" })).toBeNull();
+    const still = screen.getByRole("dialog", { name: "Gestionar tasques i notes" });
+    expect(within(still).getByLabelText("Text de la tasca nova")).toHaveValue("Salts amb calma");
+    // A second Escape closes the drawer, the topmost overlay now.
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Gestionar tasques i notes" })).toBeNull();
+    expect(lines.some((line) => line.startsWith("DELETE "))).toBe(false);
   });
 });
 

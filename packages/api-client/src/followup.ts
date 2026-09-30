@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { isApiError } from "./api-error";
 import type { ApiClient } from "./client";
 import type { components } from "./generated/schema";
-import { type FileLimits, loadFileLimits, uploadSigned } from "./uploads";
+import { type FileLimits, loadFileLimits, uploadSignedGrant } from "./uploads";
 
 export type FollowupCard = components["schemas"]["InstructorCard"];
 export type FollowupTask = components["schemas"]["Task"];
@@ -61,24 +61,54 @@ export function attachmentName(fileName: string): string {
 }
 
 /**
+ * The api has not given this submission its answer yet: no answer at all (a network failure), or
+ * `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` — its first request is still running, which
+ * is not its answer (CONVENCIONS_API §7, E79).
+ */
+function unanswered(cause: unknown): boolean {
+  if (!isApiError(cause) || cause.status === 0) return true;
+  const details = cause.details as { reason?: unknown } | null | undefined;
+  return cause.code === "IDEMPOTENCY_KEY_REUSED" && details?.reason === "IN_PROGRESS";
+}
+
+/**
+ * A refused claim of an uploaded file whose grant is over (R-10-11: the api's `INVALID_STATE`).
+ * The frozen dog of a pending readmission is `INVALID_STATE` too, with its own reason: uploading
+ * again would not change it.
+ */
+function expiredClaim(cause: unknown): boolean {
+  if (!isApiError(cause, "INVALID_STATE") || cause.status === 0) return false;
+  const details = cause.details as { reason?: unknown } | null | undefined;
+  return details?.reason !== "READMISSION_PENDING";
+}
+
+/**
+ * How long before its `expiresAt` an uploaded file is uploaded again rather than claimed: the
+ * time the claim takes to reach the api, and a device clock a little behind the api's. A clock
+ * further off is caught by the api's refusal (`expiredClaim`).
+ */
+const UPLOAD_GRANT_MARGIN_MS = 30_000;
+
+/**
  * One `Idempotency-Key` per submission (CONVENCIONS_API §7, ruling E74): the key is created when a
  * submission starts and reused by its retries — the same payload sent again after a request that
- * got no answer (a network failure) — so the api creates or deletes once; it is retired as soon as
- * the api answers, success or refusal, so the next submission of the same payload is a new one
- * with a new key. (A double tap while a write runs sends nothing: `run` refuses it.)
+ * got no answer (a network failure, or `IN_PROGRESS`, E79) — so the api creates or deletes once; it
+ * is retired as soon as the api answers, success or refusal, so the next submission of the same
+ * payload is a new one with a new key. (A double tap while a write runs sends nothing: `run`
+ * refuses it.)
  */
 function useSubmissionKeys() {
-  const unanswered = useRef(new Map<string, string>());
+  const pending = useRef(new Map<string, string>());
   return useCallback(
     async <Result>(signature: string, send: (key: string) => Promise<Result>): Promise<Result> => {
-      const key = unanswered.current.get(signature) ?? crypto.randomUUID();
-      unanswered.current.set(signature, key);
+      const key = pending.current.get(signature) ?? crypto.randomUUID();
+      pending.current.set(signature, key);
       try {
         const result = await send(key);
-        unanswered.current.delete(signature);
+        pending.current.delete(signature);
         return result;
       } catch (cause) {
-        if (isApiError(cause) && cause.status !== 0) unanswered.current.delete(signature);
+        if (!unanswered(cause)) pending.current.delete(signature);
         throw cause;
       }
     },
@@ -122,7 +152,11 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
   const tasksRequest = useRef(0);
   // How many pages of `GET /tasks` the list shows: every read (after a write too) reads them all.
   const taskPages = useRef(1);
-  const uploaded = useRef(new WeakMap<File, string>());
+  // Each picked file's upload: its key, good until the grant's end (epoch ms, R-10-11).
+  const uploaded = useRef(new WeakMap<File, { expiresAt: number; fileKey: string }>());
+  // The keys a submission the api has not answered carries: its retries send them as they were,
+  // whatever their grant (E74); an answer releases them.
+  const held = useRef(new Set<string>());
   const submit = useSubmissionKeys();
 
   const readCard = useCallback(
@@ -257,33 +291,95 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
     [readCard, readTasks],
   );
 
-  /** Uploads each file once (a retry reuses its `fileKey`, so the payload and its key repeat). */
+  /**
+   * Uploads each file, or reuses its `fileKey` while the grant lasts (R-10-11) or while a
+   * submission the api has not answered holds it (E74: its retry repeats its payload and key).
+   * `reused`: the files whose key was not uploaded now.
+   */
   const upload = useCallback(
     async (files: readonly File[], purpose: FollowupAttachmentEntity) => {
       const keys: { file: File; fileKey: string }[] = [];
+      const reused: File[] = [];
       for (const file of files) {
-        let fileKey = uploaded.current.get(file);
-        if (fileKey === undefined) {
-          fileKey = await uploadSigned(client, file, purpose);
-          uploaded.current.set(file, fileKey);
+        const known = uploaded.current.get(file);
+        if (
+          known !== undefined &&
+          (held.current.has(known.fileKey) || Date.now() < known.expiresAt - UPLOAD_GRANT_MARGIN_MS)
+        ) {
+          keys.push({ file, fileKey: known.fileKey });
+          reused.push(file);
+          continue;
         }
-        keys.push({ file, fileKey });
+        const grant = await uploadSignedGrant(client, file, purpose);
+        // An `expiresAt` that cannot be read is over at once: the file is uploaded again.
+        const expiresAt = Date.parse(grant.expiresAt);
+        uploaded.current.set(file, {
+          expiresAt: Number.isFinite(expiresAt) ? expiresAt : 0,
+          fileKey: grant.fileKey,
+        });
+        keys.push({ file, fileKey: grant.fileKey });
       }
-      return keys;
+      return { keys, reused };
     },
     [client],
   );
 
+  /** Sends a submission that claims `fileKeys`: held while the api has not answered it. */
+  const claim = useCallback(
+    async <Result>(fileKeys: readonly string[], send: () => Promise<Result>): Promise<Result> => {
+      try {
+        const result = await send();
+        for (const fileKey of fileKeys) held.current.delete(fileKey);
+        return result;
+      } catch (cause) {
+        for (const fileKey of fileKeys) {
+          if (unanswered(cause)) held.current.add(fileKey);
+          else held.current.delete(fileKey);
+        }
+        throw cause;
+      }
+    },
+    [],
+  );
+
+  /**
+   * Uploads `files` and sends the submission that claims them. When the api refuses a reused key
+   * because its grant is over (`INVALID_STATE`, R-10-11) — a retry after the five minutes, or the
+   * retry of an unanswered submission the api never received — those files are uploaded again and
+   * the submission, a new one with new keys, is sent once more.
+   */
+  const withUploads = useCallback(
+    async (
+      files: readonly File[],
+      purpose: FollowupAttachmentEntity,
+      send: (keys: readonly { file: File; fileKey: string }[]) => Promise<void>,
+    ) => {
+      const first = await upload(files, purpose);
+      try {
+        await send(first.keys);
+      } catch (cause) {
+        if (first.reused.length === 0 || !expiredClaim(cause)) throw cause;
+        for (const file of first.reused) uploaded.current.delete(file);
+        await send((await upload(files, purpose)).keys);
+      }
+    },
+    [upload],
+  );
+
   const createTask = useCallback(
     (text: string, files: readonly File[]) =>
-      run("create", async () => {
-        const attachmentIds = (await upload(files, "TASK")).map((item) => item.fileKey);
-        const body = { attachmentIds, dogId, text };
-        await submit(`create:${JSON.stringify(body)}`, (key) =>
-          client.POST("/tasks", { body, params: { header: { "Idempotency-Key": key } } }),
-        );
-      }),
-    [client, dogId, run, submit, upload],
+      run("create", () =>
+        withUploads(files, "TASK", async (keys) => {
+          const attachmentIds = keys.map((item) => item.fileKey);
+          const body = { attachmentIds, dogId, text };
+          await claim(attachmentIds, () =>
+            submit(`create:${JSON.stringify(body)}`, (key) =>
+              client.POST("/tasks", { body, params: { header: { "Idempotency-Key": key } } }),
+            ),
+          );
+        }),
+      ),
+    [claim, client, dogId, run, submit, withUploads],
   );
 
   /**
@@ -331,15 +427,23 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
 
   const addAttachments = useCallback(
     (entityType: "DOG_OBSERVATIONS" | "TASK", entityId: string, files: readonly File[]) =>
-      run(`attachment:${entityId}`, async () => {
-        for (const { file, fileKey } of await upload(files, entityType)) {
-          const body = { entityId, entityType, fileKey, name: attachmentName(file.name) };
-          await submit(`attach:${JSON.stringify(body)}`, (key) =>
-            client.POST("/attachments", { body, params: { header: { "Idempotency-Key": key } } }),
-          );
-        }
-      }),
-    [client, run, submit, upload],
+      run(`attachment:${entityId}`, () =>
+        withUploads(files, entityType, async (keys) => {
+          // A file registered already answers the same attachment again (R-10-11).
+          for (const { file, fileKey } of keys) {
+            const body = { entityId, entityType, fileKey, name: attachmentName(file.name) };
+            await claim([fileKey], () =>
+              submit(`attach:${JSON.stringify(body)}`, (key) =>
+                client.POST("/attachments", {
+                  body,
+                  params: { header: { "Idempotency-Key": key } },
+                }),
+              ),
+            );
+          }
+        }),
+      ),
+    [claim, client, run, submit, withUploads],
   );
 
   const removeAttachment = useCallback(

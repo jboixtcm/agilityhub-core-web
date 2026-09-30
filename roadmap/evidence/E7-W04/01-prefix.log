@@ -1,0 +1,652 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx (11 tests | 2 failed | 9 skipped) 580ms
+   ❯ T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) (11)
+     × E7-W04 step 3 (R-11-04): PERSONAL = false on its way, set back to true and the page left, the answers in reverse order — true is saved, and the recovery entry stays until it is 501ms
+     × E7-W04 step 4 (R-11-04): after a back-forward cache restore, leaving still saves — pagehide(persisted) → pageshow(persisted) → a change → leave at once: the PUT is sent and the outbox holds it 77ms
+ ❯ src/census/SendAnnouncementDialog.test.tsx (8 tests | 2 failed | 6 skipped) 10277ms
+   ❯ T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) (8)
+     × E7-W04 step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the send's answer — a network failure, a retry answered IN_PROGRESS and another retry all carry one key, and the api makes one batch 10115ms
+     × E7-W04 step 2 (R-11-13): the count and the tick belong to the latest dry run — A answers 11, B is asked, back to A before B answers: no count, ENVIA off, nothing sent; A's new answer shows its count unticked 159ms
+ ❯ src/messaging/AnnouncementsPage.test.tsx (12 tests | 1 failed | 11 skipped) 10430ms
+   ❯ T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) (12)
+     × E7-W04 step 5 (R-11-12): two completed saves of one template whose answers arrive in reverse order — the newer version stays, no draft is lost, and the next save carries the newer version 10427ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W04 step 3 (R-11-04): PERSONAL = false on its way, set back to true and the page left, the answers in reverse order — true is saved, and the recovery entry stays until it is
+AssertionError: expected null to match object { memberId: 'member-laura', …(1) }
+
+- Expected:
+{
+  "memberId": "member-laura",
+  "patch": {
+    "emailByCategory": {
+      "PERSONAL": true,
+    },
+  },
+}
+
++ Received:
+null
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:392:82
+    390|     await new Promise((resolve) => setTimeout(resolve, 30));
+    391|     // The older one has not answered: the change is not safe yet.
+    392|     expect(JSON.parse(sessionStorage.getItem(PREFERENCES_OUTBOX_KEY) ?…
+       |                                                                                  ^
+    393|       memberId: "member-laura",
+    394|       patch: { emailByCategory: { PERSONAL: true } },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W04 step 4 (R-11-04): after a back-forward cache restore, leaving still saves — pagehide(persisted) → pageshow(persisted) → a change → leave at once: the PUT is sent and the outbox holds it
+AssertionError: expected null to match object { memberId: 'member-laura', …(1) }
+
+- Expected:
+{
+  "memberId": "member-laura",
+  "patch": {
+    "emailByCategory": {
+      "PERSONAL": false,
+    },
+  },
+}
+
++ Received:
+null
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:438:82
+    436|     fireEvent.click(screen.getByRole("switch", { name: "Correu: Comuni…
+    437|     transition("pagehide", false);
+    438|     expect(JSON.parse(sessionStorage.getItem(PREFERENCES_OUTBOX_KEY) ?…
+       |                                                                                  ^
+    439|       memberId: "member-laura",
+    440|       patch: { emailByCategory: { PERSONAL: false } },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/census/SendAnnouncementDialog.test.tsx > T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) > E7-W04 step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the send's answer — a network failure, a retry answered IN_PROGRESS and another retry all carry one key, and the api makes one batch
+TestingLibraryElementError: Unable to find an element with the text: /encara està en curs/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mEnviar comunicat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"messaging-send"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"announcement-template"[39m
+        [36m>[39m
+          [0mPlantilla[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"announcement-template"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"tpl-n-24"[39m
+          [36m>[39m
+            [0mComunicat del club (N-24)[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"tpl-custom-1"[39m
+          [36m>[39m
+            [0mFesta de final de temporada[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"tpl-custom-2"[39m
+          [36m>[39m
+            [0mHorari d'estiu[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"messaging-send__summary"[39m
+      [36m>[39m
+        [0m2 abonats seleccionats[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"messaging-send__count"[39m
+      [36m>[39m
+        [0mS'enviarà a 2 abonats[0m
+      [36m</p>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"messaging-send__confirm"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [36m<span>[39m
+          [0mConfirmo que vull enviar aquest comunicat a 2 abonats[0m
+        [36m</span>[39m
+      [36m</label>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"messaging-editor__error"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mLa clau d'idempotència ja s'ha utilitzat per a una altra petició.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"messaging-dialog__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mENVIA[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mEnviar comunicat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"messaging-send"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"announcement-template"[39m
+        [36m>[39m
+          [0mPlantilla[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"announcement-template"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"tpl-n-24"[39m
+          [36m>[39m
+            [0mComunicat del club (N-24)[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"tpl-custom-1"[39m
+          [36m>[39m
+            [0mFesta de final de temporada[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"tpl-custom-2"[39m
+          [36m>[39m
+            [0mHorari d'estiu[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"messaging-send__summary"[39m
+      [36m>[39m
+        [0m2 abonats seleccionats[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"messaging-send__count"[39m
+      [36m>[39m
+        [0mS'enviarà a 2 abonats[0m
+      [36m</p>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"messaging-send__confirm"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [36m<span>[39m
+          [0mConfirmo que vull enviar aquest comunicat a 2 abonats[0m
+        [36m</span>[39m
+      [36m</label>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"messaging-editor__error"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mLa clau d'idempotència ja s'ha utilitzat per a una altra petició.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"messaging-dialog__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mENVIA[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/SendAnnouncementDialog.test.tsx:343:32
+    341|     );
+    342|     fireEvent.click(submit);
+    343|     expect(await within(modal).findByText(/encara està en curs/u)).toH…
+       |                                ^
+    344|       "L'enviament encara està en curs. Torna-ho a provar d'aquí a un …
+    345|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/census/SendAnnouncementDialog.test.tsx > T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) > E7-W04 step 2 (R-11-13): the count and the tick belong to the latest dry run — A answers 11, B is asked, back to A before B answers: no count, ENVIA off, nothing sent; A's new answer shows its count unticked
+TestingLibraryElementError: Unable to find an element with the text: Comptant els destinataris. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_1_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_1_"[39m
+    [36m>[39m
+      [0mEnviar comunicat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"messaging-send"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"announcement-template"[39m
+        [36m>[39m
+          [0mPlantilla[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"announcement-template"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"tpl-n-24"[39m
+          [36m>[39m
+            [0mComunicat del club (N-24)[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"tpl-custom-1"[39m
+          [36m>[39m
+            [0mFesta de final de temporada[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"tpl-custom-2"[39m
+          [36m>[39m
+            [0mHorari d'estiu[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"messaging-send__summary"[39m
+      [36m>[39m
+        [0m2 abonats seleccionats[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"messaging-send__count"[39m
+      [36m>[39m
+        [0mS'enviarà a 11 abonats[0m
+      [36m</p>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"messaging-send__confirm"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [36m<span>[39m
+          [0mConfirmo que vull enviar aquest comunicat a 11 abonats[0m
+        [36m</span>[39m
+      [36m</label>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"messaging-dialog__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mENVIA[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/SendAnnouncementDialog.test.tsx:414:26
+    412|       expect(holds).toHaveLength(2);
+    413|     });
+    414|     expect(within(modal).getByText("Comptant els destinataris")).toBeV…
+       |                          ^
+    415|     expect(within(modal).queryByText("S'enviarà a 11 abonats")).toBeNu…
+    416|     expect(within(modal).queryByRole("checkbox")).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/messaging/AnnouncementsPage.test.tsx > T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) > E7-W04 step 5 (R-11-12): two completed saves of one template whose answers arrive in reverse order — the newer version stays, no draft is lost, and the next save carries the newer version
+AssertionError: expected <span …(1)></span> to be null
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"messaging-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"messaging-page__header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mComunicats i plantilles[0m
+          [36m</h1>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"messaging-page__link"[39m
+            [33mhref[39m=[32m"/notificacions"[39m
+          [36m>[39m
+            [0mAvisos enviats ›[0m
+          [36m</a>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-send"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mEnviar comunicat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mNova plantilla[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"messaging-page__grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card messaging-templates"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"messaging-templates__title"[39m
+            [36m>[39m
+              [0mPlantilles per categoria[0m
+            [36m</h2>[39m
+            [36m<ul[39m
+              [33mclass[39m=[32m"messaging-categories"[39m
+            [36m>[39m
+              [36m<li>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"messaging-categories__row"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span>[39m
+                    [36m<strong>[39m
+                      [0mOperativa[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"messaging-categories__hint"[39m
+                    [36m>[39m
+                      [0m(reserves, canvis — sistema)[0m
+                    [36m</span>[39m
+                  [36m</span>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"messaging-categories__count"[39m
+                  [36m>[39m
+                    [0m12[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"messaging-categories__row"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span>[39m
+                    [36m<strong>[39m
+                      [0mComunicats individuals[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"messaging-categories__hint"[39m
+                    [36m>[39m
+                      [0m(canvi de nivell, baixa…)[0m
+                    [36m</span>[39m
+                  [36m</span>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"messaging-categories__count"[39m
+                  [36m>[39m
+                    [0m6[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"messaging-categories__row"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span>[39m
+                    [36m<strong>[39m
+                      [0mCanvis en reserves[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"messaging-categories__hint"[39m
+                    [36m>[39m
+                      [0m(anul·lacions del club, espera)[0m
+                    [36m</span>[39m
+                  [36m</span>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"messaging-categories__count"[39m
+                  [36m>[39m
+                    [0m8[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"messaging-categories__row"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span>[39m
+                    [36m<strong>[39m
+                      [0mComunicats del club[0m
+                    [36m</strong>[39m
+   ...
+
+- Expected:
+null
+
++ Received:
+<span
+  class="messaging-list__draft"
+>
+  sense desar
+</span>
+
+ ❯ src/messaging/AnnouncementsPage.test.tsx:438:49
+    436|     fireEvent.click(save());
+    437|     await waitFor(() => {
+    438|       expect(screen.queryByText("sense desar")).toBeNull();
+       |                                                 ^
+    439|     });
+    440|     expect(screen.queryByText(/Algú ha modificat aquesta plantilla/u))…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  5 failed | 26 skipped (31)
+   Start at  23:55:40
+   Duration  11.41s (tests 89%, transform 5%, environment 3%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/SendAnnouncementDialog.test.tsx src/census/NotificationPreferencesBlock.test.tsx src/messaging/AnnouncementsPage.test.tsx -t E7-W04

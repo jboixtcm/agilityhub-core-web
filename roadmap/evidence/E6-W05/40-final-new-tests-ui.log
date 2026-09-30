@@ -1,0 +1,54 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ↓ src/components.test.tsx > base components > Button exposes a disabled loading state
+ ↓ src/components.test.tsx > base components > IconButton requires an accessible label
+ ↓ src/components.test.tsx > base components > Chip renders its semantic tone
+ ↓ src/components.test.tsx > base components > Badge renders a counter
+ ↓ src/components.test.tsx > base components > Card contains grouped content
+ ↓ src/components.test.tsx > base components > Input forwards native accessible attributes
+ ↓ src/components.test.tsx > base components > Textarea forwards native accessible attributes
+ ↓ src/components.test.tsx > base components > Select renders native options
+ ↓ src/components.test.tsx > base components > Checkbox preserves its checked state
+ ↓ src/components.test.tsx > base components > Switch announces and changes its state
+ ↓ src/components.test.tsx > base components > RadioGroup changes the selected option
+ ↓ src/components.test.tsx > base components > FormField associates its label and reports errors
+ ↓ src/components.test.tsx > base components > Modal closes with Escape
+ ↓ src/components.test.tsx > base components > Modal can require an explicit in-dialog action
+ ↓ src/components.test.tsx > base components > Modal can require an explicit action
+ ↓ src/components.test.tsx > base components > Drawer renders a desktop side panel
+ ↓ src/components.test.tsx > base components > E4-W13 a Drawer keeps the focus where the user is when its parent re-renders with a new onClose (AGENTS rule 6)
+ ✓ src/components.test.tsx > base components > E6-W05 step 3: Escape closes only the topmost overlay (AGENTS rule 6) > a confirmation opened over a drawer: the first Escape closes the confirmation, the second the drawer 59ms
+ ✓ src/components.test.tsx > base components > E6-W05 step 3: Escape closes only the topmost overlay (AGENTS rule 6) > a drawer and its confirmation open together: the inner one is on top 4ms
+ ✓ src/components.test.tsx > base components > E6-W05 step 3: Escape closes only the topmost overlay (AGENTS rule 6) > a confirmation that needs an explicit action keeps Escape from the drawer below it 4ms
+ ↓ src/components.test.tsx > base components > Toast exposes status and dismissal
+ ↓ src/components.test.tsx > base components > Toast queue is available through useToast
+ ↓ src/components.test.tsx > base components > Tabs switches the active panel
+ ↓ src/components.test.tsx > base components > AppBar renders mobile start and end actions
+ ↓ src/components.test.tsx > base components > TabBar renders six mobile destinations
+ ↓ src/components.test.tsx > base components > Sidebar renders grouped entries and counters
+ ↓ src/components.test.tsx > base components > EmptyState offers a recovery action
+ ↓ src/components.test.tsx > base components > Skeleton announces loading without motion-dependent content
+ ↓ src/components.test.tsx > base components > Avatar derives person initials
+ ↓ src/components.test.tsx > base components > LevelDot exposes its level label
+ ↓ src/components.test.tsx > base components > DataTable renders headers and rows
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 2 · attachmentRejection with the api's numbers (R-10-11) > refuses a file over files.maxSizeMb (MiB), a type outside files.allowedTypes and one past files.maxAttachmentsPerEntity
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · attachmentRejection with the api's numbers (R-10-11) > E6-W05 step 2: a selection reports all its refusals at once, before its accepted files; a selection with none reports an empty list (it replaces the last one's messages) 15ms
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 2 · attachmentRejection with the api's numbers (R-10-11) > the picker passes the accepted files and reports each refused one with its reason
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > paints each task with its state chip, text, «{dd-mm} · {autor}», the clip chip and, done, struck through with «feta per …»
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > «＋ Afegir» opens the inline form beside the title; it creates with the text and the picked files, and closes only when the write succeeded
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > the pencil edits the text in place; the ✕ asks «Vols eliminar aquesta tasca?» before deleting; ✓ completes and ↺ reopens
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > an edit is sent with the version it was opened at, even after a read brings a newer one (optimistic lock)
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > while a write runs every action waits (pending state), and a read-only list has no «＋ Afegir», pencil, ✕ nor reopening
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > a refused file reaches the caller as a message; the error is shown inside the panel
+ ✓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > E6-W05 step 4: a refused deletion says why inside the confirmation, which stays open; an earlier failure is not shown there 60ms
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > round 2 #2: «Mostra'n més» below the list reads the next page, waits while it reads and says why a page failed
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 2 · TasksPanel (R-10-10, mockup 26) > round 2 #4: a clip whose opening fails says why next to it; a later click clears it, and a late failure of an earlier click is dropped
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 3 · FollowupEditor (the body of 26 and D13's drawer) > lays out the observations field, the tasks, the history link, the member's note read-only and [DESA], disabled until the text changes
+ ↓ src/tasks-panel.test.tsx > E6-W02 step 3 · FollowupEditor (the body of 26 and D13's drawer) > a stale save shows the notice and the typed text to recover; saving keeps the field read-only
+
+ Test Files  2 passed (2)
+      Tests  5 passed | 40 skipped (45)
+   Start at  23:48:42
+   Duration  577ms (environment 55%, tests 15%, transform 15%, setup 13%, import 2%)
+

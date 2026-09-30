@@ -1,0 +1,1100 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/instructor/student-record.test.tsx (11 tests | 2 failed | 9 skipped) 266ms
+   ❯ E6-W02 round 2 (review of 30-09): D13 (4)
+     × #6 T-10-32 (D13): es renders every literal of the record in Spanish, with no missing key 123ms
+   ❯ E6-W05 (review of E6-W02's round 2): D13's drawer (1)
+     × step 3 (AGENTS rule 6): Escape in the delete confirmation closes the confirmation only; the drawer stays open with its unsaved task text and deletes nothing 141ms
+ ❯ src/followup/followup.test.tsx (20 tests | 2 failed | 18 skipped) 10340ms
+   ❯ E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read (2)
+     × step 5 (R-10-13): offline, a failed read whose counter refresh fails too puts the counter back at its value, a failed retry does not lower it, and the api's count wins when it answers 226ms
+     × step 6 (R-10-13): a failed read, back to D14, a successful retry — the row loses its highlight and the counter drops 10113ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/followup/followup.test.tsx > E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read > step 5 (R-10-13): offline, a failed read whose counter refresh fails too puts the counter back at its value, a failed retry does not lower it, and the api's count wins when it answers
+TestingLibraryElementError: Unable to find an element with the text: 5 pendents de llegir. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"followup"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"followup__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSeguiment alumnes[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0m4 pendents de llegir[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Què es mostra"[39m
+            [33mclass[39m=[32m"followup__chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTot[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNotes d'alumnes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mMarcar-ho tot com a llegit[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"followup-read-failure"[39m
+          [36m>[39m
+            [0mNo s'ha pogut marcar com a llegit el seguiment de Blat.[0m
+            [0m [0m
+            [0mNo hi ha connexió amb el servidor.[0m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mTorna-ho a provar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Tanca"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca al seguiment[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca al seguiment"[39m
+              [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"kind"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"unread"[39m
+                  [36m>[39m
+                    [0mPendent de llegir[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [3...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/followup/followup.test.tsx:503:19
+    501|       await new Promise((resolve) => setTimeout(resolve, 20));
+    502|     });
+    503|     expect(screen.getByText("5 pendents de llegir")).toBeVisible();
+       |                   ^
+    504|     await waitFor(async () => {
+    505|       expect((await tableRows())[1]?.startsWith("* Pau Riera")).toBe(t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/followup/followup.test.tsx > E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read > step 6 (R-10-13): a failed read, back to D14, a successful retry — the row loses its highlight and the counter drops
+AssertionError: expected false to be true // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"followup"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"followup__header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"followup__title"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mSeguiment alumnes[0m
+            [36m</h1>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0m4 pendents de llegir[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"followup__actions"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Què es mostra"[39m
+              [33mclass[39m=[32m"followup__chips"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mTot[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mTasques[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mNotes d'alumnes[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mMarcar-ho tot com a llegit[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca al seguiment[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca al seguiment"[39m
+                [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"kind"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"unread"[39m
+                    [36m>[39m
+                      [0mPendent de llegir[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"memberId"[39m
+                    [36m>[39m
+                      [0mAbonat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"dogId"[39m
+                    [36m>[39m
+                      [0mGos[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+          ...
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/followup/followup.test.tsx:565:63
+    563|     });
+    564|     await waitFor(async () => {
+    565|       expect((await tableRows())[1]?.startsWith("Pau Riera")).toBe(tru…
+       |                                                               ^
+    566|     });
+    567|     expect(await screen.findByText("4 pendents de llegir")).toBeVisibl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #6 T-10-32 (D13): es renders every literal of the record in Spanish, with no missing key
+AssertionError: expected [ …(4) ] to deeply equal [ …(4) ]
+
+- Expected
++ Received
+
+  [
+    "86% | Asistencia · últimos 30 días | 1 no presentado · 1 avisado",
+    "7 | Clases · últimos 30 días | mes móvil",
+    "2,3 | Entrenamientos / semana | media 30 días",
+-   "lun 03/08 | Última clase | A+B · Central · Estel",
++   "lun 3/8 | Última clase | A+B · Central · Estel",
+  ]
+
+ ❯ src/instructor/student-record.test.tsx:331:7
+    329|         [...card.children].map((part) => clean(part.textContent)).join…
+    330|       ),
+    331|     ).toEqual([
+       |       ^
+    332|       "86% | Asistencia · últimos 30 días | 1 no presentado · 1 avisad…
+    333|       "7 | Clases · últimos 30 días | mes móvil",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/instructor/student-record.test.tsx > E6-W05 (review of E6-W02's round 2): D13's drawer > step 3 (AGENTS rule 6): Escape in the delete confirmation closes the confirmation only; the drawer stays open with its unsaved task text and deletes nothing
+TestingLibraryElementError: Unable to find an accessible element with the role "dialog" and name "Gestionar tasques i notes"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"student-record__header"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Laura + Duna":
+  [36m<h1 />[39m
+
+  Name "Notes als instructors — de l'alumne":
+  [36m<h2 />[39m
+
+  Name "Tasques — les veu i marca l'alumne":
+  [36m<h2 />[39m
+
+  Name "Observacions — privades (instructors i administració)":
+  [36m<h2 />[39m
+
+  Name "5 darreres classes":
+  [36m<h2 />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Gestionar tasques i notes":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--secondary student-record__manage"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "foto_balancí.jpg":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"student-record__tasks"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li[39m
+    [33mdata-done[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  table:
+
+  Name "5 darreres classes":
+  [36m<table[39m
+    [33mclass[39m=[32m"ah-data-table"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  caption:
+
+  Name "5 darreres classes":
+  [36m<caption[39m
+    [33mclass[39m=[32m"ah-sr-only"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Data Nivells Pista Instructor Assistència":
+  [36m<tr />[39m
+
+  Name "dl 03/08 A+B Central Estel present":
+  [36m<tr />[39m
+
+  Name "dj 30/07 B+C Central Marc present":
+  [36m<tr />[39m
+
+  Name "dl 27/07 A+B Central Estel present":
+  [36m<tr />[39m
+
+  Name "dj 23/07 B+C Central Marc avisat":
+  [36m<tr />[39m
+
+  Name "dl 20/07 B+C Central Estel no presentat":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "Data":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Nivells":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Pista":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Instructor":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  Name "Assistència":
+  [36m<th[39m
+    [33mscope[39m=[32m"col"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "dl 03/08":
+  [36m<td />[39m
+
+  Name "A+B":
+  [36m<td />[39m
+
+  Name "Central":
+  [36m<td />[39m
+
+  Name "Estel":
+  [36m<td />[39m
+
+  Name "present":
+  [36m<td />[39m
+
+  Name "dj 30/07":
+  [36m<td />[39m
+
+  Name "B+C":
+  [36m<td />[39m
+
+  Name "Central":
+  [36m<td />[39m
+
+  Name "Marc":
+  [36m<td />[39m
+
+  Name "present":
+  [36m<td />[39m
+
+  Name "dl 27/07":
+  [36m<td />[39m
+
+  Name "A+B":
+  [36m<td />[39m
+
+  Name "Central":
+  [36m<td />[39m
+
+  Name "Estel":
+  [36m<td />[39m
+
+  Name "present":
+  [36m<td />[39m
+
+  Name "dj 23/07":
+  [36m<td />[39m
+
+  Name "B+C":
+  [36m<td />[39m
+
+  Name "Central":
+  [36m<td />[39m
+
+  Name "Marc":
+  [36m<td />[39m
+
+  Name "avisat":
+  [36m<td />[39m
+
+  Name "dl 20/07":
+  [36m<td />[39m
+
+  Name "B+C":
+  [36m<td />[39m
+
+  Name "Central":
+  [36m<td />[39m
+
+  Name "Estel":
+  [36m<td />[39m
+
+  Name "no presentat":
+  [36m<td />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"student-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"student-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"student-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura + Duna[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral student-record__level"[39m
+            [33mtitle[39m=[32m"Nivell C"[39m
+          [36m>[39m
+            [0mNivell C · fa 8 mesos[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral"[39m
+          [36m>[39m
+            [0mAbonada[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-chip ah-tone--neutral student-record__dog"[39m
+          [36m>[39m
+            [0mBorder collie · 4 anys[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary student-record__manage"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0m [0m
+            [0mGestionar tasques i notes[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"student-record__metrics"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card student-record__metric"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0m86%[0m
+          [36m</strong>[39m
+          [36m<span>[39m
+            [0mAssistència · darrers 30 dies[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0m1 no presentat · 1 avisat[0m
+          [36m</small>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card student-record__metric"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0m7[0m
+          [36m</strong>[39m
+          [36m<span>[39m
+            [0mClasses · darrers 30 dies[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mmes mòbil[0m
+          [36m</small>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card student-record__metric"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0m2,3[0m
+          [36m</strong>[39m
+          [36m<span>[39m
+            [0mEntrenaments / setmana[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mmitjana 30 dies[0m
+          [36m</small>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card student-record__metric"[39m
+        [36m>[39m
+          [36m<strong>[39m
+            [0mdl 03/08[0m
+          [36m</strong>[39m
+          [36m<span>[39m
+            [0mDarrera classe[0m
+          [36m</span>[39m
+          [36m<small>[39m
+            [0mA+B · Central · Estel[0m
+          [36m</small>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"student-record__blocks"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card student-record__block"[39m
+        [36m>[39m
+          [36m<h2>[39m
+            [0mNotes als instructors — de l'alumne[0m
+          [36m</h2>[39m
+          [36m<p>[39m
+            [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"student-record__clips"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-attachment-chips"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-chip"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span>[39m
+                    [0mfoto_balancí.jpg[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card student-record__block"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"student-record__block-head"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mTasques — les veu i marca l'alumne[0m
+            [36m</h2>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0m2 pendents[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0m1 feta[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"student-record__tasks"[39m
+          [36m>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"student-record__task-meta"[39m
+              [36m>[39m
+                [0m31-07 · Estel[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"student-record__task-text"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mAquesta setmana practiqueu el balancí amb calma: sessions curtes i moltes recompenses[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"student-record__task-meta"[39m
+              [36m>[39m
+                [0m30-07 · Marc[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"student-record__task-text"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mRepasseu la taula de contactes al jardí, 5 minuts al dia[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li[39m
+              [33mdata-done[39m=[32m""[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"student-record__task-meta"[39m
+              [36m>[39m
+                [0m28-07 · Estel[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"student-record__task-text"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mTreballar l'«espera» a la línia de sortida[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mfeta el 02-08[0m
+              [36m</span>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card student-record__block student-record__block--private"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-lock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m [0m
+          [0mObservacions — privades (instructors i administració)[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [0mVa molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card student-record__block"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0m5 darreres classes[0m
+        [36m</h2>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-data-table__scroll"[39m
+        [36m>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"ah-data-table"[39m
+          [36m>[39m
+            [36m<caption[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0m5 darreres classes[0m
+            [36m</caption>[39m
+            [36m<thead>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mData[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mNivells[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mPista[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mInstructor[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mAssistència[0m
+                [36m</th>[39m
+              [36m</tr>[39m
+            [36m</thead>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<td>[39m
+                  [0mdl 03/08[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mA+B[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mCentral[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mEstel[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                  [36m>[39m
+                    [0mpresent[0m
+                  [36m</span>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m<tr>[39m
+                [36m<td>[39m
+                  [0mdj 30/07[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mB+C[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mCentral[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mMarc[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                  [36m>[39m
+                    [0mpresent[0m
+                  [36m</span>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m<tr>[39m
+                [36m<td>[39m
+                  [0mdl 27/07[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mA+B[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mCentral[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mEstel[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                  [36m>[39m
+                    [0mpresent[0m
+                  [36m</span>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m<tr>[39m
+                [36m<td>[39m
+                  [0mdj 23/07[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mB+C[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mCentral[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mMarc[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+                  [36m>[39m
+                    [0mavisat[0m
+                  [36m</span>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m<tr>[39m
+                [36m<td>[39m
+                  [0mdl 20/07[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mB+C[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mCentral[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0mEstel[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+                  [36m>[39m
+                    [0mno presentat[0m
+                  [36m</span>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+          [36m</table>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/instructor/student-record.test.tsx:389:26
+    387|     fireEvent.keyDown(document, { key: "Escape" });
+    388|     expect(screen.queryByRole("dialog", { name: "Vols eliminar aquesta…
+    389|     const still = screen.getByRole("dialog", { name: "Gestionar tasque…
+       |                          ^
+    390|     expect(within(still).getByLabelText("Text de la tasca nova")).toHa…
+    391|     // A second Escape closes the drawer, the topmost overlay now.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 27 skipped (31)
+   Start at  23:35:49
+   Duration  11.92s (tests 78%, transform 11%, environment 5%, import 4%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/student-record.test.tsx src/followup/followup.test.tsx -t E6-W05|#6 T-10-32

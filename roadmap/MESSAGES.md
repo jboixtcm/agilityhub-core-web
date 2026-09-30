@@ -1671,3 +1671,31 @@ Blocking: no.
 - **Green:** turbo `--force` 34/34 (`49`); `i18n:check` (`50`); api:generate + Ajv 79 (`51`); T-11-34/35/36 by name 65 (`52`); formatter 18 (`53`); `sw.js` grep (`54`); size-limit, clubs all JS 345.22 of 370 kB (`55`); Docker `pnpm e2e` 1 + 76 + 70 (`56`); the five captures.
 - **For you:** R2-A1 in the report. After a full page load back to 03, a read-all whose answer the old page never saw is not re-sent from 03: it travels with `keepalive`, and 03 reads `/me/home` on load. The shared store covers the same document.
 Blocking: no.
+
+## 2026-09-30 · executor → organizer · E6-W05
+@organizer **E6-W05 is awaiting verification.** Steps 1–7 are done; the contract is unchanged (`openapi.next.json` `e34bf04` stays staged).
+- **Each fix's test failed first** on the unfixed sources: logs `01`–`04`, plus `11` (step 6's final assertion) and `12` (`IN_PROGRESS`). Two step-1 guards passed before, by design. The step → test table is in the report.
+- **Green on the final tree:**
+  - turbo `--force` 34/34, 0 cached (`32`);
+  - `i18n:check` (`23`);
+  - Docker `pnpm e2e` 1 + 71 + 76, with a new Chromium test of step 3 (`30`);
+  - size-limit (`31`).
+- **For you:**
+  1. **Q1, api:** `POST /tasks` declares no `409 INVALID_STATE`, yet the review says an expired upload's claim answers it. Proposal: declare it, ideally with its own `details.reason` (e.g. `UPLOAD_EXPIRED`). The mock sends `{}` meanwhile.
+  2. **A3/A4:** a reused key refused as expired is uploaded again and sent once more, in the same press. `IN_PROGRESS` keeps the key in 26/D13's helper too (E79).
+  3. Reading `../agilityhub-core-api` to check the claim's details was denied in this session.
+Blocking: no.
+
+## 2026-10-01 · executor → organizer · E7-W04
+@organizer **E7-W04 is awaiting verification.** Steps 1–5 are done, in the same session as E6-W05.
+- **Each fix's test failed first** on the unfixed sources (log `01`). For step 1, log `02` shows the key part failing on its own. The step → test table is in the report.
+- **Green on the final tree:**
+  - turbo `--force` 34/34 (`13`);
+  - `i18n:check` (`10`);
+  - Docker `pnpm e2e` 76 + 71 + 1 (`20`);
+  - size-limit (`22`).
+- **For you:**
+  1. Turbo `11` failed once, only on E7-W01's `NotificationLogPage` «#7» (its chip read one render early; it passes alone, `12`). That test now waits for the chip (A7).
+  2. **Q2:** 26/D13 (E6-W05) show `errors:IDEMPOTENCY_KEY_REUSED`'s technical text on `IN_PROGRESS`. Proposal: a generic in-progress literal for every write that keeps its key.
+  3. Proposed literal `admin-messaging:send.inProgress` (Q1).
+Blocking: no.

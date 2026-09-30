@@ -290,7 +290,17 @@ function Shell({ api }: { api: ApiClient }) {
       {page === "/seguiment" ? (
         <FollowUpPage client={api} onNavigate={setPage} />
       ) : (
-        <p>{`D13 ${page}`}</p>
+        <>
+          <p>{`D13 ${page}`}</p>
+          <button
+            onClick={() => {
+              setPage("/seguiment");
+            }}
+            type="button"
+          >
+            D14
+          </button>
+        </>
       )}
     </UnreadFollowUpContext.Provider>
   );
@@ -452,6 +462,109 @@ describe("E6-W03 round 2: D14's reads (R-10-13) and its filter values", () => {
         expect.stringContaining("filter=unread:eq:false"),
       ]),
     );
+  });
+});
+
+describe("E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read", () => {
+  const blat = () => screen.getByRole("link", { name: "Aquesta setmana no podrem venir dijous" });
+  const failureText =
+    "No s'ha pogut marcar com a llegit el seguiment de Blat. No hi ha connexió amb el servidor.";
+  const retryIn = (alert: HTMLElement) =>
+    within(alert.closest<HTMLElement>(".ah-toast") ?? document.body).getByRole("button", {
+      name: "Torna-ho a provar",
+    });
+
+  it("step 5 (R-10-13): offline, a failed read whose counter refresh fails too puts the counter back at its value, a failed retry does not lower it, and the api's count wins when it answers", async () => {
+    const requests = recordRequests();
+    await renderFollowUp();
+    await tableRows();
+    expect(await screen.findByText("5 pendents de llegir")).toBeVisible();
+    let offline = true;
+    server.use(
+      http.post("*/api/v1/followup/:id/read", () => (offline ? HttpResponse.error() : undefined)),
+      http.get("*/api/v1/followup/unread-count", () =>
+        offline ? HttpResponse.error() : undefined,
+      ),
+    );
+    const counts = () =>
+      requests.filter((request) => request.line === "GET /followup/unread-count").length;
+    const before = counts();
+    fireEvent.click(blat());
+    expect(await screen.findByText("4 pendents de llegir")).toBeVisible();
+    const alert = await screen.findByText(failureText);
+    // The counter's refresh was asked for, and it failed too.
+    await waitFor(() => {
+      expect(counts()).toBe(before + 1);
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+    expect(screen.getByText("5 pendents de llegir")).toBeVisible();
+    await waitFor(async () => {
+      expect((await tableRows())[1]?.startsWith("* Pau Riera")).toBe(true);
+    });
+    fireEvent.click(retryIn(alert));
+    await screen.findByText(failureText);
+    await waitFor(() => {
+      expect(counts()).toBe(before + 2);
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+    expect(screen.getByText("5 pendents de llegir")).toBeVisible();
+    expect(
+      requests.filter((request) => request.line === "POST /followup/f-note-blat/read"),
+    ).toHaveLength(2);
+    // Back online, the api's own count is what shows (here someone else read nothing meanwhile).
+    offline = false;
+    act(() => {
+      window.dispatchEvent(new Event("focus"));
+    });
+    await waitFor(() => {
+      expect(counts()).toBe(before + 3);
+    });
+    expect(await screen.findByText("5 pendents de llegir")).toBeVisible();
+  });
+
+  it("step 6 (R-10-13): a failed read, back to D14, a successful retry — the row loses its highlight and the counter drops", async () => {
+    let offline = true;
+    server.use(
+      http.post("*/api/v1/followup/:id/read", () => (offline ? HttpResponse.error() : undefined)),
+    );
+    mockScenario("admin");
+    window.history.replaceState(null, "", "/seguiment");
+    const i18n = await createI18n({
+      branding: canic,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-census", "census", "enums", "errors", "common"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={canic}>
+          <Shell api={client()} />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    await tableRows();
+    fireEvent.click(blat());
+    expect(screen.getByText("D13 /alumnes/dog-blat")).toBeVisible();
+    await screen.findByText(failureText);
+    fireEvent.click(screen.getByRole("button", { name: "D14" }));
+    await waitFor(async () => {
+      expect((await tableRows())[1]?.startsWith("* Pau Riera")).toBe(true);
+    });
+    expect(await screen.findByText("5 pendents de llegir")).toBeVisible();
+    offline = false;
+    fireEvent.click(retryIn(screen.getByText(failureText)));
+    await waitFor(() => {
+      expect(screen.queryByText(failureText)).toBeNull();
+    });
+    // Read now, the row is no longer highlighted (and the api lists it after the unread ones).
+    await waitFor(async () => {
+      expect((await tableRows()).find((row) => row.includes("Pau Riera"))).toMatch(/^Pau Riera/u);
+    });
+    expect(await screen.findByText("4 pendents de llegir")).toBeVisible();
   });
 });
 

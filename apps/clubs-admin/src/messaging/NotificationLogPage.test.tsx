@@ -164,9 +164,15 @@ describe("E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10)", () => {
     await waitFor(() => {
       expect(rows().length).toBeGreaterThan(0);
     });
-    const chips = [...document.querySelectorAll(".ah-universal-list__active-filter > span")].map(
-      (chip) => chip.textContent,
-    );
+    const activeChips = () =>
+      [...document.querySelectorAll(".ah-universal-list__active-filter > span")].map(
+        (chip) => chip.textContent,
+      );
+    // On a loaded runner the chips' labels may land a render after the rows (E7-W04, turbo `11`).
+    await waitFor(() => {
+      expect(activeChips().some((text) => text.startsWith("Abonat = «"))).toBe(true);
+    });
+    const chips = activeChips();
     const member = chips.find((text) => text.startsWith("Abonat = «"));
     expect(member).toMatch(/^Abonat = «Laura Serra Vidal, [^»]+»$/u);
     expect(member).not.toContain("member-");

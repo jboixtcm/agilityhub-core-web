@@ -104,6 +104,11 @@
   border-radius: var(--ah-radius-md);
 }
 
+/* One refused file (or the write's failure) per line (E6-W05). */
+.ah-followup__line {
+  display: block;
+}
+
 .ah-followup__stale {
   display: grid;
   gap: var(--ah-space-2);

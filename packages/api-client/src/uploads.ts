@@ -37,6 +37,21 @@ export async function uploadSigned(
   file: File,
   purpose: UploadPurpose,
 ): Promise<string> {
+  return (await uploadSignedGrant(client, file, purpose)).fileKey;
+}
+
+/** An uploaded file's `fileKey` and the end of its grant (`expiresAt`, five minutes, R-10-11). */
+export interface UploadGrant {
+  expiresAt: string;
+  fileKey: string;
+}
+
+/** `uploadSigned`, with the grant's end: a caller that keeps the key knows until when it is good. */
+export async function uploadSignedGrant(
+  client: ApiClient,
+  file: File,
+  purpose: UploadPurpose,
+): Promise<UploadGrant> {
   const signed = await client.POST("/attachments/upload-url", {
     body: {
       fileName: file.name,
@@ -48,7 +63,7 @@ export async function uploadSigned(
   if (signed.data === undefined)
     throw new TypeError("The upload URL response did not contain data");
   await putSignedFile(signed.data, file);
-  return signed.data.fileKey;
+  return { expiresAt: signed.data.expiresAt, fileKey: signed.data.fileKey };
 }
 
 /**
