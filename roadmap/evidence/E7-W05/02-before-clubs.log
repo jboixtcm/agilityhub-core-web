@@ -1,0 +1,317 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > renders mockup 11's six cards as delivered: icon, tone, texts, relative time, «i per SMS», the buttons
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > never prints «i per SMS» without the SMS module, even for an SMS the api lists
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [CANVIA DE CLASSE] opens 04 with the notification's dog
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [AGAFA LA PLAÇA] reuses E5-W01's claim: the entry's seat hold, then the confirmation (06/29)
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [AGAFA LA PLAÇA] reads disabled, with its hint, once the seat is gone (enabled: false)
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W02 round 2 #4 (AGENTS rule 3): with WAITLIST off, a historical N-15 the api still lists is an informative card with no [AGAFA LA PLAÇA]
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a hold refused with 409 SEAT_TAKEN shows E5-W01's message in the card
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > an informative card opens its route on tap, without a button; one without an action is inert
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > entering calls read-all once, and 03's bell goes quiet
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > back on 03 from the browser's page cache, the bell reads GET /me/home again
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W02 round 2 #3: a failed read-all is sent again (bounded retry), and its answer silences the bell
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W02 round 2 #3: inside one document (the module store survives, as in an in-app return), a read-all answered after 03 mounted updates the bell (03 reads GET /me/home again)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the fixed green tick under «App», the four e-mail switches with the product defaults and «+SMS»
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > hides «+SMS» in a club without SMS (R-11-17)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the reminder select lists «Mai» and the club's options
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > each change shows at once and is saved as a partial PUT after the 300 ms pause
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > rolls a refused change back with its message (422 INVALID_REMINDER_OPTION)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > keeps a newer choice when an older save answers late (the answer rebases the member's edits)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W02 round 2 #1: leaving 12 while a PUT is on its way sends the waiting change at once, and the latest choice (120) is what the api keeps even when the older PUT answers last
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W02 round 2 #1: a change kept across a reload is sent again on the next visit of the same account and club only
+ ↓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > mockup 26: the title, the private observations, the three tasks (the done one struck through with «feta per la Laura el 02-08»), the history link, the member's note read-only and [DESA] waiting for a change
+ ↓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > T-10-25 «＋ Afegir» uploads the video through the signed url (TASK, the signed headers, no bearer) and creates one task with one Idempotency-Key, even on a double tap; 22's counters follow
+ ↓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > the pencil edits the text with the version read; the ✕ asks «Vols eliminar aquesta tasca?» and deletes with its key; ✓ completes (feta per l'Estel) and ↺ reopens
+ ↓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > an edit opened before another instructor's change is sent with its own version: STALE_VERSION (409), and the typed text stays
+ ↓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > errors by code inside the editor: TASK_ALREADY_DONE (422) after a completion the api refuses, then the list read again
+ ↓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > [DESA] saves the observations with the version read and one key; a stale version (tasksStale) keeps the typed text to recover and saves it again on the new version
+ ↓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > a file the api refuses (FILE_TOO_LARGE) is said inside the editor; with the club's limits readable (ADMIN) it is refused before any signed url
+ ↓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > an observation file goes through the DOG_OBSERVATIONS upload and POST /attachments; a clip opens a fresh signed url
+ ↓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > «Veure l'historial complet ›» reads every task, done ones included, in a read-only drawer
+ ↓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > T-10-32 (26): es and en with no missing key
+ ↓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #1 (CONVENCIONS_API §7, T-10-25): a network failure keeps the submission's key, so its retry creates one task
+ ↓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #1 (E74): two deliberate submissions with the same text are two tasks, each with its own key
+ ↓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #2 (R-10-10): with 52 tasks «Mostra'n més» reads the next page into the same list, whose tasks are managed like the rest — the oldest done one reopened, the oldest pending one edited, completed and deleted
+ ↓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #4 (AGENTS rule 4): a clip that cannot be opened says why next to it — by its code, or «No s'ha pogut obrir el fitxer.» without an answer — on the list, the member's note and the history drawer
+ ↓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #7 (ruling E74): an instructor cannot read the file limits, so a 30 MB file is checked by the signed-url request: FILE_TOO_LARGE by its code, and nothing is PUT nor registered — an observation file and a new task's file
+ ↓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 1 (R-10-11): after a refused creation, a retry past the upload's five minutes uploads the file again and creates the task
+ ↓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 1: within the five minutes the retry reuses the uploaded file (one upload)
+ ↓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 1 (E74): an unanswered creation is retried past the five minutes with its own key and files; the api had created it, so it replays one task
+ ↓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 1 (E74): an unanswered creation the api never received is retried as it was; the expired file is refused (409 INVALID_STATE), uploaded again and the task created once
+ ↓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the submission's answer — its retry keeps the key and the files, and one task is created
+ × src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > E7-W05 step 4 (CONVENCIONS_API §7, E80): a task whose first request is still running says so with the shared in-progress text, never the key's technical one, and its retry creates one task 172ms
+   → [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.[39m
+Received:
+[31m  La clau d'idempotència ja s'ha utilitzat per a una altra petició.[39m
+ ↓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 2: a mixed selection keeps the refused file's message while the accepted one uploads — on the observations and on an open task
+ ↓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 4: a refused deletion says why inside its confirmation, which stays open
+ ↓ src/instructor/tasks.test.tsx > E6-W04 step 0d (review of E6-W05): screen 26 > E6-W04 step 0d: a creation whose answer was lost but which the api created, its text edited, «Afegeix» — a new task with a new upload and a new key, never the first submission's file
+ ↓ src/instructor/tasks.test.tsx > E6-W04 step 0d (review of E6-W05): screen 26 > E6-W04 step 0d: a reused file the api refuses as bound to another task (422 ATTACHMENT_ENTITY_MISMATCH) is uploaded again, once, and the submission sent again with a new key
+ ↓ src/instructor/tasks.test.tsx > E6-W04 step 0d (review of E6-W05): screen 26 > E6-W04 step 0d: an instructor's mixed selection (a JPEG and an executable) attaches the JPEG and says «prog.exe: …» — on the observations and on an open task
+ ↓ src/instructor/tasks.test.tsx > E6-W04 step 0d (review of E6-W05): screen 26 > E6-W04 step 0d (its review): when a later file of the selection gets no answer, the files attached before it show next to the error, so they are not picked again
+ ↓ src/instructor/tasks.test.tsx > 26's route (S10 §2): INSTRUCTOR and ADMIN, never an impersonation > an impersonated session reaching 26 reads «No es permet la suplantació.» and asks nothing
+ × src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W05 step 3 (S11 §13-8): a read-all left without an answer stays pending in the tab's sessionStorage for this account and club, and a fresh 03 sends it again before it reads GET /me/home — the bell goes quiet 170ms
+   → expected [] to deeply equal [ Array(1) ]
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W05 step 3: another account's or club's pending read-all is not sent from 03 192ms
+ × src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W05 step 6 (E7-W02 review #3): a quiet refetch of 03 that fails keeps the last rows on screen 149ms
+   → expected <p></p> to be null
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a card tapped before read-all has landed is marked read on its own
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > the empty state: «Encara no tens cap avís»
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > loads the second page when the list end shows (no page buttons)
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a failed read shows the error by its code, and [Torna-ho a provar] reads again
+ × src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it 683ms
+   → expected 60 to be 120 // Object.is equality
+ × src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx 10450ms
+   → expected [ Array(2) ] to have a length of 3 but got 2
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mstyle[39m=[32m""[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body />[39m
+[36m</html>[39m
+ × src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved 639ms
+   → expected [ Array(2) ] to deeply equal [ Array(3) ]
+ × src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 2 (R-11-04): back from the back-forward cache, 12 saves again — pagehide with a change pending, pageshow(persisted), an edit while that PUT is out, leave: the edit is saved 554ms
+   → expected { …(4) } to match object { Object (patch) }
+(3 matching properties omitted from actual)
+ × src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 6 (E7-W02 review #4): an older visit's success never erases the entry a newer visit left in the outbox 693ms
+   → expected null to match object { Object (patch) }
+ × src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 6 (E7-W02 review #5): an impersonated session never shows the browser-permission note (it never asks for push) 410ms
+   → expected <p …(2)></p> to be null
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > asks for the browser's permission only on interaction, never on mount, and registers the subscription
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > a dismissed prompt (no answer) also leaves the hint under the switch
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W02 round 2 #5: a permission already refused shows the explanation on arrival (read at mount, never asked), and a change still saves
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > an iPhone outside the installed app gets the install hint and no permission prompt
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > no push toggle without PushManager in the browser, nor in a club without PUSH
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > «Aprèn amb AgilityHub ›» after «Els meus gossos» only with LEARN_LINK
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the language select writes Account.locale, switches the UI at once and says only new notices change
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > staff without the MEMBER role have no «Avisos» block and no request (S11 §6)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > logout deletes this device's subscription first, and never waits on it
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W05 step 3 (S11 §13-8): a read-all left without an answer stays pending in the tab's sessionStorage for this account and club, and a fresh 03 sends it again before it reads GET /me/home — the bell goes quiet
+AssertionError: expected [] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+- [
+-   "undefined:10000000-0000-4000-8000-000000000002:50000000-0000-4000-8000-000000000001",
+- ]
++ []
+
+ ❯ src/NotificationsPage.test.tsx:374:7
+    372|     expect(
+    373|       Object.keys(sessionStorage).filter((key) => key.startsWith(READ_…
+    374|     ).toEqual([`${READ_ALL_PENDING_KEY}:10000000-0000-4000-8000-000000…
+       |       ^
+    375|     cleanup();
+    376|     server.resetHandlers();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W05 step 6 (E7-W02 review #3): a quiet refetch of 03 that fails keeps the last rows on screen
+AssertionError: expected <p></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p>
+  No s'han pogut carregar les teves reserves.
+</p>
+
+ ❯ src/NotificationsPage.test.tsx:428:79
+    426|     });
+    427|     await new Promise((resolve) => setTimeout(resolve, 50));
+    428|     expect(screen.queryByText("No s'han pogut carregar les teves reser…
+       |                                                                               ^
+    429|     expect(rows()).toBe(shown);
+    430|     expect(screen.getByRole("link", { name: "Avisos: 2 sense llegir" }…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > E7-W05 step 4 (CONVENCIONS_API §7, E80): a task whose first request is still running says so with the shared in-progress text, never the key's technical one, and its retry creates one task
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.[39m
+Received:
+[31m  La clau d'idempotència ja s'ha utilitzat per a una altra petició.[39m
+ ❯ src/instructor/tasks.test.tsx:866:60
+    864|     await renderTasks();
+    865|     const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "v…
+    866|     expect(await within(tasksBlock()).findByRole("alert")).toHaveTextC…
+       |                                                            ^
+    867|       "L'operació encara està en curs. Torna-ho a provar d'aquí a un m…
+    868|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it
+AssertionError: expected 60 to be 120 // Object.is equality
+
+- Expected
++ Received
+
+- 120
++ 60
+
+ ❯ src/profile/NoticesCard.test.tsx:411:36
+    409|       expect(noticesOutbox()).toBeNull();
+    410|     });
+    411|     expect(await storedReminder()).toBe(120);
+       |                                    ^
+    412|     expect(reminderSelect()).toHaveValue("120");
+    413|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx
+AssertionError: expected [ Array(2) ] to have a length of 3 but got 2
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mstyle[39m=[32m""[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body />[39m
+[36m</html>[39m
+
+- Expected
++ Received
+
+- 3
++ 2
+
+ ❯ src/profile/NoticesCard.test.tsx:430:22
+    428|     first.open();
+    429|     await waitFor(() => {
+    430|       expect(landed).toHaveLength(3);
+       |                      ^
+    431|     });
+    432|     expect(noticesOutbox()).toMatchObject({ patch: { reminderMinutesBe…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved
+AssertionError: expected [ Array(2) ] to deeply equal [ Array(3) ]
+
+- Expected
++ Received
+
+@@ -3,9 +3,6 @@
+      "reminderMinutesBefore": 120,
+    },
+    {
+      "reminderMinutesBefore": 60,
+    },
+-   {
+-     "reminderMinutesBefore": 120,
+-   },
+  ]
+
+ ❯ src/profile/NoticesCard.test.tsx:467:20
+    465|       expect(noticesOutbox()).toBeNull();
+    466|     });
+    467|     expect(landed).toEqual([
+       |                    ^
+    468|       { reminderMinutesBefore: 120 },
+    469|       { reminderMinutesBefore: 60 },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 2 (R-11-04): back from the back-forward cache, 12 saves again — pagehide with a change pending, pageshow(persisted), an edit while that PUT is out, leave: the edit is saved
+AssertionError: expected { …(4) } to match object { Object (patch) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "patch": {
+-     "reminderMinutesBefore": 120,
++     "reminderMinutesBefore": 60,
+    },
+  }
+
+ ❯ src/profile/NoticesCard.test.tsx:488:29
+    486|     await new Promise((resolve) => setTimeout(resolve, 400));
+    487|     transition("pagehide", false);
+    488|     expect(noticesOutbox()).toMatchObject({ patch: { reminderMinutesBe…
+       |                             ^
+    489|     departure.open();
+    490|     await waitFor(async () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 6 (E7-W02 review #4): an older visit's success never erases the entry a newer visit left in the outbox
+AssertionError: expected null to match object { Object (patch) }
+
+- Expected:
+{
+  "patch": {
+    "emailByCategory": {
+      "OPERATIONAL": true,
+    },
+  },
+}
+
++ Received:
+null
+
+ ❯ src/profile/NoticesCard.test.tsx:531:29
+    529|     olderVisit.open();
+    530|     await new Promise((resolve) => setTimeout(resolve, 100));
+    531|     expect(noticesOutbox()).toMatchObject({ patch: { emailByCategory: …
+       |                             ^
+    532|   });
+    533|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 6 (E7-W02 review #5): an impersonated session never shows the browser-permission note (it never asks for push)
+AssertionError: expected <p …(2)></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p
+  class="profile-notices__note"
+  role="status"
+>
+  Activa les notificacions al navegador per rebre-les al mòbil
+</p>
+
+ ❯ src/profile/NoticesCard.test.tsx:549:7
+    547|     expect(
+    548|       screen.queryByText("Activa les notificacions al navegador per re…
+    549|     ).toBeNull();
+       |       ^
+    550|     expect(requestPermission).not.toHaveBeenCalled();
+    551|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  9 failed | 1 passed | 61 skipped (71)
+   Start at  04:44:20
+   Duration  14.58s (tests 81%, transform 9%, environment 5%, import 3%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/profile/NoticesCard.test.tsx src/NotificationsPage.test.tsx src/instructor/tasks.test.tsx -t E7-W05 --reporter=verbose

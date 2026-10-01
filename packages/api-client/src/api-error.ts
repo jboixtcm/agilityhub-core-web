@@ -73,6 +73,17 @@ export function isApiError(error: unknown, code?: string): error is ApiError {
   return error instanceof ApiError && (code === undefined || error.code === code);
 }
 
+/**
+ * `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}`: the first request of this key is still
+ * running at the api. It is not the write's answer: the client keeps the key, and the user reads
+ * one shared text, `common:inProgress` (CONVENCIONS_API §7, E79 and E80). `DIFFERENT_REQUEST` is
+ * an answer and keeps `errors:IDEMPOTENCY_KEY_REUSED`.
+ */
+export function isInProgress(error: unknown): boolean {
+  if (!isApiError(error, "IDEMPOTENCY_KEY_REUSED")) return false;
+  return recordFrom(error.details)?.reason === "IN_PROGRESS";
+}
+
 /** One field of a refused request: the api's field path and the code to translate. */
 export interface ApiFieldError {
   code: string;

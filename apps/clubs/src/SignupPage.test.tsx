@@ -1100,6 +1100,10 @@ describe("M2 api errors land on their field and step (§2, CATALEG_ERRORS)", () 
     { code: "SIGNUP_CLOSED", status: 422, text: "En aquest moment no es poden enviar sol·licituds d'alta." },
     { code: "RATE_LIMITED", headers: { "Retry-After": "120" }, status: 429, text: "Massa intents. Torna-ho a provar d'aquí a 120 s." },
     { code: "PAYMENT_METHOD_NOT_AVAILABLE", status: 422, text: "Aquest mètode de pagament no està disponible." },
+    // E7-W05 step 4 (CONVENCIONS_API §7, E80): a submission still in progress reads the shared
+    // text; another request with the same key keeps the error's own.
+    { code: "IDEMPOTENCY_KEY_REUSED", details: { reason: "IN_PROGRESS" }, status: 409, text: "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment." },
+    { code: "IDEMPOTENCY_KEY_REUSED", details: { reason: "DIFFERENT_REQUEST" }, status: 409, text: "La clau d'idempotència ja s'ha utilitzat per a una altra petició." },
     { code: "SOMETHING_NEW", status: 422, text: "No s'ha pogut completar l'acció." },
     {
       code: "VALIDATION_ERROR",

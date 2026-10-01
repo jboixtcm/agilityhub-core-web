@@ -1,11 +1,11 @@
 import { createApiClient, type components } from "@agilityhub/api-client";
-import { mockScenario, resetCensusRecordState } from "@agilityhub/api-client/mocks";
+import { handlers, mockScenario, resetCensusRecordState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
@@ -99,6 +99,82 @@ async function renderBlock(preferences?: Preferences, onNavigate?: (path: string
   );
   await screen.findByLabelText("Recordatori de classe");
   return { onFeedback, onSaved, view };
+}
+
+/** A promise the test opens when it chooses. */
+function gate() {
+  let open: () => void = () => undefined;
+  const opened = new Promise<void>((resolve) => {
+    open = resolve;
+  });
+  return { open, opened };
+}
+
+/**
+ * How the api treats one `PUT` (by its order): when it lands (is applied), whether it lands at all,
+ * when its answer leaves, and whether the answer is lost on the way (a network failure).
+ */
+interface PutPlan {
+  answerAfter?: Promise<void>;
+  landAfter?: Promise<void>;
+  lost?: boolean;
+  networkFailure?: boolean;
+}
+
+/**
+ * Each `PUT` of D10 follows its plan (the first plan for the first `PUT`…; a `PUT` without one
+ * lands and is answered at once). `landed` lists the bodies in the order the api applied them.
+ */
+function planPuts(plans: PutPlan[]) {
+  const landed: unknown[] = [];
+  let index = 0;
+  server.use(
+    http.put("*/api/v1/members/:id/notification-preferences", async ({ request }) => {
+      const plan = plans[index] ?? {};
+      index += 1;
+      const body: unknown = await request.clone().json();
+      await plan.landAfter;
+      const response =
+        plan.lost === true ? undefined : await getResponse(handlers, request.clone());
+      if (plan.lost !== true) landed.push(body);
+      await plan.answerAfter;
+      return plan.networkFailure === true ? HttpResponse.error() : response;
+    }),
+  );
+  return landed;
+}
+
+/** What the api holds for the member now. */
+async function stored(): Promise<Preferences | undefined> {
+  const { data } = await createApiClient({ baseUrl: `${window.location.origin}/api/v1` }).GET(
+    "/members/{id}/notification-preferences",
+    { params: { path: { id: "member-laura" } } },
+  );
+  return data;
+}
+
+const outbox = () =>
+  JSON.parse(sessionStorage.getItem(PREFERENCES_OUTBOX_KEY) ?? "null") as {
+    memberId: string;
+    patch: unknown;
+  } | null;
+
+const personal = () => screen.getByRole("switch", { name: "Correu: Comunicats personals" });
+
+/** PERSONAL off (its `PUT` is the first), back on, and the record left at once (`pagehide`). */
+async function offThenOnAndLeave(puts: { body: unknown; keepalive: boolean }[]) {
+  fireEvent.click(personal());
+  await waitFor(() => {
+    expect(puts).toHaveLength(1);
+  });
+  fireEvent.click(personal());
+  window.dispatchEvent(new Event("pagehide"));
+  await waitFor(() => {
+    expect(puts).toHaveLength(2);
+  });
+  await waitFor(() => {
+    expect(puts[1]).toEqual({ body: { emailByCategory: { PERSONAL: true } }, keepalive: true });
+  });
 }
 
 beforeAll(() => {
@@ -448,6 +524,153 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
         keepalive: true,
       });
     });
+  });
+
+  it("E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it", async () => {
+    const first = gate();
+    const landed = planPuts([
+      // PERSONAL = false reaches the api after the departure's PUT.
+      { landAfter: first.opened },
+      {},
+      // The resend of the latest choice never reaches the api.
+      { lost: true, networkFailure: true },
+    ]);
+    const puts = recordPutRequests();
+    await renderBlock();
+    await offThenOnAndLeave(puts);
+    await waitFor(() => {
+      expect(landed).toEqual([{ emailByCategory: { PERSONAL: true } }]);
+    });
+    first.open();
+    await waitFor(() => {
+      expect(puts).toHaveLength(3);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    // The api holds the older value, so the latest choice is still owed.
+    expect((await stored())?.emailByCategory.PERSONAL).toBe(false);
+    expect(outbox()).toMatchObject({
+      memberId: "member-laura",
+      patch: { emailByCategory: { PERSONAL: true } },
+    });
+    cleanup();
+    await renderBlock();
+    await waitFor(async () => {
+      expect((await stored())?.emailByCategory.PERSONAL).toBe(true);
+    });
+    await waitFor(() => {
+      expect(outbox()).toBeNull();
+    });
+    expect(personal()).toHaveAttribute("aria-checked", "true");
+  });
+
+  it("E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx", async () => {
+    const first = gate();
+    const resend = gate();
+    const landed = planPuts([
+      { landAfter: first.opened, networkFailure: true },
+      {},
+      { answerAfter: resend.opened },
+    ]);
+    const puts = recordPutRequests();
+    await renderBlock();
+    await offThenOnAndLeave(puts);
+    await waitFor(() => {
+      expect(landed).toEqual([{ emailByCategory: { PERSONAL: true } }]);
+    });
+    first.open();
+    await waitFor(() => {
+      expect(puts).toHaveLength(3);
+    });
+    expect(puts[2]).toEqual({ body: { emailByCategory: { PERSONAL: true } }, keepalive: true });
+    await waitFor(() => {
+      expect(landed).toHaveLength(3);
+    });
+    // The resend has landed but not answered: the latest choice is not confirmed yet.
+    expect(outbox()).toMatchObject({ patch: { emailByCategory: { PERSONAL: true } } });
+    resend.open();
+    await waitFor(() => {
+      expect(outbox()).toBeNull();
+    });
+    expect(landed).toEqual([
+      { emailByCategory: { PERSONAL: true } },
+      { emailByCategory: { PERSONAL: false } },
+      { emailByCategory: { PERSONAL: true } },
+    ]);
+    expect((await stored())?.emailByCategory.PERSONAL).toBe(true);
+  });
+
+  it("E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved", async () => {
+    const first = gate();
+    const second = gate();
+    const landed = planPuts([{ landAfter: first.opened }, { answerAfter: second.opened }, {}]);
+    const puts = recordPutRequests();
+    await renderBlock();
+    await offThenOnAndLeave(puts);
+    await waitFor(() => {
+      expect(landed).toEqual([{ emailByCategory: { PERSONAL: true } }]);
+    });
+    // The older PUT lands over the newer one, and its answer arrives first.
+    first.open();
+    await waitFor(() => {
+      expect(landed.slice(0, 2)).toEqual([
+        { emailByCategory: { PERSONAL: true } },
+        { emailByCategory: { PERSONAL: false } },
+      ]);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(outbox()).toMatchObject({ patch: { emailByCategory: { PERSONAL: true } } });
+    second.open();
+    await waitFor(() => {
+      expect(outbox()).toBeNull();
+    });
+    expect(landed).toEqual([
+      { emailByCategory: { PERSONAL: true } },
+      { emailByCategory: { PERSONAL: false } },
+      { emailByCategory: { PERSONAL: true } },
+    ]);
+    expect((await stored())?.emailByCategory.PERSONAL).toBe(true);
+  });
+
+  it("E7-W05 step 5 (R-11-04): the departure's keepalive PUT is held across pagehide(persisted) and pageshow(persisted) — the kept change goes again as a normal save once it settles, and the outbox clears only when that save is answered", async () => {
+    const departure = gate();
+    const save = gate();
+    planPuts([{ answerAfter: departure.opened }, { answerAfter: save.opened }]);
+    const puts = recordPutRequests();
+    await renderBlock();
+    const transition = (type: "pagehide" | "pageshow", persisted: boolean) => {
+      const event = new Event(type);
+      Object.defineProperty(event, "persisted", { value: persisted });
+      window.dispatchEvent(event);
+    };
+    const operational = () =>
+      screen.getByRole("switch", {
+        name: "Correu: Operativa (reserves i canvis fets per l'abonat)",
+      });
+    fireEvent.click(operational());
+    transition("pagehide", true);
+    await waitFor(() => {
+      expect(puts).toEqual([{ body: { emailByCategory: { OPERATIONAL: true } }, keepalive: true }]);
+    });
+    transition("pageshow", true);
+    // Restored with the departure's PUT still out: the kept change waits for it (one at a time).
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    expect(puts).toHaveLength(1);
+    expect(outbox()).toMatchObject({ patch: { emailByCategory: { OPERATIONAL: true } } });
+    expect(operational()).toHaveAttribute("aria-checked", "true");
+    departure.open();
+    await waitFor(() => {
+      expect(puts).toHaveLength(2);
+    });
+    expect(puts[1]).toEqual({ body: { emailByCategory: { OPERATIONAL: true } }, keepalive: false });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    // That save has not been answered: the outbox stays.
+    expect(outbox()).toMatchObject({ patch: { emailByCategory: { OPERATIONAL: true } } });
+    save.open();
+    await waitFor(() => {
+      expect(outbox()).toBeNull();
+    });
+    expect(operational()).toHaveAttribute("aria-checked", "true");
+    expect((await stored())?.emailByCategory.OPERATIONAL).toBe(true);
   });
 
   it("without SMS and PUSH (the api's `modules`): no «+SMS» and no push toggle", async () => {

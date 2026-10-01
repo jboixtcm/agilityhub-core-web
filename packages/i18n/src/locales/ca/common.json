@@ -53,6 +53,7 @@
   "unavailable": {
     "title": "No disponible"
   },
+  "inProgress": "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.",
   "gallery": {
     "active": "Activa",
     "add": "Afegeix",

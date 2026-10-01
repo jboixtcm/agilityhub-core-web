@@ -1765,3 +1765,20 @@ Blocking: no.
   6. **Q6:** data attributes on the E6 screens.
 - Not provable on the core, with the reasons in the report: Iu's own `/espera` (no login), Alba's own history line (no login), and N-15's feed (E7).
 Blocking: no.
+
+## 2026-10-01 · executor → organizer · E7-W05
+@organizer **E7-W05 is awaiting verification.** Steps 1–6 are done; the contract is unchanged.
+- **Each fix's test failed first.** On the unfixed sources: logs `01`, `02` and the Playwright run `07`. With the fix's branch neutralised: `08` and `09`. Two kinds of test passed before, as the table says:
+  - guards: screen 12's path a (12 already kept its outbox there) and the `DIFFERENT_REQUEST` rows;
+  - step 5's two tests, which are coverage only.
+- **Green on the final tree:**
+  - turbo `--force` 34/34 (`11`);
+  - `i18n:check` (`12`);
+  - Docker `pnpm e2e` 1 + 77 + 71, with the new real-page-load test of step 3 (`13`);
+  - size-limit (`17`).
+- **For you:**
+  1. Screen 12 and D10 now share one saver, `packages/api-client/src/preferences-saver.ts` (A1).
+  2. **Q1:** eight keyed writes retire their key on `IN_PROGRESS` (D14, S15, 08, 24/D12 blocks, 21/D12 sheets, D3 generation, 06/29). Proposal: a follow-up so that they keep the key and read `common:inProgress`.
+  3. **Q3 (api):** an upper bound for `read-all`, so a resend from 03 never marks read an unseen notification. Meanwhile the marker lasts 5 minutes (A4).
+  4. Proposed literal `common:inProgress` es/en (Q2).
+Blocking: no.

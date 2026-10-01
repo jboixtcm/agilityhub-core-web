@@ -56,6 +56,9 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
   const staff =
     session.me?.impersonation === undefined &&
     (session.activeProfile === "INSTRUCTOR" || session.activeProfile === "ADMIN");
+  // The account and club the visit's read-all belongs to (its pending marker, E7-W05 step 3).
+  const accountId = session.me?.account.id ?? "";
+  const clubId = session.me?.membership?.clubId ?? "";
 
   useEffect(() => {
     mounted.current = true;
@@ -66,12 +69,15 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
     };
   }, []);
 
-  /** Idempotent on the api side; its answer's `unreadCount` reaches 03's bell (`unread.ts`). */
+  /**
+   * Idempotent on the api side; its answer's `unreadCount` reaches 03's bell (`unread.ts`), and
+   * until it arrives 03 knows it is pending, even after a full page load (E7-W05 step 3).
+   */
   const sendReadAll = useCallback(() => {
     function attempt() {
       if (readAll.current !== "idle") return;
       readAll.current = "sending";
-      readAllNotifications(client).then(
+      readAllNotifications(client, { accountId, clubId }).then(
         () => {
           readAll.current = "done";
         },
@@ -85,7 +91,7 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
       );
     }
     attempt();
-  }, [client]);
+  }, [accountId, client, clubId]);
 
   useEffect(() => {
     let current = true;

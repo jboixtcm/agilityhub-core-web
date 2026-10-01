@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the fixed green tick under «App», the four e-mail switches with the product defaults and «+SMS»
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > hides «+SMS» in a club without SMS (R-11-17)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the reminder select lists «Mai» and the club's options
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > each change shows at once and is saved as a partial PUT after the 300 ms pause
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > rolls a refused change back with its message (422 INVALID_REMINDER_OPTION)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > keeps a newer choice when an older save answers late (the answer rebases the member's edits)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W02 round 2 #1: leaving 12 while a PUT is on its way sends the waiting change at once, and the latest choice (120) is what the api keeps even when the older PUT answers last
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W02 round 2 #1: a change kept across a reload is sent again on the next visit of the same account and club only
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it 1037ms
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 2 (R-11-04): back from the back-forward cache, 12 saves again — pagehide with a change pending, pageshow(persisted), an edit while that PUT is out, leave: the edit is saved
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 6 (E7-W02 review #4): an older visit's success never erases the entry a newer visit left in the outbox
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 6 (E7-W02 review #5): an impersonated session never shows the browser-permission note (it never asks for push)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > asks for the browser's permission only on interaction, never on mount, and registers the subscription
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > a dismissed prompt (no answer) also leaves the hint under the switch
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W02 round 2 #5: a permission already refused shows the explanation on arrival (read at mount, never asked), and a change still saves
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > an iPhone outside the installed app gets the install hint and no permission prompt
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > no push toggle without PushManager in the browser, nor in a club without PUSH
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > «Aprèn amb AgilityHub ›» after «Els meus gossos» only with LEARN_LINK
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the language select writes Account.locale, switches the UI at once and says only new notices change
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > staff without the MEMBER role have no «Avisos» block and no request (S11 §6)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > logout deletes this device's subscription first, and never waits on it
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 23 skipped (24)
+   Start at  04:44:53
+   Duration  2.09s (tests 51%, transform 27%, environment 11%, import 8%, setup 2%)
+

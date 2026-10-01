@@ -1,6 +1,7 @@
 import {
   apiFieldErrors,
   isApiError,
+  isInProgress,
   type ApiClient,
   type components,
   putSignedFile,
@@ -92,6 +93,8 @@ interface PendingError {
   field?: string;
   /** `details.fieldErrors` of the owning step: form field → code. */
   fields?: Record<string, string>;
+  /** `IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}`: not the submission's answer (E79, E80). */
+  inProgress?: true;
   retryAfter?: number;
   step: SignupStep;
 }
@@ -342,7 +345,7 @@ function usePendingError(
   onChange: DraftUpdate,
   apply: (errors: { fields: FieldErrors; message?: string | undefined }) => void,
 ): void {
-  const { t } = useTranslation(["signup", "errors"]);
+  const { t } = useTranslation(["signup", "errors", "common"]);
   useEffect(() => {
     if (pending?.step !== step) return;
     apply(pendingErrorMessages(pending, t));
@@ -569,6 +572,7 @@ function pendingErrorMessages(
   t: Translate,
 ): { fields: FieldErrors; message?: string } {
   const generic = t("signup:common.genericError");
+  if (pending.inProgress === true) return { fields: {}, message: t("common:inProgress") };
   if (pending.code === "RATE_LIMITED") {
     return { fields: {}, message: t("signup:common.rateLimited", { seconds: pending.retryAfter ?? 60 }) };
   }
@@ -592,6 +596,9 @@ function pendingErrorMessages(
 /** Where an api error belongs (the page handles `SIGNUP_CLOSED` itself). */
 function routeApiError(error: unknown, currentStep: SignupStep): PendingError {
   if (!isApiError(error)) return { code: "", step: currentStep };
+  // The submission's first request is still running: its key stays, and the step says so with the
+  // shared text (CONVENCIONS_API §7, E80).
+  if (isInProgress(error)) return { code: error.code, inProgress: true, step: currentStep };
   if (error.status === 429 || error.code === "RATE_LIMITED") {
     return {
       code: "RATE_LIMITED",

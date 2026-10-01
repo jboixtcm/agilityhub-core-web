@@ -1,4 +1,5 @@
 import { type ApiClient, isApiError } from "@agilityhub/api-client";
+import { useSession } from "@agilityhub/auth";
 import {
   Button,
   Card,
@@ -13,7 +14,7 @@ import { useTranslation } from "react-i18next";
 
 import { ActivityReservationRow } from "../activities/ActivityReservationRow";
 import { useMeActivities } from "../activities/shared";
-import { useUnreadCount } from "../notifications/unread";
+import { readAllNotifications, readAllPending, useUnreadCount } from "../notifications/unread";
 
 import "./booking.css";
 import { DogChips } from "./DogChips";
@@ -34,6 +35,17 @@ export function HomePage({ client }: { client: ApiClient }) {
   // `GET /me/home` again, so the bell and the page show what the api holds.
   const unread = useUnreadCount();
   const home = useMeHome(client, dogId, unread.version);
+  const session = useSession();
+  const accountId = session.me?.account.id ?? "";
+  const clubId = session.me?.membership?.clubId ?? "";
+  // E7-W05 step 3: a read-all screen 11 sent without seeing its answer (the member came back by a
+  // full page load, so the store above starts empty) is sent again — it is idempotent — and its
+  // answer makes 03 read `GET /me/home` again.
+  useEffect(() => {
+    const scope = { accountId, clubId };
+    if (accountId === "" || !readAllPending(scope)) return;
+    readAllNotifications(client, scope).catch(() => undefined);
+  }, [accountId, client, clubId]);
   const activitiesEnabled = branding.modules.includes("ACTIVITIES");
   // S07 rows keep E4-W04's `ActivityReservationRow`: its registration comes from `mine[]`.
   const activities = useMeActivities(client, activitiesEnabled);

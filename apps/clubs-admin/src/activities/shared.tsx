@@ -1,6 +1,7 @@
 import {
   apiFieldErrors,
   isApiError,
+  isInProgress,
   type ApiClient,
   type components,
   uploadSigned,
@@ -79,14 +80,20 @@ export function errorFields(error: unknown): string[] {
   return apiFieldErrors(error).map((entry) => entry.field);
 }
 
-/** Message of an api error by its `code` (never its `message`), with the D7 fallback. */
+/**
+ * Message of an api error by its `code` (never its `message`), with the D7 fallback; a write still
+ * in progress (the publication and the cancellation keep their key) reads the shared
+ * `common:inProgress` (CONVENCIONS_API §7, E80).
+ */
 export function useActivityErrorMessage() {
-  const { t } = useTranslation(["admin-activities", "errors"]);
+  const { t } = useTranslation(["admin-activities", "errors", "common"]);
   return useCallback(
     (error: unknown) =>
-      isApiError(error)
-        ? t(`errors:${error.code}`, { defaultValue: t("admin-activities:common.error") })
-        : t("admin-activities:common.error"),
+      isInProgress(error)
+        ? t("common:inProgress")
+        : isApiError(error)
+          ? t(`errors:${error.code}`, { defaultValue: t("admin-activities:common.error") })
+          : t("admin-activities:common.error"),
     [t],
   );
 }

@@ -53,6 +53,7 @@
   "unavailable": {
     "title": "No disponible"
   },
+  "inProgress": "La operación todavía está en curso. Vuelve a intentarlo dentro de un momento.",
   "gallery": {
     "active": "Activa",
     "add": "Añadir",

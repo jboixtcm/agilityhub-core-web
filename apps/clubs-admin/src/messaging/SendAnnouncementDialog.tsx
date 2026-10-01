@@ -1,4 +1,4 @@
-import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
+import { type ApiClient, type components, isApiError, isInProgress } from "@agilityhub/api-client";
 import { Button, Checkbox, FormField, Modal, Select, Skeleton, Toast } from "@agilityhub/ui";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -67,16 +67,6 @@ export function AnnouncementSent({
 const unansweredSends = new Map<string, string>();
 
 /**
- * `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}`: the send's first request is still running at
- * the api. It is not the send's answer (CONVENCIONS_API §7, E79).
- */
-function inProgress(cause: unknown): boolean {
-  if (!isApiError(cause, "IDEMPOTENCY_KEY_REUSED")) return false;
-  const details = cause.details as { reason?: unknown } | null | undefined;
-  return details?.reason === "IN_PROGRESS";
-}
-
-/**
  * «Enviar comunicat» (S11 §2 D9, R-11-13), from D9 or from a D5/D15 selection or filter set: the
  * sendable templates, the recipients as the admin chose them, and «S'enviarà a {n} abonats» from
  * the api's `dryRun` — never from the rows on screen. [ENVIA] waits for that count and the
@@ -97,7 +87,7 @@ export function SendAnnouncementDialog({
   /** The api accepted it (202): how many members it reaches. */
   onSent: (recipientCount: number) => void;
 }) {
-  const { t } = useTranslation(["admin-messaging", "errors"]);
+  const { t } = useTranslation(["admin-messaging", "errors", "common"]);
   const [templates, setTemplates] = useState<Template[] | { error: string }>();
   const [templateId, setTemplateId] = useState<string>("");
   const [sending, setSending] = useState(false);
@@ -202,13 +192,14 @@ export function SendAnnouncementDialog({
       onSent(data?.recipientCount ?? count.count);
     } catch (cause) {
       // An answer retires the key; a request that got none keeps it for the retry, and so does
-      // `IN_PROGRESS` (the first request is still running): the next [ENVIA] sends the same key.
-      if (isApiError(cause) && cause.status !== 0 && !inProgress(cause)) {
+      // `IN_PROGRESS` (the first request is still running, E79): the next [ENVIA] sends the same
+      // key, and the admin reads the shared text of a write still in progress (E80).
+      if (isApiError(cause) && cause.status !== 0 && !isInProgress(cause)) {
         unansweredSends.delete(signature);
       }
       setSendError(
-        inProgress(cause)
-          ? t("admin-messaging:send.inProgress")
+        isInProgress(cause)
+          ? t("common:inProgress")
           : errorText(cause, t("admin-messaging:send.error")),
       );
     } finally {

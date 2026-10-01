@@ -843,6 +843,44 @@ describe("E6-W05 (reviews of E6-W02's round 2): screen 26", () => {
     expect(writes(requests).filter((line) => line.startsWith("POST /attachments"))).toHaveLength(1);
   });
 
+  it("E7-W05 step 4 (CONVENCIONS_API §7, E80): a task whose first request is still running says so with the shared in-progress text, never the key's technical one, and its retry creates one task", async () => {
+    let answers = 0;
+    server.use(
+      http.post("*/api/v1/tasks", () => {
+        answers += 1;
+        if (answers > 1) return undefined;
+        return HttpResponse.json(
+          {
+            code: "IDEMPOTENCY_KEY_REUSED",
+            details: { reason: "IN_PROGRESS" },
+            message: "Idempotency key reused",
+            traceId: "t-409",
+          },
+          { status: 409 },
+        );
+      }),
+    );
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
+    expect(await within(tasksBlock()).findByRole("alert")).toHaveTextContent(
+      "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.",
+    );
+    expect(
+      within(tasksBlock()).queryByText(/La clau d'idempotència ja s'ha utilitzat/u),
+    ).toBeNull();
+    await waitFor(() => {
+      expect(within(form).getByRole("button", { name: "Afegeix" })).toBeEnabled();
+    });
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(4);
+    });
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(posts).toHaveLength(2);
+    expect(posts[1]?.key).toBe(posts[0]?.key);
+  });
+
   it("step 2: a mixed selection keeps the refused file's message while the accepted one uploads — on the observations and on an open task", async () => {
     const requests = recordRequests();
     await renderTasks({ scenario: "admin" });

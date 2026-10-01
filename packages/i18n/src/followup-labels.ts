@@ -23,13 +23,28 @@ function apiCode(error: unknown): string | undefined {
 }
 
 /**
+ * `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` (the api-client's `isInProgress`, read here
+ * by shape like `apiCode`): the write's first request is still running (CONVENCIONS_API §7, E80).
+ */
+function inProgress(error: unknown): boolean {
+  if (apiCode(error) !== "IDEMPOTENCY_KEY_REUSED") return false;
+  const { details } = error as { details?: unknown };
+  return (
+    typeof details === "object" &&
+    details !== null &&
+    (details as { reason?: unknown }).reason === "IN_PROGRESS"
+  );
+}
+
+/**
  * The texts of the shared follow-up editor (screen 26 and D13's drawer, S10 §10), one place for
  * both apps: «{dd-mm} · {autor}» in the club's time zone, «feta per {la Laura} el {dd-mm}» through
  * `personArticle`, the state chips from `enums:taskState.*`, a refused file as «{fitxer}:
- * {errors:<CODE>}», and every failure by its code (`errors:<CODE>`, never the api `message`).
+ * {errors:<CODE>}», every failure by its code (`errors:<CODE>`, never the api `message`), and a
+ * write still in progress by the shared `common:inProgress` (E7-W05 step 4).
  */
 export function useFollowupTexts<Task extends FollowupTaskLike>(): DogFollowupTexts<Task> {
-  const { t } = useTranslation(["instructor", "enums", "errors"]);
+  const { t } = useTranslation(["instructor", "enums", "errors", "common"]);
   const formats = useClubFormats();
   return useMemo(() => {
     const dayMonth = (instant: string) =>
@@ -62,8 +77,9 @@ export function useFollowupTexts<Task extends FollowupTaskLike>(): DogFollowupTe
       },
       errorText: (error, fallback) => {
         const code = apiCode(error);
-        return code === undefined
-          ? fallback
+        if (code === undefined) return fallback;
+        return inProgress(error)
+          ? t("common:inProgress")
           : t(`errors:${code}`, { defaultValue: t("errors:INTERNAL_ERROR") });
       },
       history: {

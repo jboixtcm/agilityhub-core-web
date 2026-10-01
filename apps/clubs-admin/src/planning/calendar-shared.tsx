@@ -1,4 +1,4 @@
-import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
+import { isApiError, isInProgress, type ApiClient, type components } from "@agilityhub/api-client";
 import { type ClubFormats, isPlainDate } from "@agilityhub/i18n";
 import { type ReactNode, useCallback } from "react";
 import { useTranslation } from "react-i18next";
@@ -299,13 +299,19 @@ export function openingOf(hours: OpeningHours, date: string): OpeningWindow | nu
   return hours[key] ?? null;
 }
 
+/**
+ * An api error's text by its `code`; a write still in progress (D4c keeps its key) reads the shared
+ * `common:inProgress` (CONVENCIONS_API §7, E80).
+ */
 export function useCalendarErrorMessage() {
-  const { t } = useTranslation(["admin-scheduling", "errors"]);
+  const { t } = useTranslation(["admin-scheduling", "errors", "common"]);
   return useCallback(
     (error: unknown) =>
-      isApiError(error)
-        ? t(`errors:${error.code}`, { defaultValue: t("admin-scheduling:common.error") })
-        : t("admin-scheduling:common.error"),
+      isInProgress(error)
+        ? t("common:inProgress")
+        : isApiError(error)
+          ? t(`errors:${error.code}`, { defaultValue: t("admin-scheduling:common.error") })
+          : t("admin-scheduling:common.error"),
     [t],
   );
 }

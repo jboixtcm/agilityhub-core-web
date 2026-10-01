@@ -1,4 +1,11 @@
-import { type ApiClient, isApiError } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  createPreferencesOutbox,
+  createPreferencesSaver,
+  isApiError,
+  type PreferencesSaverState,
+  shownPreferences,
+} from "@agilityhub/api-client";
 import { useSession } from "@agilityhub/auth";
 import { Button, Card, Icon, Select, Skeleton, Switch, Toast, useBranding } from "@agilityhub/ui";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -7,15 +14,7 @@ import { useTranslation } from "react-i18next";
 import { errorText } from "../booking/shared";
 import { pushPermission, pushSupport, subscribeToPush } from "../notifications/push";
 
-import {
-  type Category,
-  createPreferencesSaver,
-  type Edits,
-  readNoticesOutbox,
-  type SaverState,
-  shownPreferences,
-  writeNoticesOutbox,
-} from "./preferences-saver";
+import { type Category, type Edits, NOTICES_OUTBOX_KEY } from "./preferences-saver";
 
 /**
  * Screen 12's «Avisos» block (S11 §2 row 12, R-11-04, R-11-07, R-11-17), driven by
@@ -35,28 +34,32 @@ export function NoticesCard({ client }: { client: ApiClient }) {
   const reader = session.roles.includes("MEMBER") || impersonated;
   const [status, setStatus] = useState<"error" | "loading" | "ready">("loading");
   const [attempt, setAttempt] = useState(0);
-  const [saverState, setSaverState] = useState<SaverState>();
+  const [saverState, setSaverState] = useState<PreferencesSaverState>();
   const [failure, setFailure] = useState<{ cause: unknown }>();
   const [support] = useState(pushSupport);
   // R-11-07: a permission the browser already refused is read at mount (never asked) so the row
-  // explains it on arrival; an in-context request updates it (E7-W02 round 2 #5).
+  // explains it on arrival; an in-context request updates it (E7-W02 round 2 #5). An impersonated
+  // session never asks for push, so the admin's own browser is never explained (E7-W05 step 6).
   const [pushDenied, setPushDenied] = useState(
-    () => support === "supported" && pushPermission() === "denied",
+    () => support === "supported" && !impersonated && pushPermission() === "denied",
   );
   const mounted = useRef(true);
   // The account and club a change belongs to (a change kept across a reload is sent again for them
-  // only, E7-W02 round 2 #1).
+  // only, E7-W02 round 2 #1); each visit owns its own entry (E7-W02 review #4).
   const accountId = session.me?.account.id ?? "";
   const clubId = session.me?.membership?.clubId ?? "";
-  const saver = useMemo(
-    () =>
-      createPreferencesSaver({
+  const { outbox, saver } = useMemo(() => {
+    const kept = createPreferencesOutbox(NOTICES_OUTBOX_KEY, { accountId, clubId });
+    return {
+      outbox: kept,
+      saver: createPreferencesSaver({
         changed: setSaverState,
         failed: (cause) => {
           setFailure({ cause });
         },
         kept: (unsaved) => {
-          writeNoticesOutbox({ accountId, clubId }, unsaved);
+          if (unsaved === undefined) kept.clear();
+          else kept.write(unsaved);
         },
         save: async (body, keepalive) =>
           (
@@ -66,8 +69,8 @@ export function NoticesCard({ client }: { client: ApiClient }) {
             })
           ).data,
       }),
-    [accountId, client, clubId],
-  );
+    };
+  }, [accountId, client, clubId]);
 
   useEffect(() => {
     mounted.current = true;
@@ -76,13 +79,20 @@ export function NoticesCard({ client }: { client: ApiClient }) {
     const leave = () => {
       saver.leave();
     };
+    // Back from the back-forward cache (`persisted`): 12 saves again, and what its departure kept
+    // and nothing confirmed since goes again as a normal change (E7-W05 step 2).
+    const restore = (event: PageTransitionEvent) => {
+      if (event.persisted) saver.restore(outbox.take());
+    };
     window.addEventListener("pagehide", leave);
+    window.addEventListener("pageshow", restore);
     return () => {
       mounted.current = false;
       window.removeEventListener("pagehide", leave);
+      window.removeEventListener("pageshow", restore);
       leave();
     };
-  }, [saver]);
+  }, [outbox, saver]);
 
   useEffect(() => {
     if (!reader) return undefined;
@@ -93,12 +103,9 @@ export function NoticesCard({ client }: { client: ApiClient }) {
         saver.load(data);
         setStatus("ready");
         // What the last visit of this account and club left unsaved is sent again (a partial PUT
-        // of values the api already has changes nothing).
-        const kept = readNoticesOutbox({ accountId, clubId });
-        if (kept !== undefined) {
-          writeNoticesOutbox({ accountId, clubId }, undefined);
-          saver.edit(kept);
-        }
+        // of values the api already has changes nothing); it stays kept until that is saved.
+        const kept = outbox.take();
+        if (kept !== undefined) saver.adopt(kept);
       },
       () => {
         if (current) setStatus("error");
@@ -107,7 +114,7 @@ export function NoticesCard({ client }: { client: ApiClient }) {
     return () => {
       current = false;
     };
-  }, [accountId, attempt, client, clubId, reader, saver]);
+  }, [attempt, client, outbox, reader, saver]);
 
   if (!reader) return null;
 
@@ -244,7 +251,7 @@ export function NoticesCard({ client }: { client: ApiClient }) {
               <br />
               <strong>{t("auth:profile.iosSteps")}</strong>
             </p>
-          ) : pushDenied && (shown.pushClubNews || reminder !== null) ? (
+          ) : pushDenied && !impersonated && (shown.pushClubNews || reminder !== null) ? (
             <p className="profile-notices__note" role="status">
               {t("auth:profile.pushDenied")}
             </p>

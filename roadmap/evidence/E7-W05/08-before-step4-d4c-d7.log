@@ -1,0 +1,36 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ × src/in-progress-text.test.tsx > E7-W05 step 4 (CONVENCIONS_API §7, E80): the writes that keep their key — D4c's cancellation and D7's publication and cancellation — read one shared text while their first request is still running > D4c: IN_PROGRESS reads «L'operació encara està en curs…»; DIFFERENT_REQUEST keeps errors:IDEMPOTENCY_KEY_REUSED 37ms
+   → expected 'La clau d\'idempotència ja s\'ha util…' to be 'L\'operació encara està en curs. Torn…' // Object.is equality
+ × src/in-progress-text.test.tsx > E7-W05 step 4 (CONVENCIONS_API §7, E80): the writes that keep their key — D4c's cancellation and D7's publication and cancellation — read one shared text while their first request is still running > D7: IN_PROGRESS reads «L'operació encara està en curs…»; DIFFERENT_REQUEST keeps errors:IDEMPOTENCY_KEY_REUSED 6ms
+   → expected 'La clau d\'idempotència ja s\'ha util…' to be 'L\'operació encara està en curs. Torn…' // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/in-progress-text.test.tsx > E7-W05 step 4 (CONVENCIONS_API §7, E80): the writes that keep their key — D4c's cancellation and D7's publication and cancellation — read one shared text while their first request is still running > D4c: IN_PROGRESS reads «L'operació encara està en curs…»; DIFFERENT_REQUEST keeps errors:IDEMPOTENCY_KEY_REUSED
+ FAIL  src/in-progress-text.test.tsx > E7-W05 step 4 (CONVENCIONS_API §7, E80): the writes that keep their key — D4c's cancellation and D7's publication and cancellation — read one shared text while their first request is still running > D7: IN_PROGRESS reads «L'operació encara està en curs…»; DIFFERENT_REQUEST keeps errors:IDEMPOTENCY_KEY_REUSED
+AssertionError: expected 'La clau d\'idempotència ja s\'ha util…' to be 'L\'operació encara està en curs. Torn…' // Object.is equality
+
+Expected: "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment."
+Received: "La clau d'idempotència ja s'ha utilitzat per a una altra petició."
+
+ ❯ src/in-progress-text.test.tsx:42:56
+     40|     async (_screen, useMessage) => {
+     41|       const { result } = renderHook(() => useMessage(), { wrapper: awa…
+     42|       expect(result.current(keyReused("IN_PROGRESS"))).toBe(
+       |                                                        ^
+     43|         "L'operació encara està en curs. Torna-ho a provar d'aquí a un…
+     44|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  05:02:49
+   Duration  837ms (environment 45%, transform 32%, setup 10%, import 8%, tests 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/in-progress-text.test.tsx --reporter=verbose

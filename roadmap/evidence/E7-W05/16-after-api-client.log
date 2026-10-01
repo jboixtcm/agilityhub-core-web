@@ -1,0 +1,21 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ✓ src/api-error.test.ts > E4-W11 CONVENCIONS_API §5 apiFieldErrors reads both field shapes > reads every details.fieldErrors[{field, code}] entry 1ms
+ ✓ src/api-error.test.ts > E4-W11 CONVENCIONS_API §5 apiFieldErrors reads both field shapes > reads the single details.field with the error's own code (400 VALIDATION_ERROR, 409 DUPLICATE_NAME) 0ms
+ ✓ src/api-error.test.ts > E4-W11 CONVENCIONS_API §5 apiFieldErrors reads both field shapes > an entry without its own code takes the error's; the same field is never listed twice 0ms
+ ✓ src/api-error.test.ts > E4-W11 CONVENCIONS_API §5 apiFieldErrors reads both field shapes > is empty without field details, for malformed entries and for anything but an ApiError 0ms
+ ✓ src/api-error.test.ts > E7-W05 step 4 CONVENCIONS_API §7 (E79, E80) isInProgress > is only IDEMPOTENCY_KEY_REUSED with reason IN_PROGRESS 0ms
+ ✓ src/preferences-saver.test.ts > E7-W05 step 1: the shared preference saver (R-11-04) — the latest choice wins whatever fails > path a: the older PUT lands last and the resend is lost — nothing frees what the departure kept 8ms
+ ✓ src/preferences-saver.test.ts > E7-W05 step 1: the shared preference saver (R-11-04) — the latest choice wins whatever fails > path b: the older PUT lands last and fails — the latest choice goes again once it settles, and only its 2xx frees what was kept 6ms
+ ✓ src/preferences-saver.test.ts > E7-W05 step 1: the shared preference saver (R-11-04) — the latest choice wins whatever fails > path c: the older PUT lands last but answers first — the latest choice goes again, and what was kept is freed once every PUT is answered 6ms
+ ✓ src/preferences-saver.test.ts > E7-W05 step 1: the shared preference saver (R-11-04) — the latest choice wins whatever fails > a page restored while the latest choice still owes its resend, and left again: the new departure carries the latest choice, never the older body still out 3ms
+ ✓ src/preferences-saver.test.ts > E7-W05 step 1: the shared preference saver (R-11-04) — the latest choice wins whatever fails > an open page shows a failure and frees what it took over once nothing is unsaved 3ms
+ ✓ src/preferences-saver.test.ts > E7-W05 step 6 (E7-W02 review #4): the preferences outbox belongs to one visit > an older visit's clear never erases what a newer visit kept; taking an entry over makes it the taker's 2ms
+ ✓ src/preferences-saver.test.ts > E7-W05 step 6 (E7-W02 review #4): the preferences outbox belongs to one visit > another scope's entry is ignored, and an entry older than five minutes is dropped 0ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  05:06:59
+   Duration  125ms (transform 46%, tests 38%, import 12%, worker 4%)
+

@@ -11,6 +11,7 @@ import { delay, http, HttpResponse } from "msw";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { canic, renderApp, without } from "./booking/test-utils";
+import { READ_ALL_PENDING_KEY } from "./notifications/unread";
 
 interface Seen {
   body: unknown;
@@ -95,6 +96,9 @@ afterEach(async () => {
   server.resetHandlers();
   vi.unstubAllGlobals();
   vi.useRealTimers();
+  for (const key of Object.keys(sessionStorage)) {
+    if (key.startsWith(READ_ALL_PENDING_KEY)) sessionStorage.removeItem(key);
+  }
   resetBookingMockState();
   resetActivityState();
   resetNotificationMockState();
@@ -331,7 +335,7 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
     expect(await screen.findByRole("link", { name: "Avisos" })).toBeVisible();
   });
 
-  it("E7-W02 round 2 #3: a read-all answered after going back Home updates the bell there (Home reads GET /me/home again)", async () => {
+  it("E7-W02 round 2 #3: inside one document (the module store survives, as in an in-app return), a read-all answered after 03 mounted updates the bell (03 reads GET /me/home again)", async () => {
     let release: () => void = () => undefined;
     const gate = new Promise<void>((resolve) => {
       release = resolve;
@@ -354,6 +358,81 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
     release();
     expect(await screen.findByRole("link", { name: "Avisos" })).toBeVisible();
     expect(count("GET", "/me/home")).toBeGreaterThan(homeReads);
+  });
+
+  it("E7-W05 step 3 (S11 §13-8): a read-all left without an answer stays pending in the tab's sessionStorage for this account and club, and a fresh 03 sends it again before it reads GET /me/home — the bell goes quiet", async () => {
+    server.use(
+      // Screen 11's read-all never gets its answer (the page is gone first).
+      http.post("*/api/v1/me/notifications/read-all", () => new Promise<never>(() => undefined)),
+    );
+    await openFeed();
+    await waitFor(() => {
+      expect(count("POST", "/me/notifications/read-all")).toBe(1);
+    });
+    expect(
+      Object.keys(sessionStorage).filter((key) => key.startsWith(READ_ALL_PENDING_KEY)),
+    ).toEqual([
+      `${READ_ALL_PENDING_KEY}:10000000-0000-4000-8000-000000000002:50000000-0000-4000-8000-000000000001`,
+    ]);
+    cleanup();
+    server.resetHandlers();
+    await renderApp("/inici");
+    expect(await screen.findByRole("link", { name: "Avisos" })).toBeVisible();
+    expect(count("POST", "/me/notifications/read-all")).toBe(2);
+    const order = requests
+      .filter(
+        (item) =>
+          item.path === "/api/v1/me/notifications/read-all" || item.path === "/api/v1/me/home",
+      )
+      .map((item) => `${item.method} ${item.path}`);
+    // After the second read-all, 03 read /me/home again.
+    expect(order.slice(order.lastIndexOf("POST /api/v1/me/notifications/read-all"))).toContain(
+      "GET /api/v1/me/home",
+    );
+    await waitFor(() => {
+      expect(
+        Object.keys(sessionStorage).filter((key) => key.startsWith(READ_ALL_PENDING_KEY)),
+      ).toEqual([]);
+    });
+  });
+
+  it("E7-W05 step 3: another account's or club's pending read-all is not sent from 03", async () => {
+    sessionStorage.setItem(
+      `${READ_ALL_PENDING_KEY}:10000000-0000-4000-8000-000000000099:50000000-0000-4000-8000-000000000001`,
+      JSON.stringify({ at: Date.now() }),
+    );
+    await renderApp("/inici");
+    expect(await screen.findByRole("link", { name: "Avisos: 2 sense llegir" })).toBeVisible();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(count("POST", "/me/notifications/read-all")).toBe(0);
+  });
+
+  it("E7-W05 step 6 (E7-W02 review #3): a quiet refetch of 03 that fails keeps the last rows on screen", async () => {
+    await renderApp("/inici");
+    expect(await screen.findByRole("link", { name: "Avisos: 2 sense llegir" })).toBeVisible();
+    const rows = () => document.querySelectorAll(".reservation-row, .activity-row").length;
+    const shown = rows();
+    expect(shown).toBeGreaterThan(0);
+    let failed = 0;
+    server.use(
+      http.get("*/api/v1/me/home", () => {
+        failed += 1;
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "boom", traceId: "t" },
+          { status: 500 },
+        );
+      }),
+    );
+    const restored = new Event("pageshow");
+    Object.defineProperty(restored, "persisted", { value: true });
+    window.dispatchEvent(restored);
+    await waitFor(() => {
+      expect(failed).toBe(1);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(screen.queryByText("No s'han pogut carregar les teves reserves.")).toBeNull();
+    expect(rows()).toBe(shown);
+    expect(screen.getByRole("link", { name: "Avisos: 2 sense llegir" })).toBeVisible();
   });
 
   it("a card tapped before read-all has landed is marked read on its own", async () => {

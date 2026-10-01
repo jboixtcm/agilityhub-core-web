@@ -1,5 +1,5 @@
 import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { useTranslation } from "react-i18next";
 
 import type { LoadState } from "../activities/shared";
@@ -74,25 +74,36 @@ export function errorText(t: Translate, cause: unknown): string {
 
 /**
  * A request's state; `load` changes with its inputs (a dog, an id), and an answer that arrives
- * after they changed is dropped. `refetch(true)` keeps the rows on screen while it reloads.
+ * after they changed is dropped. `refetch(true)` and a new `refresh` read the same request again
+ * with the rows kept on screen — also when that read fails (E7-W02 review #3); another request
+ * (another dog) shows its own error.
  */
-export function useLoader<Data>(load: () => Promise<Data>) {
+export function useLoader<Data>(load: () => Promise<Data>, refresh?: unknown) {
   const [state, setState] = useState<LoadState<Data>>({ status: "loading" });
   const [reload, setReload] = useState(0);
+  // The request whose rows are on screen.
+  const shownBy = useRef<() => Promise<Data>>(undefined);
   useEffect(() => {
     let current = true;
     load().then(
       (data) => {
-        if (current) setState({ data, status: "ready" });
+        if (!current) return;
+        shownBy.current = load;
+        setState({ data, status: "ready" });
       },
       (error: unknown) => {
-        if (current) setState({ error, status: "error" });
+        if (!current) return;
+        setState((previous) =>
+          previous.status === "ready" && shownBy.current === load
+            ? previous
+            : { error, status: "error" },
+        );
       },
     );
     return () => {
       current = false;
     };
-  }, [load, reload]);
+  }, [load, refresh, reload]);
   const refetch = useCallback((quiet = false) => {
     if (!quiet) setState({ status: "loading" });
     setReload((value) => value + 1);
@@ -107,7 +118,8 @@ function required<Data>(data: Data | undefined): Data {
 
 /**
  * `GET /me/home?dogId=` (03): no `dogId` = «Tots». A new `refresh` (a read-all that landed, S11
- * R-11-10) reads it again with the rows kept on screen; an older answer is dropped.
+ * R-11-10) reads it again with the rows kept on screen, even if that read fails; an older answer
+ * is dropped.
  */
 export function useMeHome(client: ApiClient, dogId: string | null, refresh = 0) {
   const load = useCallback(
@@ -119,10 +131,9 @@ export function useMeHome(client: ApiClient, dogId: string | null, refresh = 0) 
           })
         ).data,
       ),
-    // `refresh` only asks for a new read.
-    [client, dogId, refresh],
+    [client, dogId],
   );
-  return useLoader(load);
+  return useLoader(load, refresh);
 }
 
 /** `GET /me/bookable-classes?dogId=` (04): no `dogId` = the api's proposed dog. */

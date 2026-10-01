@@ -235,6 +235,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - D10's preferences: an older `PUT` answered after a newer one makes the block send the newest body again. The recovery entry stays until the newest body is answered. After a back-forward cache restore (`pageshow` with `persisted`) the block saves again, and what the departure kept is re-sent. D10 mounts one block per member.
   - D9 keeps the newest version of each template it has received: a late save answer or a detail read that crossed a newer save never replaces it, nor drops a draft.
   - `NotificationLogPage.test.tsx` «#7» waits for its chips (it read them one render early on a loaded runner).
+- Follow-ups of E7-W02's round-2 and E7-W04's reviews (E7-W05):
+  - Screen 12 and D10 share one preference saver (`packages/api-client/src/preferences-saver.ts`). A body sent while an older `PUT` was still out is sent again, once, after every older `PUT` has settled (an answer or a network failure). What the page was left with stays in the outbox until that final `PUT` gets a 2xx.
+  - Screen 12 saves again after a back-forward cache restore (`pageshow` with `persisted`). A second departure sends the changes made after the first.
+  - Each outbox entry belongs to one visit: an older visit's success never erases a newer visit's entry.
+  - A read-all of screen 11 that has no answer yet stays marked in the tab's `sessionStorage` per account and club (5 min). 03 sends it again on a full page load, then reads `GET /me/home`.
+  - A quiet reload of 03 (and of 04, 07 and the waitlist detail) that fails keeps the last rows.
+  - An impersonated session never shows the browser-permission note.
+  - `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` reads one shared text, `common:inProgress`, on every write that keeps its key: D9's send, 26 and D13, D4c, D7's publication and cancellation, and the public signup, add-dog and checkout. `admin-messaging:send.inProgress` is gone, and `DIFFERENT_REQUEST` keeps `errors:IDEMPOTENCY_KEY_REUSED`. `isInProgress` is exported from `@agilityhub/api-client`.
+  - D9: an older save answer leaves the detail alone but still drops the draft it carried.
 - The attendance sheet after a refusal (E6-W03 steps 11–14, E6-W01 round-2 review): a list read again drops the choices it no longer allows (`mergeSheet` takes the sheet's permissions and its base rows are required), a save's `Idempotency-Key` is kept only after a network failure, the student search's «Mostra'n més» answers at once after a new query, and a save no longer fades every circle (only those the api refuses).
 
 - Corrections of the global audit of 26-09 (E4-W16; INC-15 web half, INC-18…INC-22, INC-24 web half, INC-26…INC-29):

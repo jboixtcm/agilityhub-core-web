@@ -191,6 +191,50 @@ test.describe("E7-W02 T-11-34 screen 11 «Notificacions» (S11 R-11-10, R-11-11)
     await expect(page.getByRole("heading", { name: "Confirmar reserva" })).toBeVisible();
   });
 
+  test("E7-W05 step 3: a read-all screen 11 sent without an answer reaches Home after a full page load — 03 sends it again and its bell goes quiet", async ({
+    page,
+  }) => {
+    // Screen 11's read-all never gets an answer (the page is gone before it lands); the same
+    // request from another page goes through.
+    await page.addInitScript(() => {
+      const original = window.fetch.bind(window);
+      window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
+        const request = input instanceof Request ? input : new Request(input, init);
+        const readAll =
+          request.method === "POST" &&
+          new URL(request.url).pathname.endsWith("/me/notifications/read-all");
+        if (readAll && location.pathname === "/notificacions") {
+          Reflect.set(window, "__e7w05ReadAllHeld", true);
+          return new Promise<Response>(() => undefined);
+        }
+        return original(input, init);
+      };
+    });
+    await login(page);
+    await openFeed(page);
+    await expect
+      .poll(() => page.evaluate(() => Reflect.get(window, "__e7w05ReadAllHeld") === true))
+      .toBe(true);
+    await page.evaluate(() => {
+      Reflect.set(window, "__e7w05SameDocument", true);
+    });
+    // The next read-all is 03's: screen 11's was already sent.
+    const fromHome = page.waitForRequest(
+      (request) =>
+        request.method() === "POST" && request.url().endsWith("/me/notifications/read-all"),
+    );
+    // The tab bar's «Inici» is a plain link: a full page load.
+    await page.getByRole("link", { exact: true, name: "Inici" }).click();
+    await page.waitForURL("**/inici");
+    await fromHome;
+    await expect(page.getByRole("link", { exact: true, name: "Avisos" })).toBeVisible();
+    await expect(page.locator(".home-header__dot")).toHaveCount(0);
+    // A new document: the flag set on screen 11 is gone.
+    expect(
+      await page.evaluate(() => Reflect.get(window, "__e7w05SameDocument") === undefined),
+    ).toBe(true);
+  });
+
   test("a seat already taken: [AGAFA LA PLAÇA] disabled with its hint", async ({ page }) => {
     await login(page, "notificationsSeatTaken");
     await openFeed(page);

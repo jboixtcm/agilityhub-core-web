@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ApiError, apiFieldErrors } from "./api-error";
+import { ApiError, apiFieldErrors, isInProgress } from "./api-error";
 
 function apiError(code: string, status: number, details: unknown) {
   return new ApiError({ code, details, message: code, status, traceId: "trace-e4-w11" });
@@ -59,5 +59,21 @@ describe("E4-W11 CONVENCIONS_API §5 apiFieldErrors reads both field shapes", ()
     ).toEqual([]);
     expect(apiFieldErrors(new Error("network"))).toEqual([]);
     expect(apiFieldErrors({ code: "VALIDATION_ERROR", details: { field: "reason" } })).toEqual([]);
+  });
+});
+
+describe("E7-W05 step 4 CONVENCIONS_API §7 (E79, E80) isInProgress", () => {
+  it("is only IDEMPOTENCY_KEY_REUSED with reason IN_PROGRESS", () => {
+    expect(isInProgress(apiError("IDEMPOTENCY_KEY_REUSED", 409, { reason: "IN_PROGRESS" }))).toBe(
+      true,
+    );
+    expect(
+      isInProgress(apiError("IDEMPOTENCY_KEY_REUSED", 409, { reason: "DIFFERENT_REQUEST" })),
+    ).toBe(false);
+    expect(isInProgress(apiError("IDEMPOTENCY_KEY_REUSED", 409, null))).toBe(false);
+    expect(isInProgress(apiError("STALE_VERSION", 409, { reason: "IN_PROGRESS" }))).toBe(false);
+    expect(
+      isInProgress({ code: "IDEMPOTENCY_KEY_REUSED", details: { reason: "IN_PROGRESS" } }),
+    ).toBe(false);
   });
 });

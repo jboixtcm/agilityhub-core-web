@@ -1,4 +1,10 @@
-export { ApiError, type ApiFieldError, apiFieldErrors, isApiError } from "./api-error";
+export {
+  ApiError,
+  type ApiFieldError,
+  apiFieldErrors,
+  isApiError,
+  isInProgress,
+} from "./api-error";
 export {
   type AttendanceSaveRequest,
   type AttendanceSheet,
@@ -53,6 +59,22 @@ export {
 } from "./followup";
 export type { components, operations, paths } from "./generated/schema";
 export { itemsWith, type ListItemWith, listFields } from "./list-fields";
+export {
+  createPreferencesOutbox,
+  createPreferencesSaver,
+  isEmptyPatch,
+  mergePatches,
+  type NotificationPreferences,
+  patchedPreferences,
+  PREFERENCES_DEBOUNCE_MS,
+  PREFERENCES_OUTBOX_MAX_AGE_MS,
+  type PreferencesOutbox,
+  type PreferencesPatch,
+  type PreferencesSaver,
+  type PreferencesSaverIo,
+  type PreferencesSaverState,
+  shownPreferences,
+} from "./preferences-saver";
 export { createQueryClient, queryKeys, useBranding, useMe } from "./query";
 export {
   type ClubRing,

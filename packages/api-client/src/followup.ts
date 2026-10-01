@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { isApiError } from "./api-error";
+import { isApiError, isInProgress } from "./api-error";
 import type { ApiClient } from "./client";
 import type { components } from "./generated/schema";
 import { type FileLimits, loadFileLimits, uploadSignedGrant } from "./uploads";
@@ -66,9 +66,7 @@ export function attachmentName(fileName: string): string {
  * is not its answer (CONVENCIONS_API §7, E79).
  */
 function unanswered(cause: unknown): boolean {
-  if (!isApiError(cause) || cause.status === 0) return true;
-  const details = cause.details as { reason?: unknown } | null | undefined;
-  return cause.code === "IDEMPOTENCY_KEY_REUSED" && details?.reason === "IN_PROGRESS";
+  return !isApiError(cause) || cause.status === 0 || isInProgress(cause);
 }
 
 /**

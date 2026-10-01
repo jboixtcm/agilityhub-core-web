@@ -340,8 +340,9 @@ describe("T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13)", () =
       "No s'ha pogut enviar el comunicat. Torna-ho a provar.",
     );
     fireEvent.click(submit);
+    // E7-W05 step 4 (CONVENCIONS_API §7, E80): the shared text of a write still in progress.
     expect(await within(modal).findByText(/encara està en curs/u)).toHaveTextContent(
-      "L'enviament encara està en curs. Torna-ho a provar d'aquí a un moment.",
+      "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.",
     );
     releaseFirst();
     await firstDone;
@@ -356,6 +357,63 @@ describe("T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13)", () =
     await vi.waitFor(() => {
       expect(batches).toEqual(["batch-0001"]);
     });
+  });
+
+  it("E7-W05 step 4 (CONVENCIONS_API §7, E80): IDEMPOTENCY_KEY_REUSED {reason: DIFFERENT_REQUEST} keeps the error's own text, not the in-progress one, and retires the key", async () => {
+    let real = 0;
+    server.use(
+      http.post("*/api/v1/message-templates/:id/send", async ({ request }) => {
+        const body = (await request.clone().json()) as { dryRun: boolean };
+        if (body.dryRun) return undefined;
+        real += 1;
+        if (real > 1) return undefined;
+        return HttpResponse.json(
+          {
+            code: "IDEMPOTENCY_KEY_REUSED",
+            details: { reason: "DIFFERENT_REQUEST" },
+            message: "Idempotency key reused",
+            traceId: "t-409",
+          },
+          { status: 409 },
+        );
+      }),
+    );
+    const requests = record();
+    const onSent = vi.fn();
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-messaging", "errors"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <SendAnnouncementDialog
+            audience={{ kind: "selection", memberIds: ["member-laura", "member-anna"] }}
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            initialTemplateId="tpl-n-24"
+            onClose={() => undefined}
+            onSent={onSent}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    const modal = await dialog();
+    fireEvent.click(await within(modal).findByRole("checkbox", { name: confirmation(2) }));
+    const submit = within(modal).getByRole("button", { name: "ENVIA" });
+    fireEvent.click(submit);
+    expect(await within(modal).findByRole("alert")).toHaveTextContent(
+      "La clau d'idempotència ja s'ha utilitzat per a una altra petició.",
+    );
+    expect(within(modal).queryByText(/encara està en curs/u)).toBeNull();
+    fireEvent.click(submit);
+    await vi.waitFor(() => {
+      expect(onSent).toHaveBeenCalledWith(2);
+    });
+    const sent = sends(requests).filter((request) => request.body?.dryRun === false);
+    expect(sent).toHaveLength(2);
+    expect(sent[1]?.key).not.toBe(sent[0]?.key);
   });
 
   it("E7-W04 step 2 (R-11-13): the count and the tick belong to the latest dry run — A answers 11, B is asked, back to A before B answers: no count, ENVIA off, nothing sent; A's new answer shows its count unticked", async () => {

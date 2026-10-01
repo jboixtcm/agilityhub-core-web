@@ -1,0 +1,57 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > renders D10's wording: the four categories (the fourth CLUB_NEWS row), the App tick always on, «+SMS», the reminder «Mai» with the six options, the push toggle and «Avisos enviats ›»
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > each change shows at once and the changes of 300 ms travel as one partial PUT
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > «Avisos enviats ›» right after a change: the change is saved (and answered) before the log opens
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > a full page load (how D10's links leave the record) sends the change still waiting for its 300 ms, with keepalive
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > a refused save (422 INVALID_REMINDER_OPTION) puts back what the api holds and says why
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W01 round 2 #4: the block reads its own route, GET /members/{id}/notification-preferences
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W01 round 2 #4: a failed read says so with [Torna-ho a provar], and the block stays
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W01 round 2 #5: leaving the page sends every unsaved change with keepalive — the one on its way too — and the next visit sends it again
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W04 step 3 (R-11-04): PERSONAL = false on its way, set back to true and the page left, the answers in reverse order — true is saved, and the recovery entry stays until it is
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W04 step 4 (R-11-04): after a back-forward cache restore, leaving still saves — pagehide(persisted) → pageshow(persisted) → a change → leave at once: the PUT is sent and the outbox holds it
+ × src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it 513ms
+   → expected null to match object { memberId: 'member-laura', …(1) }
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W05 step 5 (R-11-04): the departure's keepalive PUT is held across pagehide(persisted) and pageshow(persisted) — the kept change goes again as a normal save once it settles, and the outbox clears only when that save is answered
+ ↓ src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > without SMS and PUSH (the api's `modules`): no «+SMS» and no push toggle
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it
+AssertionError: expected null to match object { memberId: 'member-laura', …(1) }
+
+- Expected:
+{
+  "memberId": "member-laura",
+  "patch": {
+    "emailByCategory": {
+      "PERSONAL": true,
+    },
+  },
+}
+
++ Received:
+null
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:551:22
+    549|     // The api holds the older value, so the latest choice is still ow…
+    550|     expect((await stored())?.emailByCategory.PERSONAL).toBe(false);
+    551|     expect(outbox()).toMatchObject({
+       |                      ^
+    552|       memberId: "member-laura",
+    553|       patch: { emailByCategory: { PERSONAL: true } },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  04:44:56
+   Duration  1.35s (tests 40%, transform 27%, environment 17%, import 11%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/NotificationPreferencesBlock.test.tsx -t path a --reporter=verbose

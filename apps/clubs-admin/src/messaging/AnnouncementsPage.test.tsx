@@ -455,6 +455,123 @@ describe("T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12)", () => {
     });
   });
 
+  it("E7-W05 step 5 (R-11-12): a GET /message-templates/{id} read with the older version that answers after a newer save's answer never brings the older version back — the saved text stays and the next save carries the newer version", async () => {
+    let releaseRead: () => void = () => undefined;
+    const readMayAnswer = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    let readAnswered = false;
+    let readVersion: number | undefined;
+    server.use(
+      // The detail read of the template just created: the api reads it at once, and the answer
+      // reaches the page only after the admin's save has been answered.
+      http.get("*/api/v1/message-templates/:id", async ({ params, request }) => {
+        if (!String(params.id).startsWith("tpl-custom-")) return undefined;
+        const response = await getResponse(handlers, request.clone());
+        readVersion = ((await response?.clone().json()) as { version: number } | undefined)
+          ?.version;
+        await readMayAnswer;
+        readAnswered = true;
+        return response;
+      }),
+    );
+    const requests = recordRequests();
+    await renderD9();
+    await editor();
+    fireEvent.click(screen.getByRole("button", { name: "Nova plantilla" }));
+    const dialog = screen.getByRole("dialog", { name: "Nova plantilla" });
+    fireEvent.change(within(dialog).getByLabelText("Categoria"), { target: { value: "PERSONAL" } });
+    fireEvent.change(within(dialog).getByLabelText("Títol"), {
+      target: { value: "Portes obertes" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Crea" }));
+    await waitFor(() => {
+      expect(title().value).toBe("Portes obertes");
+    });
+    // The read of the new template is on its way (version 1) while the admin saves (→ 2).
+    await waitFor(() => {
+      expect(readVersion).toBeDefined();
+    });
+    fireEvent.change(body(), { target: { value: "Portes obertes dissabte a les 10." } });
+    fireEvent.click(save());
+    await waitFor(() => {
+      expect(screen.queryByText("sense desar")).toBeNull();
+    });
+    await waitFor(() => {
+      expect(body()).not.toHaveAttribute("readonly");
+    });
+    releaseRead();
+    await waitFor(() => {
+      expect(readAnswered).toBe(true);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(body().value).toBe("Portes obertes dissabte a les 10.");
+    expect(screen.queryByText("sense desar")).toBeNull();
+    // The next save is based on the newer version: no STALE_VERSION.
+    fireEvent.change(body(), { target: { value: "Portes obertes dissabte a les 11." } });
+    fireEvent.click(save());
+    await waitFor(() => {
+      expect(screen.queryByText("sense desar")).toBeNull();
+    });
+    expect(screen.queryByText(/Algú ha modificat aquesta plantilla/u)).toBeNull();
+    const versions = requests
+      .filter((request) => request.line.startsWith("PUT /message-templates/tpl-custom-"))
+      .map((request) => (request.body as { version: number }).version);
+    expect(readVersion).toBe(versions[0]);
+    expect(versions).toEqual([versions[0], (versions[0] ?? 0) + 1]);
+  });
+
+  it("E7-W05 step 6 (E7-W04 review #4, R-11-12): an older save answer leaves the detail alone but drops the draft it carried — save E1 (answered late), reopen, [Desactiva] (newer version), then E1's answer: nothing stays «sense desar»", async () => {
+    let release: () => void = () => undefined;
+    const late = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let held = false;
+    let lateAnswered = false;
+    server.use(
+      http.put("*/api/v1/message-templates/:id", async ({ params, request }) => {
+        if (params.id !== "tpl-n-28" || held) return undefined;
+        held = true;
+        // The api saves E1 at once; its answer reaches the page last.
+        const response = await getResponse(handlers, request.clone());
+        await late;
+        lateAnswered = true;
+        return response;
+      }),
+    );
+    await renderD9();
+    await editor();
+    fireEvent.change(body(), { target: { value: "Primer text desat de la baixa." } });
+    fireEvent.click(save());
+    await waitFor(() => {
+      expect(body()).toHaveAttribute("readonly");
+    });
+    // Another template, then this one again: it is read with E1 in it, the draft still on top.
+    fireEvent.click(screen.getByRole("button", { name: "Canvi de nivell (N-09)" }));
+    await waitFor(() => {
+      expect(title().value).toBe("Canvi de nivell");
+    });
+    fireEvent.click(screen.getByRole("button", { name: /^Comunicació de baixa com a associat/u }));
+    await waitFor(() => {
+      expect(title().value).toBe("Comunicació de baixa com a associat");
+    });
+    expect(screen.getByText("sense desar")).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Desactiva" }));
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Activa" })).toBeVisible();
+    });
+    release();
+    await waitFor(() => {
+      expect(lateAnswered).toBe(true);
+    });
+    await waitFor(() => {
+      expect(screen.queryByText("sense desar")).toBeNull();
+    });
+    expect(body().value).toBe("Primer text desat de la baixa.");
+    // The newer version stays: still disabled.
+    expect(screen.getByRole("button", { name: "Activa" })).toBeVisible();
+  });
+
   it("a stale PUT says «Algú ha modificat aquesta plantilla; recarrega-la»; [Recarrega] reads it again and keeps the admin's edits — the text and the one matrix cell they clicked — saved on the new version", async () => {
     const requests = recordRequests();
     await renderD9();

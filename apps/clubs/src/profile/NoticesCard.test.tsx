@@ -1,4 +1,5 @@
 import {
+  handlers,
   mockScenario,
   NOTIFICATIONS_MOCK_NOW,
   resetActivityState,
@@ -8,7 +9,7 @@ import {
 import { server } from "@agilityhub/api-client/mocks/server";
 import { LOCALE_STORAGE_KEY } from "@agilityhub/i18n";
 import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import { getResponse, http, HttpResponse } from "msw";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { canic, renderApp, without } from "../booking/test-utils";
@@ -119,6 +120,81 @@ function present<Value>(value: Value | null | undefined): Value {
 }
 
 const emailSwitch = (label: string) => screen.getByRole("switch", { name: `Correu: ${label}` });
+
+/** A promise the test opens when it chooses. */
+function gate() {
+  let open: () => void = () => undefined;
+  const opened = new Promise<void>((resolve) => {
+    open = resolve;
+  });
+  return { open, opened };
+}
+
+/**
+ * How the api treats one `PUT` (by its order): when it lands (is applied), whether it lands at all,
+ * when its answer leaves, and whether the answer is lost on the way (a network failure).
+ */
+interface PutPlan {
+  answerAfter?: Promise<void>;
+  landAfter?: Promise<void>;
+  lost?: boolean;
+  networkFailure?: boolean;
+}
+
+/**
+ * Each `PUT /me/notification-preferences` follows its plan (a `PUT` without one lands and is
+ * answered at once). `landed` lists the bodies in the order the api applied them.
+ */
+function planPuts(plans: PutPlan[]) {
+  const landed: unknown[] = [];
+  let index = 0;
+  server.use(
+    http.put("*/api/v1/me/notification-preferences", async ({ request }) => {
+      const plan = plans[index] ?? {};
+      index += 1;
+      const body: unknown = await request.clone().json();
+      await plan.landAfter;
+      const response =
+        plan.lost === true ? undefined : await getResponse(handlers, request.clone());
+      if (plan.lost !== true) landed.push(body);
+      await plan.answerAfter;
+      return plan.networkFailure === true ? HttpResponse.error() : response;
+    }),
+  );
+  return landed;
+}
+
+/** The reminder the api holds now. */
+async function storedReminder(): Promise<number | null> {
+  const stored = (await (await fetch(`${window.location.origin}${PREFERENCES}`)).json()) as {
+    reminderMinutesBefore: number | null;
+  };
+  return stored.reminderMinutesBefore;
+}
+
+const noticesOutbox = () =>
+  JSON.parse(sessionStorage.getItem(NOTICES_OUTBOX_KEY) ?? "null") as { patch: unknown } | null;
+
+const reminderSelect = () => screen.getByRole("combobox", { name: "Recordatori de classe" });
+
+/** Reminder 60 (its `PUT` is the first), then 120, and the member leaves 12 at once. */
+async function sixtyThenTwoHoursAndLeave() {
+  fireEvent.change(reminderSelect(), { target: { value: "60" } });
+  await waitFor(() => {
+    expect(puts()).toHaveLength(1);
+  });
+  fireEvent.change(reminderSelect(), { target: { value: "120" } });
+  cleanup();
+  await waitFor(() => {
+    expect(puts()).toEqual([{ reminderMinutesBefore: 60 }, { reminderMinutesBefore: 120 }]);
+  });
+}
+
+function transition(type: "pagehide" | "pageshow", persisted: boolean) {
+  const event = new Event(type);
+  Object.defineProperty(event, "persisted", { value: persisted });
+  window.dispatchEvent(event);
+}
 
 describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17)", () => {
   it("the fixed green tick under «App», the four e-mail switches with the product defaults and «+SMS»", async () => {
@@ -311,6 +387,173 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     await waitFor(() => {
       expect(sessionStorage.getItem(NOTICES_OUTBOX_KEY)).toBeNull();
     });
+  });
+
+  it("E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it", async () => {
+    const first = gate();
+    const landed = planPuts([
+      { landAfter: first.opened },
+      {},
+      { lost: true, networkFailure: true },
+    ]);
+    await openProfile();
+    await sixtyThenTwoHoursAndLeave();
+    await waitFor(() => {
+      expect(landed).toEqual([{ reminderMinutesBefore: 120 }]);
+    });
+    first.open();
+    await waitFor(() => {
+      expect(puts()).toHaveLength(3);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(await storedReminder()).toBe(60);
+    expect(noticesOutbox()).toMatchObject({ patch: { reminderMinutesBefore: 120 } });
+    await openProfile();
+    await waitFor(async () => {
+      expect(await storedReminder()).toBe(120);
+    });
+    await waitFor(() => {
+      expect(noticesOutbox()).toBeNull();
+    });
+    expect(reminderSelect()).toHaveValue("120");
+  });
+
+  it("E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx", async () => {
+    const first = gate();
+    const resend = gate();
+    const landed = planPuts([
+      { landAfter: first.opened, networkFailure: true },
+      {},
+      { answerAfter: resend.opened },
+    ]);
+    await openProfile();
+    await sixtyThenTwoHoursAndLeave();
+    await waitFor(() => {
+      expect(landed).toEqual([{ reminderMinutesBefore: 120 }]);
+    });
+    first.open();
+    await waitFor(() => {
+      expect(landed).toHaveLength(3);
+    });
+    expect(noticesOutbox()).toMatchObject({ patch: { reminderMinutesBefore: 120 } });
+    resend.open();
+    await waitFor(() => {
+      expect(noticesOutbox()).toBeNull();
+    });
+    expect(landed).toEqual([
+      { reminderMinutesBefore: 120 },
+      { reminderMinutesBefore: 60 },
+      { reminderMinutesBefore: 120 },
+    ]);
+    expect(await storedReminder()).toBe(120);
+  });
+
+  it("E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved", async () => {
+    const first = gate();
+    const second = gate();
+    const landed = planPuts([{ landAfter: first.opened }, { answerAfter: second.opened }, {}]);
+    await openProfile();
+    await sixtyThenTwoHoursAndLeave();
+    await waitFor(() => {
+      expect(landed).toEqual([{ reminderMinutesBefore: 120 }]);
+    });
+    first.open();
+    await waitFor(() => {
+      expect(landed.slice(0, 2)).toEqual([
+        { reminderMinutesBefore: 120 },
+        { reminderMinutesBefore: 60 },
+      ]);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(noticesOutbox()).toMatchObject({ patch: { reminderMinutesBefore: 120 } });
+    second.open();
+    await waitFor(() => {
+      expect(noticesOutbox()).toBeNull();
+    });
+    expect(landed).toEqual([
+      { reminderMinutesBefore: 120 },
+      { reminderMinutesBefore: 60 },
+      { reminderMinutesBefore: 120 },
+    ]);
+    expect(await storedReminder()).toBe(120);
+  });
+
+  it("E7-W05 step 2 (R-11-04): back from the back-forward cache, 12 saves again — pagehide with a change pending, pageshow(persisted), an edit while that PUT is out, leave: the edit is saved", async () => {
+    const departure = gate();
+    planPuts([{ answerAfter: departure.opened }]);
+    await openProfile();
+    fireEvent.change(reminderSelect(), { target: { value: "60" } });
+    transition("pagehide", true);
+    await waitFor(() => {
+      expect(puts()).toEqual([{ reminderMinutesBefore: 60 }]);
+    });
+    transition("pageshow", true);
+    fireEvent.change(reminderSelect(), { target: { value: "120" } });
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    transition("pagehide", false);
+    expect(noticesOutbox()).toMatchObject({ patch: { reminderMinutesBefore: 120 } });
+    departure.open();
+    await waitFor(async () => {
+      expect(await storedReminder()).toBe(120);
+    });
+    await waitFor(() => {
+      expect(noticesOutbox()).toBeNull();
+    });
+    expect(puts().at(-1)).toEqual({ reminderMinutesBefore: 120 });
+  });
+
+  it("E7-W05 step 6 (E7-W02 review #4): an older visit's success never erases the entry a newer visit left in the outbox", async () => {
+    const olderVisit = gate();
+    planPuts([
+      // The first visit's departure: answered only after the second visit has left.
+      { answerAfter: olderVisit.opened },
+      // The second visit saves what it took over from the outbox…
+      {},
+      // …and its own departure never reaches the api.
+      { lost: true, networkFailure: true },
+    ]);
+    await openProfile();
+    fireEvent.change(reminderSelect(), { target: { value: "60" } });
+    cleanup();
+    await waitFor(() => {
+      expect(puts()).toEqual([{ reminderMinutesBefore: 60 }]);
+    });
+    await openProfile();
+    await waitFor(() => {
+      expect(puts()).toHaveLength(2);
+    });
+    await waitFor(() => {
+      expect(screen.queryByText("Desant…")).toBeNull();
+    });
+    fireEvent.click(emailSwitch("Operativa (reserves i canvis que has fet tu)"));
+    cleanup();
+    await waitFor(() => {
+      expect(puts()).toHaveLength(3);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(noticesOutbox()).toMatchObject({ patch: { emailByCategory: { OPERATIONAL: true } } });
+    olderVisit.open();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(noticesOutbox()).toMatchObject({ patch: { emailByCategory: { OPERATIONAL: true } } });
+  });
+
+  it("E7-W05 step 6 (E7-W02 review #5): an impersonated session never shows the browser-permission note (it never asks for push)", async () => {
+    const { requestPermission } = browserWithPush("denied");
+    vi.stubGlobal("Notification", { permission: "denied", requestPermission });
+    await openProfile({ scenario: "impersonated" });
+    const push = screen.getByRole("switch", {
+      name: "Vull rebre notificacions al mòbil quan hi hagi comunicats del club",
+    });
+    expect(push).toHaveAttribute("aria-checked", "true");
+    fireEvent.click(push);
+    fireEvent.click(push);
+    await waitFor(() => {
+      expect(puts()).toEqual([{ pushClubNews: true }]);
+    });
+    expect(
+      screen.queryByText("Activa les notificacions al navegador per rebre-les al mòbil"),
+    ).toBeNull();
+    expect(requestPermission).not.toHaveBeenCalled();
   });
 
   it("asks for the browser's permission only on interaction, never on mount, and registers the subscription", async () => {

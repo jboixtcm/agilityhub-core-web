@@ -99,7 +99,6 @@
     "sending": "Enviando",
     "done": "Comunicado enviado a {count, plural, one {# abonado} other {# abonados}}",
     "error": "No se ha podido enviar el comunicado. Vuelve a intentarlo.",
-    "inProgress": "El envío todavía está en curso. Vuelve a intentarlo dentro de un momento.",
     "cancel": "Cancela",
     "close": "Cierra"
   },

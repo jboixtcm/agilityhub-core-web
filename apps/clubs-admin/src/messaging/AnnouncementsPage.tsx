@@ -322,11 +322,12 @@ export function AnnouncementsPage({
               onSaved={(saved, options) => {
                 setListReload((value) => value + 1);
                 // An answer older than a version already received (a save answered after a newer
-                // one) changes nothing: neither the detail shown nor a draft.
-                if (freshest(saved) !== saved) return;
-                // The answer of a template no longer open never replaces the one shown; reopening
-                // it reads it again.
-                if (selectedRef.current === saved.id) setDetail({ data: saved, status: "ready" });
+                // one) never replaces the detail shown, and the answer of a template no longer
+                // open never does either (reopening it reads it again). The draft that write
+                // carried is saved all the same, so it goes (E7-W05 step 6).
+                if (freshest(saved) === saved && selectedRef.current === saved.id) {
+                  setDetail({ data: saved, status: "ready" });
+                }
                 if (options?.keepEdits !== true) {
                   // Only the draft that write carried: one written after it (the template was
                   // reopened meanwhile) stays.
