@@ -13,6 +13,7 @@ import {
   mockScenario,
   resetAttendanceMockState,
   resetFollowupMockState,
+  resetMemberSelfServiceState,
   type MockScenario,
 } from "./handlers";
 import { server } from "./server";
@@ -193,6 +194,94 @@ describe("E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants
     expect((await history()).data?.items).toHaveLength(7);
     use("instructor");
     await expect(failure(history())).resolves.toMatchObject({ code: "FORBIDDEN", status: 403 });
+  });
+});
+
+describe("E6-W04 step 0b · 25's activity rows and 13's task completion, as the api answers (rulings E74, E75)", () => {
+  afterEach(() => {
+    resetMemberSelfServiceState();
+  });
+
+  const complete = (id: string) =>
+    client.POST("/tasks/{id}/completion", { params: { path: { id } } });
+  const meDuna = async () =>
+    (await client.GET("/me/dogs")).data?.dogs.find((dog) => dog.id === "dog-duna");
+
+  it("E6-W04 step 0b: GET /me/history sends the done activity's activityId (its page answers) and null on the class and training rows", async () => {
+    const { data } = await history();
+    expectValid("MemberHistory", data);
+    expect(data?.items.find((item) => item.type === "ACTIVITY")).toMatchObject({
+      activityId: "activity-seminari-obstacles",
+      id: "ar1",
+      title: "Seminari d'obstacles",
+    });
+    expect(
+      data?.items.filter((item) => item.type !== "ACTIVITY").map((item) => item.activityId),
+    ).toEqual([null, null, null, null, null, null]);
+  });
+
+  it("E6-W04 step 0b: the member completes a task of GET /me/dogs with no body and no key — 200 Task with doneAt and doneBy, GET /me/dogs shows it done and counts it, a second call is 422 TASK_ALREADY_DONE", async () => {
+    const recorded: { body: string; key: string | null }[] = [];
+    server.events.on("request:start", ({ request }) => {
+      if (request.url.endsWith("/completion")) {
+        void request
+          .clone()
+          .text()
+          .then((body) => {
+            recorded.push({ body, key: request.headers.get("Idempotency-Key") });
+          });
+      }
+    });
+    const done = await complete("task-duna-balance");
+    server.events.removeAllListeners();
+    expect(done.response.status).toBe(200);
+    expectValid("Task", done.data);
+    expect(done.data).toMatchObject({
+      createdBy: { displayName: "Laura", role: "INSTRUCTOR" },
+      dogId: "dog-duna",
+      doneAt: "2026-08-03T06:50:00Z",
+      doneBy: { displayName: "Biel", gender: "MALE", role: "MEMBER" },
+      id: "task-duna-balance",
+      state: "DONE",
+      text: "Treballar l'entrada al balancí",
+    });
+    expect(recorded).toEqual([{ body: "", key: null }]);
+    const duna = await meDuna();
+    expect(duna?.tasks).toMatchObject({ completed: 2, open: 1 });
+    expect(duna?.tasks?.items.find((task) => task.id === "task-duna-balance")?.doneAt).toBe(
+      "2026-08-03T06:50:00Z",
+    );
+    await expect(failure(complete("task-duna-balance"))).resolves.toEqual({
+      code: "TASK_ALREADY_DONE",
+      details: {},
+      status: 422,
+    });
+    await expect(failure(complete("task-duna-start"))).resolves.toMatchObject({
+      code: "TASK_ALREADY_DONE",
+      status: 422,
+    });
+    // The refused calls changed nothing.
+    expect((await meDuna())?.tasks).toMatchObject({ completed: 2, open: 1 });
+  });
+
+  it("E6-W04 step 0b: the impersonation token completes as the member (doneBy Laura, MEMBER); an unknown task is 404 NOT_FOUND; TASKS off is 404 MODULE_DISABLED", async () => {
+    use("impersonated");
+    const done = await complete("task-duna-weave");
+    expectValid("Task", done.data);
+    expect(done.data).toMatchObject({
+      attachments: [expect.objectContaining({ id: expect.any(String) as string })],
+      doneBy: { displayName: "Laura", gender: "FEMALE", role: "MEMBER" },
+      state: "DONE",
+    });
+    await expect(failure(complete("task-unknown"))).resolves.toMatchObject({
+      code: "NOT_FOUND",
+      status: 404,
+    });
+    use("minimal");
+    await expect(failure(complete("task-duna-start"))).resolves.toMatchObject({
+      code: "MODULE_DISABLED",
+      status: 404,
+    });
   });
 });
 
@@ -441,6 +530,44 @@ describe("E6-W02 step 7 · observations and attachments (R-10-11, R-10-12)", () 
       },
     });
     expect(again.data?.id).toBe(registered.data?.id);
+  });
+
+  it("E6-W04 step 0d: a fileKey bound to a task is refused for any other task (422 ATTACHMENT_ENTITY_MISMATCH, nothing created), past its five minutes too; its own task replays it", async () => {
+    const fileKey = await uploadedKey("TASK");
+    const created = await create({
+      attachmentIds: [fileKey],
+      dogId: "dog-duna",
+      text: "Salts amb calma",
+    });
+    expect(created.response.status).toBe(201);
+    const taskId = created.data?.id ?? "";
+    const mismatch = { code: "ATTACHMENT_ENTITY_MISMATCH", details: {}, status: 422 };
+    // Another submission that carries the same key: another task.
+    await expect(
+      failure(
+        create({ attachmentIds: [fileKey], dogId: "dog-duna", text: "Salts amb calma i girs" }),
+      ),
+    ).resolves.toEqual(mismatch);
+    expect((await tasks()).data?.items).toHaveLength(4);
+    const attach = (entityId: string) =>
+      client.POST("/attachments", {
+        body: { entityId, entityType: "TASK", fileKey, name: "vídeo_salt.mp4" },
+        params: { header: { "Idempotency-Key": crypto.randomUUID() } },
+      });
+    await expect(failure(attach("t1"))).resolves.toEqual(mismatch);
+    // A bound grant is not checked against its five minutes: the binding answers.
+    vi.setSystemTime(Date.now() + 6 * 60_000);
+    await expect(
+      failure(create({ attachmentIds: [fileKey], dogId: "dog-duna", text: "Una altra" })),
+    ).resolves.toEqual(mismatch);
+    const again = await attach(taskId);
+    expect(again.response.status).toBe(201);
+    expect(again.data?.id).toBe(created.data?.attachments[0]?.id);
+    expect((await tasks()).data?.items).toHaveLength(4);
+    const t1 = await client.GET("/attachments", {
+      params: { query: { entityId: "t1", entityType: "TASK" } },
+    });
+    expect(t1.data?.items.map((item) => item.name)).toEqual(["vídeo_balancí.mp4"]);
   });
 
   it("POST /attachments registers an observation file, GET lists it with a signed url, DELETE retires it", async () => {

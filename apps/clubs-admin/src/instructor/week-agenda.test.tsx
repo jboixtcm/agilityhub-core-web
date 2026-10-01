@@ -2,6 +2,7 @@ import { createApiClient } from "@agilityhub/api-client";
 import {
   AGENDA_MOCK_NOW,
   AGENDA_SELECTED_CLASS_ID,
+  handlers,
   mockScenario,
   type MockScenario,
   resetAttendanceMockState,
@@ -14,7 +15,7 @@ import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhu
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -648,6 +649,112 @@ describe("E6-W03 step 7 modules and impersonation on D12 (S10 §9)", () => {
     cleanup();
     await renderAgenda({ path: "/agenda?setmana=2026-09-07" });
     expect(await screen.findByText("Aquesta setmana no hi ha res a l'agenda")).toBeVisible();
+  });
+});
+
+describe("E6-W04 step 0c: D12's legend reads the half height's minutes from the api (InstructorWeek.trainingSlotMinutes, api E6-T06, ruling E75)", () => {
+  /** The mock's own week, with the api's `trainingSlotMinutes` replaced by `value`. */
+  function weekWithSlotMinutes(value: number | null) {
+    server.use(
+      http.get("*/api/v1/instructor/week", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new TypeError("The week mock did not answer");
+        const week = (await original.json()) as Record<string, unknown>;
+        return HttpResponse.json({ ...week, trainingSlotMinutes: value });
+      }),
+    );
+  }
+
+  const legend = () => document.querySelector(".week-agenda__legend")?.textContent;
+
+  it("E6-W04 step 0c: the club's 30 minutes as the mock answers them, and 45 when the api says 45 — «(mitja alçada: 45 min)», never the mockup's literal", async () => {
+    const requests = recordRequests();
+    const answers: unknown[] = [];
+    server.events.on("response:mocked", ({ request, response }) => {
+      if (new URL(request.url).pathname.endsWith("/instructor/week")) {
+        void response
+          .clone()
+          .json()
+          .then((body: { trainingSlotMinutes?: unknown }) => {
+            answers.push(body.trainingSlotMinutes);
+          });
+      }
+    });
+    await renderAgenda();
+    await grid();
+    await waitFor(() => {
+      expect(answers).toEqual([30]);
+    });
+    expect(legend()).toContain("(mitja alçada: 30 min)");
+    expect(weekReads(requests)).toEqual([""]);
+    cleanup();
+    weekWithSlotMinutes(45);
+    await renderAgenda();
+    await grid();
+    await waitFor(() => {
+      expect(legend()).toBe(
+        "Reserva = pista reservada per a entrenament (mitja alçada: 45 min) · Bloqueig = pista tancada, amb el motiu · clic en una classe: inscrits i passar llista",
+      );
+    });
+  });
+
+  it("E6-W04 step 0c: trainingSlotMinutes null leaves the minutes out — «(mitja alçada)» — in ca, es and en", async () => {
+    weekWithSlotMinutes(null);
+    for (const [locale, text] of [
+      [
+        "ca",
+        "Reserva = pista reservada per a entrenament (mitja alçada) · Bloqueig = pista tancada, amb el motiu · clic en una classe: inscrits i passar llista",
+      ],
+      [
+        "es",
+        "Reserva = pista reservada para entrenamiento (media altura) · Bloqueo = pista cerrada, con el motivo · clic en una clase: inscritos y pasar lista",
+      ],
+      [
+        "en",
+        "Booking = ring booked for training (half height) · Block = ring closed, with the reason · click a class: registrants and attendance",
+      ],
+    ] as const) {
+      cleanup();
+      await renderAgenda({ locale });
+      await grid();
+      await waitFor(() => {
+        expect(legend()).toBe(text);
+      });
+      expect(legend()).not.toMatch(/\d+ min|null|undefined/u);
+    }
+  });
+});
+
+describe("E6-W04 step 3e · D12 dims a FINISHED class (R-10-15: ACTIVE, FINISHED and CANCELLED, the last two dimmed)", () => {
+  it("E6-W04 step 3e: a class that P8 finished is drawn dimmed, never struck through as a cancelled one", async () => {
+    server.use(
+      http.get("*/api/v1/instructor/week", async ({ request }) => {
+        const original = await getResponse(handlers, request);
+        if (original === undefined) throw new TypeError("The week mock did not answer");
+        const week = (await original.json()) as { cells: { kind?: string; state?: string }[] };
+        return HttpResponse.json({
+          ...week,
+          cells: week.cells.map((cell) =>
+            cell.kind === "CLASS" && cell.state === "ACTIVE"
+              ? { ...cell, state: "FINISHED" }
+              : cell,
+          ),
+        });
+      }),
+    );
+    await renderAgenda();
+    await grid();
+    const finished = await waitFor(() => {
+      const cells = [
+        ...document.querySelectorAll<HTMLElement>(
+          ".week-agenda button.ah-schedule-cell:not(.ah-schedule-cell--struck)",
+        ),
+        // A class cell carries its occupancy («4/5»); trainings and blocks have none.
+      ].filter((cell) => cell.querySelector(".ah-schedule-cell__meta") !== null);
+      expect(cells.length).toBeGreaterThan(0);
+      return cells;
+    });
+    for (const cell of finished) expect(cell).toHaveClass("ah-schedule-cell--muted");
   });
 });
 

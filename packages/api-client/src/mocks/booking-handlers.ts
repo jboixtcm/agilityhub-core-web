@@ -188,12 +188,12 @@ function holdFailure(body: SeatHoldRequest, context: BookingOptions) {
         reason: "rebut de juliol pendent",
       });
     case "WEEKLY_LIMIT_DONE":
-      // The class's booking week at the clock (R-08-01), as the api computes it.
+      // The class's booking week at the clock (R-08-01), counted over the dog's bookings of it.
       return apiError(
         "BOOKING_LIMIT_REACHED",
         "Booking limit reached",
         409,
-        limitReachedDetails(row.week, context.now),
+        limitReachedDetails(body.dogId, row.week, context),
       );
     case "FULL":
     case "WAITLIST_FULL":

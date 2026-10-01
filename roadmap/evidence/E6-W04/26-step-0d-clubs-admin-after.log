@@ -1,0 +1,41 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > mockup D14 for an ADMIN: «5 pendents de llegir», the columns, the five rows highlighted and in the api's order, the authors by gender and the completed task 122ms
+ ✓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > for the instructor the api's order puts the three unread rows first (her own tasks are not unread) and the counter reads 3 34ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > D13 as the mockup: the header chips, four metric cards with their subtitles, the three blocks with the api's tasks, and the «5 darreres classes» table 132ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > no classes in the window reads «—»; TASKS off drops the three blocks, the button and every task read; FREE_TRAINING off drops the training card 39ms
+ ✓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > the three chips map to filter=kind:eq:TASK, kind:eq:MEMBER_NOTE and no kind filter 75ms
+ ✓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > «Marcar-ho tot com a llegit» calls read-all with its key, puts the counter at 0 and reads the list again 65ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > [GESTIONAR TASQUES I NOTES] opens the same editor as 26 in a drawer; a task created there shows in the record's block and counters 93ms
+ ✓ src/instructor/student-record.test.tsx > T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) > T-10-32 (D13): en with no missing key; `Level.name` is the api's (its ca fallback), never translated here 30ms
+ ✓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > a row click calls read for that row, drops its highlight and the counter at once, and opens D13 (the dog's record) 70ms
+ ✓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > 400 INVALID_FILTER shows the list's own message; levels.enabled off drops the «Nivell» column 47ms
+ ✓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > the pages hold at most 50 rows: only 20 and 50 are offered, and a size of 200 in the address becomes 50 25ms
+ ✓ src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #2 (R-10-10): the drawer reaches every task too — «Mostra'n més» reads the second page, and its oldest pending task is completed there 196ms
+ ✓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1 (review #2): a refused read puts the row back unread and the counter back, and says why with a retry that sends it again 93ms
+ ✓ src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #3: a round trip through the history keeps the drawer's drafts — the new task's text and file and an open edit — and the focus comes back to the link 105ms
+ ✓ src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #4 (AGENTS rule 4): a clip of the record that cannot be opened says why next to it — by its code, or «No s'ha pogut obrir el fitxer.» without an answer 24ms
+ ✓ src/instructor/student-record.test.tsx > E6-W02 round 2 (review of 30-09): D13 > #6 T-10-32 (D13): es renders every literal of the record in Spanish, with no missing key 32ms
+ ✓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1: the read belongs to the shell, so its failure is said on D13, where the user already is 137ms
+ ✓ src/instructor/student-record.test.tsx > E6-W05 (review of E6-W02's round 2): D13's drawer > step 3 (AGENTS rule 6): Escape in the delete confirmation closes the confirmation only; the drawer stays open with its unsaved task text and deletes nothing 50ms
+ ✓ src/instructor/student-record.test.tsx > E6-W04 step 0d (review of E6-W05): D13's drawer > E6-W04 step 0d: an instructor's mixed selection on an open task attaches the JPEG and says «eina.exe: …» in the drawer 50ms
+ ✓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1: a read that got no answer says so, and its retry keeps the key 76ms
+ ✓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #3 (review #4): a note updated while D14 is open still shows «llegit»; a click on its row sends the read 64ms
+ ✓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #5 (review #1): «Tipus» and «Pendent de llegir» offer the contract's values with the api's counts, also when the first page holds only unread notes 63ms
+ ✓ src/followup/followup.test.tsx > E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read > step 5 (R-10-13): offline, a failed read whose counter refresh fails too puts the counter back at its value, a failed retry does not lower it, and the api's count wins when it answers (E6-W04 step 0d: a count other than the restored one) 127ms
+ ✓ src/followup/followup.test.tsx > E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read > step 6 (R-10-13): a failed read, back to D14, a successful retry — the row loses its highlight and the counter drops 89ms
+ ✓ src/instructor/student-record.test.tsx > «Alumnes» of the back office (mockups D12–D14, S10 §13-9) > instructors see «Alumnes» in the sidebar; the search reads GET /dogs and opens D13 469ms
+ ✓ src/instructor/student-record.test.tsx > «Alumnes» of the back office (mockups D12–D14, S10 §13-9) > E5-W05 step 23 (R-10-00): «Alumnes» writes the owner's first name the api sends, a compound one whole («Joan Antoni + Toby»), and adds «(abonat: {nom i cognom})» to a dog led by another guide 14ms
+ ✓ src/followup/followup.test.tsx > T-10-30 the menu counter (S10 §2 row D14, step 6) > reads unread-count on mount, every 60 s and on focus; never when disabled 135ms
+ ✓ src/followup/followup.test.tsx > T-10-30 the menu counter (S10 §2 row D14, step 6) > a local change wins over an answer requested before it (a row read while the count is in flight) 104ms
+ ✓ src/followup/followup.test.tsx > E6-W03 step 5 the D14 entry for instructors (S10 §2) and the D12 entry > an instructor sees «Persones» with «Seguiment alumnes» and its counter only, and «Agenda de la setmana» (current) once, on /agenda 19ms
+ ✓ src/followup/followup.test.tsx > E6-W03 step 5 the D14 entry for instructors (S10 §2) and the D12 entry > TASKS off: no «Seguiment alumnes» and no counter; an instructor then has no «Persones» group 24ms
+ ✓ src/followup/followup.test.tsx > T-10-32 (D14) the three locales, with no missing key > es 38ms
+ ✓ src/followup/followup.test.tsx > T-10-32 (D14) the three locales, with no missing key > en 34ms
+
+ Test Files  2 passed (2)
+      Tests  32 passed (32)
+   Start at  02:02:48
+   Duration  2.70s (tests 53%, transform 26%, environment 10%, import 8%, setup 2%)
+

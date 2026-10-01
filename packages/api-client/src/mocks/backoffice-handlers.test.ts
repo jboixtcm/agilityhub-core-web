@@ -5,6 +5,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import openapiDocument from "../../openapi/openapi.json";
 import type { components } from "../generated/schema";
 
+import { findParameter, settingsState } from "./fixtures/settings";
 import {
   JOBS_MOCK_NOW,
   mockScenario,
@@ -51,6 +52,24 @@ async function as<Body>(scenario: MockScenario, method: string, path: string, bo
 
 /** The D4 class of the calendar world with 4 booked and 2 waiting (Wednesday 12 at 18:50). */
 const D4_CLASS = "cls-2026-08-12-1850-0";
+
+/**
+ * Sets a club parameter as a saved change would (`resetSettingsState` restores them); a key the mock
+ * club does not list yet is added to its block, as a club that sets it.
+ */
+function setParameter(key: string, value: unknown): void {
+  const found = findParameter(key);
+  if (found !== undefined) {
+    found.value = value;
+    return;
+  }
+  const template = findParameter("classes.defaultCapacity");
+  const block = settingsState.parameters.blocks.find((item) => item.key === "classes");
+  if (template === undefined || block === undefined) {
+    throw new TypeError("Missing the classes block");
+  }
+  block.rows.push({ ...structuredClone(template), key, value });
+}
 
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
@@ -306,10 +325,11 @@ describe("E5-W05 step 15 · the risk review's rows are classes of the calendar w
       "2026-09-23T10:00:00+02:00",
       ["AUTO_CANCELLED TODAY CANCELLED cls-2026-09-23-0930-0"],
     ],
+    // E5-W05 round 2 #12: a day with rows, so the assertion is real (the probe day has none).
     [
-      "dg 27-09 at 12:00, the review's probe day (no active class ahead)",
-      "2026-09-27T12:00:00+02:00",
-      [],
+      "dl 21-09 at 12:00, a Monday after its review (Wednesday's «Cadells» ahead)",
+      "2026-09-21T12:00:00+02:00",
+      ["WILL_CANCEL OTHER ACTIVE cls-2026-09-23-0930-0"],
     ],
   ])(
     "E5-W05 step 15: on %s each row is a class of its week in the state its status implies",
@@ -319,6 +339,30 @@ describe("E5-W05 step 15 · the risk review's rows are classes of the calendar w
       expect(await riskRowsInTheirWeeks()).toEqual(rows);
     },
   );
+
+  it("E5-W05 round 2 #12: on dg 27-09 at 12:00, the review's probe day, the form has no row because no active class falls in its window: the week ahead is still a draft", async () => {
+    vi.setSystemTime(new Date("2026-09-27T12:00:00+02:00"));
+    resetPlanningState();
+    const review = await as<RiskReviewForm>("admin", "GET", "/risk-review");
+    expect([review.status, review.body.date, review.body.items]).toEqual([200, "2026-09-27", []]);
+    // The window is Sunday 27 to Tuesday 29: the ending week has no class on Sunday, and the
+    // classes of Monday 28 and Tuesday 29 are drafts, which the review never covers.
+    const ending = await as<WeekCalendar>(
+      "admin",
+      "GET",
+      "/weeks/week-2026-09-21/calendar?filter=ACTIVE",
+    );
+    expect(ending.body.classes.length).toBeGreaterThan(0);
+    expect(ending.body.classes.filter((item) => item.date >= "2026-09-27")).toEqual([]);
+    const ahead = await as<WeekCalendar>(
+      "admin",
+      "GET",
+      "/weeks/week-2026-09-28/calendar?filter=DRAFT",
+    );
+    const inWindow = ahead.body.classes.filter((item) => item.date <= "2026-09-29");
+    expect(inWindow.length).toBeGreaterThan(0);
+    expect(inWindow.every((item) => item.state === "DRAFT")).toBe(true);
+  });
 });
 
 describe("E5-W05 step 16 · the back-office mock finds classes and waiting entries in the caller's club only", () => {
@@ -518,6 +562,11 @@ describe("E5-W03 step 8 · S09 ring-usage register (GET /training-bookings, GET 
 });
 
 describe("E5-W05 step 7 · the staff lists' bookingWeekKey follows R-08-01 (the opening's hour)", () => {
+  // E5-W05 round 2 #12: the member world is reset even when an assertion fails.
+  afterEach(() => {
+    resetBookingMockState();
+  });
+
   it("E5-W05 step 7: Duna's class of Sunday 2 at 20:00 (mockup 06's done class) belongs to the week that opens then, 2026-08-02, as Monday 3's does", async () => {
     // Mockup 06's member world (`bookingLimit`) holds the booking of Sunday 2 at 20:00.
     expect((await as<unknown>("bookingLimit", "GET", "/me/home")).status).toBe(200);
@@ -537,14 +586,16 @@ describe("E5-W05 step 7 · the staff lists' bookingWeekKey follows R-08-01 (the 
     const monday = list.body.items.filter((row) =>
       (row.classStartsAt ?? "").startsWith("2026-08-03"),
     );
+    // E5-W05 round 2 #12: `every` holds on an empty array, so the rows must be there.
+    expect(monday.length).toBeGreaterThan(0);
     expect(monday.every((row) => row.bookingWeekKey === "2026-08-02")).toBe(true);
     const registrants = await as<ClassBookings>(
       "admin",
       "GET",
       `/class-sessions/${D4_CLASS}/bookings`,
     );
+    expect(registrants.body.items.length).toBeGreaterThan(0);
     expect(registrants.body.items.every((row) => row.bookingWeekKey === "2026-08-09")).toBe(true);
-    resetBookingMockState();
   });
 });
 
@@ -663,6 +714,41 @@ describe("E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the 
     expect(blank.status).toBe(200);
   });
 
+  it("E5-W05 round 2 #11.a: GET /bookings/filter-values labels a class «{club-local start YYYY-MM-DDTHH:mm} · {description}», as the core does", async () => {
+    const values = await as<FilterValues>(
+      "admin",
+      "GET",
+      "/bookings/filter-values?field=classSessionId",
+    );
+    expect(values.status).toBe(200);
+    valid("FilterValues", values.body);
+    const list = await as<Page<components["schemas"]["BookingListItem"]>>(
+      "admin",
+      "GET",
+      "/bookings?size=1000&fields=classSessionId,classStartsAt,classDescription",
+    );
+    expect(values.body.values.length).toBeGreaterThan(0);
+    for (const value of values.body.values) {
+      // The core's shape (`bookings-filter-values-core.json`): «2026-10-08T17:40 · D+E».
+      expect(value.label).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2} · \S/u);
+      const row = list.body.items.find((item) => item.classSessionId === value.value);
+      if (row?.classStartsAt === undefined) throw new TypeError(`No row of ${String(value.value)}`);
+      const local = new Intl.DateTimeFormat("sv-SE", {
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        month: "2-digit",
+        timeZone: "Europe/Madrid",
+        year: "numeric",
+      })
+        .format(new Date(row.classStartsAt))
+        .replace(" ", "T");
+      expect(value.label).toBe(`${local} · ${row.classDescription ?? ""}`);
+    }
+    // Monday 3 at 18:50 in the club (16:50Z), D4's «B+C».
+    expect(values.body.values.map((value) => value.label)).toContain("2026-08-03T18:50 · B+C");
+  });
+
   it("E5-W05 step 5: a ring block's search reads its ring's name and, for staff, its note (S09 §2, E75)", async () => {
     const byRing = await as<Page<BlockRow>>(
       "admin",
@@ -675,5 +761,188 @@ describe("E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the 
     expect(byNote.body.items.map((row) => row.note)).toContain("Reg de la sorra");
     const memberNote = await as<Page<BlockRow>>("member", "GET", "/ring-blocks?q=sorra");
     expect(memberNote.body.items).toEqual([]);
+  });
+
+  it("E5-W05 round 2 #4: an ADMIN of another club (adminOtherClub) finds no booking, training booking or ring block of this club, and no filter value: the tenant comes from the JWT", async () => {
+    const lists: [path: string, field: string][] = [
+      ["/bookings", "state"],
+      ["/training-bookings", "memberId"],
+      ["/ring-blocks", "ringId"],
+    ];
+    for (const [path, field] of lists) {
+      const own = await as<Page<unknown>>("admin", "GET", path);
+      expect(own.body.totalItems, path).toBeGreaterThan(0);
+      const ownValues = await as<FilterValues>(
+        "admin",
+        "GET",
+        `${path}/filter-values?field=${field}`,
+      );
+      expect(ownValues.body.values.length, path).toBeGreaterThan(0);
+      const other = await as<Page<unknown>>("adminOtherClub", "GET", path);
+      expect([other.status, other.body.items, other.body.totalItems], path).toEqual([200, [], 0]);
+      const values = await as<FilterValues>(
+        "adminOtherClub",
+        "GET",
+        `${path}/filter-values?field=${field}`,
+      );
+      expect([values.status, values.body], path).toEqual([200, { field, values: [] }]);
+      valid("FilterValues", values.body);
+    }
+  });
+});
+
+describe("E5-W05 round 2 · the staff registrants' level is the dog's own, and follows levels.enabled (S08 §6)", () => {
+  it("E5-W05 round 2 #3: GET /class-sessions/{id}/bookings sends each dog's own level (Duna «C», Chun-li «A», Nass «B», Fish «B», Thai «E»), and null in a club with levels.enabled = false", async () => {
+    const levels = async (scenario: MockScenario) => {
+      const answer = await as<ClassBookings>(
+        scenario,
+        "GET",
+        `/class-sessions/${D4_CLASS}/bookings`,
+      );
+      expect(answer.status).toBe(200);
+      valid("ClassBookings", answer.body);
+      return answer.body.items.map((item) => `${item.dogName}:${item.levelCode ?? "—"}`);
+    };
+    expect(await levels("admin")).toEqual(["Duna:C", "Chun-li:A", "Nass:B", "Fish:B", "Thai:E"]);
+    expect(await levels("planningNoLevels")).toEqual([
+      "Duna:—",
+      "Chun-li:—",
+      "Nass:—",
+      "Fish:—",
+      "Thai:—",
+    ]);
+  });
+});
+
+describe("E5-W05 round 2 · the jobs mock reads its parameters (S15 R-15-01, R-15-12)", () => {
+  const summary = async (name: string) => {
+    const jobs = await as<JobSummaries>("admin", "GET", "/jobs");
+    expect(jobs.status).toBe(200);
+    valid("JobSummaries", jobs.body);
+    return jobs.body.items.find((job) => job.name === name);
+  };
+
+  it("E5-W05 round 2 #11.d: no-show-notices runs at messaging.noShowNoticeTime (08:00): its schedule, its runs and its next run; a saved change moves the schedule and the next run", async () => {
+    expect((await summary("no-show-notices"))?.schedule).toEqual({
+      dayOfMonth: null,
+      dayOfWeek: null,
+      kind: "DAILY",
+      localTime: "08:00",
+    });
+    // At 8:12 on Monday 10, today's 8:00 batch has run: the next one is Tuesday's.
+    expect((await summary("no-show-notices"))?.nextScheduledForLocal).toBe("2026-08-11T08:00");
+    const runs = await as<components["schemas"]["ListPageJobRunListItem"]>(
+      "admin",
+      "GET",
+      "/jobs/no-show-notices/runs?sort=scheduledFor,desc",
+    );
+    expect(runs.body.items.map((item) => item.scheduledForLocal)).toEqual([
+      "2026-08-10T08:00",
+      "2026-08-09T08:00",
+      "2026-08-08T08:00",
+    ]);
+    setParameter("messaging.noShowNoticeTime", "21:00");
+    expect(await summary("no-show-notices")).toMatchObject({
+      nextScheduledForLocal: "2026-08-10T21:00",
+      schedule: { kind: "DAILY", localTime: "21:00" },
+    });
+  });
+
+  it("E5-W05 round 2 #14: nextScheduledForLocal follows jobs.dailyTime, classes.riskReviewTime and bookings.weekOpensAt, as schedule.localTime does", async () => {
+    const next = async () =>
+      Object.fromEntries(
+        (await as<JobSummaries>("admin", "GET", "/jobs")).body.items.map((job) => [
+          job.name,
+          [job.schedule.localTime, job.nextScheduledForLocal],
+        ]),
+      );
+    expect(await next()).toMatchObject({
+      "billing-reminder": ["06:00", "2026-08-22T06:00"],
+      cleanup: ["06:00", "2026-08-11T06:00"],
+      expirations: ["06:00", "2026-08-11T06:00"],
+      reminders: [null, null],
+      "risk-review": ["07:30", "2026-08-11T07:30"],
+      "week-opening": ["20:00", "2026-08-16T20:00"],
+    });
+    setParameter("jobs.dailyTime", "05:15");
+    // Today's 9:00 review is still ahead at 8:12.
+    setParameter("classes.riskReviewTime", "09:00");
+    setParameter("bookings.weekOpensAt", { dayOfWeek: "SATURDAY", time: "10:00" });
+    expect(await next()).toMatchObject({
+      "billing-reminder": ["05:15", "2026-08-22T05:15"],
+      cleanup: ["05:15", "2026-08-11T05:15"],
+      expirations: ["05:15", "2026-08-11T05:15"],
+      "risk-review": ["09:00", "2026-08-10T09:00"],
+      "week-opening": ["10:00", "2026-08-15T10:00"],
+    });
+  });
+
+  it("E5-W05 round 2 #14: the risk review reads classes.minDogs, as D4's risk mark does: with minDogs = 1 the class with one dog is at risk in neither D1 nor D4", async () => {
+    const c3 = "cls-2026-08-11-2000-10";
+    const c4 = "cls-2026-08-12-0930-0";
+    const reviewed = async () => {
+      const review = await as<RiskReviewForm>("admin", "GET", "/risk-review");
+      valid("RiskReviewForm", review.body);
+      return {
+        classes: review.body.items.map((item) => `${item.status} ${item.classId}`),
+        minDogs: review.body.minDogs,
+      };
+    };
+    const d4 = async (id: string) => {
+      const week = await as<WeekCalendar>(
+        "admin",
+        "GET",
+        "/weeks/week-2026-08-10/calendar?filter=ACTIVE",
+      );
+      const detail = await as<components["schemas"]["ClassSession"]>(
+        "admin",
+        "GET",
+        `/class-sessions/${id}`,
+      );
+      return [week.body.classes.find((item) => item.id === id)?.atRisk, detail.body.atRisk];
+    };
+    expect(await reviewed()).toEqual({
+      classes: [
+        "AUTO_CANCELLED cls-2026-08-10-0930-7",
+        "AUTO_CANCELLED cls-2026-08-10-1740-9",
+        `AT_RISK ${c3}`,
+        `WILL_CANCEL ${c4}`,
+      ],
+      minDogs: 2,
+    });
+    expect(await d4(c3)).toEqual([true, true]);
+    setParameter("classes.minDogs", 1);
+    // c3 has one dog: enough now. c4 has none: still at risk, in both screens.
+    expect(await reviewed()).toEqual({
+      classes: [
+        "AUTO_CANCELLED cls-2026-08-10-0930-7",
+        "AUTO_CANCELLED cls-2026-08-10-1740-9",
+        `WILL_CANCEL ${c4}`,
+      ],
+      minDogs: 1,
+    });
+    expect(await d4(c3)).toEqual([false, false]);
+    expect(await d4(c4)).toEqual([true, true]);
+  });
+
+  it("E5-W05 round 2 #14: with the risk review switched off, no active class names notified members (no review ran); a class it cancelled keeps the ones it notified", async () => {
+    const notified = async () =>
+      (await as<RiskReviewForm>("admin", "GET", "/risk-review")).body.items.map(
+        (item) => `${item.status} ${String(item.notified.length)}`,
+      );
+    expect(await notified()).toEqual([
+      "AUTO_CANCELLED 0",
+      "AUTO_CANCELLED 1",
+      "AT_RISK 1",
+      "WILL_CANCEL 0",
+    ]);
+    const off = await as<unknown>("admin", "PUT", "/jobs/risk-review/switch", { enabled: false });
+    expect(off.status).toBe(200);
+    expect(await notified()).toEqual([
+      "AUTO_CANCELLED 0",
+      "AUTO_CANCELLED 1",
+      "AT_RISK 0",
+      "AT_RISK 0",
+    ]);
   });
 });

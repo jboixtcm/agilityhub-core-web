@@ -1,0 +1,1559 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/App.test.tsx (51 tests | 6 failed | 45 skipped) 30360ms
+   ❯ T-03-40 mobile own dogs (5)
+     × E4-W16 step 11 (INC-26, R-03-18): the task rows under the counter — pending with a checkbox (live since E6-W04 step 0b) and «dd-mm · instructor», done struck through with «feta el dd-mm», the clip with the attachments, dates in the club's zone 117ms
+   ❯ E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) (5)
+     × E6-W04 step 0b: a pending task's checkbox sends the completion (no body, no key), is busy meanwhile, then shows the task as the api returns it — checked, struck through, «feta per en Biel el 14-08» — and the counter; GET /me/dogs keeps it done 32ms
+     × E6-W04 step 0b: 422 TASK_ALREADY_DONE (someone else completed it meanwhile) reads 13 again and shows the task done, with no error 29ms
+     × E6-W04 step 0b: any other refusal is said by its code (404 NOT_FOUND: a task deleted meanwhile), a failure with no answer by the generic message, and the task stays pending and can be tried again 10033ms
+     × E6-W04 step 0b: an impersonated session completes it as the member — the impersonation token is sent and the line reads «feta per la Laura el 14-08» 10066ms
+     × E6-W04 step 0b: es and en read the completed line with the reader's words 10079ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-03-40 mobile own dogs > E4-W16 step 11 (INC-26, R-03-18): the task rows under the counter — pending with a checkbox (live since E6-W04 step 0b) and «dd-mm · instructor», done struck through with «feta el dd-mm», the clip with the attachments, dates in the club's zone
+Error: [2mexpect([22m[31melement[39m[2m).not.toHaveAttribute([22m[32m[32m"aria-disabled"[32m[39m[2m) // element.hasAttribute("aria-disabled")[22m
+
+Expected the element not to have attribute:
+[32m  aria-disabled[39m
+Received:
+[31m  aria-disabled="true"[39m
+ ❯ src/App.test.tsx:1434:25
+    1432|     expect(pending).not.toBeChecked();
+    1433|     // E6-W04 step 0b: the pending checkbox completes the task now; a …
+    1434|     expect(pending).not.toHaveAttribute("aria-disabled");
+       |                         ^
+    1435|     const done = within(tasks).getByRole("checkbox", { name: "Consolid…
+    1436|     expect(done).toBeChecked();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b: a pending task's checkbox sends the completion (no body, no key), is busy meanwhile, then shows the task as the api returns it — checked, struck through, «feta per en Biel el 14-08» — and the counter; GET /me/dogs keeps it done
+Error: [2mexpect([22m[31melement[39m[2m).not.toHaveAttribute([22m[32m[32m"aria-disabled"[32m[39m[2m) // element.hasAttribute("aria-disabled")[22m
+
+Expected the element not to have attribute:
+[32m  aria-disabled[39m
+Received:
+[31m  aria-disabled="true"[39m
+ ❯ src/App.test.tsx:1600:25
+    1598|     const pending = within(tasks).getByRole("checkbox", { name: "Treba…
+    1599|     expect(pending).not.toBeChecked();
+    1600|     expect(pending).not.toHaveAttribute("aria-disabled");
+       |                         ^
+    1601|     fireEvent.click(pending);
+    1602|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b: 422 TASK_ALREADY_DONE (someone else completed it meanwhile) reads 13 again and shows the task done, with no error
+ApiError: Task not found
+ ❯ Function.fromResponse ../../packages/api-client/src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse ../../packages/api-client/src/client.ts:120:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:219:28
+ ❯ src/App.test.tsx:1650:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b: any other refusal is said by its code (404 NOT_FOUND: a task deleted meanwhile), a failure with no answer by the generic message, and the task stays pending and can be tried again
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"self-page my-dogs-page"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"self-page__header"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33maria-label[39m=[32m"Torna al perfil"[39m
+              [33mhref[39m=[32m"/perfil"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m‹[0m
+              [36m</span>[39m
+            [36m</a>[39m
+            [36m<h1>[39m
+              [0mEls meus gossos[0m
+            [36m</h1>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"self-page__body"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card dog-card"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"dog-card__identity"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"dog-photo"[39m
+                  [33mfor[39m=[32m"_r_a_"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCanvia la foto de Duna[0m
+                  [36m</span>[39m
+                  [36m<input[39m
+                    [33maccept[39m=[32m"image/*"[39m
+                    [33mid[39m=[32m"_r_a_"[39m
+                    [33mtype[39m=[32m"file"[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<div>[39m
+                  [36m<h2>[39m
+                    [0mDuna[0m
+                  [36m</h2>[39m
+                  [36m<p>[39m
+                    [0mBorder collie[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0mfemella[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m4 anys[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"dog-card__level"[39m
+                [36m>[39m
+                  [0mNivell C[0m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-note"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mfor[39m=[32m"dog-note-dog-duna"[39m
+                [36m>[39m
+                  [0mNotes als instructors[0m
+                  [0m [0m
+                  [36m<span>[39m
+                    [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+                  [36m</span>[39m
+                [36m</label>[39m
+                [36m<textarea[39m
+                  [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                  [33mid[39m=[32m"dog-note-dog-duna"[39m
+                  [33mmaxlength[39m=[32m"2000"[39m
+                [36m>[39m
+                  [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+                [36m</textarea>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mDESA[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33maria-label[39m=[32m"Tasques"[39m
+                [33mclass[39m=[32m"dog-card__section dog-tasks"[39m
+              [36m>[39m
+                [36m<h3>[39m
+                  [0mTasques[0m
+                [36m</h3>[39m
+                [36m<p>[39m
+                  [0m2 pendents · 1 feta[0m
+                [36m</p>[39m
+                [36m<ul[39m
+                  [33mclass[39m=[32m"dog-tasks__list"[39m
+                [36m>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-checked[39m=[32m"false"[39m
+                      [33maria-disabled[39m=[32m"true"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-balance"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-balance"[39m
+                      [36m>[39m
+                        [0mTreballar l'entrada al balancí[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m10-08 · Laura[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-checked[39m=[32m"false"[39m
+                      [33maria-disabled[39m=[32m"true"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-weave"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-weave"[39m
+                      [36m>[39m
+                        [0mRevisar l'entrada a l'eslàlom[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m12-08 · Marc[0m
+                        [0m · [0m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                        [0m1 adjunt[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                    [33mdata-done[39m=[32m""[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-checked[39m=[32m"true"[39m
+                      [33maria-disabled[39m=[32m"true"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-start"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-start"[39m
+                      [36m>[39m
+                        [0mConsolidar la sortida quieta[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m20-07 · Laura[0m
+                        [0m · feta el 01-08[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                [36m</ul>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"self-link"[39m
+                  [33mhref[39m=[32m"/historic"[39m
+                [36m>[39m
+                  [0mVeure l'historial ›[0m
+                [36m</a>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-documents"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<div>[39m
+                  [36m<div>[39m
+                    [36m<span>[39m
+                      [0mcartilla_Duna_1.jpg[0m
+                    [36m</span>[39m
+                    [36m<span>[39m
+                      [0mcartilla_Duna_2.jpg[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div>[39m
+                    [36m<span>[39m
+                      [0mAssegurança.pdf[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0m＋ DOC.[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card dog-card"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"dog-card__identity"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"dog-photo"[39m
+                  [33mfor[39m=[32m"_r_b_"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCanvia la foto de Rock[0m
+                  [36m</span>[39m
+                  [36m<input[39m
+                    [33maccept[39m=[32m"image/*"[39m
+                    [33mid[39m=[32m"_r_b_"[39m
+                    [33mtype[39m=[32m"file"[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<div>[39m
+                  [36m<h2>[39m
+                    [0mRock[0m
+                  [36m</h2>[39m
+                  [36m<p>[39m
+                    [0mMestís[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0mmascle[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m3 anys[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"dog-card__level"[39m
+                [36m>[39m
+                  [0mNivell D[0m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-note"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mfor[39m=[32m"dog-note-dog-rock"[39m
+                [36m>[39m
+                  [0mNotes als instructors[0m
+                  [0m [0m
+                  [36m<span>[39m
+                    [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+                  [36m</span>[39m
+                [36m</label>[39m
+                [36m<textarea[39m
+                  [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                  [33mid[39m=[32m"dog-note-dog-rock"[39m
+                  [33mmaxlength[39m=[32m"2000"[39m
+                [36m/>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mDESA[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-documents"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<div>[39m
+                  [36m<small>[39m
+                    [0mCap document[0m
+                  [36m</small>[39m
+                [36m</div>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0m＋ DOC.[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"dog-card__free"[39m
+              [36m>[39m
+                [0mPot entrenar sol[0m
+              [36m</span>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"dog-card__license"[39m
+              [36m>[39m
+                [0mFCAG[0m
+                [0m · [0m
+                [0mllicència 3241[0m
+                [0m · Iniciació[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"dog-card__license"[39m
+              [36m>[39m
+                [0mRSCE[0m
+                [0m · [0m
+                [0mllicència 13298[0m
+                [0m · M[0m
+                [0m · 2[0m
+                [0m · 2D[0m
+              [36m</p>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-pack"[39m
+              [36m>[39m
+                [36m<div>[39m
+                  [36m<h3>[39m
+                    [0mPack 10[0m
+                  [36m</h3>[39m
+                  [36m<span>[39m
+                    [0mcaduca 12/11/2026[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"dog-pack__track"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mstyle[39m=[32m"inline-size: 60%;"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<p>[39m
+                  [36m<strong>[39m
+                    [0m6 consumides[0m
+                  [36m</strong>[39m
+                  [0m ·[0m
+                  [0m [0m
+                  [36m<b>[39m
+                    [0m4 disponibles[0m
+                  [36m</b>[39m
+                [36m</p>[39m
+              [36m</section>[39m
+            [36m</div>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m"self-button-link self-button-link--secondary"[39m
+              [33mhref[39m=[32m"/gossos/nou"[39m
+            [36m>[39m
+              [0m＋ AFEGEIX UN GOS[0m
+            [36m</a>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"my-dogs-page__footnote"[39m
+            [36m>[39m
+              [0mEl nivell l'assigna el club · Per donar de baixa un dels gossos, comunica-ho al club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"self-page my-dogs-page"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"self-page__header"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33maria-label[39m=[32m"Torna al perfil"[39m
+              [33mhref[39m=[32m"/perfil"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m‹[0m
+              [36m</span>[39m
+            [36m</a>[39m
+            [36m<h1>[39m
+              [0mEls meus gossos[0m
+            [36m</h1>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"self-page__body"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card dog-card"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"dog-card__identity"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"dog-photo"[39m
+                  [33mfor[39m=[32m"_r_a_"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCanvia la foto de Duna[0m
+                  [36m</span>[39m
+                  [36m<input[39m
+                    [33maccept[39m=[32m"image/*"[39m
+                    [33mid[39m=[32m"_r_a_"[39m
+                    [33mtype[39m=[32m"file"[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<div>[39m
+                  [36m<h2>[39m
+                    [0mDuna[0m
+                  [36m</h2>[39m
+                  [36m<p>[39m
+                    [0mBorder collie[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0mfemella[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m4 anys[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"dog-card__level"[39m
+                [36m>[39m
+                  [0mNivell C[0m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-note"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mfor[39m=[32m"dog-note-dog-duna"[39m
+                [36m>[39m
+                  [0mNotes als instructors[0m
+                  [0m [0m
+                  [36m<span>[39m
+                    [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+                  [36m</span>[39m
+                [36m</label>[39m
+                [36m<textarea[39m
+                  [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                  [33mid[39m=[32m"dog-note-dog-duna"[39m
+                  [33mmaxlength[39m=[32m"2000"[39m
+                [36m>[39m
+                  [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+                [36m</textarea>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mDESA[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33maria-label[39m=[32m"Tasques"[39m
+                [33mclass[39m=[32m"dog-card__section dog-tasks"[39m
+              [36m>[39m
+                [36m<h3>[39m
+                  [0mTasques[0m
+                [36m</h3>[39m
+                [36m<p>[39m
+                  [0m2 pendents · 1 feta[0m
+                [36m</p>[39m
+                [36m<ul[39m
+                  [33mclass[39m=[32m"dog-tasks__list"[39m
+                [36m>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-checked[39m=[32m"false"[39m
+                      [33maria-disabled[39m=[32m"true"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-balance"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-balance"[39m
+                      [36m>[39m
+                        [0mTreballar l'entrada al balancí[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m10-08 · Laura[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-checked[39m=[32m"false"[39m
+                      [33maria-disabled[39m=[32m"true"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-weave"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-weave"[39m
+                      [36m>[39m
+                        [0mRevisar l'entrada a l'eslàlom[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m12-08 · Marc[0m
+                        [0m · [0m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                        [0m1 adjunt[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                    [33mdata-done[39m=[32m""[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-checked[39m=[32m"true"[39m
+                      [33maria-disabled[39m=[32m"true"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-start"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-start"[39m
+                      [36m>[39m
+                        [0mConsolidar la sortida quieta[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m20-07 · Laura[0m
+                        [0m · feta el 01-08[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                [36m</ul>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"self-link"[39m
+                  [33mhref[39m=[32m"/historic"[39m
+                [36m>[39m
+                  [0mVeure l'historial ›[0m
+                [36m</a>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-documents"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<div>[39m
+                  [36m<div>[39m
+                    [36m<span>[39m
+                      [0mcartilla_Duna_1.jpg[0m
+                    [36m</span>[39m
+                    [36m<span>[39m
+                      [0mcartilla_Duna_2.jpg[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div>[39m
+                    [36m<span>[39m
+                      [0mAssegurança.pdf[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0m＋ DOC.[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card dog-card"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"dog-card__identity"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"dog-photo"[39m
+                  [33mfor[39m=[32m"_r_b_"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCanvia la foto de Rock[0m
+                  [36m</span>[39m
+                  [36m<input[39m
+                    [33maccept[39m=[32m"image/*"[39m
+                    [33mid[39m=[32m"_r_b_"[39m
+                    [33mtype[39m=[32m"file"[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<div>[39m
+                  [36m<h2>[39m
+                    [0mRock[0m
+                  [36m</h2>[39m
+                  [36m<p>[39m
+                    [0mMestís[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0mmascle[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m3 anys[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"dog-card__level"[39m
+                [36m>[39m
+                  [0mNivell D[0m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-note"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mfor[39m=[32m"dog-note-dog-rock"[39m
+                [36m>[39m
+                  [0mNotes als instructors[0m
+                  [0m [0m
+                  [36m<span>[39m
+                    [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+                  [36m</span>[39m
+                [36m</label>[39m
+                [36m<textarea[39m
+                  [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                  [33mid[39m=[32m"dog-note-dog-rock"[39m
+                  [33mmaxlength[39m=[32m"2000"[39m
+                [36m/>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mDESA[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-documents"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<div>[39m
+                  [36m<small>[39m
+                    [0mCap document[0m
+                  [36m</small>[39m
+                [36m</div>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0m＋ DOC.[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"dog-card__free"[39m
+              [36m>[39m
+                [0mPot entrenar sol[0m
+              [36m</span>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"dog-card__license"[39m
+              [36m>[39m
+                [0mFCAG[0m
+                [0m · [0m
+                [0mllicència 3241[0m
+                [0m · Iniciació[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"dog-card__license"[39m
+              [36m>[39m
+                [0mRSCE[0m
+                [0m · [0m
+                [0mllicència 13298[0m
+                [0m · M[0m
+                [0m · 2[0m
+                [0m · 2D[0m
+              [36m</p>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-pack"[39m
+              [36m>[39m
+                [36m<div>[39m
+                  [36m<h3>[39m
+                    [0mPack 10[0m
+                  [36m</h3>[39m
+                  [36m<span>[39m
+                    [0mcaduca 12/11/2026[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"dog-pack__track"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mstyle[39m=[32m"inline-size: 60%;"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<p>[39m
+                  [36m<strong>[39m
+                    [0m6 consumides[0m
+                  [36m</strong>[39m
+                  [0m ·[0m
+                  [0m [0m
+                  [36m<b>[39m
+                    [0m4 disponibles[0m
+                  [36m</b>[39m
+                [36m</p>[39m
+              [36m</section>[39m
+            [36m</div>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m"self-button-link self-button-link--secondary"[39m
+              [33mhref[39m=[32m"/gossos/nou"[39m
+            [36m>[39m
+              [0m＋ AFEGEIX UN GOS[0m
+            [36m</a>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"my-dogs-page__footnote"[39m
+            [36m>[39m
+              [0mEl nivell l'assigna el club · Per donar de baixa un dels gossos, comunica-ho al club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.test.tsx:1689:25
+    1687|     const pending = within(tasks).getByRole("checkbox", { name: "Treba…
+    1688|     fireEvent.click(pending);
+    1689|     expect(await screen.findByRole("alert")).toHaveTextContent(
+       |                         ^
+    1690|       "No s'ha trobat l'element sol·licitat.",
+    1691|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b: an impersonated session completes it as the member — the impersonation token is sent and the line reads «feta per la Laura el 14-08»
+AssertionError: expected 'Treballar l\'entrada al balancí10-08 …' to be 'Treballar l\'entrada al balancí10-08 …' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"clubs-shell__top"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"impersonation-banner"[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mEstàs veient l'app com Laura Serra Vidal[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mSurt[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"clubs-shell__content"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"self-page my-dogs-page"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"self-page__header"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Torna al perfil"[39m
+                [33mhref[39m=[32m"/perfil"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+              [36m<h1>[39m
+                [0mEls meus gossos[0m
+              [36m</h1>[39m
+            [36m</header>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"self-page__body"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-card dog-card"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"dog-card__identity"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"dog-photo"[39m
+                    [33mfor[39m=[32m"_r_d_"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-sr-only"[39m
+                    [36m>[39m
+                      [0mCanvia la foto de Duna[0m
+                    [36m</span>[39m
+                    [36m<input[39m
+                      [33maccept[39m=[32m"image/*"[39m
+                      [33mid[39m=[32m"_r_d_"[39m
+                      [33mtype[39m=[32m"file"[39m
+                    [36m/>[39m
+                  [36m</label>[39m
+                  [36m<div>[39m
+                    [36m<h2>[39m
+                      [0mDuna[0m
+                    [36m</h2>[39m
+                    [36m<p>[39m
+                      [0mBorder collie[0m
+                      [0m ·[0m
+                      [0m [0m
+                      [0mfemella[0m
+                      [0m ·[0m
+                      [0m [0m
+                      [0m4 anys[0m
+                    [36m</p>[39m
+                  [36m</div>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"dog-card__level"[39m
+                  [36m>[39m
+                    [0mNivell C[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+                [36m<section[39m
+                  [33mclass[39m=[32m"dog-card__section dog-note"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mfor[39m=[32m"dog-note-dog-duna"[39m
+                  [36m>[39m
+                    [0mNotes als instructors[0m
+                    [0m [0m
+                    [36m<span>[39m
+                      [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+                    [36m</span>[39m
+                  [36m</label>[39m
+                  [36m<textarea[39m
+                    [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                    [33mid[39m=[32m"dog-note-dog-duna"[39m
+                    [33mmaxlength[39m=[32m"2000"[39m
+                  [36m>[39m
+                    [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+                  [36m</textarea>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                    [33mdisabled[39m=[32m""[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [0mDESA[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</section>[39m
+                [36m<section[39m
+                  [33maria-label[39m=[32m"Tasques"[39m
+                  [33mclass[39m=[32m"dog-card__section dog-tasks"[39m
+                [36m>[39m
+                  [36m<h3>[39m
+                    [0mTasques[0m
+                  [36m</h3>[39m
+                  [36m<p>[39m
+                    [0m2 pendents · 1 feta[0m
+                  [36m</p>[39m
+                  [36m<ul[39m
+                    [33mclass[39m=[32m"dog-tasks__list"[39m
+                  [36m>[39m
+                    [36m<li[39m
+                      [33mclass[39m=[32m"dog-task"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-checked[39m=[32m"false"[39m
+                        [33maria-disabled[39m=[32m"true"[39m
+                        [33maria-labelledby[39m=[32m"dog-task-task-duna-balance"[39m
+                        [33mclass[39m=[32m"dog-task__check"...
+
+Expected: "Treballar l'entrada al balancí10-08 · Laura · feta per la Laura el 14-08"
+Received: "Treballar l'entrada al balancí10-08 · Laura"
+
+ ❯ src/App.test.tsx:1713:70
+    1711|     );
+    1712|     await waitFor(() => {
+    1713|       expect(within(tasks).getAllByRole("listitem")[0]?.textContent).t…
+       |                                                                      ^
+    1714|         "Treballar l'entrada al balancí10-08 · Laura · feta per la Lau…
+    1715|       );
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b: es and en read the completed line with the reader's words
+AssertionError: expected 'Treballar l\'entrada al balancí10-08 …' to contain 'hecha por Biel el 14-08'
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"clubs-shell__top"[39m
+        [36m/>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"clubs-shell__content"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"self-page my-dogs-page"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"self-page__header"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Volver al perfil"[39m
+                [33mhref[39m=[32m"/perfil"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+              [36m<h1>[39m
+                [0mMis perros[0m
+              [36m</h1>[39m
+            [36m</header>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"self-page__body"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-card dog-card"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"dog-card__identity"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"dog-photo"[39m
+                    [33mfor[39m=[32m"_r_g_"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-sr-only"[39m
+                    [36m>[39m
+                      [0mCambiar la foto de Duna[0m
+                    [36m</span>[39m
+                    [36m<input[39m
+                      [33maccept[39m=[32m"image/*"[39m
+                      [33mid[39m=[32m"_r_g_"[39m
+                      [33mtype[39m=[32m"file"[39m
+                    [36m/>[39m
+                  [36m</label>[39m
+                  [36m<div>[39m
+                    [36m<h2>[39m
+                      [0mDuna[0m
+                    [36m</h2>[39m
+                    [36m<p>[39m
+                      [0mBorder collie[0m
+                      [0m ·[0m
+                      [0m [0m
+                      [0mhembra[0m
+                      [0m ·[0m
+                      [0m [0m
+                      [0m4 años[0m
+                    [36m</p>[39m
+                  [36m</div>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"dog-card__level"[39m
+                  [36m>[39m
+                    [0mNivel C[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+                [36m<section[39m
+                  [33mclass[39m=[32m"dog-card__section dog-note"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mfor[39m=[32m"dog-note-dog-duna"[39m
+                  [36m>[39m
+                    [0mNotas a los instructores[0m
+                    [0m [0m
+                    [36m<span>[39m
+                      [0m(qué quieres obtener del club, aspectos a tener en cuenta…)[0m
+                    [36m</span>[39m
+                  [36m</label>[39m
+                  [36m<textarea[39m
+                    [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                    [33mid[39m=[32m"dog-note-dog-duna"[39m
+                    [33mmaxlength[39m=[32m"2000"[39m
+                  [36m>[39m
+                    [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+                  [36m</textarea>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                    [33mdisabled[39m=[32m""[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [0mGUARDAR[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</section>[39m
+                [36m<section[39m
+                  [33maria-label[39m=[32m"Tareas"[39m
+                  [33mclass[39m=[32m"dog-card__section dog-tasks"[39m
+                [36m>[39m
+                  [36m<h3>[39m
+                    [0mTareas[0m
+                  [36m</h3>[39m
+                  [36m<p>[39m
+                    [0m2 pendientes · 1 hecha[0m
+                  [36m</p>[39m
+                  [36m<ul[39m
+                    [33mclass[39m=[32m"dog-tasks__list"[39m
+                  [36m>[39m
+                    [36m<li[39m
+                      [33mclass[39m=[32m"dog-task"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-checked[39m=[32m"false"[39m
+                        [33maria-disabled[39m=[32m"true"[39m
+                        [33maria-labelledby[39m=[32m"dog-task-task-duna-balance"[39m
+                        [33mclass[39m=[32m"dog-task__check"[39m
+                        [33mrole[39m=[32m"checkbox"[39m
+                      [36m/>[39m
+                      [36m<div>[39m
+                        [36m<p[39m
+                          [33mid[39m=[32m"dog-task-task-duna-balance"[39m
+                        [36m>[39m
+                          [0mTreballar l'entrada al balancí[0m
+                        [36m</p>[39m
+                        [36m<small>[39m
+                          [0m10-08 · Laura[0m
+...
+
+Expected: "hecha por Biel el 14-08"
+Received: "Treballar l'entrada al balancí10-08 · Laura"
+
+ ❯ src/App.test.tsx:1744:71
+    1742|       fireEvent.click(first);
+    1743|       await waitFor(() => {
+    1744|         expect(within(card).getAllByRole("listitem")[0]?.textContent).…
+       |                                                                       ^
+    1745|       });
+    1746|       expect(document.body.textContent).not.toMatch(/errors:|census:|i…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 45 skipped (51)
+   Start at  02:01:43
+   Duration  31.45s (tests 97%, transform 2%, environment 1%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t E6-W04 step 0b|E4-W16 step 11
+exit 1
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/followup-handlers.test.ts (21 tests | 2 failed | 19 skipped) 11ms
+   ❯ E6-W04 step 0b · 25's activity rows and 13's task completion, as the api answers (rulings E74, E75) (3)
+     × E6-W04 step 0b: the member completes a task of GET /me/dogs with no body and no key — 200 Task with doneAt and doneBy, GET /me/dogs shows it done and counts it, a second call is 422 TASK_ALREADY_DONE 8ms
+     × E6-W04 step 0b: the impersonation token completes as the member (doneBy Laura, MEMBER); an unknown task is 404 NOT_FOUND; TASKS off is 404 MODULE_DISABLED 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/followup-handlers.test.ts > E6-W04 step 0b · 25's activity rows and 13's task completion, as the api answers (rulings E74, E75) > E6-W04 step 0b: the member completes a task of GET /me/dogs with no body and no key — 200 Task with doneAt and doneBy, GET /me/dogs shows it done and counts it, a second call is 422 TASK_ALREADY_DONE
+ApiError: Task not found
+ ❯ Function.fromResponse src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse src/client.ts:120:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:219:28
+ ❯ src/mocks/followup-handlers.test.ts:235:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/followup-handlers.test.ts > E6-W04 step 0b · 25's activity rows and 13's task completion, as the api answers (rulings E74, E75) > E6-W04 step 0b: the impersonation token completes as the member (doneBy Laura, MEMBER); an unknown task is 404 NOT_FOUND; TASKS off is 404 MODULE_DISABLED
+ApiError: Task not found
+ ❯ Function.fromResponse src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse src/client.ts:120:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:219:28
+ ❯ src/mocks/followup-handlers.test.ts:269:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 19 skipped (21)
+   Start at  02:02:15
+   Duration  637ms (transform 58%, import 40%, tests 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/followup-handlers.test.ts -t completes
+exit 1

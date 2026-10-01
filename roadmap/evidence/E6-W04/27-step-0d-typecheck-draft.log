@@ -1,0 +1,9 @@
+Scope: 4 of 11 workspace projects
+packages/api-client typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+packages/ui typecheck: Done
+packages/api-client typecheck: Done
+apps/clubs-admin typecheck$ tsc --noEmit
+apps/clubs typecheck$ tsc --noEmit
+apps/clubs typecheck: Done
+apps/clubs-admin typecheck: Done

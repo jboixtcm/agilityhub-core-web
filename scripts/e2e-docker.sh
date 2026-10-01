@@ -26,15 +26,44 @@ mkdir -p "$evidence_directory"
 # `pnpm e2e:docker <ID> [--] <Playwright arguments>` (E4-W12): the arguments after the task id go to
 # every app's `playwright test` (for example `--repeat-each=20 --grep=… --pass-with-no-tests`);
 # without them the complete suite runs, as before. The task id itself is informative only.
+#
+# `--capture-task=<ID>` (E5-W05 round 2, review #10), anywhere among those arguments, is the
+# script's own and never reaches Playwright: the permanent mock specs that take screenshots
+# (`booking.spec.ts`, `instructor-registrants.spec.ts`, `e5-backoffice.spec.ts`) write them into
+# `roadmap/evidence/$E2E_CAPTURE_TASK`, by default the task that owns each spec (E5-W01, E5-W03),
+# so a later complete run never rewrites another task's captures. The option goes into the
+# container as `--env E2E_CAPTURE_TASK=<ID>`, and its task joins the evidence copied back. Without
+# it a host `E2E_CAPTURE_TASK` is forwarded the same way. (`turbo.json` passes the variable to the
+# `e2e` tasks: turbo's strict env mode drops any undeclared one.)
+#   pnpm e2e:docker E5-W05 --capture-task=E5-W05
+capture_task="${E2E_CAPTURE_TASK:-}"
 playwright_args=()
 if [[ $# -gt 1 ]]; then
   for argument in "${@:2}"; do
-    [[ "$argument" == "--" ]] || playwright_args+=("$argument")
+    case "$argument" in
+      --) ;;
+      --capture-task=*) capture_task="${argument#--capture-task=}" ;;
+      *) playwright_args+=("$argument") ;;
+    esac
   done
+fi
+capture_env=()
+if [[ -n "$capture_task" ]]; then
+  if [[ ! "$capture_task" =~ ^E[0-9]+-W[0-9]+$ ]]; then
+    echo "--capture-task takes a task id (E5-W05), not: $capture_task" >&2
+    exit 2
+  fi
+  capture_env=(--env "E2E_CAPTURE_TASK=$capture_task")
+  case " $evidence_tasks " in
+    *" $capture_task "*) ;;
+    *) evidence_tasks="${evidence_tasks:+$evidence_tasks }$capture_task" ;;
+  esac
 fi
 
 echo "Running Playwright in $playwright_image"
 echo "Evidence copied back for: ${evidence_tasks:-<no task>}"
+# (No apostrophe inside the `${…:-…}` below: bash reads it as an opening quote there.)
+echo "Capture folder of the permanent mock specs: ${capture_task:-<the task of each spec>}"
 if [[ ${#playwright_args[@]} -eq 0 ]]; then
   echo "Playwright arguments: <none, complete suite>"
 else
@@ -43,6 +72,7 @@ fi
 docker run --rm \
   --env CI=1 \
   --env EVIDENCE_TASKS="$evidence_tasks" \
+  ${capture_env[@]+"${capture_env[@]}"} \
   --volume "$repository_root:/src:ro" \
   --volume "$evidence_directory:/evidence" \
   --workdir /work \

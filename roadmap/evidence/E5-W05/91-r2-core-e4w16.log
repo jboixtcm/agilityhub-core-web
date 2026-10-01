@@ -1,0 +1,139 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E5-W05 e4w16-core.spec.ts
+
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision=8ee2827070bc7566bc6bef3fd3eddf0d42ba1331 created=2026-09-30T22:06:50.87325972Z
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+E4_WEEK_START=2026-09-28 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-05 (the club-local Monday after today, Europe/Madrid)
+ Volume agilityhub-e5-w05_mongo-data Creating 
+ Network agilityhub-e5-w05_default Creating 
+ Volume agilityhub-e5-w05_export-files Creating 
+ Volume agilityhub-e5-w05_mailbox Creating 
+ Volume agilityhub-e5-w05_mongo-data Creating 
+ Network agilityhub-e5-w05_default Creating 
+ Volume agilityhub-e5-w05_export-files Creating 
+ Volume agilityhub-e5-w05_mailbox Creating 
+ Volume agilityhub-e5-w05_mongo-data Created 
+ Volume agilityhub-e5-w05_mongo-data Created 
+ Volume agilityhub-e5-w05_export-files Created 
+ Volume agilityhub-e5-w05_export-files Created 
+ Volume agilityhub-e5-w05_mailbox Created 
+ Volume agilityhub-e5-w05_mailbox Created 
+ Network agilityhub-e5-w05_default Created 
+ Network agilityhub-e5-w05_default Created 
+ Container agilityhub-e5-w05-mongo-1 Creating 
+ Container agilityhub-e5-w05-mongo-1 Created 
+ Container agilityhub-e5-w05-seed-1 Creating 
+ Container agilityhub-e5-w05-seed-1 Created 
+ Container agilityhub-e5-w05-activate-demo-club-1 Creating 
+ Container agilityhub-e5-w05-activate-demo-club-1 Created 
+ Container agilityhub-e5-w05-core-1 Creating 
+ Container agilityhub-e5-w05-core-1 Created 
+ Container agilityhub-e5-w05-mongo-1 Starting 
+ Container agilityhub-e5-w05-mongo-1 Started 
+ Container agilityhub-e5-w05-mongo-1 Waiting 
+ Container agilityhub-e5-w05-mongo-1 Healthy 
+ Container agilityhub-e5-w05-seed-1 Starting 
+ Container agilityhub-e5-w05-seed-1 Started 
+ Container agilityhub-e5-w05-seed-1 Waiting 
+ Container agilityhub-e5-w05-seed-1 Exited 
+ Container agilityhub-e5-w05-activate-demo-club-1 Starting 
+ Container agilityhub-e5-w05-activate-demo-club-1 Started 
+ Container agilityhub-e5-w05-mongo-1 Waiting 
+ Container agilityhub-e5-w05-activate-demo-club-1 Waiting 
+ Container agilityhub-e5-w05-activate-demo-club-1 Exited 
+ Container agilityhub-e5-w05-mongo-1 Healthy 
+ Container agilityhub-e5-w05-core-1 Starting 
+ Container agilityhub-e5-w05-core-1 Started 
+ Container agilityhub-e5-w05-activate-demo-club-1 Waiting 
+ Container agilityhub-e5-w05-core-1 Waiting 
+ Container agilityhub-e5-w05-mongo-1 Waiting 
+ Container agilityhub-e5-w05-seed-1 Waiting 
+ Container agilityhub-e5-w05-seed-1 Exited 
+ Container agilityhub-e5-w05-activate-demo-club-1 Exited 
+ Container agilityhub-e5-w05-mongo-1 Healthy 
+ Container agilityhub-e5-w05-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E5-W05/seed-files.log (155 lines)
+ Container agilityhub-e5-w05-playwright-run-eba2d4297470 Creating 
+ Container agilityhub-e5-w05-playwright-run-eba2d4297470 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:21) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +851
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 851, reused 0, downloaded 108, added 108
+Progress: resolved 851, reused 0, downloaded 294, added 293
+Progress: resolved 851, reused 0, downloaded 503, added 503
+Progress: resolved 851, reused 0, downloaded 541, added 541
+Progress: resolved 851, reused 0, downloaded 560, added 560
+Progress: resolved 851, reused 0, downloaded 603, added 602
+Progress: resolved 851, reused 0, downloaded 703, added 703
+Progress: resolved 851, reused 0, downloaded 791, added 791
+Progress: resolved 851, reused 0, downloaded 847, added 847
+Progress: resolved 851, reused 0, downloaded 848, added 848
+Progress: resolved 851, reused 0, downloaded 849, added 849
+Progress: resolved 851, reused 0, downloaded 851, added 851, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 12.7s using pnpm v9.15.9
+[WebServer] (node:135) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:215) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:313) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+[1/5] e2e/core/e4w16-core.spec.ts:239:5 › T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through
+[2/5] e2e/core/e4w16-core.spec.ts:360:5 › T-01-19 E4-W16 step 10 · a RESET link sets the new password once without `current`
+[3/5] e2e/core/e4w16-core.spec.ts:442:5 › T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through the one-time code, once; E5-W05 step 24 · its banner names the member record, not the account
+[4/5] e2e/core/e4w16-core.spec.ts:604:5 › T-14-26 E4-W16 step 5 · a READY export downloads from the drawer through GET /exports/{id} and the bearer
+[5/5] e2e/core/e4w16-core.spec.ts:659:5 › T-03-34 (front) E4-W16 step 7 · D10 keeps the block, «Inactivitat», «Baixa» and the audit whatever BILLING says
+  5 passed (11.2s)
+
+$ /Users/jordib/Dropbox/Documents/SOFTWARE_CANIC/05-desenvolupament/roadmap-kit/mac/heavy.sh pnpm e2e:core E5-W05 e4w16-core.spec.ts > roadmap/evidence/E5-W05/91-r2-core-e4w16.log 2>&1; echo "exit $?"
+exit 0
+$ docker ps -a --filter label=com.docker.compose.project=agilityhub-e5-w05 --format '{{.Names}} {{.Status}}'
+exit 0 (no container of the stage is left)

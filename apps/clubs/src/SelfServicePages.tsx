@@ -5,7 +5,7 @@ import {
   type components,
   uploadSigned,
 } from "@agilityhub/api-client";
-import { fmtMaskedIban, fmtPlainDate, normalizeLocale } from "@agilityhub/i18n";
+import { fmtMaskedIban, fmtPlainDate, normalizeLocale, personArticle } from "@agilityhub/i18n";
 import {
   Button,
   Card,
@@ -252,39 +252,152 @@ function clubDayMonth(instant: string, timeZone: string): string {
   return `${part("day")}-${part("month")}`;
 }
 
+type DogTaskBlock = NonNullable<MeDog["tasks"]>;
+type TaskActor = NonNullable<components["schemas"]["Task"]["doneBy"]>;
+
+/** The block with task `id` done at `doneAt` (the api's answer), counted once. */
+function withTaskDone(block: DogTaskBlock, id: string, doneAt: string): DogTaskBlock {
+  const task = block.items.find((item) => item.id === id);
+  if (task === undefined || task.doneAt !== undefined) return block;
+  return {
+    completed: block.completed + 1,
+    items: block.items.map((item) => (item.id === id ? { ...item, doneAt } : item)),
+    open: Math.max(0, block.open - 1),
+  };
+}
+
 /**
  * R-03-18 (INC-26): the dog's tasks from `GET /me/dogs` — the pending ones and those done in the
- * last 30 days — under the counter. The checkbox is inert until completion arrives (S10, E6-W02);
- * a done task is struck through with «feta el {dd-mm}».
+ * last 30 days — under the counter; a done task is struck through with «feta el {dd-mm}». E6-W04
+ * step 0b (S10 R-10-10, §6): a pending task's checkbox completes it (`POST /tasks/{id}/completion`,
+ * MEMBER and impersonated; idempotent by state, no key), busy while it runs, and then shows the
+ * task as the api returned it — «feta per {la Laura} el {dd-mm}», 26's line. `422
+ * TASK_ALREADY_DONE` (someone else completed it) reads 13 again and shows it done, with no error;
+ * any other failure is said by its code. A member never reopens a task.
  */
-function DogTasks({ dog }: { dog: MeDog }) {
+function DogTasks({
+  client,
+  dog,
+  onClear,
+  onError,
+}: {
+  client: ApiClient;
+  dog: MeDog;
+  /** A new completion clears the page's last message (an earlier failure's included). */
+  onClear: () => void;
+  onError: (message: string) => void;
+}) {
   const branding = useBranding();
-  const { t } = useTranslation("census");
+  const { i18n, t } = useTranslation(["census", "errors"]);
+  const [tasks, setTasks] = useState<DogTaskBlock | undefined>(dog.tasks);
+  // Who completed a task from this page: the completion's answer names them (`Task.doneBy`).
+  const [doneBy, setDoneBy] = useState<Readonly<Record<string, TaskActor>>>({});
+  const [working, setWorking] = useState<ReadonlySet<string>>(new Set());
 
-  if (dog.tasks === undefined) {
+  if (tasks === undefined) {
     return null;
   }
+
+  const failure = (error: unknown) =>
+    isApiError(error) && error.status !== 0
+      ? t(`errors:${error.code}`, { defaultValue: t("census:selfService.genericError") })
+      : t("census:selfService.genericError");
+
+  const complete = async (id: string) => {
+    if (working.has(id)) {
+      return;
+    }
+    setWorking((current) => new Set([...current, id]));
+    onClear();
+    try {
+      const { data } = await client.POST("/tasks/{id}/completion", { params: { path: { id } } });
+      if (data === undefined) {
+        throw new TypeError("The completion response did not contain data");
+      }
+      const doneAt = data.doneAt ?? new Date().toISOString();
+      const actor = data.doneBy ?? undefined;
+      setTasks((current) => (current === undefined ? current : withTaskDone(current, id, doneAt)));
+      if (actor !== undefined) {
+        setDoneBy((current) => ({ ...current, [id]: actor }));
+      }
+    } catch (error) {
+      if (!isApiError(error, "TASK_ALREADY_DONE")) {
+        onError(failure(error));
+      } else {
+        // Someone else completed it: 13 read again shows it as the api has it, with no error.
+        try {
+          const { data } = await client.GET("/me/dogs");
+          const fresh = data?.dogs.find((item) => item.id === dog.id)?.tasks;
+          if (fresh !== undefined) {
+            // A task this page completed meanwhile stays done, even if the read was taken before.
+            setTasks((current) =>
+              (current?.items ?? []).reduce(
+                (merged, item) =>
+                  item.doneAt === undefined
+                    ? merged
+                    : withTaskDone(merged, item.id, item.doneAt),
+                fresh,
+              ),
+            );
+          }
+        } catch (readError) {
+          onError(failure(readError));
+        }
+      }
+    } finally {
+      setWorking((current) => new Set([...current].filter((item) => item !== id)));
+    }
+  };
+
+  const doneLine = (id: string, doneAt: string) => {
+    const date = clubDayMonth(doneAt, branding.timeZone);
+    const actor = doneBy[id];
+    return actor === undefined
+      ? t("census:myDogs.taskDone", { date })
+      : // 26's and D13's line (`instructor:tasks.doneBy`), in the member's own namespace.
+        t("census:myDogs.taskDoneBy", {
+          article: personArticle(
+            actor.displayName,
+            actor.gender,
+            normalizeLocale(i18n.resolvedLanguage),
+          ),
+          date,
+          name: actor.displayName,
+        });
+  };
 
   return (
     <section className="dog-card__section dog-tasks" aria-label={t("census:myDogs.tasksTitle")}>
       <h3>{t("census:myDogs.tasksTitle")}</h3>
-      <p>{t("census:myDogs.tasksSummary", dog.tasks)}</p>
-      {dog.tasks.items.length === 0 ? null : (
+      <p>{t("census:myDogs.tasksSummary", tasks)}</p>
+      {tasks.items.length === 0 ? null : (
         <ul className="dog-tasks__list">
-          {dog.tasks.items.map((task) => {
+          {tasks.items.map((task) => {
             const doneAt = task.doneAt ?? undefined;
             const textId = `dog-task-${task.id}`;
+            const busy = working.has(task.id);
             return (
-              <li className="dog-task" data-done={doneAt === undefined ? undefined : ""} key={task.id}>
-                <span
+              <li
+                className="dog-task"
+                data-done={doneAt === undefined ? undefined : ""}
+                key={task.id}
+              >
+                <button
+                  aria-busy={busy ? true : undefined}
                   aria-checked={doneAt !== undefined}
-                  aria-disabled="true"
+                  aria-disabled={doneAt !== undefined || busy ? true : undefined}
                   aria-labelledby={textId}
                   className="dog-task__check"
+                  onClick={() => {
+                    if (doneAt === undefined && !busy) {
+                      void complete(task.id);
+                    }
+                  }}
                   role="checkbox"
+                  type="button"
                 >
                   {doneAt === undefined ? null : <Icon aria-hidden="true" name="check" />}
-                </span>
+                </button>
                 <div>
                   <p id={textId}>{task.text}</p>
                   <small>
@@ -292,11 +405,7 @@ function DogTasks({ dog }: { dog: MeDog }) {
                       date: clubDayMonth(task.createdAt, branding.timeZone),
                       instructor: task.instructorName,
                     })}
-                    {doneAt === undefined
-                      ? null
-                      : ` · ${t("census:myDogs.taskDone", {
-                          date: clubDayMonth(doneAt, branding.timeZone),
-                        })}`}
+                    {doneAt === undefined ? null : ` · ${doneLine(task.id, doneAt)}`}
                     {task.attachmentsCount > 0 ? (
                       <>
                         {" · "}
@@ -437,12 +546,14 @@ function DogCard({
   client,
   dog: initialDog,
   modules,
+  onClearMessage,
   onDocument,
   onMessage,
 }: {
   client: ApiClient;
   dog: MeDog;
   modules: readonly string[];
+  onClearMessage: () => void;
   onDocument: (upload: DocumentUpload) => void;
   onMessage: (message: string, error?: boolean) => void;
 }) {
@@ -495,7 +606,16 @@ function DogCard({
               onMessage(t("census:myDogs.noteSaved", { dog: dog.name }));
             }}
           />
-          {dog.tasks === undefined ? null : <DogTasks dog={dog} />}
+          {dog.tasks === undefined ? null : (
+            <DogTasks
+              client={client}
+              dog={dog}
+              onClear={onClearMessage}
+              onError={(message) => {
+                onMessage(message, true);
+              }}
+            />
+          )}
         </>
       ) : null}
       <DogDocuments
@@ -756,6 +876,9 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
                   dog={dog}
                   key={dog.id}
                   modules={branding.modules}
+                  onClearMessage={() => {
+                    setMessage(undefined);
+                  }}
                   onDocument={setDocumentUpload}
                   onMessage={(text, messageError) => {
                     setMessage({ ...(messageError === true ? { error: true } : {}), text });

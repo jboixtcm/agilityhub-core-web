@@ -33,7 +33,7 @@ import {
 } from "./fixtures/planning";
 import { findParameter } from "./fixtures/settings";
 import { fieldsProjection, WEEK_LIST_FIELDS } from "./list-fields";
-import { currentMockScenario } from "./scenarios";
+import { callerClubOwnsTheWorld, currentMockScenario } from "./scenarios";
 
 type ApiErrorResponse = components["schemas"]["ApiError"];
 type WeekTemplateCreateRequest = components["schemas"]["WeekTemplateCreateRequest"];
@@ -676,7 +676,12 @@ export const planningHandlers = [
     const url = new URL(request.url);
     const projection = fieldsProjection<WeekListItem>(url, WEEK_LIST_FIELDS, ["id"]);
     if (projection === undefined) return apiError("INVALID_FILTER", "Unsupported field", 400);
-    let items = [...planningState.weeks];
+    // The weeks have no free-text search: a non-blank `q` is undeclared (E75).
+    if ((url.searchParams.get("q") ?? "").trim() !== "") {
+      return apiError("INVALID_FILTER", "Unsupported search", 400);
+    }
+    // The tenant comes from the JWT: another club's token finds none of this club's weeks.
+    let items = callerClubOwnsTheWorld() ? [...planningState.weeks] : [];
     for (const filter of url.searchParams.getAll("filter")) {
       const [field, op, value] = filter.split(":");
       if (field === "startDate" && value !== undefined) {
@@ -729,7 +734,9 @@ export const planningHandlers = [
     return HttpResponse.json(weekResource(week), { status: 201 });
   }),
   http.get("*/api/v1/weeks/:id", ({ params }) => {
-    const week = planningState.weeks.find((candidate) => candidate.id === String(params.id));
+    const week = callerClubOwnsTheWorld()
+      ? planningState.weeks.find((candidate) => candidate.id === String(params.id))
+      : undefined;
     return week === undefined
       ? apiError("NOT_FOUND", "Week not found", 404)
       : HttpResponse.json(weekResource(week));

@@ -66,16 +66,18 @@ function customCaps(category: NotificationCategory): ChannelCaps {
   };
 }
 
-/** A cell outside the template's `caps` (R-11-12): CHANNEL_NOT_ALLOWED (422, rule 0). */
+/**
+ * The cells outside the template's `caps` (R-11-12): CHANNEL_NOT_ALLOWED (422, rule 0) with
+ * `ChannelNotAllowedDetails`, the first refused cell and every refused one (api e34bf04).
+ */
 function channelOutsideCaps(template: Pick<StoredTemplate, "caps">, matrix: ChannelMatrix) {
-  for (const audience of AUDIENCES) {
-    for (const channel of CHANNELS) {
-      if (matrix[audience][channel] && !template.caps[audience].includes(channel)) {
-        return { audience, channel };
-      }
-    }
-  }
-  return undefined;
+  const cells = AUDIENCES.flatMap((audience) =>
+    CHANNELS.filter(
+      (channel) => matrix[audience][channel] && !template.caps[audience].includes(channel),
+    ).map((channel) => ({ audience, channel })),
+  );
+  const [first] = cells;
+  return first === undefined ? undefined : { ...first, cells };
 }
 
 function smsActive(matrix: ChannelMatrix): boolean {
@@ -108,19 +110,29 @@ function textRefusal(
   if (broken !== undefined) {
     return failure(400, "TEMPLATE_SYNTAX_ERROR", { field: broken.field });
   }
-  for (const item of all) {
-    const [unknown] = unknownVariables(item.text, template.variables);
-    if (unknown !== undefined) {
-      return failure(400, "TEMPLATE_UNKNOWN_VARIABLE", { field: item.field, variable: unknown });
-    }
+  // `TemplateFieldDetails` (api e34bf04): the first text with an unknown variable, and every
+  // unknown variable of the save.
+  const unknown = all.flatMap((item) =>
+    unknownVariables(item.text, template.variables).map((variable) => ({ ...item, variable })),
+  );
+  const [firstUnknown] = unknown;
+  if (firstUnknown !== undefined) {
+    return failure(400, "TEMPLATE_UNKNOWN_VARIABLE", {
+      field: firstUnknown.field,
+      variables: [...new Set(unknown.map((item) => item.variable))].sort(),
+    });
   }
   const missing = missingVariables(texts.body, template.requiredVariables);
   if (missing.length > 0) {
     return failure(400, "VALIDATION_ERROR", { missingVariables: missing });
   }
   if (smsActive(matrix)) {
+    // The default language's SMS text is the required one (`smsBody.<default locale>`).
+    const defaultLocale = currentMockScenario().branding.defaultLocale;
+    if ((texts.smsBody?.[defaultLocale] ?? "").trim() === "") {
+      return failure(400, "SMS_BODY_REQUIRED", { field: `smsBody.${defaultLocale}` });
+    }
     const sms = Object.entries(texts.smsBody ?? {}).filter(([, text]) => text.trim() !== "");
-    if (sms.length === 0) return failure(400, "SMS_BODY_REQUIRED", { field: "smsBody" });
     const long = sms.find(([, text]) => text.length > 160);
     if (long !== undefined) {
       return failure(400, "SMS_BODY_TOO_LONG", { field: `smsBody.${long[0]}`, max: 160 });

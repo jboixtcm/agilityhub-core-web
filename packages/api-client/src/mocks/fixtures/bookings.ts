@@ -3,6 +3,7 @@ import type { components } from "../../generated/schema";
 import { clubInstant, clubLocalDateOf } from "./calendar";
 import { catalogState } from "./catalogs";
 import { addDays } from "./planning";
+import { findParameter } from "./settings";
 import { trainingParameters, trainingReservationRows, trainingWeekOf } from "./training";
 
 type Booking = components["schemas"]["Booking"];
@@ -439,6 +440,17 @@ function homeDog(dog: MockDog): HomeDog {
   };
 }
 
+/**
+ * R-08-03: the club's limit of a booking week, `bookings.maxCurrentWeek` for W0 and
+ * `bookings.maxNextWeek` for W1 (the product defaults, 2 and 1, when the club does not list them).
+ */
+function weekLimit(week: BookingWeek): number {
+  const value = findParameter(
+    week === "NEXT" ? "bookings.maxNextWeek" : "bookings.maxCurrentWeek",
+  )?.value;
+  return typeof value === "number" ? value : week === "NEXT" ? 1 : 2;
+}
+
 /** R-08-02: what counts towards a week (never `CANCELLED` nor `CANCELLED_BY_CLUB`). */
 function counts(item: StoredBooking): boolean {
   return (
@@ -542,12 +554,12 @@ export function meHome(
     limits: {
       currentWeek: {
         count: weekCount(limitDogs, "CURRENT", options.now),
-        max: 2,
+        max: weekLimit("CURRENT"),
         weekKey: current.key,
       },
       nextWeek: {
         count: weekCount(limitDogs, "NEXT", options.now),
-        max: 1,
+        max: weekLimit("NEXT"),
         weekKey: clubLocalDateOf(current.end),
       },
       unit: "DOG",
@@ -769,15 +781,12 @@ function swapOption(item: StoredBooking): SwapOption[] {
 }
 
 /**
- * `LimitStatus` of the dog for the class's week (R-08-02, R-08-09): the bookings that count,
- * the ones still cancellable in time (`swappable`) and the rest (`notSelectable`).
+ * The dog's bookings that count in `week` at the clock (R-08-02), split as R-08-09 does:
+ * `swappable`, the ACTIVE ones still cancellable in time; `notSelectable`, the rest — DONE once
+ * the class has begun or the booking was cancelled late, LATE_WINDOW otherwise (inside the
+ * threshold, or waiting for its payment: a PAYMENT_PENDING booking is never swapped).
  */
-export function limitStatus(
-  dogId: string,
-  week: BookingWeek,
-  options: BookingOptions,
-): LimitStatus {
-  const max = week === "NEXT" ? 1 : 2;
+function weekBookings(dogId: string, week: BookingWeek, options: BookingOptions) {
   const counted = bookingState.bookings.filter(
     (item) => item.dogId === dogId && counts(item) && inWeek(item, week, options.now),
   );
@@ -787,27 +796,38 @@ export function limitStatus(
     const session = findClass(item.classSessionId);
     if (session === undefined) continue;
     const startsAt = Date.parse(localInstant(session.startsAtLocal));
-    const reason =
-      item.state === "CANCELLED_LATE" || startsAt <= options.now
-        ? "DONE"
-        : startsAt - options.now < options.thresholdMinutes * 60_000
-          ? "LATE_WINDOW"
-          : undefined;
-    if (reason === undefined && item.state === "ACTIVE") swappable.push(...swapOption(item));
+    const done = item.state === "CANCELLED_LATE" || startsAt <= options.now;
+    const inTime = startsAt - options.now >= options.thresholdMinutes * 60_000;
+    if (!done && inTime && item.state === "ACTIVE") swappable.push(...swapOption(item));
     else
       notSelectable.push({
         bookingId: item.id,
         description: session.description,
-        reason: reason ?? "DONE",
+        reason: done ? "DONE" : "LATE_WINDOW",
         startsAtLocal: session.startsAtLocal,
       });
   }
-  const reached = counted.length >= max;
+  return { count: counted.length, notSelectable, swappable };
+}
+
+/**
+ * `LimitStatus` of the dog for the class's week (R-08-02, R-08-09): the bookings that count,
+ * the ones still cancellable in time (`swappable`) and the rest (`notSelectable`), against the
+ * club's limit of that week (R-08-03).
+ */
+export function limitStatus(
+  dogId: string,
+  week: BookingWeek,
+  options: BookingOptions,
+): LimitStatus {
+  const max = weekLimit(week);
+  const { count, notSelectable, swappable } = weekBookings(dogId, week, options);
+  const reached = count >= max;
   // The mockup 06 lists a done class beside two cancellable ones: the mock caps `count` at the
   // week's limit, which is what the api reports once the limit is reached. Below the limit there
   // is nothing to swap.
   return {
-    count: Math.min(counted.length, max),
+    count: Math.min(count, max),
     max,
     notSelectable: reached ? notSelectable : [],
     reached,
@@ -818,19 +838,25 @@ export function limitStatus(
 }
 
 /**
- * `409 BOOKING_LIMIT_REACHED` details (S08 §6) of a `WEEKLY_LIMIT_DONE` row at `now`: the class's
- * week and its limit, no swappable booking, and `nextBookableAt` = the start of the next booking
- * week, the coming opening, for a CURRENT class and a NEXT one alike (api E5-T29, R-08-01).
+ * `409 BOOKING_LIMIT_REACHED` details (S08 §6) of a `WEEKLY_LIMIT_DONE` row at the clock: the
+ * class's week and the club's limit of it, the dog's bookings that count there (`current`, the
+ * count `/me/home` shows for that week) and those it cannot swap (`notSelectable`, R-08-09), no
+ * swappable booking, and `nextBookableAt` = the start of the next booking week, the coming
+ * opening, for a CURRENT class and a NEXT one alike (api E5-T29, R-08-01). The row itself is the
+ * fixture's «Límit setmanal» (mockup 04 beside 03's cancellable Monday, assumption A6), so below
+ * the limit `current` stays the world's count rather than a made-up one.
  */
-export function limitReachedDetails(week: BookingWeek, now: number): BookingLimitReachedDetails {
+export function limitReachedDetails(
+  dogId: string,
+  week: BookingWeek,
+  options: BookingOptions,
+): BookingLimitReachedDetails {
+  const { count, notSelectable } = weekBookings(dogId, week, options);
   return {
-    current: week === "NEXT" ? 1 : 2,
-    limit: week === "NEXT" ? 1 : 2,
-    nextBookableAt: bookingWeekOf(now).end,
-    notSelectable: [
-      { bookingId: "booking-duna-past-1", reason: "DONE" },
-      { bookingId: "booking-duna-past-2", reason: "DONE" },
-    ],
+    current: count,
+    limit: weekLimit(week),
+    nextBookableAt: bookingWeekOf(options.now).end,
+    notSelectable,
     swappable: [],
     unit: "DOG",
     week,
@@ -989,6 +1015,26 @@ const POOL_OFFSETS: Readonly<Record<string, number>> = {
 /** A booking cancelled late: the 18:50 classes show the api's «any state». */
 const LATE_CANCELLER = ["Sergio", "Thai", "MALE"] as const;
 
+/**
+ * Each registrant dog's own level code, as the census and the S10 sheets know them (Duna C,
+ * Chun-li A, Nass B, Fish B, Blat B, Trevi D, Thai E); the others take one of the club's levels.
+ */
+const DOG_LEVELS: Readonly<Record<string, string>> = {
+  Bitxo: "D",
+  Blat: "B",
+  Bruc: "D",
+  "Chun-li": "A",
+  Coco: "C",
+  Duna: "C",
+  Fish: "B",
+  Kai: "B",
+  Mixa: "C",
+  Nala: "A",
+  Nass: "B",
+  Thai: "E",
+  Trevi: "D",
+};
+
 /** The class's slice of the pool: by its start time, and by its place among that time's classes. */
 function registrantsOf(session: ClassSession, count: number) {
   const slot = Number(/-(\d+)$/u.exec(session.id)?.[1] ?? "0");
@@ -1016,10 +1062,14 @@ const slug = (value: string) =>
  * `GET /class-sessions/{id}/bookings` (S08 §6) of a class of the calendar or day-grid world: its
  * `counters.booked` live bookings, plus one late cancellation; a cancelled class has its
  * `affectedBookings` cancelled by the club; a draft has none. `displayState` as the api derives it
- * (a live booking of a class that has ended reads DONE), and each dog's `levelCode`, one of the
- * class's levels.
+ * (a live booking of a class that has ended reads DONE), and `levelCode`, the dog's own level,
+ * `null` in a club with `levels.enabled = false` (the caller passes the switch).
  */
-export function classBookingItems(session: ClassSession, now = Date.now()): ClassBookingItem[] {
+export function classBookingItems(
+  session: ClassSession,
+  levelsEnabled: boolean,
+  now = Date.now(),
+): ClassBookingItem[] {
   const item = (
     [member, dog]: readonly [string, string, string],
     index: number,
@@ -1036,12 +1086,7 @@ export function classBookingItems(session: ClassSession, now = Date.now()): Clas
     dogName: dog,
     id: `cb-${session.id}-${String(index)}`,
     late: state === "CANCELLED_LATE" ? true : state === "ACTIVE" ? null : false,
-    levelCode:
-      session.levelIds.length === 0
-        ? null
-        : (session.levelIds[index % session.levelIds.length] ?? "")
-            .replace(/^level-/u, "")
-            .toUpperCase(),
+    levelCode: levelsEnabled ? (DOG_LEVELS[dog] ?? null) : null,
     memberId: `member-${slug(member)}`,
     memberName: member,
     origin: index === 1 ? "BACKOFFICE" : "APP",

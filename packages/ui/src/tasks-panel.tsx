@@ -881,6 +881,11 @@ export interface FollowupEditorModel<Task extends TaskPanelItem> {
   readHistory: (page: number) => Promise<void>;
   /** «Mostra'n més» of the editable list: one page further. */
   readMoreTasks: () => Promise<void>;
+  /**
+   * The files the last write's api refused one by one (an instructor cannot read the limits, so
+   * the picker lets them through): said «{fitxer}: {missatge}» where the write started.
+   */
+  refusals?: readonly AttachmentRefusal[] | undefined;
   reloadTasks: () => void;
   removeAttachment: (attachmentId: string) => Promise<boolean>;
   reopenTask: (task: Task) => Promise<boolean>;
@@ -964,10 +969,15 @@ export function DogFollowupEditor<Task extends TaskPanelItem>({
     model.error === undefined || (model.observations.stale && texts.staleVersion(model.error))
       ? undefined
       : texts.errorText(model.error, texts.writeError);
-  // A block's refusals and its write's failure, one line each.
+  // The files the api refused in the last write (E6-W04 step 0d).
+  const apiRefused = (model.refusals ?? []).map(({ file, reason }) =>
+    texts.rejection(reason, file),
+  );
+  // A block's refusals (the picker's and the api's) and its write's failure, one line each.
   const said = (from: FollowupScope): ReactNode => {
     const lines = [
       ...(refused?.scope === from ? refused.messages : []),
+      ...(scope === from ? apiRefused : []),
       ...(scope === from && writeError !== undefined ? [writeError] : []),
     ];
     if (lines.length <= 1) return lines[0];

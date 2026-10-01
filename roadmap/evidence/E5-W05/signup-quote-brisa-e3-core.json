@@ -1,9 +1,9 @@
 {
   "plan": "Pack 6",
-  "today": "2026-09-30",
+  "today": "2026-10-01",
   "planQuotes": [
     {
-      "planId": "0a2592e1-1af0-4c14-93ae-29621318639b",
+      "planId": "2107fd14-1716-4c55-88e2-3bd8c71c3926",
       "lines": [
         {
           "concept": "ENTRY_FEE",
@@ -20,19 +20,6 @@
       "options": [
         {
           "option": "TODAY",
-          "portion": "HALF",
-          "startDate": "2026-09-30",
-          "amountDue": {
-            "amountMinor": 3000,
-            "currency": "EUR"
-          },
-          "totalDue": {
-            "amountMinor": 13000,
-            "currency": "EUR"
-          }
-        },
-        {
-          "option": "ALTERNATIVE",
           "portion": "FULL",
           "startDate": "2026-10-01",
           "amountDue": {
@@ -43,11 +30,24 @@
             "amountMinor": 16000,
             "currency": "EUR"
           }
+        },
+        {
+          "option": "ALTERNATIVE",
+          "portion": "HALF",
+          "startDate": "2026-10-16",
+          "amountDue": {
+            "amountMinor": 3000,
+            "currency": "EUR"
+          },
+          "totalDue": {
+            "amountMinor": 13000,
+            "currency": "EUR"
+          }
         }
       ]
     },
     {
-      "planId": "e3b0ddd5-b7d1-46ba-8bcd-41f5948d89b0",
+      "planId": "9ec50c09-22fd-4e3a-8bb8-6a4344f86100",
       "lines": [
         {
           "concept": "PACK",
@@ -64,7 +64,7 @@
       "options": []
     },
     {
-      "planId": "2bd76876-4223-4b70-847f-f36d2a761e05",
+      "planId": "578706c1-7c92-4714-b4ee-8166dd479bd5",
       "lines": [
         {
           "concept": "PACK",
@@ -81,7 +81,7 @@
       "options": []
     },
     {
-      "planId": "ba6e57a9-4cdc-4c3e-8ad8-a68058fc237b",
+      "planId": "2ec2e14b-1a83-4cf6-8a1c-932d6b030776",
       "lines": [
         {
           "concept": "ENTRY_FEE",

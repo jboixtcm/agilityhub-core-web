@@ -193,6 +193,7 @@
     "photoSaved": "Photo for {dog} saved",
     "taskAttachments": "{count, plural, one {# attachment} other {# attachments}}",
     "taskDone": "done on {date}",
+    "taskDoneBy": "done by {article}{name} on {date}",
     "taskMeta": "{date} · {instructor}",
     "tasksSummary": "{open, plural, one {# pending} other {# pending}} · {completed, plural, one {# completed} other {# completed}}",
     "tasksTitle": "Tasks",

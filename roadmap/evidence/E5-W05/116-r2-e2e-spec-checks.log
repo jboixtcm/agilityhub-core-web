@@ -1,0 +1,6 @@
+tsc exit 0
+eslint exit 0
+Checking formatting...
+[warn] e2e/core/e3-signup.spec.ts
+[warn] Code style issues found in the above file. Run Prettier with --write to fix.
+prettier exit 1

@@ -1,0 +1,57 @@
+Scope: 4 of 11 workspace projects
+packages/api-client typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+packages/ui typecheck: Done
+packages/api-client typecheck: src/mocks/messaging-handlers.test.ts(311,11): error TS2375: Type '{ body: { ca: string; es: string; }; color: "OK" | "NEUTRAL" | "WARNING" | "ERROR" | "ACCENT"; enabled: true; icon: "info" | "check" | "x" | "unlock" | "warn" | "up" | "heart" | "bell" | "doc" | ... 6 more ... | "lock"; matrix: { ...; }; smsBody: { ...; } | ... 1 more ... | undefined; title: { ...; }; version: numbe...' is not assignable to type '{ body: { [x: string]: string; } & {}; category?: "SYSTEM" | "OPERATIONAL" | "PERSONAL" | "CLUB_CHANGES" | "CLUB_NEWS" | null; color: "OK" | "NEUTRAL" | "WARNING" | "ERROR" | "ACCENT"; ... 5 more ...; version: number; } & {}' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+packages/api-client typecheck:   Type '{ body: { ca: string; es: string; }; color: "OK" | "NEUTRAL" | "WARNING" | "ERROR" | "ACCENT"; enabled: true; icon: "info" | "check" | "x" | "unlock" | "warn" | "up" | "heart" | "bell" | "doc" | ... 6 more ... | "lock"; matrix: { ...; }; smsBody: { ...; } | ... 1 more ... | undefined; title: { ...; }; version: numbe...' is not assignable to type '{ body: { [x: string]: string; } & {}; category?: "SYSTEM" | "OPERATIONAL" | "PERSONAL" | "CLUB_CHANGES" | "CLUB_NEWS" | null; color: "OK" | "NEUTRAL" | "WARNING" | "ERROR" | "ACCENT"; ... 5 more ...; version: number; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+packages/api-client typecheck:     Types of property 'smsBody' are incompatible.
+packages/api-client typecheck:       Type '{ [x: string]: string; } | null | undefined' is not assignable to type '({ [x: string]: string; } & {}) | null'.
+packages/api-client typecheck:         Type 'undefined' is not assignable to type '({ [x: string]: string; } & {}) | null'.
+packages/api-client typecheck: Failed
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/api-client@0.0.0 typecheck: `tsc --noEmit`
+Exit status 2
+typecheck exit 2
+Scope: 4 of 11 workspace projects
+packages/api-client typecheck$ tsc --noEmit
+packages/ui typecheck$ tsc --noEmit
+packages/ui typecheck: Done
+packages/api-client typecheck: src/mocks/messaging-handlers.test.ts(311,11): error TS2375: Type '{ body: { ca: string; es: string; }; color: "OK" | "NEUTRAL" | "WARNING" | "ERROR" | "ACCENT"; enabled: true; icon: "info" | "check" | "x" | "unlock" | "warn" | "up" | "heart" | "bell" | "doc" | ... 6 more ... | "lock"; matrix: { ...; }; smsBody: { ...; } | ... 1 more ... | undefined; title: { ...; }; version: numbe...' is not assignable to type '{ body: { [x: string]: string; } & {}; category?: "SYSTEM" | "OPERATIONAL" | "PERSONAL" | "CLUB_CHANGES" | "CLUB_NEWS" | null; color: "OK" | "NEUTRAL" | "WARNING" | "ERROR" | "ACCENT"; ... 5 more ...; version: number; } & {}' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+packages/api-client typecheck:   Type '{ body: { ca: string; es: string; }; color: "OK" | "NEUTRAL" | "WARNING" | "ERROR" | "ACCENT"; enabled: true; icon: "info" | "check" | "x" | "unlock" | "warn" | "up" | "heart" | "bell" | "doc" | ... 6 more ... | "lock"; matrix: { ...; }; smsBody: { ...; } | ... 1 more ... | undefined; title: { ...; }; version: numbe...' is not assignable to type '{ body: { [x: string]: string; } & {}; category?: "SYSTEM" | "OPERATIONAL" | "PERSONAL" | "CLUB_CHANGES" | "CLUB_NEWS" | null; color: "OK" | "NEUTRAL" | "WARNING" | "ERROR" | "ACCENT"; ... 5 more ...; version: number; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+packages/api-client typecheck:     Types of property 'smsBody' are incompatible.
+packages/api-client typecheck:       Type '{ [x: string]: string; } | null | undefined' is not assignable to type '({ [x: string]: string; } & {}) | null'.
+packages/api-client typecheck:         Type 'undefined' is not assignable to type '({ [x: string]: string; } & {}) | null'.
+packages/api-client typecheck: Failed
+apps/clubs typecheck$ tsc --noEmit
+apps/clubs-admin typecheck$ tsc --noEmit
+apps/clubs typecheck: Done
+apps/clubs-admin typecheck: Done
+ ERR_PNPM_RECURSIVE_FAIL  
+
+
+Summary: 1 fails, 3 passes
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERROR  @agilityhub/api-client@0.0.0 typecheck: `tsc --noEmit`
+Exit status 2
+typecheck (no-bail) exit 1
+eslint exit 0
+Checking formatting...
+[warn] apps/clubs-admin/src/followup/followup.test.tsx
+[warn] Code style issues found in the above file. Run Prettier with --write to fix.
+prettier exit 1
+
+> agilityhub-core-web@0.0.0 i18n:check /Users/jordib/dev/agilityhub/agilityhub-core-web
+> node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs && node scripts/check-parameter-keys.mjs
+
+i18n check passed
+ca: 3278 keys
+es: 3278 keys
+en: 3278 keys
+2550 statically used keys, 0 unused
+251 codes, 0 missing
+151 catalog parameters (119 in D11, 32 system-only), 10 blocks, 0 missing
+i18n:check exit 0
+Checking formatting...
+All matched files use Prettier code style!
+prettier (step 0d files; followup.test.tsx's two warnings are at lines 502 and 520, inside the step 0c tests of l.496-582, not step 5 at l.583) exit 0

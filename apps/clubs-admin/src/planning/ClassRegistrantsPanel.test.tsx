@@ -81,13 +81,14 @@ describe("E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R
     const rows = within(panel)
       .getAllByRole("listitem")
       .map((item) => item.textContent);
-    // Each row: «{abonat} + {gos}», the level chip (E5-T29 `levelCode`) and the displayState chip.
+    // Each row: «{abonat} + {gos}», the level chip (E5-T29 `levelCode`, the dog's own level) and
+    // the displayState chip.
     expect(rows.slice(0, 5)).toEqual([
-      "Laura + DunaBconfirmada",
-      "Marc + Chun-liCconfirmada",
+      "Laura + DunaCconfirmada",
+      "Marc + Chun-liAconfirmada",
       "Anna + NassBconfirmada",
-      "Eva + FishCconfirmada",
-      "Sergio + ThaiBanul·lada tard",
+      "Eva + FishBconfirmada",
+      "Sergio + ThaiEanul·lada tard",
     ]);
     // E5-W05 step 2: «{guia} + {gos}» (E5-T29 `memberFirstName`), mockup D12's line.
     expect(within(panel).getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
@@ -323,5 +324,32 @@ describe("E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6,
   it("E5-W05 step 2: the mock's staff waitlist sends each entry's first name, as the api does: «En espera: Júlia + Kira · Roser + Lluna»", async () => {
     const panel = await renderPanel();
     expect(within(panel).getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
+  });
+});
+
+describe("E5-W05 round 2 · the mock's level chip is the dog's own level, and none with levels off (S08 §6 levelCode)", () => {
+  const levelChips = (panel: HTMLElement) =>
+    [...panel.querySelectorAll(".ah-registrants__level")].map((chip) => chip.textContent);
+
+  it("E5-W05 round 2 #3: with levels on each chip is the dog's level (Duna «C», her census level); in a club with levels.enabled = false (planningNoLevels) no row has a level chip", async () => {
+    const panel = await renderPanel();
+    expect(within(panel).getAllByRole("listitem")[0]?.textContent).toBe("Laura + DunaCconfirmada");
+    expect(levelChips(panel)).toEqual(["C", "A", "B", "B", "E"]);
+    cleanup();
+    mockScenario("planningNoLevels");
+    const noLevels = await renderPanel();
+    expect(levelChips(noLevels)).toEqual([]);
+    expect(
+      within(noLevels)
+        .getAllByRole("listitem")
+        .slice(0, 5)
+        .map((item) => item.textContent),
+    ).toEqual([
+      "Laura + Dunaconfirmada",
+      "Marc + Chun-liconfirmada",
+      "Anna + Nassconfirmada",
+      "Eva + Fishconfirmada",
+      "Sergio + Thaianul·lada tard",
+    ]);
   });
 });

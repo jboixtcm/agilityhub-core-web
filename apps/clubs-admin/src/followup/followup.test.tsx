@@ -1,5 +1,6 @@
 import { type ApiClient, createApiClient } from "@agilityhub/api-client";
 import {
+  handlers,
   mockScenario,
   type MockScenario,
   resetFollowupMockState,
@@ -19,7 +20,7 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import { delay, http, HttpResponse } from "msw";
+import { delay, getResponse, http, HttpResponse } from "msw";
 import { useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -465,6 +466,127 @@ describe("E6-W03 round 2: D14's reads (R-10-13) and its filter values", () => {
   });
 });
 
+describe("E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75)", () => {
+  /** Opens the list's filter menu; `pick` chooses a «Columna» and reads its «Valor» options. */
+  function filterMenu() {
+    const summary = [...document.querySelectorAll("summary")].find((element) =>
+      element.textContent.trim().startsWith("Filtre"),
+    );
+    if (summary === undefined) throw new TypeError("No filter menu");
+    fireEvent.click(summary);
+    const menu = summary.parentElement ?? document.body;
+    const options = () =>
+      within(within(menu).getByLabelText("Valor"))
+        .getAllByRole("option")
+        .map((option) => option.textContent);
+    const pick = async (field: string, expected: readonly string[]) => {
+      fireEvent.change(within(menu).getByLabelText("Columna"), { target: { value: field } });
+      await waitFor(() => {
+        expect(options()).toEqual(expected);
+      });
+    };
+    return { menu, pick };
+  }
+
+  const valueReads = (requests: Recorded[]) =>
+    requests
+      .filter((request) => request.line.startsWith("GET /followup/filter-values?"))
+      .map((request) => new URL(request.line.slice(4), window.location.origin).searchParams);
+
+  it("E6-W04 step 0c: «Abonat», «Gos» and «Creador» offer the api's values with their counts over the whole set — also the members, dogs and authors only rows beyond the first page have — and a creator picked is named in the chip", async () => {
+    const requests = recordRequests();
+    await renderFollowUp({ scenario: "followupMany" });
+    const rows = await tableRows();
+    // The first page (50) holds only Laura's notes on Duna.
+    expect(rows).toHaveLength(50);
+    expect(rows.every((row) => row.includes("Laura Serra") && row.includes("| Duna |"))).toBe(true);
+    const { menu, pick } = filterMenu();
+    await pick("memberId", ["Anna Ballart (1)", "Laura Serra (55)", "Pau Riera (1)"]);
+    await pick("dogId", ["Blat (1)", "Duna (55)", "Nass (1)"]);
+    await pick("authorAccountId", ["Estel (2)", "Laura (53)", "Marc (1)", "Pau (1)"]);
+    expect(
+      within(within(menu).getByLabelText("Columna"))
+        .getAllByRole("option")
+        .map((option) => option.textContent),
+    ).toContain("Creador");
+    expect(valueReads(requests).map((query) => query.get("field"))).toEqual(
+      expect.arrayContaining(["memberId", "dogId", "authorAccountId"]),
+    );
+    // Never from the rows on screen: no list read of 50 rows serves the relation values.
+    expect(
+      requests.filter(
+        (request) => request.line.startsWith("GET /followup?") && !request.line.includes("filter="),
+      ),
+    ).toHaveLength(1);
+
+    const value = within(menu).getByLabelText("Valor");
+    const marc = within(value)
+      .getAllByRole("option")
+      .find((option) => option.textContent === "Marc (1)");
+    fireEvent.change(value, { target: { value: marc?.getAttribute("value") ?? "" } });
+    fireEvent.click(within(menu).getByRole("button", { name: "Afegeix el filtre" }));
+    await waitFor(async () => {
+      expect(await tableRows()).toEqual([
+        "Anna Ballart | Nass | B | 10-08 | Marc (tasca) | Repasseu la taula de contactes al jardí | 10-08 | — | Obre la fitxa de Nass",
+      ]);
+    });
+    const last = requests.filter((request) => request.line.startsWith("GET /followup?")).at(-1);
+    expect(last?.line).toMatch(/filter=authorAccountId:eq:[0-9a-f-]{36}/u);
+    expect(await screen.findByText("Filtre (1): Creador = «Marc»")).toBeVisible();
+  });
+
+  it("E6-W04 step 0c (its review): a «Creador» filter that comes with the address is named from the api's labels, never shown as its account id", async () => {
+    mockScenario("followupMany");
+    const values = await createApiClient({ baseUrl: `${window.location.origin}/api/v1` }).GET(
+      "/followup/filter-values",
+      { params: { query: { field: "authorAccountId" } } },
+    );
+    const marc = values.data?.values.find((item) => item.label === "Marc");
+    if (marc === undefined) throw new TypeError("No «Marc» among the authors");
+    const id = String(marc.value);
+    await renderFollowUp({
+      path: `/seguiment?filter=${encodeURIComponent(`authorAccountId:eq:${id}`)}`,
+      scenario: "followupMany",
+    });
+    expect(await screen.findByText("Filtre (1): Creador = «Marc»")).toBeVisible();
+    expect(screen.queryByText(new RegExp(id, "u"))).toBeNull();
+  });
+
+  it("E6-W04 step 0c: the search box sends q to GET /followup and the rows narrow to what the api finds in the member, the dog, the author and the task's whole text; the filter values follow the search", async () => {
+    const requests = recordRequests();
+    await renderFollowUp();
+    expect(await tableRows()).toHaveLength(5);
+    const search = screen.getByRole("searchbox", { name: "Cerca al seguiment" });
+    const listReads = () =>
+      requests
+        .filter((request) => request.line.startsWith("GET /followup?"))
+        .map((request) => request.line);
+    // A word of the task's whole text, beyond its excerpt («… sessions curtes i moltes recompenses»).
+    fireEvent.change(search, { target: { value: "recompenses" } });
+    await waitFor(async () => {
+      expect(await tableRows()).toEqual([
+        "* Laura Serra · no llegit | Duna | C | 12-08 | Estel (tasca) | Practiqueu el balancí amb calma: sessions curtes | 12-08 | — | Obre la fitxa de Duna",
+      ]);
+    });
+    expect(listReads().at(-1)).toContain("q=recompenses");
+    // The author («Marc», who wrote a task) and the dog («Blat»).
+    fireEvent.change(search, { target: { value: "marc" } });
+    await waitFor(async () => {
+      expect((await tableRows()).map((row) => row.split(" | ")[0])).toEqual([
+        "* Anna Ballart · no llegit",
+      ]);
+    });
+    expect(listReads().at(-1)).toContain("q=marc");
+    fireEvent.change(search, { target: { value: "Blat" } });
+    await waitFor(async () => {
+      expect((await tableRows()).map((row) => row.split(" | ")[1])).toEqual(["Blat"]);
+    });
+    const { pick } = filterMenu();
+    await pick("memberId", ["Pau Riera (1)"]);
+    expect(valueReads(requests).at(-1)?.get("q")).toBe("Blat");
+  });
+});
+
 describe("E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read", () => {
   const blat = () => screen.getByRole("link", { name: "Aquesta setmana no podrem venir dijous" });
   const failureText =
@@ -474,7 +596,7 @@ describe("E6-W05 (review of E6-W03's round 2): D14's counter and rows after a fa
       name: "Torna-ho a provar",
     });
 
-  it("step 5 (R-10-13): offline, a failed read whose counter refresh fails too puts the counter back at its value, a failed retry does not lower it, and the api's count wins when it answers", async () => {
+  it("step 5 (R-10-13): offline, a failed read whose counter refresh fails too puts the counter back at its value, a failed retry does not lower it, and the api's count wins when it answers (E6-W04 step 0d: a count other than the restored one)", async () => {
     const requests = recordRequests();
     await renderFollowUp();
     await tableRows();
@@ -515,7 +637,17 @@ describe("E6-W05 (review of E6-W03's round 2): D14's counter and rows after a fa
     expect(
       requests.filter((request) => request.line === "POST /followup/f-note-blat/read"),
     ).toHaveLength(2);
-    // Back online, the api's own count is what shows (here someone else read nothing meanwhile).
+    // E6-W04 step 0d: meanwhile the same account reads Duna's note elsewhere, so the api counts 4,
+    // not the 5 restored here.
+    const elsewhere = await getResponse(
+      handlers,
+      new Request(`${window.location.origin}/api/v1/followup/f-note-duna/read`, {
+        headers: { "Idempotency-Key": crypto.randomUUID() },
+        method: "POST",
+      }),
+    );
+    expect(elsewhere?.status).toBe(204);
+    // Back online, the api's own count is what shows.
     offline = false;
     act(() => {
       window.dispatchEvent(new Event("focus"));
@@ -523,7 +655,8 @@ describe("E6-W05 (review of E6-W03's round 2): D14's counter and rows after a fa
     await waitFor(() => {
       expect(counts()).toBe(before + 3);
     });
-    expect(await screen.findByText("5 pendents de llegir")).toBeVisible();
+    expect(await screen.findByText("4 pendents de llegir")).toBeVisible();
+    expect(screen.queryByText("5 pendents de llegir")).toBeNull();
   });
 
   it("step 6 (R-10-13): a failed read, back to D14, a successful retry — the row loses its highlight and the counter drops", async () => {

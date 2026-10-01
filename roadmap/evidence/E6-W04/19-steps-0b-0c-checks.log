@@ -1,0 +1,31 @@
+
+> clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> tsc --noEmit
+
+exit 0 (clubs typecheck)
+
+> clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> tsc --noEmit
+
+exit 0 (clubs-admin typecheck)
+
+> @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> tsc --noEmit
+
+exit 0 (api-client typecheck)
+
+> agilityhub-core-web@0.0.0 i18n:check /Users/jordib/dev/agilityhub/agilityhub-core-web
+> node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs && node scripts/check-parameter-keys.mjs
+
+i18n check passed
+ca: 3279 keys
+es: 3279 keys
+en: 3279 keys
+2551 statically used keys, 0 unused
+251 codes, 0 missing
+151 catalog parameters (119 in D11, 32 system-only), 10 blocks, 0 missing
+exit 0 (i18n:check)
+exit 0 (eslint, touched files)
+Checking formatting...
+All matched files use Prettier code style!
+exit 0 (prettier --check, touched files)

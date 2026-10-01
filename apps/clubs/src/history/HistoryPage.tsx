@@ -276,6 +276,12 @@ export function HistoryPage({ client }: { client: ApiClient }) {
                   "history",
                 )}
                 detail={historyDetail(t, formats, item)}
+                // An activity whose page answers (`activityId` not null, S07 §6) opens it.
+                href={
+                  item.type === "ACTIVITY" && item.activityId != null
+                    ? `/activitats/${encodeURIComponent(item.activityId)}`
+                    : undefined
+                }
                 title={
                   data.showDog && item.dogName != null
                     ? t("history:withDog", { dog: item.dogName, title: item.title })

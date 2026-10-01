@@ -6,6 +6,7 @@ import openapiDocument from "../../openapi/openapi.json";
 import { isApiError } from "../api-error";
 import { createApiClient } from "../client";
 
+import { findParameter, replaceParameter, resetSettingsState } from "./fixtures/settings";
 import { mockScenario, resetMessagingMockState, type MockScenario } from "./handlers";
 import { server } from "./server";
 
@@ -66,6 +67,174 @@ afterEach(() => {
 });
 afterAll(() => {
   server.close();
+});
+
+describe("E6-W04 step 0 · the adopted snapshot (api e34bf04): S11's refusal details and D10's read", () => {
+  async function n28Body() {
+    const n28 = (await detail("tpl-n-28")).data;
+    if (n28 === undefined) throw new TypeError("No N-28");
+    return {
+      body: n28.bodyI18n,
+      color: n28.color,
+      enabled: true,
+      icon: n28.icon,
+      matrix: n28.matrix,
+      title: n28.titleI18n,
+      version: n28.version,
+    };
+  }
+
+  it("E6-W04 step 0: CHANNEL_NOT_ALLOWED carries ChannelNotAllowedDetails: the first refused cell and every refused cell", async () => {
+    const body = await n28Body();
+    const refused = await failure(
+      client.PUT("/message-templates/{id}", {
+        body: {
+          ...body,
+          matrix: {
+            ...body.matrix,
+            ADMINS: { ...body.matrix.ADMINS, SMS: true },
+            MEMBER: { ...body.matrix.MEMBER, SMS: true },
+          },
+        },
+        params: { path: { id: "tpl-n-28" } },
+      }),
+    );
+    expect(refused).toMatchObject({ code: "CHANNEL_NOT_ALLOWED", status: 422 });
+    expectValid("ChannelNotAllowedDetails", refused.details);
+    expect(refused.details).toEqual({
+      audience: "MEMBER",
+      cells: [
+        { audience: "MEMBER", channel: "SMS" },
+        { audience: "ADMINS", channel: "SMS" },
+      ],
+      channel: "SMS",
+    });
+  });
+
+  it("E6-W04 step 0: TEMPLATE_UNKNOWN_VARIABLE carries TemplateFieldDetails with every unknown variable of the save", async () => {
+    const body = await n28Body();
+    const refused = await failure(
+      client.PUT("/message-templates/{id}", {
+        body: {
+          ...body,
+          body: { ...body.body, ca: `${body.body.ca ?? ""} [[sabor]]` },
+          title: { ...body.title, ca: "Baixa [[color]]" },
+        },
+        params: { path: { id: "tpl-n-28" } },
+      }),
+    );
+    expect(refused).toMatchObject({ code: "TEMPLATE_UNKNOWN_VARIABLE", status: 400 });
+    expectValid("TemplateFieldDetails", refused.details);
+    expect(refused.details).toEqual({ field: "title.ca", variables: ["color", "sabor"] });
+  });
+
+  it("E6-W04 step 0: SMS_BODY_REQUIRED names the default language's SMS text (smsBody.ca), which another language's text does not replace", async () => {
+    const n08a = (await detail("tpl-n-08a")).data;
+    if (n08a === undefined) throw new TypeError("No N-08a");
+    const refused = await failure(
+      client.PUT("/message-templates/{id}", {
+        body: {
+          body: n08a.bodyI18n,
+          color: n08a.color,
+          enabled: true,
+          icon: n08a.icon,
+          matrix: n08a.matrix,
+          smsBody: { es: n08a.smsBodyI18n?.es ?? "" },
+          title: n08a.titleI18n,
+          version: n08a.version,
+        },
+        params: { path: { id: "tpl-n-08a" } },
+      }),
+    );
+    expect(refused).toMatchObject({ code: "SMS_BODY_REQUIRED", status: 400 });
+    expectValid("TemplateFieldDetails", refused.details);
+    expect(refused.details).toEqual({ field: "smsBody.ca" });
+  });
+
+  it("E6-W04 step 0, T-11-12 (S11 R-11-12, E76/E79): N-02 does not declare `link` (only its welcome e-mail carries it): a text without it saves, and [[link]] is an unknown variable", async () => {
+    const n02 = (await detail("tpl-n-02")).data;
+    if (n02 === undefined) throw new TypeError("No N-02");
+    expect(n02.variables.map((variable) => variable.key)).not.toContain("link");
+    expect(n02.bodyI18n.ca).not.toContain("[[link]]");
+    const body = {
+      body: { ca: "Ja tens accés.", es: "Ya tienes acceso." },
+      color: n02.color,
+      enabled: true,
+      icon: n02.icon,
+      matrix: n02.matrix,
+      title: n02.titleI18n,
+      version: n02.version,
+    };
+    const refused = await failure(
+      client.PUT("/message-templates/{id}", {
+        body: { ...body, body: { ...body.body, ca: "Entra-hi: [[link]]." } },
+        params: { path: { id: "tpl-n-02" } },
+      }),
+    );
+    expect(refused).toEqual({
+      code: "TEMPLATE_UNKNOWN_VARIABLE",
+      details: { field: "body.ca", variables: ["link"] },
+      status: 400,
+    });
+    const saved = await client.PUT("/message-templates/{id}", {
+      body,
+      params: { path: { id: "tpl-n-02" } },
+    });
+    expect(saved.response.status).toBe(200);
+  });
+
+  it("E6-W04 step 0: D10's GET /members/{id}/notification-preferences carries the club's locales and SMS/PUSH modules, as the published route says", async () => {
+    const read = (scenario: MockScenario) => {
+      use(scenario);
+      return client.GET("/members/{id}/notification-preferences", {
+        params: { path: { id: "member-laura" } },
+      });
+    };
+    const admin = (await read("admin")).data;
+    expectValid("NotificationPreferences", admin);
+    expect(admin?.availableLocales).toEqual(["ca", "es"]);
+    expect(admin?.modules).toEqual({ push: true, sms: true });
+    expect((await read("messagingNoSms")).data?.modules).toEqual({ push: true, sms: false });
+    expect((await read("messagingNoPush")).data?.modules).toEqual({ push: false, sms: true });
+    // The reminder options are the club's `messaging.reminderOptionsMinutes`, as on screen 12.
+    const options = findParameter("messaging.reminderOptionsMinutes");
+    if (options === undefined) throw new TypeError("No messaging.reminderOptionsMinutes");
+    replaceParameter({ ...options, value: [120, 1440] });
+    try {
+      expect((await read("admin")).data?.reminderOptionsMinutes).toEqual([120, 1440]);
+      expect(
+        await failure(
+          client.PUT("/members/{id}/notification-preferences", {
+            body: { reminderMinutesBefore: 60 },
+            params: { path: { id: "member-laura" } },
+          }),
+        ),
+      ).toMatchObject({ code: "INVALID_REMINDER_OPTION", status: 422 });
+    } finally {
+      resetSettingsState();
+    }
+  });
+
+  it("E6-W04 step 0: D10's PUT refuses an impersonation token (403 IMPERSONATION_DENIED) and a non-ADMIN (403), as its GET does", async () => {
+    use("impersonated");
+    expect(
+      await failure(
+        client.PUT("/members/{id}/notification-preferences", {
+          body: { pushClubNews: false },
+          params: { path: { id: "member-laura" } },
+        }),
+      ),
+    ).toMatchObject({ code: "IMPERSONATION_DENIED", status: 403 });
+    use("instructor");
+    expect(
+      await failure(
+        client.PUT("/members/{id}/notification-preferences", {
+          body: { pushClubNews: false },
+          params: { path: { id: "member-laura" } },
+        }),
+      ),
+    ).toMatchObject({ code: "FORBIDDEN", status: 403 });
+  });
 });
 
 describe("E7-W01 step 10 · D9's templates follow the S11 contract (R-11-12)", () => {
@@ -163,20 +332,28 @@ describe("E7-W01 step 10 · D9's templates follow the S11 contract (R-11-12)", (
         }),
       ),
     ).resolves.toMatchObject({ code: "TEMPLATE_MANDATORY", status: 422 });
+    // N-08a's `admin_text` is required (R-11-12; N-02's `link` is not, E76/E79).
+    const n08a = (await detail("tpl-n-08a")).data;
+    if (n08a === undefined) throw new TypeError("No N-08a");
     await expect(
       failure(
         client.PUT("/message-templates/{id}", {
           body: {
-            ...n02Body,
-            body: { ca: "Ja tens accés.", es: "Ya tienes acceso." },
+            body: { ca: "La classe queda anul·lada.", es: "La clase queda anulada." },
+            color: n08a.color,
             enabled: true,
+            icon: n08a.icon,
+            matrix: n08a.matrix,
+            smsBody: n08a.smsBodyI18n ?? null,
+            title: n08a.titleI18n,
+            version: n08a.version,
           },
-          params: { path: { id: "tpl-n-02" } },
+          params: { path: { id: "tpl-n-08a" } },
         }),
       ),
     ).resolves.toMatchObject({
       code: "VALIDATION_ERROR",
-      details: { missingVariables: ["link"] },
+      details: { missingVariables: ["admin_text"] },
       status: 400,
     });
   });

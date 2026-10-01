@@ -239,9 +239,11 @@ describe("29: the normal confirmation and the informative variants (S08 §2 29, 
 
   it("the limit done this week (CURRENT, per dog): the mockup's «… per a la setmana vinent a partir de diumenge 9 a les 20 h», without a countdown", async () => {
     await tapRow(3);
+    // E5-W05 round 2 #6: the refusal counts Duna's real bookings of the week at the clock (her
+    // Monday 3, as 03 counts it), not a made-up two; the fixed «Límit setmanal» row is kept (A6).
     expect(
       screen.getByText(
-        "Aquesta setmana ja has fet dues classes amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
+        "Aquesta setmana ja has fet una classe amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
       ),
     ).toBeVisible();
     expect(screen.queryByText(/Podràs reservar aquesta classe/u)).toBeNull();

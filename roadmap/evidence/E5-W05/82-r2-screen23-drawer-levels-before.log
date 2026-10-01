@@ -1,0 +1,77 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/today/OverviewPage.test.tsx (12 tests | 1 failed | 11 skipped) 183ms
+   ❯ T-06-29 screen 23 «Visió global» (9)
+     ↓ shows n/n +e with the planned instructor, training names, the block and the cancelled class
+     ↓ drops «+e» when the club has no WAITLIST module
+     ↓ E5-W03 step 1 lists the class's registrants and the «En espera» line in the drawer, read-only (S08 §6)
+     × E5-W05 round 2 #3: the drawer's level chips are the dogs' own levels (Duna «C»), and none in a club with levels.enabled = false 182ms
+     ↓ E5-W05 steps 1 and 2: the drawer's chips read displayState («feta», «no presentat»), the level chip is levelCode (none when null), and «En espera: {guia} + {gos}» with the FIFO position
+     ↓ opens the class drawer with the instructor projection of the tapped class
+     ↓ opens the block drawer and cancels the block (POST /ring-blocks/{id}/cancellation)
+     ↓ maps 409 INVALID_STATE and 422 RING_BLOCK_MANAGED_BY_ACTIVITY on the block cancellation
+     ↓ answers 403 to a member asking for the instructor view
+   ↓ T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) (2)
+     ↓ names the instructors (instructorNames[]) and the ring (ring.name) of GET /class-sessions/{id}, not of the tapped cell
+     ↓ a class without a ring (ring: null) has no «Pista» row; without names, no «Instructor» row
+   ↓ T-06-29 E4-W14 screen 23's drawer: the instructors' label follows the count, the names are a list (1)
+     ↓ ca «Instructor: Marc» / «Instructors: Marc i Núria»; es «Instructores: Marc y Núria»; en «Instructors: Marc and Núria»
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 skipped (12)
+   Start at  01:00:10
+   Duration  1.03s (transform 37%, environment 23%, tests 19%, import 16%, setup 5%)
+
+TAP version 13
+1..12
+ok 1 - src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > shows n/n +e with the planned instructor, training names, the block and the cancelled class # SKIP
+ok 2 - src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > drops «+e» when the club has no WAITLIST module # SKIP
+ok 3 - src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > E5-W03 step 1 lists the class's registrants and the «En espera» line in the drawer, read-only (S08 §6) # SKIP
+not ok 4 - src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > E5-W05 round 2 \#3: the drawer's level chips are the dogs' own levels (Duna «C»), and none in a club with levels.enabled = false # time=181.68ms
+    ---
+    error:
+        name: "AssertionError"
+        message: "expected { chips: [], rows: [ …(6) ] } to deeply equal { Object (chips, rows) }"
+    at: "/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs/src/today/OverviewPage.test.tsx:165:32"
+    actual: "{
+  \"chips\": [],
+  \"rows\": [
+    \"Laura + Dunaconfirmada\",
+    \"Marc + Chun-liconfirmada\",
+    \"Anna + Nassconfirmada\",
+    \"Eva + Fishconfirmada\",
+    \"Pau + Blatconfirmada\",
+    \"Sergio + Thaianul·lada tard\",
+  ],
+}"
+    expected: "{
+  \"chips\": [
+    \"C\",
+    \"A\",
+    \"B\",
+    \"B\",
+    \"B\",
+    \"E\",
+  ],
+  \"rows\": [
+    \"Laura + DunaCconfirmada\",
+    \"Marc + Chun-liAconfirmada\",
+    \"Anna + NassBconfirmada\",
+    \"Eva + FishBconfirmada\",
+    \"Pau + BlatBconfirmada\",
+    \"Sergio + ThaiEanul·lada tard\",
+  ],
+}"
+    ...
+ok 5 - src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > E5-W05 steps 1 and 2: the drawer's chips read displayState («feta», «no presentat»), the level chip is levelCode (none when null), and «En espera: {guia} + {gos}» with the FIFO position # SKIP
+ok 6 - src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the class drawer with the instructor projection of the tapped class # SKIP
+ok 7 - src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > opens the block drawer and cancels the block (POST /ring-blocks/{id}/cancellation) # SKIP
+ok 8 - src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > maps 409 INVALID_STATE and 422 RING_BLOCK_MANAGED_BY_ACTIVITY on the block cancellation # SKIP
+ok 9 - src/today/OverviewPage.test.tsx > T-06-29 screen 23 «Visió global» > answers 403 to a member asking for the instructor view # SKIP
+ok 10 - src/today/OverviewPage.test.tsx > T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) > names the instructors (instructorNames[]) and the ring (ring.name) of GET /class-sessions/{id}, not of the tapped cell # SKIP
+ok 11 - src/today/OverviewPage.test.tsx > T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) > a class without a ring (ring: null) has no «Pista» row; without names, no «Instructor» row # SKIP
+ok 12 - src/today/OverviewPage.test.tsx > T-06-29 E4-W14 screen 23's drawer: the instructors' label follows the count, the names are a list > ca «Instructor: Marc» / «Instructors: Marc i Núria»; es «Instructores: Marc y Núria»; en «Instructors: Marc and Núria» # SKIP
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/today/OverviewPage.test.tsx -t E5-W05 round 2 --reporter=default --reporter=tap-flat

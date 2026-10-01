@@ -1,0 +1,186 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E6-W04 e6-core.spec.ts
+
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision=8ee2827070bc7566bc6bef3fd3eddf0d42ba1331 created=2026-09-30T22:06:50.87325972Z
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+E4_WEEK_START=2026-09-28 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-05 (the club-local Monday after today, Europe/Madrid)
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E6-W04/demo-canic.yaml (266 lines)
+ Network agilityhub-e6-w04_default Creating 
+ Network agilityhub-e6-w04_default Creating 
+ Volume agilityhub-e6-w04_export-files Creating 
+ Volume agilityhub-e6-w04_export-files Creating 
+ Volume agilityhub-e6-w04_mongo-data Creating 
+ Volume agilityhub-e6-w04_mongo-data Creating 
+ Volume agilityhub-e6-w04_mailbox Creating 
+ Volume agilityhub-e6-w04_mailbox Creating 
+ Volume agilityhub-e6-w04_export-files Created 
+ Volume agilityhub-e6-w04_export-files Created 
+ Volume agilityhub-e6-w04_mongo-data Created 
+ Volume agilityhub-e6-w04_mongo-data Created 
+ Volume agilityhub-e6-w04_mailbox Created 
+ Volume agilityhub-e6-w04_mailbox Created 
+ Network agilityhub-e6-w04_default Created 
+ Network agilityhub-e6-w04_default Created 
+ Container agilityhub-e6-w04-mongo-1 Creating 
+ Container agilityhub-e6-w04-mongo-1 Created 
+ Container agilityhub-e6-w04-seed-1 Creating 
+ Container agilityhub-e6-w04-seed-1 Created 
+ Container agilityhub-e6-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e6-w04-activate-demo-club-1 Created 
+ Container agilityhub-e6-w04-core-1 Creating 
+ Container agilityhub-e6-w04-core-1 Created 
+ Container agilityhub-e6-w04-mongo-1 Starting 
+ Container agilityhub-e6-w04-mongo-1 Started 
+ Container agilityhub-e6-w04-mongo-1 Waiting 
+ Container agilityhub-e6-w04-mongo-1 Healthy 
+ Container agilityhub-e6-w04-seed-1 Starting 
+ Container agilityhub-e6-w04-seed-1 Started 
+ Container agilityhub-e6-w04-seed-1 Waiting 
+ Container agilityhub-e6-w04-seed-1 Exited 
+ Container agilityhub-e6-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e6-w04-activate-demo-club-1 Started 
+ Container agilityhub-e6-w04-mongo-1 Waiting 
+ Container agilityhub-e6-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e6-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e6-w04-mongo-1 Healthy 
+ Container agilityhub-e6-w04-core-1 Starting 
+ Container agilityhub-e6-w04-core-1 Started 
+ Container agilityhub-e6-w04-seed-1 Waiting 
+ Container agilityhub-e6-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e6-w04-core-1 Waiting 
+ Container agilityhub-e6-w04-mongo-1 Waiting 
+ Container agilityhub-e6-w04-seed-1 Exited 
+ Container agilityhub-e6-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e6-w04-mongo-1 Healthy 
+ Container agilityhub-e6-w04-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E6-W04/seed-files.log (155 lines)
+ Container agilityhub-e6-w04-playwright-run-a1e993de16d6 Creating 
+ Container agilityhub-e6-w04-playwright-run-a1e993de16d6 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:21) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +851
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 851, reused 0, downloaded 111, added 109
+Progress: resolved 851, reused 0, downloaded 293, added 293
+Progress: resolved 851, reused 0, downloaded 440, added 439
+Progress: resolved 851, reused 0, downloaded 537, added 537
+Progress: resolved 851, reused 0, downloaded 554, added 554
+Progress: resolved 851, reused 0, downloaded 595, added 595
+Progress: resolved 851, reused 0, downloaded 665, added 664
+Progress: resolved 851, reused 0, downloaded 732, added 732
+Progress: resolved 851, reused 0, downloaded 784, added 784
+Progress: resolved 851, reused 0, downloaded 848, added 848
+Progress: resolved 851, reused 0, downloaded 849, added 848
+Progress: resolved 851, reused 0, downloaded 851, added 851, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/msw postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 12.7s using pnpm v9.15.9
+
+[WebServer] (node:135) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:215) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:313) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 11 tests using 1 worker
+
+[1/11] e2e/core/e6-core.spec.ts:1027:5 › E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read
+  1) e2e/core/e6-core.spec.ts:1027:5 › E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read 
+
+    Test timeout of 300000ms exceeded.
+
+    Error: page.waitForURL: Test ended.
+    =========================== logs ===========================
+    waiting for navigation to "**/instructor/dia" until "load"
+    ============================================================
+
+      432 |   const routeRefresh = page.waitForResponse(isRefresh);
+      433 |   await submitPasswordLogin(page);
+    > 434 |   await page.waitForURL(`**${landing}`);
+          |              ^
+      435 |   expect((await routeRefresh).status()).toBe(200);
+      436 |   await expect(page.locator(".clubs-shell")).toBeVisible();
+      437 | }
+        at loginClubs (/work/e2e/core/e6-core.spec.ts:434:14)
+        at clubsSession (/work/e2e/core/e6-core.spec.ts:455:3)
+        at findScene (/work/e2e/core/e6-core.spec.ts:960:21)
+        at /work/e2e/core/e6-core.spec.ts:1083:11
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-01T00:36:26.287Z grant_type=refresh_token status=400 cookie=none test="E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read" body={"code":"REFRESH_EXPIRED"}
+    2026-10-01T00:36:26.464Z grant_type=password status=200 cooki...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e6-core-E6-W04-step-2-·-pr-7560a-e-parameters-the-flows-read/error-context.md
+
+    Error Context: test-results/core-e1/e6-core-E6-W04-step-2-·-pr-7560a-e-parameters-the-flows-read/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e6-core-E6-W04-step-2-·-pr-7560a-e-parameters-the-flows-read/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e6-core-E6-W04-step-2-·-pr-7560a-e-parameters-the-flows-read/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/11] e2e/core/e6-core.spec.ts:1115:7 › Monday 04:00 › (f) 22 · the seeded month gives the card's metrics (86%, 7 classes, 2,3 a week) and its three blocks, before anything is marked
+[3/11] e2e/core/e6-core.spec.ts:1174:7 › Monday 04:00 › (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves
+[4/11] e2e/core/e6-core.spec.ts:1308:7 › Monday 04:00 › (b) R-10-05 · «ha avisat» more than 4 h ahead: CANCELLED, the seat released, the waitlist notified; the row stays, final and inert
+[5/11] e2e/core/e6-core.spec.ts:1389:7 › Monday 04:00 › (d) D12 · the week with the class, a training at half height and a block; the panel cycles Martí to «present» through the same contract; the week PDF
+[6/11] e2e/core/e6-core.spec.ts:1514:7 › Monday 04:00 › (f) 26 → D13 → 13 · a task with a real signed upload, edited, done and reopened; D13 shows it with the counters; Rita sees it on her screens and no /me answer carries DOG_OBSERVATIONS
+[7/11] e2e/core/e6-core.spec.ts:1778:7 › Monday 04:00 › (h) D14 · per-account unread marks: instructor A reads a row and then everything; instructor B still has them unread, and not the task she wrote
+[8/11] e2e/core/e6-core.spec.ts:1886:5 › (e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist
+[9/11] e2e/core/e6-core.spec.ts:1982:5 › (e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new
+[10/11] e2e/core/e6-core.spec.ts:2131:5 › (g) 25 · Rita's history: the Monday class «feta», the seeded no-show, the club's cancellation with its message, the late cancellation; Alba's notice never on her account
+[11/11] e2e/core/e6-core.spec.ts:2141:5 › (i) es · T-10-32 on real data: 20 and 21 in Spanish (a save round trip that leaves the states), and 25's badges and detail lines
+  1 failed
+    e2e/core/e6-core.spec.ts:1027:5 › E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read 
+  10 did not run
+
+e6 notifications: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E6-W04/e6-notifications.json
+ ELIFECYCLE  Command failed with exit code 1.
+exit 1

@@ -13,8 +13,10 @@ import {
 } from "./handlers";
 import { server } from "./server";
 
+type ApiError = components["schemas"]["ApiError"];
 type BookableClasses = components["schemas"]["BookableClasses"];
 type Booking = components["schemas"]["Booking"];
+type BookingLimitReachedDetails = components["schemas"]["BookingLimitReachedDetails"];
 type MeHome = components["schemas"]["MeHome"];
 type SeatHoldResponse = components["schemas"]["SeatHoldResponse"];
 type WaitlistEntry = components["schemas"]["WaitlistEntry"];
@@ -562,5 +564,164 @@ describe("E5-W05 step 7 · the booking world's clock sits after its club's week 
       // Monday 3 at 00:00 local, summer time.
       "2026-08-10T18:50 LATER NOT_YET_OPEN 2026-08-02T22:00:00Z",
     ]);
+  });
+});
+
+describe("E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09)", () => {
+  afterEach(() => {
+    resetSettingsState();
+  });
+
+  /** The `409 BOOKING_LIMIT_REACHED` details of Duna's «ds 8» row (the fixed «Límit setmanal»). */
+  async function saturdayRefusal(): Promise<BookingLimitReachedDetails> {
+    const answer = await call("POST", "/seat-holds", {
+      classSessionId: "class-2026-08-08-0900",
+      dogId: "dog-duna",
+    });
+    expect(answer.status).toBe(409);
+    const body = answer.body as ApiError;
+    expect(body.code).toBe("BOOKING_LIMIT_REACHED");
+    return body.details as BookingLimitReachedDetails;
+  }
+
+  /** The ids of Duna's bookings that count in `weekKey` (R-08-02), as the member world holds them. */
+  async function dunaWeekBookings(weekKey: string): Promise<string[]> {
+    mockScenario("admin");
+    const list = await call(
+      "GET",
+      `/bookings?filter=${encodeURIComponent("dogId:eq:dog-duna")}&filter=${encodeURIComponent(`bookingWeekKey:eq:${weekKey}`)}&size=1000&fields=id,state`,
+    );
+    mockScenario("member");
+    return (list.body as { items: { id: string; state?: string }[] }).items
+      .filter((item) => ["ACTIVE", "CANCELLED_LATE", "PAYMENT_PENDING"].includes(item.state ?? ""))
+      .map((item) => item.id);
+  }
+
+  it("E5-W05 round 2 #6: at the clock the CURRENT refusal counts Duna's real bookings of the week: its `current` is /me/home's count, and no notSelectable id is a phantom", async () => {
+    const duna = await home("member", "?dogId=dog-duna");
+    const details = await saturdayRefusal();
+    expect(details).toMatchObject({ limit: 2, swappable: [], unit: "DOG", week: "CURRENT" });
+    expect(details.current).toBe(duna.limits.currentWeek.count);
+    const booked = await dunaWeekBookings(duna.limits.currentWeek.weekKey);
+    expect(details.notSelectable.every((item) => booked.includes(item.bookingId))).toBe(true);
+  });
+
+  it("E5-W05 round 2 #6: Monday 3 cancelled late (at 16:00, within the 4 h) still counts: the refusal lists it as DONE (R-08-09) and counts it as /me/home does", async () => {
+    vi.setSystemTime(new Date("2026-08-03T16:00:00+02:00"));
+    mockScenario("member");
+    expect(await call("POST", "/bookings/booking-duna-mon3/cancellation", {})).toMatchObject({
+      body: { state: "CANCELLED_LATE" },
+      status: 200,
+    });
+    const duna = await home("member", "?dogId=dog-duna");
+    expect(duna.limits.currentWeek.count).toBe(1);
+    const details = await saturdayRefusal();
+    expect(details.current).toBe(1);
+    expect(details.notSelectable).toEqual([
+      {
+        bookingId: "booking-duna-mon3",
+        description: "B+C",
+        reason: "DONE",
+        startsAtLocal: "2026-08-03T18:50",
+      },
+    ]);
+    expect(await dunaWeekBookings(duna.limits.currentWeek.weekKey)).toEqual(["booking-duna-mon3"]);
+  });
+
+  it("E5-W05 round 2 #6: one minute before the opening the NEXT refusal counts next week's bookings as /me/home does, and no class of a NEXT week is DONE", async () => {
+    vi.setSystemTime(new Date("2026-08-02T19:59:00+02:00"));
+    const duna = await home("member", "?dogId=dog-duna");
+    const details = await saturdayRefusal();
+    expect(details).toMatchObject({ limit: 1, week: "NEXT" });
+    expect(details.current).toBe(duna.limits.nextWeek.count);
+    const booked = await dunaWeekBookings(duna.limits.nextWeek.weekKey);
+    expect(details.notSelectable.every((item) => booked.includes(item.bookingId))).toBe(true);
+    // A class of a week that has not begun cannot have been done.
+    expect(details.notSelectable.filter((item) => item.reason === "DONE")).toEqual([]);
+  });
+
+  it("E5-W05 round 2 #11.b: a PAYMENT_PENDING booking the hold cannot swap is LATE_WINDOW (the api's), a begun class DONE", async () => {
+    await home("bookingLimit");
+    const monday = bookingState.bookings.find((item) => item.id === "booking-duna-mon3");
+    if (monday === undefined) throw new TypeError("Missing Monday 3's booking");
+    monday.state = "PAYMENT_PENDING";
+    const hold = (
+      await call("POST", "/seat-holds", {
+        classSessionId: "class-2026-08-08-0900",
+        dogId: "dog-duna",
+      })
+    ).body as SeatHoldResponse;
+    expect(hold.limit.swappable.map((option) => option.bookingId)).toEqual(["booking-duna-fri7"]);
+    expect(hold.limit.notSelectable).toEqual([
+      {
+        bookingId: "booking-duna-mon3",
+        description: "B+C",
+        reason: "LATE_WINDOW",
+        startsAtLocal: "2026-08-03T18:50",
+      },
+      {
+        bookingId: "booking-duna-done",
+        description: "B+C",
+        reason: "DONE",
+        startsAtLocal: "2026-08-02T20:00",
+      },
+    ]);
+  });
+
+  it("E5-W05 round 2 #11.b: the refusal lists Duna's PAYMENT_PENDING class of the week as LATE_WINDOW and counts it (bookingSingleClass, PAY_TO_BOOK)", async () => {
+    mockScenario("bookingSingleClass");
+    const hold = (
+      await call("POST", "/seat-holds", {
+        classSessionId: "class-2026-08-05-1850",
+        dogId: "dog-duna",
+      })
+    ).body as SeatHoldResponse;
+    const created = (await call("POST", "/bookings", { seatHoldId: hold.id })).body as Booking;
+    expect(created.state).toBe("PAYMENT_PENDING");
+    const duna = await home("bookingSingleClass", "?dogId=dog-duna");
+    expect(duna.limits.currentWeek.count).toBe(2);
+    const details = await saturdayRefusal();
+    expect(details.current).toBe(2);
+    expect(details.notSelectable).toEqual([
+      {
+        bookingId: created.id,
+        description: "B+C",
+        reason: "LATE_WINDOW",
+        startsAtLocal: "2026-08-05T18:50",
+      },
+    ]);
+  });
+
+  it("E5-W05 round 2 #11.c: the limits are the club's bookings.maxCurrentWeek and bookings.maxNextWeek: /me/home, the hold and the refusal follow a saved change", async () => {
+    const setLimit = (key: string, value: number) => {
+      const parameter = findParameter(key);
+      if (parameter === undefined) throw new TypeError(`Missing ${key}`);
+      parameter.value = value;
+    };
+    setLimit("bookings.maxCurrentWeek", 1);
+    setLimit("bookings.maxNextWeek", 2);
+    expect((await home()).limits).toMatchObject({
+      currentWeek: { count: 1, max: 1 },
+      nextWeek: { count: 1, max: 2 },
+    });
+    // Monday 3 reaches this week's limit of 1: Wednesday 5 needs the swap (R-08-09).
+    const wednesday = (
+      await call("POST", "/seat-holds", {
+        classSessionId: "class-2026-08-05-1850",
+        dogId: "dog-duna",
+      })
+    ).body as SeatHoldResponse;
+    expect(wednesday.limit).toMatchObject({ count: 1, max: 1, reached: true, week: "CURRENT" });
+    expect(wednesday.limit.swappable.map((option) => option.bookingId)).toEqual([
+      "booking-duna-mon3",
+    ]);
+    expect(await saturdayRefusal()).toMatchObject({ current: 1, limit: 1, week: "CURRENT" });
+    const monday = (
+      await call("POST", "/seat-holds", {
+        classSessionId: "class-2026-08-10-1850",
+        dogId: "dog-duna",
+      })
+    ).body as SeatHoldResponse;
+    expect(monday.limit).toMatchObject({ count: 0, max: 2, reached: false, week: "NEXT" });
   });
 });

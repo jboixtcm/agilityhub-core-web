@@ -48,6 +48,8 @@ const DEFAULT_COLUMNS = [
   "completedAt",
 ];
 const RELATION_OPERATORS: readonly UniversalFilterOperator[] = ["eq", "ne", "in", "nin"];
+/** The filters whose values the api names (`GET /followup/filter-values`, E6-W04 step 0c). */
+const RELATION_FIELDS: readonly string[] = ["memberId", "dogId", "authorAccountId"];
 
 type Kind = "" | "MEMBER_NOTE" | "TASK";
 
@@ -75,6 +77,25 @@ function filterValue(value: unknown): string {
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean"
     ? String(value)
     : "";
+}
+
+/**
+ * Adds the api's labels of one field's values to `current`, or keeps `current` when none changed:
+ * a new object at every answer re-renders the list, which asks for the values again (the
+ * register's pattern, E5-W05 round 2 #1).
+ */
+function withLearned(
+  current: Readonly<Record<string, string>>,
+  field: string,
+  options: readonly UniversalFilterValue[],
+): Readonly<Record<string, string>> {
+  const changed = options.filter((option) => current[`${field}:${option.value}`] !== option.label);
+  return changed.length === 0
+    ? current
+    : {
+        ...current,
+        ...Object.fromEntries(changed.map((option) => [`${field}:${option.value}`, option.label])),
+      };
 }
 
 /** The list's state in the URL; a page size the list does not take becomes 50. */
@@ -395,23 +416,37 @@ export function FollowUpPage({
       operators: RELATION_OPERATORS,
       type: "relation",
     },
+    // E6-W04 step 0c (E75): «Creador», whoever wrote the task or the note (`authorAccountId`).
+    {
+      key: "authorAccountId",
+      label: t("admin-census:followup.columns.author"),
+      operators: RELATION_OPERATORS,
+      type: "relation",
+    },
   ];
 
-  const valueLabel = (
-    field: string,
-    value: string,
-    source: readonly FollowupItem[] = rows,
-  ): string => {
+  // The names the api gave each relation value (`filter-values` labels), for the applied chips:
+  // the rows carry no `authorAccountId`, and a member or dog may be on no row of this page.
+  const [learned, setLearned] = useState<Readonly<Record<string, string>>>({});
+
+  const valueLabel = (field: string, value: string): string => {
     if (field === "kind") return kindLabel(t, value);
     if (field === "unread") {
       return value === "true"
         ? t("admin-census:followup.unreadValue.yes")
         : t("admin-census:followup.unreadValue.no");
     }
-    const row = source.find((item) =>
-      field === "memberId" ? item.memberId === value : item.dogId === value,
+    const row =
+      field === "memberId"
+        ? rows.find((item) => item.memberId === value)
+        : field === "dogId"
+          ? rows.find((item) => item.dogId === value)
+          : undefined;
+    return (
+      (field === "memberId" ? row?.memberName : row?.dogName) ??
+      learned[`${field}:${value}`] ??
+      value
     );
-    return (field === "memberId" ? row?.memberName : row?.dogName) ?? value;
   };
 
   const loadFilterValues = useCallback(
@@ -438,37 +473,87 @@ export function FollowUpPage({
           }),
         );
       }
-      // The member and dog values: the first page's, until api E6-T06 publishes
-      // `GET /followup/filter-values` (E6-W04 step 0c).
-      const { data } = await client.GET("/followup", {
-        params: {
-          query: {
-            filter: others,
-            page: 0,
-            ...search,
-            size: 50,
-            sort: ["activityAt,desc"],
-          },
-        },
+      // E6-W04 step 0c (api E6-T06, E75): the member, dog and creator values and their counts over
+      // the whole set the other filters and `q` select, never the rows on screen.
+      const result = await client.GET("/followup/filter-values", {
+        params: { query: { field, filter: others, ...search } },
       });
-      const items = data?.items ?? [];
-      const counted = new Map<string, UniversalFilterValue>();
-      for (const item of items) {
-        const value = filterValue((item as Record<string, unknown>)[field]);
-        if (value === "") continue;
-        const known = counted.get(value);
-        counted.set(value, {
-          count: (known?.count ?? 0) + 1,
-          label: known?.label ?? valueLabel(field, value, items),
-          value,
-        });
-      }
-      return [...counted.values()].sort((left, right) => left.label.localeCompare(right.label));
+      if (result.data === undefined) throw new TypeError("Follow-up values without data");
+      const options = result.data.values
+        .map((item) => ({ count: item.count, label: item.label, value: filterValue(item.value) }))
+        .filter((item) => item.value !== "")
+        .sort((left, right) => left.label.localeCompare(right.label));
+      setLearned((current) => withLearned(current, field, options));
+      return options;
     },
-    // `valueLabel` reads `t` and the rows only.
+    // `valueLabel` reads `t` only for these fields; `learned` is written here, never read (a new
+    // callback per answer would ask for the values again).
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [client, state.filters, state.q, t],
   );
+
+  // A relation filter that came with the address or a saved view: the rows may not carry its
+  // value's name (`authorAccountId` never does), so the api's labels are read once for that field
+  // (E6-W04 step 0c's review). A value beyond the api's top 50 keeps its id; nothing loops, as the
+  // fields only change with the filters.
+  const unnamedFields = [
+    ...new Set(
+      state.filters
+        .filter(
+          (filter) =>
+            RELATION_FIELDS.includes(filter.field) &&
+            filter.value
+              .split(",")
+              .some(
+                (value) =>
+                  learned[`${filter.field}:${value}`] === undefined &&
+                  valueLabel(filter.field, value) === value,
+              ),
+        )
+        .map((filter) => filter.field),
+    ),
+  ].join(",");
+  useEffect(() => {
+    if (unnamedFields === "") return undefined;
+    let current = true;
+    const search = state.q === "" ? {} : { q: state.q };
+    void Promise.all(
+      unnamedFields.split(",").map(async (field) => {
+        const { data } = await client.GET("/followup/filter-values", {
+          params: {
+            query: {
+              field,
+              filter: apiFilters(state.filters.filter((filter) => filter.field !== field)),
+              ...search,
+            },
+          },
+        });
+        return {
+          field,
+          options: (data?.values ?? []).map((item) => ({
+            count: item.count,
+            label: item.label,
+            value: filterValue(item.value),
+          })),
+        };
+      }),
+    ).then(
+      (answers) => {
+        if (!current) return;
+        setLearned((known) =>
+          answers.reduce(
+            (merged, answer) => withLearned(merged, answer.field, answer.options),
+            known,
+          ),
+        );
+      },
+      // A failed read leaves the id; the list's own error says what went wrong.
+      () => undefined,
+    );
+    return () => {
+      current = false;
+    };
+  }, [client, state.filters, state.q, unnamedFields]);
 
   const applied = (list.data?.appliedFilters ?? []).map((filter) => {
     const value = filterValue(filter.value);

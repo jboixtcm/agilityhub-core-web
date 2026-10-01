@@ -1550,9 +1550,21 @@ select {
   border-color: var(--ah-color-success);
 }
 
-/* R-03-18: inert until the completion arrives with S10 (E6-W02). */
+/* R-03-18: a done task is inert (a member never reopens it); E6-W04 step 0b: busy meanwhile. */
 .dog-task__check[aria-disabled="true"] {
   cursor: default;
+}
+
+/* Seen on a phone too (no cursor there): dimmed and dashed until the api answers. */
+.dog-task__check[aria-busy="true"] {
+  cursor: progress;
+  opacity: 0.55;
+  border-style: dashed;
+}
+
+.dog-task__check:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
 }
 
 .dog-tasks__list {

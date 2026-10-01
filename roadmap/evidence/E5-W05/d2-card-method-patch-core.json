@@ -3,7 +3,7 @@
     "code": "PAYMENT_METHOD_NOT_AVAILABLE",
     "message": "Aquest mètode de pagament no està disponible.",
     "details": {},
-    "traceId": "b09767f5-70f7-48c1-a9a6-b790fcc6dbb4"
+    "traceId": "696572de-1dc9-4214-957d-4d8cf35df719"
   },
   "status": 422
 }

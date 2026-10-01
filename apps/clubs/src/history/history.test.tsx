@@ -321,6 +321,87 @@ describe("T-10-31 screen 25 «Històric» (S10 §2, R-10-14)", () => {
   });
 });
 
+describe("E6-W04 step 0b: screen 25's activity rows open their page (HistoryItem.activityId, S07 §6, rulings E74 and E75)", () => {
+  it("E6-W04 step 0b: the mockup's done activity «Seminari d'obstacles» is a link to /activitats/{activityId}; the class and training rows are not links", async () => {
+    window.history.replaceState(null, "", "/historic");
+    await renderHistory();
+    const link = screen.getByRole("link", { name: "Seminari d'obstacles" });
+    expect(link).toHaveAttribute("href", "/activitats/activity-seminari-obstacles");
+    expect(link.closest(".history-row")).not.toBeNull();
+    // Only that row links: the api sends `activityId` on ACTIVITY rows only.
+    expect(document.querySelectorAll(".history-screen__list a")).toHaveLength(1);
+    // The row still reads as before (date | title | badge).
+    expect(historyRows()).toContain("dg 12/07 | Seminari d'obstacles | feta");
+  });
+
+  it("E6-W04 step 0b (its review): the page the link opens answers in the mock world, as the api's does when it sends activityId", async () => {
+    window.history.replaceState(null, "", "/historic");
+    await renderHistory();
+    const href = screen.getByRole("link", { name: "Seminari d'obstacles" }).getAttribute("href");
+    cleanup();
+    await renderApp(href ?? "");
+    expect(
+      await screen.findByRole("heading", { level: 2, name: "Seminari d'obstacles" }),
+    ).toBeVisible();
+    expect(screen.getByText("dg 12 de juliol · 9:00–13:00")).toBeVisible();
+  });
+
+  it("E6-W04 step 0b: an ACTIVITY row whose activityId is null (a cancelled, draft or unpublished activity: its page is 404) has no link, and a published one does", async () => {
+    server.use(
+      http.get("*/api/v1/me/history", () =>
+        HttpResponse.json({
+          dogs: [{ id: "dog-duna", levelCode: "C", name: "Duna", own: true }],
+          from: "2026-06-03",
+          items: [
+            {
+              activityId: "activity-taller-contactes",
+              counts: null,
+              date: "2026-07-19",
+              detail: null,
+              dogId: null,
+              dogName: null,
+              id: "ar3",
+              startsAtLocal: "2026-07-19T10:00",
+              state: "DONE",
+              title: "Taller de contactes",
+              type: "ACTIVITY",
+            },
+            {
+              activityId: null,
+              counts: null,
+              date: "2026-07-12",
+              detail: { kind: "BY_CLUB", message: null },
+              dogId: null,
+              dogName: null,
+              id: "ar2",
+              startsAtLocal: "2026-07-12T09:00",
+              state: "CANCELLED_BY_CLUB",
+              title: "Seminari d'obstacles",
+              type: "ACTIVITY",
+            },
+          ],
+          monthsVisible: 2,
+          showDog: false,
+          types: ["CLASS", "ACTIVITY"],
+        }),
+      ),
+    );
+    window.history.replaceState(null, "", "/historic");
+    await renderHistory();
+    expect(historyRows()).toEqual([
+      "dg 19/07 | Taller de contactes | feta",
+      "dg 12/07 | Seminari d'obstacles | cancel·lada pel club",
+    ]);
+    expect(screen.getByRole("link", { name: "Taller de contactes" })).toHaveAttribute(
+      "href",
+      "/activitats/activity-taller-contactes",
+    );
+    expect(screen.queryByRole("link", { name: "Seminari d'obstacles" })).toBeNull();
+    expect(screen.getByText("Seminari d'obstacles").closest("a")).toBeNull();
+    server.resetHandlers();
+  });
+});
+
 describe("R-10-12 privacy: no member-facing surface can render the observations", () => {
   it("screens 25 and 13 do not import the observations editor, nor read an `observations` field", () => {
     for (const file of ["HistoryPage.tsx", "HistoryRow.tsx", "../SelfServicePages.tsx"]) {

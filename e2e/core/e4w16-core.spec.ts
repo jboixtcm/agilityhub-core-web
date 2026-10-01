@@ -24,8 +24,23 @@ const evidenceDirectory =
 // written here: the seed names its account apart from it (E5-W05 step 24).
 const memberEmail = "member@example.test";
 
+// E5-W05 round 2 (question 6, AGENTS rule 4): the api's answers are the generated contract's types
+// (`packages/api-client/src/generated/schema.d.ts`), with `Pick` where the run reads a few fields.
 type Schemas = components["schemas"];
+/** `GET /me/dogs` (13): the dogs, with their tasks (`MeDog.tasks`, `DogTasks`). */
+type MeDogsAnswer = Pick<Schemas["MeDogs"], "dogs">;
+/** `GET /members/{id}/overview` (D10): the member's dogs. */
+type MemberOverviewDogs = Pick<Schemas["MemberOverview"], "dogs">;
+/** `POST /tasks` answers the `Task`; a refusal has no `id`. */
+type CreatedTask = Partial<Pick<Schemas["Task"], "id">>;
+/** A refusal's `ApiError` code (`POST /oauth2/token` answers one for a spent handoff code). */
+type ApiProblem = Partial<Pick<Schemas["ApiError"], "code">>;
+/** `GET /exports/{id}` (S14): the job the drawer downloads. */
+type ExportJob = Pick<Schemas["ExportJob"], "downloadUrl" | "fileName" | "status">;
+/** `GET /branding`: the club's modules. */
+type BrandingModules = Pick<Schemas["BrandingResponse"], "modules">;
 
+/** A message of the core's local mailbox (`MAIL_LOCAL_DIRECTORY`): a file, not an api answer. */
 interface MailMessage {
   html?: string;
   text?: string;
@@ -201,19 +216,6 @@ async function bearerOf(page: Page, trigger: () => Promise<unknown>): Promise<st
   return authorization;
 }
 
-interface MeDogsAnswer {
-  dogs: {
-    id: string;
-    name: string;
-    status: string;
-    tasks?: {
-      completed: number;
-      items: { doneAt?: string | null; id: string; text: string }[];
-      open: number;
-    };
-  }[];
-}
-
 /** 13 after a full-page load: the restore's refresh, then `GET /me/dogs`. */
 async function openMyDogs(member: Page): Promise<MeDogsAnswer> {
   const refresh = member.waitForResponse(
@@ -253,7 +255,7 @@ test("T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones str
         await fetch(`/api/v1/members/${memberId}/overview`, {
           headers: { Authorization: authorization },
         })
-      ).json()) as { dogs: { id: string; name: string }[] };
+      ).json()) as MemberOverviewDogs;
       const dog = overview.dogs[0];
       if (dog === undefined) return { dogName: "", ids: [], statuses: [] };
       const answers = await Promise.all(
@@ -267,7 +269,7 @@ test("T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones str
             },
             method: "POST",
           });
-          const body = (await response.json()) as { id?: string };
+          const body = (await response.json()) as CreatedTask;
           return { id: body.id ?? "", status: response.status };
         }),
       );
@@ -320,7 +322,7 @@ test("T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones str
     ).toBeVisible();
     await expect(region.getByRole("listitem")).toHaveCount(items.length);
     for (const task of items) {
-      const done = task.doneAt !== undefined && task.doneAt !== null;
+      const done = task.doneAt != null;
       await expect(region.getByRole("checkbox", { name: task.text })).toHaveAttribute(
         "aria-checked",
         String(done),
@@ -577,7 +579,7 @@ test("T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       method: "POST",
     });
-    const payload = (await response.json()) as { code?: string };
+    const payload = (await response.json()) as ApiProblem;
     return { code: payload.code ?? null, status: response.status };
   }, code);
   expect(second).toEqual({ code: "HANDOFF_INVALID", status: 400 });
@@ -631,11 +633,7 @@ test("T-14-26 E4-W16 step 5 · a READY export downloads from the drawer through 
   await ready.click();
   const detailAnswer = await detail;
   expect(detailAnswer.status()).toBe(200);
-  const job = (await detailAnswer.json()) as {
-    downloadUrl?: string;
-    fileName?: string;
-    status: string;
-  };
+  const job = (await detailAnswer.json()) as ExportJob;
   expect(job.status).toBe("READY");
   expect(job.downloadUrl).toBeDefined();
   const file = await fileRequest;
@@ -665,7 +663,7 @@ test("T-03-34 (front) E4-W16 step 7 · D10 keeps the block, «Inactivitat», «B
   const { admin } = await sharedAdmin(browser);
   const modules = await admin.evaluate(async () => {
     const response = await fetch("/api/v1/branding");
-    return ((await response.json()) as { modules: string[] }).modules;
+    return ((await response.json()) as BrandingModules).modules;
   });
   const record = await memberRecord(admin);
   await navigateSpa(admin, record.path);

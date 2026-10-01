@@ -290,4 +290,25 @@ describe("E5-W05 step 14: SlotGrid's disabled columns (E5-W02 round-2 review #4)
     expect(onCellPress).toHaveBeenCalledWith(expect.objectContaining({ id: "ring-mun_08:30" }));
     expect(onSelectionChange).toHaveBeenCalledWith(["ring-mun_08:30"]);
   });
+
+  it("E5-W05 round 2 #13: a selected cell of a disabled column still says it is selected (aria-pressed), as it still looks", () => {
+    render(
+      <SlotGrid
+        columns={[{ disabled: true, id: "ring-mun", label: "Muntanya" }]}
+        labels={labels}
+        mode="single"
+        onSelectionChange={vi.fn()}
+        rows={[row("07:30"), row("08:00")]}
+        selection={{ cellIds: ["ring-mun_07:30"] }}
+      />,
+    );
+    const chosen = screen.getByRole("button", { name: "7:30, lliure" });
+    expect(chosen).toHaveClass("ah-slot--selected");
+    expect(chosen).toBeDisabled();
+    expect(chosen).toHaveAttribute("aria-pressed", "true");
+    // The cell that is neither pressable nor chosen announces no pressed state.
+    expect(screen.getByRole("button", { name: "8:00, lliure" })).not.toHaveAttribute(
+      "aria-pressed",
+    );
+  });
 });

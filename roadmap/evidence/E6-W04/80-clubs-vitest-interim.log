@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/today/TodayPage.test.tsx (18 tests | 1 failed) 1330ms
+   ❯ T-06-29 screen 10 «Classes del dia» (18)
+     × never adds a «Sense» column of its own when the api does not send one 54ms
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > never adds a «Sense» column of its own when the api does not send one
+AssertionError: expected "warn" to be called with arguments: [ Array(1) ]
+
+Number of calls: 0
+
+ ❯ src/today/TodayPage.test.tsx:304:18
+    302|     // builds log it (E4-W03 review #2).
+    303|     expect(screen.queryByText("Obediència")).not.toBeInTheDocument();
+    304|     expect(warn).toHaveBeenCalledWith(
+       |                  ^
+    305|       "[DayGrid] cells without a matching column are not drawn: cls-b …
+    306|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 24 passed (25)
+      Tests  1 failed | 476 passed (477)
+   Start at  02:44:39
+   Duration  8.00s (tests 52%, environment 22%, transform 13%, import 8%, setup 5%)
+
+    Isolate  25 workers spawned · ~860ms startup each (spawn + environment, per file)
+             at least ~405ms faster with isolate: false — reuses workers across files instead of one per file
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run

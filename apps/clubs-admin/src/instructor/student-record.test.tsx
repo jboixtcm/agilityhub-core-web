@@ -395,6 +395,44 @@ describe("E6-W05 (review of E6-W02's round 2): D13's drawer", () => {
   });
 });
 
+describe("E6-W04 step 0d (review of E6-W05): D13's drawer", () => {
+  it("E6-W04 step 0d: an instructor's mixed selection on an open task attaches the JPEG and says «eina.exe: …» in the drawer", async () => {
+    const lines = requestLines();
+    await renderRecord();
+    fireEvent.click(screen.getByRole("button", { name: "Gestionar tasques i notes" }));
+    const drawer = await screen.findByRole("dialog", { name: "Gestionar tasques i notes" });
+    const second = () =>
+      present(drawer.querySelectorAll<HTMLElement>(".ah-tasks__list > .ah-task")[1]);
+    await waitFor(() => {
+      expect(drawer.querySelectorAll(".ah-tasks__list > .ah-task")).toHaveLength(3);
+    });
+    // An instructor cannot read the file limits (403): every file goes to the api.
+    await waitFor(() => {
+      expect(lines.filter((line) => line.startsWith("GET /parameters/files."))).toHaveLength(3);
+    });
+    fireEvent.click(within(second()).getByRole("button", { name: "Edita la tasca" }));
+    fireEvent.change(within(second()).getByLabelText("Adjunta un fitxer", { selector: "input" }), {
+      target: {
+        files: [
+          new File(["x"], "contactes.jpg", { type: "image/jpeg" }),
+          new File(["x"], "eina.exe", { type: "application/x-msdownload" }),
+        ],
+      },
+    });
+    expect(await within(second()).findByRole("button", { name: "contactes.jpg" })).toBeVisible();
+    await waitFor(() => {
+      expect(second()).not.toHaveAttribute("aria-busy");
+    });
+    expect(
+      within(drawer)
+        .getAllByRole("alert")
+        .map((alert) => alert.textContent),
+    ).toEqual(["eina.exe: Aquest tipus de fitxer no està permès."]);
+    expect(lines.filter((line) => line === "POST /attachments")).toHaveLength(1);
+    expect(lines.filter((line) => line.startsWith("PUT "))).toHaveLength(1);
+  });
+});
+
 describe("«Alumnes» of the back office (mockups D12–D14, S10 §13-9)", () => {
   it("instructors see «Alumnes» in the sidebar; the search reads GET /dogs and opens D13", async () => {
     const i18n = await createI18n({
@@ -478,6 +516,19 @@ describe("«Alumnes» of the back office (mockups D12–D14, S10 §13-9)", () =>
           status: "ACTIVE",
         },
       },
+      {
+        // E5-W05 round 2 #5: a handlerName equal to the owner's first name is the owner.
+        handlerName: "Joan Antoni",
+        id: "00000000-0000-4000-8000-00000000a003",
+        level: { code: "B", color: null, id: "00000000-0000-4000-8000-00000000000b", name: "B" },
+        name: "Brisa",
+        owner: {
+          firstName: "Joan Antoni",
+          fullName: "Joan Antoni Puig Serra",
+          id: "00000000-0000-4000-8000-00000000b001",
+          status: "ACTIVE",
+        },
+      },
     ];
     server.use(
       http.get("*/api/v1/dogs", () =>
@@ -512,5 +563,8 @@ describe("«Alumnes» of the back office (mockups D12–D14, S10 §13-9)", () =>
     expect(within(toby).queryByText(/abonat/u)).toBeNull();
     const rock = screen.getByRole("link", { name: /^Júlia Roca \+ Rock · D/u });
     expect(within(rock).getByText("(abonat: Laura Serra Vidal)")).toBeVisible();
+    // E5-W05 round 2 #5 (R-10-00 «si difereixen»): «Joan Antoni» leads his own dog.
+    const brisa = screen.getByRole("link", { name: "Joan Antoni + Brisa · B" });
+    expect(within(brisa).queryByText(/abonat/u)).toBeNull();
   });
 });

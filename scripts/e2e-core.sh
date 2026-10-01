@@ -49,6 +49,11 @@ echo "E5_WEEK_START=$E5_WEEK_START (the club-local Monday after today, Europe/Ma
 export SEED_WEEK_START="$E4_WEEK_START"
 
 mkdir -p "$evidence_directory"
+# E6-W04: the image's demo seed (fictional people only), kept with the run's evidence, so the core
+# specs' seeded rows can be checked against the file the stages seeded from.
+docker run --rm --entrypoint /bin/cat "$core_image" /app/seeds/demo-canic.yaml \
+  >"$evidence_directory/demo-canic.yaml" || echo "could not read /app/seeds/demo-canic.yaml" >&2
+echo "demo seed: $evidence_directory/demo-canic.yaml ($(wc -l <"$evidence_directory/demo-canic.yaml" | tr -d ' ') lines)"
 export E1_CORE_PASSWORD="${E1_CORE_PASSWORD:-$(openssl rand -hex 24)}"
 export CORE_EVIDENCE_SUBDIRECTORY="$evidence_subdirectory"
 export COMPOSE_PROJECT_NAME="$core_project_name"
@@ -82,8 +87,8 @@ save_seed_log() {
 }
 
 run_core_suite() {
-  # `run_core_suite <stage> || status=$?` turns `set -e` off in here: a core that does not start
-  # stops the stage (its seed log is kept all the same).
+  # `run_stage` calls it as `run_core_suite <stage> || …`, which turns `set -e` off in here: a core
+  # that does not start stops the stage (its seed log is kept all the same).
   local up_status=0
   docker compose -f "$compose_file" up -d --wait mongo seed core || up_status=$?
   save_seed_log "$1"
@@ -93,7 +98,29 @@ run_core_suite() {
   # E4-W16 round 2: `--no-deps`, because the stack is already up and seeded. Without it `run` walks
   # `depends_on` (core → activate-demo-club → seed) and starts the exited seed again next to the
   # running core, and that second `seed:demo` fails now and then (runs 91 and 94 of E4-W16).
-  docker compose -f "$compose_file" --profile e2e run --rm --no-deps playwright
+  # E5-W05 round 2 (review #8): `-T`, never a pseudo-TTY. In an interactive terminal `run` took one
+  # and put the terminal in raw mode, so Ctrl-C reached the container as a keystroke and never the
+  # script's INT trap. Nothing in the stage reads a terminal (tar, pnpm and Playwright's `line`
+  # reporter under CI=1), and the unattended runs never had a TTY. The service runs under an init
+  # (`init: true`, `docker-compose.yml`), so the signal `run` forwards reaches Playwright.
+  docker compose -f "$compose_file" --profile e2e run --rm --no-deps -T playwright
+}
+
+# E5-W05 round 2 (review #8): a stage that a signal ended (130 after SIGINT, 143 after SIGTERM)
+# stops the script there, cleaned up, with that code: `run_core_suite <stage> || status=$?` kept it
+# as a failure and started the next stage. Any other failure is recorded and the next stage runs.
+run_stage() {
+  local stage_status=0
+  run_core_suite "$1" || stage_status=$?
+  if ((stage_status == 130 || stage_status == 143)); then
+    trap - EXIT INT TERM
+    echo "e2e-core: stage $1 ended with $stage_status (interrupted), cleaning up and exiting" >&2
+    cleanup
+    exit "$stage_status"
+  fi
+  if ((stage_status != 0)); then
+    status="$stage_status"
+  fi
 }
 
 check_n37_notification() {
@@ -144,6 +171,29 @@ check_n37_notification() {
     ' | tee "$evidence_directory/n37-notification.json"
 }
 
+# E6-W04: what the core stored for the E6 stage's notices (N-15 to the waiting dog when «ha avisat»
+# frees the seat, N-19 from P3 the next morning). Evidence only, the spec asserts the screens: the
+# codes, deliveries, action types and variables (the seed's fictional names and the class's date),
+# the recipient's field names, never an address or a token. It never fails the run.
+save_e6_notifications() {
+  docker compose -f "$compose_file" exec -T mongo mongosh --quiet \
+    mongodb://localhost:27017/agilityhub_e1_web --eval '
+      const pick = (item) => ({
+        action: item.action?.type ?? null,
+        code: item.code ?? null,
+        createdAt: item.createdAt ?? null,
+        deliveries: (item.deliveries ?? []).map((delivery) => ({channel: delivery.channel ?? null, status: delivery.status ?? null})),
+        recipient: Object.keys(item.recipient ?? {}).sort(),
+        variables: item.variables ?? {}
+      });
+      const notices = db.notifications.find({code: {$in: ["N-15", "N-19"]}}).sort({createdAt: 1}).toArray().map(pick);
+      const byCode = db.notifications.aggregate([{$group: {_id: "$code", count: {$sum: 1}}}, {$sort: {_id: 1}}]).toArray();
+      print(EJSON.stringify({byCode, notices}, null, 2));
+    ' >"$evidence_directory/e6-notifications.json" 2>&1 \
+    || echo "could not read the E6 notifications" >&2
+  echo "e6 notifications: $evidence_directory/e6-notifications.json"
+}
+
 # E1/E2 stage, then the E3 signup stage and the E4 planning/activities stage, each on a fresh seed,
 # whatever the task id (E3-W11 step 0, E4-W05 steps 1 and 7): run after another stage on the same
 # seed, the E3 stage fails its refresh (E4-W07 report), and E2 blocks the bookings of the member
@@ -158,34 +208,46 @@ fi
 : > "$evidence_directory/oauth-token-calls.log"
 
 cleanup
-# A failing stage does not hide the next one: all run, and the script exits with the failure.
+# A failing stage does not hide the next one: all run, and the script exits with the failure. An
+# interrupted one (130/143) ends the script at once (`run_stage`).
 status=0
 if [[ "$staged" == true ]]; then
   export CORE_TEST_FILES="e1-core.spec.ts e2-core.spec.ts"
-  run_core_suite e1-e2 || status=$?
+  run_stage e1-e2
   cleanup
   # E4-W16: the audit corrections (impersonation handoff, export drawer, D10, 13, recovery) on a
   # fresh core and seed: after E1/E2 the api's authentication quota per IP is spent (429).
   export CORE_TEST_FILES="e4w16-core.spec.ts"
-  run_core_suite e4w16 || status=$?
+  run_stage e4w16
   cleanup
   export CORE_TEST_FILES="e3-signup.spec.ts"
-  run_core_suite e3 || status=$?
+  run_stage e3
   check_n37_notification || status=1
   cleanup
   export CORE_TEST_FILES="e4-core.spec.ts"
-  run_core_suite e4 || status=$?
+  run_stage e4
   cleanup
   # E5-W04: bookings, waitlist, training and processes on their own fresh seed (they change it).
   export CORE_TEST_FILES="e5-core.spec.ts"
   export SEED_WEEK_START="$E5_WEEK_START"
-  run_core_suite e5 || status=$?
+  run_stage e5
+  cleanup
+  # E6-W04: the attendance sheet, tasks and follow-up on their own fresh seed. The E6 scenario of
+  # the demo seed (api E6-T04, `scenario.attendance`) lives on week 0 like E5's, so it seeds from
+  # the same Monday; its spec moves the core's test clock through that Monday and Tuesday.
+  export CORE_TEST_FILES="e6-core.spec.ts"
+  export SEED_WEEK_START="$E5_WEEK_START"
+  run_stage e6
+  save_e6_notifications
 else
   export CORE_TEST_FILES="$2"
-  if [[ "$2" == *e5-core* ]]; then
+  if [[ "$2" == *e5-core* || "$2" == *e6-core* ]]; then
     export SEED_WEEK_START="$E5_WEEK_START"
   fi
-  run_core_suite files || status=$?
+  run_stage files
+  if [[ "$2" == *e6-core* ]]; then
+    save_e6_notifications
+  fi
 fi
 
 exit "$status"

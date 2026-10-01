@@ -1,0 +1,41 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+ Test Files  25 passed (25)
+      Tests  473 passed (473)
+   Start at  02:14:26
+   Duration  8.40s (tests 51%, environment 23%, transform 14%, import 8%, setup 5%)
+
+    Isolate  25 workers spawned · ~1.02s startup each (spawn + environment, per file)
+             at least ~482ms faster with isolate: false — reuses workers across files instead of one per file
+
+exit 0 (clubs)
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+ Test Files  35 passed (35)
+      Tests  526 passed (526)
+   Start at  02:14:35
+   Duration  15.29s (tests 67%, environment 14%, transform 9%, import 6%, setup 3%)
+
+    Isolate  35 workers spawned · ~797ms startup each (spawn + environment, per file)
+             at least ~843ms faster with isolate: false — reuses workers across files instead of one per file
+
+exit 0 (clubs-admin)
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+
+ Test Files  23 passed (23)
+      Tests  395 passed (395)
+   Start at  02:14:51
+   Duration  4.91s (tests 53%, import 24%, transform 23%)
+
+exit 0 (api-client)

@@ -4,7 +4,15 @@ import { resolve } from "node:path";
 import { expect, test } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4173";
-const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E5-W05");
+// E5-W05 round 2 (review #10): the capture goes to this spec's own task (E5-W03) unless the run
+// names another one (`E2E_CAPTURE_TASK`, `pnpm e2e:docker <ID> --capture-task=<ID>`), as E5-W05
+// does to refresh it (steps 1 and 2): a later complete run never rewrites it.
+const captureTask = process.env.E2E_CAPTURE_TASK ?? "";
+const evidenceDirectory = resolve(
+  import.meta.dirname,
+  "../../../roadmap/evidence",
+  captureTask === "" ? "E5-W03" : captureTask,
+);
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -47,8 +55,9 @@ test.describe("E5-W03 step 1 · screen 23's class drawer lists the registrants (
     const drawer = page.getByRole("dialog", { name: "B+C" });
     const panel = drawer.getByRole("region", { name: "Inscrits (5/5)" });
     await expect(panel.getByRole("listitem")).toHaveCount(6);
-    // E5-W05 steps 1 and 2: the api's displayState («feta») and «{guia} + {gos}».
-    await expect(panel.getByRole("listitem").first()).toHaveText("Laura + Dunafeta");
+    // E5-W05 steps 1 and 2: the api's displayState («feta») and «{guia} + {gos}»; round 2 #3: Duna's
+    // own level chip («C»).
+    await expect(panel.getByRole("listitem").first()).toHaveText("Laura + DunaCfeta");
     await expect(panel.getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
     await expect(panel.getByRole("button")).toHaveCount(0);
     await panel.scrollIntoViewIfNeeded();

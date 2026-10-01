@@ -812,15 +812,27 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
   await expect(admin.getByText("Pagament inicial pendent")).toHaveClass(/ah-badge/u);
   await expect(admin.getByLabel("Data del proper rebut")).toBeVisible();
   await screenshot(admin, "D2-signup-core-1280.png");
-  // A date different from the core's proposal, so the request proves the typed value is sent.
-  expect(view.proposals.nextInvoiceDate).not.toBe("2026-11-01");
-  await expect(admin.getByLabel("Data del proper rebut")).not.toHaveValue("01/11/2026");
+  // A date different from the core's proposal (the first of the month after it), so the request
+  // proves the typed value is sent whatever the day of the run (E5-W05 round 2: on 01-10 the core
+  // proposed 2026-11-01, the date this test used to type).
+  const proposedInvoiceDate =
+    view.proposals.nextInvoiceDate ?? new Date().toISOString().slice(0, 10);
+  const typedInvoiceIso = new Date(
+    Date.UTC(Number(proposedInvoiceDate.slice(0, 4)), Number(proposedInvoiceDate.slice(5, 7)), 1),
+  )
+    .toISOString()
+    .slice(0, 10);
+  const typedInvoiceInput = `${typedInvoiceIso.slice(8, 10)}/${typedInvoiceIso.slice(5, 7)}/${typedInvoiceIso.slice(0, 4)}`;
+  expect(view.proposals.nextInvoiceDate).not.toBe(typedInvoiceIso);
+  await expect(admin.getByLabel("Data del proper rebut")).not.toHaveValue(typedInvoiceInput);
   // M11 (R-14-01): VALIDA lands on D1, whose first read already omits the signup (no wait, no detour).
   const refreshedDashboard = admin.waitForResponse(
     (response) =>
       response.url().endsWith("/api/v1/dashboard") && response.request().method() === "GET",
   );
-  await completeValidation(admin, { nextInvoiceDate: { input: "01/11/2026", iso: "2026-11-01" } });
+  await completeValidation(admin, {
+    nextInvoiceDate: { input: typedInvoiceInput, iso: typedInvoiceIso },
+  });
   const dashboardResponse = await refreshedDashboard;
   expect(dashboardResponse.status()).toBe(200);
   const dashboard = (await dashboardResponse.json()) as {
@@ -1041,7 +1053,28 @@ test("T-04-34 public signup is validated and enters through the N-02 welcome lin
       2,
     )}\n`,
   );
-  await expect(member.getByRole("heading", { name: "Sol·licitud enviada" })).toBeVisible();
+  try {
+    await expect(member.getByRole("heading", { name: "Sol·licitud enviada" })).toBeVisible();
+  } catch (error) {
+    // E6-W04: this step failed now and then (E5-W05 run 65, E6-W04 runs 96 and 98) after the
+    // full-page load to the success page; what the page shows instead goes to the evidence.
+    await member.screenshot({
+      fullPage: true,
+      path: join(evidenceDirectory, "enviada-add-dog-failure-core-375.png"),
+    });
+    writeFileSync(
+      join(evidenceDirectory, "enviada-add-dog-failure-core.json"),
+      `${JSON.stringify(
+        {
+          text: (await member.locator("body").innerText()).slice(0, 1200),
+          url: member.url(),
+        },
+        null,
+        2,
+      )}\n`,
+    );
+    throw error;
+  }
   // The add-dog success page never promises a welcome message (the member already has access).
   await expect(member.getByText(/benvinguda/u)).toHaveCount(0);
   await screenshot(member, "enviada-add-dog-core-375.png");

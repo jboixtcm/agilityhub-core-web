@@ -21,12 +21,13 @@ import {
   jobsState,
   jobSummary,
   manualRun,
+  minDogsParameter,
   resetJobsState,
   RISK_REVIEW_DEFAULTS,
   riskReviewForm,
   type StoredJob,
 } from "./fixtures/jobs";
-import { clubLocalDate } from "./fixtures/planning";
+import { clubLocalDate, clubLocalDateTime } from "./fixtures/planning";
 import { findParameter, replaceParameter } from "./fixtures/settings";
 import {
   ACTIVITY_RING_BLOCK,
@@ -35,11 +36,11 @@ import {
   trainingState,
 } from "./fixtures/training";
 import { fieldsProjection } from "./list-fields";
-import { apiError, planningState } from "./planning-handlers";
+import { apiError, levelsEnabled, planningState } from "./planning-handlers";
 import {
+  callerClubOwnsTheWorld,
   currentMockScenario,
   currentMockScenarioName,
-  MOCK_CLUB_ID,
   type MockScenarioDefinition,
 } from "./scenarios";
 
@@ -80,14 +81,6 @@ function moduleOff(scenario: MockScenarioDefinition, module: string) {
   return scenario.branding.modules.includes(module)
     ? undefined
     : apiError("MODULE_DISABLED", "Module disabled", 404);
-}
-
-/**
- * The tenant comes from the JWT: the calendar and day-grid worlds are one club's records
- * (`MOCK_CLUB_ID`), and a token of another club finds none of them (E5-W05 step 16).
- */
-function callerClubOwnsTheWorld(scenario: MockScenarioDefinition): boolean {
-  return scenario.me.membership?.clubId === MOCK_CLUB_ID;
 }
 
 function nowMs(): number {
@@ -309,8 +302,9 @@ function text(value: unknown): string[] {
     : [];
 }
 
-// The universal-list helpers, shared with the S11 log (`messaging-handlers.ts`, E7-W01).
-export { type ListSpec, refuse, selectItems, text as listValues };
+// The universal-list helpers, shared with the S11 log (`messaging-handlers.ts`, E7-W01) and the
+// calendar world's `GET /class-sessions` (`calendar-handlers.ts`).
+export { type ListSpec, listResponse, refuse, selectItems, text as listValues };
 
 // ---------------------------------------------------------------------------------------------
 // S08 staff reads: class registrants, waiting entries and the universal `GET /bookings`.
@@ -349,8 +343,12 @@ function ringFields(ring: { id?: string | null | undefined; name?: string | null
     : { ringColor: found.color, ringId: found.id, ringName: found.name };
 }
 
-/** `GET /bookings`: the member world's bookings (E5-W01) and the registrants of every class. */
-function bookingListItems(): Required<BookingListItem>[] {
+/**
+ * `GET /bookings`: the member world's bookings (E5-W01) and the registrants of every class, all of
+ * the mock club; a token of another club finds none (the tenant comes from the JWT).
+ */
+function bookingListItems(scenario: MockScenarioDefinition): Required<BookingListItem>[] {
+  if (!callerClubOwnsTheWorld(scenario)) return [];
   const memberWorld = bookingState.bookings.flatMap((booking) => {
     const item = findClass(booking.classSessionId);
     const dog = findDog(booking.dogId);
@@ -377,7 +375,7 @@ function bookingListItems(): Required<BookingListItem>[] {
   });
   // The register's projection (x-fields): a registrant row without the class list's own fields.
   const staffWorld = planningState.sessions.flatMap((session) =>
-    classBookingItems(session).map((item) => ({
+    classBookingItems(session, levelsEnabled()).map((item) => ({
       bookedAt: item.bookedAt,
       bookingWeekKey: item.bookingWeekKey,
       classDescription: session.displayDescription,
@@ -478,11 +476,15 @@ function manyTrainingRows(): ReturnType<typeof trainingBookingListItems> {
   });
 }
 
-const trainingRows = () =>
-  [
-    ...trainingBookingListItems(nowMs()),
-    ...(currentMockScenarioName() === "registerMany" ? manyTrainingRows() : []),
-  ].map((item) => {
+/** The register's rows: the mock club's, so a token of another club finds none. */
+const trainingRows = (scenario: MockScenarioDefinition) =>
+  (callerClubOwnsTheWorld(scenario)
+    ? [
+        ...trainingBookingListItems(nowMs()),
+        ...(currentMockScenarioName() === "registerMany" ? manyTrainingRows() : []),
+      ]
+    : []
+  ).map((item) => {
     const memberId = censusMemberId(item.memberId);
     const member = censusMembers.find((candidate) => candidate.id === memberId);
     return {
@@ -532,7 +534,7 @@ export function trainingBookingExportRows(request: Request): number | Response {
   if (!columns.every((key) => TRAINING_SPEC.fields.includes(key))) {
     return apiError("INVALID_FILTER", "Invalid columns", 400);
   }
-  const selected = selectItems(url, trainingRows(), TRAINING_SPEC);
+  const selected = selectItems(url, trainingRows(scenario), TRAINING_SPEC);
   return selected.error ?? selected.items.length;
 }
 
@@ -600,8 +602,12 @@ function manyBlocks(): RingBlock[] {
   });
 }
 
-/** The rows of `GET /ring-blocks`: each block with its ring's name and colour (E5-T29). */
-function ringBlockRows(member: boolean): RingBlockRow[] {
+/**
+ * The rows of `GET /ring-blocks`: each block with its ring's name and colour (E5-T29), of the mock
+ * club only (a token of another club finds none).
+ */
+function ringBlockRows(scenario: MockScenarioDefinition, member: boolean): RingBlockRow[] {
+  if (!callerClubOwnsTheWorld(scenario)) return [];
   const blocks = [
     ...ringBlockListItems(),
     ...(currentMockScenarioName() === "registerMany" ? manyBlocks() : []),
@@ -687,7 +693,7 @@ export const backofficeHandlers = [
     if (refused !== undefined) return refused;
     const session = findSession(scenario, String(params.id));
     if (session === undefined) return apiError("NOT_FOUND", "Class not found", 404);
-    return HttpResponse.json({ items: classBookingItems(session) });
+    return HttpResponse.json({ items: classBookingItems(session, levelsEnabled()) });
   }),
   // S08 §6: every waiting entry of the class, any state, in position order (requires WAITLIST).
   http.get("*/api/v1/class-sessions/:id/waitlist-entries", ({ params }) => {
@@ -741,7 +747,7 @@ export const backofficeHandlers = [
     const scenario = currentMockScenario();
     const refused = refuse(scenario, ["INSTRUCTOR", "ADMIN"]);
     if (refused !== undefined) return refused;
-    return listResponse(request, bookingListItems(), BOOKING_SPEC);
+    return listResponse(request, bookingListItems(scenario), BOOKING_SPEC);
   }),
   // Its universal filter (E5-T29): the dog's and the member's names, the class's start and
   // description; any other field its value.
@@ -749,13 +755,16 @@ export const backofficeHandlers = [
     const scenario = currentMockScenario();
     const refused = refuse(scenario, ["INSTRUCTOR", "ADMIN"]);
     if (refused !== undefined) return refused;
-    return filterValuesResponse(request, bookingListItems(), BOOKING_SPEC, (item, field, value) =>
+    const items = bookingListItems(scenario);
+    return filterValuesResponse(request, items, BOOKING_SPEC, (item, field, value) =>
       field === "dogId"
         ? item.dogName
         : field === "memberId"
           ? item.memberName
           : field === "classSessionId"
-            ? `${item.classStartsAt} · ${item.classDescription}`
+            ? // The core's label (`bookings-filter-values-core.json`): «2026-10-08T17:40 · D+E», the
+              // club-local start without seconds or offset, and the class's description.
+              `${clubLocalDateTime(new Date(item.classStartsAt))} · ${item.classDescription}`
             : value,
     );
   }),
@@ -765,7 +774,7 @@ export const backofficeHandlers = [
     const refused =
       refuse(scenario, ["INSTRUCTOR", "ADMIN"]) ?? moduleOff(scenario, "FREE_TRAINING");
     if (refused !== undefined) return refused;
-    return listResponse(request, trainingRows(), TRAINING_SPEC);
+    return listResponse(request, trainingRows(scenario), TRAINING_SPEC);
   }),
   // The register's universal filter (E5-T29): the ring's, the member's and the dog's names.
   http.get("*/api/v1/training-bookings/filter-values", ({ request }) => {
@@ -773,7 +782,8 @@ export const backofficeHandlers = [
     const refused =
       refuse(scenario, ["INSTRUCTOR", "ADMIN"]) ?? moduleOff(scenario, "FREE_TRAINING");
     if (refused !== undefined) return refused;
-    return filterValuesResponse(request, trainingRows(), TRAINING_SPEC, (item, field, value) =>
+    const rows = trainingRows(scenario);
+    return filterValuesResponse(request, rows, TRAINING_SPEC, (item, field, value) =>
       field === "ringId"
         ? item.ringName
         : field === "memberId"
@@ -787,7 +797,7 @@ export const backofficeHandlers = [
   http.get("*/api/v1/ring-blocks", ({ request }) => {
     const scenario = currentMockScenario();
     const member = isImpersonation(scenario) || !hasRole(scenario, ["INSTRUCTOR", "ADMIN"]);
-    return listResponse(request, ringBlockRows(member), ringBlockSpec(member));
+    return listResponse(request, ringBlockRows(scenario, member), ringBlockSpec(member));
   }),
   // The register's universal filter (E5-T29, staff only): the ring's name, a deactivated one's too.
   http.get("*/api/v1/ring-blocks/filter-values", ({ request }) => {
@@ -796,7 +806,7 @@ export const backofficeHandlers = [
     if (refused !== undefined) return refused;
     return filterValuesResponse(
       request,
-      ringBlockRows(false),
+      ringBlockRows(scenario, false),
       ringBlockSpec(false),
       (item, field, value) => (field === "ringId" ? (item.ringName ?? value) : value),
     );
@@ -825,10 +835,11 @@ export const backofficeHandlers = [
     const scenario = currentMockScenario();
     const refused = refuse(scenario, ["ADMIN"]);
     if (refused !== undefined) return refused;
-    // Each schedule at its parameter's local time (R-15-01), so a saved change shows at once.
+    // Each schedule, and its next run, at its parameter's local time (R-15-01), so a saved change
+    // shows at once.
     return HttpResponse.json({
       items: visibleJobs(scenario).map((job) =>
-        jobSummary(job, (key) => findParameter(key)?.value),
+        jobSummary(job, (key) => findParameter(key)?.value, nowMs()),
       ),
     });
   }),
@@ -957,9 +968,10 @@ export const backofficeHandlers = [
           "classes.riskLookaheadDays",
           RISK_REVIEW_DEFAULTS.lookaheadDays,
         ),
-        minDogs: parameterValue("classes.minDogs", RISK_REVIEW_DEFAULTS.minDogs),
+        // The club's minimum, as D4's risk mark reads it (`atRiskNow`).
+        minDogs: minDogsParameter(),
         now: nowMs(),
-        registrants: (session) => classBookingItems(session),
+        registrants: (session) => classBookingItems(session, levelsEnabled()),
         reviewTime: parameterValue("classes.riskReviewTime", RISK_REVIEW_DEFAULTS.reviewTime),
         ringName: (session) => ringFields({ id: session.ringId }).ringName,
         sessions: classes,

@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/instructor/week-agenda.test.tsx (19 tests | 1 failed | 18 skipped) 153ms
+   ❯ E6-W04 step 3e · D12 dims a FINISHED class (R-10-15: ACTIVE, FINISHED and CANCELLED, the last two dimmed) (1)
+     × E6-W04 step 3e: a class that P8 finished is drawn dimmed, never struck through as a cancelled one 151ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/week-agenda.test.tsx > E6-W04 step 3e · D12 dims a FINISHED class (R-10-15: ACTIVE, FINISHED and CANCELLED, the last two dimmed) > E6-W04 step 3e: a class that P8 finished is drawn dimmed, never struck through as a cancelled one
+Error: [2mexpect([22m[31melement[39m[2m).toHaveClass([22m[32m[32m"ah-schedule-cell--muted"[32m[39m[2m)[22m
+
+Expected the element to have class:
+[32m  ah-schedule-cell--muted[39m
+Received:
+[31m  ah-schedule-cell[39m
+ ❯ src/instructor/week-agenda.test.tsx:757:47
+    755|       return cells;
+    756|     });
+    757|     for (const cell of finished) expect(cell).toHaveClass("ah-schedule…
+       |                                               ^
+    758|   });
+    759| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 skipped (19)
+   Start at  03:03:08
+   Duration  1.11s (transform 42%, environment 23%, import 16%, tests 15%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/week-agenda.test.tsx -t step 3e

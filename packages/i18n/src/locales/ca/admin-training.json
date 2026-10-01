@@ -48,6 +48,8 @@
     "cancelling": "Anul·lant el bloqueig…",
     "cancelled": "Bloqueig anul·lat.",
     "inactiveRing": "pista desactivada",
+    "rangeFrom": "Des del",
+    "rangeTo": "Fins al",
     "columns": {
       "from": "Dia i hora",
       "ring": "Pista",

@@ -507,6 +507,8 @@ function WeekCellView({
     );
   }
   const cancelled = cell.state === "CANCELLED";
+  // R-10-15: FINISHED and CANCELLED classes are dimmed; only a cancelled one is struck through.
+  const dimmed = cancelled || cell.state === "FINISHED";
   const waiting = branding.modules.includes("WAITLIST") ? (cell.waiting ?? 0) : 0;
   const where =
     cell.ringName == null
@@ -524,7 +526,7 @@ function WeekCellView({
         booked: cell.booked ?? 0,
         capacity: cell.capacity ?? 0,
       })}
-      muted={cancelled}
+      muted={dimmed}
       onClick={() => {
         if (cell.classId !== undefined) onSelect(cell.classId);
       }}
@@ -782,7 +784,11 @@ export function WeekAgendaPage({
                     selected === undefined
                       ? ""
                       : bareWeekday(selected.date, formats.formatPlainDate),
+                  // E6-W04 step 0c: the half height's minutes are the api's
+                  // (`trainingSlotMinutes`, `training.slotMinutes`); `null` prints none.
+                  minutes: data.trainingSlotMinutes ?? 0,
                   selected: selected === undefined ? "no" : "yes",
+                  slot: data.trainingSlotMinutes == null ? "no" : "yes",
                   time: selected === undefined ? "" : timeLabel(selected.time),
                   training: trainingOn ? "yes" : "no",
                 })}

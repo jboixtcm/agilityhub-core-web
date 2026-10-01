@@ -1,0 +1,417 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/instructor/week-agenda.test.tsx (18 tests | 2 failed | 16 skipped) 20252ms
+   ❯ E6-W04 step 0c: D12's legend reads the half height's minutes from the api (InstructorWeek.trainingSlotMinutes, api E6-T06, ruling E75) (2)
+     × E6-W04 step 0c: the club's 30 minutes as the mock answers them, and 45 when the api says 45 — «(mitja alçada: 45 min)», never the mockup's literal 10152ms
+     × E6-W04 step 0c: trainingSlotMinutes null leaves the minutes out — «(mitja alçada)» — in ca, es and en 10098ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/week-agenda.test.tsx > E6-W04 step 0c: D12's legend reads the half height's minutes from the api (InstructorWeek.trainingSlotMinutes, api E6-T06, ruling E75) > E6-W04 step 0c: the club's 30 minutes as the mock answers them, and 45 when the api says 45 — «(mitja alçada: 45 min)», never the mockup's literal
+AssertionError: expected [ undefined ] to deeply equal [ 30 ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"week-agenda"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"week-agenda__header"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mAgenda de la setmana[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"week-agenda__navigator"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Setmana anterior"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow week-agenda__arrow--previous"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<strong[39m
+              [33mclass[39m=[32m"week-agenda__current"[39m
+            [36m>[39m
+              [0mSetmana actual[0m
+            [36m</strong>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Setmana següent"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"week-agenda__range"[39m
+            [36m>[39m
+              [0mdel 10 al 15 d’agost[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Filtres de l'agenda"[39m
+            [33mclass[39m=[32m"week-agenda__filters"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"week-agenda__filter week-agenda__filter--instructor"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mInstructor[0m
+              [36m</span>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Instructor"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mInstructor: Tots[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"me"[39m
+                [36m>[39m
+                  [0mInstructor: Els meus[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"instructor-estel"[39m
+                [36m>[39m
+                  [0mInstructor: Estel[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"instructor-marc"[39m
+                [36m>[39m
+                  [0mInstructor: Marc[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"instructor-nuria"[39m
+                [36m>[39m
+                  [0mInstructor: Núria[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</label>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"week-agenda__filter"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mFiltre de pista[0m
+              [36m</span>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Filtre de pista"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTotes les pistes[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-muntanya"[39m
+                [36m>[39m
+                  [0mMuntanya[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-central"[39m
+                [36m>[39m
+                  [0mCentral[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-carretera"[39m
+                [36m>[39m
+                  [0mCarretera[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-cadells"[39m
+                [36m>[39m
+                  [0mCadells[0m
+                [36m</option>[39m
+                ...
+
+- Expected
++ Received
+
+  [
+-   30,
++   undefined,
+  ]
+
+ ❯ src/instructor/week-agenda.test.tsx:686:23
+    684|     await grid();
+    685|     await waitFor(() => {
+    686|       expect(answers).toEqual([30]);
+       |                       ^
+    687|     });
+    688|     expect(legend()).toContain("(mitja alçada: 30 min)");
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/instructor/week-agenda.test.tsx > E6-W04 step 0c: D12's legend reads the half height's minutes from the api (InstructorWeek.trainingSlotMinutes, api E6-T06, ruling E75) > E6-W04 step 0c: trainingSlotMinutes null leaves the minutes out — «(mitja alçada)» — in ca, es and en
+AssertionError: expected 'Reserva = pista reservada per a entre…' to be 'Reserva = pista reservada per a entre…' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"week-agenda"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"week-agenda__header"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+          [36m>[39m
+            [0mAgenda de la setmana[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"week-agenda__navigator"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Setmana anterior"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow week-agenda__arrow--previous"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<strong[39m
+              [33mclass[39m=[32m"week-agenda__current"[39m
+            [36m>[39m
+              [0mSetmana actual[0m
+            [36m</strong>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Setmana següent"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"week-agenda__range"[39m
+            [36m>[39m
+              [0mdel 10 al 15 d’agost[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Filtres de l'agenda"[39m
+            [33mclass[39m=[32m"week-agenda__filters"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"week-agenda__filter week-agenda__filter--instructor"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mInstructor[0m
+              [36m</span>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Instructor"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mInstructor: Tots[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"me"[39m
+                [36m>[39m
+                  [0mInstructor: Els meus[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"instructor-estel"[39m
+                [36m>[39m
+                  [0mInstructor: Estel[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"instructor-marc"[39m
+                [36m>[39m
+                  [0mInstructor: Marc[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"instructor-nuria"[39m
+                [36m>[39m
+                  [0mInstructor: Núria[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</label>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"week-agenda__filter"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mFiltre de pista[0m
+              [36m</span>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Filtre de pista"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTotes les pistes[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-muntanya"[39m
+                [36m>[39m
+                  [0mMuntanya[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-central"[39m
+                [36m>[39m
+                  [0mCentral[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-carretera"[39m
+                [36m>[39m
+                  [0mCarretera[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ring-cadells"[39m
+                [36m>[39m
+                  [0mCadells[0m
+                [36m</option>[39m
+                ...
+
+Expected: "Reserva = pista reservada per a entrenament (mitja alçada) · Bloqueig = pista tancada, amb el motiu · clic en una classe: inscrits i passar llista"
+Received: "Reserva = pista reservada per a entrenament (mitja alçada: 30 min) · Bloqueig = pista tancada, amb el motiu · clic en una classe: inscrits i passar llista"
+
+ ❯ src/instructor/week-agenda.test.tsx:721:26
+    719|       await grid();
+    720|       await waitFor(() => {
+    721|         expect(legend()).toBe(text);
+       |                          ^
+    722|       });
+    723|       expect(legend()).not.toMatch(/\d+ min|null|undefined/u);
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 16 skipped (18)
+   Start at  02:05:22
+   Duration  21.16s (tests 96%, transform 2%, environment 1%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/week-agenda.test.tsx -t E6-W04 step 0c
+exit 1
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/agenda-handlers.test.ts (16 tests | 1 failed | 15 skipped) 23ms
+   ❯ E6-W04 step 0c · InstructorWeek.trainingSlotMinutes for D12's legend (api E6-T06) (1)
+     × E6-W04 step 0c: the club's training.slotMinutes (30, then 45 after a change), and null with FREE_TRAINING off 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/agenda-handlers.test.ts > E6-W04 step 0c · InstructorWeek.trainingSlotMinutes for D12's legend (api E6-T06) > E6-W04 step 0c: the club's training.slotMinutes (30, then 45 after a change), and null with FREE_TRAINING off
+AssertionError: expected undefined to be 30 // Object.is equality
+
+- Expected:
+30
+
++ Received:
+undefined
+
+ ❯ src/mocks/agenda-handlers.test.ts:476:40
+    474|     const first = (await week()).data;
+    475|     expectValid("InstructorWeek", first);
+    476|     expect(first?.trainingSlotMinutes).toBe(30);
+       |                                        ^
+    477|     use("admin");
+    478|     const parameter = (
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+   Start at  02:05:43
+   Duration  685ms (transform 57%, import 39%, tests 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/agenda-handlers.test.ts -t trainingSlotMinutes|slotMinutes
+exit 1

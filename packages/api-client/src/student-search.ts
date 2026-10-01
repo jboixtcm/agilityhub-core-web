@@ -11,7 +11,9 @@ export const STUDENT_SEARCH_PAGE_SIZE = 50;
 /**
  * S10 R-10-00 for a search row: the «{guia}» of «{guia} + {gos}» is `handlerName`, else the owner's
  * first name as the api sends it (`owner.firstName`, a compound one whole, E5-T29); when another
- * guide leads the dog, `ownerFullName` names the member for «(abonat: {nom i cognom})».
+ * guide leads the dog, `ownerFullName` names the member for «(abonat: {nom i cognom})». The owner
+ * is added only «si difereixen»: a `handlerName` equal to the owner's first name (or full name)
+ * is the owner (E5-W05 round 2 #5).
  */
 export function studentSearchGuide(dog: StudentSearchDog): {
   guide: string;
@@ -19,7 +21,9 @@ export function studentSearchGuide(dog: StudentSearchDog): {
 } {
   const handler = dog.handlerName?.trim() ?? "";
   if (handler === "") return { guide: dog.owner?.firstName ?? "" };
-  return dog.owner === undefined || dog.owner.fullName === handler
+  return dog.owner === undefined ||
+    dog.owner.firstName.trim() === handler ||
+    dog.owner.fullName.trim() === handler
     ? { guide: handler }
     : { guide: handler, ownerFullName: dog.owner.fullName };
 }

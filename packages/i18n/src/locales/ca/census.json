@@ -193,6 +193,7 @@
     "photoSaved": "Foto de {dog} desada",
     "taskAttachments": "{count, plural, one {# adjunt} other {# adjunts}}",
     "taskDone": "feta el {date}",
+    "taskDoneBy": "feta per {article}{name} el {date}",
     "taskMeta": "{date} · {instructor}",
     "tasksSummary": "{open, plural, one {# pendent} other {# pendents}} · {completed, plural, one {# feta} other {# fetes}}",
     "tasksTitle": "Tasques",

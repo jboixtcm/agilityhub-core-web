@@ -1,0 +1,77 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ❯ src/slot-grid.test.tsx (9 tests | 1 failed | 8 skipped) 44ms
+   ❯ E5-W05 step 14: SlotGrid's disabled columns (E5-W02 round-2 review #4) (3)
+     × E5-W05 round 2 #13: a selected cell of a disabled column still says it is selected (aria-pressed), as it still looks 44ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/slot-grid.test.tsx > E5-W05 step 14: SlotGrid's disabled columns (E5-W02 round-2 review #4) > E5-W05 round 2 #13: a selected cell of a disabled column still says it is selected (aria-pressed), as it still looks
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"aria-pressed"[32m[39m[2m, [22m[32m[32m"true"[32m[39m[2m) // element.getAttribute("aria-pressed") === "true"[22m
+
+Expected the element to have attribute:
+[32m  aria-pressed="true"[39m
+Received:
+[31m  null[39m
+ ❯ src/slot-grid.test.tsx:308:20
+    306|     expect(chosen).toHaveClass("ah-slot--selected");
+    307|     expect(chosen).toBeDisabled();
+    308|     expect(chosen).toHaveAttribute("aria-pressed", "true");
+       |                    ^
+    309|     // The cell that is neither pressable nor chosen announces no pres…
+    310|     expect(screen.getByRole("button", { name: "8:00, lliure" })).not.t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  00:51:26
+   Duration  448ms (environment 63%, setup 14%, tests 12%, transform 9%, import 1%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/slot-grid.test.tsx -t round 2 #13
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/training/TrainingPage.test.tsx (26 tests | 1 failed | 25 skipped) 326ms
+   ❯ E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03) (3)
+     × E5-W05 round 2 #13: a refresh that clears the choice a SLOT_TAKEN offered also clears that message 324ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/TrainingPage.test.tsx > E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03) > E5-W05 round 2 #13: a refresh that clears the choice a SLOT_TAKEN offered also clears that message
+AssertionError: expected <p …(2)></p> to be null
+
+- Expected:
+null
+
++ Received:
+<p
+  class="booking-note booking-note--danger"
+  role="alert"
+>
+  Aquesta pista ja no està lliure.
+</p>
+
+ ❯ src/training/TrainingPage.test.tsx:438:68
+    436|     });
+    437|     expect(screen.getAllByRole("group", { name: "Pista" })).toHaveLeng…
+    438|     expect(screen.queryByText("Aquesta pista ja no està lliure.")).toB…
+       |                                                                    ^
+    439|   });
+    440| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 25 skipped (26)
+   Start at  00:51:26
+   Duration  1.39s (transform 41%, tests 25%, environment 17%, import 14%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/training/TrainingPage.test.tsx -t round 2 #13

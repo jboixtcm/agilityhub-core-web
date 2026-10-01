@@ -19,7 +19,7 @@
     "e2e": {
       "dependsOn": ["build"],
       "cache": false,
-      "env": ["PLAYWRIGHT_BROWSERS_PATH"]
+      "env": ["PLAYWRIGHT_BROWSERS_PATH", "E2E_CAPTURE_TASK"]
     },
     "dev": {
       "cache": false,

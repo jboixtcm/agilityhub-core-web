@@ -42,7 +42,6 @@ const VARIABLE_LABELS: Readonly<Record<string, Readonly<Record<MessagingLocale, 
   dog_name: { ca: "gos_nom", en: "dog_name", es: "perro_nombre" },
   effective_date: { ca: "persona_data_baixa", en: "person_leave_date", es: "persona_fecha_baja" },
   level_name: { ca: "gos_nivell", en: "dog_level", es: "perro_nivel" },
-  link: { ca: "enllac", en: "link", es: "enlace" },
   member_first_name: { ca: "persona_nom", en: "person_first_name", es: "persona_nombre" },
   member_last_names: { ca: "persona_cognoms", en: "person_last_names", es: "persona_apellidos" },
   member_name: { ca: "persona_nom_complet", en: "person_full_name", es: "persona_nombre_completo" },
@@ -79,11 +78,6 @@ const PREVIEW_VALUES: Readonly<Record<string, Readonly<Record<MessagingLocale, s
   dog_name: { ca: "Duna", en: "Duna", es: "Duna" },
   effective_date: { ca: "31 d'agost de 2026", en: "31 August 2026", es: "31 de agosto de 2026" },
   level_name: { ca: "C", en: "C", es: "C" },
-  link: {
-    ca: "https://app.example.test/entrar",
-    en: "https://app.example.test/entrar",
-    es: "https://app.example.test/entrar",
-  },
   member_first_name: { ca: "Laura", en: "Laura", es: "Laura" },
   member_last_names: { ca: "Serra Vidal", en: "Serra Vidal", es: "Serra Vidal" },
   member_name: { ca: "Laura Serra Vidal", en: "Laura Serra Vidal", es: "Laura Serra Vidal" },
@@ -129,7 +123,7 @@ export interface StoredTemplate {
   mandatory: boolean;
   matrix: ChannelMatrix;
   push: NotificationAudience[];
-  /** N-02 `link`, N-08a `admin_text` (R-11-12): a text without them is refused. */
+  /** N-08a `admin_text` (R-11-12): a text without it is refused. */
   requiredVariables: string[];
   seed: { body: LocalizedText; sms: LocalizedText | null; title: LocalizedText } | null;
   sms: LocalizedText | null;
@@ -170,18 +164,19 @@ const N28_MOCKUP_BODY = {
 const SEEDS: readonly TemplateSeed[] = [
   // PERSONAL, in mockup D9's order (N-02, N-09, N-28, N-19), then N-20 and N-37.
   {
+    // S11 R-11-12 (E76, E79): N-02's `link` belongs to its welcome e-mail only; the template (the
+    // APP copy) does not declare it.
     body: {
-      ca: "Ja tens accés a l'app del club. Entra-hi amb aquest enllaç: [[link]].",
-      es: "Ya tienes acceso a la app del club. Entra con este enlace: [[link]].",
+      ca: "Ja tens accés a l'app del club.",
+      es: "Ya tienes acceso a la app del club.",
     },
     category: "PERSONAL",
     code: "N-02",
     icon: "mail",
     mandatory: true,
     matrix: { MEMBER: ["APP", "EMAIL"] },
-    requiredVariables: ["link"],
     title: { ca: "Benvinguda amb accés", es: "Bienvenida con acceso" },
-    variables: ["member_first_name", "club_name", "link"],
+    variables: ["member_first_name", "club_name"],
   },
   {
     body: {

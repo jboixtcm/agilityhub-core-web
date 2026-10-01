@@ -1,0 +1,106 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ↓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > mockup 25: the three dogs with «Tots» pressed by default, the four type chips, the window caption and the seven rows with their exact badges and lines
+ ↓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > every other line of R-10-14's table: a cancelled future class on top, «ha avisat» late and in time, the club on the member's behalf, the system, a cancelled training, and a club cancellation without a message
+ ↓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > a detail kind this front does not know yet renders no line (forward compatibility); the empty history says so
+ ↓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > the detail's instant is read in the club's time zone, never the device's (a late cancellation near midnight)
+ ↓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > a single accessible dog: no dog chips and no « · amb {gos}»; FREE_TRAINING and ACTIVITIES off: no type chips and no such rows
+ ↓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > round 2 #5 (R-10-14, §9): a ?tipus= the club does not offer clears itself — historyNoModules with ?tipus=TRAINING drops it from the address and reads «Tot» again
+ ↓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > the chips drive `dogId` and `type` (↔ ?dogId= and ?tipus=); arriving with ?dogId= preselects that dog
+ ↓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > a dog that is not the member's (404 DOG_NOT_ACCESSIBLE) says so and goes back to «Tots»
+ ↓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > the empty history, and a failed read with its retry
+ ↓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > an impersonated session reads 25 with the banner; an instructor-only session does not get the page
+ ↓ src/history/history.test.tsx > T-10-31 screen 25 «Històric» (S10 §2, R-10-14) > T-10-32 (25): es and en read the rows with no missing key (the titles are the api's)
+ ↓ src/App.test.tsx > T-02-14 clubs shell > uses the compact mark with the runtime club name
+ ↓ src/App.test.tsx > T-02-14 clubs shell > filters the six-tab mockup navigation by modules and roles
+ ↓ src/App.test.tsx > T-02-14 clubs shell > E4-W03 turns the «Avui» slot into «Visió global» for the instructor profile
+ ↓ src/App.test.tsx > T-02-14 clubs shell > E6-W01 step 1: «El meu dia» and «Alumnes» lead to 20 and the student search; never while impersonating
+ ↓ src/App.test.tsx > T-02-14 clubs shell > omits Entrenaments when FREE_TRAINING is disabled
+ ↓ src/App.test.tsx > T-02-14 clubs shell > registers every mobile route from the frontend plan
+ ↓ src/App.test.tsx > T-01-18 access screen > uses the exact access actions, focuses an empty email and gates signup
+ ↓ src/App.test.tsx > T-01-18 access screen > shows the Retry-After countdown and disables requests
+ ↓ src/App.test.tsx > T-01-19 activation screen > renders gender-aware, reset and invalid-link variants
+ ↓ src/App.test.tsx > T-01-20 profile choice > shows cards for every available role and sends the remember choice
+ ↓ src/App.test.tsx > E6-W01 round 2 #7 (ruling E71, mockup 20 V6): an instructor lands on 20 > a password login takes an instructor to /instructor/dia and a member-only account to /inici
+ ↓ src/App.test.tsx > E6-W01 round 2 #7 (ruling E71, mockup 20 V6): an instructor lands on 20 > 03b: «Com a instructora» opens 20 and «Com a alumna» keeps 03
+ ↓ src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff
+ ↓ src/App.test.tsx > T-01-21 profile access rows and impersonation > keeps the impersonation banner visible from /me
+ ↓ src/App.test.tsx > T-01-21 profile access rows and impersonation > E5-W05 step 24: the banner names the member the admin opened (/me impersonation.memberName), not the account, whose name differs in a family group
+ ↓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > step 1: /entrar?handoff= takes the code out of the address, redeems it once, enters the session without refresh and opens 03 with the banner
+ ↓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > round 2 #1: a redeemed code whose /me keeps failing shows the error with a retry, never the admin's own session; the retry opens 03 with the banner
+ ↓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > step 1: a code already redeemed shows «Aquest enllaç ja no és vàlid» on 01 and opens no impersonated session
+ ↓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): a refused code (400 HANDOFF_INVALID) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload
+ ↓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): a 5xx from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload
+ ↓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1 (E47): no answer (offline) from /oauth2/token leaves the tab ended — never a refresh_token grant with the cookie, also after a reload
+ ↓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 round 2 #1 (review #1, E47): a tab reloaded while /oauth2/token has not answered the code sends no refresh_token grant, opens no session (not the tab's own cookie) and says «Aquest enllaç ja no és vàlid»
+ ↓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 round 2 #2: a background recovery that signs in before the retry's listener is attached still opens 03
+ ↓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > E4-W18 step 1: after a 5xx the retry sends the same code again (never the cookie) and opens 03 with the banner
+ ↓ src/App.test.tsx > T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app > step 2: a 401 ends the impersonation with «La sessió com l'abonat ha caducat» and a close button, never a refresh — also after a reload of the tab
+ ↓ src/App.test.tsx > T-01-19 E4-W16 step 10 (INC-24, E49): password recovery after a RESET link > the reset screen sends {new, repeat} without `current` once; a second use says the link was used and offers «Recupera-la»
+ ↓ src/App.test.tsx > T-01-19 E4-W16 step 10 (INC-24, E49): password recovery after a RESET link > the session of a LOGIN link still needs `current` for an account with a password (the mock refuses it like the api)
+ ↓ src/App.test.tsx > E4-W16 step 12 member-app fixes > (b) «Canviar de perfil · {perfil}» follows the membership's gender (ICU select, as 03b)
+ ↓ src/App.test.tsx > E4-W16 step 12 member-app fixes > (c) the onboarding offers only the club's languages and starts on the club's default when the account's is not offered
+ ↓ src/App.test.tsx > T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an instructor-only session gets the usual no-access path: no detail, no /me/activities call
+ ↓ src/App.test.tsx > T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > a member session opens the detail
+ ↓ src/App.test.tsx > T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) > an impersonated session opens the detail and its cancellation asks for «Motiu»
+ ↓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders configured fields and sends consent, profile data and image choice
+ ↓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement
+ ↓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > reloads an outdated policy version before accepting it
+ ↓ src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > renders the screen and pop-up in Catalan, Spanish and English
+ ↓ src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS
+ ↓ src/App.test.tsx > T-03-40 mobile own dogs > E36 (R-04-25): a dog added from the app shows «pendent de validació» and has no actions
+ ✓ src/history/history.test.tsx > E6-W04 step 0b: screen 25's activity rows open their page (HistoryItem.activityId, S07 §6, rulings E74 and E75) > E6-W04 step 0b: the mockup's done activity «Seminari d'obstacles» is a link to /activitats/{activityId}; the class and training rows are not links 138ms
+ ✓ src/history/history.test.tsx > E6-W04 step 0b: screen 25's activity rows open their page (HistoryItem.activityId, S07 §6, rulings E74 and E75) > E6-W04 step 0b: an ACTIVITY row whose activityId is null (a cancelled, draft or unpublished activity: its page is 404) has no link, and a published one does 47ms
+ ↓ src/history/history.test.tsx > R-10-12 privacy: no member-facing surface can render the observations > screens 25 and 13 do not import the observations editor, nor read an `observations` field
+ ✓ src/App.test.tsx > T-03-40 mobile own dogs > E4-W16 step 11 (INC-26, R-03-18): the task rows under the counter — pending with a checkbox (live since E6-W04 step 0b) and «dd-mm · instructor», done struck through with «feta el dd-mm», the clip with the attachments, dates in the club's zone 130ms
+ ↓ src/App.test.tsx > T-03-40 mobile own dogs > E4-W16 round 2 #5 (R-03-18): the task counter agrees in number with 1 and 2 — ICU plurals in ca, es and en
+ ↓ src/App.test.tsx > T-03-40 mobile own dogs > E4-W16 step 6 (INC-22): «＋ DOC.» works again after a first upload, on another dog, with empty fields
+ ✓ src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b: a pending task's checkbox sends the completion (no body, no key), is busy meanwhile, then shows the task as the api returns it — checked, struck through, «feta per en Biel el 14-08» — and the counter; GET /me/dogs keeps it done 85ms
+ ✓ src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b: 422 TASK_ALREADY_DONE (someone else completed it meanwhile) reads 13 again and shows the task done, with no error 40ms
+ ✓ src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b: any other refusal is said by its code (404 NOT_FOUND: a task deleted meanwhile), a failure with no answer by the generic message, and the task stays pending and can be tried again 43ms
+ ✓ src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b: an impersonated session completes it as the member — the impersonation token is sent and the line reads «feta per la Laura el 14-08» 36ms
+ ✓ src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b: es and en read the completed line with the reader's words 87ms
+ ↓ src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 1: «＋ DOC.» offers the club's three types of GET /me/dogs in order, «Assegurança» sends INSURANCE, and /parameters is never read
+ ↓ src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 1: the labels are the reader's (es), as GET /me/dogs resolves them
+ ↓ src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 2: «Nivell {codi}» only when the dog carries its level (none without levels.enabled), without reading /parameters
+ ↓ src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+ ↓ src/App.test.tsx > T-03-41 mobile own data > validates DNI, NIE, phone and postal code from the country profile
+
+ Test Files  2 passed (2)
+      Tests  8 passed | 57 skipped (65)
+   Start at  02:14:08
+   Duration  1.80s (transform 41%, environment 22%, tests 19%, import 14%, setup 5%)
+
+exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants (R-10-14) > the member reads the seven rows of mockup 25 with three dogs, «Tots» and the two months
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants (R-10-14) > filters by dog (activities with «Tots» only) and by type; a dog outside the member's is 404 DOG_NOT_ACCESSIBLE
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants (R-10-14) > the single-dog member, the club without FREE_TRAINING and ACTIVITIES, every detail kind and the empty history
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants (R-10-14) > FAMILY_GROUP off leaves the member's own dogs only (S10 §9)
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · GET /me/history reproduces mockup 25 and its variants (R-10-14) > the impersonated session reads it as the member; an instructor gets 403
+ ✓ src/mocks/followup-handlers.test.ts > E6-W04 step 0b · 25's activity rows and 13's task completion, as the api answers (rulings E74, E75) > E6-W04 step 0b: GET /me/history sends the done activity's activityId (its page answers) and null on the class and training rows 11ms
+ ✓ src/mocks/followup-handlers.test.ts > E6-W04 step 0b · 25's activity rows and 13's task completion, as the api answers (rulings E74, E75) > E6-W04 step 0b: the member completes a task of GET /me/dogs with no body and no key — 200 Task with doneAt and doneBy, GET /me/dogs shows it done and counts it, a second call is 422 TASK_ALREADY_DONE 10ms
+ ✓ src/mocks/followup-handlers.test.ts > E6-W04 step 0b · 25's activity rows and 13's task completion, as the api answers (rulings E74, E75) > E6-W04 step 0b: the impersonation token completes as the member (doneBy Laura, MEMBER); an unknown task is 404 NOT_FOUND; TASKS off is 404 MODULE_DISABLED 4ms
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > GET /tasks lists mockup 26's three tasks, newest first, the video on the first
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > tasksMany (round 2 #2): 52 tasks in pages of 50, the two oldest — one done, one pending — on the second page; the card counts all of them
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > T-10-25 «＋ Afegir» with an uploaded video creates one task, even when the same key is sent twice; the card counts it
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > the pencil, the ✕, the completion and the reopening, with their business errors at 422 (rule 0)
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > DOG_NOT_ACTIVE, ATTACHMENT_ENTITY_MISMATCH and ATTACHMENT_LIMIT_REACHED are 422; a refused attachment leaves no task
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful > a member cannot create (403), an impersonation token gets IMPERSONATION_DENIED, and TASKS off is 404 MODULE_DISABLED
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > [DESA] saves the observations with their version; the card shows them; the same key replays
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > tasksStale: another instructor saved first, so the caller's version is stale (409)
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > the upload url validates type and size (FILE_TYPE_NOT_ALLOWED, FILE_TOO_LARGE{maxSizeMb}); the storage wants the signed headers and no bearer
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > E6-W05 step 1 (R-10-11): an upload's grant lasts five minutes — the storage refuses a late PUT (403) and a late claim is 409 INVALID_STATE, on a task and on an attachment; the same claim replays after it
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > E6-W04 step 0d: a fileKey bound to a task is refused for any other task (422 ATTACHMENT_ENTITY_MISMATCH, nothing created), past its five minutes too; its own task replays it
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > POST /attachments registers an observation file, GET lists it with a signed url, DELETE retires it
+ ↓ src/mocks/followup-handlers.test.ts > E6-W02 step 7 · observations and attachments (R-10-11, R-10-12) > R-10-12 privacy: no /me/* answer of the member carries the observations
+
+ Test Files  1 passed (1)
+      Tests  3 passed | 18 skipped (21)
+   Start at  02:14:11
+   Duration  709ms (transform 57%, import 39%, tests 4%)
+
+exit 0

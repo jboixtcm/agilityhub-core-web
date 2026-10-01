@@ -1,0 +1,355 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/training/TrainingRegisterPage.test.tsx (16 tests | 3 failed | 12 skipped) 1226ms
+   ❯ E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) (8)
+     × E5-W03 round 2 · review #9: the date and relation filters offer only operators that take one value, and the query says so 348ms
+   ❯ E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values (8)
+     × E5-W05 round 2 #1: the blocks tab asks GET /ring-blocks/filter-values once when it settles, and a second ring picked in «Valor» stays selected 660ms
+     × E5-W05 round 2 #2 (ruling E80): the blocks' «Dia i hora» filter is a range of club dates sent as `between` with the club's day bounds, with no suggested values 72ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/TrainingRegisterPage.test.tsx > E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) > E5-W03 round 2 · review #9: the date and relation filters offer only operators that take one value, and the query says so
+TestingLibraryElementError: Unable to find a label with the text of: Des del
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"training-register"[39m
+    [36m>[39m
+      [36m<h1>[39m
+        [0mEntrenaments[0m
+      [36m</h1>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Registre d'ús de pistes"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_2_-panel-bookings"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_2_-tab-bookings"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mReserves d'entrenament[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_2_-panel-blocks"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_2_-tab-blocks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mBloquejos i reserves de pista[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_2_-tab-blocks"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_2_-panel-blocks"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Bloquejos i reserves de pista"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mCerca per pista o nota[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Cerca per pista o nota"[39m
+                  [33mplaceholder[39m=[32m"Cerca per pista o nota"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"Estat del bloqueig"[39m
+                [33mclass[39m=[32m"ah-universal-list__status"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTots[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"ACTIVE"[39m
+                [36m>[39m
+                  [0mactiu[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"CANCELLED"[39m
+                [36m>[39m
+                  [0manul·lat[0m
+                [36m</option>[39m
+              [36m</select>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+                [33mopen[39m=[32m""[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mFiltre (1): Dia i hora = «3 al 9 d’agost»[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mDia i hora = «3 al 9 d’agost»[0m
+                    [36m</span>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Treu el filtre de Dia i hora"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mColumna[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"ringId"[39m
+                      [36m>[39m
+                        [0mPista[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"from"[39m
+                      [36m>[39m
+                        [0mDia i hora[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"kind"[39m
+                      [36m>[39m
+                        [0mTipus[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/training/TrainingRegisterPage.test.tsx:298:29
+    296|         .map((option) => option.getAttribute("value")),
+    297|     ).toEqual(["between"]);
+    298|     fireEvent.change(screen.getByLabelText("Des del"), { target: { val…
+       |                             ^
+    299|     fireEvent.change(screen.getByLabelText("Fins al"), { target: { val…
+    300|     fireEvent.click(screen.getByRole("button", { name: "Afegeix el fil…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/training/TrainingRegisterPage.test.tsx > E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values > E5-W05 round 2 #1: the blocks tab asks GET /ring-blocks/filter-values once when it settles, and a second ring picked in «Valor» stays selected
+AssertionError: expected [ Array(111) ] to deeply equal [ 'ringId' ]
+
+- Expected
++ Received
+
+  [
+    "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
++   "ringId",
+  ]
+
+ ❯ src/training/TrainingRegisterPage.test.tsx:511:73
+    509|       setTimeout(resolve, 600);
+    510|     });
+    511|     expect(valueRequests().map((url) => url.searchParams.get("field"))…
+       |                                                                         ^
+    512|
+    513|     fireEvent.click(screen.getByText(/^Filtre \(1\):/u));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/training/TrainingRegisterPage.test.tsx > E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values > E5-W05 round 2 #2 (ruling E80): the blocks' «Dia i hora» filter is a range of club dates sent as `between` with the club's day bounds, with no suggested values
+AssertionError: expected <select aria-busy="true" …(1)>…(1)</select> to be null
+
+- Expected:
+null
+
++ Received:
+<select
+  aria-busy="true"
+  disabled=""
+>
+  <option>
+    Carregant valors…
+  </option>
+</select>
+
+ ❯ src/training/TrainingRegisterPage.test.tsx:542:63
+    540|     ).toEqual(["between"]);
+    541|     // Two club dates instead of the value list.
+    542|     expect(screen.queryByRole("combobox", { name: "Valor" })).toBeNull…
+       |                                                               ^
+    543|     const add = screen.getByRole("button", { name: "Afegeix el filtre"…
+    544|     expect(add).toBeDisabled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed | 12 skipped (16)
+   Start at  00:44:33
+   Duration  2.25s (tests 57%, transform 18%, environment 14%, import 9%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/training/TrainingRegisterPage.test.tsx -t round 2|review #9

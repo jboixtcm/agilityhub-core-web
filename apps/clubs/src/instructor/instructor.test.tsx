@@ -1016,6 +1016,17 @@ describe("E6-W01 step 6 the instructor's student search (S10 §2, §13-9)", () =
     const rock = screen.getByRole("link", { name: /^Júlia Roca \+ Rock · D/u });
     expect(within(rock).getByText("(abonat: Laura Serra Vidal)")).toBeVisible();
   });
+
+  it("E5-W05 round 2 #5 (R-10-00): a handlerName equal to the owner's first name («Joan Antoni») is the owner, so the row adds no «(abonat: …)»", async () => {
+    const answer = compoundAndGuideDogs();
+    const toby = answer.items[0];
+    if (toby === undefined) throw new TypeError("No Toby in the answer");
+    answer.items = [{ ...toby, handlerName: "Joan Antoni" }];
+    server.use(http.get("*/api/v1/dogs", () => HttpResponse.json(answer)));
+    await renderScreen(<StudentSearchPage client={client()} />, { path: "/instructor/alumnes" });
+    const row = await screen.findByRole("link", { name: "Joan Antoni + Toby · B" });
+    expect(within(row).queryByText(/abonat/u)).toBeNull();
+  });
 });
 
 /** `GET /dogs` in the instructor's projection (E5-T29 `owner.firstName`): a compound first name, and a dog led by another guide. */

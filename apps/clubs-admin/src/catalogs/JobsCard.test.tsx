@@ -345,7 +345,8 @@ describe("T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15
     });
     const table = await within(drawer).findByRole("table", { name: "Darreres execucions" });
     expect(within(table).getAllByRole("row")).toHaveLength(1 + 3);
-    fireEvent.click(within(table).getByRole("button", { name: "09/08/2026 21:00" }));
+    // At `messaging.noShowNoticeTime` (08:00, E5-W05 round 2 #11.d): today's run is the failed one.
+    fireEvent.click(within(table).getByRole("button", { name: "10/08/2026 8:00" }));
     const sheet = await within(drawer).findByRole("region", { name: "Fitxa de l'execució" });
     expect(
       await within(sheet).findByText(
@@ -582,6 +583,139 @@ describe("E5-W05 step 18 · the run drawer (S15 §2, R-15-21)", () => {
         "/calendari?classe=cls-2026-08-10-1740-9&estat=anul%C2%B7lades&setmana=2026-08-10",
       );
     });
+  });
+});
+
+describe("E5-W05 round 2 #7 · a run's Week and Member effects link to D4 and D10 (R-15-21)", () => {
+  /**
+   * P1 of a club whose week opens on Friday (`bookings.weekOpensAt` FRIDAY 20:00), run on Friday 31
+   * July at 20:00: it opens the booking week `2026-08-07` (`openedWeekKey` = the opening + 7 days,
+   * S15 R-15-11), from Friday 7 at 20:00 to Friday 14 at 20:00, whose classes are Saturday 8,
+   * Sunday 9 and the week of Monday 10.
+   */
+  function fridayOpeningRun(runId: string) {
+    return {
+      actorAccountId: null,
+      dryRun: false,
+      durationMs: 812,
+      effects: {
+        counters: { activeClasses: 28, notified: 1, opened: 1 },
+        items: [
+          {
+            action: "OPEN",
+            detail: { activeClasses: 28, recipients: 1, weekKey: "2026-08-07" },
+            entityId: "2026-08-07",
+            entityType: "Week",
+          },
+          { action: "NOTIFY", detail: {}, entityId: "member-laura", entityType: "Member" },
+          {
+            action: "CANCEL",
+            detail: { classId: "cls-2026-08-10-1740-9" },
+            entityId: "cls-2026-08-10-1740-9",
+            entityType: "ClassSession",
+          },
+        ],
+      },
+      errors: [],
+      finishedAt: "2026-07-31T18:00:01Z",
+      job: "WEEK_OPENING",
+      parametersSnapshot: { "bookings.weekOpensAt": { dayOfWeek: "FRIDAY", time: "20:00" } },
+      runId,
+      scheduledFor: "2026-07-31T18:00:00Z",
+      scheduledForLocal: "2026-07-31T20:00",
+      skipReason: null,
+      startedAt: "2026-07-31T18:00:00Z",
+      status: "SUCCEEDED",
+      timeZone: "Europe/Madrid",
+      trigger: "SCHEDULE",
+    };
+  }
+
+  async function openSheet() {
+    resetPlanningState();
+    mockScenario("jobsFullClub");
+    server.use(
+      http.get("*/api/v1/jobs/week-opening/runs/:runId", ({ params }) =>
+        HttpResponse.json(fridayOpeningRun(String(params.runId))),
+      ),
+    );
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-settings", "enums", "errors"],
+      storage: undefined,
+    });
+    const onNavigate = vi.fn();
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <JobsCard
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            onNavigate={onNavigate}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    const card = await screen.findByRole("region", { name: "Processos automàtics" });
+    fireEvent.click(
+      within(await waitForRow(card, "Obertura de la setmana")).getByRole("button", {
+        name: /correcta/u,
+      }),
+    );
+    const drawer = await screen.findByRole("dialog", {
+      name: "Execucions · Obertura de la setmana",
+    });
+    fireEvent.click(await within(drawer).findByRole("button", { name: "09/08/2026 20:00" }));
+    const sheet = await within(drawer).findByRole("region", { name: "Fitxa de l'execució" });
+    return { drawer, onNavigate, sheet };
+  }
+
+  it("E5-W05 round 2 #7: with a Friday opening, the Week item opens D4 on the week it opens (Monday 10), and the Member item opens D10", async () => {
+    const { onNavigate, sheet } = await openSheet();
+    const week = await within(sheet).findByRole("link", { name: "Week 2026-08-07 · OPEN" });
+    expect(week).toHaveAttribute("href", "/calendari?setmana=2026-08-10");
+    fireEvent.click(week);
+    expect(onNavigate).toHaveBeenLastCalledWith("/calendari?setmana=2026-08-10");
+    const member = within(sheet).getByRole("link", { name: "Member member-laura · NOTIFY" });
+    expect(member).toHaveAttribute("href", "/abonats/member-laura");
+    fireEvent.click(member);
+    expect(onNavigate).toHaveBeenLastCalledWith("/abonats/member-laura");
+  });
+
+  it("E5-W05 round 2 #7 (assumption A3): a class answer that arrives after the drawer closed navigates nowhere", async () => {
+    let release: () => void = () => undefined;
+    const answered = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const classReads: string[] = [];
+    const { drawer, onNavigate, sheet } = await openSheet();
+    server.use(
+      http.get("*/api/v1/class-sessions/:id", async ({ params }) => {
+        classReads.push(String(params.id));
+        await answered;
+        // Then the calendar world's own answer.
+        return undefined;
+      }),
+    );
+    fireEvent.click(
+      await within(sheet).findByRole("button", {
+        name: "ClassSession cls-2026-08-10-1740-9 · CANCEL",
+      }),
+    );
+    await waitFor(() => {
+      expect(classReads).toEqual(["cls-2026-08-10-1740-9"]);
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Tanca" }));
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("dialog", { name: "Execucions · Obertura de la setmana" }),
+      ).toBeNull();
+    });
+    release();
+    await new Promise((resolve) => {
+      setTimeout(resolve, 300);
+    });
+    expect(onNavigate).not.toHaveBeenCalled();
   });
 });
 

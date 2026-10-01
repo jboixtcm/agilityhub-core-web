@@ -1,0 +1,43 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/App.test.tsx (53 tests | 1 failed | 52 skipped) 141ms
+   ❯ E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) (7)
+     × E6-W04 step 0b (its review): a failed completion's message goes when the next completion starts, so a successful retry leaves no stale error 139ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b (its review): a failed completion's message goes when the next completion starts, so a successful retry leaves no stale error
+AssertionError: expected <div …(3)></div> to be null
+
+- Expected:
+null
+
++ Received:
+<div
+  class="self-page__message"
+  data-error="true"
+  role="alert"
+>
+  No s'ha trobat l'element sol·licitat.
+</div>
+
+ ❯ src/App.test.tsx:1741:41
+    1739|       expect(pending).toBeChecked();
+    1740|     });
+    1741|     expect(screen.queryByRole("alert")).toBeNull();
+       |                                         ^
+    1742|   });
+    1743|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 52 skipped (53)
+   Start at  02:44:23
+   Duration  1.25s (transform 49%, environment 20%, import 15%, tests 12%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t stale error

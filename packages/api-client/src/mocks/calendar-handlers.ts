@@ -2,6 +2,7 @@ import { http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
+import { type ListSpec, listResponse, listValues, refuse } from "./backoffice-handlers";
 import { readerLocale } from "./day-grid-handlers";
 import {
   cancellationPreviewFor,
@@ -14,6 +15,7 @@ import {
 } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
 import { noRingDayGridColumn } from "./fixtures/day-grid";
+import { atRiskNow, minDogsParameter } from "./fixtures/jobs";
 import {
   addDays,
   clubLocalDate,
@@ -35,7 +37,7 @@ import {
   planningState,
   validationError,
 } from "./planning-handlers";
-import { currentMockScenario } from "./scenarios";
+import { callerClubOwnsTheWorld, currentMockScenario } from "./scenarios";
 
 type Inconsistency = components["schemas"]["Inconsistency"];
 type WeekCalendar = components["schemas"]["WeekCalendar"];
@@ -173,12 +175,17 @@ function weekInconsistencies(week: MockWeek): Inconsistency[] {
   return items;
 }
 
+/**
+ * A class as the api answers it: `inconsistencyIds` filled on read, and `atRisk` with the club's
+ * `classes.minDogs` (R-06-13, `atRiskNow`), as D1's risk review evaluates it.
+ */
 function withInconsistencyIds(
   session: ClassSession,
   inconsistencies: readonly Inconsistency[],
 ): ClassSession {
   return {
     ...session,
+    atRisk: atRiskNow(session, minDogsParameter()),
     inconsistencyIds: inconsistencies
       .filter((inconsistency) => inconsistency.itemIds.includes(session.id))
       .map((inconsistency) => inconsistency.id),
@@ -187,8 +194,50 @@ function withInconsistencyIds(
 
 function sessionResponse(session: ClassSession): ClassSession {
   const week = findWeek(session.weekId);
-  return week === undefined ? session : withInconsistencyIds(session, weekInconsistencies(week));
+  return withInconsistencyIds(session, week === undefined ? [] : weekInconsistencies(week));
 }
+
+/**
+ * `GET /class-sessions` (S06 §6 `classes`): the snapshot's `x-fields`, `x-filterable` (an
+ * instructor's and a level's id match any of the class's) and `x-sortable`; no search, so a
+ * non-blank `q` is `400 INVALID_FILTER` (E75).
+ */
+const CLASS_LIST_SPEC: ListSpec<ClassSession> = {
+  fields: [
+    "id",
+    "weekId",
+    "date",
+    "startTime",
+    "endTime",
+    "startsAt",
+    "endsAt",
+    "ringId",
+    "levelIds",
+    "instructorIds",
+    "capacity",
+    "capacityMode",
+    "description",
+    "displayDescription",
+    "state",
+    "counters",
+    "atRisk",
+    "riskExempt",
+    "cancellation",
+    "origin",
+    "version",
+    "inconsistencyIds",
+    "placementId",
+    "notes",
+  ],
+  filterable: ["id", "date", "state", "ringId", "instructorId", "levelId", "weekId"],
+  sortable: ["startsAt", "date"],
+  values: (item, field) =>
+    field === "instructorId"
+      ? item.instructorIds
+      : field === "levelId"
+        ? item.levelIds
+        : listValues((item as Record<string, unknown>)[field]),
+};
 
 function draftIds(week: MockWeek): Set<string> {
   return new Set(
@@ -503,13 +552,14 @@ function dayGrid(date: string, view: "instructor" | "member", locale: "ca" | "en
     ),
   );
   const waitlist = hasModule("WAITLIST");
+  const minDogs = minDogsParameter();
   const cells = new Map<string, DayGridCell[]>();
   const push = (time: string, cell: DayGridCell) => {
     cells.set(time, [...(cells.get(time) ?? []), cell]);
   };
   for (const session of sessions) {
     push(session.startTime, {
-      atRisk: session.atRisk,
+      atRisk: atRiskNow(session, minDogs),
       classId: session.id,
       description: session.displayDescription,
       endTime: session.endTime,
@@ -581,7 +631,8 @@ function dayGrid(date: string, view: "instructor" | "member", locale: "ca" | "en
 
 export const calendarHandlers = [
   http.get("*/api/v1/weeks/:id/calendar", ({ params, request }) => {
-    const week = findWeek(String(params.id));
+    // The tenant comes from the JWT: another club's token finds none of this club's weeks.
+    const week = callerClubOwnsTheWorld() ? findWeek(String(params.id)) : undefined;
     if (week === undefined) return apiError("NOT_FOUND", "Week not found", 404);
     const filter = new URL(request.url).searchParams.get("filter") ?? "ACTIVE";
     return HttpResponse.json(calendarOf(week, filter));
@@ -648,8 +699,27 @@ export const calendarHandlers = [
     planningState.sessions.push(session);
     return HttpResponse.json(sessionResponse(session), { status: 201 });
   }),
+  // S06 §6 `classes` (ADMIN, INSTRUCTOR; MEMBER → 403, an impersonation token too): the club's
+  // classes as a universal list; `notes` is the ADMIN's only. Another club's token finds none.
+  http.get("*/api/v1/class-sessions", ({ request }) => {
+    const scenario = currentMockScenario();
+    const refused = refuse(scenario, ["INSTRUCTOR", "ADMIN"]);
+    if (refused !== undefined) return refused;
+    const admin = scenario.me.membership?.roles.includes("ADMIN") ?? false;
+    const visible = (session: ClassSession): ClassSession =>
+      admin
+        ? session
+        : (Object.fromEntries(
+            Object.entries(session).filter(([key]) => key !== "notes"),
+          ) as ClassSession);
+    const classes = callerClubOwnsTheWorld(scenario)
+      ? planningState.sessions.map((session) => visible(sessionResponse(session)))
+      : [];
+    return listResponse(request, classes, CLASS_LIST_SPEC);
+  }),
   http.get("*/api/v1/class-sessions/:id", ({ params }) => {
-    const session = findSession(String(params.id));
+    // The tenant comes from the JWT: another club's token finds none of this club's classes.
+    const session = callerClubOwnsTheWorld() ? findSession(String(params.id)) : undefined;
     if (session === undefined) return apiError("NOT_FOUND", "Class not found", 404);
     // Detail only (api E5-T15): the instructors' names in `instructorIds` order and the ring,
     // always sent (`null` for a class without a ring).

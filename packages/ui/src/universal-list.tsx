@@ -81,10 +81,22 @@ export interface UniversalListColumn<Row> {
   sortKey?: string;
 }
 
+/**
+ * A filter that takes a range of dates instead of a suggested value (e.g. the blocks' day of the
+ * ring-usage register, ruling E80): two date inputs, and no `loadFilterValues` for its field.
+ */
+export interface UniversalFilterRange {
+  endLabel: string;
+  startLabel: string;
+  /** The filter's value from both `YYYY-MM-DD` ends, the start not after the end. */
+  toValue: (start: string, end: string) => string;
+}
+
 export interface UniversalListFilterColumn {
   key: string;
   label: string;
   operators?: readonly UniversalFilterOperator[];
+  range?: UniversalFilterRange;
   type: UniversalFilterType;
 }
 
@@ -331,7 +343,20 @@ export function UniversalList<Row>({
   const [filterOperator, setFilterOperator] = useState<UniversalFilterOperator>(initialOperator);
   const [filterValue, setFilterValue] = useState("");
   const [filterValues, setFilterValues] = useState<UniversalFilterValue[]>([]);
-  const [filterValuesLoading, setFilterValuesLoading] = useState(firstFilterColumn !== undefined);
+  const [filterValuesLoading, setFilterValuesLoading] = useState(
+    firstFilterColumn !== undefined && firstFilterColumn.range === undefined,
+  );
+  const range = selectedFilterColumn?.range;
+  const rangeField = range !== undefined;
+  const [rangeStart, setRangeStart] = useState("");
+  const [rangeEnd, setRangeEnd] = useState("");
+  // What [Afegeix el filtre] adds: the chosen value, or both ends of a range in order.
+  const pendingValue =
+    range === undefined
+      ? filterValue
+      : rangeStart !== "" && rangeEnd !== "" && rangeStart <= rangeEnd
+        ? range.toValue(rangeStart, rangeEnd)
+        : "";
   const [searchValue, setSearchValue] = useState(state.q);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [selectedViewId, setSelectedViewId] = useState(() => {
@@ -364,7 +389,8 @@ export function UniversalList<Row>({
   }, [onStateChange, searchValue, state]);
 
   useEffect(() => {
-    if (filterField === "") {
+    // A range offers no suggested values: its field is never asked for.
+    if (filterField === "" || rangeField) {
       return undefined;
     }
     let current = true;
@@ -387,7 +413,7 @@ export function UniversalList<Row>({
     return () => {
       current = false;
     };
-  }, [filterField, loadFilterValues]);
+  }, [filterField, loadFilterValues, rangeField]);
 
   const visibleColumns = useMemo(
     () =>
@@ -421,17 +447,23 @@ export function UniversalList<Row>({
 
   const changeFilterField = (event: ChangeEvent<HTMLSelectElement>) => {
     const field = event.currentTarget.value;
+    // The same column again keeps its values: nothing would load them a second time.
+    if (field === filterField) {
+      return;
+    }
     const definition = filterColumns.find((column) => column.key === field);
     const operator =
       definition?.operators?.[0] ??
       (definition === undefined ? "eq" : UNIVERSAL_FILTER_OPERATORS[definition.type][0]);
     setFilterField(field);
     setFilterOperator(operator);
-    setFilterValuesLoading(true);
+    setFilterValuesLoading(definition?.range === undefined);
+    setRangeStart("");
+    setRangeEnd("");
   };
 
   const addFilter = () => {
-    if (filterField === "" || filterValue === "") {
+    if (filterField === "" || pendingValue === "") {
       return;
     }
     const withoutField = state.filters.filter((filter) => filter.field !== filterField);
@@ -439,7 +471,7 @@ export function UniversalList<Row>({
       ...state,
       filters: [
         ...withoutField,
-        { field: filterField, operator: filterOperator, value: filterValue },
+        { field: filterField, operator: filterOperator, value: pendingValue },
       ],
       page: 0,
     });
@@ -611,29 +643,56 @@ export function UniversalList<Row>({
                 ))}
               </select>
             </label>
-            <label>
-              <span>{labels.filterValue}</span>
-              <select
-                aria-busy={filterValuesLoading || undefined}
-                disabled={filterValuesLoading || filterValues.length === 0}
-                onChange={(event) => {
-                  setFilterValue(event.currentTarget.value);
-                }}
-                value={filterValue}
-              >
-                {filterValuesLoading ? (
-                  <option>{labels.loadingFilterValues}</option>
-                ) : (
-                  filterValues.map((value) => (
-                    <option key={value.value} value={value.value}>
-                      {`${value.label} (${String(value.count)})`}
-                    </option>
-                  ))
-                )}
-              </select>
-            </label>
+            {range === undefined ? (
+              <label>
+                <span>{labels.filterValue}</span>
+                <select
+                  aria-busy={filterValuesLoading || undefined}
+                  disabled={filterValuesLoading || filterValues.length === 0}
+                  onChange={(event) => {
+                    setFilterValue(event.currentTarget.value);
+                  }}
+                  value={filterValue}
+                >
+                  {filterValuesLoading ? (
+                    <option>{labels.loadingFilterValues}</option>
+                  ) : (
+                    filterValues.map((value) => (
+                      <option key={value.value} value={value.value}>
+                        {`${value.label} (${String(value.count)})`}
+                      </option>
+                    ))
+                  )}
+                </select>
+              </label>
+            ) : (
+              <>
+                <label>
+                  <span>{range.startLabel}</span>
+                  <input
+                    max={rangeEnd === "" ? undefined : rangeEnd}
+                    onChange={(event) => {
+                      setRangeStart(event.currentTarget.value);
+                    }}
+                    type="date"
+                    value={rangeStart}
+                  />
+                </label>
+                <label>
+                  <span>{range.endLabel}</span>
+                  <input
+                    min={rangeStart === "" ? undefined : rangeStart}
+                    onChange={(event) => {
+                      setRangeEnd(event.currentTarget.value);
+                    }}
+                    type="date"
+                    value={rangeEnd}
+                  />
+                </label>
+              </>
+            )}
             <div className="ah-universal-list__menu-actions">
-              <Button disabled={filterValue === ""} onClick={addFilter}>
+              <Button disabled={pendingValue === ""} onClick={addFilter}>
                 {labels.addFilter}
               </Button>
               <Button

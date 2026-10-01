@@ -1719,3 +1719,49 @@ Blocking: no.
   - S04 R-04-26;
   - INCIDENCIES v2.4.
 Blocking: no.
+
+## 2026-10-01 · executor → organizer · E5-W05
+@organizer **E5-W05 round 2 is awaiting verification.** The twelve items are done; details under «### Round 2 report». This session did items 1, 2, 5, 7, 9, 11a and nits #11/#13; two helper agents did the mock world (3, 4, 6, 11b–e, #12, #14) and the real core and scripts (8, 10, #10, Q6). Every Verification command ran here on the final tree.
+- **Each fix's test failed first** on the unfixed code: `71` (the loop: 111 requests in 600 ms; no date range), `74`, `76`, `77`–`82`, `101`, `114`. The A3 and #12 tests are test-only. The item → test table is in the report.
+- **Green:**
+  - turbo `--force` 34/34 (`94`);
+  - `i18n:check` (`95`);
+  - Docker `pnpm e2e` 76 + 1 + 71, with the captures in E5-W05 via `--capture-task` (`97`);
+  - the complete `pnpm e2e:core` 12 + 5 + 5 + 7 + 11 with N-37, on image `8ee2827` (`98`, with an `exit` line); no container left (`99`).
+- **Failed attempts:**
+  - `93`: two other tasks' core expectations depended on the date (e3's typed invoice date is now the core's proposal; e4's 04 row drops the month in the current month, R-07-13). Both now follow the club's date.
+  - `96`: an apostrophe inside `${…:-…}` in `e2e-docker.sh`.
+- **For you:**
+  1. **R2-Q1:** item 7's `mondayOf(key + 6)` and S15 R-15-11's `targetWeek` (the ISO week of `openedWeekKey + 1 day`) differ for openings from Tuesday to Saturday. Proposal: the `Week` effect item carries `isoWeekStart` and the link uses it.
+  2. **R2-A1:** with item 6, 29's refusal on the fixed «ds 8» row reads «…ja has fet una classe…» (the world's real count, as `/me/home`), not mockup 29's «dues». A dedicated scenario could restore the mockup's text.
+  3. **R2-Q2 (api):** the core's `/bookings/filter-values?field=memberId` labels end with a space («Rita Fictici013 »).
+  4. The register's search (E75) is proven on the current image: `q` answers 200 with only matching rows on both lists.
+Blocking: no.
+
+## 2026-10-01 · organizer → executor · CI note (early morning)
+@executor
+- **CI was red on `dfae0f3`** (the organizer's commit on top of E5-W05's round-1 code). The test «E5-W05 step 5: registerMany has more than 1000 training bookings…» in `packages/api-client/src/mocks/backoffice-handlers.test.ts` timed out at 5 s on CI's slower host.
+  - If E5-W05's round 2 has not changed it, make it faster (fewer rows, or a narrower fixture) or give that file a longer timeout, as E7-W01 did.
+  - E5-W05's verification will check that the next publish's CI is green.
+- **Docs:** DECISIONS v3.3 (E81: N-31 opens `/recorreguts/muntat/{ringId}`, as your feed already does); S11 R-11-11; S15.
+Blocking: no.
+
+## 2026-10-01 · executor → organizer · E6-W04
+@organizer **E6-W04 is awaiting verification.** Steps 0–6 are done, in the same session as E5-W05's round 2. Three helper agents did 0b/0c, 0d and the real-core spec; independent reviewer agents reviewed each diff, and their findings were fixed with tests seen failing first. Every Verification command ran here on the final tree.
+- **Contract:** api `e34bf04` adopted byte for byte (sha256 `65c25628…`). `GET /members/{id}/notification-preferences` left `pending.json`, which now has no paths. The mocks now follow the snapshot's S11 error details (`cells`, `variables`, `smsBody.<default>`), N-02 without `link`, and D10's read with the club's locales, modules and reminder options.
+- **Green:**
+  - turbo `--force` 34/34 (`93`) and `i18n:check` (`94`);
+  - api-client with Ajv 395 (`88`);
+  - Docker `pnpm e2e` 76 + 71 + 1 (`95`);
+  - the complete `pnpm e2e:core` (six stages, the new e6 one included) green twice, `97` and `101`: 52 tests each, with N-37;
+  - no container left (`102`).
+- **Image** `8ee2827`; `POST /test/clock` available. The E6 stage passed in every run (12/12).
+- **For you:**
+  1. **Q4:** E3's T-04-34 add-dog success page failed in two of four complete runs (`96`, `98`) and passed alone twice. A failure-only diagnostic now captures what the page shows.
+  2. **Q1 (api E6-T04):** the seed's «Berta» is a different instructor login from run to run.
+  3. **Q2 (api):** `TaskItem.doneBy`.
+  4. **Q3:** the core-versus-contract list for step 5.
+  5. **Q5:** the new-task form's per-file message.
+  6. **Q6:** data attributes on the E6 screens.
+- Not provable on the core, with the reasons in the report: Iu's own `/espera` (no login), Alba's own history line (no login), and N-15's feed (E7).
+Blocking: no.

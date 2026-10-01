@@ -1,0 +1,76 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > mockup D12: «‹ Setmana actual › del 10 al 15 d'agost», dl–ds, the rows at their hour lines, a training at half height, the block with its reason and note, the classes as delivered
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > the filters change the query without hiding trainings or blocks; the arrows move ±7 days through ?setmana=
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > a click on a class opens its list under the grid: the header, the names linked to D13, the level, the tasks, the status lines and the waiting list
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > the badge cycles «— → present → avisat → no presentat → —» and stops on a final row; [DESA LA LLISTA] sends only the changed rows with the current version and a new key
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > 409 STALE_VERSION: the toast, the other person's change kept, and only the caller's edit sent again with the new version
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > the PDF asks for the same query with format=pdf and Accept: application/pdf, downloads agenda-{startDate}.pdf, and is busy meanwhile
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > a failed PDF says why by its code, and the page stays as it was
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 step 11 on D12 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > a PUT refused with 422 ATTENDANCE_WINDOW_CLOSED whose re-read is closed leaves no choice behind, the badges inert and [DESA LA LLISTA] disabled
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 step 4 the panel survives the way to D13 and back (?setmana= and the choices) > a name opens D13 with a normal navigation; back on /agenda the week, the class and the unsaved choice are there, rebased on the list read again
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 D12 after a write: what the grid shows and what the panel keeps > a save reads the week again: the class's «passar llista pendent» mark goes, and the panel stays with «Llista desada»
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 D12 after a write: what the grid shows and what the panel keeps > an unsaved choice survives opening another class and coming back
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 D12 after a write: what the grid shows and what the panel keeps > a reservation made with the ring card reads the week again and shows in the grid
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 step 7 modules and impersonation on D12 (S10 §9) > FREE_TRAINING off: no training cells and no «Reserva = …» in the legend; WAITLIST off: no «espera» and no «En espera:»
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 step 7 modules and impersonation on D12 (S10 §9) > an impersonated session reaching /agenda reads «No es permet la suplantació.»; an empty week reads its empty state
+ ✓ src/instructor/week-agenda.test.tsx > E6-W04 step 0c: D12's legend reads the half height's minutes from the api (InstructorWeek.trainingSlotMinutes, api E6-T06, ruling E75) > E6-W04 step 0c: the club's 30 minutes as the mock answers them, and 45 when the api says 45 — «(mitja alçada: 45 min)», never the mockup's literal 223ms
+ ✓ src/instructor/week-agenda.test.tsx > E6-W04 step 0c: D12's legend reads the half height's minutes from the api (InstructorWeek.trainingSlotMinutes, api E6-T06, ruling E75) > E6-W04 step 0c: trainingSlotMinutes null leaves the minutes out — «(mitja alçada)» — in ca, es and en 191ms
+ ↓ src/instructor/week-agenda.test.tsx > T-10-32 (D12) the three locales, with no missing key > es
+ ↓ src/instructor/week-agenda.test.tsx > T-10-32 (D12) the three locales, with no missing key > en
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > mockup D14 for an ADMIN: «5 pendents de llegir», the columns, the five rows highlighted and in the api's order, the authors by gender and the completed task
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > for the instructor the api's order puts the three unread rows first (her own tasks are not unread) and the counter reads 3
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > the three chips map to filter=kind:eq:TASK, kind:eq:MEMBER_NOTE and no kind filter
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > «Marcar-ho tot com a llegit» calls read-all with its key, puts the counter at 0 and reads the list again
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > a row click calls read for that row, drops its highlight and the counter at once, and opens D13 (the dog's record)
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > 400 INVALID_FILTER shows the list's own message; levels.enabled off drops the «Nivell» column
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > the pages hold at most 50 rows: only 20 and 50 are offered, and a size of 200 in the address becomes 50
+ ↓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1 (review #2): a refused read puts the row back unread and the counter back, and says why with a retry that sends it again
+ ↓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1: the read belongs to the shell, so its failure is said on D13, where the user already is
+ ↓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1: a read that got no answer says so, and its retry keeps the key
+ ↓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #3 (review #4): a note updated while D14 is open still shows «llegit»; a click on its row sends the read
+ ↓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #5 (review #1): «Tipus» and «Pendent de llegir» offer the contract's values with the api's counts, also when the first page holds only unread notes
+ ✓ src/followup/followup.test.tsx > E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75) > E6-W04 step 0c: «Abonat», «Gos» and «Creador» offer the api's values with their counts over the whole set — also the members, dogs and authors only rows beyond the first page have — and a creator picked is named in the chip 321ms
+ ✓ src/followup/followup.test.tsx > E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75) > E6-W04 step 0c: the search box sends q to GET /followup and the rows narrow to what the api finds in the member, the dog, the author and the task's whole text; the filter values follow the search 980ms
+ ↓ src/followup/followup.test.tsx > E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read > step 5 (R-10-13): offline, a failed read whose counter refresh fails too puts the counter back at its value, a failed retry does not lower it, and the api's count wins when it answers (E6-W04 step 0d: a count other than the restored one)
+ ↓ src/followup/followup.test.tsx > E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read > step 6 (R-10-13): a failed read, back to D14, a successful retry — the row loses its highlight and the counter drops
+ ↓ src/followup/followup.test.tsx > T-10-30 the menu counter (S10 §2 row D14, step 6) > reads unread-count on mount, every 60 s and on focus; never when disabled
+ ↓ src/followup/followup.test.tsx > T-10-30 the menu counter (S10 §2 row D14, step 6) > a local change wins over an answer requested before it (a row read while the count is in flight)
+ ↓ src/followup/followup.test.tsx > E6-W03 step 5 the D14 entry for instructors (S10 §2) and the D12 entry > an instructor sees «Persones» with «Seguiment alumnes» and its counter only, and «Agenda de la setmana» (current) once, on /agenda
+ ↓ src/followup/followup.test.tsx > E6-W03 step 5 the D14 entry for instructors (S10 §2) and the D12 entry > TASKS off: no «Seguiment alumnes» and no counter; an instructor then has no «Persones» group
+ ↓ src/followup/followup.test.tsx > T-10-32 (D14) the three locales, with no missing key > es
+ ↓ src/followup/followup.test.tsx > T-10-32 (D14) the three locales, with no missing key > en
+
+ Test Files  2 passed (2)
+      Tests  4 passed | 36 skipped (40)
+   Start at  02:14:16
+   Duration  2.72s (tests 42%, transform 31%, environment 14%, import 10%, setup 3%)
+
+exit 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 GET /instructor/week (S10 §6, R-10-15) as the api answers > mockup D12: the ISO week of the date (dl–ds), the rows, trainings, the block and every class
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 GET /instructor/week (S10 §6, R-10-15) as the api answers > instructorId filters the classes only (me = the caller); ringId filters everything
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 GET /instructor/week (S10 §6, R-10-15) as the api answers > FREE_TRAINING off: no TRAINING cells; WAITLIST off: no waiting; another week reads PAST or FUTURE
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 GET /instructor/week (S10 §6, R-10-15) as the api answers > R-10-16: with classes.maxInstructorsPerClass = 2 the shared class reads «Marc, Estel» and «Els meus» includes it
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 GET /instructor/week (S10 §6, R-10-15) as the api answers > refuses a bad date (400), an unknown instructor (404), a member (403) and an impersonation (IMPERSONATION_DENIED)
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 GET /instructor/week (S10 §6, R-10-15) as the api answers > GET /instructor/week/export?format=pdf answers a valid PDF of the same query, synchronously
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 GET /instructor/week (S10 §6, R-10-15) as the api answers > the selected class of D12 is a sheet of the same world: five rows, two waiting, and the stale variant's other save
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > mockup D14 for an ADMIN: five rows, all unread, newest first; the counter says 5
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > R-10-13 for the instructor (Estel): her own tasks are never unread and come after the unread rows
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > the kind chips and unread filter by the api; an undeclared filter, sort or size is 400 INVALID_FILTER
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > a row read leaves its highlight and the counter; read-all puts it at 0; both need their key
+ ↓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > followupAllRead: nothing unread; TASKS off: 404 MODULE_DISABLED; an impersonation: IMPERSONATION_DENIED
+ ✓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > E6-W04 step 0c: GET /followup/filter-values counts each value over the whole set the filters and q select (followupMany: the members, dogs and authors beyond the first page too), without the field's own filters, labelled by name 19ms
+ ✓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > E6-W04 step 0c: filter-values refuses an undeclared field or filter (400 INVALID_FILTER), a member (403), an impersonation (IMPERSONATION_DENIED) and TASKS off (404 MODULE_DISABLED) 6ms
+ ✓ src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > E6-W04 step 0c: GET /followup's q searches the member's full name, the dog, the author and the whole text (not only the excerpt), in any case 7ms
+ ✓ src/mocks/agenda-handlers.test.ts > E6-W04 step 0c · InstructorWeek.trainingSlotMinutes for D12's legend (api E6-T06) > E6-W04 step 0c: the club's training.slotMinutes (30, then 45 after a change), and null with FREE_TRAINING off 24ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed | 12 skipped (16)
+   Start at  02:14:19
+   Duration  741ms (transform 54%, import 37%, tests 9%)
+
+exit 0

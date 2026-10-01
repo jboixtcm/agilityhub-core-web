@@ -1,0 +1,799 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/history/history.test.tsx (14 tests | 2 failed | 12 skipped) 191ms
+   ❯ E6-W04 step 0b: screen 25's activity rows open their page (HistoryItem.activityId, S07 §6, rulings E74 and E75) (2)
+     × E6-W04 step 0b: the mockup's done activity «Seminari d'obstacles» is a link to /activitats/{activityId}; the class and training rows are not links 143ms
+     × E6-W04 step 0b: an ACTIVITY row whose activityId is null (a cancelled, draft or unpublished activity: its page is 404) has no link, and a published one does 46ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/history/history.test.tsx > E6-W04 step 0b: screen 25's activity rows open their page (HistoryItem.activityId, S07 §6, rulings E74 and E75) > E6-W04 step 0b: the mockup's done activity «Seminari d'obstacles» is a link to /activitats/{activityId}; the class and training rows are not links
+TestingLibraryElementError: Unable to find an accessible element with the role "link" and name "Seminari d'obstacles"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"ah-app-bar history-screen__bar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Torna":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button history-screen__back"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Duna · C":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-chip dog-chip"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rock · D":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-chip dog-chip"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Toby · B (Joan Antoni)":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"ah-chip dog-chip"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Tots":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-chip dog-chip dog-chip--selected"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Tot":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"history-screen__type"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Classes":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"history-screen__type"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Entrenaments":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"history-screen__type"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Activitats":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"history-screen__type"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Històric":
+  [36m<h1 />[39m
+
+  --------------------------------------------------
+  group:
+
+  Name "Gossos":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Gossos"[39m
+    [33mclass[39m=[32m"dog-chips"[39m
+    [33mrole[39m=[32m"group"[39m
+  [36m/>[39m
+
+  Name "Tipus":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Tipus"[39m
+    [33mclass[39m=[32m"history-screen__chips"[39m
+    [33mrole[39m=[32m"group"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"history-screen__window"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"history-row__detail"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"history-row__detail"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"history-row__detail"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"history-row__detail"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "Històric de classes, entrenaments i activitats":
+  [36m<ul[39m
+    [33maria-label[39m=[32m"Històric de classes, entrenaments i activitats"[39m
+    [33mclass[39m=[32m"history-screen__list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"history-screen"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar history-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Torna"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button history-screen__back"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mHistòric[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Gossos"[39m
+        [33mclass[39m=[32m"dog-chips"[39m
+        [33mrole[39m=[32m"group"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"ah-chip dog-chip"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-paw"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mDuna · C[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"ah-chip dog-chip"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mRock · D[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"ah-chip dog-chip"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mToby · B (Joan Antoni)[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-pressed[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-chip dog-chip dog-chip--selected"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mTots[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Tipus"[39m
+        [33mclass[39m=[32m"history-screen__chips"[39m
+        [33mrole[39m=[32m"group"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-pressed[39m=[32m"true"[39m
+          [33mclass[39m=[32m"history-screen__type"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mTot[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"history-screen__type"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mClasses[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"history-screen__type"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mEntrenaments[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"history-screen__type"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mActivitats[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"history-screen__window"[39m
+      [36m>[39m
+        [0mDarrers 2 mesos, del més recent al més antic[0m
+      [36m</p>[39m
+      [36m<ul[39m
+        [33maria-label[39m=[32m"Històric de classes, entrenaments i activitats"[39m
+        [33mclass[39m=[32m"history-screen__list"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card history-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"history-row__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__date"[39m
+              [36m>[39m
+                [0mdt 28/07[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__title"[39m
+              [36m>[39m
+                [0mClasse B+C · amb Duna[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success history-row__badge"[39m
+              [36m>[39m
+                [0mfeta[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card history-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"history-row__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__date"[39m
+              [36m>[39m
+                [0mdv 24/07[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__title"[39m
+              [36m>[39m
+                [0mEntrenament · amb Rock[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success history-row__badge"[39m
+              [36m>[39m
+                [0mfet[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card history-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"history-row__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__date"[39m
+              [36m>[39m
+                [0mdt 21/07[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__title"[39m
+              [36m>[39m
+                [0mClasse B+C · amb Duna[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning history-row__badge"[39m
+              [36m>[39m
+                [0manul·lada tard[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"history-row__detail"[39m
+            [36m>[39m
+              [0mPer tu, el 21/07 a les 19:10 · compta com a feta[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card history-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"history-row__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__date"[39m
+              [36m>[39m
+                [0mdv 17/07[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__title"[39m
+              [36m>[39m
+                [0mClasse D i sup. · amb Rock[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--danger history-row__badge"[39m
+              [36m>[39m
+                [0mcancel·lada pel club[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"history-row__detail"[39m
+            [36m>[39m
+              [0m«Pluja forta: pistes tancades»[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card history-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"history-row__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__date"[39m
+              [36m>[39m
+                [0mdt 14/07[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__title"[39m
+              [36m>[39m
+                [0mClasse B+C · amb Duna[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--danger history-row__badge"[39m
+              [36m>[39m
+                [0mno presentat[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"history-row__detail"[39m
+            [36m>[39m
+              [0mSense avís previ · compta com a feta[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card history-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"history-row__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__date"[39m
+              [36m>[39m
+                [0mdg 12/07[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__title"[39m
+              [36m>[39m
+                [0mSeminari d'obstacles[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success history-row__badge"[39m
+              [36m>[39m
+                [0mfeta[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card history-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"history-row__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__date"[39m
+              [36m>[39m
+                [0mdc 8/07[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__title"[39m
+              [36m>[39m
+                [0mClasse C+D · amb Duna[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--neutral history-row__badge"[39m
+              [36m>[39m
+                [0manul·lada[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"history-row__detail"[39m
+            [36m>[39m
+              [0mPer tu, dins termini · no compta[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/history/history.test.tsx:328:25
+    326|     window.history.replaceState(null, "", "/historic");
+    327|     await renderHistory();
+    328|     const link = screen.getByRole("link", { name: "Seminari d'obstacle…
+       |                         ^
+    329|     expect(link).toHaveAttribute("href", "/activitats/activity-seminar…
+    330|     expect(link.closest(".history-row")).not.toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/history/history.test.tsx > E6-W04 step 0b: screen 25's activity rows open their page (HistoryItem.activityId, S07 §6, rulings E74 and E75) > E6-W04 step 0b: an ACTIVITY row whose activityId is null (a cancelled, draft or unpublished activity: its page is 404) has no link, and a published one does
+TestingLibraryElementError: Unable to find an accessible element with the role "link" and name "Taller de contactes"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  [36m<header[39m
+    [33mclass[39m=[32m"ah-app-bar history-screen__bar"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Torna":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Torna"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button history-screen__back"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Tot":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"history-screen__type"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Classes":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"history-screen__type"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Activitats":
+  [36m<button[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"history-screen__type"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Històric":
+  [36m<h1 />[39m
+
+  --------------------------------------------------
+  group:
+
+  Name "Tipus":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Tipus"[39m
+    [33mclass[39m=[32m"history-screen__chips"[39m
+    [33mrole[39m=[32m"group"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"history-screen__window"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "Històric de classes, entrenaments i activitats":
+  [36m<ul[39m
+    [33maria-label[39m=[32m"Històric de classes, entrenaments i activitats"[39m
+    [33mclass[39m=[32m"history-screen__list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"history-screen"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar history-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Torna"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button history-screen__back"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mHistòric[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Tipus"[39m
+        [33mclass[39m=[32m"history-screen__chips"[39m
+        [33mrole[39m=[32m"group"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-pressed[39m=[32m"true"[39m
+          [33mclass[39m=[32m"history-screen__type"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mTot[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"history-screen__type"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mClasses[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"history-screen__type"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mActivitats[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"history-screen__window"[39m
+      [36m>[39m
+        [0mDarrers 2 mesos, del més recent al més antic[0m
+      [36m</p>[39m
+      [36m<ul[39m
+        [33maria-label[39m=[32m"Històric de classes, entrenaments i activitats"[39m
+        [33mclass[39m=[32m"history-screen__list"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card history-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"history-row__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__date"[39m
+              [36m>[39m
+                [0mdg 19/07[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__title"[39m
+              [36m>[39m
+                [0mTaller de contactes[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success history-row__badge"[39m
+              [36m>[39m
+                [0mfeta[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card history-row"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"history-row__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__date"[39m
+              [36m>[39m
+                [0mdg 12/07[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"history-row__title"[39m
+              [36m>[39m
+                [0mSeminari d'obstacles[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--danger history-row__badge"[39m
+              [36m>[39m
+                [0mcancel·lada pel club[0m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/history/history.test.tsx:383:19
+    381|       "dg 12/07 | Seminari d'obstacles | cancel·lada pel club",
+    382|     ]);
+    383|     expect(screen.getByRole("link", { name: "Taller de contactes" })).…
+       |                   ^
+    384|       "href",
+    385|       "/activitats/activity-taller-contactes",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 12 skipped (14)
+   Start at  02:01:30
+   Duration  1.29s (transform 46%, environment 19%, tests 16%, import 16%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/history/history.test.tsx -t E6-W04 step 0b
+exit 1
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/followup-handlers.test.ts (21 tests | 1 failed | 20 skipped) 13ms
+   ❯ E6-W04 step 0b · 25's activity rows and 13's task completion, as the api answers (rulings E74, E75) (3)
+     × E6-W04 step 0b: GET /me/history sends the done activity's activityId (its page answers) and null on the class and training rows 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/followup-handlers.test.ts > E6-W04 step 0b · 25's activity rows and 13's task completion, as the api answers (rulings E74, E75) > E6-W04 step 0b: GET /me/history sends the done activity's activityId (its page answers) and null on the class and training rows
+AssertionError: expected { counts: null, …(9) } to match object { …(3) }
+(8 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "activityId": "activity-seminari-obstacles",
+    "id": "ar1",
+    "title": "Seminari d'obstacles",
+  }
+
+ ❯ src/mocks/followup-handlers.test.ts:213:66
+    211|     const { data } = await history();
+    212|     expectValid("MemberHistory", data);
+    213|     expect(data?.items.find((item) => item.type === "ACTIVITY")).toMat…
+       |                                                                  ^
+    214|       activityId: "activity-seminari-obstacles",
+    215|       id: "ar1",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 skipped (21)
+   Start at  02:01:32
+   Duration  633ms (transform 58%, import 40%, tests 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/followup-handlers.test.ts -t activityId
+exit 1

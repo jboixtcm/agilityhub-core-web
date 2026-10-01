@@ -10,7 +10,7 @@ import { clubInstant, clubLocalDateOf, clubLocalTime } from "./calendar";
 import { catalogState } from "./catalogs";
 import { censusDogs } from "./census";
 import { instructorNoteAttachments, observationsBlock, tasksBlock } from "./followup";
-import { ringBlockListItems } from "./training";
+import { ringBlockListItems, trainingParameters } from "./training";
 
 type AttendanceRow = components["schemas"]["AttendanceRow"];
 type AttendanceSheet = components["schemas"]["AttendanceSheet"];
@@ -735,6 +735,10 @@ export function instructorWeekView(query: WeekQuery, context: AttendanceContext)
         .map((ring) => ({ color: ring.color, id: ring.id, name: ring.name })),
     },
     rows: [...new Set(cells.map((cell) => cell.time))].sort(),
+    // E6-W04 step 0c (api E6-T06): `training.slotMinutes` for D12's legend; null with FREE_TRAINING off.
+    trainingSlotMinutes: context.modules.includes("FREE_TRAINING")
+      ? trainingParameters().slotMinutes
+      : null,
     week: {
       endDate: cells.some((cell) => cell.date === sunday) ? sunday : plusDays(start, 5),
       relative,

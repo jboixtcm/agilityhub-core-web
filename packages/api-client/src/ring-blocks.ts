@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { isApiError } from "./api-error";
 import type { ApiClient } from "./client";
@@ -230,7 +230,9 @@ function useRingCatalog(client: ApiClient, includeInactive: boolean, activeOnly:
     setState({ status: "loading" });
     setReload((value) => value + 1);
   }, []);
-  return { ...state, refetch };
+  // One object per answer, so a hook or a memo that reads the catalog is not rebuilt at every
+  // render (E5-W05 round 2 #1).
+  return useMemo(() => ({ ...state, refetch }), [refetch, state]);
 }
 
 /** `GET /rings` (S05): the active rings in catalog order (`order`, then the name). */

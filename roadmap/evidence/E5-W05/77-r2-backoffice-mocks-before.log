@@ -1,0 +1,19 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/backoffice-handlers.test.ts (28 tests | 6 failed | 21 skipped) 334ms
+   ❯ E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75) (5)
+     × E5-W05 round 2 #4: an ADMIN of another club (adminOtherClub) finds no booking, training booking or ring block of this club, and no filter value: the tenant comes from the JWT 127ms
+   ❯ E5-W05 round 2 · the staff registrants' level is the dog's own, and follows levels.enabled (S08 §6) (1)
+     × E5-W05 round 2 #3: GET /class-sessions/{id}/bookings sends each dog's own level (Duna «C», Chun-li «A», Nass «B», Fish «B», Thai «E»), and null in a club with levels.enabled = false 28ms
+   ❯ E5-W05 round 2 · the jobs mock reads its parameters (S15 R-15-01, R-15-12) (4)
+     × E5-W05 round 2 #11d: no-show-notices runs at messaging.noShowNoticeTime (08:00): its schedule, its runs and its next run; a saved change moves the schedule and the next run 26ms
+     × E5-W05 round 2 #14: nextScheduledForLocal follows jobs.dailyTime, classes.riskReviewTime and bookings.weekOpensAt, as schedule.localTime does 26ms
+     × E5-W05 round 2 #14: the risk review reads classes.minDogs, as D4's risk mark does: with minDogs = 1 the class with one dog is at risk in neither D1 nor D4 39ms
+     × E5-W05 round 2 #14: with the risk review switched off, no active class names notified members (no review ran); a class it cancelled keeps the ones it notified 29ms
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 1 passed | 21 skipped (28)
+   Start at  00:57:45
+   Duration  944ms (tests 38%, transform 36%, import 25%)
+

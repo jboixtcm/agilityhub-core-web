@@ -4,7 +4,7 @@ import { Badge, Button, Card, Icon, Skeleton, type Tone } from "@agilityhub/ui";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { mondayOf } from "../planning/shared";
+import { classCalendarPath } from "../planning/calendar-shared";
 
 type RiskReviewForm = components["schemas"]["RiskReviewForm"];
 type RiskReviewItem = components["schemas"]["RiskReviewItem"];
@@ -26,12 +26,11 @@ function clockTime(value: string): string {
 
 /** D4 on the class's week with the class selected; a cancelled class lives under «Anul·lades». */
 export function riskReviewPath(item: RiskReviewItem): string {
-  const query = new URLSearchParams({
-    classe: item.classId,
-    estat: item.status === "AUTO_CANCELLED" ? "anul·lades" : "actives",
-    setmana: mondayOf(item.date),
+  return classCalendarPath({
+    date: item.date,
+    id: item.classId,
+    state: item.status === "AUTO_CANCELLED" ? "CANCELLED" : "ACTIVE",
   });
-  return `/calendari?${query.toString()}`;
 }
 
 /**

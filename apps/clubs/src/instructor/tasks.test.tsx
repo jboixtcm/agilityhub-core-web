@@ -337,7 +337,8 @@ describe("T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12
     fireEvent.change(firstPicker(), {
       target: { files: [file("vídeo_llarg.mp4", "video/mp4", 30 * 1024 * 1024)] },
     });
-    expect(await screen.findByText("El fitxer és massa gran.")).toBeVisible();
+    // E6-W04 step 0d: the api's refusal of a file names it, as the picker's does.
+    expect(await screen.findByText("vídeo_llarg.mp4: El fitxer és massa gran.")).toBeVisible();
     expect(requests.some((request) => request.line === "POST /attachments/upload-url")).toBe(true);
     cleanup();
     requests.length = 0;
@@ -601,7 +602,8 @@ describe("E6-W02 round 2 (review of 30-09): screen 26", () => {
     });
     const big = () => file("vídeo_llarg.mp4", "video/mp4", 30 * 1024 * 1024);
     fireEvent.change(firstPicker(), { target: { files: [big()] } });
-    expect(await screen.findByText("El fitxer és massa gran.")).toBeVisible();
+    // E6-W04 step 0d: the api's refusal of an attached file names it.
+    expect(await screen.findByText("vídeo_llarg.mp4: El fitxer és massa gran.")).toBeVisible();
     const form = newTask("Salts amb calma", [big()]);
     await waitFor(() => {
       expect(
@@ -905,6 +907,211 @@ describe("E6-W05 (reviews of E6-W02's round 2): screen 26", () => {
     expect(screen.getByRole("dialog", { name: "Vols eliminar aquesta tasca?" })).toBe(dialog);
     // Said once, where the user is: not again behind the confirmation.
     expect(screen.getAllByRole("alert")).toHaveLength(1);
+  });
+});
+
+describe("E6-W04 step 0d (review of E6-W05): screen 26", () => {
+  const newTask = (text: string, files: File[] = []) => {
+    fireEvent.click(screen.getByRole("button", { name: "Afegir" }));
+    const form = screen.getByRole("form", { name: "Nova tasca" });
+    fireEvent.change(within(form).getByLabelText("Text de la tasca nova"), {
+      target: { value: text },
+    });
+    if (files.length > 0) {
+      fireEvent.change(within(form).getByLabelText("Adjunta un fitxer", { selector: "input" }), {
+        target: { files },
+      });
+    }
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    return form;
+  };
+  const tasksBlock = () =>
+    present(screen.getByRole("heading", { name: "Tasques" }).closest<HTMLElement>("section"));
+  const writes = (requests: Recorded[]) =>
+    requests
+      .filter((request) => !request.line.startsWith("GET"))
+      .map((request) => request.line.replace(/mock-uploads\/.+$/u, "mock-uploads/…"));
+  const fileKeys = (request: Recorded | undefined) =>
+    (request?.body as { attachmentIds?: string[] } | undefined)?.attachmentIds ?? [];
+  /** The statuses MSW answered `POST /tasks` with, in order. */
+  const taskStatuses = () => {
+    const statuses: number[] = [];
+    server.events.on("response:mocked", ({ request, response }) => {
+      if (request.method === "POST" && new URL(request.url).pathname === "/api/v1/tasks") {
+        statuses.push(response.status);
+      }
+    });
+    return statuses;
+  };
+
+  it("E6-W04 step 0d: a creation whose answer was lost but which the api created, its text edited, «Afegeix» — a new task with a new upload and a new key, never the first submission's file", async () => {
+    let lost = true;
+    server.use(
+      http.post("*/api/v1/tasks", async ({ request }) => {
+        if (!lost) return undefined;
+        lost = false;
+        // The api creates the task and its answer never arrives.
+        await getResponse(handlers, request.clone());
+        return HttpResponse.error();
+      }),
+    );
+    const statuses = taskStatuses();
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
+    expect(await within(tasksBlock()).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat.",
+    );
+    fireEvent.change(within(form).getByLabelText("Text de la tasca nova"), {
+      target: { value: "Salts amb calma i girs" },
+    });
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(5);
+    });
+    expect(within(tasksBlock()).queryByRole("alert")).toBeNull();
+    expect(writes(requests)).toEqual([
+      "POST /attachments/upload-url",
+      "PUT /mock-uploads/…",
+      "POST /tasks",
+      "POST /attachments/upload-url",
+      "PUT /mock-uploads/…",
+      "POST /tasks",
+    ]);
+    expect(statuses.slice(-1)).toEqual([201]);
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(fileKeys(posts[1])).toHaveLength(1);
+    expect(fileKeys(posts[1])).not.toEqual(fileKeys(posts[0]));
+    expect(posts[1]?.key).not.toBe(posts[0]?.key);
+    expect(cards().map(cardText)).toEqual(
+      expect.arrayContaining([
+        "pendent | Salts amb calma | 03-08 · Estel · vídeo_salt.mp4",
+        "pendent | Salts amb calma i girs | 03-08 · Estel · vídeo_salt.mp4",
+      ]),
+    );
+  });
+
+  it("E6-W04 step 0d: a reused file the api refuses as bound to another task (422 ATTACHMENT_ENTITY_MISMATCH) is uploaded again, once, and the submission sent again with a new key", async () => {
+    let created = false;
+    server.use(
+      http.post("*/api/v1/tasks", async ({ request }) => {
+        if (created) return undefined;
+        created = true;
+        // The api created the task, and then answered with an error.
+        await getResponse(handlers, request.clone());
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "Internal error", traceId: "t-500" },
+          { status: 500 },
+        );
+      }),
+    );
+    const statuses = taskStatuses();
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
+    expect(await within(tasksBlock()).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat.",
+    );
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("form", { name: "Nova tasca" })).toBeNull();
+    });
+    expect(cards()).toHaveLength(5);
+    expect(within(tasksBlock()).queryByRole("alert")).toBeNull();
+    expect(writes(requests)).toEqual([
+      "POST /attachments/upload-url",
+      "PUT /mock-uploads/…",
+      "POST /tasks",
+      "POST /tasks",
+      "POST /attachments/upload-url",
+      "PUT /mock-uploads/…",
+      "POST /tasks",
+    ]);
+    expect(statuses).toEqual([500, 422, 201]);
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    // Answered, the first submission is over: the press is a new one that reuses the live file…
+    expect(posts[1]?.key).not.toBe(posts[0]?.key);
+    expect(fileKeys(posts[1])).toEqual(fileKeys(posts[0]));
+    // …which the first task holds: uploaded again, it is sent once more with a new key.
+    expect(posts[2]?.key).not.toBe(posts[1]?.key);
+    expect(fileKeys(posts[2])).toHaveLength(1);
+    expect(fileKeys(posts[2])).not.toEqual(fileKeys(posts[1]));
+  });
+
+  it("E6-W04 step 0d: an instructor's mixed selection (a JPEG and an executable) attaches the JPEG and says «prog.exe: …» — on the observations and on an open task", async () => {
+    const requests = recordRequests();
+    await renderTasks();
+    // An instructor cannot read the file limits (403): every file goes to the api.
+    await waitFor(() => {
+      expect(
+        requests.filter((request) => request.line.startsWith("GET /parameters/files.")),
+      ).toHaveLength(3);
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    fireEvent.change(firstPicker(), {
+      target: {
+        files: [file("espatlla.jpg", "image/jpeg"), file("prog.exe", "application/x-msdownload")],
+      },
+    });
+    expect(await screen.findByRole("button", { name: "espatlla.jpg" })).toBeVisible();
+    await waitFor(() => {
+      expect(firstPicker()).toBeEnabled();
+    });
+    expect(screen.getAllByRole("alert").map((alert) => alert.textContent)).toEqual([
+      "prog.exe: Aquest tipus de fitxer no està permès.",
+    ]);
+    fireEvent.click(within(card(1)).getByRole("button", { name: "Edita la tasca" }));
+    // The refused file first: the accepted one after it is still attached.
+    fireEvent.change(within(card(1)).getByLabelText("Adjunta un fitxer", { selector: "input" }), {
+      target: {
+        files: [file("eina.exe", "application/x-msdownload"), file("contactes.jpg", "image/jpeg")],
+      },
+    });
+    expect(await within(card(1)).findByRole("button", { name: "contactes.jpg" })).toBeVisible();
+    await waitFor(() => {
+      expect(card(1)).not.toHaveAttribute("aria-busy");
+    });
+    expect(screen.getAllByRole("alert").map((alert) => alert.textContent)).toEqual([
+      "eina.exe: Aquest tipus de fitxer no està permès.",
+    ]);
+    expect(
+      requests
+        .filter((request) => request.line === "POST /attachments/upload-url")
+        .map((request) => (request.body as { fileName?: string } | undefined)?.fileName),
+    ).toEqual(["espatlla.jpg", "prog.exe", "eina.exe", "contactes.jpg"]);
+    // The executables were refused by their signed-url request: never PUT nor registered.
+    expect(requests.filter((request) => request.line.startsWith("PUT "))).toHaveLength(2);
+    expect(
+      requests.filter((request) => request.line === "POST /attachments").map((r) => r.body),
+    ).toEqual([
+      expect.objectContaining({ entityType: "DOG_OBSERVATIONS", name: "espatlla.jpg" }),
+      expect.objectContaining({ entityId: "t2", entityType: "TASK", name: "contactes.jpg" }),
+    ]);
+  });
+
+  it("E6-W04 step 0d (its review): when a later file of the selection gets no answer, the files attached before it show next to the error, so they are not picked again", async () => {
+    server.use(
+      http.post("*/api/v1/attachments/upload-url", async ({ request }) => {
+        const body = (await request.clone().json()) as { fileName?: string };
+        return body.fileName === "segon.jpg" ? HttpResponse.error() : undefined;
+      }),
+    );
+    await renderTasks();
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    fireEvent.change(firstPicker(), {
+      target: { files: [file("primer.jpg", "image/jpeg"), file("segon.jpg", "image/jpeg")] },
+    });
+    expect(await screen.findByRole("alert")).toBeVisible();
+    await waitFor(() => {
+      expect(firstPicker()).toBeEnabled();
+    });
+    // «primer.jpg» was registered before «segon.jpg» failed: the block shows it.
+    expect(await screen.findByRole("button", { name: "primer.jpg" })).toBeVisible();
+    expect(screen.queryByRole("button", { name: "segon.jpg" })).toBeNull();
   });
 });
 

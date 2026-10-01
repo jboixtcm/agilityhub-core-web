@@ -435,6 +435,17 @@ export function clubLocalDate(instant: Date = new Date()): string {
   }).format(instant);
 }
 
+/** Club-local `YYYY-MM-DDTHH:mm` of an instant, as the api writes a local start. */
+export function clubLocalDateTime(instant: Date): string {
+  const time = new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    hourCycle: "h23",
+    minute: "2-digit",
+    timeZone: clubTimeZone,
+  }).format(instant);
+  return `${clubLocalDate(instant)}T${time}`;
+}
+
 export function addDays(date: string, days: number): string {
   const value = new Date(`${date}T12:00:00Z`);
   value.setUTCDate(value.getUTCDate() + days);

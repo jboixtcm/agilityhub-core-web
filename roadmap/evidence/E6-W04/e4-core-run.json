@@ -1,0 +1,198 @@
+{
+  "runId": "owb5j4",
+  "weekStart": "2026-09-28",
+  "templateInconsistency": "Incoherència: dimecres 20:00 — pista Central amb dues classes alhora. Mentre hi hagi incoherències no es poden generar classes d'aquesta plantilla.",
+  "generation": {
+    "body": {
+      "saturdayTemplateId": "bbb36edc-9c26-4c85-83ae-0aa04f057cdf",
+      "weekdayTemplateId": "8b5e127b-e459-4890-bdce-825974d6729f"
+    },
+    "status": 200,
+    "weekId": "821e30e2-2e7e-49c4-a1b7-f5bccfc77093",
+    "classCount": 38,
+    "skipped": [],
+    "week": "2026-10-19"
+  },
+  "d3bMondayColumns": [
+    "Muntanya",
+    "Central",
+    "Cadells",
+    "Petita"
+  ],
+  "validation": {
+    "draftCount": 38,
+    "week": "2026-10-05"
+  },
+  "classCancellation": {
+    "status": 200,
+    "reason": "DELETED",
+    "adminText": "Integració E4 owb5j4: la classe s'elimina del calendari. Disculpeu les molèsties!",
+    "byAccountId": "8f328b4b-b9c8-458f-8c83-a4804c7255cd",
+    "at": "2026-10-01T02:08:59.934Z",
+    "affectedBookings": 4,
+    "affectedWaitlist": 2
+  },
+  "ringBlockConflict": {
+    "status": 409,
+    "code": "RING_BLOCK_CONFLICT",
+    "message": "L'horari coincideix amb un bloqueig de pista.",
+    "details": {
+      "conflicts": [
+        {
+          "ringId": "3ec48c81-62fc-469c-aa0f-2348966c3251",
+          "type": "CLASS",
+          "id": "b87470e9-1c9f-4aa7-af01-a54d03f6e832",
+          "from": "2026-10-14T18:00:00Z",
+          "to": "2026-10-14T19:00:00Z",
+          "label": "Obed. urbana",
+          "bookedCount": 0
+        }
+      ]
+    },
+    "traceId": "9672bdf1-7eed-468a-b39b-179c4bf2c37c"
+  },
+  "ringBlock": {
+    "id": "cd6daf7b-c7cc-43a4-baef-cdf0ec438809",
+    "status": 201
+  },
+  "activitiesExport": {
+    "bytes": 4062,
+    "contentDisposition": "attachment; filename=\"canic_activities_20261001-0409.xlsx\"",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "magic": "504b0304",
+    "request": "/api/v1/activities/export?columns=title%2Cdate%2Crings%2Cregistrations%2Cstate&filter=deleted%3Aeq%3Afalse&format=xlsx&sort=date%2Cdesc",
+    "status": 200,
+    "suggestedFilename": "canic_activities_20261001-0409.xlsx"
+  },
+  "tournamentSaturday": {
+    "cellsByColumn": {
+      "ds 17": 1
+    },
+    "date": "2026-10-17"
+  },
+  "windowlessDraft": {
+    "created": {
+      "date": null,
+      "endTime": null,
+      "startTime": null
+    },
+    "preview": {
+      "body": {
+        "code": "INVALID_TIME_RANGE",
+        "message": "L'interval de temps no és vàlid.",
+        "details": {},
+        "traceId": "77ffeb04-2eae-4666-92ac-09825fc23621"
+      },
+      "status": 400
+    },
+    "publication": {
+      "body": {
+        "code": "ACTIVITY_INCOMPLETE",
+        "message": "Cal completar les dades de l'activitat.",
+        "details": {
+          "fieldErrors": [
+            {
+              "code": "REQUIRED",
+              "field": "date"
+            },
+            {
+              "code": "REQUIRED",
+              "field": "registrationFrom"
+            },
+            {
+              "code": "REQUIRED",
+              "field": "registrationTo"
+            },
+            {
+              "code": "REQUIRED",
+              "field": "startTime"
+            },
+            {
+              "code": "REQUIRED",
+              "field": "endTime"
+            }
+          ]
+        },
+        "traceId": "8a7e1149-a954-421b-ab72-28c3a35a25c8"
+      },
+      "status": 422
+    }
+  },
+  "publicUrl": null,
+  "narrowWindow": {
+    "patch": {
+      "code": null,
+      "status": 200
+    },
+    "preview": {
+      "body": {
+        "code": "INVALID_TIME_RANGE",
+        "message": "L'interval de temps no és vàlid.",
+        "details": {},
+        "traceId": "88fd2c3b-cddf-46d7-bbf3-47bae75bd994"
+      },
+      "status": 400
+    }
+  },
+  "seminarConflicts": {
+    "conflicts": [
+      {
+        "ringId": "3ec48c81-62fc-469c-aa0f-2348966c3251",
+        "type": "CLASS",
+        "id": "c2b28514-da47-41e7-a52d-96153361ad0a",
+        "from": "2026-10-24T16:30:00Z",
+        "to": "2026-10-24T17:30:00Z",
+        "label": "A+B",
+        "bookedCount": 0
+      }
+    ],
+    "trainingBookings": []
+  },
+  "row03Ca": "Seminari E4 owb5j4inscritaDissabte 24 · 18:30–20:30 · Central",
+  "mine03AfterCancelCa": [],
+  "waitlistCa": {
+    "member": {
+      "after": "WAITLISTED",
+      "rankAfter": 2,
+      "rankBefore": 3
+    },
+    "promoted": {
+      "after": "ACTIVE",
+      "rankBefore": 1
+    }
+  },
+  "registrantsExport": {
+    "bytes": 4653,
+    "contentDisposition": "attachment; filename=\"canic_activity-registrations_20261001-0409.xlsx\"",
+    "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "magic": "504b0304",
+    "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3Afdf72e43-3934-4001-b187-b199cc4544f9&format=xlsx&sort=registeredAt%2Casc",
+    "status": 200,
+    "suggestedFilename": "canic_activity-registrations_20261001-0409.xlsx"
+  },
+  "row03Es": "Seminari E4 owb5j4inscritaSábado 24 · 18:30–20:30 · Central",
+  "mine03AfterCancelEs": [],
+  "waitlistChipEs": "en lista de espera (3)",
+  "waitlistEs": {
+    "joinedPosition": 4,
+    "joinedRank": 3,
+    "promotedRank": 1
+  },
+  "seminarCancellation": {
+    "status": 200
+  },
+  "seminarRegistrants": [
+    {
+      "cancelReason": "MEMBER",
+      "state": "CANCELLED"
+    },
+    {
+      "cancelReason": "MEMBER",
+      "state": "CANCELLED"
+    },
+    {
+      "cancelReason": "ACTIVITY_CANCELLED",
+      "state": "CANCELLED"
+    }
+  ]
+}

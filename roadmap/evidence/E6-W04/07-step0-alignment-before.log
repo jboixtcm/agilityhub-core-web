@@ -1,0 +1,138 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/messaging-handlers.test.ts (15 tests | 6 failed | 9 skipped) 31ms
+   ❯ E6-W04 step 0 · the adopted snapshot (api e34bf04): S11's refusal details and D10's read (6)
+     × E6-W04 step 0: CHANNEL_NOT_ALLOWED carries ChannelNotAllowedDetails: the first refused cell and every refused cell 15ms
+     × E6-W04 step 0: TEMPLATE_UNKNOWN_VARIABLE carries TemplateFieldDetails with every unknown variable of the save 4ms
+     × E6-W04 step 0: SMS_BODY_REQUIRED names the default language's SMS text (smsBody.ca), which another language's text does not replace 2ms
+     × E6-W04 step 0 (S11 R-11-12, E76/E79): N-02 does not declare `link` (only its welcome e-mail carries it), so a text without it saves 1ms
+     × E6-W04 step 0: D10's GET /members/{id}/notification-preferences carries the club's locales and SMS/PUSH modules, as the published route says 4ms
+     × E6-W04 step 0: D10's PUT refuses an impersonation token (403 IMPERSONATION_DENIED) and a non-ADMIN (403), as its GET does 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/messaging-handlers.test.ts > E6-W04 step 0 · the adopted snapshot (api e34bf04): S11's refusal details and D10's read > E6-W04 step 0: CHANNEL_NOT_ALLOWED carries ChannelNotAllowedDetails: the first refused cell and every refused cell
+AssertionError: [
+  {
+    "instancePath": "",
+    "schemaPath": "#/required",
+    "keyword": "required",
+    "params": {
+      "missingProperty": "cells"
+    },
+    "message": "must have required property 'cells'"
+  }
+]: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ expectValid src/mocks/messaging-handlers.test.ts:19:69
+     17| function expectValid(name: string, value: unknown) {
+     18|   const validate = ajv.compile({ $ref: `${openapiSchemaId}#/components…
+     19|   expect(validate(value), JSON.stringify(validate.errors, null, 2)).to…
+       |                                                                     ^
+     20| }
+     21|
+ ❯ src/mocks/messaging-handlers.test.ts:102:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/mocks/messaging-handlers.test.ts > E6-W04 step 0 · the adopted snapshot (api e34bf04): S11's refusal details and D10's read > E6-W04 step 0: TEMPLATE_UNKNOWN_VARIABLE carries TemplateFieldDetails with every unknown variable of the save
+AssertionError: expected { Object (field, variable) } to deeply equal { field: 'title.ca', …(1) }
+
+- Expected
++ Received
+
+  {
+    "field": "title.ca",
+-   "variables": [
+-     "color",
+-     "sabor",
+-   ],
++   "variable": "color",
+  }
+
+ ❯ src/mocks/messaging-handlers.test.ts:127:29
+    125|     expect(refused).toMatchObject({ code: "TEMPLATE_UNKNOWN_VARIABLE",…
+    126|     expectValid("TemplateFieldDetails", refused.details);
+    127|     expect(refused.details).toEqual({ field: "title.ca", variables: ["…
+       |                             ^
+    128|   });
+    129|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/mocks/messaging-handlers.test.ts > E6-W04 step 0 · the adopted snapshot (api e34bf04): S11's refusal details and D10's read > E6-W04 step 0: SMS_BODY_REQUIRED names the default language's SMS text (smsBody.ca), which another language's text does not replace
+Error: Expected an ApiError
+ ❯ failure src/mocks/messaging-handlers.test.ts:39:9
+     37|     throw error;
+     38|   }
+     39|   throw new Error("Expected an ApiError");
+       |         ^
+     40| }
+     41|
+ ❯ src/mocks/messaging-handlers.test.ts:133:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/mocks/messaging-handlers.test.ts > E6-W04 step 0 · the adopted snapshot (api e34bf04): S11's refusal details and D10's read > E6-W04 step 0 (S11 R-11-12, E76/E79): N-02 does not declare `link` (only its welcome e-mail carries it), so a text without it saves
+AssertionError: expected [ 'member_first_name', …(2) ] to not include 'link'
+ ❯ src/mocks/messaging-handlers.test.ts:156:63
+    154|     const n02 = (await detail("tpl-n-02")).data;
+    155|     if (n02 === undefined) throw new TypeError("No N-02");
+    156|     expect(n02.variables.map((variable) => variable.key)).not.toContai…
+       |                                                               ^
+    157|     expect(n02.bodyI18n.ca).not.toContain("[[link]]");
+    158|     const saved = await client.PUT("/message-templates/{id}", {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/mocks/messaging-handlers.test.ts > E6-W04 step 0 · the adopted snapshot (api e34bf04): S11's refusal details and D10's read > E6-W04 step 0: D10's GET /members/{id}/notification-preferences carries the club's locales and SMS/PUSH modules, as the published route says
+AssertionError: expected [ 'ca', 'es', 'en' ] to deeply equal [ 'ca', 'es' ]
+
+- Expected
++ Received
+
+  [
+    "ca",
+    "es",
++   "en",
+  ]
+
+ ❯ src/mocks/messaging-handlers.test.ts:182:37
+    180|     const admin = (await read("admin")).data;
+    181|     expectValid("NotificationPreferences", admin);
+    182|     expect(admin?.availableLocales).toEqual(["ca", "es"]);
+       |                                     ^
+    183|     expect(admin?.modules).toEqual({ push: true, sms: true });
+    184|     expect((await read("messagingNoSms")).data?.modules).toEqual({ pus…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/mocks/messaging-handlers.test.ts > E6-W04 step 0 · the adopted snapshot (api e34bf04): S11's refusal details and D10's read > E6-W04 step 0: D10's PUT refuses an impersonation token (403 IMPERSONATION_DENIED) and a non-ADMIN (403), as its GET does
+Error: Expected an ApiError
+ ❯ failure src/mocks/messaging-handlers.test.ts:39:9
+     37|     throw error;
+     38|   }
+     39|   throw new Error("Expected an ApiError");
+       |         ^
+     40| }
+     41|
+ ❯ src/mocks/messaging-handlers.test.ts:191:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 9 skipped (15)
+   Start at  02:03:34
+   Duration  698ms (transform 54%, import 40%, tests 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/messaging-handlers.test.ts -t E6-W04 step 0

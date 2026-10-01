@@ -12,6 +12,7 @@ import {
   mockScenario,
   resetAttendanceMockState,
   resetFollowupMockState,
+  resetSettingsState,
   resetTrainingMockState,
   type MockScenario,
 } from "./handlers";
@@ -369,5 +370,124 @@ describe("E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 
       code: "IMPERSONATION_DENIED",
       status: 403,
     });
+  });
+
+  const values = (query: { field: string; filter?: string[]; q?: string }) =>
+    client.GET("/followup/filter-values", { params: { query } });
+  const counted = (answer: { values: { count: number; label: string; value: unknown }[] }) =>
+    answer.values.map((item) => `${item.label} ${String(item.count)}`).sort();
+
+  it("E6-W04 step 0c: GET /followup/filter-values counts each value over the whole set the filters and q select (followupMany: the members, dogs and authors beyond the first page too), without the field's own filters, labelled by name", async () => {
+    use("followupMany");
+    const firstPage = (await list({ size: 50 })).data;
+    expect(new Set(firstPage?.items.map((item) => item.memberName))).toEqual(
+      new Set(["Laura Serra"]),
+    );
+    const members = (await values({ field: "memberId" })).data;
+    expectValid("FilterValues", members);
+    expect(members?.field).toBe("memberId");
+    expect(counted(members ?? { values: [] })).toEqual([
+      "Anna Ballart 1",
+      "Laura Serra 55",
+      "Pau Riera 1",
+    ]);
+    expect(members?.values.find((item) => item.label === "Pau Riera")?.value).toBe("member-pau");
+    expect(counted((await values({ field: "dogId" })).data ?? { values: [] })).toEqual([
+      "Blat 1",
+      "Duna 55",
+      "Nass 1",
+    ]);
+    const authors = (await values({ field: "authorAccountId" })).data;
+    expect(counted(authors ?? { values: [] })).toEqual(["Estel 2", "Laura 53", "Marc 1", "Pau 1"]);
+    expect(authors?.values.find((item) => item.label === "Marc")?.value).toMatch(
+      /^[0-9a-f-]{36}$/u,
+    );
+    // The other filters narrow it; the field's own filters are left out.
+    expect(
+      counted(
+        (await values({ field: "memberId", filter: ["kind:eq:TASK", "memberId:eq:member-pau"] }))
+          .data ?? { values: [] },
+      ),
+    ).toEqual(["Anna Ballart 1", "Laura Serra 2"]);
+    // `unread` is the caller's (R-10-13): the many variant's three tasks are read already.
+    expect(counted((await values({ field: "unread" })).data ?? { values: [] })).toEqual([
+      "false 3",
+      "true 54",
+    ]);
+    expect(counted((await values({ field: "kind" })).data ?? { values: [] })).toEqual([
+      "MEMBER_NOTE 54",
+      "TASK 3",
+    ]);
+    // `q` narrows the set as the list's search does.
+    expect(
+      counted((await values({ field: "memberId", q: "contactes" })).data ?? { values: [] }),
+    ).toEqual(["Anna Ballart 1"]);
+  });
+
+  it("E6-W04 step 0c: filter-values refuses an undeclared field or filter (400 INVALID_FILTER), a member (403), an impersonation (IMPERSONATION_DENIED) and TASKS off (404 MODULE_DISABLED)", async () => {
+    await expect(failure(values({ field: "textExcerpt" }))).resolves.toMatchObject({
+      code: "INVALID_FILTER",
+      status: 400,
+    });
+    await expect(
+      failure(values({ field: "memberId", filter: ["text:eq:x"] })),
+    ).resolves.toMatchObject({ code: "INVALID_FILTER", status: 400 });
+    use("member");
+    await expect(failure(values({ field: "memberId" }))).resolves.toMatchObject({
+      code: "FORBIDDEN",
+      status: 403,
+    });
+    use("impersonated");
+    await expect(failure(values({ field: "memberId" }))).resolves.toMatchObject({
+      code: "IMPERSONATION_DENIED",
+      status: 403,
+    });
+    use("instructorNoTasks");
+    await expect(failure(values({ field: "memberId" }))).resolves.toMatchObject({
+      code: "MODULE_DISABLED",
+      status: 404,
+    });
+  });
+
+  it("E6-W04 step 0c: GET /followup's q searches the member's full name, the dog, the author and the whole text (not only the excerpt), in any case", async () => {
+    use("admin");
+    const found = async (q: string) =>
+      (await client.GET("/followup", { params: { query: { q } } })).data?.items.map(
+        (item) => item.id,
+      );
+    expect(await found("recompenses")).toEqual(["f-task-balanci"]);
+    expect(await found("BALLART")).toEqual(["f-task-contactes"]);
+    expect(await found("blat")).toEqual(["f-note-blat"]);
+    expect(await found("marc")).toEqual(["f-task-contactes"]);
+    expect(await found("línia de sortida")).toEqual(["f-task-espera"]);
+    const page = (await client.GET("/followup", { params: { query: { q: "duna" } } })).data;
+    expectValid("FollowupPage", page);
+    expect(page?.totalItems).toBe(3);
+  });
+});
+
+describe("E6-W04 step 0c · InstructorWeek.trainingSlotMinutes for D12's legend (api E6-T06)", () => {
+  afterEach(() => {
+    resetSettingsState();
+  });
+
+  it("E6-W04 step 0c: the club's training.slotMinutes (30, then 45 after a change), and null with FREE_TRAINING off", async () => {
+    const first = (await week()).data;
+    expectValid("InstructorWeek", first);
+    expect(first?.trainingSlotMinutes).toBe(30);
+    use("admin");
+    const parameter = (
+      await client.GET("/parameters/{key}", { params: { path: { key: "training.slotMinutes" } } })
+    ).data;
+    await client.PUT("/parameters/{key}", {
+      body: { reason: "Torns de 45 minuts", value: 45, version: parameter?.version ?? 0 },
+      params: { path: { key: "training.slotMinutes" } },
+    });
+    use("instructor");
+    expect((await week()).data?.trainingSlotMinutes).toBe(45);
+    use("agendaNoTraining");
+    const off = (await week()).data;
+    expectValid("InstructorWeek", off);
+    expect(off?.trainingSlotMinutes).toBeNull();
   });
 });

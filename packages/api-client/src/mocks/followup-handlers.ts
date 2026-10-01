@@ -13,6 +13,7 @@ import {
   FOLLOWUP_UPLOAD_PATH,
   followupDogStatus,
   followupState,
+  inboxFilterValues,
   inboxRows,
   inboxState,
   inboxUnreadCount,
@@ -173,6 +174,15 @@ function allowedType(mimeType: string): boolean {
   );
 }
 
+/**
+ * The entity an uploaded file is bound to since its first registration (R-10-11): its key belongs
+ * to that entity from then on — another entity's claim of it is `ATTACHMENT_ENTITY_MISMATCH`, and
+ * the binding answers whatever the grant (the api's `AttachmentService.add`, E6-W04 step 0d).
+ */
+function boundEntity(fileKey: string): { entityId: string; entityType: string } | undefined {
+  return followupState.attachments.find((item) => item.fileKey === fileKey);
+}
+
 /** The live attachments of the entity a request names, or its refusal (404). */
 function attachmentEntityExists(entityType: AttachmentEntity, entityId: string): boolean {
   return entityType === "TASK"
@@ -268,6 +278,10 @@ export const followupHandlers = [
       const uploads = fileKeys.map((fileKey) => followupState.uploads.get(fileKey));
       if (uploads.some((upload) => upload?.purpose !== "TASK")) {
         // A refused attachment leaves no task (the api's single transaction).
+        return failure(422, "ATTACHMENT_ENTITY_MISMATCH");
+      }
+      // A key bound to another task already (a new task is never its entity).
+      if (fileKeys.some((fileKey) => boundEntity(fileKey) !== undefined)) {
         return failure(422, "ATTACHMENT_ENTITY_MISMATCH");
       }
       // The claim of an upload whose five minutes are over (R-10-11): the api's `INVALID_STATE`.
@@ -520,6 +534,13 @@ export const followupHandlers = [
       if (!attachmentEntityExists(body.entityType, body.entityId)) return failure(404, "NOT_FOUND");
       const upload = followupState.uploads.get(body.fileKey);
       if (upload?.purpose !== body.entityType) return failure(422, "ATTACHMENT_ENTITY_MISMATCH");
+      const bound = boundEntity(body.fileKey);
+      if (
+        bound !== undefined &&
+        (bound.entityType !== body.entityType || bound.entityId !== body.entityId)
+      ) {
+        return failure(422, "ATTACHMENT_ENTITY_MISMATCH");
+      }
       // The same fileKey again → the same attachment (R-10-11).
       const known = followupState.attachments.find(
         (item) => item.fileKey === body.fileKey && item.removedAt === null,
@@ -589,20 +610,8 @@ export const followupHandlers = [
     if (sort.length > 1 || sortField !== "activityAt" || !["asc", "desc"].includes(direction)) {
       return apiError("INVALID_FILTER", "Invalid follow-up sort", 400);
     }
-    const filters = url.searchParams.getAll("filter").map((raw) => {
-      const [field = "", op = "", ...rest] = raw.split(":");
-      return { field, op, value: rest.join(":") };
-    });
-    if (
-      filters.some(
-        (filter) =>
-          !INBOX_FILTERABLE.includes(filter.field) ||
-          !INBOX_OPERATORS.includes(filter.op) ||
-          filter.value === "",
-      )
-    ) {
-      return apiError("INVALID_FILTER", "Invalid follow-up filter", 400);
-    }
+    const filters = inboxFilters(url);
+    if (filters === undefined) return apiError("INVALID_FILTER", "Invalid follow-up filter", 400);
     const project = fieldsProjection<FollowupItem>(url, INBOX_FIELDS, ["id"]);
     if (project === undefined) return apiError("INVALID_FILTER", "Invalid follow-up fields", 400);
     const rows = inboxRows({
@@ -626,6 +635,33 @@ export const followupHandlers = [
       totalItems: rows.length,
       totalPages: Math.ceil(rows.length / size),
     });
+  }),
+  // E6-W04 step 0c (api E6-T06, E75): D14's universal filter — a field's values with their counts
+  // over the whole set the list's filters and `q` select (the field's own filters left out).
+  http.get("*/api/v1/followup/filter-values", ({ request }) => {
+    const scenario = followupScenario();
+    const refused = staffWrite(scenario);
+    if (refused !== undefined) return refused;
+    const url = new URL(request.url);
+    const field = url.searchParams.get("field") ?? "";
+    if (field === "") return validationError("field", "REQUIRED");
+    const filters = inboxFilters(url);
+    if (!INBOX_FILTERABLE.includes(field) || filters === undefined) {
+      return apiError("INVALID_FILTER", "Invalid follow-up filter", 400);
+    }
+    const query = {
+      accountId: scenario.me.account.id,
+      filters,
+      levelsEnabled: levelsEnabled(),
+      order: "desc" as const,
+      q: url.searchParams.get("q") ?? "",
+      variant: scenario.inbox,
+    };
+    const answer: components["schemas"]["FilterValues"] = {
+      field,
+      values: inboxFilterValues(query, field),
+    };
+    return HttpResponse.json(answer);
   }),
   http.get("*/api/v1/followup/unread-count", () => {
     const scenario = followupScenario();
@@ -687,6 +723,22 @@ const INBOX_FILTERABLE: readonly string[] = [
 ];
 const INBOX_OPERATORS: readonly string[] = ["eq", "ne", "in", "nin"];
 const INBOX_PAGE_SIZES: readonly number[] = [20, 50];
+
+/** The `filter` params of D14's reads, or `undefined` when one is undeclared (400 INVALID_FILTER). */
+function inboxFilters(url: URL): { field: string; op: string; value: string }[] | undefined {
+  const filters = url.searchParams.getAll("filter").map((raw) => {
+    const [field = "", op = "", ...rest] = raw.split(":");
+    return { field, op, value: rest.join(":") };
+  });
+  return filters.some(
+    (filter) =>
+      !INBOX_FILTERABLE.includes(filter.field) ||
+      !INBOX_OPERATORS.includes(filter.op) ||
+      filter.value === "",
+  )
+    ? undefined
+    : filters;
+}
 
 /** The D14 writes' `Idempotency-Key` (CONVENCIONS_API §7), as `idempotent` does for the tasks. */
 function inboxIdempotent(

@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > mockup 26: the title, the private observations, the three tasks (the done one struck through with «feta per la Laura el 02-08»), the history link, the member's note read-only and [DESA] waiting for a change 124ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > T-10-25 «＋ Afegir» uploads the video through the signed url (TASK, the signed headers, no bearer) and creates one task with one Idempotency-Key, even on a double tap; 22's counters follow 55ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > the pencil edits the text with the version read; the ✕ asks «Vols eliminar aquesta tasca?» and deletes with its key; ✓ completes (feta per l'Estel) and ↺ reopens 74ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > an edit opened before another instructor's change is sent with its own version: STALE_VERSION (409), and the typed text stays 51ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > errors by code inside the editor: TASK_ALREADY_DONE (422) after a completion the api refuses, then the list read again 27ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > [DESA] saves the observations with the version read and one key; a stale version (tasksStale) keeps the typed text to recover and saves it again on the new version 64ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > a file the api refuses (FILE_TOO_LARGE) is said inside the editor; with the club's limits readable (ADMIN) it is refused before any signed url 42ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > an observation file goes through the DOG_OBSERVATIONS upload and POST /attachments; a clip opens a fresh signed url 91ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > «Veure l'historial complet ›» reads every task, done ones included, in a read-only drawer 34ms
+ ✓ src/instructor/tasks.test.tsx > T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) > T-10-32 (26): es and en with no missing key 43ms
+ ✓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #1 (CONVENCIONS_API §7, T-10-25): a network failure keeps the submission's key, so its retry creates one task 44ms
+ ✓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #1 (E74): two deliberate submissions with the same text are two tasks, each with its own key 53ms
+ ✓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #2 (R-10-10): with 52 tasks «Mostra'n més» reads the next page into the same list, whose tasks are managed like the rest — the oldest done one reopened, the oldest pending one edited, completed and deleted 252ms
+ ✓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #4 (AGENTS rule 4): a clip that cannot be opened says why next to it — by its code, or «No s'ha pogut obrir el fitxer.» without an answer — on the list, the member's note and the history drawer 56ms
+ ✓ src/instructor/tasks.test.tsx > E6-W02 round 2 (review of 30-09): screen 26 > #7 (ruling E74): an instructor cannot read the file limits, so a 30 MB file is checked by the signed-url request: FILE_TOO_LARGE by its code, and nothing is PUT nor registered — an observation file and a new task's file 54ms
+ ✓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 1 (R-10-11): after a refused creation, a retry past the upload's five minutes uploads the file again and creates the task 49ms
+ ✓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 1: within the five minutes the retry reuses the uploaded file (one upload) 49ms
+ ✓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 1 (E74): an unanswered creation is retried past the five minutes with its own key and files; the api had created it, so it replays one task 45ms
+ ✓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 1 (E74): an unanswered creation the api never received is retried as it was; the expired file is refused (409 INVALID_STATE), uploaded again and the task created once 55ms
+ ✓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the submission's answer — its retry keeps the key and the files, and one task is created 57ms
+ ✓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 2: a mixed selection keeps the refused file's message while the accepted one uploads — on the observations and on an open task 56ms
+ ✓ src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > step 4: a refused deletion says why inside its confirmation, which stays open 24ms
+ ✓ src/instructor/tasks.test.tsx > E6-W04 step 0d (review of E6-W05): screen 26 > E6-W04 step 0d: a creation whose answer was lost but which the api created, its text edited, «Afegeix» — a new task with a new upload and a new key, never the first submission's file 41ms
+ ✓ src/instructor/tasks.test.tsx > E6-W04 step 0d (review of E6-W05): screen 26 > E6-W04 step 0d: a reused file the api refuses as bound to another task (422 ATTACHMENT_ENTITY_MISMATCH) is uploaded again, once, and the submission sent again with a new key 41ms
+ ✓ src/instructor/tasks.test.tsx > E6-W04 step 0d (review of E6-W05): screen 26 > E6-W04 step 0d: an instructor's mixed selection (a JPEG and an executable) attaches the JPEG and says «prog.exe: …» — on the observations and on an open task 50ms
+ ✓ src/instructor/tasks.test.tsx > 26's route (S10 §2): INSTRUCTOR and ADMIN, never an impersonation > an impersonated session reaching 26 reads «No es permet la suplantació.» and asks nothing 17ms
+
+ Test Files  1 passed (1)
+      Tests  26 passed (26)
+   Start at  02:02:40
+   Duration  2.61s (tests 61%, transform 21%, environment 9%, import 7%, setup 2%)
+

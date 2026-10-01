@@ -48,6 +48,8 @@
     "cancelling": "Anulando el bloqueo…",
     "cancelled": "Bloqueo anulado.",
     "inactiveRing": "pista desactivada",
+    "rangeFrom": "Desde el",
+    "rangeTo": "Hasta el",
     "columns": {
       "from": "Día y hora",
       "ring": "Pista",

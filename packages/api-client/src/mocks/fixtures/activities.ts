@@ -380,6 +380,49 @@ export const activityState: {
   sequence: 1,
 };
 
+/** Screen 25's done activity (mockup 25, «dg 12/07 · Seminari d'obstacles · feta»). */
+export const PAST_ACTIVITY_ID = "activity-seminari-obstacles";
+
+/**
+ * The member history world's past activity (E6-W04 step 0b): FINISHED, so its page answers
+ * `GET /me/activities/{id}` as the api's does for a row whose `activityId` it sends (E6-T06, S07
+ * §6). It is not in the planning world's list (D7, 04), whose fixtures are dated from August.
+ */
+export function pastActivity(): StoredActivity {
+  return {
+    cancellation: null,
+    createdAt: "2026-05-20T09:00:00Z",
+    date: "2026-07-12",
+    documents: [],
+    endTime: "13:00",
+    id: PAST_ACTIVITY_ID,
+    image: null,
+    internalNotes: null,
+    levelIds: [],
+    location: { address: null, atClub: true, name: null, url: null },
+    longDescriptionI18n: null,
+    maxPlaces: 12,
+    minPlaces: null,
+    publishedAt: "2026-06-01T10:00:00Z",
+    registrationFrom: "2026-06-01",
+    registrationTo: "2026-07-11",
+    ringBlockWindow: null,
+    ringIds: [],
+    shortDescriptionI18n: {
+      ca: "Matí de pràctica d'obstacles (text fictici)",
+      es: "Mañana de práctica de obstáculos (texto ficticio)",
+    },
+    slug: "seminari-obstacles",
+    startTime: "09:00",
+    state: "FINISHED",
+    titleI18n: { ca: "Seminari d'obstacles", es: "Seminario de obstáculos" },
+    type: "SEMINAR",
+    typeLabel: null,
+    version: 3,
+    waitlistEnabled: false,
+  };
+}
+
 export function resetActivityState(): void {
   activityState.activities = initialActivities();
   activityState.registrations = initialRegistrations();

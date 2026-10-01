@@ -552,20 +552,21 @@ describe("T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12)", () => {
   });
 
   it("errors by code where they belong: a missing required variable (VALIDATION_ERROR missingVariables), a broken [[…]] (400 TEMPLATE_SYNTAX_ERROR) and an unknown one (400 TEMPLATE_UNKNOWN_VARIABLE) under the text, which they describe", async () => {
-    await renderD9({ path: "/comunicats?template=tpl-n-02" });
+    // N-08a requires `admin_text` (R-11-12; N-02's `link` is its welcome e-mail's only, E76/E79).
+    await renderD9({ path: "/comunicats?template=tpl-n-08a" });
     await editor();
-    fireEvent.change(body(), { target: { value: "Ja tens accés a l'app del club." } });
+    fireEvent.change(body(), { target: { value: "La classe queda anul·lada." } });
     fireEvent.click(save());
-    expect(await screen.findByText("Falta la variable [[enllac]] al text")).toBeVisible();
-    expect(body()).toHaveAccessibleDescription("Falta la variable [[enllac]] al text");
+    expect(await screen.findByText("Falta la variable [[text_admin]] al text")).toBeVisible();
+    expect(body()).toHaveAccessibleDescription("Falta la variable [[text_admin]] al text");
     expect(body()).toHaveAttribute("aria-invalid", "true");
-    fireEvent.change(body(), { target: { value: "Entra-hi persona_nom]] amb [[enllac]]." } });
+    fireEvent.change(body(), { target: { value: "Anul·lada: persona_nom]] [[text_admin]]." } });
     // An edit clears the refusal it answered.
     expect(body()).not.toHaveAttribute("aria-invalid");
     fireEvent.click(save());
     expect(await screen.findByText("La sintaxi de la plantilla no és vàlida.")).toBeVisible();
     expect(body()).toHaveAccessibleDescription("La sintaxi de la plantilla no és vàlida.");
-    fireEvent.change(body(), { target: { value: "Entra-hi, [[sabor]], amb [[enllac]]." } });
+    fireEvent.change(body(), { target: { value: "Anul·lada, [[sabor]]: [[text_admin]]." } });
     fireEvent.click(save());
     expect(await screen.findByText("La plantilla conté una variable desconeguda.")).toBeVisible();
     expect(body()).toHaveAccessibleDescription("La plantilla conté una variable desconeguda.");

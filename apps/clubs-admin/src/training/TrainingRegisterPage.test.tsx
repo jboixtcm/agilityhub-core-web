@@ -278,7 +278,7 @@ describe("E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 an
       expect(last?.searchParams.getAll("filter")).toEqual(["date:gte:2026-08-04"]);
     });
 
-    // The blocks' day: a whole club-local day, so only `between`, with both ends.
+    // The blocks' day: whole club-local days (ruling E80: a range of dates), so only `between`.
     fireEvent.click(screen.getByRole("tab", { name: "Bloquejos i reserves de pista" }));
     await screen.findByText("Reg de la sorra");
     fireEvent.click(screen.getByText(/^Filtre \(1\):/u));
@@ -295,11 +295,8 @@ describe("E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 an
         .getAllByRole("option")
         .map((option) => option.getAttribute("value")),
     ).toEqual(["between"]);
-    const day = screen.getByRole("combobox", { name: "Valor" });
-    await waitFor(() => {
-      expect(day).not.toBeDisabled();
-    });
-    fireEvent.change(day, { target: { value: "2026-08-02T22:00:00Z,2026-08-03T22:00:00Z" } });
+    fireEvent.change(screen.getByLabelText("Des del"), { target: { value: "2026-08-03" } });
+    fireEvent.change(screen.getByLabelText("Fins al"), { target: { value: "2026-08-03" } });
     fireEvent.click(screen.getByRole("button", { name: "Afegeix el filtre" }));
     await waitFor(() => {
       const last = requests.filter((url) => url.pathname.endsWith("/ring-blocks")).at(-1);
@@ -499,6 +496,93 @@ describe("E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the com
     const answer = (await requests[0]) as { appliedFilters: { value: unknown }[] };
     expect(answer.appliedFilters[0]?.value).toEqual(["2026-08-03", "2026-08-09"]);
     expect(screen.getByText(/^Filtre \(1\): Dia i hora = «3 al 9 d.agost»$/u)).toBeVisible();
+  });
+
+  it("E5-W05 round 2 #1: the blocks tab asks GET /ring-blocks/filter-values once when it settles, and a second ring picked in «Valor» stays selected", async () => {
+    const requests = recordRequests();
+    await renderPage("admin", "?vista=bloquejos");
+    await screen.findByText("Reg de la sorra");
+    const valueRequests = () =>
+      requests.filter((url) => url.pathname.endsWith("/ring-blocks/filter-values"));
+    // Let the page settle: a loop would keep asking (and re-render) meanwhile.
+    await new Promise((resolve) => {
+      setTimeout(resolve, 600);
+    });
+    expect(valueRequests().map((url) => url.searchParams.get("field"))).toEqual(["ringId"]);
+
+    fireEvent.click(screen.getByText(/^Filtre \(1\):/u));
+    const value = screen.getByRole("combobox", { name: "Valor" });
+    await waitFor(() => {
+      expect(within(value).getAllByRole("option").length).toBeGreaterThan(1);
+    });
+    const second = within(value).getAllByRole("option")[1]?.getAttribute("value") ?? "";
+    expect(second).not.toBe("");
+    fireEvent.change(value, { target: { value: second } });
+    await new Promise((resolve) => {
+      setTimeout(resolve, 600);
+    });
+    expect(screen.getByRole("combobox", { name: "Valor" })).toHaveValue(second);
+    expect(valueRequests()).toHaveLength(1);
+  });
+
+  it("E5-W05 round 2 #2 (ruling E80): the blocks' «Dia i hora» filter is a range of club dates sent as `between` with the club's day bounds, with no suggested values", async () => {
+    const requests = recordRequests();
+    await renderPage("admin", "?vista=bloquejos");
+    await screen.findByText("Reg de la sorra");
+    fireEvent.click(screen.getByText(/^Filtre \(1\):/u));
+    fireEvent.change(screen.getByRole("combobox", { name: "Columna" }), {
+      target: { value: "from" },
+    });
+    expect(
+      within(screen.getByRole("combobox", { name: "Operador" }))
+        .getAllByRole("option")
+        .map((option) => option.getAttribute("value")),
+    ).toEqual(["between"]);
+    // Two club dates instead of the value list.
+    expect(screen.queryByRole("combobox", { name: "Valor" })).toBeNull();
+    const add = screen.getByRole("button", { name: "Afegeix el filtre" });
+    expect(add).toBeDisabled();
+    fireEvent.change(screen.getByLabelText("Des del"), { target: { value: "2026-08-04" } });
+    expect(add).toBeDisabled();
+    fireEvent.change(screen.getByLabelText("Fins al"), { target: { value: "2026-08-05" } });
+    fireEvent.click(add);
+    await waitFor(() => {
+      const last = requests.filter((url) => url.pathname.endsWith("/ring-blocks")).at(-1);
+      // Europe/Madrid (CEST): dt 4 at 00:00 is 22:00Z of the 3rd; the range ends when dj 6 starts.
+      expect(last?.searchParams.getAll("filter")).toEqual([
+        "from:between:2026-08-03T22:00:00Z,2026-08-05T22:00:00Z",
+      ]);
+    });
+    await waitFor(() => {
+      expect(screen.getByText(/^Filtre \(1\): Dia i hora = «4 al 5 d.agost»$/u)).toBeVisible();
+    });
+    // The day summer time ends (dg 25-10): 24 hours from 00:00 CEST to the next 00:00 CET.
+    fireEvent.change(screen.getByLabelText("Des del"), { target: { value: "2026-10-25" } });
+    fireEvent.change(screen.getByLabelText("Fins al"), { target: { value: "2026-10-25" } });
+    fireEvent.click(add);
+    await waitFor(() => {
+      const last = requests.filter((url) => url.pathname.endsWith("/ring-blocks")).at(-1);
+      expect(last?.searchParams.getAll("filter")).toEqual([
+        "from:between:2026-10-24T22:00:00Z,2026-10-25T23:00:00Z",
+      ]);
+    });
+    expect(await screen.findByText(/^Filtre \(1\): Dia i hora = «25 d.octubre»$/u)).toBeVisible();
+    // Over two years the chip names both.
+    fireEvent.change(screen.getByLabelText("Des del"), { target: { value: "2026-12-28" } });
+    fireEvent.change(screen.getByLabelText("Fins al"), { target: { value: "2027-01-03" } });
+    fireEvent.click(add);
+    expect(
+      await screen.findByText(
+        /^Filtre \(1\): Dia i hora = «28 de desembre del? 2026 – 3 de gener del? 2027»$/u,
+      ),
+    ).toBeVisible();
+    expect(
+      requests.some(
+        (url) =>
+          url.pathname.endsWith("/ring-blocks/filter-values") &&
+          url.searchParams.get("field") === "from",
+      ),
+    ).toBe(false);
   });
 
   it("E5-W05 step 5: with more than 1000 blocks, the ring filter offers «Cadells», which appears only after row 1000, from GET /ring-blocks/filter-values", async () => {

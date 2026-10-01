@@ -1,0 +1,11 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+ Test Files  25 passed (25)
+      Tests  462 passed (462)
+   Start at  00:53:36
+   Duration  8.01s (tests 52%, environment 19%, transform 15%, import 9%, setup 5%)
+

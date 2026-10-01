@@ -59,7 +59,8 @@ interface Choice {
 /** A refusal of `POST /training-bookings`, by `code` (S09 §6), shown next to the button. */
 type Failure =
   | { cancellable: CancellableTraining[]; kind: "limit"; limit: number }
-  | { kind: "message"; message: string };
+  /** `slotTaken`: a `SLOT_TAKEN`, whose message goes with the choice it offered. */
+  | { kind: "message"; message: string; slotTaken?: boolean };
 
 /** «dg 20:00» from `weekOpensAt {dayOfWeek, time}` (S09 §10 «reinici {weekOpensAt}»). */
 const WEEKDAY_REFERENCE: Readonly<Record<string, string>> = {
@@ -136,17 +137,19 @@ export function TrainingPage({ client }: { client: ApiClient }) {
   const [picked, setChoice] = useState<Choice>();
   /** «Qualsevol» with more than one free ring, or the free rings of a `SLOT_TAKEN`. */
   const [chooser, setChooser] = useState<{ ringIds: string[]; startsAt: string }>();
+  const [failure, setFailure] = useState<Failure>();
   // R-09-03: the choice holds only while the grid shown (read again on focus, after a refusal or a
   // retry) still has that ring free at that time; otherwise it is cleared (during this render, so
-  // it never comes back with a later grid) and [Confirma] is disabled.
+  // it never comes back with a later grid) and [Confirma] is disabled. A SLOT_TAKEN's message goes
+  // with it: it pointed at a chooser that is gone.
   const choice =
     picked !== undefined && slotStillFree(slots.data, selectedDay, picked) ? picked : undefined;
   if (picked !== undefined && choice === undefined) {
     setChoice(undefined);
     setChooser(undefined);
+    if (failure?.kind === "message" && failure.slotTaken === true) setFailure(undefined);
   }
   const [pending, setPending] = useState(false);
-  const [failure, setFailure] = useState<Failure>();
   const [booked, setBooked] = useState(false);
   /** One `Idempotency-Key` per payload, kept only while its outcome is unknown (a lost answer). */
   const keys = useRef(new Map<string, string>());
@@ -335,7 +338,11 @@ export function TrainingPage({ client }: { client: ApiClient }) {
           limit: typeof details.limit === "number" ? details.limit : (summary?.counter.limit ?? 0),
         });
       } else {
-        setFailure({ kind: "message", message: errorText(t, cause) });
+        setFailure({
+          kind: "message",
+          message: errorText(t, cause),
+          ...(code === "SLOT_TAKEN" ? { slotTaken: true } : {}),
+        });
       }
       if (code === "SLOT_TAKEN") {
         // R-09-06: the rings still free at that time, when the api names them.

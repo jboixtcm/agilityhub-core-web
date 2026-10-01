@@ -1,0 +1,477 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/followup/followup.test.tsx (22 tests | 2 failed | 20 skipped) 20264ms
+   ❯ E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75) (2)
+     × E6-W04 step 0c: «Abonat», «Gos» and «Creador» offer the api's values with their counts over the whole set — also the members, dogs and authors only rows beyond the first page have — and a creator picked is named in the chip 10218ms
+     × E6-W04 step 0c: the search box sends q to GET /followup and the rows narrow to what the api finds in the member, the dog, the author and the task's whole text; the filter values follow the search 10044ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/followup/followup.test.tsx > E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75) > E6-W04 step 0c: «Abonat», «Gos» and «Creador» offer the api's values with their counts over the whole set — also the members, dogs and authors only rows beyond the first page have — and a creator picked is named in the chip
+AssertionError: expected [ 'Laura Serra (50)' ] to deeply equal [ 'Anna Ballart (1)', …(2) ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"followup"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"followup__header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"followup__title"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mSeguiment alumnes[0m
+            [36m</h1>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0m54 pendents de llegir[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"followup__actions"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Què es mostra"[39m
+              [33mclass[39m=[32m"followup__chips"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mTot[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mTasques[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mNotes d'alumnes[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mMarcar-ho tot com a llegit[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca al seguiment[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca al seguiment"[39m
+                [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [33mopen[39m=[32m""[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"kind"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"unread"[39m
+                    [36m>[39m
+                      [0mPendent de llegir[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"memberId"[39m
+                    [36m>[39m
+                      [0mAbonat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"dogId"[39m
+                    [36m>[39m
+                      [0mGos[0m
+                    [36m</option>[39m
+     ...
+
+- Expected
++ Received
+
+  [
+-   "Anna Ballart (1)",
+-   "Laura Serra (55)",
+-   "Pau Riera (1)",
++   "Laura Serra (50)",
+  ]
+
+ ❯ src/followup/followup.test.tsx:485:27
+    483|       fireEvent.change(within(menu).getByLabelText("Columna"), { targe…
+    484|       await waitFor(() => {
+    485|         expect(options()).toEqual(expected);
+       |                           ^
+    486|       });
+    487|     };
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/followup/followup.test.tsx > E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75) > E6-W04 step 0c: the search box sends q to GET /followup and the rows narrow to what the api finds in the member, the dog, the author and the task's whole text; the filter values follow the search
+AssertionError: expected [ …(5) ] to deeply equal [ Array(1) ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"followup"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"followup__header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"followup__title"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mSeguiment alumnes[0m
+            [36m</h1>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0m5 pendents de llegir[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"followup__actions"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Què es mostra"[39m
+              [33mclass[39m=[32m"followup__chips"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mTot[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mTasques[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"followup__chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mNotes d'alumnes[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mMarcar-ho tot com a llegit[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-universal-list__search"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mCerca al seguiment[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Cerca al seguiment"[39m
+                [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+                [33mtype[39m=[32m"search"[39m
+                [33mvalue[39m=[32m"recompenses"[39m
+              [36m/>[39m
+            [36m</label>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"kind"[39m
+                    [36m>[39m
+                      [0mTipus[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"unread"[39m
+                    [36m>[39m
+                      [0mPendent de llegir[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"memberId"[39m
+                    [36m>[39m
+                      [0mAbonat[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"dogId"[39m
+                    [36m>[39m
+                      [0mGos[0m
+                    [36m</option>[39m
+                  [36m</select>[39m...
+
+- Expected
++ Received
+
+  [
++   "* Laura Serra · no llegit | Duna | C | 19-08 | Laura (alumna) | A veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí | 19-08 | — | Obre la fitxa de Duna",
++   "* Pau Riera · no llegit | Blat | B | 19-08 | Pau (alumne) | Aquesta setmana no podrem venir dijous | 19-08 | — | Obre la fitxa de Blat",
+    "* Laura Serra · no llegit | Duna | C | 12-08 | Estel (tasca) | Practiqueu el balancí amb calma: sessions curtes | 12-08 | — | Obre la fitxa de Duna",
++   "* Anna Ballart · no llegit | Nass | B | 10-08 | Marc (tasca) | Repasseu la taula de contactes al jardí | 10-08 | — | Obre la fitxa de Nass",
++   "* Laura Serra · no llegit | Duna | C | 28-07 | Estel (tasca) | Treballar l'«espera» a la sortida | 28-07 | 02-08 | Obre la fitxa de Duna",
+  ]
+
+ ❯ src/followup/followup.test.tsx:553:33
+    551|     fireEvent.change(search, { target: { value: "recompenses" } });
+    552|     await waitFor(async () => {
+    553|       expect(await tableRows()).toEqual([
+       |                                 ^
+    554|         "* Laura Serra · no llegit | Duna | C | 12-08 | Estel (tasca) …
+    555|       ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 20 skipped (22)
+   Start at  02:04:54
+   Duration  21.46s (tests 95%, transform 3%, environment 1%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/followup/followup.test.tsx -t E6-W04 step 0c
+exit 1
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+stderr | src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > E6-W04 step 0c: GET /followup/filter-values counts each value over the whole set the filters and q select (followupMany: the members, dogs and authors beyond the first page too), without the field's own filters, labelled by name
+[MSW] Error: intercepted a request without a matching request handler:
+
+  • GET https://core.example.test/api/v1/followup/filter-values?field=memberId
+
+If you still wish to intercept this unhandled request, please create a request handler for it.
+Read more: https://mswjs.io/docs/http/intercepting-requests
+
+stderr | src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > E6-W04 step 0c: filter-values refuses an undeclared field or filter (400 INVALID_FILTER), a member (403), an impersonation (IMPERSONATION_DENIED) and TASKS off (404 MODULE_DISABLED)
+[MSW] Error: intercepted a request without a matching request handler:
+
+  • GET https://core.example.test/api/v1/followup/filter-values?field=textExcerpt
+
+If you still wish to intercept this unhandled request, please create a request handler for it.
+Read more: https://mswjs.io/docs/http/intercepting-requests
+
+ ❯ src/mocks/agenda-handlers.test.ts (16 tests | 3 failed | 13 skipped) 33ms
+   ❯ E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) (8)
+     × E6-W04 step 0c: GET /followup/filter-values counts each value over the whole set the filters and q select (followupMany: the members, dogs and authors beyond the first page too), without the field's own filters, labelled by name 19ms
+     × E6-W04 step 0c: filter-values refuses an undeclared field or filter (400 INVALID_FILTER), a member (403), an impersonation (IMPERSONATION_DENIED) and TASKS off (404 MODULE_DISABLED) 9ms
+     × E6-W04 step 0c: GET /followup's q searches the member's full name, the dog, the author and the whole text (not only the excerpt), in any case 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > E6-W04 step 0c: GET /followup/filter-values counts each value over the whole set the filters and q select (followupMany: the members, dogs and authors beyond the first page too), without the field's own filters, labelled by name
+ApiError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+ ❯ Function.network src/api-error.ts:63:12
+     61|
+     62|   static network(error: unknown): ApiError {
+     63|     return new ApiError({
+       |            ^
+     64|       code: "NETWORK",
+     65|       details: error,
+ ❯ Object.onError src/client.ts:125:49
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:180:38
+ ❯ src/mocks/agenda-handlers.test.ts:386:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > E6-W04 step 0c: filter-values refuses an undeclared field or filter (400 INVALID_FILTER), a member (403), an impersonation (IMPERSONATION_DENIED) and TASKS off (404 MODULE_DISABLED)
+AssertionError: expected { code: 'NETWORK', …(2) } to match object { code: 'INVALID_FILTER', status: 400 }
+(2 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": "INVALID_FILTER",
+-   "status": 400,
++   "code": "NETWORK",
++   "status": 0,
+  }
+
+ ❯ src/mocks/agenda-handlers.test.ts:427:60
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/mocks/agenda-handlers.test.ts > E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) > E6-W04 step 0c: GET /followup's q searches the member's full name, the dog, the author and the whole text (not only the excerpt), in any case
+AssertionError: expected [] to deeply equal [ 'f-task-balanci' ]
+
+- Expected
++ Received
+
+- [
+-   "f-task-balanci",
+- ]
++ []
+
+ ❯ src/mocks/agenda-handlers.test.ts:457:40
+    455|         await client.GET("/followup", { params: { query: { q } } })
+    456|       ).data?.items.map((item) => item.id);
+    457|     expect(await found("recompenses")).toEqual(["f-task-balanci"]);
+       |                                        ^
+    458|     expect(await found("BALLART")).toEqual(["f-task-contactes"]);
+    459|     expect(await found("blat")).toEqual(["f-note-blat"]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 13 skipped (16)
+   Start at  02:05:16
+   Duration  706ms (transform 56%, import 38%, tests 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/agenda-handlers.test.ts -t filter-values|q searches
+exit 1

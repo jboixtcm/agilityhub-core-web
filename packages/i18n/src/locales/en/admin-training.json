@@ -48,6 +48,8 @@
     "cancelling": "Cancelling the block…",
     "cancelled": "Block cancelled.",
     "inactiveRing": "deactivated ring",
+    "rangeFrom": "From",
+    "rangeTo": "To",
     "columns": {
       "from": "Day and time",
       "ring": "Ring",

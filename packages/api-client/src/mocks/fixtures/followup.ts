@@ -1,5 +1,6 @@
 import type { components } from "../../generated/schema";
 
+import { PAST_ACTIVITY_ID } from "./activities";
 import { BOOKING_DOG_IDS } from "./bookings";
 import { censusDogs } from "./census";
 
@@ -30,6 +31,12 @@ const DUNA = BOOKING_DOG_IDS.duna;
 const ROCK = BOOKING_DOG_IDS.rock;
 const TOBY = BOOKING_DOG_IDS.toby;
 
+/**
+ * The activity of mockup 25's «Seminari d'obstacles» row: the activities world's past activity
+ * (FINISHED, so `GET /me/activities/{id}` answers it, `pastActivity`).
+ */
+export const HISTORY_DONE_ACTIVITY_ID = PAST_ACTIVITY_ID;
+
 /** Mockup 25's dogs: Laura's Duna and Rock, and Toby of Joan Antoni's family group. */
 const HISTORY_DOGS: readonly HistoryDog[] = [
   { id: DUNA, levelCode: "C", name: "Duna", own: true },
@@ -49,6 +56,8 @@ function classRow(
 ): HistoryItem {
   const dogId = dog === "Duna" ? DUNA : dog === "Rock" ? ROCK : TOBY;
   return {
+    // The api sends `activityId` on every row: null but on an activity whose page answers.
+    activityId: null,
     counts,
     date,
     detail,
@@ -67,6 +76,7 @@ function mockupRows(): HistoryItem[] {
   return [
     classRow("b9", "2026-07-28", "18:50", "Classe B+C", "Duna", "DONE", true, null),
     {
+      activityId: null,
       counts: null,
       date: "2026-07-24",
       detail: null,
@@ -91,6 +101,8 @@ function mockupRows(): HistoryItem[] {
       kind: "NO_SHOW",
     }),
     {
+      // A FINISHED activity: its page answers (S07 §6), so the row links to it (E74, E75).
+      activityId: HISTORY_DONE_ACTIVITY_ID,
       counts: null,
       date: "2026-07-12",
       detail: null,
@@ -134,6 +146,7 @@ function allReasonRows(): HistoryItem[] {
       kind: "SYSTEM",
     }),
     {
+      activityId: null,
       counts: null,
       date: "2026-07-18",
       detail: { kind: "BY_MEMBER_IN_TIME" },
@@ -146,6 +159,7 @@ function allReasonRows(): HistoryItem[] {
       type: "TRAINING",
     },
     {
+      activityId: null,
       counts: null,
       date: "2026-07-16",
       detail: { kind: "BY_CLUB", message: null },
@@ -625,6 +639,8 @@ interface StoredInboxItem {
   memberId: string;
   memberName: string;
   taskId: string | null;
+  /** The task's or the note's whole text, when the excerpt is shorter (`q` searches it, E75). */
+  text?: string;
   textExcerpt: string;
 }
 
@@ -686,6 +702,7 @@ function initialInbox(): StoredInboxItem[] {
       id: "f-task-balanci",
       kind: "TASK",
       taskId: "t-d14-balanci",
+      text: "Practiqueu el balancí amb calma: sessions curtes i moltes recompenses",
       textExcerpt: "Practiqueu el balancí amb calma: sessions curtes",
     },
     {
@@ -705,6 +722,7 @@ function initialInbox(): StoredInboxItem[] {
       memberId: "member-anna",
       memberName: "Anna Ballart",
       taskId: "t-d14-contactes",
+      text: "Repasseu la taula de contactes al jardí, 5 minuts al dia",
       textExcerpt: "Repasseu la taula de contactes al jardí",
     },
     {
@@ -721,6 +739,7 @@ function initialInbox(): StoredInboxItem[] {
       id: "f-task-espera",
       kind: "TASK",
       taskId: "t3",
+      text: "Treballar l'«espera» a la línia de sortida",
       textExcerpt: "Treballar l'«espera» a la sortida",
     },
   ];
@@ -828,20 +847,22 @@ export interface InboxQuery {
   variant: InboxVariant | undefined;
 }
 
-/** The visible rows as the caller reads them, unread first then by `activityAt` (R-10-13). */
-export function inboxRows(query: InboxQuery): FollowupItem[] {
+/** A row's value of a filterable field as the filters compare it (`unread` is the caller's). */
+function inboxFieldValue(item: StoredInboxItem, unread: boolean, field: string): string {
+  if (field === "unread") return String(unread);
+  const value = (item as unknown as Record<string, unknown>)[field];
+  return typeof value === "string" ? value : "";
+}
+
+/** The visible rows the query selects (`q` and every filter), each with the caller's `unread`. */
+function inboxSelection(query: InboxQuery): { item: StoredInboxItem; unread: boolean }[] {
   const mark = readMark(query.accountId, query.variant);
-  const fieldValue = (item: StoredInboxItem, unread: boolean, field: string): string => {
-    if (field === "unread") return String(unread);
-    const value = (item as unknown as Record<string, unknown>)[field];
-    return typeof value === "string" ? value : "";
-  };
   const matches = (
     item: StoredInboxItem,
     unread: boolean,
     filter: InboxQuery["filters"][number],
   ) => {
-    const value = fieldValue(item, unread, filter.field);
+    const value = inboxFieldValue(item, unread, filter.field);
     const values = filter.value.split(",");
     return filter.op === "ne"
       ? value !== filter.value
@@ -851,17 +872,65 @@ export function inboxRows(query: InboxQuery): FollowupItem[] {
           ? !values.includes(value)
           : value === filter.value;
   };
-  // `q`: free text within the caller's projection (names, author, text), case-insensitive.
+  // `q` (E75): the member's full name, the dog, the author and the whole text (not only the
+  // excerpt), any case, taken literally.
   const text = query.q.trim().toLocaleLowerCase("ca");
   const found = (item: StoredInboxItem) =>
     text === "" ||
-    [item.memberName, item.dogName, item.authorName, item.textExcerpt].some((value) =>
+    [item.memberName, item.dogName, item.authorName, item.text ?? item.textExcerpt].some((value) =>
       value.toLocaleLowerCase("ca").includes(text),
     );
   return inboxState.items
     .filter((item) => !item.hidden && found(item))
     .map((item) => ({ item, unread: isUnread(item, query.accountId, mark) }))
-    .filter(({ item, unread }) => query.filters.every((filter) => matches(item, unread, filter)))
+    .filter(({ item, unread }) => query.filters.every((filter) => matches(item, unread, filter)));
+}
+
+/**
+ * `GET /followup/filter-values` (S10 §6, E75): the top 50 values of `field` over the whole set the
+ * other filters and `q` select (the field's own filters left out; never one page), each counted,
+ * labelled by the member's full name, the dog's name or the author's name as their newest row
+ * stores it; `kind` and `unread` (the caller's) by their value.
+ */
+export function inboxFilterValues(
+  query: InboxQuery,
+  field: string,
+): { count: number; label: string; value: boolean | string }[] {
+  const rows = inboxSelection({
+    ...query,
+    filters: query.filters.filter((filter) => filter.field !== field),
+  }).sort((left, right) => right.item.activityAt.localeCompare(left.item.activityAt));
+  const counted = new Map<string, { count: number; label: string }>();
+  for (const { item, unread } of rows) {
+    const value = inboxFieldValue(item, unread, field);
+    if (value === "") continue;
+    const label =
+      field === "memberId"
+        ? item.memberName
+        : field === "dogId"
+          ? item.dogName
+          : field === "authorAccountId"
+            ? item.authorName
+            : value;
+    const known = counted.get(value);
+    // Newest first: the first row seen gives the label.
+    counted.set(value, { count: (known?.count ?? 0) + 1, label: known?.label ?? label });
+  }
+  return [...counted.entries()]
+    .sort(([leftValue, left], [rightValue, right]) =>
+      left.count === right.count ? leftValue.localeCompare(rightValue) : right.count - left.count,
+    )
+    .slice(0, 50)
+    .map(([value, entry]) => ({
+      count: entry.count,
+      label: entry.label,
+      value: field === "unread" ? value === "true" : value,
+    }));
+}
+
+/** The visible rows as the caller reads them, unread first then by `activityAt` (R-10-13). */
+export function inboxRows(query: InboxQuery): FollowupItem[] {
+  return inboxSelection(query)
     .sort(
       (left, right) =>
         Number(right.unread) - Number(left.unread) ||

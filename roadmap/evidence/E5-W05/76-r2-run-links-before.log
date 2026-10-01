@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/JobsCard.test.tsx (23 tests | 1 failed | 21 skipped) 602ms
+   ❯ E5-W05 round 2 #7 · a run's Week and Member effects link to D4 and D10 (R-15-21) (2)
+     × E5-W05 round 2 #7: with a Friday opening, the Week item opens D4 on the week it opens (Monday 10), and the Member item opens D10 162ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > E5-W05 round 2 #7 · a run's Week and Member effects link to D4 and D10 (R-15-21) > E5-W05 round 2 #7: with a Friday opening, the Week item opens D4 on the week it opens (Monday 10), and the Member item opens D10
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"href"[32m[39m[2m, [22m[32m[32m"/calendari?setmana=2026-08-10"[32m[39m[2m) // element.getAttribute("href") === "/calendari?setmana=2026-08-10"[22m
+
+Expected the element to have attribute:
+[32m  href="/calendari?setmana=2026-08-10"[39m
+Received:
+[31m  href="/calendari?setmana=2026-08-03"[39m
+ ❯ src/catalogs/JobsCard.test.tsx:673:18
+    671|     const { onNavigate, sheet } = await openSheet();
+    672|     const week = await within(sheet).findByRole("link", { name: "Week …
+    673|     expect(week).toHaveAttribute("href", "/calendari?setmana=2026-08-1…
+       |                  ^
+    674|     fireEvent.click(week);
+    675|     expect(onNavigate).toHaveBeenLastCalledWith("/calendari?setmana=20…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 21 skipped (23)
+   Start at  00:49:51
+   Duration  1.64s (tests 39%, transform 25%, environment 19%, import 13%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/JobsCard.test.tsx -t round 2 #7

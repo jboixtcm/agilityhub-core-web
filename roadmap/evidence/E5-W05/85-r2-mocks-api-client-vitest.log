@@ -1,0 +1,13 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+
+ Test Files  23 passed (23)
+      Tests  380 passed (380)
+   Start at  01:09:20
+   Duration  4.39s (tests 48%, import 28%, transform 24%)
+
+
+> @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> tsc --noEmit
+

@@ -1,0 +1,9 @@
+{
+  "bytes": 4653,
+  "contentDisposition": "attachment; filename=\"canic_activity-registrations_20261001-0409.xlsx\"",
+  "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "magic": "504b0304",
+  "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3Afdf72e43-3934-4001-b187-b199cc4544f9&format=xlsx&sort=registeredAt%2Casc",
+  "status": 200,
+  "suggestedFilename": "canic_activity-registrations_20261001-0409.xlsx"
+}

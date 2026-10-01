@@ -2,6 +2,7 @@ import type { components } from "../../generated/schema";
 
 import { clubInstant, RISK_REVIEW_DAY, riskReviewClassIds } from "./calendar";
 import { addDays, clubLocalDate } from "./planning";
+import { findParameter } from "./settings";
 
 type ClassBookingItem = components["schemas"]["ClassBookingItem"];
 type ClassSession = components["schemas"]["ClassSession"];
@@ -32,7 +33,7 @@ interface CatalogEntry {
   schedule: JobSummary["schedule"];
   /**
    * R-15-01 (the «Hora» column): the parameter the api reads the local time from (and, for the
-   * week's opening, the day), so a saved change shows in `GET /jobs` at once.
+   * week's opening, the day), so a saved change shows in `GET /jobs` at once, with its next run.
    */
   timeParameter?: string;
 }
@@ -77,7 +78,9 @@ export const JOB_CATALOG: readonly CatalogEntry[] = [
     module: null,
     name: "no-show-notices",
     parameter: "jobs.noShowNotices.enabled",
-    schedule: daily("21:00"),
+    // The next day's batch (S15 R-15-13) at the club's `messaging.noShowNoticeTime`.
+    schedule: daily("08:00"),
+    timeParameter: "messaging.noShowNoticeTime",
   },
   {
     jobName: "REMINDERS",
@@ -132,16 +135,6 @@ export const JOB_CATALOG: readonly CatalogEntry[] = [
     timeParameter: "jobs.dailyTime",
   },
 ];
-
-/** The next occurrence the api computes (club-local), for the scheduled processes. */
-const NEXT_LOCAL: Readonly<Record<string, string>> = {
-  "billing-reminder": "2026-08-22T06:00",
-  cleanup: "2026-08-11T06:00",
-  expirations: "2026-08-11T06:00",
-  "no-show-notices": "2026-08-10T21:00",
-  "risk-review": "2026-08-11T07:30",
-  "week-opening": "2026-08-16T20:00",
-};
 
 /**
  * The classes of the example day's risk review, as the calendar world holds them on that day
@@ -312,6 +305,7 @@ function initialRuns(entry: CatalogEntry): JobRun[] {
         }),
       ];
     case "no-show-notices":
+      // Each morning's batch at `messaging.noShowNoticeTime` (08:00): today's failed.
       return [
         at(3, {
           errors: [
@@ -322,17 +316,17 @@ function initialRuns(entry: CatalogEntry): JobRun[] {
               traceId: "mock-trace-no-show",
             },
           ],
-          local: "2026-08-09T21:00",
+          local: "2026-08-10T08:00",
           status: "FAILED",
         }),
         at(2, {
           counters: { late: 0, notices: 3 },
-          local: "2026-08-08T21:00",
+          local: "2026-08-09T08:00",
           status: "SUCCEEDED",
         }),
         at(1, {
           counters: { late: 1, notices: 2 },
-          local: "2026-08-07T21:00",
+          local: "2026-08-08T08:00",
           status: "SUCCEEDED",
         }),
       ];
@@ -521,11 +515,57 @@ function scheduleOf(
   return entry.schedule;
 }
 
+/** The club-local `YYYY-MM-DDTHH:mm` of an instant. */
+function localMinute(instant: number): string {
+  return new Intl.DateTimeFormat("sv-SE", {
+    day: "2-digit",
+    hour: "2-digit",
+    hourCycle: "h23",
+    minute: "2-digit",
+    month: "2-digit",
+    timeZone: TIME_ZONE,
+    year: "numeric",
+  })
+    .format(new Date(instant))
+    .replace(" ", "T");
+}
+
+const WEEKDAYS = [
+  "MONDAY",
+  "TUESDAY",
+  "WEDNESDAY",
+  "THURSDAY",
+  "FRIDAY",
+  "SATURDAY",
+  "SUNDAY",
+] as const;
+
+/**
+ * `nextScheduledForLocal` as the api computes it (R-15-01): the first occurrence of the schedule
+ * after `now`, club-local — the day (every day, the week's day or the month's) at its local time;
+ * `null` for a continuous process.
+ */
+function nextOccurrence(schedule: JobSummary["schedule"], now: number): string | null {
+  const time = schedule.localTime;
+  if (schedule.kind === "CONTINUOUS" || time === null || time === undefined) return null;
+  const current = localMinute(now);
+  for (let offset = 0; offset <= 366; offset += 1) {
+    const date = addDays(current.slice(0, 10), offset);
+    const weekday = WEEKDAYS[(new Date(`${date}T12:00:00Z`).getUTCDay() + 6) % 7];
+    if (schedule.kind === "WEEKLY" && weekday !== schedule.dayOfWeek) continue;
+    if (schedule.kind === "MONTHLY" && Number(date.slice(8, 10)) !== schedule.dayOfMonth) continue;
+    if (`${date}T${time}` > current) return `${date}T${time}`;
+  }
+  return null;
+}
+
 export function jobSummary(
   job: StoredJob,
   parameterValue: (key: string) => unknown = () => undefined,
+  now = Date.now(),
 ): JobSummary {
   const last = job.runs[0];
+  const schedule = scheduleOf(job.entry, parameterValue);
   return {
     enabled: job.enabled,
     jobName: job.entry.jobName,
@@ -542,8 +582,9 @@ export function jobSummary(
           },
     module: job.entry.module,
     name: job.entry.name,
-    nextScheduledForLocal: NEXT_LOCAL[job.entry.name] ?? null,
-    schedule: scheduleOf(job.entry, parameterValue),
+    // From the same schedule, so a saved parameter moves both (E5-W05 round 2).
+    nextScheduledForLocal: nextOccurrence(schedule, now),
+    schedule,
   };
 }
 
@@ -552,17 +593,7 @@ export function manualRun(job: StoredJob, dryRun: boolean, now: number): JobRun 
   jobsState.sequence += 1;
   const minute = Math.floor(now / 60_000) * 60_000;
   const scheduledFor = new Date(minute).toISOString().replace(".000Z", "Z");
-  const local = new Intl.DateTimeFormat("sv-SE", {
-    day: "2-digit",
-    hour: "2-digit",
-    hourCycle: "h23",
-    minute: "2-digit",
-    month: "2-digit",
-    timeZone: TIME_ZONE,
-    year: "numeric",
-  })
-    .format(new Date(minute))
-    .replace(" ", "T");
+  const local = localMinute(minute);
   return {
     actorAccountId: "10000000-0000-4000-8000-000000000001",
     dryRun,
@@ -611,15 +642,37 @@ export const RISK_REVIEW_DEFAULTS = {
   reviewTime: RISK_PARAMETERS["classes.riskReviewTime"],
 };
 
+/** The club's `classes.minDogs` (S06 R-06-13, S15 R-15-12), or its default when it is not listed. */
+export function minDogsParameter(): number {
+  const value = findParameter("classes.minDogs")?.value;
+  return typeof value === "number" ? value : RISK_REVIEW_DEFAULTS.minDogs;
+}
+
+/**
+ * Whether a class is at risk (R-06-13), the same for D4's mark and D1's rows: an ACTIVE class,
+ * not exempt, with fewer booked dogs than the club's `classes.minDogs`. The world's `atRisk` mark
+ * stands for the api's window terms (the day within the lookahead, before its review), so a class
+ * the world never marks, such as a one-seat «Teràpia», is not at risk however few it holds.
+ */
+export function atRiskNow(session: ClassSession, minDogs: number): boolean {
+  return (
+    session.state === "ACTIVE" &&
+    session.atRisk &&
+    !session.riskExempt &&
+    session.counters.booked < minDogs
+  );
+}
+
 /**
  * `GET /risk-review` (S15 §6 form A) for the club-local `date`, computed from the club's classes as
  * the api does (E5-W05 step 15): the ACTIVE classes at risk and the CANCELLED{RISK_REVIEW} ones of
- * `date` … `date + lookaheadDays`, by `startsAt`. The mock world's `atRisk` mark stands for the
- * api's risk evaluation, so D1's rows and D4's warnings agree. `notified`: the bookings the
- * cancellation affected; for an active class, its registrants once a review has already covered
- * its day. `WILL_CANCEL`/`WILL_REVIEW` only when P2 will still review the class and nobody was
- * notified yet (E37); otherwise `AT_RISK`. On the example day the calendar world holds the spec's
- * c1…c4 (`riskReviewSessions`), so the form is S15's example.
+ * `date` … `date + lookaheadDays`, by `startsAt`. At risk is `atRiskNow` with the club's
+ * `classes.minDogs`, as D4 marks it, so D1's rows and D4's warnings agree. `notified`: the bookings
+ * the cancellation affected; for an active class, its registrants once a review has already
+ * covered its day — with the process on only (switched off, no review ran). `WILL_CANCEL`/
+ * `WILL_REVIEW` only when P2 will still review the class and nobody was notified yet (E37);
+ * otherwise `AT_RISK`. On the example day the calendar world holds the spec's c1…c4
+ * (`riskReviewSessions`), so the form is S15's example.
  */
 export function riskReviewForm(date: string, world: RiskReviewWorld): RiskReviewForm {
   const reviewAt = (day: string) => clubInstant(day, world.reviewTime);
@@ -655,7 +708,7 @@ export function riskReviewForm(date: string, world: RiskReviewWorld): RiskReview
         status: "AUTO_CANCELLED",
       };
     }
-    const notified = session.date <= coveredUpTo ? people(session, "ACTIVE") : [];
+    const notified = world.enabled && session.date <= coveredUpTo ? people(session, "ACTIVE") : [];
     const willReview =
       world.enabled &&
       Date.parse(review) > world.now &&
@@ -683,7 +736,7 @@ export function riskReviewForm(date: string, world: RiskReviewWorld): RiskReview
           session.date <= last &&
           (session.state === "CANCELLED"
             ? session.cancellation?.reason === "RISK_REVIEW"
-            : session.state === "ACTIVE" && session.atRisk && !session.riskExempt),
+            : atRiskNow(session, world.minDogs)),
       )
       .sort((left, right) => left.startsAt.localeCompare(right.startsAt))
       .map(item),

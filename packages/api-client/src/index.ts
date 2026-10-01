@@ -43,6 +43,7 @@ export {
   type FollowupAttachmentEntity,
   type FollowupBusy,
   type FollowupCard,
+  type FollowupFileRefusal,
   FOLLOWUP_HISTORY_PAGE_SIZE,
   type FollowupHistory,
   type FollowupLoad,

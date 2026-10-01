@@ -1780,9 +1780,29 @@ export interface paths {
         };
         /**
          * followup
-         * @description Roles: INSTRUCTOR, ADMIN (MEMBER → 403; impersonation → IMPERSONATION_DENIED). D14 universal list (CONVENCIONS_API §4, R-10-13): the visible FollowupItem rows (a deleted task's row is hidden), unread first (activityAt desc), then the rest (activityAt desc), ordered by the query; unread(item, me) = activityAt > readAllAt ∧ id ∉ readItemIds ∧ author ≠ me. memberName (the dog's current owner), dogName and levelCode (null with levels.enabled = false) are read at request time; authorAccountId, authorName and authorGender are whoever wrote the task or the note, as they were then, never the dog's current owner. Pages hold at most 50 rows (S10 §3): size 20 or 50, and 200 or 1000 is 400 INVALID_FILTER. An undeclared filter or sort is 400 INVALID_FILTER. Requires TASKS (MODULE_DISABLED). Tenant comes from the JWT.
+         * @description Roles: INSTRUCTOR, ADMIN (MEMBER → 403; impersonation → IMPERSONATION_DENIED). D14 universal list (CONVENCIONS_API §4, R-10-13): the visible FollowupItem rows (a deleted task's row is hidden), unread first (activityAt desc), then the rest (activityAt desc), ordered by the query; unread(item, me) = activityAt > readAllAt ∧ id ∉ readItemIds ∧ author ≠ me. memberName (the dog's current owner), dogName and levelCode (null with levels.enabled = false) are read at request time; authorAccountId, authorName and authorGender are whoever wrote the task or the note, as they were then, never the dog's current owner. Pages hold at most 50 rows (S10 §3): size 20 or 50, and 200 or 1000 is 400 INVALID_FILTER. An undeclared filter or sort is 400 INVALID_FILTER. q searches the member's full name, the dog's name, the author's name and the text (the task's or the note's whole text, not only textExcerpt), any case, taken literally (CONVENCIONS_API §4, E75); GET /followup/filter-values gives the filter's values. Requires TASKS (MODULE_DISABLED). Tenant comes from the JWT.
          */
         get: operations["followup"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/followup/filter-values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * followupFilterValues
+         * @description Roles: INSTRUCTOR, ADMIN (MEMBER → 403; impersonation → IMPERSONATION_DENIED). CONVENCIONS_API §4 for D14's universal filter (S10 §6, E75): the top 50 values of field (one of GET /followup's x-filterable fields; any other is INVALID_FILTER), each with its count over the whole set that filter and q select, never one page; the filters on field itself are left out. unread is the caller's own (R-10-13: read marks are per account), so two instructors get different counts. Labels: the member's full name, the dog's name and the author's name (as their newest row stores it); kind and unread their values, as is an id whose record is gone. q narrows the set as the list's search does. Requires TASKS (MODULE_DISABLED). Tenant comes from the JWT.
+         */
+        get: operations["followupFilterValues"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1900,7 +1920,7 @@ export interface paths {
         };
         /**
          * instructorWeek
-         * @description Roles: INSTRUCTOR, ADMIN (MEMBER → 403; impersonation → IMPERSONATION_DENIED). D12 (R-10-15): ISO week of date in the club's zone, Monday–Saturday (Sunday only with items); classes of the S06 calendar form B (never DRAFT) with attendanceStatus; instructorId filters classes only (`me` = the caller; also the shared classes with classes.maxInstructorsPerClass > 1), ringId filters everything; trainings (half height: training.slotMinutes) and blocks are always shown. FREE_TRAINING off: no TRAINING cells; WAITLIST off: no waiting. Tenant comes from the JWT.
+         * @description Roles: INSTRUCTOR, ADMIN (MEMBER → 403; impersonation → IMPERSONATION_DENIED). D12 (R-10-15): ISO week of date in the club's zone, Monday–Saturday (Sunday only with items); classes of the S06 calendar form B (never DRAFT) with attendanceStatus; instructorId filters classes only (`me` = the caller; also the shared classes with classes.maxInstructorsPerClass > 1), ringId filters everything; trainings (half height: training.slotMinutes, sent as trainingSlotMinutes for the legend) and blocks are always shown. FREE_TRAINING off: no TRAINING cells and trainingSlotMinutes null; WAITLIST off: no waiting. Tenant comes from the JWT.
          */
         get: operations["instructorWeek"];
         put?: never;
@@ -2976,7 +2996,7 @@ export interface paths {
         };
         /**
          * memberNotificationPreferences
-         * @description Mocks-first (E7-W01 round 2 #4; api E7-T03 round 2, item 8; S11 §6 amended 30-09, ruling E76). Roles: ADMIN (impersonation → 403). D10's block: the member's preferences in the shape of GET /me/notification-preferences. Another club's member → 404. Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). The «Avisos» block of D10 (organizer 30-09, E76): the member's NotificationPreference with exactly the shape of GET /me/notification-preferences for that member (the product defaults when the block is absent, the reminder options, the member's account locale, the club's locales and SMS/PUSH modules). Another club's member → 404. Tenant comes from the JWT.
          */
         get: operations["memberNotificationPreferences"];
         /**
@@ -3126,7 +3146,7 @@ export interface paths {
         put?: never;
         /**
          * createMessageTemplate
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). [＋ Nova plantilla]: a CUSTOM template of PERSONAL, CLUB_NEWS or CLUB_CHANGES (SYSTEM or OPERATIONAL → VALIDATION_ERROR) with member variables only and no action, sent to members only; texts in the club's languages (the default one required; body ≤ 2000); matrix cells outside the category's MEMBER caps → CHANNEL_NOT_ALLOWED (422); an active SMS cell needs smsBody (≤ 160 GSM-7 rendered with the preview data set). MessageTemplateChanged and CATALOG_CHANGED audit. Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). [＋ Nova plantilla]: a CUSTOM template of PERSONAL, CLUB_NEWS or CLUB_CHANGES (SYSTEM or OPERATIONAL → VALIDATION_ERROR) with member variables only and no action, sent to members only; texts in the club's languages (the default one required; body ≤ 2000); matrix cells outside the category's MEMBER caps → CHANNEL_NOT_ALLOWED (422, ChannelNotAllowedDetails {audience, channel, cells}); an active SMS cell needs smsBody (≤ 160 GSM-7 rendered with the preview data set). TEMPLATE_SYNTAX_ERROR, TEMPLATE_UNKNOWN_VARIABLE and SMS_BODY_* carry TemplateFieldDetails (details.field, e.g. body.ca). MessageTemplateChanged and CATALOG_CHANGED audit. Tenant comes from the JWT.
          */
         post: operations["createMessageTemplate"];
         delete?: never;
@@ -3144,12 +3164,12 @@ export interface paths {
         };
         /**
          * messageTemplate
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). The editor of D9: the texts per club locale, the seed texts (CATALOG) and lastChange. Another club's, an unknown or an archived template → 404. Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). The editor of D9: the texts in the club's locales only (a template stored with other languages too shows the club's), the seed texts (CATALOG) and lastChange. Another club's, an unknown or an archived template → 404. Tenant comes from the JWT.
          */
         get: operations["messageTemplate"];
         /**
          * updateMessageTemplate
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). [DESA] (R-11-12): texts, icon, colour, matrix within caps, enabled (not a mandatory one: TEMPLATE_MANDATORY) and, for CUSTOM, the category; version+1 and customized (the texts differ from the seed). A missing required variable (N-02 link, N-08a admin_text) is VALIDATION_ERROR with details.missingVariables (MissingVariablesDetails). With SMS off the SMS cells are kept as stored. A stale version → STALE_VERSION. MessageTemplateChanged and CATALOG_CHANGED audit in the same transaction; the next notification uses the saved text (no template cache). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). [DESA] (R-11-12): texts, icon, colour, matrix within caps, enabled (not a mandatory one: TEMPLATE_MANDATORY) and, for CUSTOM, the category; version+1 and customized (the texts differ from the seed). Only the code's variables (the list of variables) are accepted. A missing required variable (N-08a admin_text; N-02's link belongs to its welcome e-mail only, E76) is VALIDATION_ERROR with details.missingVariables (MissingVariablesDetails); CHANNEL_NOT_ALLOWED carries ChannelNotAllowedDetails; TEMPLATE_SYNTAX_ERROR, TEMPLATE_UNKNOWN_VARIABLE and SMS_BODY_* carry TemplateFieldDetails. The texts are the club's languages (a template stored in other languages too is shown and saved in the club's). With SMS off the SMS cells are kept as stored. A stale version → STALE_VERSION. MessageTemplateChanged and CATALOG_CHANGED audit in the same transaction; the next notification uses the saved text (no template cache). Tenant comes from the JWT.
          */
         put: operations["updateMessageTemplate"];
         post?: never;
@@ -3766,7 +3786,7 @@ export interface paths {
         put?: never;
         /**
          * subscribePush
-         * @description Roles: MEMBER, INSTRUCTOR, ADMIN (impersonation → IMPERSONATION_DENIED). Asked in context from 12 (the push toggle or a reminder ≠ «Mai»), never at start-up: an upsert of the account's subscription by endpoint (unique per club through its hash), ACTIVE again if it had expired or belonged to another account on this browser; deviceLabel from the User-Agent when absent («iPhone · Safari»); PushSubscribed{accountId, endpoint = its SHA-256} when something changed. An endpoint that is no https URL, or keys that are not base64url of a 65-byte P-256 key and a 16-byte secret → PUSH_SUBSCRIPTION_INVALID (422). The VAPID public key is GET /branding.pushPublicKey. Requires PUSH. Tenant comes from the JWT.
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN (impersonation → IMPERSONATION_DENIED). Asked in context from 12 (the push toggle or a reminder ≠ «Mai»), never at start-up: an upsert of the account's subscription by endpoint (its hash; one ACTIVE subscription per endpoint and club), ACTIVE again if it had expired. A subscription never changes owner (E76): when another account's is active on this browser it ends (EXPIRED, PushUnsubscribed for that account) and the caller gets a subscription of its own, a new id. deviceLabel from the User-Agent when absent («iPhone · Safari»); PushSubscribed{accountId, endpoint = its SHA-256} when something changed. An endpoint that is no https URL, or keys that are not base64url of a point on P-256 (65 bytes, uncompressed) and a 16-byte secret → PUSH_SUBSCRIPTION_INVALID (422). The VAPID public key is GET /branding.pushPublicKey. Requires PUSH. Tenant comes from the JWT.
          */
         post: operations["subscribePush"];
         delete?: never;
@@ -6048,11 +6068,23 @@ export interface components {
             INSTRUCTORS: components["schemas"]["NotificationChannel"][];
             MEMBER: components["schemas"]["NotificationChannel"][];
         };
+        ChannelCell: {
+            audience: components["schemas"]["NotificationAudience"];
+            channel: components["schemas"]["NotificationChannel"];
+        };
         /** @description «Canals per públic — aquesta plantilla» (D9): every row is present; a cell outside `caps` is always false and inert */
         ChannelMatrix: {
             ADMINS: components["schemas"]["AudienceChannels"];
             INSTRUCTORS: components["schemas"]["AudienceChannels"];
             MEMBER: components["schemas"]["AudienceChannels"];
+        };
+        ChannelNotAllowedDetails: {
+            /** @description The first refused cell's row */
+            audience: components["schemas"]["NotificationAudience"];
+            /** @description Every refused cell */
+            cells: components["schemas"]["ChannelCell"][];
+            /** @description The first refused cell's channel */
+            channel: components["schemas"]["NotificationChannel"];
         };
         ChannelState: {
             channel: components["schemas"]["NotificationChannel"];
@@ -7237,7 +7269,7 @@ export interface components {
             ownerFirstName?: string | null;
         };
         HistoryItem: {
-            /** @description ACTIVITY rows: the activity's id (the row's id is the registration's), for its page GET /me/activities/{activityId}, which answers 404 once the activity is neither PUBLISHED nor FINISHED, as after the club cancels it. Null on CLASS and TRAINING rows */
+            /** @description ACTIVITY rows whose activity is PUBLISHED or FINISHED: the activity's id (the row's id is the registration's), for its page GET /me/activities/{activityId}, which answers only then (S07 §6). Null on the other ACTIVITY rows (a cancelled, unpublished or draft activity: its page is 404, even for a row cancelled in time before) and on CLASS and TRAINING rows. Link the row when it is not null */
             activityId?: string | null;
             /** @description Classes only: counts as done */
             counts?: boolean | null;
@@ -7519,6 +7551,11 @@ export interface components {
             filters: components["schemas"]["WeekFilters"];
             /** @description Distinct start times (HH:mm) of the week's cells */
             rows: string[];
+            /**
+             * Format: int32
+             * @description training.slotMinutes (S09): how long a TRAINING cell is, drawn at half height, for D12's legend; null with FREE_TRAINING off
+             */
+            trainingSlotMinutes?: number | null;
             week: components["schemas"]["WeekRange"];
         };
         InvoiceSummary: {
@@ -8537,7 +8574,7 @@ export interface components {
             version: number;
         };
         MissingVariablesDetails: {
-            /** @description requiredVariables absent from the text (N-02 link, N-08a admin_text) */
+            /** @description The template's required variables absent from the text (N-08a admin_text; N-02's link is its welcome e-mail's only, E76) */
             missingVariables: string[];
         };
         ModuleSettings: {
@@ -10589,6 +10626,20 @@ export interface components {
             body: string;
             smsBody?: string | null;
             title: string;
+        };
+        TemplateFieldDetails: {
+            /**
+             * @description The text: title.<locale>, body.<locale> or smsBody.<locale> (SMS_BODY_REQUIRED: the default language's)
+             * @example body.ca
+             */
+            field: string;
+            /**
+             * Format: int32
+             * @description SMS_BODY_TOO_LONG only: the maximum length, 160
+             */
+            max?: number;
+            /** @description TEMPLATE_UNKNOWN_VARIABLE only: every unknown variable of the save */
+            variables?: string[];
         };
         /** @enum {string} */
         TemplateIcon: "check" | "x" | "unlock" | "warn" | "up" | "heart" | "bell" | "doc" | "flag" | "mail" | "cal" | "clock" | "info" | "paw" | "cone" | "lock";
@@ -25053,6 +25104,133 @@ export interface operations {
             };
         };
     };
+    followupFilterValues: {
+        parameters: {
+            query: {
+                field: string;
+                /** @description The list's q: the member's full name, the dog's name, the author's name or the text */
+                q?: string;
+                /** @description The list's filters (field:op:value, repeated); only x-filterable fields */
+                filter?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description FilterValues */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FilterValues"];
+                };
+            };
+            /** @description VALIDATION_ERROR, INVALID_FILTER */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     readAllFollowup: {
         parameters: {
             query?: never;
@@ -33948,7 +34126,25 @@ export interface operations {
                     "application/json": components["schemas"]["NotificationPreferences"];
                 };
             };
-            /** @description FORBIDDEN, IMPERSONATION_DENIED */
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -33959,6 +34155,71 @@ export interface operations {
             };
             /** @description NOT_FOUND */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
                 headers: {
                     [name: string]: unknown;
                 };

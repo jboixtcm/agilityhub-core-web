@@ -53,8 +53,8 @@ function moduleOn(module: string): boolean {
   return currentMockScenario().branding.modules.includes(module);
 }
 
-/** `messaging.reminderOptionsMinutes` of the club (R-11-04). */
-function reminderOptions(): number[] {
+/** `messaging.reminderOptionsMinutes` of the club (R-11-04); D10's read shares it (E6-W04). */
+export function reminderOptions(): number[] {
   const value = findParameter("messaging.reminderOptionsMinutes")?.value;
   return Array.isArray(value) && value.every((item) => typeof item === "number")
     ? [...value]

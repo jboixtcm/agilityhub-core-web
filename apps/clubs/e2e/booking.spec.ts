@@ -4,8 +4,15 @@ import { resolve } from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4173";
-// E5-W05 step 7 refreshes the captures that the new mock clock changes.
-const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E5-W05");
+// E5-W05 round 2 (review #10): the captures go to this spec's own task (E5-W01) unless the run names
+// another one (`E2E_CAPTURE_TASK`, `pnpm e2e:docker <ID> --capture-task=<ID>`), as E5-W05 does to
+// refresh the ones its mock clock changes (step 7): a later complete run never rewrites them.
+const captureTask = process.env.E2E_CAPTURE_TASK ?? "";
+const evidenceDirectory = resolve(
+  import.meta.dirname,
+  "../../../roadmap/evidence",
+  captureTask === "" ? "E5-W01" : captureTask,
+);
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -126,10 +133,11 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await openReserve(page);
     await tapRow(page, "ds 8 · 9:00");
     // This week's limit (CURRENT at the clock, R-08-01): the class is over by Sunday 9 at 20:00,
-    // the coming opening (`nextBookableAt`), so the mockup's sentence.
+    // the coming opening (`nextBookableAt`). E5-W05 round 2 #6: the refusal counts Duna's real
+    // bookings of the week (her Monday 3, as 03 counts it), so «una classe», not the mockup's «dues».
     await expect(
       page.getByText(
-        "Aquesta setmana ja has fet dues classes amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
+        "Aquesta setmana ja has fet una classe amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
       ),
     ).toBeVisible();
     await shot(page, "29-limit-375.png");

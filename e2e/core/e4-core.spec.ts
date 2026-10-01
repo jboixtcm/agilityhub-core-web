@@ -1116,7 +1116,13 @@ test("T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; 
   const block = member.getByRole("region", { name: "Activitats" });
   const seminarRow = block.getByRole("link", { name: new RegExp(escapeRegExp(seminarTitle), "u") });
   // E4-W14 (R-07-13): the 04 row prints the start–end of an activity that has both.
-  const seminarWhen = `${seminarTitle} · ${caShortDay(seminarSaturday)} ${dayOfMonth(seminarSaturday)}/${seminarSaturday.slice(5, 7)} · 18:30–20:30`;
+  // R-07-13 `list`: «ds 24» in the club's current month, «ds 24/10» in another one (E5-W05 round 2:
+  // the run of 01-10 reached the seminar's own month).
+  const seminarDay =
+    clubToday().slice(0, 7) === seminarSaturday.slice(0, 7)
+      ? dayOfMonth(seminarSaturday)
+      : `${dayOfMonth(seminarSaturday)}/${seminarSaturday.slice(5, 7)}`;
+  const seminarWhen = `${seminarTitle} · ${caShortDay(seminarSaturday)} ${seminarDay} · 18:30–20:30`;
   await expect(seminarRow).toContainText(seminarWhen);
   await expect(seminarRow).toContainText("5 places");
   await screenshot(member, "04-activitats-core-375.png");

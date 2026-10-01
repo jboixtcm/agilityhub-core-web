@@ -1,0 +1,151 @@
+# E5-W05 round 2 · item 8 (review #8): scripts/e2e-core.sh stops on Ctrl-C; `down --profile e2e` removes a leftover one-off
+# Each command below is echoed with `$`, followed by its output (stdout and stderr) and `exit <code>`.
+
+## (a) syntax
+$ bash -n scripts/e2e-core.sh  →  denied by this sandbox's permission rules (as are bash -n scripts/e2e-docker.sh and running a proof script); the heavy runs 90/91 execute the script itself
+$ which shellcheck
+shellcheck not found
+exit 1 (shellcheck is not installed on this host)
+
+## the change: -T on the stage's run, run_stage exits on 130/143, init on the playwright service
+$ grep -n -e "-T playwright" -e "run_stage" -e "stage_status" scripts/e2e-core.sh
+85:  # `run_stage` calls it as `run_core_suite <stage> || …`, which turns `set -e` off in here: a core
+101:  docker compose -f "$compose_file" --profile e2e run --rm --no-deps -T playwright
+107:run_stage() {
+108:  local stage_status=0
+109:  run_core_suite "$1" || stage_status=$?
+110:  if ((stage_status == 130 || stage_status == 143)); then
+112:    echo "e2e-core: stage $1 ended with $stage_status (interrupted), cleaning up and exiting" >&2
+114:    exit "$stage_status"
+116:  if ((stage_status != 0)); then
+117:    status="$stage_status"
+184:# interrupted one (130/143) ends the script at once (`run_stage`).
+188:  run_stage e1-e2
+193:  run_stage e4w16
+196:  run_stage e3
+200:  run_stage e4
+205:  run_stage e5
+211:  run_stage files
+exit 0
+$ grep -n -e "init: true" -e "TINI_KILL_PROCESS_GROUP" scripts/core-stack/docker-compose.yml
+125:    # (TINI_KILL_PROCESS_GROUP), so Playwright stops with 130/143 and `e2e-core.sh` ends there.
+126:    init: true
+130:      TINI_KILL_PROCESS_GROUP: "1"
+exit 0
+
+## (b) a throwaway compose project (agilityhub-e5-w05-proof) with the stack's own file
+# The file requires E1_CORE_PASSWORD, E4_WEEK_START and CORE_URL; they come from a temporary --env-file (tmp.local/e5-w05-proof.env, git-ignored, deleted afterwards) with fictional values:
+$ cat tmp.local/e5-w05-proof.env
+E1_CORE_PASSWORD=proof-only-not-a-secret
+E4_WEEK_START=2026-10-05
+CORE_URL=http://core:8080
+exit 0
+$ docker compose -p agilityhub-e5-w05-proof --env-file tmp.local/e5-w05-proof.env -f scripts/core-stack/docker-compose.yml config --services
+mongo
+seed
+activate-demo-club
+core
+exit 0
+$ docker compose -p agilityhub-e5-w05-proof --env-file tmp.local/e5-w05-proof.env -f scripts/core-stack/docker-compose.yml --profile e2e config --services
+mongo
+seed
+activate-demo-club
+core
+playwright
+exit 0
+# A Playwright one-off container left behind, as an interrupted stage's `run --rm` leaves it:
+$ docker compose -p agilityhub-e5-w05-proof --env-file tmp.local/e5-w05-proof.env -f scripts/core-stack/docker-compose.yml --profile e2e run -d --no-deps --name agilityhub-e5-w05-proof-leftover --entrypoint sleep playwright 300
+ Volume agilityhub-e5-w05-proof_mongo-data Creating 
+ Network agilityhub-e5-w05-proof_default Creating 
+ Volume agilityhub-e5-w05-proof_export-files Creating 
+ Volume agilityhub-e5-w05-proof_mailbox Creating 
+ Volume agilityhub-e5-w05-proof_mongo-data Creating 
+ Network agilityhub-e5-w05-proof_default Creating 
+ Volume agilityhub-e5-w05-proof_export-files Creating 
+ Volume agilityhub-e5-w05-proof_mailbox Creating 
+ Volume agilityhub-e5-w05-proof_export-files Created 
+ Volume agilityhub-e5-w05-proof_export-files Created 
+ Volume agilityhub-e5-w05-proof_mailbox Created 
+ Volume agilityhub-e5-w05-proof_mailbox Created 
+ Volume agilityhub-e5-w05-proof_mongo-data Created 
+ Volume agilityhub-e5-w05-proof_mongo-data Created 
+ Network agilityhub-e5-w05-proof_default Created 
+ Network agilityhub-e5-w05-proof_default Created 
+ Container agilityhub-e5-w05-proof-leftover Creating 
+ Container agilityhub-e5-w05-proof-leftover Created 
+ace29a82e4d1ee61d49589887b7860db40ed19a10ded65a05686252e01bda0a6
+exit 0
+$ docker ps -a --filter label=com.docker.compose.project=agilityhub-e5-w05-proof --format '{{.Names}} | {{.Status}} | oneoff={{.Label "com.docker.compose.oneoff"}} service={{.Label "com.docker.compose.service"}}'
+agilityhub-e5-w05-proof-leftover | Up Less than a second | oneoff=True service=playwright
+exit 0
+# The cleanup before E5-W05 step 20: `down` without the profile does not see the one-off:
+$ docker compose -p agilityhub-e5-w05-proof --env-file tmp.local/e5-w05-proof.env -f scripts/core-stack/docker-compose.yml down --volumes --remove-orphans
+ Network agilityhub-e5-w05-proof_default Removing 
+ Volume agilityhub-e5-w05-proof_mongo-data Removing 
+ Volume agilityhub-e5-w05-proof_export-files Removing 
+ Volume agilityhub-e5-w05-proof_mailbox Removing 
+ Network agilityhub-e5-w05-proof_default Resource is still in use 
+ Volume agilityhub-e5-w05-proof_mongo-data Removed 
+ Volume agilityhub-e5-w05-proof_mailbox Resource is still in use 
+ Volume agilityhub-e5-w05-proof_export-files Removed 
+exit 0
+$ docker ps -a --filter label=com.docker.compose.project=agilityhub-e5-w05-proof --format '{{.Names}} | {{.Status}} | oneoff={{.Label "com.docker.compose.oneoff"}} service={{.Label "com.docker.compose.service"}}'
+agilityhub-e5-w05-proof-leftover | Up 6 seconds | oneoff=True service=playwright
+exit 0
+# The cleanup now (`cleanup()` in scripts/e2e-core.sh): `down` with the e2e profile removes it:
+$ docker compose -p agilityhub-e5-w05-proof --env-file tmp.local/e5-w05-proof.env -f scripts/core-stack/docker-compose.yml --profile e2e down --volumes --remove-orphans
+ Container agilityhub-e5-w05-proof-leftover Stopping 
+ Container agilityhub-e5-w05-proof-leftover Stopped 
+ Container agilityhub-e5-w05-proof-leftover Removing 
+ Container agilityhub-e5-w05-proof-leftover Removed 
+ Volume agilityhub-e5-w05-proof_mailbox Removing 
+ Network agilityhub-e5-w05-proof_default Removing 
+ Volume agilityhub-e5-w05-proof_mailbox Removed 
+ Network agilityhub-e5-w05-proof_default Removed 
+exit 0
+$ docker ps -a --filter label=com.docker.compose.project=agilityhub-e5-w05-proof --format '{{.Names}} | {{.Status}} | oneoff={{.Label "com.docker.compose.oneoff"}} service={{.Label "com.docker.compose.service"}}'
+exit 0 (no container of the project is left)
+
+## (c) the stage's one-off as run_core_suite runs it (run --rm --no-deps -T): no TTY, Docker's init (tini) as PID 1, the stage's shell in its own process group
+$ docker compose -p agilityhub-e5-w05-proof --env-file tmp.local/e5-w05-proof.env -f scripts/core-stack/docker-compose.yml --profile e2e run --rm --no-deps -T --entrypoint sh playwright -c 'printf "PID 1: "; tr "\0" " " < /proc/1/cmdline; echo; if [ -t 0 ] || [ -t 1 ]; then echo "tty: yes"; else echo "tty: no"; fi; echo "TINI_KILL_PROCESS_GROUP=$TINI_KILL_PROCESS_GROUP"; ps -o pid,pgid,comm'
+ Volume agilityhub-e5-w05-proof_mongo-data Creating 
+ Volume agilityhub-e5-w05-proof_mongo-data Creating 
+ Volume agilityhub-e5-w05-proof_mailbox Creating 
+ Volume agilityhub-e5-w05-proof_mailbox Creating 
+ Network agilityhub-e5-w05-proof_default Creating 
+ Network agilityhub-e5-w05-proof_default Creating 
+ Volume agilityhub-e5-w05-proof_export-files Creating 
+ Volume agilityhub-e5-w05-proof_export-files Creating 
+ Volume agilityhub-e5-w05-proof_mongo-data Created 
+ Volume agilityhub-e5-w05-proof_mongo-data Created 
+ Volume agilityhub-e5-w05-proof_mailbox Created 
+ Volume agilityhub-e5-w05-proof_mailbox Created 
+ Volume agilityhub-e5-w05-proof_export-files Created 
+ Volume agilityhub-e5-w05-proof_export-files Created 
+ Network agilityhub-e5-w05-proof_default Created 
+ Network agilityhub-e5-w05-proof_default Created 
+ Container agilityhub-e5-w05-proof-playwright-run-0b279cba0784 Creating 
+ Container agilityhub-e5-w05-proof-playwright-run-0b279cba0784 Created 
+PID 1: /sbin/docker-init -- sh -c printf "PID 1: "; tr "\0" " " < /proc/1/cmdline; echo; if [ -t 0 ] || [ -t 1 ]; then echo "tty: yes"; else echo "tty: no"; fi; echo "TINI_KILL_PROCESS_GROUP=$TINI_KILL_PROCESS_GROUP"; ps -o pid,pgid,comm 
+tty: no
+TINI_KILL_PROCESS_GROUP=1
+    PID    PGID COMMAND
+      1       1 docker-init
+      7       7 sh
+      9       7 ps
+exit 0
+$ docker compose -p agilityhub-e5-w05-proof --env-file tmp.local/e5-w05-proof.env -f scripts/core-stack/docker-compose.yml --profile e2e down --volumes --remove-orphans
+ Volume agilityhub-e5-w05-proof_mongo-data Removing 
+ Network agilityhub-e5-w05-proof_default Removing 
+ Volume agilityhub-e5-w05-proof_export-files Removing 
+ Volume agilityhub-e5-w05-proof_mailbox Removing 
+ Volume agilityhub-e5-w05-proof_export-files Removed 
+ Volume agilityhub-e5-w05-proof_mongo-data Removed 
+ Volume agilityhub-e5-w05-proof_mailbox Removed 
+ Network agilityhub-e5-w05-proof_default Removed 
+exit 0
+$ docker ps -a --filter label=com.docker.compose.project=agilityhub-e5-w05-proof --format '{{.Names}} | {{.Status}}'
+exit 0 (nothing left)
+# Not exercised here: sending the signal itself. docker kill / docker stop are denied in this sandbox, so the path
+# Ctrl-C -> bash's INT trap + compose run forwarding INT to the container -> tini -> the stage's process group -> Playwright 130 -> stop_on_signal / run_stage exit 130
+# is reasoned from (a)-(c); (c) shows the preconditions (no TTY, tini PID 1, group kill on).

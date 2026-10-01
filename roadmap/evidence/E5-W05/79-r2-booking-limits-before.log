@@ -1,0 +1,166 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/booking-handlers.test.ts (21 tests | 6 failed | 15 skipped) 143ms
+   ↓ E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) (11)
+     ↓ GET /me/home: the mockup rows in order, «amb {dog}» only with «Tots», counters from what counts (R-08-02)
+     ↓ GET /me/home?dogId= keeps the member's activity rows under every dog, as the api's MemberHomeQuery (E5-W01 round 2, review #3)
+     ↓ GET /me/bookable-classes reproduces 04: pack, the six rows, and the Rock and Toby variants
+     ↓ module variants: WAITLIST off reads FULL without counts; SINGLE_CLASS prices every row and drops the pack
+     ↓ POST /seat-holds: a plain hold of 30 s from the api clock; each refused row with its code, status and details
+     ↓ POST /bookings confirms the hold (pack −1, calendar links); an expired hold is 409 SEAT_HOLD_EXPIRED
+     ↓ bookingLimit (mockup 06): the hold proposes two swappable bookings and a done one; the swap cancels the old one
+     ↓ bookingSingleClass: PAY_TO_BOOK answers PAYMENT_PENDING with a same-origin checkoutUrl; Rock is charged on the receipt
+     ↓ GET /bookings/{id} and the cancellation: late by R-08-10 (4 h, the edge in time), displayState, then 409
+     ↓ the waitlist: join a WAITLIST_OPEN row (it leaves 04), refusals, the detail, leaving it, and the claim of a NOTIFIED entry
+     ↓ WAITLIST off: every waitlist route is 404 MODULE_DISABLED
+   ↓ E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them (4)
+     ↓ E5-W05 step 7: at Sunday 2 at 20:30 (weekOpensAt SUNDAY 20:00) W0 is 2026-08-02 and W1 2026-08-09: Monday 3 counts in the current week, Monday 10 is next, Monday 17 opens with W1, and the limit refusal names the coming opening
+     ↓ E5-W05 step 7: 06's done class belongs to W0 at the clock (it began at the week's opening, Sunday 2 at 20:00): the hold lists it as DONE beside the two cancellable ones
+     ↓ E5-W05 step 7: one minute before the opening (Sunday 2 at 19:59) the weeks are one earlier: Wednesday 5 to Saturday 8 are next week's, Monday 10 opens at 20:00, and Monday 17 is not listed yet
+     ↓ E5-W05 step 7: the weeks come from `bookings.weekOpensAt` (T-08-44, a club whose week opens on Monday at 00:00)
+   ❯ E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) (6)
+     × E5-W05 round 2 #6: at the clock the CURRENT refusal counts Duna's real bookings of the week: its `current` is /me/home's count, and no notSelectable id is a phantom 25ms
+     × E5-W05 round 2 #6: Monday 3 cancelled late (at 16:00, within the 4 h) still counts: the refusal lists it as DONE (R-08-09) and counts it as /me/home does 13ms
+     × E5-W05 round 2 #6: one minute before the opening the NEXT refusal counts next week's bookings as /me/home does, and no class of a NEXT week is DONE 42ms
+     × E5-W05 round 2 #11b: a PAYMENT_PENDING booking the hold cannot swap is LATE_WINDOW (the api's), a begun class DONE 26ms
+     × E5-W05 round 2 #11b: the refusal lists Duna's PAYMENT_PENDING class of the week as LATE_WINDOW and counts it (bookingSingleClass, PAY_TO_BOOK) 26ms
+     × E5-W05 round 2 #11c: the limits are the club's bookings.maxCurrentWeek and bookings.maxNextWeek: /me/home, the hold and the refusal follow a saved change 9ms
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 15 skipped (21)
+   Start at  00:59:42
+   Duration  566ms (transform 42%, import 29%, tests 29%)
+
+TAP version 13
+1..21
+ok 1 - src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/home: the mockup rows in order, «amb {dog}» only with «Tots», counters from what counts (R-08-02) # SKIP
+ok 2 - src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/home?dogId= keeps the member's activity rows under every dog, as the api's MemberHomeQuery (E5-W01 round 2, review \#3) # SKIP
+ok 3 - src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/bookable-classes reproduces 04: pack, the six rows, and the Rock and Toby variants # SKIP
+ok 4 - src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > module variants: WAITLIST off reads FULL without counts; SINGLE_CLASS prices every row and drops the pack # SKIP
+ok 5 - src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > POST /seat-holds: a plain hold of 30 s from the api clock; each refused row with its code, status and details # SKIP
+ok 6 - src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > POST /bookings confirms the hold (pack −1, calendar links); an expired hold is 409 SEAT_HOLD_EXPIRED # SKIP
+ok 7 - src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > bookingLimit (mockup 06): the hold proposes two swappable bookings and a done one; the swap cancels the old one # SKIP
+ok 8 - src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > bookingSingleClass: PAY_TO_BOOK answers PAYMENT_PENDING with a same-origin checkoutUrl; Rock is charged on the receipt # SKIP
+ok 9 - src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /bookings/{id} and the cancellation: late by R-08-10 (4 h, the edge in time), displayState, then 409 # SKIP
+ok 10 - src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > the waitlist: join a WAITLIST_OPEN row (it leaves 04), refusals, the detail, leaving it, and the claim of a NOTIFIED entry # SKIP
+ok 11 - src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > WAITLIST off: every waitlist route is 404 MODULE_DISABLED # SKIP
+ok 12 - src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: at Sunday 2 at 20:30 (weekOpensAt SUNDAY 20:00) W0 is 2026-08-02 and W1 2026-08-09: Monday 3 counts in the current week, Monday 10 is next, Monday 17 opens with W1, and the limit refusal names the coming opening # SKIP
+ok 13 - src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: 06's done class belongs to W0 at the clock (it began at the week's opening, Sunday 2 at 20:00): the hold lists it as DONE beside the two cancellable ones # SKIP
+ok 14 - src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: one minute before the opening (Sunday 2 at 19:59) the weeks are one earlier: Wednesday 5 to Saturday 8 are next week's, Monday 10 opens at 20:00, and Monday 17 is not listed yet # SKIP
+ok 15 - src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: the weeks come from `bookings.weekOpensAt` (T-08-44, a club whose week opens on Monday at 00:00) # SKIP
+not ok 16 - src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 \#6: at the clock the CURRENT refusal counts Duna's real bookings of the week: its `current` is /me/home's count, and no notSelectable id is a phantom # time=25.42ms
+    ---
+    error:
+        name: "AssertionError"
+        message: "expected 2 to be 1 // Object.is equality"
+    at: "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/booking-handlers.test.ts:604:29"
+    actual: "2"
+    expected: "1"
+    ...
+not ok 17 - src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 \#6: Monday 3 cancelled late (at 16:00, within the 4 h) still counts: the refusal lists it as DONE (R-08-09) and counts it as /me/home does # time=13.43ms
+    ---
+    error:
+        name: "AssertionError"
+        message: "expected 2 to be 1 // Object.is equality"
+    at: "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/booking-handlers.test.ts:619:29"
+    actual: "2"
+    expected: "1"
+    ...
+not ok 18 - src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 \#6: one minute before the opening the NEXT refusal counts next week's bookings as /me/home does, and no class of a NEXT week is DONE # time=41.55ms
+    ---
+    error:
+        name: "AssertionError"
+        message: "expected false to be true // Object.is equality"
+    at: "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/booking-handlers.test.ts:638:84"
+    actual: "false"
+    expected: "true"
+    ...
+not ok 19 - src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 \#11b: a PAYMENT_PENDING booking the hold cannot swap is LATE_WINDOW (the api's), a begun class DONE # time=26.45ms
+    ---
+    error:
+        name: "AssertionError"
+        message: "expected [ { …(4) }, { …(4) } ] to deeply equal [ { …(4) }, { …(4) } ]"
+    at: "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/booking-handlers.test.ts:655:38"
+    actual: "[
+  {
+    \"bookingId\": \"booking-duna-mon3\",
+    \"description\": \"B+C\",
+    \"reason\": \"DONE\",
+    \"startsAtLocal\": \"2026-08-03T18:50\",
+  },
+  {
+    \"bookingId\": \"booking-duna-done\",
+    \"description\": \"B+C\",
+    \"reason\": \"DONE\",
+    \"startsAtLocal\": \"2026-08-02T20:00\",
+  },
+]"
+    expected: "[
+  {
+    \"bookingId\": \"booking-duna-mon3\",
+    \"description\": \"B+C\",
+    \"reason\": \"LATE_WINDOW\",
+    \"startsAtLocal\": \"2026-08-03T18:50\",
+  },
+  {
+    \"bookingId\": \"booking-duna-done\",
+    \"description\": \"B+C\",
+    \"reason\": \"DONE\",
+    \"startsAtLocal\": \"2026-08-02T20:00\",
+  },
+]"
+    ...
+not ok 20 - src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 \#11b: the refusal lists Duna's PAYMENT_PENDING class of the week as LATE_WINDOW and counts it (bookingSingleClass, PAY_TO_BOOK) # time=25.71ms
+    ---
+    error:
+        name: "AssertionError"
+        message: "expected [ { …(2) }, { …(2) } ] to deeply equal [ { bookingId: 'booking-2', …(3) } ]"
+    at: "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/booking-handlers.test.ts:685:35"
+    actual: "[
+  {
+    \"bookingId\": \"booking-duna-past-1\",
+    \"reason\": \"DONE\",
+  },
+  {
+    \"bookingId\": \"booking-duna-past-2\",
+    \"reason\": \"DONE\",
+  },
+]"
+    expected: "[
+  {
+    \"bookingId\": \"booking-2\",
+    \"description\": \"B+C\",
+    \"reason\": \"LATE_WINDOW\",
+    \"startsAtLocal\": \"2026-08-05T18:50\",
+  },
+]"
+    ...
+not ok 21 - src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 \#11c: the limits are the club's bookings.maxCurrentWeek and bookings.maxNextWeek: /me/home, the hold and the refusal follow a saved change # time=8.89ms
+    ---
+    error:
+        name: "AssertionError"
+        message: "expected { …(3) } to match object { …(2) }
+(3 matching properties omitted from actual)"
+    at: "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/booking-handlers.test.ts:703:35"
+    actual: "{
+  \"currentWeek\": {
+    \"count\": 1,
+    \"max\": 2,
+  },
+  \"nextWeek\": {
+    \"count\": 1,
+    \"max\": 1,
+  },
+}"
+    expected: "{
+  \"currentWeek\": {
+    \"count\": 1,
+    \"max\": 1,
+  },
+  \"nextWeek\": {
+    \"count\": 1,
+    \"max\": 2,
+  },
+}"
+    ...

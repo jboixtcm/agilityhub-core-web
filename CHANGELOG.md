@@ -150,6 +150,53 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - the notification log shows a `null` audience (rows written before E7-T02) without a label;
   - MSW: the booking world's clock is Sunday 2 August 20:30 with the weeks computed by R-08-01 (`bookingWeekKey` too); the three `filter-values` routes; lists without search refuse `q` (E75); `appliedFilters` echo lists and ranges as arrays; the risk review names real classes on any day; the back office finds classes and waiting entries in the caller's club only; the dry run's pending-document warning and the dog `PATCH`'s whole `birthDate`; `/jobs` schedules from their parameters; scenarios `registerMany`, `impersonatedFamily`, `adminOtherClub`;
   - the real-core stages: E5's (e) checks the booking's own ring, its cleanup is an `afterAll`, the Spanish pass repeats (a) and (d), and the spec uses the generated types; the RESET link's own `&purpose=reset` and the banner's member name are proven on the core; e3 compares the kept card by file ids and state; `scripts/e2e-core.sh` removes the Playwright one-off container and stops on INT/TERM.
+- E5-W05 round 2 (ruling E80):
+  - the register's blocks tab asks `GET /ring-blocks/filter-values` once per need (no loop, a picked ring stays), and its «Dia i hora» filter is a range of club dates («Des del», «Fins al») sent as `between` with the club's day bounds, with no suggested values; `UniversalList` gains that range filter and ignores a change to the column already shown; `useClubRings` returns one object per answer;
+  - the student search adds «(abonat: …)» only when the guide is not the owner (a `handlerName` equal to the owner's first name is the owner);
+  - a run's `Week` effect opens D4 on the week its classes are in for any opening day; D1's rows and a run's classes share `classCalendarPath`;
+  - `SlotGrid` keeps `aria-pressed` on a chosen cell of a disabled column; 08 drops a SLOT_TAKEN message with the choice it offered;
+  - MSW behaves like the api:
+    - a registrant's `levelCode` is the dog's own level, `null` with `levels.enabled = false`;
+    - the booking lists, their `filter-values` and the training export are club-scoped, and so are `/weeks` and `/class-sessions/{id}`;
+    - `GET /class-sessions` has a handler, and it and `GET /weeks` refuse `q`;
+    - the limit refusal counts the dog's real bookings, as `/me/home` does, with limits from `bookings.maxCurrentWeek`/`maxNextWeek` and PAYMENT_PENDING as LATE_WINDOW;
+    - `no-show-notices` runs at `messaging.noShowNoticeTime`;
+    - the jobs' next runs follow their parameters, and the risk review reads `classes.minDogs` (D1 and D4 alike) and notifies only when it is on;
+    - a class's `filter-values` label is the core's «{YYYY-MM-DDTHH:mm} · {description}»;
+  - the real-core stages:
+    - the register's search is proven on the current image (`q` on `/training-bookings` and `/ring-blocks`);
+    - `e4w16-core.spec.ts` uses the generated types;
+    - two calendar-dependent expectations of e3 and e4 follow the club's date;
+    - `scripts/e2e-core.sh` runs each stage without a TTY, under an init, and stops on 130/143;
+  - the permanent mock specs write their captures to their own task, or to `pnpm e2e:docker <ID> --capture-task=<ID>`.
+- E6 integration (E6-W04):
+  - the api snapshot `e34bf04` is adopted byte for byte. It brings `GET /followup/filter-values`, `InstructorWeek.trainingSlotMinutes`, S11's error-detail schemas, and `GET /members/{id}/notification-preferences`, which leaves `pending.json` (now without paths);
+  - MSW follows the snapshot:
+    - CHANNEL_NOT_ALLOWED lists every refused cell;
+    - TEMPLATE_UNKNOWN_VARIABLE lists every unknown variable;
+    - SMS_BODY_REQUIRED names the default language's text;
+    - N-02 no longer declares `link`;
+    - D10's preferences carry the club's locales and SMS/PUSH modules, and its PUT has the GET's guards;
+  - `scripts/e2e-core.sh` keeps the image's demo seed with the run's evidence;
+  - screen 25: an activity row links to its page when the api sends its `activityId`;
+  - screen 13: a member's checkbox completes a task (`POST /tasks/{id}/completion`):
+    - it is busy meanwhile, then shows «feta per … el …»;
+    - `TASK_ALREADY_DONE` reads 13 again, without an error;
+    - other errors are said by their code, and a new completion clears the last message;
+  - D14: «Abonat», «Gos» and the new «Creador» read `GET /followup/filter-values`, and a filter from the address is named from those labels; D12's legend reads the api's `trainingSlotMinutes`;
+  - 26 and D13:
+    - a held upload key belongs to its submission;
+    - `ATTACHMENT_ENTITY_MISMATCH` uploads the file again once;
+    - an instructor's selection goes file by file, with «<name>: <message>» for each refused one, and the files attached before a failure are shown;
+  - D12 dims a FINISHED class (R-10-15);
+  - the real-core e2e gains an E6 stage (`e2e/core/e6-core.spec.ts`) on api E6-T04's demo seed:
+    - the sheet on 21 and on D12, with a real concurrent save;
+    - «ha avisat» frees the seat and notifies the waitlist;
+    - P8 and P3 from D11 with the clock advanced (one N-19, «avís ja enviat»);
+    - tasks with a real signed upload on 26, D13 and 13;
+    - per-account unread marks on D14, 25 and the week PDF;
+    - the `es` pass;
+    - and E3's add-dog success step writes a diagnostic when it fails.
 - D9, the log, D10 and «Enviar comunicat» (E7-W01 round 2):
   - the log's exports ask for the export's own columns (`createdAt, code, recipient, channels, readAt`), and MSW checks them as the api does;
   - the send's confirmation belongs to the dry run that finished last: another template, or the same one again, needs a new tick;

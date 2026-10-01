@@ -1,0 +1,10 @@
+{
+  "heading": "Ja hi ets",
+  "openedAsDelivered": true,
+  "parameters": [
+    "t",
+    "purpose"
+  ],
+  "path": "/activacio",
+  "purpose": "reset"
+}

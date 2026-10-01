@@ -1,0 +1,262 @@
+{
+  "created": {},
+  "runId": "osy4oi",
+  "steps": {
+    "instants": {
+      "finished": "2026-10-05T07:46:00.000Z",
+      "monday": "2026-10-05T02:00:00.000Z",
+      "nextMorning": "2026-10-06T06:00:00.000Z"
+    },
+    "preflight": {
+      "followup": 200,
+      "instructorDay": 200
+    },
+    "jobs-switched-off": [
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "class-finishing",
+      "cleanup"
+    ],
+    "jobs-switch-off-answers": {
+      "week-opening": {
+        "enabled": false,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": false,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": false,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": false,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": false,
+        "status": 200
+      }
+    },
+    "clock-2026-10-05T02:00:00.000Z": {
+      "body": {
+        "now": "2026-10-05T02:00:00.000021583Z"
+      },
+      "status": 200
+    },
+    "clock": {
+      "coreUrl": "http://core:8080",
+      "instant": "2026-10-05T02:00:00.000Z",
+      "status": 200
+    },
+    "parameters": {
+      "bookings.lateCancelThresholdMinutes": 240,
+      "waitlist.mode": "ALL_AT_ONCE",
+      "waitlist.notifyThresholdMinutes": 30,
+      "attendance.editDays": 1,
+      "messaging.noShowNoticeTime": "08:00",
+      "classes.finishGraceMinutes": 15,
+      "bookings.instructorLastMinuteNotice": true
+    },
+    "scene-discovery": {
+      "classInstructor": "Berta",
+      "entry": {
+        "name": "Iu + Gira",
+        "state": "ACTIVE"
+      },
+      "logins": {
+        "instructor@example.test": "other",
+        "instructor.2@example.test": "teacher"
+      },
+      "rows": [
+        "Mel",
+        "Sorra",
+        "Pinya",
+        "Trufa"
+      ]
+    },
+    "scene": {
+      "bertaId": "43177d2c-a660-46d9-a905-7937e8259bcc",
+      "classId": "3d6c6bd4-d916-4d1b-89b7-b8f8a48fd5fa",
+      "entryId": "35acb752-2b72-4458-afdf-26e2a808eb33",
+      "instructorA": "instructor.2@example.test",
+      "instructorB": "instructor@example.test",
+      "melId": "b2171eac-9cdc-3808-a481-70c6aa6e956a",
+      "names": {
+        "alba": "Alba + Pinya",
+        "iu": "Iu + Gira",
+        "marti": "Martí + Sorra",
+        "nil": "Nil + Trufa",
+        "rita": "Rita + Mel"
+      }
+    },
+    "f-22-card": {
+      "lastClasses": [
+        {
+          "date": "2026-09-30",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-28",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-23",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-21",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-16",
+          "state": "NOTIFIED"
+        }
+      ],
+      "metrics": {
+        "windowDays": 30,
+        "attendancePct": 86,
+        "present": 6,
+        "noShow": 1,
+        "notified": 1,
+        "cancelledLate": 0,
+        "classesCounted": 7,
+        "trainingsCount": 10,
+        "trainingsPerWeek": 2.3
+      },
+      "noteText": "La Mel s'espanta amb el túnel llarg: si us plau, comenceu amb el túnel recollit (text fictici).",
+      "observations": "Bona progressió en contactes; cal reforçar la sortida del túnel (observació fictícia).",
+      "tasks": {
+        "pendingCount": 1,
+        "doneCount": 1,
+        "latest": {
+          "id": "2a8aec87-a347-4df7-9893-d01fa1a372f2",
+          "text": "Tres sessions de quiets d'un minut abans de la classe de dilluns.",
+          "createdAt": "2026-10-01T00:34:22.886Z",
+          "createdByName": "Berta"
+        }
+      }
+    },
+    "a-c-sheet": {
+      "a": {
+        "afterReload": {
+          "Mel": "PRESENT",
+          "Sorra": "NO_SHOW",
+          "Pinya": "PENDING",
+          "Trufa": "NO_SHOW"
+        },
+        "savedAt": "2026-10-05T02:00:02.931Z",
+        "savedByName": "Berta",
+        "status": 200,
+        "version": 2
+      },
+      "c": {
+        "otherSave": {
+          "status": 200,
+          "version": 1
+        },
+        "stale": {
+          "code": "STALE_VERSION",
+          "status": 409
+        },
+        "versionRead": 0
+      },
+      "order": [
+        "Rita + Mel",
+        "Martí + Sorra",
+        "Alba + Pinya",
+        "Nil + Trufa"
+      ],
+      "twentyCard": {
+        "booked": 4,
+        "capacity": 5,
+        "waiting": 1
+      }
+    },
+    "b-notice": {
+      "booked": 3,
+      "entry": {
+        "adminRead": 200,
+        "state": "NOTIFIED"
+      },
+      "forcedPuts": 0,
+      "mailboxAfterNotice": [],
+      "notice": {
+        "atLocal": "04:00",
+        "at": "2026-10-05T02:00:03.370Z",
+        "late": false,
+        "minutesBefore": 269,
+        "seatReleased": true,
+        "waitlistNotified": true,
+        "afterClassEnd": false,
+        "bookingState": "CANCELLED"
+      },
+      "status": 200
+    },
+    "d-pdf": {
+      "boxes": [
+        {
+          "height": 595.27563,
+          "width": 841.8898
+        }
+      ],
+      "rotate": [],
+      "contentType": "application/pdf",
+      "firstBytes": "%PDF-1.6",
+      "size": 13604,
+      "status": 200,
+      "suggestedFilename": "agenda-2026-10-05.pdf"
+    },
+    "d-agenda": {
+      "blocks": 1,
+      "cell": {
+        "booked": 3,
+        "capacity": 5,
+        "state": "ACTIVE",
+        "waiting": 1
+      },
+      "saved": {
+        "items": 1,
+        "status": 200,
+        "version": 4
+      },
+      "trainingSlotMinutes": 30,
+      "trainings": 3
+    },
+    "j-tasks-deleted": {},
+    "jobs-switched-on": {
+      "week-opening": {
+        "enabled": true,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": true,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": true,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": true,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": true,
+        "status": 200
+      }
+    },
+    "clock-2026-10-01T00:34:59.193Z": {
+      "body": {
+        "now": "2026-10-01T00:34:59.193004667Z"
+      },
+      "status": 200
+    },
+    "j-clock-restored": {
+      "status": 200
+    }
+  },
+  "weekStart": "2026-10-05"
+}

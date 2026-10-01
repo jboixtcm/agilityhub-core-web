@@ -183,7 +183,9 @@ export function SlotGrid({
     return (
       <button
         aria-label={labels.cell(time, state)}
-        aria-pressed={pressable ? isSelected : undefined}
+        // A chosen cell says so even when it can no longer be pressed (its column disabled), as
+        // it still looks chosen.
+        aria-pressed={pressable || isSelected ? isSelected : undefined}
         className={className}
         // Dimmed like its column's header when the column is disabled.
         data-disabled={disabledColumns.has(cell.columnId) ? "" : undefined}

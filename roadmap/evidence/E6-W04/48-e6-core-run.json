@@ -1,0 +1,355 @@
+{
+  "created": {
+    "taskA": "543a8570-bc15-4350-a9b9-3179a553f7e7",
+    "taskB": "0d801002-1150-47e3-9519-f69e673c41e1"
+  },
+  "runId": "otj7ae",
+  "steps": {
+    "instants": {
+      "finished": "2026-10-05T07:46:00.000Z",
+      "monday": "2026-10-05T02:00:00.000Z",
+      "nextMorning": "2026-10-06T06:00:00.000Z"
+    },
+    "preflight": {
+      "followup": 200,
+      "instructorDay": 200
+    },
+    "jobs-switched-off": [
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "class-finishing",
+      "cleanup"
+    ],
+    "jobs-switch-off-answers": {
+      "week-opening": {
+        "enabled": false,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": false,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": false,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": false,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": false,
+        "status": 200
+      }
+    },
+    "clock-2026-10-05T02:00:00.000Z": {
+      "body": {
+        "now": "2026-10-05T02:00:00.000024542Z"
+      },
+      "status": 200
+    },
+    "clock": {
+      "coreUrl": "http://core:8080",
+      "instant": "2026-10-05T02:00:00.000Z",
+      "status": 200
+    },
+    "parameters": {
+      "bookings.lateCancelThresholdMinutes": 240,
+      "waitlist.mode": "ALL_AT_ONCE",
+      "waitlist.notifyThresholdMinutes": 30,
+      "attendance.editDays": 1,
+      "messaging.noShowNoticeTime": "08:00",
+      "classes.finishGraceMinutes": 15,
+      "bookings.instructorLastMinuteNotice": true
+    },
+    "scene-discovery": {
+      "classInstructor": "Berta",
+      "entry": {
+        "name": "Iu + Gira",
+        "state": "ACTIVE"
+      },
+      "logins": {
+        "instructor@example.test": "teacher",
+        "instructor.3@example.test": "other",
+        "instructor.2@example.test": "other"
+      },
+      "rows": [
+        "Mel",
+        "Sorra",
+        "Pinya",
+        "Trufa"
+      ]
+    },
+    "scene": {
+      "bertaId": "0b94dfba-7717-4b66-abe4-32f6bbbf0953",
+      "classId": "51bcce94-8fd3-424e-9d22-ba1c2cb5c7c6",
+      "entryId": "d3d89d1e-3ae3-43d0-a92e-ec90e0e762d3",
+      "instructorA": "instructor@example.test",
+      "instructorB": "instructor.2@example.test",
+      "melId": "d7295966-8d57-3a2f-a281-5f92665f691c",
+      "names": {
+        "alba": "Alba + Pinya",
+        "iu": "Iu + Gira",
+        "marti": "Martí + Sorra",
+        "nil": "Nil + Trufa",
+        "rita": "Rita + Mel"
+      }
+    },
+    "f-22-card": {
+      "lastClasses": [
+        {
+          "date": "2026-09-30",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-28",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-23",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-21",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-16",
+          "state": "NOTIFIED"
+        }
+      ],
+      "metrics": {
+        "windowDays": 30,
+        "attendancePct": 86,
+        "present": 6,
+        "noShow": 1,
+        "notified": 1,
+        "cancelledLate": 0,
+        "classesCounted": 7,
+        "trainingsCount": 10,
+        "trainingsPerWeek": 2.3
+      },
+      "noteText": "La Mel s'espanta amb el túnel llarg: si us plau, comenceu amb el túnel recollit (text fictici).",
+      "observations": "Bona progressió en contactes; cal reforçar la sortida del túnel (observació fictícia).",
+      "tasks": {
+        "pendingCount": 1,
+        "doneCount": 1,
+        "latest": {
+          "id": "3b62d9ee-cc6e-4ad6-88f0-92dd60cac7c9",
+          "text": "Tres sessions de quiets d'un minut abans de la classe de dilluns.",
+          "createdAt": "2026-10-01T00:50:46.638Z",
+          "createdByName": "Berta"
+        }
+      }
+    },
+    "a-c-sheet": {
+      "a": {
+        "afterReload": {
+          "Mel": "PRESENT",
+          "Sorra": "NO_SHOW",
+          "Pinya": "PENDING",
+          "Trufa": "NO_SHOW"
+        },
+        "savedAt": "2026-10-05T02:00:02.905Z",
+        "savedByName": "Berta",
+        "status": 200,
+        "version": 2
+      },
+      "c": {
+        "otherSave": {
+          "status": 200,
+          "version": 1
+        },
+        "stale": {
+          "code": "STALE_VERSION",
+          "status": 409
+        },
+        "versionRead": 0
+      },
+      "order": [
+        "Rita + Mel",
+        "Martí + Sorra",
+        "Alba + Pinya",
+        "Nil + Trufa"
+      ],
+      "twentyCard": {
+        "booked": 4,
+        "capacity": 5,
+        "waiting": 1
+      }
+    },
+    "b-notice": {
+      "booked": 3,
+      "entry": {
+        "adminRead": 200,
+        "state": "NOTIFIED"
+      },
+      "forcedPuts": 0,
+      "mailboxAfterNotice": [],
+      "notice": {
+        "atLocal": "04:00",
+        "at": "2026-10-05T02:00:03.356Z",
+        "late": false,
+        "minutesBefore": 269,
+        "seatReleased": true,
+        "waitlistNotified": true,
+        "afterClassEnd": false,
+        "bookingState": "CANCELLED"
+      },
+      "status": 200
+    },
+    "d-pdf": {
+      "boxes": [
+        {
+          "height": 595.27563,
+          "width": 841.8898
+        }
+      ],
+      "rotate": [],
+      "contentType": "application/pdf",
+      "firstBytes": "%PDF-1.6",
+      "size": 13601,
+      "status": 200,
+      "suggestedFilename": "agenda-2026-10-05.pdf"
+    },
+    "d-agenda": {
+      "blocks": 1,
+      "cell": {
+        "booked": 3,
+        "capacity": 5,
+        "state": "ACTIVE",
+        "waiting": 1
+      },
+      "saved": {
+        "items": 1,
+        "status": 200,
+        "version": 4
+      },
+      "trainingSlotMinutes": 30,
+      "trainings": 3
+    },
+    "f-upload": {
+      "grant": {
+        "host": "127.0.0.1:4173",
+        "path": "/api/v1/attachments"
+      },
+      "puts": [
+        {
+          "host": "127.0.0.1:4173",
+          "path": "/api/v1/attachments",
+          "status": 204
+        }
+      ]
+    },
+    "f-tasks": {
+      "attachmentGrantMinutes": 5,
+      "d13": {
+        "tasks": {
+          "pendingCount": 2,
+          "doneCount": 1,
+          "latest": {
+            "id": "543a8570-bc15-4350-a9b9-3179a553f7e7",
+            "text": "Salts curts amb recompensa al final, tres cops al dia (E6 otj7ae, text fictici).",
+            "createdAt": "2026-10-05T02:00:06.435Z",
+            "createdByName": "Berta"
+          }
+        }
+      },
+      "member": {
+        "attachments": {
+          "code": null,
+          "count": 1,
+          "status": 200
+        },
+        "file": {
+          "size": 32,
+          "status": 200
+        },
+        "meDogTask": {
+          "id": "543a8570-bc15-4350-a9b9-3179a553f7e7",
+          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 otj7ae, text fictici).",
+          "createdAt": "2026-10-05T02:00:06.435Z",
+          "instructorName": "Berta",
+          "attachmentsCount": 1
+        },
+        "meResponses": [
+          "/api/v1/me/activities",
+          "/api/v1/me/training-summary",
+          "/api/v1/me/home",
+          "/api/v1/me/dogs",
+          "/api/v1/me/history"
+        ],
+        "observationLeaks": []
+      },
+      "popup": {
+        "host": "127.0.0.1:4173",
+        "path": "/api/v1"
+      },
+      "task": {
+        "attachments": 1,
+        "created": 201,
+        "id": "543a8570-bc15-4350-a9b9-3179a553f7e7"
+      }
+    },
+    "f-member-completion": {
+      "d13": {
+        "pendingCount": 1,
+        "doneCount": 2,
+        "latest": {
+          "id": "543a8570-bc15-4350-a9b9-3179a553f7e7",
+          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 otj7ae, text fictici).",
+          "createdAt": "2026-10-05T02:00:06.435Z",
+          "createdByName": "Berta"
+        }
+      },
+      "doneBy": {
+        "displayName": "Rita",
+        "role": "MEMBER"
+      },
+      "status": 200
+    },
+    "j-tasks-deleted": {
+      "taskA": {
+        "delete": 204,
+        "listed": false
+      },
+      "taskB": {
+        "delete": 204,
+        "listed": false
+      }
+    },
+    "jobs-switched-on": {
+      "week-opening": {
+        "enabled": true,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": true,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": true,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": true,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": true,
+        "status": 200
+      }
+    },
+    "clock-2026-10-01T00:51:24.130Z": {
+      "body": {
+        "now": "2026-10-01T00:51:24.130004042Z"
+      },
+      "status": 200
+    },
+    "j-clock-restored": {
+      "status": 200
+    }
+  },
+  "weekStart": "2026-10-05"
+}

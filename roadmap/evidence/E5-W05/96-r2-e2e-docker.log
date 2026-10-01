@@ -1,0 +1,11 @@
+heavy.sh: 01:20 waiting for the host lock, held by: 01:17 agilityhub-core-api: ./mvnw -q clean verify
+heavy.sh: 01:25 got the host lock after 4 min 45 s
+
+> agilityhub-core-web@0.0.0 e2e:docker /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-docker.sh E5-W05 --capture-task\=E5-W05
+
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: E5-W05
+scripts/e2e-docker.sh: línia 113: EOF inesperat mentre es cercava «'»
+ ELIFECYCLE  Command failed with exit code 2.
+exit 2

@@ -1,0 +1,96 @@
+{
+  "created": {},
+  "runId": "ot06ju",
+  "steps": {
+    "instants": {
+      "finished": "2026-10-05T07:46:00.000Z",
+      "monday": "2026-10-05T02:00:00.000Z",
+      "nextMorning": "2026-10-06T06:00:00.000Z"
+    },
+    "preflight": {
+      "followup": 200,
+      "instructorDay": 200
+    },
+    "jobs-switched-off": [
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "class-finishing",
+      "cleanup"
+    ],
+    "jobs-switch-off-answers": {
+      "week-opening": {
+        "enabled": false,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": false,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": false,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": false,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": false,
+        "status": 200
+      }
+    },
+    "clock-2026-10-05T02:00:00.000Z": {
+      "body": {
+        "now": "2026-10-05T02:00:00.000022084Z"
+      },
+      "status": 200
+    },
+    "clock": {
+      "coreUrl": "http://core:8080",
+      "instant": "2026-10-05T02:00:00.000Z",
+      "status": 200
+    },
+    "parameters": {
+      "bookings.lateCancelThresholdMinutes": 240,
+      "waitlist.mode": "ALL_AT_ONCE",
+      "waitlist.notifyThresholdMinutes": 30,
+      "attendance.editDays": 1,
+      "messaging.noShowNoticeTime": "08:00",
+      "classes.finishGraceMinutes": 15,
+      "bookings.instructorLastMinuteNotice": true
+    },
+    "jobs-switched-on": {
+      "week-opening": {
+        "enabled": true,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": true,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": true,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": true,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": true,
+        "status": 200
+      }
+    },
+    "clock-2026-10-01T00:41:26.827Z": {
+      "body": {
+        "now": "2026-10-01T00:41:26.827003959Z"
+      },
+      "status": 200
+    },
+    "j-clock-restored": {
+      "status": 200
+    }
+  },
+  "weekStart": "2026-10-05"
+}

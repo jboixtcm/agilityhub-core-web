@@ -19,7 +19,7 @@ import {
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { addDays, clubInstant, isIsoDate } from "../planning/calendar-shared";
+import { addDays, classCalendarPath, clubInstant, isIsoDate } from "../planning/calendar-shared";
 import { mondayOf } from "../planning/shared";
 
 type JobSummary = components["schemas"]["JobSummary"];
@@ -434,29 +434,15 @@ function RunsDrawer({
 
 type JobEffectItem = JobRun["effects"]["items"][number];
 
-/** D4 on a class's week with the class selected (D1's rows link the same way, S14 §2). */
-function classPath(session: { date: string; id: string; state: string }): string {
-  const query = new URLSearchParams({
-    classe: session.id,
-    estat:
-      session.state === "CANCELLED"
-        ? "anul·lades"
-        : session.state === "DRAFT"
-          ? "esborrany"
-          : "actives",
-    setmana: mondayOf(session.date),
-  });
-  return `/calendari?${query.toString()}`;
-}
-
 /**
  * R-15-21: where the back office has a page for an effect's entity, the item links to it. A class
  * opens in D4 (its week comes from `GET /class-sessions/{id}`), a week in D4, a member in D10.
  */
 function directPath(item: JobEffectItem): string | undefined {
   if (item.entityType === "Week" && isIsoDate(item.entityId)) {
-    // The booking week's key is the day it opens (S08 R-08-01); D4 shows its Monday's week.
-    return `/calendari?${new URLSearchParams({ setmana: mondayOf(addDays(item.entityId, 1)) }).toString()}`;
+    // The booking week's key is the day it opens (S08 R-08-01), any day of the week before its
+    // classes (`bookings.weekOpensAt` is the club's): six days on is always in its classes' week.
+    return `/calendari?${new URLSearchParams({ setmana: mondayOf(addDays(item.entityId, 6)) }).toString()}`;
   }
   if (item.entityType === "Member") return `/abonats/${encodeURIComponent(item.entityId)}`;
   return undefined;
@@ -494,7 +480,7 @@ function RunEffects({
         params: { path: { id: item.entityId } },
       });
       if (result.data === undefined) throw new TypeError("The class response had no data");
-      if (shownRun.current === forRun) onNavigate(classPath(result.data));
+      if (shownRun.current === forRun) onNavigate(classCalendarPath(result.data));
     } catch (cause) {
       if (shownRun.current === forRun) setOpenError(errorText(t, cause));
     } finally {

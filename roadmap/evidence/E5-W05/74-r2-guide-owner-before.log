@@ -1,0 +1,385 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/instructor.test.tsx (43 tests | 1 failed | 41 skipped) 10138ms
+   ❯ E6-W01 step 6 the instructor's student search (S10 §2, §13-9) (5)
+     × E5-W05 round 2 #5 (R-10-00): a handlerName equal to the owner's first name («Joan Antoni») is the owner, so the row adds no «(abonat: …)» 10020ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > E5-W05 round 2 #5 (R-10-00): a handlerName equal to the owner's first name («Joan Antoni») is the owner, so the row adds no «(abonat: …)»
+TestingLibraryElementError: Unable to find role="link" and name "Joan Antoni + Toby · B"
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m""[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"instructor-screen instructor-students"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mAlumnes[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"instructor-students__search"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mCerca un alumne[0m
+        [36m</span>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card instructor-students__list"[39m
+      [36m>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-00000000a001"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mJoan Antoni + Toby · B[0m
+                [0m [0m
+                [36m<span[39m
+                  [33mclass[39m=[32m"instructor-students__owner"[39m
+                [36m>[39m
+                  [0m(abonat: Joan Antoni Puig Serra)[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body[39m
+  [33mstyle[39m=[32m""[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"instructor-screen instructor-students"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mAlumnes[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"instructor-students__search"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mCerca un alumne[0m
+        [36m</span>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card instructor-students__list"[39m
+      [36m>[39m
+        [36m<ul>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/instructor/alumnes/00000000-0000-4000-8000-00000000a001"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mJoan Antoni + Toby · B[0m
+                [0m [0m
+                [36m<span[39m
+                  [33mclass[39m=[32m"instructor-students__owner"[39m
+                [36m>[39m
+                  [0m(abonat: Joan Antoni Puig Serra)[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/instructor/instructor.test.tsx:1027:30
+    1025|     server.use(http.get("*/api/v1/dogs", () => HttpResponse.json(answe…
+    1026|     await renderScreen(<StudentSearchPage client={client()} />, { path…
+    1027|     const row = await screen.findByRole("link", { name: "Joan Antoni +…
+       |                              ^
+    1028|     expect(within(row).queryByText(/abonat/u)).toBeNull();
+    1029|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 41 skipped (43)
+   Start at  00:47:48
+   Duration  11.22s (tests 91%, transform 5%, environment 2%, import 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/instructor.test.tsx -t round 2 #5
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/instructor/student-record.test.tsx (11 tests | 1 failed | 10 skipped) 102ms
+   ❯ «Alumnes» of the back office (mockups D12–D14, S10 §13-9) (2)
+     × E5-W05 step 23 (R-10-00): «Alumnes» writes the owner's first name the api sends, a compound one whole («Joan Antoni + Toby»), and adds «(abonat: {nom i cognom})» to a dog led by another guide 101ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/student-record.test.tsx > «Alumnes» of the back office (mockups D12–D14, S10 §13-9) > E5-W05 step 23 (R-10-00): «Alumnes» writes the owner's first name the api sends, a compound one whole («Joan Antoni + Toby»), and adds «(abonat: {nom i cognom})» to a dog led by another guide
+TestingLibraryElementError: Unable to find an accessible element with the role "link" and name "Joan Antoni + Brisa · B"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Alumnes":
+  [36m<h1 />[39m
+
+  --------------------------------------------------
+  searchbox:
+
+  Name "Cerca un alumne":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-input"[39m
+    [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+    [33mtype[39m=[32m"search"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"students-page__list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  Name "":
+  [36m<li />[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "Joan Antoni + Toby · B":
+  [36m<a[39m
+    [33mhref[39m=[32m"/alumnes/00000000-0000-4000-8000-00000000a001"[39m
+  [36m/>[39m
+
+  Name "Júlia Roca + Rock · D (abonat: Laura Serra Vidal)":
+  [36m<a[39m
+    [33mhref[39m=[32m"/alumnes/00000000-0000-4000-8000-00000000a002"[39m
+  [36m/>[39m
+
+  Name "Joan Antoni + Brisa · B (abonat: Joan Antoni Puig Serra)":
+  [36m<a[39m
+    [33mhref[39m=[32m"/alumnes/00000000-0000-4000-8000-00000000a003"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"students-page"[39m
+    [36m>[39m
+      [36m<h1>[39m
+        [0mAlumnes[0m
+      [36m</h1>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"students-page__search"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mCerca un alumne[0m
+        [36m</span>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mplaceholder[39m=[32m"Cerca un alumne"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card"[39m
+      [36m>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"students-page__list"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/alumnes/00000000-0000-4000-8000-00000000a001"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mJoan Antoni + Toby · B[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/alumnes/00000000-0000-4000-8000-00000000a002"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mJúlia Roca + Rock · D[0m
+                [0m [0m
+                [36m<span[39m
+                  [33mclass[39m=[32m"students-page__owner"[39m
+                [36m>[39m
+                  [0m(abonat: Laura Serra Vidal)[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+          [36m<li>[39m
+            [36m<a[39m
+              [33mhref[39m=[32m"/alumnes/00000000-0000-4000-8000-00000000a003"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mJoan Antoni + Brisa · B[0m
+                [0m [0m
+                [36m<span[39m
+                  [33mclass[39m=[32m"students-page__owner"[39m
+                [36m>[39m
+                  [0m(abonat: Joan Antoni Puig Serra)[0m
+                [36m</span>[39m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</a>[39m
+          [36m</li>[39m
+        [36m</ul>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/instructor/student-record.test.tsx:529:26
+    527|     expect(within(rock).getByText("(abonat: Laura Serra Vidal)")).toBe…
+    528|     // E5-W05 round 2 #5 (R-10-00 «si difereixen»): «Joan Antoni» lead…
+    529|     const brisa = screen.getByRole("link", { name: "Joan Antoni + Bris…
+       |                          ^
+    530|     expect(within(brisa).queryByText(/abonat/u)).toBeNull();
+    531|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  00:47:59
+   Duration  1.33s (transform 54%, environment 19%, import 15%, tests 8%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/student-record.test.tsx -t step 23

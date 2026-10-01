@@ -467,11 +467,16 @@ const scenarios = {
     sessions: accountSessions,
   },
   /**
-   * E5-W05 step 16 (tenant isolation): an ADMIN of another club, the «club mínim» (WAITLIST on).
-   * The token's club is not the one the mock worlds belong to, so none of their records is found.
+   * E5-W05 step 16 (tenant isolation): an ADMIN of another club, the «club mínim» with WAITLIST and
+   * FREE_TRAINING on (so its lists answer by tenant, not by module). The token's club is not the
+   * one the mock worlds belong to, so none of their records is found.
    */
   adminOtherClub: {
-    branding: { ...minimal, locales: ["ca", "es", "en"] },
+    branding: {
+      ...minimal,
+      locales: ["ca", "es", "en"],
+      modules: [...minimal.modules, "FREE_TRAINING"],
+    },
     me: {
       ...admin,
       membership: { ...adminMembership, clubId: "50000000-0000-4000-8000-000000000002" },
@@ -722,4 +727,14 @@ export function currentMockScenario(): MockScenarioDefinition {
 
 export function currentMockScenarioName(): MockScenario {
   return selectedScenario;
+}
+
+/**
+ * The tenant comes from the JWT: the mock worlds are one club's records (`MOCK_CLUB_ID`), and a
+ * token of another club finds none of them (E5-W05 step 16).
+ */
+export function callerClubOwnsTheWorld(
+  scenario: MockScenarioDefinition = currentMockScenario(),
+): boolean {
+  return scenario.me.membership?.clubId === MOCK_CLUB_ID;
 }

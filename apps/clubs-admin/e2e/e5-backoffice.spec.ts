@@ -4,8 +4,16 @@ import { resolve } from "node:path";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4174";
-// E5-W05 refreshes E5-W03's captures (registrants, register, D10, D11, D1) in its own folder.
-const evidenceDirectory = resolve(import.meta.dirname, "../../../roadmap/evidence/E5-W05");
+// E5-W05 round 2 (review #10): the captures go to this spec's own task (E5-W03) unless the run names
+// another one (`E2E_CAPTURE_TASK`, `pnpm e2e:docker <ID> --capture-task=<ID>`), as E5-W05 does to
+// refresh E5-W03's captures (registrants, register, D10, D11, D1) in its own folder: a later
+// complete run never rewrites them.
+const captureTask = process.env.E2E_CAPTURE_TASK ?? "";
+const evidenceDirectory = resolve(
+  import.meta.dirname,
+  "../../../roadmap/evidence",
+  captureTask === "" ? "E5-W03" : captureTask,
+);
 const brandingCanic: unknown = JSON.parse(
   readFileSync(
     resolve(
@@ -67,8 +75,9 @@ test.describe("E5-W03 D4 · the registrants of the selected class (S08 §6, R-08
     await page.getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/5 \+2/u }).click();
     const card = page.getByRole("region", { name: /^Classe seleccionada/u });
     const panel = card.getByRole("region", { name: "Inscrits (4/5)" });
-    // E5-W05 steps 1 and 2: the level chip (levelCode), the displayState chip and «{guia} + {gos}».
-    await expect(panel.getByRole("listitem").first()).toHaveText("Laura + DunaBconfirmada");
+    // E5-W05 steps 1 and 2: the level chip (levelCode, round 2 #3: Duna's own «C»), the
+    // displayState chip and «{guia} + {gos}».
+    await expect(panel.getByRole("listitem").first()).toHaveText("Laura + DunaCconfirmada");
     await expect(panel.getByText("Sergio + Thai")).toBeVisible();
     await expect(panel.getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
     await card.scrollIntoViewIfNeeded();

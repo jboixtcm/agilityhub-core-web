@@ -115,6 +115,15 @@ function currentWeek(timeZone: string): { end: string; start: string } {
   return { end: addDays(start, 6), start };
 }
 
+/**
+ * The blocks' `from` filter for the club dates `start`…`end`: the club-local start of `start` and
+ * of the day after `end`. The days are the club's dates; the front never builds them from the
+ * blocks' instants (ruling E80).
+ */
+function clubDaysRange(start: string, end: string, timeZone: string): string {
+  return `${clubInstant(start, "00:00", timeZone)},${clubInstant(addDays(end, 1), "00:00", timeZone)}`;
+}
+
 /** `400 INVALID_FILTER` keeps the list's own message (T-08-47 / T-09-24); other codes theirs. */
 function listError(t: Translate, error: unknown): string | undefined {
   if (error === undefined) return undefined;
@@ -144,6 +153,25 @@ function filterOptions(
   return /^\d{4}-\d{2}-\d{2}/u.test(values[0]?.value ?? "")
     ? values.sort((left, right) => left.value.localeCompare(right.value))
     : values.sort((left, right) => left.label.localeCompare(right.label));
+}
+
+/**
+ * Adds the api's labels of one field's values to `current`, or keeps `current` when none changed:
+ * a new object at every answer re-renders the list, which asks for the values again (E5-W05
+ * round 2 #1).
+ */
+function withLearned(
+  current: Readonly<Record<string, string>>,
+  field: string,
+  options: readonly UniversalFilterValue[],
+): Readonly<Record<string, string>> {
+  const changed = options.filter((option) => current[`${field}:${option.value}`] !== option.label);
+  return changed.length === 0
+    ? current
+    : {
+        ...current,
+        ...Object.fromEntries(changed.map((option) => [`${field}:${option.value}`, option.label])),
+      };
 }
 
 function RingName({ color, name }: { color: string | undefined; name: string }) {
@@ -376,10 +404,7 @@ function TrainingBookingsList({
       const options = filterOptions(result.data, (value, apiLabel) =>
         ["date", "origin", "state"].includes(field) ? valueLabel(field, value) : apiLabel,
       );
-      setLearned((current) => ({
-        ...current,
-        ...Object.fromEntries(options.map((option) => [`${field}:${option.value}`, option.label])),
-      }));
+      setLearned((current) => withLearned(current, field, options));
       return options;
     },
     // `valueLabel` reads `t` and `formats` for these fields.
@@ -463,7 +488,7 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
   const { t } = useTranslation(["admin-training", "census", "enums", "errors"]);
   const rings = useClubRings(client, admin);
   const week = currentWeek(branding.timeZone);
-  const weekFilter = `${clubInstant(week.start, "00:00", branding.timeZone)},${clubInstant(addDays(week.end, 1), "00:00", branding.timeZone)}`;
+  const weekFilter = clubDaysRange(week.start, week.end, branding.timeZone);
   const [state, setState, applySavedView] = useUrlListState(
     {
       columns: admin ? [...BLOCK_DEFAULT_COLUMNS, "actions"] : BLOCK_DEFAULT_COLUMNS,
@@ -621,20 +646,22 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
       type: "relation",
     },
     {
-      // Each value is a whole day (its two club-local ends): only `between` takes it.
+      // Whole club days, from one date to another (ruling E80): `/ring-blocks/filter-values` gives
+      // at most 50 start instants, so it offers no values here.
       key: "from",
       label: t("admin-training:blocks.columns.from"),
       operators: ["between"],
+      range: {
+        endLabel: t("admin-training:blocks.rangeTo"),
+        startLabel: t("admin-training:blocks.rangeFrom"),
+        toValue: (start, end) => clubDaysRange(start, end, branding.timeZone),
+      },
       type: "date",
     },
     { key: "kind", label: t("admin-training:blocks.columns.kind"), type: "enum" },
     { key: "reason", label: t("admin-training:blocks.columns.reason"), type: "enum" },
     { key: "state", label: t("admin-training:blocks.columns.state"), type: "enum" },
   ];
-
-  /** A day's filter value: its club-local start and the next day's (`from:between:…`). */
-  const dayRange = (date: string) =>
-    `${clubInstant(date, "00:00", branding.timeZone)},${clubInstant(addDays(date, 1), "00:00", branding.timeZone)}`;
 
   // The names the api gave each filter value (`filter-values` labels), for the applied chips.
   const [learned, setLearned] = useState<Readonly<Record<string, string>>>({});
@@ -654,11 +681,15 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
     }
     if (field === "from") {
       const [start = "", end = ""] = value.split(",");
-      if (start === "" || end === "") return value;
-      const last = new Date(Date.parse(end) - 1).toISOString();
-      return formats.formatDate(start, "dayMonth") === formats.formatDate(last, "dayMonth")
-        ? formats.formatDate(start, "dayMonth")
-        : formats.formatWeekRange(start, last);
+      if (start === "" || end === "" || Number.isNaN(Date.parse(end))) return value;
+      // The club dates of both ends (`clubDaysRange`: the range ends when the day after its last
+      // one starts); a range over two years names them.
+      const first = clubToday(branding.timeZone, new Date(start));
+      const last = clubToday(branding.timeZone, new Date(Date.parse(end) - 1));
+      if (first === last) return formats.formatPlainDate(first, "dayMonth");
+      return first.slice(0, 4) === last.slice(0, 4)
+        ? formats.formatWeekRange(first, last)
+        : formats.formatDateRange(first, last, "long");
     }
     return value;
   };
@@ -675,35 +706,17 @@ function RingBlocksList({ admin, client }: { admin: boolean; client: ApiClient }
         },
       });
       if (result.data === undefined) throw new TypeError("Ring block values without data");
-      if (field === "from") {
-        // Each value is a block's start: the filter offers whole club-local days, each counted
-        // with the api's counts of the starts it holds.
-        const days = new Map<string, UniversalFilterValue>();
-        for (const item of result.data.values) {
-          const instant = filterValue(item.value);
-          if (instant === "") continue;
-          const date = clubToday(branding.timeZone, new Date(instant));
-          const value = dayRange(date);
-          days.set(value, {
-            count: (days.get(value)?.count ?? 0) + item.count,
-            label: dayLabel(date, formats.formatPlainDate),
-            value,
-          });
-        }
-        return [...days.values()].sort((left, right) => left.value.localeCompare(right.value));
-      }
+      // The ring keeps the api's label; `valueLabel` names the enums with `t` alone. `rings` is
+      // not an input: its object is new at every render, and the list asks again for each new
+      // callback (E5-W05 round 2 #1).
       const options = filterOptions(result.data, (value, apiLabel) =>
         field === "ringId" ? apiLabel : valueLabel(field, value),
       );
-      setLearned((current) => ({
-        ...current,
-        ...Object.fromEntries(options.map((option) => [`${field}:${option.value}`, option.label])),
-      }));
+      setLearned((current) => withLearned(current, field, options));
       return options;
     },
-    // `dayRange` and `valueLabel` read the zone, `formats`, `rings` and `t` only.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [client, formats, rings, state.filters, state.q, t],
+    [client, state.filters, state.q, t],
   );
 
   const applied = (data?.appliedFilters ?? []).map((filter) => {

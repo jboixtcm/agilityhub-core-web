@@ -16,6 +16,8 @@ import {
   memberActivityDetail,
   MOCK_ACTIVITY_ACCOUNT,
   nextActivityId,
+  PAST_ACTIVITY_ID,
+  pastActivity,
   registrationListItem,
   registrationOpen,
   registrationResource,
@@ -1138,7 +1140,9 @@ export const activityHandlers = [
   http.get("*/api/v1/me/activities/:activityId", ({ params, request }) => {
     const disabled = moduleDisabled();
     if (disabled !== undefined) return disabled;
-    const activity = findActivity(String(params.activityId));
+    const id = String(params.activityId);
+    // Screen 25's done activity links here (E6-W04 step 0b): the history world's past activity.
+    const activity = findActivity(id) ?? (id === PAST_ACTIVITY_ID ? pastActivity() : undefined);
     if (
       activity === undefined ||
       (activity.state !== "PUBLISHED" && activity.state !== "FINISHED")

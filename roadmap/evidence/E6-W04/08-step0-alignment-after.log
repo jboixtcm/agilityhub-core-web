@@ -1,0 +1,22 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+
+ Test Files  2 passed (2)
+      Tests  26 passed (26)
+   Start at  02:05:08
+   Duration  826ms (transform 44%, import 34%, tests 22%)
+
+exit api 0
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+ Test Files  8 passed (8)
+      Tests  62 passed (62)
+   Start at  02:05:10
+   Duration  4.26s (tests 53%, transform 20%, environment 15%, import 8%, setup 4%)
+
+exit admin 0

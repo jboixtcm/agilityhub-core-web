@@ -1,0 +1,106 @@
+# E5-W05 round 2 · items 10, 11a, 12 #10 and question 6: checks of the touched specs and scripts
+# Each command below is echoed with `$`, followed by its output (stdout and stderr) and `exit <code>`.
+$ pnpm exec tsc -p e2e/core/tsconfig.json --noEmit
+exit 0
+$ pnpm exec eslint e2e/core/ apps/clubs/e2e/booking.spec.ts apps/clubs/e2e/instructor-registrants.spec.ts apps/clubs-admin/e2e/e5-backoffice.spec.ts
+exit 0
+$ pnpm exec prettier --check e2e/core/e5-core.spec.ts e2e/core/e4w16-core.spec.ts apps/clubs/e2e/booking.spec.ts apps/clubs/e2e/instructor-registrants.spec.ts apps/clubs-admin/e2e/e5-backoffice.spec.ts scripts/core-stack/docker-compose.yml turbo.json
+Checking formatting...
+All matched files use Prettier code style!
+exit 0
+$ pnpm --filter clubs exec tsc --noEmit
+exit 0
+$ pnpm --filter clubs-admin exec tsc --noEmit
+exit 0
+$ pnpm --filter clubs exec playwright test --list e2e/booking.spec.ts e2e/instructor-registrants.spec.ts
+Listing tests:
+  booking.spec.ts:94:3 › E5-W01 S08 member flow against MSW (03, 04, 06/29, 07) › T-08-37 03 and 04 as the mockups: dog filter, counters, rows, pack and every row badge
+  booking.spec.ts:113:3 › E5-W01 S08 member flow against MSW (03, 04, 06/29, 07) › 29 normal: the held seat for 30 s, the confirmation with the calendar links, then 07
+  booking.spec.ts:129:3 › E5-W01 S08 member flow against MSW (03, 04, 06/29, 07) › 29 limit done and «Properament»: the notes without a countdown (S08 §2 row 29 amended 26-09, B1)
+  booking.spec.ts:150:3 › E5-W01 S08 member flow against MSW (03, 04, 06/29, 07) › T-08-36 29 time out: at 0:00 the red note, and a tap goes back to 04
+  booking.spec.ts:172:3 › E5-W01 S08 member flow against MSW (03, 04, 06/29, 07) › T-08-38 06: the week's limit proposes the swap; the chosen booking is cancelled in the same step
+  booking.spec.ts:191:3 › E5-W01 S08 member flow against MSW (03, 04, 06/29, 07) › T-08-39 07: the booking detail, and the waiting entry with «SURT DE LA LLISTA D'ESPERA»
+  booking.spec.ts:219:3 › E5-W01 S08 member flow against MSW (03, 04, 06/29, 07) › T-08-39 07 inside the 4 h threshold: the warning first, then the yellow note
+  booking.spec.ts:236:3 › E5-W01 S08 member flow against MSW (03, 04, 06/29, 07) › impersonated: the banner stays over 03 and 04, and the admin books as the member
+  booking.spec.ts:254:3 › E5-W01 S08 member flow against MSW (03, 04, 06/29, 07) › es: 04 reads in Spanish
+  instructor-registrants.spec.ts:31:3 › E5-W03 step 1 · screen 23's class drawer lists the registrants (S08 §6) › an INSTRUCTOR reads who is booked and who waits, without actions
+Total: 10 tests in 2 files
+exit 0
+$ pnpm --filter clubs-admin exec playwright test --list e2e/e5-backoffice.spec.ts
+Listing tests:
+  e5-backoffice.spec.ts:70:3 › E5-W03 D4 · the registrants of the selected class (S08 §6, R-08-16) › an ADMIN sees who is booked and who waits, and removes a waiting entry
+  e5-backoffice.spec.ts:102:3 › E5-W03 D4 · the registrants of the selected class (S08 §6, R-08-16) › an INSTRUCTOR reads the same panel without actions (A22 c)
+  e5-backoffice.spec.ts:113:3 › E5-W03 «Entrenaments» · the ring-usage register (S09 §2, §13-8, no mockup) › an ADMIN lists the week's training bookings and the ring blocks, exports and cancels a block
+  e5-backoffice.spec.ts:154:3 › E5-W03 «Entrenaments» · the ring-usage register (S09 §2, §13-8, no mockup) › an INSTRUCTOR reads the register without exports nor block actions
+  e5-backoffice.spec.ts:168:3 › E5-W03 D10 · «Reserves» of the member (S08 §2, R-08-19) › shows the class and training bookings, read-only
+  e5-backoffice.spec.ts:191:3 › E5-W03 D11 · «Processos automàtics» (S15 §2, no mockup) › T-15-32 lists the processes and simulates, runs and switches one
+  e5-backoffice.spec.ts:234:3 › E5-W03 D1 · «Revisió de classes en risc» (S15 §6 form A) › T-15-33 renders the four statuses and opens D4 on the class
+Total: 7 tests in 1 file
+exit 0
+$ pnpm exec playwright test --config=e2e/core/playwright.config.ts --list e5-core.spec.ts e4w16-core.spec.ts   (CORE_URL, E1_CORE_PASSWORD, E4_WEEK_START are required by the config: not set on the host, so this is expected to fail at config load)
+Error: CORE_URL is required
+    at requiredEnvironment (/Users/jordib/dev/agilityhub/agilityhub-core-web/e2e/core/playwright.config.ts:6:11)
+    at Object.<anonymous> (/Users/jordib/dev/agilityhub/agilityhub-core-web/e2e/core/playwright.config.ts:11:17)
+    at Module._compile (node:internal/modules/cjs/loader:1781:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1913:10)
+    at Module.load (node:internal/modules/cjs/loader:1505:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1309:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)
+    at Module.require (node:internal/modules/cjs/loader:1527:12)
+    at require (node:internal/modules/helpers:147:16)
+    at requireOrImport (/Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/common/index.js:1083:18)
+    at loadUserConfig (/Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/common/index.js:1268:52)
+    at loadConfig (/Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/common/index.js:1275:28)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at Object.loadConfigFromFile (/Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/common/index.js:1490:10)
+    at runTests (/Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/cli/testActions.js:46:18)
+    at _Command.<anonymous> (/Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/playwright@1.63.0/node_modules/playwright/lib/program.js:55:7)
+exit 1
+$ pnpm exec turbo run e2e --filter=clubs --dry=json | grep -n -A 3 -e "\"envMode\"" -e "\"specified\"" | head -20   (turbo strict env mode: the e2e task receives only declared variables; E2E_CAPTURE_TASK is now one)
+14:      "specified": {
+15-        "env": [],
+16-        "passThroughEnv": null
+17-      },
+--
+30:  "envMode": "strict",
+31-  "frameworkInference": true,
+32-  "tasks": [
+33-    {
+--
+175:      "envMode": "strict",
+176-      "environmentVariables": {
+177:        "specified": {
+178-          "env": [],
+179-          "passThroughEnv": null
+180-        },
+--
+246:      "envMode": "strict",
+247-      "environmentVariables": {
+248:        "specified": {
+exit 0
+$ pnpm exec turbo run e2e --filter=clubs --dry=json | grep -n -B 3 -A 3 -e "E2E_CAPTURE_TASK" -e "\"taskId\": \"clubs#e2e\""
+673-      }
+674-    },
+675-    {
+676:      "taskId": "clubs#e2e",
+677-      "task": "e2e",
+678-      "package": "clubs",
+679-      "hash": "d714692110033b52",
+--
+810-        "persistent": false,
+811-        "interruptible": false,
+812-        "env": [
+813:          "E2E_CAPTURE_TASK",
+814-          "PLAYWRIGHT_BROWSERS_PATH"
+815-        ],
+816-        "passThroughEnv": null,
+--
+822-      "environmentVariables": {
+823-        "specified": {
+824-          "env": [
+825:            "E2E_CAPTURE_TASK",
+826-            "PLAYWRIGHT_BROWSERS_PATH"
+827-          ],
+828-          "passThroughEnv": null
+exit 0
+$ bash -n scripts/e2e-docker.sh  ->  denied by this sandbox (bash -n is not allowed here); the executor's pnpm e2e:docker run executes it

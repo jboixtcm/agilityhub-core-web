@@ -1,0 +1,44 @@
+{
+  "changedFields": [
+    "gender",
+    "birthDate",
+    "contactEmails",
+    "phones",
+    "address",
+    "paymentMethod"
+  ],
+  "dogBeforeRejection": {
+    "changedFields": [
+      "name",
+      "sex",
+      "breed",
+      "birthMonth",
+      "documents"
+    ],
+    "documents": [
+      "VACCINATION_CARD: demo-document.pdf, cartilla_retorn_2.jpg"
+    ]
+  },
+  "memberContact": {
+    "emails": [
+      "demo.b3ea4cb0-23c5-4163-aff5-ae8c5c77c71f.192@example.test"
+    ],
+    "phones": [
+      "600000192"
+    ]
+  },
+  "submittedContact": {
+    "emails": [
+      "retorn.e3@example.test"
+    ],
+    "phones": [
+      "699000905"
+    ]
+  },
+  "submittedPaymentMethod": {
+    "type": "SEPA_DD",
+    "maskedAccount": null,
+    "holderName": "Lluc Fictici192",
+    "channel": null
+  }
+}

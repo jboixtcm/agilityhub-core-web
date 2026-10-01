@@ -1,0 +1,378 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/followup/followup.test.tsx (23 tests | 1 failed | 22 skipped) 10129ms
+   ❯ E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75) (3)
+     × E6-W04 step 0c (its review): a «Creador» filter that comes with the address is named from the api's labels, never shown as its account id 10127ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/followup/followup.test.tsx > E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75) > E6-W04 step 0c (its review): a «Creador» filter that comes with the address is named from the api's labels, never shown as its account id
+TestingLibraryElementError: Unable to find an element with the text: Filtre (1): Creador = «Marc». This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"followup"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"followup__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSeguiment alumnes[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0m54 pendents de llegir[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Què es mostra"[39m
+            [33mclass[39m=[32m"followup__chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTot[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNotes d'alumnes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mMarcar-ho tot com a llegit[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca al seguiment[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca al seguiment"[39m
+              [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre (1): Creador = «10000000-0000-4000-8000-0000000000c2»[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mCreador = «10000000-0000-4000-8000-0000000000c2»[0m
+                [36m</span>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Treu el filtre de Creador"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"kind"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"unread"[39m
+                  [36m>[39m
+                    [0mPendent de llegir[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"dogId"[39m
+                  [36m>[39m
+                    [0mGos[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33m...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"followup"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"followup__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSeguiment alumnes[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0m54 pendents de llegir[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Què es mostra"[39m
+            [33mclass[39m=[32m"followup__chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTot[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNotes d'alumnes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mMarcar-ho tot com a llegit[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca al seguiment[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca al seguiment"[39m
+              [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre (1): Creador = «10000000-0000-4000-8000-0000000000c2»[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mCreador = «10000000-0000-4000-8000-0000000000c2»[0m
+                [36m</span>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Treu el filtre de Creador"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"kind"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"unread"[39m
+                  [36m>[39m
+                    [0mPendent de llegir[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"dogId"[39m
+                  [36m>[39m
+                    [0mGos[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33m...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/followup/followup.test.tsx:551:25
+    549|       scenario: "followupMany",
+    550|     });
+    551|     expect(await screen.findByText("Filtre (1): Creador = «Marc»")).to…
+       |                         ^
+    552|     expect(screen.queryByText(new RegExp(id, "u"))).toBeNull();
+    553|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 22 skipped (23)
+   Start at  02:45:43
+   Duration  11.51s (tests 89%, transform 7%, environment 2%, import 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/followup/followup.test.tsx -t its review

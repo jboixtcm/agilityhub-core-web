@@ -617,10 +617,14 @@ describe("MSW bootstrap handlers", () => {
     // E7-W02: + the eight S11 member handlers of `notification-handlers.ts` (11's feed, its read and
     // read-all, 12's preferences GET and PUT, the push subscription and its deletion, the e-mail
     // unsubscribe page).
-    // E7-W01 round 2: + `GET /members/{id}/notification-preferences` (D10's block, pending.json).
+    // E7-W01 round 2: + `GET /members/{id}/notification-preferences` (D10's block; in the snapshot
+    // since api e34bf04, E6-W04).
     // E5-W05: + the three universal filters' `filter-values` of `backoffice-handlers.ts`
     // (`/bookings`, `/training-bookings`, `/ring-blocks`, api E5-T29).
-    expect(handlers).toHaveLength(262);
+    // E5-W05 round 2: + the calendar world's `GET /class-sessions` list (`calendar-handlers.ts`).
+    // E6-W04 steps 0b and 0c: + screen 13's completion of a `GET /me/dogs` task (`handlers.ts`)
+    // and D14's `GET /followup/filter-values` (`followup-handlers.ts`).
+    expect(handlers).toHaveLength(265);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

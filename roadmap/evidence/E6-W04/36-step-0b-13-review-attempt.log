@@ -1,0 +1,196 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/App.test.tsx (53 tests | 1 failed | 51 skipped) 10277ms
+   ❯ E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) (7)
+     × E6-W04 step 0b (its review): a failed completion's message goes when the next completion starts, so a successful retry leaves no stale error 10148ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E6-W04 step 0b (its review): a failed completion's message goes when the next completion starts, so a successful retry leaves no stale error
+Error: [2mexpect([22m[31melement[39m[2m).toBeChecked()[22m
+
+Received element is not checked:
+  [31m<button
+  aria-checked="false"
+  aria-labelledby="dog-task-task-duna-balance"
+  class="dog-task__check"
+  role="checkbox"
+  type="button"
+/>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"clubs-shell__top"[39m
+        [36m/>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"clubs-shell__content"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"self-page my-dogs-page"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"self-page__header"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Torna al perfil"[39m
+                [33mhref[39m=[32m"/perfil"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+              [36m<h1>[39m
+                [0mEls meus gossos[0m
+              [36m</h1>[39m
+            [36m</header>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"self-page__body"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"self-page__message"[39m
+                [33mdata-error[39m=[32m"true"[39m
+                [33mrole[39m=[32m"alert"[39m
+              [36m>[39m
+                [0mNo s'ha trobat l'element sol·licitat.[0m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-card dog-card"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"dog-card__identity"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"dog-photo"[39m
+                    [33mfor[39m=[32m"_r_1_"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-sr-only"[39m
+                    [36m>[39m
+                      [0mCanvia la foto de Duna[0m
+                    [36m</span>[39m
+                    [36m<input[39m
+                      [33maccept[39m=[32m"image/*"[39m
+                      [33mid[39m=[32m"_r_1_"[39m
+                      [33mtype[39m=[32m"file"[39m
+                    [36m/>[39m
+                  [36m</label>[39m
+                  [36m<div>[39m
+                    [36m<h2>[39m
+                      [0mDuna[0m
+                    [36m</h2>[39m
+                    [36m<p>[39m
+                      [0mBorder collie[0m
+                      [0m ·[0m
+                      [0m [0m
+                      [0mfemella[0m
+                      [0m ·[0m
+                      [0m [0m
+                      [0m4 anys[0m
+                    [36m</p>[39m
+                  [36m</div>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"dog-card__level"[39m
+                  [36m>[39m
+                    [0mNivell C[0m
+                  [36m</span>[39m
+                [36m</div>[39m
+                [36m<section[39m
+                  [33mclass[39m=[32m"dog-card__section dog-note"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mfor[39m=[32m"dog-note-dog-duna"[39m
+                  [36m>[39m
+                    [0mNotes als instructors[0m
+                    [0m [0m
+                    [36m<span>[39m
+                      [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+                    [36m</span>[39m
+                  [36m</label>[39m
+                  [36m<textarea[39m
+                    [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                    [33mid[39m=[32m"dog-note-dog-duna"[39m
+                    [33mmaxlength[39m=[32m"2000"[39m
+                  [36m>[39m
+                    [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+                  [36m</textarea>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                    [33mdisabled[39m=[32m""[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [0mDESA[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</section>[39m
+                [36m<section[39m
+                  [33maria-label[39m=[32m"Tasques"[39m
+                  [33mclass[39m=[32m"dog-card__section dog-tasks"[39m
+                [36m>[39m
+                  [36m<h3>[39m
+                    [0mTasques[0m
+                  [36m</h3>[39m
+                  [36m<p>[39m
+                    [0m2 pendents · 1 feta[0m
+                  [36m</p>[39m
+                  [36m<ul[39m
+                    [33mclass[39m=[32m"dog-tasks__list"[39m
+                  [36m>[39m
+                    [36m<li[39m
+                      [33mclass[39m=[32m"dog-task"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-checked[39m=[32m"false"[39m
+                        [33maria-labelledby[39m=[32m"dog-task-task-duna-balance"[39m
+                        [33mclass[39m=[32m"dog-task__check"[39m
+                        [33mrole[39m=[32m"checkbox"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m/>[39m
+                      [36m<div>[39m
+                        [36m<p[39m
+    ...
+ ❯ src/App.test.tsx:1723:23
+    1721|     fireEvent.click(pending);
+    1722|     await waitFor(() => {
+    1723|       expect(pending).toBeChecked();
+       |                       ^
+    1724|     });
+    1725|     expect(screen.queryByRole("alert")).toBeNull();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 51 skipped (53)
+   Start at  02:40:18
+   Duration  11.54s (tests 90%, transform 5%, environment 3%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx -t its review

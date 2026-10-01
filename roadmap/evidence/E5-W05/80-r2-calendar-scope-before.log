@@ -1,0 +1,130 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/calendar-handlers.test.ts (13 tests | 3 failed | 10 skipped) 118ms
+   ↓ E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) (7)
+     ↓ serves the D4 week (form B) with the Thursday warning and the Carretera block
+     ↓ R-06-08 validates the draft week and refuses the inconsistent one
+     ↓ E5-T15 GET /class-sessions/{id} adds instructorNames and the ring; PATCH does not
+     ↓ R-06-10 cancels with the notice text and R-06-09 checks the version
+     ↓ R-06-11 refuses a block over a class with the conflict list
+     ↓ R-06-05 answers RING_HAS_BOOKINGS when a class or a block moves onto a training booking
+     ↓ serves the instructor day grid (form D) of the Wednesday
+   ↓ E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §3) (2)
+     ↓ R-02-09 a weekday absent from club.openingHours is closed: classes and ring blocks there get OUTSIDE_OPENING_HOURS
+     ↓ S06 §3 with an opening at 07:05 and 10-minute slots: 07:10 is the first valid start
+   ↓ E4-W10 the template MSW handlers refuse a band on a closed day of the kind (S06 R-06-01, WeekTemplateRules) (1)
+     ↓ R-06-01 R-02-09 Monday closed: WEEKDAYS bands (new or moved) get OUTSIDE_OPENING_HOURS; the Saturday template still takes them
+   ❯ E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) (3)
+     × E5-W05 round 2 #11e: an ADMIN of another club lists no week and no class, and this world's week, calendar and class are 404 NOT_FOUND for it 49ms
+     × E5-W05 round 2 #11e: GET /class-sessions is the staff's (a MEMBER is 403) and filters by the snapshot's x-filterable fields 34ms
+     × E5-W05 round 2 #11e: a non-blank `q` on GET /weeks and GET /class-sessions is 400 INVALID_FILTER (neither declares it); a blank one reads as absent 32ms
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 10 skipped (13)
+   Start at  00:59:46
+   Duration  749ms (transform 48%, import 35%, tests 17%)
+
+TAP version 13
+1..13
+ok 1 - src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > serves the D4 week (form B) with the Thursday warning and the Carretera block # SKIP
+ok 2 - src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > R-06-08 validates the draft week and refuses the inconsistent one # SKIP
+ok 3 - src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > E5-T15 GET /class-sessions/{id} adds instructorNames and the ring; PATCH does not # SKIP
+ok 4 - src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > R-06-10 cancels with the notice text and R-06-09 checks the version # SKIP
+ok 5 - src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > R-06-11 refuses a block over a class with the conflict list # SKIP
+ok 6 - src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > R-06-05 answers RING_HAS_BOOKINGS when a class or a block moves onto a training booking # SKIP
+ok 7 - src/mocks/calendar-handlers.test.ts > E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) > serves the instructor day grid (form D) of the Wednesday # SKIP
+ok 8 - src/mocks/calendar-handlers.test.ts > E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §3) > R-02-09 a weekday absent from club.openingHours is closed: classes and ring blocks there get OUTSIDE_OPENING_HOURS # SKIP
+ok 9 - src/mocks/calendar-handlers.test.ts > E4-W09 opening hours in the calendar MSW handlers (S02 R-02-09, S06 §3) > S06 §3 with an opening at 07:05 and 10-minute slots: 07:10 is the first valid start # SKIP
+ok 10 - src/mocks/calendar-handlers.test.ts > E4-W10 the template MSW handlers refuse a band on a closed day of the kind (S06 R-06-01, WeekTemplateRules) > R-06-01 R-02-09 Monday closed: WEEKDAYS bands (new or moved) get OUTSIDE_OPENING_HOURS; the Saturday template still takes them # SKIP
+not ok 11 - src/mocks/calendar-handlers.test.ts > E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) > E5-W05 round 2 \#11e: an ADMIN of another club lists no week and no class, and this world's week, calendar and class are 404 NOT_FOUND for it # time=49.42ms
+    ---
+    error:
+        name: "AssertionError"
+        message: "/weeks: expected [ 200, …(2) ] to deeply equal [ 200, [], +0 ]"
+    at: "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/calendar-handlers.test.ts:388:77"
+    actual: "[
+  200,
+  [
+    {
+      \"classCounts\": {
+        \"active\": 21,
+        \"cancelled\": 1,
+        \"draft\": 0,
+      },
+      \"endDate\": \"2026-08-16\",
+      \"generatedAt\": \"2026-08-10T07:12:00Z\",
+      \"id\": \"week-2026-08-10\",
+      \"isoWeek\": 33,
+      \"isoYear\": 2026,
+      \"saturdayTemplateName\": \"Dissabtes\",
+      \"startDate\": \"2026-08-10\",
+      \"state\": \"VALIDATED\",
+      \"validatedAt\": \"2026-08-11T08:02:00Z\",
+      \"weekdayTemplateName\": \"Setmana A\",
+    },
+    {
+      \"classCounts\": {
+        \"active\": 0,
+        \"cancelled\": 0,
+        \"draft\": 28,
+      },
+      \"endDate\": \"2026-08-23\",
+      \"generatedAt\": \"2026-08-11T07:30:00Z\",
+      \"id\": \"week-2026-08-17\",
+      \"isoWeek\": 34,
+      \"isoYear\": 2026,
+      \"saturdayTemplateName\": \"Dissabtes\",
+      \"startDate\": \"2026-08-17\",
+      \"state\": \"GENERATED\",
+      \"validatedAt\": null,
+      \"weekdayTemplateName\": \"Setmana A\",
+    },
+    {
+      \"classCounts\": {
+        \"active\": 0,
+        \"cancelled\": 0,
+        \"draft\": 6,
+      },
+      \"endDate\": \"2026-08-30\",
+      \"generatedAt\": \"2026-08-12T06:40:00Z\",
+      \"id\": \"week-2026-08-24\",
+      \"isoWeek\": 35,
+      \"isoYear\": 2026,
+      \"saturdayTemplateName\": \"Dissabtes\",
+      \"startDate\": \"2026-08-24\",
+      \"state\": \"GENERATED\",
+      \"validatedAt\": null,
+      \"weekdayTemplateName\": \"Setmana B\",
+    },
+  ],
+  3,
+]"
+    expected: "[
+  200,
+  [],
+  0,
+]"
+    ...
+not ok 12 - src/mocks/calendar-handlers.test.ts > E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) > E5-W05 round 2 \#11e: GET /class-sessions is the staff's (a MEMBER is 403) and filters by the snapshot's x-filterable fields # time=33.93ms
+    ---
+    error:
+        name: "InternalError"
+        message: "[MSW] Cannot bypass a request when using the \"error\" strategy for the \"onUnhandledRequest\" option."
+    at: "/Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/src/core/experimental/on-unhandled-frame.ts:71:9"
+    ...
+not ok 13 - src/mocks/calendar-handlers.test.ts > E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) > E5-W05 round 2 \#11e: a non-blank `q` on GET /weeks and GET /class-sessions is 400 INVALID_FILTER (neither declares it); a blank one reads as absent # time=32.34ms
+    ---
+    error:
+        name: "AssertionError"
+        message: "/weeks: expected [ 200, undefined ] to deeply equal [ 400, 'INVALID_FILTER' ]"
+    at: "/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/calendar-handlers.test.ts:423:59"
+    actual: "[
+  200,
+  undefined,
+]"
+    expected: "[
+  400,
+  \"INVALID_FILTER\",
+]"
+    ...

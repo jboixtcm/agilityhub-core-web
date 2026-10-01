@@ -145,6 +145,12 @@ type JobRunAnswer = Pick<Schemas["JobRun"], "dryRun" | "effects" | "runId" | "st
 type JobRunItem = Schemas["JobRunListItem"];
 type JobRuns = Pick<Schemas["ListPageJobRunListItem"], "items">;
 type JobSummaries = Pick<Schemas["JobSummaries"], "items">;
+/** `GET /training-bookings` (the «Entrenaments» register, S09 §2): the page and its total. */
+type TrainingRegister = Pick<Schemas["ListPageTrainingBookingListItem"], "items" | "totalItems">;
+/** `GET /ring-blocks` (the register's blocks tab): the page and its total. */
+type BlockRegister = Pick<Schemas["ListPageRingBlockListItem"], "items" | "totalItems">;
+/** `GET /bookings/filter-values` (CONVENCIONS_API §4). */
+type FilterValues = Schemas["FilterValues"];
 
 interface RunRecord {
   created: Record<string, string>;
@@ -245,6 +251,29 @@ function addMinutes(time: string, minutes: number): string {
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+}
+
+/** A text as a free-text search compares it: lower case, without diacritics. */
+function searchable(value: null | string | undefined): string {
+  return (value ?? "").normalize("NFD").replace(/\p{M}/gu, "").toLocaleLowerCase("ca");
+}
+
+/** Whether one of `values` contains the search `q` (ignoring case and diacritics). */
+function matchesSearch(q: string, values: (null | string | undefined)[]): boolean {
+  return values.some((value) => searchable(value).includes(searchable(q)));
+}
+
+/** The value that the fewest rows carry (a search for it narrows the list the most). */
+function rarest(values: (null | string | undefined)[]): string | undefined {
+  const counts = new Map<string, number>();
+  for (const value of values) {
+    if (value === null || value === undefined || value === "") continue;
+    counts.set(value, (counts.get(value) ?? 0) + 1);
+  }
+  return [...counts.entries()].sort(
+    ([first, firstCount], [second, secondCount]) =>
+      firstCount - secondCount || first.localeCompare(second),
+  )[0]?.[0];
 }
 
 /** The scenario's `demoNow` (`demo-canic.yaml`): Monday 07:00 club-local of week 0. */
@@ -2044,5 +2073,222 @@ test("R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:0
       trigger: run.trigger,
     })),
     trigger: { body: triggerBody, status: triggered.status() },
+  });
+});
+
+/** A list page's own `GET` whose `q` is `q` (the search box's call, after its debounce). */
+function isSearch(path: RegExp, q: string) {
+  return (response: Response) =>
+    isCall("GET", path)(response) && new URL(response.url()).searchParams.get("q") === q;
+}
+
+/** A list page's own `GET` with `filter` among its filters (the address's, not the default's). */
+function isFiltered(path: RegExp, filter: string) {
+  return (response: Response) =>
+    isCall("GET", path)(response) &&
+    new URL(response.url()).searchParams.getAll("filter").includes(filter);
+}
+
+// E5-W05 round 2 (question 1; ruling E75, api E5-T29 round 2): the «Entrenaments» register searches
+// on the core. `GET /training-bookings?q=` (the member's, the dog's and the ring's names) and
+// `GET /ring-blocks?q=` (the ring's name and, for ADMIN, the note) answer 200 with every matching row
+// of the week and only those (an older image answered `400 INVALID_FILTER`), and each tab's search
+// box narrows its rows. Questions 4 and 5: `GET /bookings/filter-values` labels every value (the
+// mocks copy the `classSessionId` label from `bookings-filter-values-core.json`). Last in the file,
+// so a failure here skips no other test (the file is serial); week 0 is addressed with the week's
+// filter, as the (e) test does. Its rows are the seed's and the run's (cancelled by now, still listed).
+test("E5-W05 round 2 · E75 · GET /training-bookings?q= and GET /ring-blocks?q= answer the matching rows on the core and narrow both tabs of «Entrenaments»; GET /bookings/filter-values labels every value", async ({
+  browser,
+}) => {
+  test.setTimeout(300_000);
+  const admin = await adminSession(browser);
+  const weekDates = `date:between:${weekStart},${addDays(weekStart, 6)}`;
+  const weekInstants = `from:between:${clubInstant(weekStart, "00:00")},${clubInstant(addDays(weekStart, 7), "00:00")}`;
+  const listPath = (path: string, filter: string, q?: string) =>
+    `${path}?${new URLSearchParams({ filter, size: "200", ...(q === undefined ? {} : { q }) }).toString()}`;
+
+  // The week's whole lists, and what to search in them: the dog with the fewest rows and its
+  // member; the note of the run's block (24, test (e)) and the ring with the fewest blocks.
+  const trainingAll = await call<TrainingRegister>(
+    admin,
+    listPath("/training-bookings", weekDates),
+  );
+  const blocksAll = await call<BlockRegister>(admin, listPath("/ring-blocks", weekInstants));
+  expect(trainingAll.status).toBe(200);
+  expect(blocksAll.status).toBe(200);
+  const dogQuery = rarest(trainingAll.body.items.map((row) => row.dogName));
+  const memberQuery = trainingAll.body.items.find((row) => row.dogName === dogQuery)?.memberName;
+  const noteRow =
+    blocksAll.body.items.find((row) => row.note === `E5 ${runId}`) ??
+    blocksAll.body.items.find((row) => (row.note ?? "") !== "");
+  const noteQuery = noteRow?.note ?? "";
+  const ringQuery = rarest(blocksAll.body.items.map((row) => row.ringName));
+  if (dogQuery === undefined || memberQuery === undefined || ringQuery === undefined) {
+    throw new Error("Week 0 has no training booking or no ring block to search for");
+  }
+  if (noteRow === undefined || noteQuery === "") {
+    throw new Error("Week 0 has no ring block with a note to search for");
+  }
+
+  const trainingProbe = async (q: string) => {
+    const answer = await call<ApiProblem & TrainingRegister>(
+      admin,
+      listPath("/training-bookings", weekDates, q),
+    );
+    const items = answer.status === 200 ? answer.body.items : [];
+    return {
+      allMatch:
+        items.length > 0 &&
+        items.every((row) => matchesSearch(q, [row.memberName, row.dogName, row.ringName])),
+      code: answer.body.code ?? null,
+      q,
+      returned: items.length,
+      rows: items.map((row) => ({
+        dogName: row.dogName ?? null,
+        id: row.id,
+        memberName: row.memberName ?? null,
+        ringName: row.ringName ?? null,
+        state: row.state ?? null,
+      })),
+      status: answer.status,
+      totalItems: answer.status === 200 ? answer.body.totalItems : null,
+    };
+  };
+  const blockProbe = async (q: string) => {
+    const answer = await call<ApiProblem & BlockRegister>(
+      admin,
+      listPath("/ring-blocks", weekInstants, q),
+    );
+    const items = answer.status === 200 ? answer.body.items : [];
+    return {
+      allMatch:
+        items.length > 0 && items.every((row) => matchesSearch(q, [row.ringName, row.note])),
+      code: answer.body.code ?? null,
+      q,
+      returned: items.length,
+      rows: items.map((row) => ({
+        id: row.id,
+        note: row.note ?? null,
+        ringName: row.ringName ?? null,
+        state: row.state ?? null,
+      })),
+      status: answer.status,
+      totalItems: answer.status === 200 ? answer.body.totalItems : null,
+    };
+  };
+  const search = {
+    blocks: {
+      byNote: await blockProbe(noteQuery),
+      byRing: await blockProbe(ringQuery),
+      week: blocksAll.body.totalItems,
+    },
+    filters: { blocks: weekInstants, training: weekDates },
+    training: {
+      byDog: await trainingProbe(dogQuery),
+      byMember: await trainingProbe(memberQuery),
+      week: trainingAll.body.totalItems,
+    },
+  };
+
+  // Questions 4 and 5: the values and labels of D10/D12's universal filter, as the core gives them.
+  const filterValues: Record<
+    string,
+    { code: null | string; status: number; values: FilterValues["values"] }
+  > = {};
+  for (const field of ["classSessionId", "memberId", "dogId"]) {
+    const answer = await call<ApiProblem & FilterValues>(
+      admin,
+      `/bookings/filter-values?field=${field}`,
+    );
+    filterValues[field] = {
+      code: answer.body.code ?? null,
+      status: answer.status,
+      values: answer.status === 200 ? answer.body.values : [],
+    };
+  }
+  // The evidence first (never a token), then the assertions.
+  writeFileSync(
+    join(evidenceDirectory, "register-search-core.json"),
+    `${JSON.stringify(search, null, 2)}\n`,
+  );
+  writeFileSync(
+    join(evidenceDirectory, "bookings-filter-values-core.json"),
+    `${JSON.stringify({ fields: filterValues, path: "GET /bookings/filter-values?field=…" }, null, 2)}\n`,
+  );
+  for (const probe of [
+    search.training.byDog,
+    search.training.byMember,
+    search.blocks.byNote,
+    search.blocks.byRing,
+  ]) {
+    expect(probe, `q=${probe.q}`).toMatchObject({ allMatch: true, code: null, status: 200 });
+  }
+  // Every row of the week that carries the searched name comes back, and the search narrows.
+  const dogRows = trainingAll.body.items.filter((row) => row.dogName === dogQuery);
+  expect(search.training.byDog.rows.map((row) => row.id)).toEqual(
+    expect.arrayContaining(dogRows.map((row) => row.id)),
+  );
+  if (new Set(trainingAll.body.items.map((row) => row.dogName)).size > 1) {
+    expect(search.training.byDog.returned).toBeLessThan(trainingAll.body.items.length);
+  }
+  expect(search.blocks.byNote.rows.map((row) => row.id)).toContain(noteRow.id);
+  const ringRows = blocksAll.body.items.filter((row) => row.ringName === ringQuery);
+  expect(search.blocks.byRing.rows.map((row) => row.id)).toEqual(
+    expect.arrayContaining(ringRows.map((row) => row.id)),
+  );
+  for (const [field, answer] of Object.entries(filterValues)) {
+    expect(answer, field).toMatchObject({ code: null, status: 200 });
+    expect(answer.values.length, field).toBeGreaterThan(0);
+    for (const value of answer.values) {
+      expect(value.label.trim(), `${field} ${JSON.stringify(value.value)}`).not.toBe("");
+    }
+  }
+
+  // The UI: each tab's search box sends `q`, the core answers 200 and the rows narrow to its answer.
+  const { page } = admin;
+  const invalidFilter = page.getByText("El filtre no és vàlid.");
+  const trainingPath = /\/api\/v1\/training-bookings$/u;
+  const weekRead = page.waitForResponse(isFiltered(trainingPath, weekDates));
+  await navigateSpa(page, `/entrenaments?vista=reserves&filter=${encodeURIComponent(weekDates)}`);
+  const weekPage = (await (await weekRead).json()) as TrainingRegister;
+  const register = page.getByRole("region", { name: "Reserves d'entrenament" });
+  const registerRows = register.locator("tbody tr");
+  await expect(registerRows).toHaveCount(weekPage.items.length);
+  await expect(register.getByRole("row").filter({ hasText: dogQuery }).first()).toBeVisible();
+  const dogSearch = page.waitForResponse(isSearch(trainingPath, dogQuery));
+  await page.getByRole("searchbox", { name: "Cerca per abonat, gos o pista" }).fill(dogQuery);
+  const dogAnswer = await dogSearch;
+  expect(dogAnswer.status()).toBe(200);
+  const dogPage = (await dogAnswer.json()) as TrainingRegister;
+  expect(dogPage.items.length).toBeGreaterThan(0);
+  await expect(registerRows).toHaveCount(dogPage.items.length);
+  for (const row of await registerRows.all()) await expect(row).toContainText(dogQuery);
+  await expect(invalidFilter).toHaveCount(0);
+  await shot(page, "entrenaments-cerca-core-1280.png");
+
+  const blocksPath = /\/api\/v1\/ring-blocks$/u;
+  await navigateSpa(page, "/tauler");
+  const blocksRead = page.waitForResponse(isFiltered(blocksPath, weekInstants));
+  await navigateSpa(
+    page,
+    `/entrenaments?vista=bloquejos&filter=${encodeURIComponent(weekInstants)}`,
+  );
+  const blocksPage = (await (await blocksRead).json()) as BlockRegister;
+  const blocks = page.getByRole("region", { name: "Bloquejos i reserves de pista" });
+  const blockRows = blocks.locator("tbody tr");
+  await expect(blockRows).toHaveCount(blocksPage.items.length);
+  const noteSearch = page.waitForResponse(isSearch(blocksPath, noteQuery));
+  await page.getByRole("searchbox", { name: "Cerca per pista o nota" }).fill(noteQuery);
+  const noteAnswer = await noteSearch;
+  expect(noteAnswer.status()).toBe(200);
+  const notePage = (await noteAnswer.json()) as BlockRegister;
+  expect(notePage.items.map((row) => row.id)).toContain(noteRow.id);
+  await expect(blockRows).toHaveCount(notePage.items.length);
+  for (const row of await blockRows.all()) await expect(row).toContainText(noteQuery);
+  await expect(invalidFilter).toHaveCount(0);
+  await shot(page, "entrenaments-bloquejos-cerca-core-1280.png");
+  note("r2-register-search", {
+    blocks: { searched: notePage.items.length, week: blocksPage.items.length },
+    training: { searched: dogPage.items.length, week: weekPage.items.length },
   });
 });

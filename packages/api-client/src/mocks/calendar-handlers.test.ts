@@ -367,3 +367,69 @@ describe("E4-W10 the template MSW handlers refuse a band on a closed day of the 
     expect(saturday.response.status).toBe(201);
   });
 });
+
+describe("E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75)", () => {
+  /** A raw read (the generated types forbid `q`), as `scenario`. */
+  async function read(
+    scenario: "admin" | "adminOtherClub" | "instructor" | "member",
+    path: string,
+  ) {
+    mockScenario(scenario);
+    const response = await fetch(`https://core.example.test/api/v1${path}`);
+    return {
+      body: (await response.json()) as { code?: string; items?: unknown[]; totalItems?: number },
+      status: response.status,
+    };
+  }
+
+  it("E5-W05 round 2 #11.e: an ADMIN of another club lists no week and no class, and this world's week, calendar and class are 404 NOT_FOUND for it", async () => {
+    for (const path of ["/weeks", "/class-sessions"]) {
+      const own = await read("admin", path);
+      expect(own.status, path).toBe(200);
+      expect(own.body.totalItems, path).toBeGreaterThan(0);
+      const other = await read("adminOtherClub", path);
+      expect([other.status, other.body.items, other.body.totalItems], path).toEqual([200, [], 0]);
+      const validate = schema(
+        path === "/weeks" ? "ListPageWeekListItem" : "ListPageClassSessionListItem",
+      );
+      expect(validate(own.body), JSON.stringify(validate.errors, null, 2)).toBe(true);
+      expect(validate(other.body), JSON.stringify(validate.errors, null, 2)).toBe(true);
+    }
+    for (const path of [
+      "/weeks/week-2026-08-10",
+      "/weeks/week-2026-08-10/calendar?filter=ACTIVE",
+      "/class-sessions/cls-2026-08-12-1850-0",
+    ]) {
+      expect((await read("admin", path)).status, path).toBe(200);
+      const other = await read("adminOtherClub", path);
+      expect([other.status, other.body.code], path).toEqual([404, "NOT_FOUND"]);
+    }
+  });
+
+  it("E5-W05 round 2 #11.e: GET /class-sessions is the staff's (a MEMBER is 403) and filters by the snapshot's x-filterable fields", async () => {
+    const wednesday = await read(
+      "instructor",
+      `/class-sessions?filter=${encodeURIComponent("date:eq:2026-08-12")}&sort=startsAt,asc&fields=id,date,startTime`,
+    );
+    expect(wednesday.status).toBe(200);
+    const items = wednesday.body.items as { date?: string; id: string; startTime?: string }[];
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.every((item) => item.date === "2026-08-12")).toBe(true);
+    expect(Object.keys(items[0] ?? {}).sort()).toEqual(["date", "id", "startTime"]);
+    const member = await read("member", "/class-sessions");
+    expect([member.status, member.body.code]).toEqual([403, "FORBIDDEN"]);
+    const undeclared = await read(
+      "admin",
+      `/class-sessions?filter=${encodeURIComponent("capacity:eq:5")}`,
+    );
+    expect([undeclared.status, undeclared.body.code]).toEqual([400, "INVALID_FILTER"]);
+  });
+
+  it("E5-W05 round 2 #11.e: a non-blank `q` on GET /weeks and GET /class-sessions is 400 INVALID_FILTER (neither declares it); a blank one reads as absent", async () => {
+    for (const path of ["/weeks", "/class-sessions"]) {
+      const searched = await read("admin", `${path}?q=setmana`);
+      expect([searched.status, searched.body.code], path).toEqual([400, "INVALID_FILTER"]);
+      expect((await read("admin", `${path}?q=%20`)).status, path).toBe(200);
+    }
+  });
+});

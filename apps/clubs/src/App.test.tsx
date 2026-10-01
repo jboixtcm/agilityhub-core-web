@@ -1,5 +1,6 @@
 import { createApiClient } from "@agilityhub/api-client";
 import {
+  handlers,
   mockScenario,
   resetActivityState,
   resetAuthMockState,
@@ -18,7 +19,7 @@ import {
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -1381,7 +1382,7 @@ describe("T-03-40 mobile own dogs", () => {
     expect(screen.getAllByLabelText(/Notes als instructors/u)).toHaveLength(2);
   });
 
-  it("E4-W16 step 11 (INC-26, R-03-18): the task rows under the counter — pending with an inert checkbox and «dd-mm · instructor», done struck through with «feta el dd-mm», the clip with the attachments, dates in the club's zone", async () => {
+  it("E4-W16 step 11 (INC-26, R-03-18): the task rows under the counter — pending with a checkbox (live since E6-W04 step 0b) and «dd-mm · instructor», done struck through with «feta el dd-mm», the clip with the attachments, dates in the club's zone", async () => {
     const client = authClient();
     await client.login("laura@example.test", "secret-password");
     const { data } = await createApiClient({
@@ -1430,9 +1431,11 @@ describe("T-03-40 mobile own dogs", () => {
     ]);
     const pending = within(tasks).getByRole("checkbox", { name: "Treballar l'entrada al balancí" });
     expect(pending).not.toBeChecked();
-    expect(pending).toHaveAttribute("aria-disabled", "true");
+    // E6-W04 step 0b: the pending checkbox completes the task now; a done one stays inert.
+    expect(pending).not.toHaveAttribute("aria-disabled");
     const done = within(tasks).getByRole("checkbox", { name: "Consolidar la sortida quieta" });
     expect(done).toBeChecked();
+    expect(done).toHaveAttribute("aria-disabled", "true");
     // The struck-through row: `.dog-task[data-done] p { text-decoration: line-through }`.
     expect(rows[2]).toHaveAttribute("data-done");
     expect(rows[0]).not.toHaveAttribute("data-done");
@@ -1511,6 +1514,320 @@ describe("T-03-40 mobile own dogs", () => {
       ]);
     });
     server.events.removeListener("request:start", listener);
+  });
+});
+
+describe("E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74)", () => {
+  /** 14-08-2026 at 10:00 club-local: the day a task completed here is «feta». */
+  const NOW = "2026-08-14T10:00:00+02:00";
+
+  interface Completion {
+    authorization: string | null;
+    body: string;
+    key: string | null;
+    path: string;
+  }
+
+  /** The member app's api calls of this flow: the completions (with their headers) and the reads of 13. */
+  function recordFlow() {
+    const completions: Completion[] = [];
+    const lines: string[] = [];
+    server.events.on("request:start", ({ request }) => {
+      const url = new URL(request.url);
+      if (url.pathname.endsWith("/completion")) {
+        lines.push(`${request.method} ${url.pathname}`);
+        void request
+          .clone()
+          .text()
+          .then((body) => {
+            completions.push({
+              authorization: request.headers.get("Authorization"),
+              body,
+              key: request.headers.get("Idempotency-Key"),
+              path: url.pathname,
+            });
+          });
+      } else if (url.pathname === "/api/v1/me/dogs" || url.pathname.startsWith("/api/v1/tasks")) {
+        lines.push(`${request.method} ${url.pathname}`);
+      }
+    });
+    return { completions, lines };
+  }
+
+  async function dunaTasks(): Promise<HTMLElement> {
+    const card = (await screen.findByRole("heading", { name: "Duna" })).closest<HTMLElement>(
+      ".dog-card",
+    );
+    if (card === null) throw new TypeError("Missing Duna's card");
+    return within(card).getByRole("region", { name: "Tasques" });
+  }
+
+  async function renderMyDogs(impersonated = false) {
+    const client = authClient();
+    if (impersonated) {
+      mockScenario("impersonated");
+      await client.acceptImpersonation("mock-impersonation-token");
+    } else {
+      // The member world (`me-member.json`), whatever the previous test left selected.
+      mockScenario("member");
+      await client.login("laura@example.test", "secret-password");
+    }
+    window.history.pushState(null, "", "/gossos");
+    await renderApplication(client);
+    return dunaTasks();
+  }
+
+  beforeEach(() => {
+    vi.useFakeTimers({ now: new Date(NOW), shouldAdvanceTime: true, toFake: ["Date"] });
+  });
+  afterEach(() => {
+    server.events.removeAllListeners();
+    vi.useRealTimers();
+  });
+
+  it("E6-W04 step 0b: a pending task's checkbox sends the completion (no body, no key), is busy meanwhile, then shows the task as the api returns it — checked, struck through, «feta per en Biel el 14-08» — and the counter; GET /me/dogs keeps it done", async () => {
+    const { completions, lines } = recordFlow();
+    let release: () => void = () => undefined;
+    const answered = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      http.post("*/api/v1/tasks/:id/completion", async () => {
+        await answered;
+        return undefined;
+      }),
+    );
+    const tasks = await renderMyDogs();
+    const pending = within(tasks).getByRole("checkbox", { name: "Treballar l'entrada al balancí" });
+    expect(pending).not.toBeChecked();
+    expect(pending).not.toHaveAttribute("aria-disabled");
+    fireEvent.click(pending);
+    await waitFor(() => {
+      expect(pending).toHaveAttribute("aria-busy", "true");
+    });
+    expect(pending).toHaveAttribute("aria-disabled", "true");
+    // A second tap while it runs sends nothing more.
+    fireEvent.click(pending);
+    release();
+    await waitFor(() => {
+      expect(pending).toBeChecked();
+    });
+    expect(pending).not.toHaveAttribute("aria-busy");
+    // A member cannot reopen it (R-10-10: reopening is staff only).
+    expect(pending).toHaveAttribute("aria-disabled", "true");
+    const rows = within(tasks).getAllByRole("listitem");
+    expect(rows.map((row) => row.textContent)).toEqual([
+      "Treballar l'entrada al balancí10-08 · Laura · feta per en Biel el 14-08",
+      "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjunt",
+      "Consolidar la sortida quieta20-07 · Laura · feta el 01-08",
+    ]);
+    expect(rows[0]).toHaveAttribute("data-done");
+    expect(within(tasks).getByText("1 pendent · 2 fetes")).toBeVisible();
+    expect(screen.queryByRole("alert")).toBeNull();
+    await waitFor(() => {
+      expect(completions).toEqual([
+        {
+          authorization: expect.stringMatching(/^Bearer /u) as string,
+          body: "",
+          key: null,
+          path: "/api/v1/tasks/task-duna-balance/completion",
+        },
+      ]);
+    });
+    expect(lines.filter((line) => line.startsWith("POST"))).toHaveLength(1);
+    // As the api: 13 read again keeps it done (`GET /me/dogs` has `doneAt`, not who).
+    cleanup();
+    const again = await renderMyDogs();
+    expect(within(again).getByText("1 pendent · 2 fetes")).toBeVisible();
+    expect(within(again).getAllByRole("listitem")[0]?.textContent).toBe(
+      "Treballar l'entrada al balancí10-08 · Laura · feta el 14-08",
+    );
+  });
+
+  it("E6-W04 step 0b: 422 TASK_ALREADY_DONE (someone else completed it meanwhile) reads 13 again and shows the task done, with no error", async () => {
+    const { lines } = recordFlow();
+    const tasks = await renderMyDogs();
+    // Another session of the member's completes it after this page was read.
+    const other = authClient();
+    await other.login("laura@example.test", "secret-password");
+    const elsewhere = await createApiClient({
+      baseUrl: `${window.location.origin}/api/v1`,
+      getAccessToken: () => other.getAccessToken(),
+    }).POST("/tasks/{id}/completion", { params: { path: { id: "task-duna-weave" } } });
+    expect(elsewhere.response.status).toBe(200);
+    lines.length = 0;
+    const stale = within(tasks).getByRole("checkbox", { name: "Revisar l'entrada a l'eslàlom" });
+    expect(stale).not.toBeChecked();
+    fireEvent.click(stale);
+    await waitFor(() => {
+      expect(stale).toBeChecked();
+    });
+    expect(lines).toEqual(["POST /api/v1/tasks/task-duna-weave/completion", "GET /api/v1/me/dogs"]);
+    expect(within(tasks).getAllByRole("listitem")[1]?.textContent).toBe(
+      "Revisar l'entrada a l'eslàlom12-08 · Marc · feta el 14-08 · 1 adjunt",
+    );
+    expect(within(tasks).getByText("1 pendent · 2 fetes")).toBeVisible();
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(screen.queryByText("Aquesta tasca ja està completada.")).toBeNull();
+  });
+
+  it("E6-W04 step 0b: any other refusal is said by its code (404 NOT_FOUND: a task deleted meanwhile), a failure with no answer by the generic message, and the task stays pending and can be tried again", async () => {
+    let answer: "network" | "notFound" = "notFound";
+    server.use(
+      http.post("*/api/v1/tasks/:id/completion", () =>
+        answer === "network"
+          ? HttpResponse.error()
+          : HttpResponse.json(
+              { code: "NOT_FOUND", details: {}, message: "Task not found", traceId: "t-13" },
+              { status: 404 },
+            ),
+      ),
+    );
+    const tasks = await renderMyDogs();
+    const pending = within(tasks).getByRole("checkbox", { name: "Treballar l'entrada al balancí" });
+    fireEvent.click(pending);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No s'ha trobat l'element sol·licitat.",
+    );
+    expect(pending).not.toBeChecked();
+    expect(pending).not.toHaveAttribute("aria-disabled");
+    expect(pending).not.toHaveAttribute("aria-busy");
+    expect(within(tasks).getByText("2 pendents · 1 feta")).toBeVisible();
+    answer = "network";
+    fireEvent.click(pending);
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent("No s'ha pogut completar l'acció.");
+    });
+    expect(pending).not.toBeChecked();
+    expect(document.body.textContent).not.toMatch(/errors:|census:|instructor:/u);
+  });
+
+  it("E6-W04 step 0b (its review): a failed completion's message goes when the next completion starts, so a successful retry leaves no stale error", async () => {
+    const { lines } = recordFlow();
+    const statuses: number[] = [];
+    server.events.on("response:mocked", ({ request, response }) => {
+      if (new URL(request.url).pathname.endsWith("/completion")) statuses.push(response.status);
+    });
+    let refuse = true;
+    server.use(
+      http.post("*/api/v1/tasks/:id/completion", () => {
+        if (!refuse) return undefined;
+        refuse = false;
+        return HttpResponse.json(
+          { code: "NOT_FOUND", details: {}, message: "Task not found", traceId: "t-13" },
+          { status: 404 },
+        );
+      }),
+    );
+    const tasks = await renderMyDogs();
+    const pending = within(tasks).getByRole("checkbox", { name: "Treballar l'entrada al balancí" });
+    fireEvent.click(pending);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No s'ha trobat l'element sol·licitat.",
+    );
+    await waitFor(() => {
+      expect(pending).not.toHaveAttribute("aria-busy");
+    });
+    fireEvent.click(pending);
+    await waitFor(() => {
+      expect(lines.filter((line) => line.startsWith("POST"))).toHaveLength(2);
+    });
+    await waitFor(() => {
+      expect(statuses).toEqual([404, 200]);
+    });
+    await waitFor(() => {
+      expect(pending).toBeChecked();
+    });
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("E6-W04 step 0b (its review): a TASK_ALREADY_DONE re-read taken before another completion answered never shows that task pending again", async () => {
+    let releaseRead: () => void = () => undefined;
+    const readHeld = new Promise<void>((resolve) => {
+      releaseRead = resolve;
+    });
+    let reads = 0;
+    server.use(
+      http.post("*/api/v1/tasks/:id/completion", ({ params }) =>
+        String(params.id) === "task-duna-balance"
+          ? HttpResponse.json(
+              { code: "TASK_ALREADY_DONE", details: {}, message: "done", traceId: "t-13" },
+              { status: 422 },
+            )
+          : undefined,
+      ),
+      http.get("*/api/v1/me/dogs", async ({ request }) => {
+        reads += 1;
+        // The page's first read answers at once; the re-read after the 422 is taken now (both
+        // tasks still pending in it) and delivered after the second completion answered.
+        if (reads === 1) return undefined;
+        const taken = await getResponse(handlers, request);
+        await readHeld;
+        return taken;
+      }),
+    );
+    const tasks = await renderMyDogs();
+    const first = within(tasks).getByRole("checkbox", { name: "Treballar l'entrada al balancí" });
+    const second = within(tasks).getByRole("checkbox", { name: "Revisar l'entrada a l'eslàlom" });
+    fireEvent.click(first);
+    await waitFor(() => {
+      expect(reads).toBe(2);
+    });
+    // Meanwhile another task is completed and answered.
+    fireEvent.click(second);
+    await waitFor(() => {
+      expect(second).toBeChecked();
+    });
+    releaseRead();
+    await waitFor(() => {
+      expect(first).not.toHaveAttribute("aria-busy");
+    });
+    expect(second).toBeChecked();
+  });
+
+  it("E6-W04 step 0b: an impersonated session completes it as the member — the impersonation token is sent and the line reads «feta per la Laura el 14-08»", async () => {
+    const { completions } = recordFlow();
+    const tasks = await renderMyDogs(true);
+    expect(screen.getByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
+    fireEvent.click(
+      within(tasks).getByRole("checkbox", { name: "Treballar l'entrada al balancí" }),
+    );
+    await waitFor(() => {
+      expect(within(tasks).getAllByRole("listitem")[0]?.textContent).toBe(
+        "Treballar l'entrada al balancí10-08 · Laura · feta per la Laura el 14-08",
+      );
+    });
+    await waitFor(() => {
+      expect(completions.map((item) => item.authorization)).toEqual([
+        "Bearer mock-impersonation-token",
+      ]);
+    });
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("E6-W04 step 0b: es and en read the completed line with the reader's words", async () => {
+    for (const [locale, line] of [
+      ["es", "hecha por Biel el 14-08"],
+      ["en", "done by Biel on 14-08"],
+    ] as const) {
+      cleanup();
+      resetMemberSelfServiceState();
+      const client = authClient();
+      await client.login("laura@example.test", "secret-password");
+      window.history.pushState(null, "", "/gossos");
+      await renderApplication(client, { ...canicBranding, locales: ["ca", "es", "en"] }, locale);
+      const card = (await screen.findByRole("heading", { name: "Duna" })).closest<HTMLElement>(
+        ".dog-card",
+      );
+      if (card === null) throw new TypeError("Missing Duna's card");
+      const first = within(card).getAllByRole("checkbox")[0];
+      if (first === undefined) throw new TypeError("Missing the first task");
+      fireEvent.click(first);
+      await waitFor(() => {
+        expect(within(card).getAllByRole("listitem")[0]?.textContent).toContain(line);
+      });
+      expect(document.body.textContent).not.toMatch(/errors:|census:|instructor:/u);
+    }
   });
 });
 

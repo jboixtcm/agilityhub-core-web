@@ -1,0 +1,48 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/planning/ClassRegistrantsPanel.test.tsx (11 tests | 1 failed | 10 skipped) 117ms
+   ↓ E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) (7)
+     ↓ lists every booking as the api orders it, with its state, and the D12 «En espera: …» line
+     ↓ offers [Treu de la llista] only to an ADMIN; an INSTRUCTOR reads the same panel
+     ↓ R-08-16 removes a waiting entry after the confirmation, reads the list again and tells the host
+     ↓ 422 WAITLIST_ENTRY_NOT_LIVE shows why inside the panel and reads the list again
+     ↓ another error stays inside the confirmation, where the admin is
+     ↓ R-08-14 shows each waiting entry's position in a FIFO club (`waitlist.mode = FIFO`)
+     ↓ S08 §9: without WAITLIST there is no waiting line and no waiting request
+   ↓ E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00) (3)
+     ↓ E5-W05 step 1: each chip reads the api's displayState with 07's literals (a past booking «feta», a NO_SHOW mark «no presentat»), never `state`; the level chip is levelCode, none when null
+     ↓ E5-W05 step 2: «En espera: {guia} + {gos}», the guide being handlerName ?? memberFirstName, with the position in a FIFO club (mockup D12)
+     ↓ E5-W05 step 2: the mock's staff waitlist sends each entry's first name, as the api does: «En espera: Júlia + Kira · Roser + Lluna»
+   ❯ E5-W05 round 2 · the mock's level chip is the dog's own level, and none with levels off (S08 §6 levelCode) (1)
+     × E5-W05 round 2 #3: with levels on each chip is the dog's level (Duna «C», her census level); in a club with levels.enabled = false (planningNoLevels) no row has a level chip 115ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 skipped (11)
+   Start at  01:00:05
+   Duration  949ms (transform 38%, environment 26%, import 17%, tests 13%, setup 5%)
+
+TAP version 13
+1..11
+ok 1 - src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > lists every booking as the api orders it, with its state, and the D12 «En espera: …» line # SKIP
+ok 2 - src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > offers [Treu de la llista] only to an ADMIN; an INSTRUCTOR reads the same panel # SKIP
+ok 3 - src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > R-08-16 removes a waiting entry after the confirmation, reads the list again and tells the host # SKIP
+ok 4 - src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > 422 WAITLIST_ENTRY_NOT_LIVE shows why inside the panel and reads the list again # SKIP
+ok 5 - src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > another error stays inside the confirmation, where the admin is # SKIP
+ok 6 - src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > R-08-14 shows each waiting entry's position in a FIFO club (`waitlist.mode = FIFO`) # SKIP
+ok 7 - src/planning/ClassRegistrantsPanel.test.tsx > E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) > S08 §9: without WAITLIST there is no waiting line and no waiting request # SKIP
+ok 8 - src/planning/ClassRegistrantsPanel.test.tsx > E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00) > E5-W05 step 1: each chip reads the api's displayState with 07's literals (a past booking «feta», a NO_SHOW mark «no presentat»), never `state`; the level chip is levelCode, none when null # SKIP
+ok 9 - src/planning/ClassRegistrantsPanel.test.tsx > E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00) > E5-W05 step 2: «En espera: {guia} + {gos}», the guide being handlerName ?? memberFirstName, with the position in a FIFO club (mockup D12) # SKIP
+ok 10 - src/planning/ClassRegistrantsPanel.test.tsx > E5-W05 steps 1 and 2 · the registrants read E5-T29's fields (S08 §6, S10 R-10-00) > E5-W05 step 2: the mock's staff waitlist sends each entry's first name, as the api does: «En espera: Júlia + Kira · Roser + Lluna» # SKIP
+not ok 11 - src/planning/ClassRegistrantsPanel.test.tsx > E5-W05 round 2 · the mock's level chip is the dog's own level, and none with levels off (S08 §6 levelCode) > E5-W05 round 2 \#3: with levels on each chip is the dog's level (Duna «C», her census level); in a club with levels.enabled = false (planningNoLevels) no row has a level chip # time=115.10ms
+    ---
+    error:
+        name: "AssertionError"
+        message: "expected 'Laura + DunaBconfirmada' to be 'Laura + DunaCconfirmada' // Object.is equality"
+    at: "/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/planning/ClassRegistrantsPanel.test.tsx:335:68"
+    actual: "Laura + DunaBconfirmada"
+    expected: "Laura + DunaCconfirmada"
+    ...
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/planning/ClassRegistrantsPanel.test.tsx -t E5-W05 round 2 --reporter=default --reporter=tap-flat

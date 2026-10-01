@@ -120,7 +120,11 @@ import {
   notificationExportRows,
   resetMessagingMockState,
 } from "./messaging-handlers";
-import { notificationHandlers, resetNotificationMockState } from "./notification-handlers";
+import {
+  notificationHandlers,
+  reminderOptions,
+  resetNotificationMockState,
+} from "./notification-handlers";
 import { planningHandlers, planningState, resetPlanningState } from "./planning-handlers";
 import {
   currentMockScenario,
@@ -1373,7 +1377,94 @@ function orderedIds<Item extends { id: string; order: number }>(
   });
 }
 
+/**
+ * D10's preferences routes (S11 §6, api e34bf04): ADMIN only (an impersonation token, a MEMBER or
+ * an INSTRUCTOR → 403), and another club's member → 404.
+ */
+function memberPreferencesRefusal(memberId: string) {
+  const scenario = currentMockScenario();
+  if (scenario.me.impersonation !== undefined) {
+    return apiError("IMPERSONATION_DENIED", "Impersonation tokens cannot use this route", 403);
+  }
+  if (!(scenario.me.membership?.roles.includes("ADMIN") ?? false)) {
+    return apiError("FORBIDDEN", "Forbidden", 403);
+  }
+  if (memberId !== censusRecordState.memberOverview.member.id) {
+    return apiError("NOT_FOUND", "Member not found", 404);
+  }
+  return undefined;
+}
+
+/** The member's stored preferences with the club's locales and SMS/PUSH modules, as the api reads them. */
+function clubMemberPreferences(): NotificationPreferences {
+  const { branding } = currentMockScenario();
+  const stored = censusRecordState.memberOverview
+    .notificationPreferences as NotificationPreferences;
+  return {
+    ...stored,
+    availableLocales: [...branding.locales],
+    modules: { push: branding.modules.includes("PUSH"), sms: branding.modules.includes("SMS") },
+    // The club's `messaging.reminderOptionsMinutes`, as screen 12's read has them (R-11-04).
+    reminderOptionsMinutes: reminderOptions(),
+  };
+}
+
 export const handlers = [
+  // E6-W04 step 0b: screen 13's checkbox (S10 R-10-10, §6) completes a task of `GET /me/dogs` for
+  // its member (also the impersonation token), so 13 read again shows it done and counted. Any
+  // other task, a staff caller or TASKS off are the follow-up world's, below.
+  http.post("*/api/v1/tasks/:id/completion", ({ params }) => {
+    const scenario = currentMockScenario();
+    const impersonation = scenario.me.impersonation;
+    const asMember =
+      impersonation !== undefined || (scenario.me.membership?.roles.includes("MEMBER") ?? false);
+    if (!scenario.branding.modules.includes("TASKS") || !asMember) return undefined;
+    const id = String(params.id);
+    const dog = memberDogsState.dogs.find(
+      (candidate) => candidate.tasks?.items.some((item) => item.id === id) === true,
+    );
+    const block = dog?.tasks;
+    const task = block?.items.find((item) => item.id === id);
+    if (dog === undefined || block === undefined || task === undefined) return undefined;
+    // Already DONE, also the second of two calls (idempotent by state, no key: ruling E74).
+    if (task.doneAt !== undefined) return apiError("TASK_ALREADY_DONE", "Task already done", 422);
+    const doneAt = new Date().toISOString().replace(/\.\d{3}Z$/u, "Z");
+    task.doneAt = doneAt;
+    block.open = Math.max(0, block.open - 1);
+    block.completed += 1;
+    const name = impersonation?.memberName ?? scenario.me.account.name;
+    const answer: components["schemas"]["Task"] = {
+      attachments: Array.from({ length: task.attachmentsCount }, (_, index) => ({
+        id: `${task.id}-attachment-${String(index + 1)}`,
+        mimeType: "application/pdf",
+        name: `adjunt-${String(index + 1)}.pdf`,
+        sizeBytes: 120_000,
+        uploadedAt: task.createdAt,
+        url: `https://files.example.test/tasks/${encodeURIComponent(task.id)}/${String(index + 1)}?X-Amz-Expires=300&X-Amz-Signature=mock`,
+      })),
+      createdAt: task.createdAt,
+      createdBy: {
+        accountId: null,
+        displayName: task.instructorName,
+        gender: null,
+        role: "INSTRUCTOR",
+      },
+      dogId: dog.id,
+      doneAt,
+      // The member who completed it, as the api's `doneBy {role, displayName, gender}`.
+      doneBy: {
+        accountId: scenario.me.account.id,
+        displayName: name.split(" ")[0] ?? name,
+        gender: scenario.me.membership?.gender ?? null,
+        role: "MEMBER",
+      },
+      id: task.id,
+      state: "DONE",
+      text: task.text,
+      version: 2,
+    };
+    return HttpResponse.json(answer);
+  }),
   // S10 (E6-W02) first: its signed-upload purposes (TASK, DOG_OBSERVATIONS) are answered before the
   // generic upload handler below, which keeps the other purposes.
   ...followupHandlers,
@@ -2828,38 +2919,24 @@ export const handlers = [
     member.roles = body.roles;
     return HttpResponse.json({ roles: body.roles });
   }),
-  // D10's block reads its own route (E7-W01 round 2 #4, `pending.json` until the snapshot has it):
-  // the member's preferences in the shape of `GET /me/notification-preferences`.
+  // D10's block reads its own route (E7-W01 round 2 #4; in the snapshot since api e34bf04): the
+  // member's preferences in the shape of `GET /me/notification-preferences`, with the club's
+  // locales and SMS/PUSH modules.
   http.get("*/api/v1/members/:id/notification-preferences", ({ params }) => {
-    const scenario = currentMockScenario();
-    if (scenario.me.impersonation !== undefined) {
-      return apiError("IMPERSONATION_DENIED", "Impersonation tokens cannot use this route", 403);
-    }
-    if (!(scenario.me.membership?.roles.includes("ADMIN") ?? false)) {
-      return apiError("FORBIDDEN", "Forbidden", 403);
-    }
-    if (String(params.id) !== censusRecordState.memberOverview.member.id) {
-      return apiError("NOT_FOUND", "Member not found", 404);
-    }
-    return HttpResponse.json(
-      censusRecordState.memberOverview.notificationPreferences as NotificationPreferences,
-    );
+    const refused = memberPreferencesRefusal(String(params.id));
+    if (refused !== undefined) return refused;
+    return HttpResponse.json(clubMemberPreferences());
   }),
   http.put("*/api/v1/members/:id/notification-preferences", async ({ params, request }) => {
-    if (String(params.id) !== censusRecordState.memberOverview.member.id) {
-      return apiError("NOT_FOUND", "Member not found", 404);
-    }
+    const refused = memberPreferencesRefusal(String(params.id));
+    if (refused !== undefined) return refused;
     const body = (await request.json()) as NotificationPreferencesPatch;
     const preferences = censusRecordState.memberOverview
       .notificationPreferences as NotificationPreferences;
     // A partial save (T-11-20): an absent or null key keeps its value; `reminderMinutesBefore: null`
     // is «Mai»; any other value must be one of the options (422 INVALID_REMINDER_OPTION, rule 0).
     const reminder = body.reminderMinutesBefore;
-    if (
-      reminder !== undefined &&
-      reminder !== null &&
-      !preferences.reminderOptionsMinutes.includes(reminder)
-    ) {
+    if (reminder !== undefined && reminder !== null && !reminderOptions().includes(reminder)) {
       return apiError("INVALID_REMINDER_OPTION", "Invalid reminder option", 422);
     }
     const emailByCategory = { ...preferences.emailByCategory };
@@ -2876,7 +2953,7 @@ export const handlers = [
       ...(reminder === undefined ? {} : { reminderMinutesBefore: reminder }),
     };
     censusRecordState.memberOverview.notificationPreferences = updatedPreferences;
-    return HttpResponse.json(updatedPreferences);
+    return HttpResponse.json(clubMemberPreferences());
   }),
   http.get("*/api/v1/dogs", async ({ request }) => {
     await delay(120);

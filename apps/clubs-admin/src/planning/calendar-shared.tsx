@@ -3,7 +3,7 @@ import { type ClubFormats, isPlainDate } from "@agilityhub/i18n";
 import { type ReactNode, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
-import { bandLabel, errorCode } from "./shared";
+import { bandLabel, errorCode, mondayOf } from "./shared";
 
 export type ClassSession = components["schemas"]["ClassSession"];
 export type RingBlock = components["schemas"]["RingBlock"];
@@ -27,6 +27,19 @@ export const apiFilter: Readonly<Record<CalendarFilter, "ACTIVE" | "CANCELLED" |
 
 export function parseFilter(value: string | null): CalendarFilter {
   return calendarFilters.find((filter) => filter === value) ?? "actives";
+}
+
+/**
+ * D4 on a class's week with the class selected, under its state's filter (`?classe=&estat=&setmana=`):
+ * D1's risk rows and a run's effects link the same way (S14 §2, S15 R-15-21).
+ */
+export function classCalendarPath(session: Pick<ClassSession, "date" | "id" | "state">): string {
+  const query = new URLSearchParams({
+    classe: session.id,
+    estat: calendarFilters.find((filter) => apiFilter[filter] === session.state) ?? "actives",
+    setmana: mondayOf(session.date),
+  });
+  return `/calendari?${query.toString()}`;
 }
 
 /** A real `YYYY-MM-DD` calendar date («2026-02-30» and «2026-13-01» are not). */

@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/backoffice-handlers.test.ts (29 tests | 1 failed | 28 skipped) 126ms
+   ❯ E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75) (6)
+     × E5-W05 round 2 #11.a: GET /bookings/filter-values labels a class «{club-local start YYYY-MM-DDTHH:mm} · {description}», as the core does 124ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75) > E5-W05 round 2 #11.a: GET /bookings/filter-values labels a class «{club-local start YYYY-MM-DDTHH:mm} · {description}», as the core does
+AssertionError: expected '2026-08-10T16:50:00Z · B+C' to match /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2} · \S/u
+
+- Expected:
+/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2} · \S/u
+
++ Received:
+"2026-08-10T16:50:00Z · B+C"
+
+ ❯ src/mocks/backoffice-handlers.test.ts:733:27
+    731|     for (const value of values.body.values) {
+    732|       // The core's shape (`bookings-filter-values-core.json`): «2026-…
+    733|       expect(value.label).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2} · \S…
+       |                           ^
+    734|       const row = list.body.items.find((item) => item.classSessionId =…
+    735|       if (row?.classStartsAt === undefined) throw new TypeError(`No ro…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 skipped (29)
+   Start at  01:18:26
+   Duration  969ms (transform 49%, import 36%, tests 14%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/backoffice-handlers.test.ts -t round 2 #11.a

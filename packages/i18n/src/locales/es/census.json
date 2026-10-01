@@ -193,6 +193,7 @@
     "photoSaved": "Foto de {dog} guardada",
     "taskAttachments": "{count, plural, one {# adjunto} other {# adjuntos}}",
     "taskDone": "hecha el {date}",
+    "taskDoneBy": "hecha por {article}{name} el {date}",
     "taskMeta": "{date} · {instructor}",
     "tasksSummary": "{open, plural, one {# pendiente} other {# pendientes}} · {completed, plural, one {# hecha} other {# hechas}}",
     "tasksTitle": "Tareas",

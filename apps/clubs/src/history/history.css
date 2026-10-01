@@ -102,6 +102,32 @@
   min-width: 0;
 }
 
+/* E6-W04 step 0b: an activity with a page — the title's link covers the whole row. */
+.history-row--link {
+  position: relative;
+}
+
+.history-row__link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.history-row__link::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  border-radius: inherit;
+}
+
+.history-row__link:focus-visible {
+  outline: none;
+}
+
+.history-row--link:focus-within {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
 .history-row__badge {
   flex: none;
   max-width: 7.5rem;

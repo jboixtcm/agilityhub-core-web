@@ -417,6 +417,26 @@ describe("E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 roun
     expect(confirmButton()).toHaveTextContent("Confirma Dilluns 3 · 8:30–9:00 · Carretera");
     expect(confirmButton()).toBeEnabled();
   });
+
+  it("E5-W05 round 2 #13: a refresh that clears the choice a SLOT_TAKEN offered also clears that message", async () => {
+    await openTraining();
+    fireEvent.click(within(group("Pista")).getByRole("button", { name: "Muntanya" }));
+    fireEvent.click(within(group("Matí")).getByRole("button", { name: "8:30, lliure" }));
+    bookedMeanwhile("ring-muntanya", "08:30");
+    fireEvent.click(confirmButton());
+    expect(await screen.findByText("Aquesta pista ja no està lliure.")).toBeVisible();
+    await waitFor(() => {
+      expect(confirmButton()).toHaveTextContent("Confirma Dilluns 3 · 8:30–9:00 · Carretera");
+    });
+    // Carretera, the ring the refusal offered, goes too; the focus refresh clears the choice.
+    bookedMeanwhile("ring-carretera", "08:30");
+    fireEvent.focus(window);
+    await waitFor(() => {
+      expect(confirmButton()).toBeDisabled();
+    });
+    expect(screen.getAllByRole("group", { name: "Pista" })).toHaveLength(1);
+    expect(screen.queryByText("Aquesta pista ja no està lliure.")).toBeNull();
+  });
 });
 
 describe("E5-W05 step 12: the offline copy blocks the booking (E5-W02 round-2 review #2, S09 §2)", () => {

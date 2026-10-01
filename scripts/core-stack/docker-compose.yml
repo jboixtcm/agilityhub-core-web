@@ -120,9 +120,14 @@ services:
   playwright:
     profiles: [e2e]
     image: mcr.microsoft.com/playwright:v1.63.0-noble
+    # E5-W05 round 2 (review #8): `run` forwards the INT/TERM it gets to the container, and a shell
+    # as PID 1 ignores both. Under Docker's init (tini) the signal goes to the stage's process group
+    # (TINI_KILL_PROCESS_GROUP), so Playwright stops with 130/143 and `e2e-core.sh` ends there.
+    init: true
     working_dir: /work
     environment:
       CI: "1"
+      TINI_KILL_PROCESS_GROUP: "1"
       CORE_URL: ${CORE_URL:?CORE_URL is required}
       E1_CORE_PASSWORD: ${E1_CORE_PASSWORD:?E1_CORE_PASSWORD is required}
       CORE_EVIDENCE_DIRECTORY: /evidence/${CORE_EVIDENCE_SUBDIRECTORY:-E1-W04}

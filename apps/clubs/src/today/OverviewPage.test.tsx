@@ -129,17 +129,56 @@ describe("T-06-29 screen 23 «Visió global»", () => {
         .getAllByRole("listitem")
         .map((item) => item.textContent),
     ).toEqual([
-      "Laura + Dunaconfirmada",
-      "Marc + Chun-liconfirmada",
-      "Anna + Nassconfirmada",
-      "Eva + Fishconfirmada",
-      "Pau + Blatconfirmada",
-      "Sergio + Thaianul·lada tard",
+      // Each dog's own level (E5-W05 round 2 #3).
+      "Laura + DunaCconfirmada",
+      "Marc + Chun-liAconfirmada",
+      "Anna + NassBconfirmada",
+      "Eva + FishBconfirmada",
+      "Pau + BlatBconfirmada",
+      "Sergio + ThaiEanul·lada tard",
     ]);
     // E5-W05 step 2 (mockup D12): «{guia} + {gos}», the guide being the entry's first name.
     expect(within(panel).getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
     // The removal is D4's (ADMIN); attendance is screen 21's (S10).
     expect(within(panel).queryByRole("button")).toBeNull();
+  });
+
+  it("E5-W05 round 2 #3: the drawer's level chips are the dogs' own levels (Duna «C»), and none in a club with levels.enabled = false", async () => {
+    vi.useFakeTimers({
+      now: new Date("2026-08-03T08:00:00+02:00"),
+      shouldAdvanceTime: true,
+      toFake: ["Date"],
+    });
+    resetBackofficeMockState();
+    const drawerRows = async () => {
+      await renderOverview();
+      fireEvent.click(screen.getByRole("button", { name: /B\+C/u }));
+      const drawer = await screen.findByRole("dialog", { name: "B+C" });
+      const panel = await within(drawer).findByRole("region", { name: "Inscrits (5/5)" });
+      await within(panel).findByText("Laura + Duna");
+      return {
+        chips: [...panel.querySelectorAll(".ah-registrants__level")].map(
+          (chip) => chip.textContent,
+        ),
+        rows: within(panel)
+          .getAllByRole("listitem")
+          .map((item) => item.textContent),
+      };
+    };
+    expect(await drawerRows()).toEqual({
+      chips: ["C", "A", "B", "B", "B", "E"],
+      rows: [
+        "Laura + DunaCconfirmada",
+        "Marc + Chun-liAconfirmada",
+        "Anna + NassBconfirmada",
+        "Eva + FishBconfirmada",
+        "Pau + BlatBconfirmada",
+        "Sergio + ThaiEanul·lada tard",
+      ],
+    });
+    cleanup();
+    mockScenario("activitiesInstructorNoLevels");
+    expect((await drawerRows()).chips).toEqual([]);
   });
 
   it("E5-W05 steps 1 and 2: the drawer's chips read displayState («feta», «no presentat»), the level chip is levelCode (none when null), and «En espera: {guia} + {gos}» with the FIFO position", async () => {
