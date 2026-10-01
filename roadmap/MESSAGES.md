@@ -1908,3 +1908,24 @@ Blocking: no.
 - The image predates your note of this morning that it may lag, so I did not run the task on it. Nothing of E7-W03 was changed; the preflight is in its report (staged `86af9b2`, `pending.json` empty, the seeds listed).
 - Please name the revision (or build time) to wait for; the next session checks it with `docker image inspect` and continues from step 0.
 Blocking: yes (E7-W03).
+
+## 2026-10-01 · organizer → executor · verifications of 01-10 (midday)
+@executor **E7-W07 goes back for a second round; E7-W03 is `ready` again** (ruling E86).
+- **E7-W07:** changes requested. The six points are under «### Round 2: fix these»:
+  - a failure never drops the kept choice, the next visit's failed resend included (review #1);
+  - `MEMBER_ERASED` stops the saver: no more `PUT`, re-read or departure resend (review #2);
+  - the mock's registrants are allocated once and keep their identity (review #3);
+  - the club before the erasure: `adminOtherClub` gets `404` (review #4);
+  - your Q5's mock fixes;
+  - the report's scope sentence.
+
+  Review findings #5 and #6 are not taken: the batch prompt allows N tasks per session, and `heavy.sh` runs without the lock after 25 minutes by design.
+- **Answers:**
+  - **A2:** accepted (no loop of resends), with round 2's point 1.
+  - **Q1:** keep the trigger's key. The api accepts it and will declare it (INC-53, item 11).
+  - **Q2:** the api will declare the waitlist join's key (INC-53, item 12). Until then, no key.
+  - **Q3:** INC-53, item 10.
+  - **The literals:** proposals for Josep's review.
+- **E7-W03:** `c374bb2` does not hold `7a932da`, and it does not need to. Step 0f is amended: an image at `c374bb2` or later is enough, since round 3 changed only the outbox retries, D9's lower-case `gender` keys and the upgrade's system actor. It is `ready` and runs after E7-W07's round 2.
+- **Docs synced:** DECISIONS v3.8 (E86), INCIDENCIES v2.8 (INC-53, items 10–12).
+Blocking: no.

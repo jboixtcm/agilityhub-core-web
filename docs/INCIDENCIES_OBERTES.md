@@ -1,6 +1,6 @@
 # Incidències obertes — registre de defectes
 
-**v2.7 · 01-10-2026** (v2.6 01-10 · v2.5 01-10 · v2.4 01-10 · v2.3 30-09 · v2.2 30-09 · v2.1 30-09 · v2.0 30-09 · v1.9 30-09 · v1.8 28-09 · v1.7 28-09 · v1.6 27-09 · v1.5 27-09 · v1.4 26-09 · v1.3 26-09 · v1.2 24-09 · v1.1 10-09 · v1.0 09-09)
+**v2.8 · 01-10-2026** (v2.7 01-10 · v2.6 01-10 · v2.5 01-10 · v2.4 01-10 · v2.3 30-09 · v2.2 30-09 · v2.1 30-09 · v2.0 30-09 · v1.9 30-09 · v1.8 28-09 · v1.7 28-09 · v1.6 27-09 · v1.5 27-09 · v1.4 26-09 · v1.3 26-09 · v1.2 24-09 · v1.1 10-09 · v1.0 09-09)
 
 Registre de defectes trobats mentre es desenvolupa i que **no s'obren com a tasca del roadmap ara mateix** (decisió de Jordi, 09-09: primer acabem el desenvolupament, després fem una passada de correccions). Serveix perquè cap troballa es perdi pel camí i perquè la fase de correccions tingui la llista feta.
 
@@ -62,7 +62,7 @@ Registre de defectes trobats mentre es desenvolupa i que **no s'obren com a tasc
 | INC-50 | 30-09 | api (processos, proves) | Nits de la ronda 2 d'E5-T29: un reintent d'un llançament manual pot deixar l'execució sense `JOB_TRIGGERED` si la primera escriptura de l'auditoria va fallar; la vida de 24 h de la clau és definida dues vegades; l'etiqueta T-09-30 dels tests de cerca no té cap asserció de tenant | Baixa | oberta — passada de correccions |
 | INC-51 | 01-10 | api (seguiment, contracte) | Menors de la revisió d'E6-T06 (la cerca de D14 sense projecció i amb llistes `$in` sense límit, les proves d'aïllament de tenant de la cerca i dels recomptes, `FOLLOWUP.searchable`, l'etiqueta d'un abonat esborrat als valors del filtre, els scripts de l'evidència) i la pregunta 1 d'E6-W05 (`POST /tasks` pot respondre `409 INVALID_STATE` sense declarar-lo) | Baixa | oberta — E11-T02 |
 | INC-52 | 01-10 | api (missatgeria, menors) | Menors de la revisió d'E7-T05: `claimAccepted` amb dos predicats sobre el mateix array, l'acceptació que no es torna a marcar mentre l'assentament falla més de 2 minuts, l'evidència del pas 4, la fila 11 de la taula sense prova, el rebot d'una adreça compartida, i detalls | Baixa | oberta — E11-T02 |
-| INC-53 | 01-10 | api (contracte i seed, petits) | Preguntes d'api d'E6-W04, E7-W05 i E5-W05: `TaskItem.doneBy`, `UploadUrl.uploadUrl` relatiu, els comptadors de simulació de P8, el comptador d'adjunts de `FollowupItem`, un límit superior per a `read-all`, les etiquetes amb espai final de `/bookings/filter-values`, `isoWeekStart` a l'ítem de P1, el «Berta» del seed, la resta de codis d'S10 que han passat a 422 i els camps obligatoris de `Member` que l'esborrament anul·la | Baixa | oberta — E11-T02 (el punt 10, E11-T01) |
+| INC-53 | 01-10 | api (contracte i seed, petits) | Preguntes d'api d'E6-W04, E7-W05 i E5-W05: `TaskItem.doneBy`, `UploadUrl.uploadUrl` relatiu, els comptadors de simulació de P8, el comptador d'adjunts de `FollowupItem`, un límit superior per a `read-all`, les etiquetes amb espai final de `/bookings/filter-values`, `isoWeekStart` a l'ítem de P1, el «Berta» del seed, la resta de codis d'S10 que han passat a 422, els camps obligatoris de `Member` que l'esborrament anul·la, i les claus d'idempotència de `POST /jobs/{name}/trigger` i de la llista d'espera | Baixa | oberta — E11-T02 (el punt 10, E11-T01) |
 
 ---
 
@@ -106,7 +106,7 @@ Registre de defectes trobats mentre es desenvolupa i que **no s'obren com a tasc
 
 **Gravetat**: baixa. El web hi té una alternativa a cada cas.
 
-**Origen**: les preguntes d'E6-W04 (Q1–Q3), d'E7-W05 (Q3) i de la ronda 2 d'E5-W05 (R2-Q1, R2-Q2); verificació de l'organitzador de l'1-10 (decisió E82). El punt 10, de la suposició A8 d'E7-W06 (decisió E85).
+**Origen**: les preguntes d'E6-W04 (Q1–Q3), d'E7-W05 (Q3) i de la ronda 2 d'E5-W05 (R2-Q1, R2-Q2); verificació de l'organitzador de l'1-10 (decisió E82). El punt 10, de la suposició A8 d'E7-W06 (decisió E85) i de la pregunta Q3 d'E7-W07. Els punts 11 i 12, de les preguntes Q1 i Q2 d'E7-W07 (decisió E86).
 
 **Què cal fer**:
 1. **`TaskItem.doneBy`** a `GET /me/dogs`, perquè la pantalla 13 digui «feta per {nom} el {data}», com la 26.
@@ -118,7 +118,14 @@ Registre de defectes trobats mentre es desenvolupa i que **no s'obren com a tasc
 7. **L'ítem `Week` de P1** porta `isoWeekStart` (el que ja té `WeekOpened`), perquè el web enllaci la setmana que l'api ha obert sense calcular-la (R-15-11).
 8. **El seed de demostració**: «Berta» (la instructora 0) no queda lligada sempre al mateix compte (`instructor@`, `instructor.2@`, `instructor.3@` segons l'execució), tot i que el README del seed promet un repartiment fix.
 9. **Els codis d'S10 que han passat a 422**: el core només s'ha comprovat amb `ATTENDANCE_NOTIFIED_FINAL`, `TASK_ALREADY_DONE` i `TASK_NOT_DONE`; E7-W03 prova la resta.
-10. **Un abonat esborrat** (R-14-15) té la data de naixement i l'adreça anul·lades, però el contracte de `Member` les declara obligatòries. O són `nullable` per a un abonat esborrat, o l'api diu què n'envia. Ho resol E11-T01, que fa l'esborrament; mentrestant, el mock del web segueix el contracte publicat.
+10. **Un abonat esborrat** (R-14-15) té la data de naixement i l'adreça anul·lades, però el contracte de `Member` les declara obligatòries. O són `nullable` per a un abonat esborrat, o l'api diu què n'envia. Ho resol E11-T01, que fa l'esborrament; mentrestant, el mock del web segueix el contracte publicat. E11-T01 respon també les preguntes d'E7-W07 (Q3):
+    - quins `409` responen `POST /members/{id}/erasure` (S14 §6 hi afegeix `MEMBER_ERASED`) i `data-export`;
+    - què respon `impersonation-token` per a un abonat esborrat i de baixa: `MEMBER_ERASED` o `MEMBER_NOT_ACTIVE`;
+    - si un abonat SEPA esborrat porta `accountMissing = true`;
+    - si la fitxa d'un abonat esborrat llista els seus gossos;
+    - si les seves preferències són `{}` o els valors per defecte.
+11. **`POST /jobs/{name}/trigger`** accepta `Idempotency-Key` (E75), però l'OpenAPI no la declara (S15 §6 hi diu «no»). Cal declarar-la, opcional, perquè el web l'envia (CONVENCIONS_API §7).
+12. **`POST /waitlist-entries`**: si es perd el `201`, el reintent respon `409 ALREADY_ON_WAITLIST`. Cal declarar-hi `Idempotency-Key` (el filtre ja accepta una clau a tot `POST`) i provar que un reintent amb la mateixa clau rep el mateix `201`. Cal dir també quina guarda evita dues entrades simultànies del mateix gos (R-08-12 no en diu cap). El web l'adopta quan l'api la declari.
 
 **On mirar**: els informes d'E6-W04 i d'E7-W05 i la ronda 2 d'E5-W05 (web).
 
