@@ -1,0 +1,44 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/auth-handoff.test.ts (2 tests | 1 failed) 6267ms
+   ❯ T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads (2)
+     × redeem code 1, reload, redeem code 2, then code 1 again → refused (the whole redemption history stays spent) 5700ms
+ ❯ src/mocks/mock-worlds.budget.test.ts (23 tests | 1 failed) 11876ms
+   ❯ E3-W10 build-time budget of the MSW mock worlds (23)
+     × imports the mock modules afresh within the start-up budget 6090ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/auth-handoff.test.ts > T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads > redeem code 1, reload, redeem code 2, then code 1 again → refused (the whole redemption history stays spent)
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/mocks/auth-handoff.test.ts:78:3
+     76|
+     77| describe("T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code…
+     78|   it("redeem code 1, reload, redeem code 2, then code 1 again → refuse…
+       |   ^
+     79|     const clubApp = new OriginStorage();
+     80|     const [first, second] = ["mock-impersonation-handoff-41", "mock-im…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/mock-worlds.budget.test.ts > E3-W10 build-time budget of the MSW mock worlds > imports the mock modules afresh within the start-up budget
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/mocks/mock-worlds.budget.test.ts:183:3
+    181|   });
+    182|
+    183|   it("imports the mock modules afresh within the start-up budget", asy…
+       |   ^
+    184|     let fresh: typeof startup.handlers = startup.handlers;
+    185|     const cost = await relativeCpuCost(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 27 passed (29)
+      Tests  2 failed | 642 passed (644)
+   Start at  20:52:57
+   Duration  28.62s (tests 46%, import 33%, transform 21%)
+

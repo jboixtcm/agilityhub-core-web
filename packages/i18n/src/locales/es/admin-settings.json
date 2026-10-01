@@ -772,6 +772,7 @@
       "late": "{count, plural, one {# con retraso} other {# con retraso}}",
       "classReminders": "{count, plural, one {# recordatorio de clase} other {# recordatorios de clase}}",
       "trainingReminders": "{count, plural, one {# recordatorio de entrenamiento} other {# recordatorios de entrenamiento}}",
+      "WOULD_REMIND": "{count, plural, one {# recordatorio previsto} other {# recordatorios previstos}}",
       "opened": "{count, plural, one {# semana abierta} other {# semanas abiertas}}",
       "swept": "{count, plural, one {# entrada de espera cerrada} other {# entradas de espera cerradas}}",
       "finished": "{count, plural, one {# clase cerrada} other {# clases cerradas}}",

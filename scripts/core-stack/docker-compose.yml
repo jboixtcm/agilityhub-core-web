@@ -136,6 +136,8 @@ services:
       CORE_TEST_FILES: ${CORE_TEST_FILES:-}
       E4_WEEK_START: ${E4_WEEK_START:?E4_WEEK_START is required}
       E5_WEEK_START: ${E5_WEEK_START:-${E4_WEEK_START}}
+      # E7-W03 round 2: `off` when `e2e-core.sh` gets `no-clock` (POST /test/clock treated as absent).
+      CORE_CLOCK_DETECTION: ${CORE_CLOCK_DETECTION:-}
     volumes:
       - ../..:/src:ro
       - ../../roadmap/evidence:/evidence

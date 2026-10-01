@@ -1,0 +1,49 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > filters by action and opens the masked before/after change drawer
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > E3-W07 step 0 labels a readmission submitted from the public form (SIGNUP_SUBMITTED, PUBLIC)
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > E4-W15 step 8 (E4-W13 report, question 4): «Entitat» and «Actor» ask for the keys they fall back to, entityType and actorRole
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > opens the exports drawer for a queued job and exposes its READY download
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > shows the catalogued EXPORT_LIMIT explanation in the exports drawer
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > routes a queued members list export into the global drawer
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > routes a queued dogs list export into the global drawer
+ ↓ src/audit/AuditPage.test.tsx > T-14-26 member audit and exports > links LastChange to the entity-scoped audit trail
+ ✓ src/audit/AuditPage.test.tsx > T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): every audit action and actor role of the contract has a label > reads a ca, es and en label for each AuditAction and actorRole value, never the code itself 98ms
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > blocks and unblocks new bookings with the required reason
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > maps STALE_VERSION when another administrator edited the member
+ ↓ src/census/CensusRecordPage.test.tsx > T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the api's launchUrl > opens exactly the launchUrl with the one-time code, in a new tab, and never writes the token into a URL
+ ↓ src/census/CensusRecordPage.test.tsx > T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the api's launchUrl > a response without launchUrl is an error in the dialog and opens nothing (no same-origin guess)
+ ↓ src/census/CensusRecordPage.test.tsx > E7-W01 round 2 #4: D10's «Preferències d'avisos» reads its own route > an overview without the preferences (the free-form field the api may shape otherwise) still shows the block, from GET /members/{id}/notification-preferences
+ ↓ src/census/CensusRecordPage.test.tsx > T-14-19 E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15) > E7-W06 step 5: an erased member's «Preferències d'avisos» say MEMBER_ERASED as final — its own message, no «Torna-ho a provar» — and ask nothing the api refuses with 409
+ ↓ src/census/CensusRecordPage.test.tsx > T-14-19 E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15) > E7-W06 step 5: a record read answered 409 MEMBER_ERASED is final — its own message, no «Torna-ho a provar»
+ ↓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+ ↓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+ ↓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/{id}/roles) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+ ↓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+ ↓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+ ↓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/access-resend) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+ ↓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id}/impersonation-token) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+ ↓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, R-14-15): an erased member's record offers none of the changes the api refuses with 409 MEMBER_ERASED, and sends none
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W17 step 9 (AGENTS rule 1): D10's «Pagament» row names a cash member's method > reads «Efectiu» in ca, «Efectivo» in es and «Cash» in en, never the raw MANUAL
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-34 (front) E4-W16 step 7 (INC-27, R-03-30): D10 without BILLING keeps its actions > keeps «Bloqueja les reserves», «Inactivitat», «Baixa (amb data)», «Tota l'auditoria ›» and the recent changes; only the invoice rows and «Tots els rebuts» go
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-34 (front) E4-W16 step 7 (INC-27, R-03-30): D10 without BILLING keeps its actions > with BILLING the card keeps its invoice rows and «Tots els rebuts»
+ ✓ src/census/CensusRecordPage.test.tsx > T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): D10's «Darrers canvis» names the action and the actor's role, never their codes > reads «Darrers canvis: 03/08 Mètode de pagament modificat (Administrador Jordi) · 26/07 Dades de l'abonat modificades (Abonat)» in ca, never MEMBER_PAYMENT_METHOD_CHANGED, MEMBER_UPDATED, ADMIN or MEMBER 526ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): D10's «Darrers canvis» names the action and the actor's role, never their codes > reads «Últimos cambios: Método de pago modificado (Administrador Jordi) · Datos del abonado modificados (Abonado)» in es, never MEMBER_PAYMENT_METHOD_CHANGED, MEMBER_UPDATED, ADMIN or MEMBER 248ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): D10's «Darrers canvis» names the action and the actor's role, never their codes > reads «Latest changes: Payment method changed (Administrator Jordi) · Member details changed (Member)» in en, never MEMBER_PAYMENT_METHOD_CHANGED, MEMBER_UPDATED, ADMIN or MEMBER 255ms
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > names a pending document by its type's label, as D2 does, and a type the club no longer lists as «Document pendent»
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > never shows the raw key while the labels load or when they cannot be read
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > shows no «núm.» badge for a member without a number
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-38 dog record > shows the complete dog record and changes level without a booking warning
+ ↓ src/census/CensusRecordPage.test.tsx > T-03-38 dog record > deactivates and reactivates a dog without deleting its record
+
+ Test Files  2 passed (2)
+      Tests  4 passed | 32 skipped (36)
+   Start at  20:50:55
+   Duration  4.49s (transform 38%, environment 26%, tests 15%, import 14%, setup 7%)
+
+  Transform  transforming modules took 2.83s · 38% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

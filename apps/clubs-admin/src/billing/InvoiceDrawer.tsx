@@ -163,6 +163,7 @@ export function InvoiceDrawer({
   onChanged,
   onClose,
   onNavigate,
+  rolledBack: listedRolledBack = false,
 }: {
   client: ApiClient;
   invoiceId: string;
@@ -170,6 +171,8 @@ export function InvoiceDrawer({
   onChanged: () => void;
   onClose: () => void;
   onNavigate: (path: string) => void;
+  /** The list row's `rolledBack` (R-12-14): an admin-cancelled receipt a rollback reached too. */
+  rolledBack?: boolean;
 }) {
   const { t } = useTranslation(["admin-billing", "enums", "errors", "census"]);
   const locale = useBillingLocale();
@@ -252,16 +255,26 @@ export function InvoiceDrawer({
       ? t("admin-billing:drawer.loading")
       : t("admin-billing:drawer.title", { number: invoice.displayNumber });
   const showTax = invoice?.lines.some((line) => line.taxPercent !== 0) ?? false;
+  const rolledBack =
+    invoice?.status === "CANCELLED" && (listedRolledBack || invoice.cancelReason === "ROLLBACK");
   const status =
     invoice === undefined
       ? undefined
       : invoiceStatusView({
           paymentMethodType: invoice.paymentMethod.type,
           refundedTotal: invoice.refundedTotal,
-          rolledBack: invoice.cancelReason === "ROLLBACK",
+          rolledBack,
           status: invoice.status,
           total: invoice.total,
         });
+  // An admin's own reason reads as written, also on a receipt a rollback reached afterwards.
+  const ownReason =
+    invoice?.cancelReason === null ||
+    invoice?.cancelReason === undefined ||
+    invoice.cancelReason === "ADMIN" ||
+    invoice.cancelReason === "ROLLBACK"
+      ? undefined
+      : invoice.cancelReason;
   const method = invoice?.paymentMethod;
 
   return (
@@ -323,13 +336,8 @@ export function InvoiceDrawer({
               {invoice.cancelledAt === null || invoice.cancelledAt === undefined ? null : (
                 <Row label={t("admin-billing:drawer.cancelledAt")}>
                   {formats.formatDate(invoice.cancelledAt)}
-                  {invoice.cancelReason === "ROLLBACK"
-                    ? ` · ${t("admin-billing:drawer.cancelReasonRollback")}`
-                    : invoice.cancelReason === null ||
-                        invoice.cancelReason === undefined ||
-                        invoice.cancelReason === "ADMIN"
-                      ? null
-                      : ` · ${invoice.cancelReason}`}
+                  {rolledBack ? ` · ${t("admin-billing:drawer.cancelReasonRollback")}` : null}
+                  {ownReason === undefined ? null : ` · ${ownReason}`}
                 </Row>
               )}
               {invoice.refundedTotal.amountMinor === 0 ? null : (

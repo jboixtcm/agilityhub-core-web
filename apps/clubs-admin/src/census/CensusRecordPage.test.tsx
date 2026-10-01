@@ -39,10 +39,11 @@ async function renderRecord(
   kind: "dog" | "member",
   recordBranding: Branding = branding,
   memberId = "member-laura",
+  language = "ca",
 ) {
   const i18n = await createI18n({
     branding: recordBranding,
-    browserLanguages: ["ca"],
+    browserLanguages: [language],
     initialNamespaces: ["admin-census", "errors"],
     storage: undefined,
   });
@@ -622,6 +623,81 @@ describe("T-03-34 (front) E4-W16 step 7 (INC-27, R-03-30): D10 without BILLING k
     );
     expect(screen.getByRole("button", { name: "Bloqueja les reserves" })).toBeVisible();
   });
+});
+
+describe("T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): D10's «Darrers canvis» names the action and the actor's role, never their codes", () => {
+  /**
+   * The member's last two audit entries as the api sends them (S14 R-14-11, `AuditSummary`): the
+   * `AuditAction` and the actor's role are codes; the second change was made by the member, so it
+   * has no actor name.
+   */
+  async function serveRecentAudit() {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const { data } = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-laura" } },
+    });
+    if (data === undefined) throw new TypeError("The mock overview did not answer");
+    const overview = {
+      ...data,
+      recentAudit: [
+        {
+          action: "MEMBER_PAYMENT_METHOD_CHANGED",
+          actorName: "Jordi",
+          actorRole: "ADMIN",
+          at: "2026-08-03T11:15:00Z",
+          id: "audit-iban",
+        },
+        {
+          action: "MEMBER_UPDATED",
+          actorRole: "MEMBER",
+          at: "2026-07-26T09:30:00Z",
+          id: "audit-self",
+        },
+      ],
+    };
+    server.use(http.get("*/api/v1/members/:id/overview", () => HttpResponse.json(overview)));
+  }
+
+  const trilingual: Branding = { ...branding, locales: ["ca", "es", "en"] };
+
+  for (const [language, recent, entries] of [
+    [
+      "ca",
+      "Darrers canvis",
+      [
+        "03/08 Mètode de pagament modificat (Administrador Jordi)",
+        "26/07 Dades de l'abonat modificades (Abonat)",
+      ],
+    ],
+    [
+      "es",
+      "Últimos cambios",
+      [
+        "Método de pago modificado (Administrador Jordi)",
+        "Datos del abonado modificados (Abonado)",
+      ],
+    ],
+    [
+      "en",
+      "Latest changes",
+      ["Payment method changed (Administrator Jordi)", "Member details changed (Member)"],
+    ],
+  ] as const) {
+    it(`reads «${recent}: ${entries.join(" · ")}» in ${language}, never MEMBER_PAYMENT_METHOD_CHANGED, MEMBER_UPDATED, ADMIN or MEMBER`, async () => {
+      await serveRecentAudit();
+      await renderRecord("member", trilingual, "member-laura", language);
+      await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+
+      const line = screen.getByText(new RegExp(`${recent}:`, "u"));
+      for (const entry of entries) expect(line).toHaveTextContent(entry);
+      if (language === "ca") {
+        expect(line).toHaveTextContent(`${recent}: ${entries.join(" · ")}`, {
+          normalizeWhitespace: true,
+        });
+      }
+      expect(line.textContent).not.toMatch(/MEMBER_|\bADMIN\b|\bMEMBER\b/u);
+    });
+  }
 });
 
 /**

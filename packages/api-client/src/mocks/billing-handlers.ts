@@ -727,7 +727,8 @@ export const billingHandlers = [
     if (denied !== undefined) return denied;
     const remittance = findRemittance(String(params.id));
     if (remittance?.fileAvailable !== true) return notFound();
-    const fileName = `${remittance.messageId}.xml`;
+    // The api's attachment name (S12 §6, snapshot b67a07b): `remesa-{period}.xml`.
+    const fileName = `remesa-${remittance.period}.xml`;
     return json({
       downloadUrl: `https://files.example.test/remittances/${remittance.id}/${fileName}?X-Amz-Expires=300&X-Amz-Signature=mock`,
       expiresAt: new Date(Date.now() + 300_000).toISOString().replace(/\.\d{3}Z$/u, "Z"),
@@ -741,7 +742,12 @@ export const billingHandlers = [
     if (remittance === undefined) return notFound();
     const payload = await body<SubmissionRequest>(request);
     return keyed(request, JSON.stringify({ id: params.id, payload }), () => {
-      if (!isDate(payload?.submittedAt) || payload.submittedAt > today()) {
+      // The club-local day it went to the bank: not after today, not before the remittance's day.
+      if (
+        !isDate(payload?.submittedAt) ||
+        payload.submittedAt > today() ||
+        payload.submittedAt < clubLocalDate(new Date(remittance.creationAt))
+      ) {
         return validationError("submittedAt");
       }
       if (remittance.status !== "GENERATED") return invalidState(remittance.status);

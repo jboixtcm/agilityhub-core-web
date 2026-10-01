@@ -279,6 +279,11 @@ export interface StoredInvoice {
 }
 
 export interface StoredRun {
+  /**
+   * The waiting manual SEPA receipts (`includeInNextRun`, E87) this run's remittance collects; its
+   * rollback returns them to PENDING.
+   */
+  carriedInvoiceIds?: string[];
   /** The series numbers the run took, for the numbering given back by a rollback. */
   firstNumber: number;
   lastNumber: number;
@@ -584,7 +589,49 @@ export function generateRun(
           ? { ...totals, charged: 0, failed: 0 }
           : totals;
   }
-  const sepaInvoices = issued.filter((item) => item.invoice.paymentMethod.type === "SEPA_DD");
+  // E87 (R-12-19): a manual SEPA receipt waiting with `includeInNextRun` (a positive total, E89)
+  // is collected by this run's remittance.
+  const carried =
+    remittanceId === null
+      ? []
+      : world.invoices.filter(
+          (item) =>
+            item.invoice.kind === "MANUAL" &&
+            item.invoice.status === "PENDING" &&
+            item.invoice.includeInNextRun &&
+            item.invoice.paymentMethod.type === "SEPA_DD" &&
+            item.invoice.total.amountMinor > 0,
+        );
+  for (const item of carried) {
+    const { invoice } = item;
+    const waiting = invoice.collections.find(
+      (entry) => entry.provider === "SEPA_XML" && entry.status === "CREATED",
+    );
+    const providerRef = `${invoice.paymentMethod.mandateRef ?? invoice.memberId.slice(0, 8)}/${invoice.displayNumber}`;
+    if (waiting === undefined) {
+      invoice.collections = [
+        ...invoice.collections,
+        collection(world, invoice, {
+          createdAt: options.at,
+          provider: "SEPA_XML",
+          providerRef,
+          remittanceId,
+          status: "SUBMITTED",
+        }),
+      ];
+    } else {
+      waiting.providerRef = providerRef;
+      waiting.remittanceId = remittanceId;
+      waiting.status = "SUBMITTED";
+    }
+    invoice.remittanceId = remittanceId;
+    invoice.status = "COLLECTING";
+    invoice.version += 1;
+  }
+  const sepaInvoices = [
+    ...issued.filter((item) => item.invoice.paymentMethod.type === "SEPA_DD"),
+    ...carried,
+  ];
   const remittance: Remittance | null =
     remittanceId === null
       ? null
@@ -611,6 +658,7 @@ export function generateRun(
         };
   if (remittance !== null) world.remittances.unshift(remittance);
   const stored: StoredRun = {
+    carriedInvoiceIds: carried.map((item) => item.invoice.id),
     firstNumber,
     lastNumber: world.nextNumber - 1,
     polls: 0,
@@ -638,10 +686,35 @@ export function generateRun(
 /** `POST /billing/runs/{id}/rollback`'s effects (R-12-14), also used to seed August's first try. */
 export function rollBackRun(world: BillingWorld, stored: StoredRun, at: string, reason: string) {
   const ids = new Set(stored.run.invoiceIds);
+  const carried = new Set(stored.carriedInvoiceIds ?? []);
+  const runRemittanceId = world.remittances.find((entry) => entry.runId === stored.run.id)?.id;
   let cancelled = 0;
   for (const item of world.invoices) {
-    if (!ids.has(item.invoice.id) || item.invoice.status === "CANCELLED") continue;
     const { invoice } = item;
+    // E87: a waiting manual receipt the remittance carried goes back to PENDING, still waiting
+    // for the next run (`includeInNextRun` kept).
+    if (carried.has(invoice.id) && invoice.status === "COLLECTING") {
+      invoice.collections = invoice.collections.map((entry) =>
+        entry.remittanceId === runRemittanceId && entry.status === "SUBMITTED"
+          ? { ...entry, failureCode: "ROLLBACK", resolvedAt: at, status: "FAILED" }
+          : entry,
+      );
+      invoice.collections = [
+        ...invoice.collections,
+        collection(world, invoice, { createdAt: at, provider: "SEPA_XML", status: "CREATED" }),
+      ];
+      invoice.remittanceId = null;
+      invoice.status = "PENDING";
+      invoice.version += 1;
+      continue;
+    }
+    if (!ids.has(invoice.id)) continue;
+    // E89 (R-12-14): the rollback takes the whole block of the run, also a receipt the admin
+    // cancelled meanwhile (it keeps its own reason); its number is issued again.
+    if (invoice.status === "CANCELLED") {
+      item.rolledBack = true;
+      continue;
+    }
     invoice.collections = [
       ...invoice.collections,
       collection(world, invoice, {

@@ -772,6 +772,7 @@
       "late": "{count, plural, one {# late} other {# late}}",
       "classReminders": "{count, plural, one {# class reminder} other {# class reminders}}",
       "trainingReminders": "{count, plural, one {# training reminder} other {# training reminders}}",
+      "WOULD_REMIND": "{count, plural, one {# planned reminder} other {# planned reminders}}",
       "opened": "{count, plural, one {# week opened} other {# weeks opened}}",
       "swept": "{count, plural, one {# waiting entry closed} other {# waiting entries closed}}",
       "finished": "{count, plural, one {# class closed} other {# classes closed}}",

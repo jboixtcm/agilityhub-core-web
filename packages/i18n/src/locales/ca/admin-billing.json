@@ -29,6 +29,7 @@
     "generateTitle": "Genera els rebuts · {month}",
     "generateBody": "Es generaran {count} rebuts per un total de {total}. La data del proper rebut dels abonats avançarà al dia {nextDate}.",
     "generate": "Genera",
+    "generateWithEarliest": "Genera amb cobrament el {date}",
     "generating": "Generant els rebuts…",
     "rollbackTitle": "Retrocedeix la remesa · {month}",
     "rollbackIntro": "Es desfarà la generació del mes:",
@@ -284,7 +285,8 @@
     "loadPeriod": "No s'ha pogut carregar el mes.",
     "trace": "Referència de l'error: {traceId}",
     "chargingSlow": "Els cobraments amb targeta encara s'estan processant.",
-    "dateAfterToday": "La data no pot ser posterior a avui."
+    "dateAfterToday": "La data no pot ser posterior a avui.",
+    "submittedAtRange": "La data ha de ser entre el {earliest} i avui."
   },
   "toasts": {
     "simulated": "Mes simulat.",

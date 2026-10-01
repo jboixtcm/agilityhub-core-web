@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 import { createApiClient } from "@agilityhub/api-client";
 import { mockScenario, resetAuditMockState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
@@ -174,8 +177,12 @@ describe("T-14-26 member audit and exports", () => {
     window.history.replaceState(null, "", "/abonats/member-laura/auditoria");
     await renderAudit();
 
-    const system = (await screen.findByRole("link", { name: "Nivell del gos modificat" })).closest("tr");
-    const unlabelled = screen.getByRole("link", { name: "Dades de l'abonat modificades" }).closest("tr");
+    const system = (await screen.findByRole("link", { name: "Nivell del gos modificat" })).closest(
+      "tr",
+    );
+    const unlabelled = screen
+      .getByRole("link", { name: "Dades de l'abonat modificades" })
+      .closest("tr");
     if (system === null || unlabelled === null) throw new TypeError("The audit rows are missing");
     expect(requestedFields.at(-1)?.split(",")).toEqual(
       expect.arrayContaining(["entityLabel", "entityType", "actorName", "actorRole"]),
@@ -292,5 +299,58 @@ describe("T-14-26 member audit and exports", () => {
       "href",
       "/auditoria?entityType=Level&entityId=level-a",
     );
+  });
+});
+
+describe("T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): every audit action and actor role of the contract has a label", () => {
+  /** The adopted api snapshot (AGENTS rule 4): the enums the list, the drawer and D10 render. */
+  function contractEnums() {
+    const snapshot = JSON.parse(
+      readFileSync(
+        resolve(import.meta.dirname, "../../../../packages/api-client/openapi/openapi.json"),
+        "utf8",
+      ),
+    ) as {
+      components: {
+        schemas: {
+          AuditAction: { enum: string[] };
+          AuditEntry: { properties: { actorRole: { enum: string[] } } };
+        };
+      };
+    };
+    return {
+      actions: snapshot.components.schemas.AuditAction.enum,
+      roles: snapshot.components.schemas.AuditEntry.properties.actorRole.enum,
+    };
+  }
+
+  it("reads a ca, es and en label for each AuditAction and actorRole value, never the code itself", async () => {
+    const { actions, roles } = contractEnums();
+    expect(actions.length).toBeGreaterThan(0);
+    expect(roles.length).toBeGreaterThan(0);
+
+    const missing: string[] = [];
+    for (const locale of ["ca", "es", "en"] as const) {
+      const i18n = await createI18n({
+        branding: { defaultLocale: locale, locales: ["ca", "es", "en"] },
+        browserLanguages: [locale],
+        initialNamespaces: ["admin-audit"],
+        storage: undefined,
+      });
+      expect(i18n.resolvedLanguage).toBe(locale);
+      for (const [group, values] of [
+        ["actions", actions],
+        ["roles", roles],
+      ] as const) {
+        for (const value of values) {
+          const key = `admin-audit:${group}.${value}`;
+          const label = i18n.t(key);
+          if (!i18n.exists(key) || label.trim() === "" || label === value || label === key) {
+            missing.push(`${locale} ${group}.${value}`);
+          }
+        }
+      }
+    }
+    expect(missing).toEqual([]);
   });
 });

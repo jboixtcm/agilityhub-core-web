@@ -1,0 +1,274 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/audit/AuditPage.test.tsx (9 tests | 1 failed | 8 skipped) 496ms
+   ❯ T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): every audit action and actor role of the contract has a label (1)
+     × reads a ca, es and en label for each AuditAction and actorRole value, never the code itself 480ms
+ ❯ src/census/CensusRecordPage.test.tsx (27 tests | 3 failed | 24 skipped) 3317ms
+   ❯ T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): D10's «Darrers canvis» names the action and the actor's role, never their codes (3)
+     × reads «Darrers canvis: 03/08 Mètode de pagament modificat (Administrador Jordi) · 26/07 Dades de l'abonat modificades (Abonat)» in ca, never MEMBER_PAYMENT_METHOD_CHANGED, MEMBER_UPDATED, ADMIN or MEMBER 1901ms
+     × reads «Últimos cambios: Método de pago modificado (Administrador Jordi) · Datos del abonado modificados (Abonado)» in es, never MEMBER_PAYMENT_METHOD_CHANGED, MEMBER_UPDATED, ADMIN or MEMBER 701ms
+     × reads «Latest changes: Payment method changed (Administrator Jordi) · Member details changed (Member)» in en, never MEMBER_PAYMENT_METHOD_CHANGED, MEMBER_UPDATED, ADMIN or MEMBER 680ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/audit/AuditPage.test.tsx > T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): every audit action and actor role of the contract has a label > reads a ca, es and en label for each AuditAction and actorRole value, never the code itself
+AssertionError: expected [ …(183) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "ca actions.MEMBER_VALIDATED",
++   "ca actions.SIGNUP_REJECTED",
++   "ca actions.SIGNUP_EDITED",
++   "ca actions.MEMBER_STATUS_CHANGED",
++   "ca actions.MEMBER_ROLES_CHANGED",
++   "ca actions.MEMBER_CONSENT_CHANGED",
++   "ca actions.ACCESS_RESENT",
++   "ca actions.DOG_UPDATED",
++   "ca actions.DOG_FREE_TRAINING_CHANGED",
++   "ca actions.DOG_TRANSFERRED",
++   "ca actions.DOG_DEACTIVATED",
++   "ca actions.DOG_REACTIVATED",
++   "ca actions.DOG_DOCUMENT_FILE_REMOVED",
++   "ca actions.FAMILY_GROUP_CHANGED",
++   "ca actions.INVOICE_MARKED_PAID",
++   "ca actions.INVOICE_MARKED_FAILED",
++   "ca actions.INVOICE_CANCELLED",
++   "ca actions.REMITTANCE_GENERATED",
++   "ca actions.REMITTANCE_ROLLED_BACK",
++   "ca actions.UPFRONT_PAYMENT_RECORDED",
++   "ca actions.PAYMENT_REFUNDED",
++   "ca actions.PACK_ADJUSTED",
++   "ca actions.INVOICE_CREATED_MANUAL",
++   "ca actions.REMITTANCE_SUBMITTED",
++   "ca actions.CARD_CHARGES_STARTED",
++   "ca actions.ACCOUNT_EMAIL_STATUS_CHANGED",
++   "ca actions.PLATFORM_ROLES_CHANGED",
++   "ca actions.BOOKING_CREATED_BY_CLUB",
++   "ca actions.BOOKING_CANCELLED_BY_CLUB",
++   "ca actions.BOOKING_CANCELLED_LATE",
++   "ca actions.TRAINING_BOOKED_BY_CLUB",
++   "ca actions.TRAINING_CANCELLED_BY_CLUB",
++   "ca actions.ATTENDANCE_OVERRIDDEN",
++   "ca actions.JOB_TRIGGERED",
++   "ca actions.WEEK_VALIDATED",
++   "ca actions.CLASS_CANCELLED",
++   "ca actions.CLASS_UPDATED_WITH_BOOKINGS",
++   "ca actions.CLASS_RISK_EXEMPTION_CHANGED",
++   "ca actions.RING_BLOCK_CREATED",
++   "ca actions.RING_BLOCK_CANCELLED",
++   "ca actions.TEMPLATE_CLASS_DELETED",
++   "ca actions.TEMPLATE_BAND_DELETED",
++   "ca actions.ACTIVITY_PUBLISHED",
++   "ca actions.ACTIVITY_CANCELLED",
++   "ca actions.ACTIVITY_UPDATED",
++   "ca actions.ACTIVITY_REGISTERED_BY_CLUB",
++   "ca actions.ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB",
++   "ca actions.INACTIVITY_RESOLVED",
++   "ca actions.LEAVE_RESOLVED",
++   "ca actions.LEAVE_CANCELLED",
++   "ca actions.CLUB_UPDATED",
++   "ca actions.CLUB_MODULES_CHANGED",
++   "ca actions.CLUB_STATUS_CHANGED",
++   "ca actions.MIGRATION_APPLIED",
++   "ca actions.ANNOUNCEMENT_SENT",
++   "ca actions.MEMBER_DATA_EXPORTED",
++   "ca actions.ERASURE_REQUESTED",
++   "ca actions.ERASURE_CANCELLED",
++   "ca actions.MEMBER_ERASED",
++   "ca actions.ACCOUNT_ERASED",
++   "ca actions.ONBOARDING_COMPLETED",
++   "es actions.MEMBER_VALIDATED",
++   "es actions.SIGNUP_REJECTED",
++   "es actions.SIGNUP_EDITED",
++   "es actions.MEMBER_STATUS_CHANGED",
++   "es actions.MEMBER_ROLES_CHANGED",
++   "es actions.MEMBER_CONSENT_CHANGED",
++   "es actions.ACCESS_RESENT",
++   "es actions.DOG_UPDATED",
++   "es actions.DOG_FREE_TRAINING_CHANGED",
++   "es actions.DOG_TRANSFERRED",
++   "es actions.DOG_DEACTIVATED",
++   "es actions.DOG_REACTIVATED",
++   "es actions.DOG_DOCUMENT_FILE_REMOVED",
++   "es actions.FAMILY_GROUP_CHANGED",
++   "es actions.INVOICE_MARKED_PAID",
++   "es actions.INVOICE_MARKED_FAILED",
++   "es actions.INVOICE_CANCELLED",
++   "es actions.REMITTANCE_GENERATED",
++   "es actions.REMITTANCE_ROLLED_BACK",
++   "es actions.UPFRONT_PAYMENT_RECORDED",
++   "es actions.PAYMENT_REFUNDED",
++   "es actions.PACK_ADJUSTED",
++   "es actions.INVOICE_CREATED_MANUAL",
++   "es actions.REMITTANCE_SUBMITTED",
++   "es actions.CARD_CHARGES_STARTED",
++   "es actions.ACCOUNT_EMAIL_STATUS_CHANGED",
++   "es actions.PLATFORM_ROLES_CHANGED",
++   "es actions.BOOKING_CREATED_BY_CLUB",
++   "es actions.BOOKING_CANCELLED_BY_CLUB",
++   "es actions.BOOKING_CANCELLED_LATE",
++   "es actions.TRAINING_BOOKED_BY_CLUB",
++   "es actions.TRAINING_CANCELLED_BY_CLUB",
++   "es actions.ATTENDANCE_OVERRIDDEN",
++   "es actions.JOB_TRIGGERED",
++   "es actions.WEEK_VALIDATED",
++   "es actions.CLASS_CANCELLED",
++   "es actions.CLASS_UPDATED_WITH_BOOKINGS",
++   "es actions.CLASS_RISK_EXEMPTION_CHANGED",
++   "es actions.RING_BLOCK_CREATED",
++   "es actions.RING_BLOCK_CANCELLED",
++   "es actions.TEMPLATE_CLASS_DELETED",
++   "es actions.TEMPLATE_BAND_DELETED",
++   "es actions.ACTIVITY_PUBLISHED",
++   "es actions.ACTIVITY_CANCELLED",
++   "es actions.ACTIVITY_UPDATED",
++   "es actions.ACTIVITY_REGISTERED_BY_CLUB",
++   "es actions.ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB",
++   "es actions.INACTIVITY_RESOLVED",
++   "es actions.LEAVE_RESOLVED",
++   "es actions.LEAVE_CANCELLED",
++   "es actions.CLUB_UPDATED",
++   "es actions.CLUB_MODULES_CHANGED",
++   "es actions.CLUB_STATUS_CHANGED",
++   "es actions.MIGRATION_APPLIED",
++   "es actions.ANNOUNCEMENT_SENT",
++   "es actions.MEMBER_DATA_EXPORTED",
++   "es actions.ERASURE_REQUESTED",
++   "es actions.ERASURE_CANCELLED",
++   "es actions.MEMBER_ERASED",
++   "es actions.ACCOUNT_ERASED",
++   "es actions.ONBOARDING_COMPLETED",
++   "en actions.MEMBER_VALIDATED",
++   "en actions.SIGNUP_REJECTED",
++   "en actions.SIGNUP_EDITED",
++   "en actions.MEMBER_STATUS_CHANGED",
++   "en actions.MEMBER_ROLES_CHANGED",
++   "en actions.MEMBER_CONSENT_CHANGED",
++   "en actions.ACCESS_RESENT",
++   "en actions.DOG_UPDATED",
++   "en actions.DOG_FREE_TRAINING_CHANGED",
++   "en actions.DOG_TRANSFERRED",
++   "en actions.DOG_DEACTIVATED",
++   "en actions.DOG_REACTIVATED",
++   "en actions.DOG_DOCUMENT_FILE_REMOVED",
++   "en actions.FAMILY_GROUP_CHANGED",
++   "en actions.INVOICE_MARKED_PAID",
++   "en actions.INVOICE_MARKED_FAILED",
++   "en actions.INVOICE_CANCELLED",
++   "en actions.REMITTANCE_GENERATED",
++   "en actions.REMITTANCE_ROLLED_BACK",
++   "en actions.UPFRONT_PAYMENT_RECORDED",
++   "en actions.PAYMENT_REFUNDED",
++   "en actions.PACK_ADJUSTED",
++   "en actions.INVOICE_CREATED_MANUAL",
++   "en actions.REMITTANCE_SUBMITTED",
++   "en actions.CARD_CHARGES_STARTED",
++   "en actions.ACCOUNT_EMAIL_STATUS_CHANGED",
++   "en actions.PLATFORM_ROLES_CHANGED",
++   "en actions.BOOKING_CREATED_BY_CLUB",
++   "en actions.BOOKING_CANCELLED_BY_CLUB",
++   "en actions.BOOKING_CANCELLED_LATE",
++   "en actions.TRAINING_BOOKED_BY_CLUB",
++   "en actions.TRAINING_CANCELLED_BY_CLUB",
++   "en actions.ATTENDANCE_OVERRIDDEN",
++   "en actions.JOB_TRIGGERED",
++   "en actions.WEEK_VALIDATED",
++   "en actions.CLASS_CANCELLED",
++   "en actions.CLASS_UPDATED_WITH_BOOKINGS",
++   "en actions.CLASS_RISK_EXEMPTION_CHANGED",
++   "en actions.RING_BLOCK_CREATED",
++   "en actions.RING_BLOCK_CANCELLED",
++   "en actions.TEMPLATE_CLASS_DELETED",
++   "en actions.TEMPLATE_BAND_DELETED",
++   "en actions.ACTIVITY_PUBLISHED",
++   "en actions.ACTIVITY_CANCELLED",
++   "en actions.ACTIVITY_UPDATED",
++   "en actions.ACTIVITY_REGISTERED_BY_CLUB",
++   "en actions.ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB",
++   "en actions.INACTIVITY_RESOLVED",
++   "en actions.LEAVE_RESOLVED",
++   "en actions.LEAVE_CANCELLED",
++   "en actions.CLUB_UPDATED",
++   "en actions.CLUB_MODULES_CHANGED",
++   "en actions.CLUB_STATUS_CHANGED",
++   "en actions.MIGRATION_APPLIED",
++   "en actions.ANNOUNCEMENT_SENT",
++   "en actions.MEMBER_DATA_EXPORTED",
++   "en actions.ERASURE_REQUESTED",
++   "en actions.ERASURE_CANCELLED",
++   "en actions.MEMBER_ERASED",
++   "en actions.ACCOUNT_ERASED",
++   "en actions.ONBOARDING_COMPLETED",
++ ]
+
+ ❯ src/audit/AuditPage.test.tsx:350:21
+    348|       }
+    349|     }
+    350|     expect(missing).toEqual([]);
+       |                     ^
+    351|   });
+    352| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): D10's «Darrers canvis» names the action and the actor's role, never their codes > reads «Darrers canvis: 03/08 Mètode de pagament modificat (Administrador Jordi) · 26/07 Dades de l'abonat modificades (Abonat)» in ca, never MEMBER_PAYMENT_METHOD_CHANGED, MEMBER_UPDATED, ADMIN or MEMBER
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  03/08 Mètode de pagament modificat (Administrador Jordi)[39m
+Received:
+[31m  Darrers canvis: 03/08 MEMBER_PAYMENT_METHOD_CHANGED (ADMIN) · 26/07 MEMBER_UPDATED (MEMBER)[39m
+ ❯ src/census/CensusRecordPage.test.tsx:689:49
+    687|
+    688|       const line = screen.getByText(new RegExp(`${recent}:`, "u"));
+    689|       for (const entry of entries) expect(line).toHaveTextContent(entr…
+       |                                                 ^
+    690|       if (language === "ca") {
+    691|         expect(line).toHaveTextContent(`${recent}: ${entries.join(" · …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): D10's «Darrers canvis» names the action and the actor's role, never their codes > reads «Últimos cambios: Método de pago modificado (Administrador Jordi) · Datos del abonado modificados (Abonado)» in es, never MEMBER_PAYMENT_METHOD_CHANGED, MEMBER_UPDATED, ADMIN or MEMBER
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Método de pago modificado (Administrador Jordi)[39m
+Received:
+[31m  Últimos cambios: 3/8 MEMBER_PAYMENT_METHOD_CHANGED (ADMIN) · 26/7 MEMBER_UPDATED (MEMBER)[39m
+ ❯ src/census/CensusRecordPage.test.tsx:689:49
+    687|
+    688|       const line = screen.getByText(new RegExp(`${recent}:`, "u"));
+    689|       for (const entry of entries) expect(line).toHaveTextContent(entr…
+       |                                                 ^
+    690|       if (language === "ca") {
+    691|         expect(line).toHaveTextContent(`${recent}: ${entries.join(" · …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): D10's «Darrers canvis» names the action and the actor's role, never their codes > reads «Latest changes: Payment method changed (Administrator Jordi) · Member details changed (Member)» in en, never MEMBER_PAYMENT_METHOD_CHANGED, MEMBER_UPDATED, ADMIN or MEMBER
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Payment method changed (Administrator Jordi)[39m
+Received:
+[31m  Latest changes: 08/03 MEMBER_PAYMENT_METHOD_CHANGED (ADMIN) · 07/26 MEMBER_UPDATED (MEMBER)[39m
+ ❯ src/census/CensusRecordPage.test.tsx:689:49
+    687|
+    688|       const line = screen.getByText(new RegExp(`${recent}:`, "u"));
+    689|       for (const entry of entries) expect(line).toHaveTextContent(entr…
+       |                                                 ^
+    690|       if (language === "ca") {
+    691|         expect(line).toHaveTextContent(`${recent}: ${entries.join(" · …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 32 skipped (36)
+   Start at  20:47:03
+   Duration  69.80s (environment 64%, import 13%, transform 13%, setup 7%, tests 3%)
+

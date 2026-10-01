@@ -4074,7 +4074,7 @@ export interface paths {
         put?: never;
         /**
          * sendMessageTemplate
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). «Enviar comunicat» (R-11-13, N-24): N-24 or a CUSTOM template only (TEMPLATE_NOT_SENDABLE, 422); recipients = the members of the selection or of the filters (the semantics of GET /members, any status the list shows; NO_RECIPIENTS, 422). dryRun → 200 with the count and nothing written; otherwise 202, AnnouncementSent{templateId, batchId, recipientCount, filters}, one MEMBER notification per member (dedupKey {batchId}:{memberId}) and ANNOUNCEMENT_SENT audit. The same Idempotency-Key replays the same batchId (E7-T04). recipients is {memberIds} or {filters, q}, never both nor neither (VALIDATION_ERROR); a member who left is never a recipient (R-11-02); an archived template is NOT_FOUND. The batch goes out with the template as it was at the send (its version and texts): archiving, disabling or editing it after the 202 changes nothing; every announcement's PUSH respects the member's pushClubNews, whatever the template's category (ruling E82). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403). «Enviar comunicat» (R-11-13, N-24): N-24 or a CUSTOM template only (TEMPLATE_NOT_SENDABLE, 422); recipients = the members of the selection or of the filters (the semantics of GET /members, any status the list shows; NO_RECIPIENTS, 422). dryRun → 200 with the count and nothing written; otherwise 202, AnnouncementSent{templateId, batchId, recipientCount, filters}, one MEMBER notification per member (dedupKey {batchId}:{memberId}) and the ANNOUNCEMENT_SENT audit entry on the template (no changes; details {batchId, recipientCount, filters, selection}, E7-T07). The same Idempotency-Key replays the same batchId (E7-T04). recipients is {memberIds} or {filters, q}, never both nor neither (VALIDATION_ERROR); a member who left is never a recipient (R-11-02); an archived template is NOT_FOUND. The batch goes out with the template as it was at the send (its version and texts): archiving, disabling or editing it after the 202 changes nothing; every announcement's PUSH respects the member's pushClubNews, whatever the template's category (ruling E82). Tenant comes from the JWT.
          */
         post: operations["sendMessageTemplate"];
         delete?: never;
@@ -4708,7 +4708,7 @@ export interface paths {
         };
         /**
          * remittances
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6 «Remeses»: the club's remittances, universal list (CONVENCIONS_API §4), newest creationAt first, filters period and status; no free-text search (a q → 400 INVALID_FILTER). Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6 «Remeses»: the club's remittances, universal list (CONVENCIONS_API §4), newest creationAt first, filters period and status; no free-text search (a q → 400 INVALID_FILTER). A row: month, creation date, collection date, invoice count, total, status, fileAvailable (the XML can be downloaded) and submittedAt. A rolled-back remittance stays listed with its file (R-12-14). A club without SEPA_XML has none: an empty page, never an error (R-12-28). Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["remittances"];
         put?: never;
@@ -4728,7 +4728,7 @@ export interface paths {
         };
         /**
          * remittance
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. A remittance with its creditor snapshot (IBAN masked). Another club's → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. A remittance with its sequenceBreakdown (FRST, RCUR), xsdValidatedAt, submittedAt, submittedByAccountId and its creditor snapshot, the IBAN masked. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["remittance"];
         put?: never;
@@ -4748,7 +4748,7 @@ export interface paths {
         };
         /**
          * remittanceFile
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. [Descarrega l'XML]: a short-lived signed URL of the pain.008 file (also of a ROLLED_BACK one); its download answers Content-Disposition attachment (CONVENCIONS_API §5). Another club's → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. [Descarrega l'XML]: a signed URL of the pain.008 file valid for five minutes (also of a ROLLED_BACK one, whose file is kept); its download answers Content-Type application/xml and Content-Disposition attachment; filename="remesa-{period}.xml" (CONVENCIONS_API §5) and authorises itself (no bearer). Issuing the link is the file access, audited DATA_EXPORTED. A remittance without a file → 404. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["remittanceFile"];
         put?: never;
@@ -4770,7 +4770,7 @@ export interface paths {
         put?: never;
         /**
          * submitRemittance
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-15 [Marca com a enviada al banc]: GENERATED → SUBMITTED with submittedAt; from then on the run cannot be rolled back and unpaid ones follow R-12-17. REMITTANCE_SUBMITTED audit. Not GENERATED → 409 INVALID_STATE. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-15 [Marca com a enviada al banc]: GENERATED → SUBMITTED with submittedAt (the club-local day the XML went to the bank: not after today, not before the remittance's day → otherwise 400 VALIDATION_ERROR {field: submittedAt}) and submittedByAccountId; REMITTANCE_SUBMITTED audit. From then on the run cannot be rolled back (409 RUN_NOT_ROLLBACKABLE {reasons: [REMITTANCE_SUBMITTED]}) and an unpaid debit follows R-12-17. Not GENERATED → 409 INVALID_STATE. The same Idempotency-Key answers the same remittance. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["submitRemittance"];
         delete?: never;
@@ -49385,7 +49385,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;

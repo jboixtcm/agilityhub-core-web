@@ -130,7 +130,12 @@
       "maintenance": "Maintenance",
       "monthlyFee": "Monthly fee"
     },
-    "audit": { "all": "Full audit ›", "recent": "Latest changes" },
+    "audit": {
+      "all": "Full audit ›",
+      "entry": "{date} {action} ({role} {name})",
+      "entryWithoutName": "{date} {action} ({role})",
+      "recent": "Latest changes"
+    },
     "block": {
       "description": "The block prevents new bookings and shows this reason to the member. Existing bookings are kept.",
       "reason": "Block reason",

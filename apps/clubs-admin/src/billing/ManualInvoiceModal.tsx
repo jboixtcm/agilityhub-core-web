@@ -33,6 +33,23 @@ function emptyLine(id: number): LineDraft {
   return { amount: "", description: "", id, taxPercent: "0" };
 }
 
+type LinePart = "amount" | "description" | "tax";
+
+/**
+ * Which input of line `index` an api `VALIDATION_ERROR` field names: `lines[i]` itself, or one of its
+ * members (`lines[i].description`, `lines[i].base…`, `lines[i].taxPercent`); the contract does not
+ * fix the path syntax, so any `lines[i].…` lands on the line.
+ */
+function linePart(field: string, index: number): LinePart | undefined {
+  const prefix = `lines[${String(index)}]`;
+  if (field === prefix) return "description";
+  if (!field.startsWith(`${prefix}.`)) return undefined;
+  const member = field.slice(prefix.length + 1);
+  if (member.startsWith("base")) return "amount";
+  if (member.startsWith("taxPercent")) return "tax";
+  return "description";
+}
+
 /**
  * [＋ Rebut manual] (R-12-19): an adjustment receipt for one member, with its own lines (positive or
  * negative), collected by hand or, for a direct-debit member, with the next run's remittance. The
@@ -111,19 +128,31 @@ export function ManualInvoiceModal({
     line,
     taxPercent: Number(line.taxPercent.replace(",", ".")),
   }));
-  const lineErrors = parsed.map((item, index) => ({
-    amount:
-      item.amountMinor === undefined || item.amountMinor === 0
-        ? t("admin-billing:manual.amountRequired")
-        : undefined,
-    api: fields.includes(`lines[${String(index)}]`) ? t("errors:VALIDATION_ERROR") : undefined,
-    description:
-      item.description === "" ? t("admin-billing:manual.descriptionRequired") : undefined,
-    tax:
-      Number.isFinite(item.taxPercent) && item.taxPercent >= 0 && item.taxPercent <= 100
-        ? undefined
-        : t("admin-billing:manual.taxInvalid"),
-  }));
+  const apiError = t("errors:VALIDATION_ERROR");
+  const lineErrors = parsed.map((item, index) => {
+    const parts = new Set(fields.map((field) => linePart(field, index)));
+    return {
+      amount:
+        item.amountMinor === undefined || item.amountMinor === 0
+          ? t("admin-billing:manual.amountRequired")
+          : undefined,
+      apiAmount: parts.has("amount") ? apiError : undefined,
+      apiDescription: parts.has("description") ? apiError : undefined,
+      apiTax: parts.has("tax") ? apiError : undefined,
+      description:
+        item.description === "" ? t("admin-billing:manual.descriptionRequired") : undefined,
+      tax:
+        Number.isFinite(item.taxPercent) && item.taxPercent >= 0 && item.taxPercent <= 100
+          ? undefined
+          : t("admin-billing:manual.taxInvalid"),
+    };
+  });
+  // The fields this form shows an api error on; any other one reads in the general alert.
+  const shownOnForm = (field: string) =>
+    lines.some((_, index) => linePart(field, index) !== undefined) ||
+    field === "memberId" ||
+    field === "note" ||
+    (field === "includeInNextRun" && sepa);
   const valid =
     member !== undefined &&
     lineErrors.every(
@@ -163,7 +192,7 @@ export function ManualInvoiceModal({
   };
 
   const generalError =
-    failure === undefined || fields.some((field) => field.startsWith("lines["))
+    failure === undefined || (fields.length > 0 && fields.every(shownOnForm))
       ? undefined
       : isApiError(failure, "CURRENCY_MISMATCH")
         ? t("errors:CURRENCY_MISMATCH")
@@ -187,7 +216,9 @@ export function ManualInvoiceModal({
         <FormField
           {...(submitted && member === undefined
             ? { error: t("admin-billing:manual.memberRequired") }
-            : {})}
+            : fields.includes("memberId")
+              ? { error: apiError }
+              : {})}
           id="billing-manual-member"
           label={t("admin-billing:manual.member")}
         >
@@ -196,7 +227,10 @@ export function ManualInvoiceModal({
             autoComplete="off"
             id="billing-manual-member"
             onChange={(event) => {
+              // A new search drops the choice: the receipt never goes to a member no longer shown.
               setQuery(event.currentTarget.value);
+              setMember(undefined);
+              setIncludeInNextRun(false);
             }}
             placeholder={t("admin-billing:manual.memberSearch")}
             type="search"
@@ -244,9 +278,9 @@ export function ManualInvoiceModal({
                 <FormField
                   {...(submitted && errors?.description !== undefined
                     ? { error: errors.description }
-                    : errors?.api === undefined
+                    : errors?.apiDescription === undefined
                       ? {}
-                      : { error: errors.api })}
+                      : { error: errors.apiDescription })}
                   id={`billing-manual-description-${String(line.id)}`}
                   label={t("admin-billing:manual.description", { index: number })}
                 >
@@ -260,7 +294,11 @@ export function ManualInvoiceModal({
                   />
                 </FormField>
                 <FormField
-                  {...(submitted && errors?.amount !== undefined ? { error: errors.amount } : {})}
+                  {...(submitted && errors?.amount !== undefined
+                    ? { error: errors.amount }
+                    : errors?.apiAmount === undefined
+                      ? {}
+                      : { error: errors.apiAmount })}
                   id={`billing-manual-amount-${String(line.id)}`}
                   label={t("admin-billing:manual.amount", { index: number })}
                 >
@@ -274,7 +312,11 @@ export function ManualInvoiceModal({
                   />
                 </FormField>
                 <FormField
-                  {...(submitted && errors?.tax !== undefined ? { error: errors.tax } : {})}
+                  {...(submitted && errors?.tax !== undefined
+                    ? { error: errors.tax }
+                    : errors?.apiTax === undefined
+                      ? {}
+                      : { error: errors.apiTax })}
                   id={`billing-manual-tax-${String(line.id)}`}
                   label={t("admin-billing:manual.taxPercent", { index: number })}
                 >
@@ -314,18 +356,32 @@ export function ManualInvoiceModal({
         </fieldset>
 
         {sepa ? (
-          <label className="billing-manual__check">
-            <Checkbox
-              checked={includeInNextRun}
-              onChange={(event) => {
-                setIncludeInNextRun(event.currentTarget.checked);
-              }}
-            />
-            {t("admin-billing:manual.includeInNextRun")}
-          </label>
+          <>
+            <label className="billing-manual__check">
+              <Checkbox
+                {...(fields.includes("includeInNextRun")
+                  ? { "aria-describedby": "billing-manual-include-error", "aria-invalid": true }
+                  : {})}
+                checked={includeInNextRun}
+                onChange={(event) => {
+                  setIncludeInNextRun(event.currentTarget.checked);
+                }}
+              />
+              {t("admin-billing:manual.includeInNextRun")}
+            </label>
+            {fields.includes("includeInNextRun") ? (
+              <p className="billing-modal__error" id="billing-manual-include-error" role="alert">
+                {apiError}
+              </p>
+            ) : null}
+          </>
         ) : null}
 
-        <FormField id="billing-manual-note" label={t("admin-billing:manual.note")}>
+        <FormField
+          {...(fields.includes("note") ? { error: apiError } : {})}
+          id="billing-manual-note"
+          label={t("admin-billing:manual.note")}
+        >
           <Textarea
             id="billing-manual-note"
             maxLength={500}

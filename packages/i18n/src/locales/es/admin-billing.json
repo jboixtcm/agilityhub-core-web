@@ -29,6 +29,7 @@
     "generateTitle": "Generar los recibos · {month}",
     "generateBody": "Se generarán {count} recibos por un total de {total}. La fecha del próximo recibo de los abonados avanzará al {nextDate}.",
     "generate": "Generar",
+    "generateWithEarliest": "Generar con cobro el {date}",
     "generating": "Generando los recibos…",
     "rollbackTitle": "Retroceder la remesa · {month}",
     "rollbackIntro": "Se deshará la generación del mes:",
@@ -284,7 +285,8 @@
     "loadPeriod": "No se ha podido cargar el mes.",
     "trace": "Referencia del error: {traceId}",
     "chargingSlow": "Los cobros con tarjeta todavía se están procesando.",
-    "dateAfterToday": "La fecha no puede ser posterior a hoy."
+    "dateAfterToday": "La fecha no puede ser posterior a hoy.",
+    "submittedAtRange": "La fecha debe estar entre el {earliest} y hoy."
   },
   "toasts": {
     "simulated": "Mes simulado.",

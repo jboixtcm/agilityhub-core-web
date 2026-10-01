@@ -187,16 +187,17 @@ const memberOverviewFixture: MemberOverview = {
     reminderOptionsMinutes: [60, 120, 240, 360, 720, 1440],
     smsFixed: true,
   },
+  // The api sends `AuditAction` codes and the actor's role; D10 shows their labels (S14 R-14-11).
   recentAudit: [
     {
-      action: "canvi d'IBAN",
+      action: "MEMBER_PAYMENT_METHOD_CHANGED",
       actorName: "Jordi",
       actorRole: "ADMIN",
       at: "2026-08-03T11:15:00Z",
       id: "audit-iban",
     },
     {
-      action: "canvi de tarifa",
+      action: "MEMBER_PLAN_CHANGED",
       actorName: "Jordi",
       actorRole: "ADMIN",
       at: "2026-07-26T09:30:00Z",

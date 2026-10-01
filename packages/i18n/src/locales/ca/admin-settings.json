@@ -772,6 +772,7 @@
       "late": "{count, plural, one {# amb retard} other {# amb retard}}",
       "classReminders": "{count, plural, one {# recordatori de classe} other {# recordatoris de classe}}",
       "trainingReminders": "{count, plural, one {# recordatori d'entrenament} other {# recordatoris d'entrenament}}",
+      "WOULD_REMIND": "{count, plural, one {# recordatori previst} other {# recordatoris previstos}}",
       "opened": "{count, plural, one {# setmana oberta} other {# setmanes obertes}}",
       "swept": "{count, plural, one {# entrada d'espera tancada} other {# entrades d'espera tancades}}",
       "finished": "{count, plural, one {# classe tancada} other {# classes tancades}}",

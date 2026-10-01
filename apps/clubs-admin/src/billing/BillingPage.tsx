@@ -1220,6 +1220,9 @@ export function BillingPage({
             setInvoiceId(undefined);
           }}
           onNavigate={onNavigate}
+          // `Invoice` has no `rolledBack` (E89: a receipt is rolled back by its run, whatever its
+          // reason): the list row's flag, when the receipt is on the page.
+          rolledBack={rows.find((row) => row.id === invoiceId)?.rolledBack === true}
         />
       )}
     </div>

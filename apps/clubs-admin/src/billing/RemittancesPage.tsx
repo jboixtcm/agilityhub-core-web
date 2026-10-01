@@ -58,8 +58,11 @@ const DEFAULT_COLUMNS = [
   "status",
   "actions",
 ];
-/** Every row reads its month (its button), its status and file (its actions). */
-const ROW_FIELDS = ["period", "status", "fileAvailable"];
+/**
+ * Every row reads its month (its button), its status and file (its actions) and its creation (the
+ * first day [Marca com a enviada al banc] accepts), whatever columns are shown.
+ */
+const ROW_FIELDS = ["period", "status", "fileAvailable", "creationAt"];
 const COLUMN_FIELDS: Readonly<Record<string, readonly string[]>> = { actions: [] };
 const STATUSES: readonly RemittanceStatus[] = ["GENERATED", "SUBMITTED", "ROLLED_BACK"];
 
@@ -464,6 +467,7 @@ export function RemittancesPage({
       {submitting === undefined ? null : (
         <SubmissionModal
           client={client}
+          createdAt={submitting.creationAt}
           keys={keys}
           month={monthOf(submitting)}
           onClose={() => {
@@ -495,9 +499,14 @@ export function RemittancesPage({
   );
 }
 
-/** [Marca com a enviada al banc] (R-12-15): the day it went to the bank; then no rollback. */
+/**
+ * [Marca com a enviada al banc] (R-12-15): the club-local day it went to the bank, from the
+ * remittance's day to today (the api answers `400 VALIDATION_ERROR {submittedAt}` otherwise); then
+ * no rollback.
+ */
 function SubmissionModal({
   client,
+  createdAt,
   keys,
   month,
   onClose,
@@ -506,6 +515,7 @@ function SubmissionModal({
   remittanceId,
 }: {
   client: ApiClient;
+  createdAt: string | undefined;
   keys: SubmissionKeys;
   month: string;
   onClose: () => void;
@@ -515,12 +525,18 @@ function SubmissionModal({
 }) {
   const { t } = useTranslation(["admin-billing", "errors"]);
   const branding = useBranding();
+  const formats = useClubFormats();
   const errorMessage = useBillingErrorMessage();
   const today = clubToday(branding.timeZone);
+  const earliest =
+    createdAt === undefined ? undefined : clubToday(branding.timeZone, new Date(createdAt));
   const [submittedAt, setSubmittedAt] = useState(today);
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<unknown>();
-  const dateError = errorFields(failure).includes("submittedAt");
+  const outOfRange =
+    submittedAt !== "" &&
+    (submittedAt > today || (earliest !== undefined && submittedAt < earliest));
+  const dateError = outOfRange || errorFields(failure).includes("submittedAt");
 
   const submit = async () => {
     setPending(true);
@@ -536,7 +552,8 @@ function SubmissionModal({
       onSubmitted();
     } catch (error) {
       setFailure(error);
-      if (isApiError(error, "INVALID_STATE")) onConflict();
+      // Another admin sent or rolled it back meanwhile: the list reads what it is now.
+      if (isApiError(error, "INVALID_STATE") || isApiError(error, "STALE_VERSION")) onConflict();
     } finally {
       setPending(false);
     }
@@ -552,15 +569,26 @@ function SubmissionModal({
     >
       <p className="billing-modal__body">{t("admin-billing:confirm.submissionBody")}</p>
       <FormField
-        {...(dateError ? { error: t("admin-billing:errors.dateAfterToday") } : {})}
+        {...(dateError
+          ? {
+              error:
+                earliest === undefined
+                  ? t("admin-billing:errors.dateAfterToday")
+                  : t("admin-billing:errors.submittedAtRange", {
+                      earliest: formats.formatPlainDate(earliest),
+                    }),
+            }
+          : {})}
         id="billing-submitted-at"
         label={t("admin-billing:confirm.submittedAt")}
       >
         <Input
           id="billing-submitted-at"
           max={today}
+          {...(earliest === undefined ? {} : { min: earliest })}
           onChange={(event) => {
             setSubmittedAt(event.currentTarget.value);
+            setFailure(undefined);
           }}
           required
           type="date"
@@ -574,7 +602,7 @@ function SubmissionModal({
       )}
       <div className="billing-modal__actions">
         <Button
-          disabled={submittedAt === ""}
+          disabled={submittedAt === "" || outOfRange}
           loading={pending}
           loadingLabel={t("admin-billing:confirm.submitting")}
           onClick={() => void submit()}

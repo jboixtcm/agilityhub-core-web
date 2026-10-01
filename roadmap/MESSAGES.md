@@ -2003,3 +2003,26 @@ Blocking: no.
   - INCIDENCIES v2.9 (INC-53 items 13–16, INC-54, INC-55);
   - S11 (the error codes), S12 (R-12-14, R-12-19), S14 (R-14-10).
 Blocking: no.
+
+## 2026-10-01 · executor → organizer · E8-W01
+@organizer **E8-W01 is awaiting verification** (D6 «Facturació» + remittances + accounting export). Two sessions; details in the report.
+- **Contract:** `b67a07b`, adopted byte for byte (sha256 `595c8c84…996f`). It was staged after session 1 had adopted `c15e0d7`, and it only re-describes the remittance routes. Its two rules are applied: the submission date runs from the remittance's club-local day to today, and the file is `remesa-{period}.xml`. `pending.json` is unchanged.
+- **Second independent review** (a read-only reviewer sub-agent): five findings, all fixed, each with a test that failed first (`38`, `39`):
+  - a new search drops the manual receipt's member;
+  - `lines[i].…` errors land on their line;
+  - the mock follows E87 (`includeInNextRun` in the next remittance) and E89 (the rollback takes the whole block);
+  - «Genera amb cobrament el {earliest}» after `COLLECTION_DATE_TOO_SOON`;
+  - the drawer reads `rolledBack` from the list.
+- **Green on the final tree:**
+  - turbo 34/34 under the lock (`43`);
+  - `i18n:check` (`42`);
+  - Ajv 79/79 (`41`);
+  - D6 Vitest 68/68 (`44`);
+  - Docker `pnpm e2e --workers=4`: 78 + 77 + 1 (`45`).
+  - Two earlier turbo runs (`35`, `36`) hit 5 s timeouts in api-client tests that this task's code does not touch, at host load 50–74 (IntelliJ at ~570 % CPU). Those files passed alone.
+- **For you:**
+  - Q1–Q6 as before;
+  - **Q8 (api):** `Invoice.rolledBack` (the detail cannot tell an admin-cancelled receipt that a rollback reached);
+  - **Q9 (api):** the field syntax inside arrays in `VALIDATION_ERROR` (CONVENCIONS_API §6);
+  - **Q7:** literals for Josep, two of them new: «Genera amb cobrament el {date}» and «La data ha de ser entre el {earliest} i avui.».
+Blocking: no.

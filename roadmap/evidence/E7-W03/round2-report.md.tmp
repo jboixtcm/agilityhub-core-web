@@ -1,0 +1,71 @@
+
+### Round 2 report
+Session 2026-10-01 (evening) · claude:claude-opus-5-5. Points 1–8 of «Round 2: fix these» are done.
+- **Who did what:** two helper sub-agents worked under this session: point 5 (the labels) and point 6 (the mock's `GET /jobs` and D11's counters). This session did points 1–4, 7 and 8, reviewed both helpers' diffs, and ran every final Verification command.
+- **Taken after E8-W01** in the same session (the order of the organizer's evening note).
+
+#### 1. The api's proofs, cited (review #1, major)
+As the organizer gives them (the web sandbox cannot read the api clone). They are api `e29748c`, E7-T07's final run, CI `36886515712`.
+- **The matrix:**
+  - `roadmap/evidence/E7-T07/11b-verify-test-summary.log:10`: `NotificationMatrixTest (surefire-reports): tests=2681 failures=0`. That is 2,520 catalog cases over 56 R1 codes, plus 160 N-24 cases.
+  - Line `:4`: `NotificationActionsIT (failsafe-reports): tests=15 failures=0`, with exact bodies and recipient sets since E7-T07.
+- **The announcement and its idempotency:** `roadmap/evidence/E7-T07/13-e7-smoke-run-2.log:43`: «POST /message-templates/{N-24}/send {filters} (+ replay, same key): 202 · 202 · … 10 MEMBER notices with dedupKey {batchId}:{memberId}, 1 ANNOUNCEMENT_SENT audit … replay → same batch, no new rows».
+- **R-11-09 (reprocessing creates no duplicate):**
+  - `NotificationEngineIT.T_11_31_aHundredSimultaneousRemindersAreAHundredNotificationsWithoutDuplicates`, where each `ReminderDue` is delivered twice;
+  - the four `NotificationDispatcherIT.R_11_09_*` tests, green in the same run.
+
+#### 2. Step 2's fallback without `POST /test/clock` (review #2)
+- **The detection:** `e7-core.spec.ts` detects the clock once, at the preflight.
+  - When it is absent, `clockAvailable` stays false. (c), (d) and (h) record the reason (`c-skipped`, `d-skipped`, `h-skipped` in the run record) and `test.skip` with it.
+  - Every clock-independent step runs at the core's own time: the preflight, (b), (a)(g), (f), (e), step 5's probe, (i) and (j).
+  - (a) asserts «avui» only at the test clock. (i) reads (d)'s card only when (d) ran. (j) cancels (h)'s booking only when it exists. The `afterAll` moves the clock back only when this run moved it.
+- **Forcing the detection off:** `scripts/e2e-core.sh` takes an optional third argument, `no-clock`, which exports `CORE_CLOCK_DETECTION=off` into the Playwright container (`scripts/core-stack/docker-compose.yml`). Variable prefixes are denied in this sandbox, hence an argument.
+- **The proof:** `heavy.sh pnpm e2e:core E7-W03 e7-core.spec.ts no-clock` → `201-e7-core-no-clock.log`, **exit 0**: **8 passed, 3 skipped** ((c), (d), (h)).
+  - The record `201-e7-core-run.json` holds `clock {forcedOff: true, reason}`, the three `*-skipped` reasons, step 5's eight codes, and `j-clock-restored {moved: false}`.
+  - The first attempt, `200-e7-core-no-clock.log`, exited 1: step 5's stale-version probe sent `version − 1 = −1` on a template never saved (version 0 on a fresh seed, since (c) did not run) and got `400 VALIDATION_ERROR`. It now sends a version the template does not have (`0 → 1`, otherwise `v − 1`). That run's `afterAll` safety net restored the `es` member's language (`PATCH /me` 200), because (j) did not run.
+- **Gate lines in a no-clock run:**
+  - «plantilla editada…» (c) and the UI half of «proves de matriu» (d) would rest on the api's evidence of point 1 alone;
+  - N-13 (h) would rest on api E7-T07's run (`NotificationEngineIT` and the P4 reminder tests);
+  - the announcement (e), the push subscription (f) and T-11-39 (a)(b) are proven on the UI either way.
+
+#### 3. Step (g) (review #3)
+- The deviation stays as accepted. The spec prints «real SMS skipped: no Twilio credentials on the local stack, fictional numbers».
+- It now asserts that every SENT SMS delivery carries a non-empty `providerRef` (the fake sender's `log-…`). The record keeps it only as «present».
+
+#### 4. Step 5's test asserts what it cites (review #4)
+- Each of the eight probes asserts its code: `STALE_VERSION`, `TEMPLATE_MANDATORY`, `CHANNEL_NOT_ALLOWED`, `TEMPLATE_NOT_CATALOG`, `TEMPLATE_NOT_SENDABLE`, `NO_RECIPIENTS`, `INVALID_REMINDER_OPTION`, `PUSH_SUBSCRIPTION_INVALID`.
+- The status stays record-only (the proposals). On image `8a319b63…` the statuses are 409 for `STALE_VERSION` and 422 for the seven others (`201-e7-core-run.json` › `step5-statuses`).
+- The T-ids stay in the title.
+
+#### 5. Labels, never raw codes (review #5)
+__LABELS__
+
+#### 6. The mock's `GET /jobs` as S15 §6 (step 5's #7)
+__JOBS__
+
+#### 7. The nits
+- **#6:** the `afterAll` safety net now also restores member.3@'s locale (`PATCH /me {locale: ca}`), the reminder (`reminderMinutesBefore: null`) and (h)'s booking (its cancellation), each only when (j) did not. (j) records what it undid (`localeRestored`, `reminderCleared`, `bookingHCancelled`). Run `200` exercised the locale restore.
+- **#7:** the bell is tied to the new card. Her `unreadCount` is read before the cancellation, and 03 then reads exactly one more (her N-08a, still unread). The record keeps `bell.before.unread`.
+- **#8:** a log-level proof plus a feed check. The log shows no row of the batch's code for any recipient outside the ten (`others`, any member, logins or not); admin@'s own feed is checked too. The test's title and comment now say exactly that.
+- **#9:** the real `registerSW → onRegisteredSW → setPushRegistration` path is added to the `@jordi` staging list (`roadmap/MESSAGES.md`).
+- **#10:** both final `e2e:core` tails are pasted below.
+- **#11:** N-08a's seed texts (S11 §8, line 284: the title and the body's `[[…]]` variables) carry no `{gender, select…}`. Step (c) only appends the run's marker to them, so E7-T04's round 3 (D9's lower-case `gender` keys on save) is not involved.
+
+#### 8. The newest image
+- **The image:** the local `ghcr.io/jboixtcm/agilityhub-core-api:main` is the one the kit pulled at this session's start:
+  - digest `sha256:8a319b63227c7ad5a88bb463ecf784fa78bf1b40187914fc13db360858e62f7d`;
+  - created `2026-10-01T16:07:11Z`;
+  - `GET /api/v1/health` → `version 0.1.0-SNAPSHOT`, `builtAt 2026-10-01T16:06:14.957Z` (recorded by the spec's preflight as `core-health`).
+- **No revision label:** the image no longer carries `org.opencontainers.image.revision`, so `docker image inspect … revision` prints nothing.
+  - The wrapper now also prints the digest.
+  - Whether `16:06Z` is `e29748c` or later cannot be told from here (no api clone, no pull, no web). **Q-R2-1** below.
+
+#### Assumptions (round 2)
+- **R2-A1:** the forced no-clock proof runs only the E7 stage (`e7-core.spec.ts`). The complete `pnpm e2e:core` (all stages, with the clock) is the evidence of the other points.
+- **R2-A2:** with no clock, (j) still runs. It restores what (a), (b), (e), (f) changed and skips (h)'s booking, which does not exist.
+
+#### Questions (round 2)
+- **Q-R2-1 (@organizer):** the published `:main` (digest `8a319b63…`, built 16:06Z on 01-10) has no revision label and `/health` says `0.1.0-SNAPSHOT`. Does it hold `e29748c`? If not, please name the digest to wait for. Proposal (api): restore the `org.opencontainers.image.revision` label and put the git revision in `/health`'s `version`.
+
+#### Evidence (round 2, final tree)
+__EVIDENCE__

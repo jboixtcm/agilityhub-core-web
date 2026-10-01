@@ -13,6 +13,14 @@ core_project_name="${CORE_PROJECT_NAME:-${E1_CORE_PROJECT_NAME:-$default_project
 
 # Core URL visible from the Playwright container; defaults to the local stack.
 export CORE_URL="${CORE_URL:-http://core:8080}"
+# E7-W03 round 2 (step 2): an optional third argument `no-clock` (`pnpm e2e:core E7-W03
+# e7-core.spec.ts no-clock`) makes the specs treat `POST /test/clock` as absent, as an image
+# without the `test` profile would: the clock steps are skipped with their reason.
+export CORE_CLOCK_DETECTION=""
+if [[ "${3:-}" == "no-clock" ]]; then
+  export CORE_CLOCK_DETECTION="off"
+  echo "CORE_CLOCK_DETECTION=off (POST /test/clock treated as absent)"
+fi
 
 core_image="ghcr.io/jboixtcm/agilityhub-core-api:main"
 if ! docker image inspect "$core_image" >/dev/null 2>&1; then
@@ -21,8 +29,9 @@ if ! docker image inspect "$core_image" >/dev/null 2>&1; then
 fi
 # E5-W04 review #5: the run's log names the core image it ran on (its revision label and creation
 # date) and the seed files it carries, so the evidence of each run proves both.
+# E7-W03 round 2 #8: the digest too, since a published image may carry no revision label.
 echo "core image: $core_image $(docker image inspect "$core_image" \
-  --format '{{.Architecture}} revision={{index .Config.Labels "org.opencontainers.image.revision"}} created={{.Created}}')"
+  --format '{{.Architecture}} revision={{index .Config.Labels "org.opencontainers.image.revision"}} created={{.Created}} digests={{.RepoDigests}}')"
 echo "core image seeds (/app/seeds): $(docker run --rm --entrypoint /bin/ls "$core_image" /app/seeds | tr '\n' ' ')"
 
 # E4-W05: the demo seed anchors its planning on the club-local Monday of the current week

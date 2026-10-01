@@ -136,6 +136,8 @@
     },
     "audit": {
       "all": "Tota l'auditoria ›",
+      "entry": "{date} {action} ({role} {name})",
+      "entryWithoutName": "{date} {action} ({role})",
       "recent": "Darrers canvis"
     },
     "block": {

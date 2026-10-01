@@ -1,0 +1,1088 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 10 packages
+   • Remote caching disabled
+
+@agilityhub/i18n:lint: cache hit, replaying logs 27d7e94d2e736c71
+@agilityhub/api-client:typecheck: cache hit, replaying logs 7b6b6c703b4a293b
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: cache hit, replaying logs 04e35d7f65444fb6
+@agilityhub/i18n:lint: 
+@agilityhub/api-client:lint: cache hit, replaying logs 7bf9a4d8c1c94b6e
+@agilityhub/config:lint: cache hit, replaying logs 42ac5d636417f38d
+@agilityhub/api-client:lint: 
+@agilityhub/ui:test: cache hit, replaying logs 6f4ac5c5c4ed4fbb
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+id:lint: cache hit, replaying logs 22651cf71461790e
+@agilityhub/config:typecheck: cache hit, replaying logs 6860c83ceac65ae7
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+@agilityhub/config:lint: 
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+clubs:lint: 
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/auth:lint: cache hit, replaying logs 2925197e67cefb4b
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/ui:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui[39m
+@agilityhub/ui:test: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/ui:test:  [32m✓[39m src/attendance-contrast.test.ts [2m([22m[2m34 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/on-primary.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 72[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/branding.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+@agilityhub/auth:lint: 
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/ui:typecheck: cache hit, replaying logs 80ec6d010d3e3996
+@agilityhub/api-client:test: cache miss, executing dbfa454fdc11735e
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/auth:lint: 
+@agilityhub/ui:test:  [32m✓[39m src/icons/Icon.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 63[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/limited-markdown.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 306[2mms[22m[39m
+@agilityhub/ui:test:    [32m✓[39m LimitedMarkdown [2m(1)[22m
+@agilityhub/ui:test:      [33m[2m✓[22m[39m renders the allowed subset and strips unsupported HTML and images[33m 305[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/index.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/attendance-sheet.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 247[2mms[22m[39m
+@agilityhub/ui:test: [90mstderr[2m | src/day-grid.test.tsx[2m > [22m[2mDayGrid presenter (screens 10 / 23)[2m > [22m[2mrenders the api's «Sense» column as delivered and never adds one of its own
+@agilityhub/ui:test: [22m[39m[DayGrid] cells without a matching column are not drawn: cls-1 (ringId null)
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  [32m✓[39m src/schedule-grid.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 453[2mms[22m[39m
+@agilityhub/ui:test:    [32m✓[39m ScheduleGrid [2m(3)[22m
+@agilityhub/ui:test:      [33m[2m✓[22m[39m stacks cells per slot, exposes day buttons and tints cells through --schedule-color[33m 307[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/day-grid.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 532[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/slot-grid.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 526[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/rich-text.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 570[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/attendance.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 440[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/components.test.tsx [2m([22m[2m31 tests[22m[2m)[22m[33m 775[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/universal-list.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 848[2mms[22m[39m
+@agilityhub/ui:test:    [32m✓[39m E5-W05 round 2 #2 · a range filter with no suggested values (ruling E80) [2m(1)[22m
+@agilityhub/ui:test:      [33m[2m✓[22m[39m offers two dates instead of the value list, never asks for the field's values, and adds the range's own value[33m 552[2mms[22m[39m
+@agilityhub/ui:test:  [32m✓[39m src/tasks-panel.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 1346[2mms[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [2m Test Files [22m [1m[32m15 passed[39m[22m[90m (15)[39m
+@agilityhub/ui:test: [2m      Tests [22m [1m[32m156 passed[39m[22m[90m (156)[39m
+@agilityhub/ui:test: [2m   Start at [22m 18:11:49
+@agilityhub/ui:test: [2m   Duration [22m 5.94s[2m (environment 68%, setup 14%, tests 9%, transform 7%, import 1%)[22m
+@agilityhub/ui:test: 
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/course-core:typecheck: cache hit, replaying logs 61edc282ad1bbb2a
+@agilityhub/shared-types:lint: cache hit, replaying logs a946566fb9efb741
+clubs-admin:lint: cache hit, replaying logs 47ab0ab282383e65
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/ui:lint: cache hit, replaying logs 0e7a5e13346b3c4c
+@agilityhub/course-core:test: cache hit, replaying logs 34116acf0470d929
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/course-core:lint: cache hit, replaying logs e1967c3b8013c83f
+@agilityhub/i18n:typecheck: cache hit, replaying logs 4d48e86f3aae2c18
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/i18n:test: cache miss, executing 66a6792d8ada6969
+@agilityhub/shared-types:lint: > eslint src tests scripts --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: 
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/course-core:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  [32m✓[39m tests/coords.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-primitives.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-id.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/wrapper.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/calibration.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-colors-txt.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/apriltag-36h11.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/ring.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-svg.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-transform.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/placement.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/units.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/summarize-course.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-txt.test.ts [2m([22m[2m113 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-writer.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-rules.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-fixtures.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/course-data-json-schema.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m Test Files [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+@agilityhub/course-core:test: [2m      Tests [22m [1m[32m364 passed[39m[22m[90m (364)[39m
+@agilityhub/course-core:test: [2m   Start at [22m 16:01:14
+@agilityhub/course-core:test: [2m   Duration [22m 1.25s[2m (transform 79%, import 15%, tests 4%, worker 2%)[22m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m  Transform [22m [33mtransforming modules took 5.41s[39m[2m · 79% of tracked time, re-done on every run[22m
+@agilityhub/course-core:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/course-core:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/course-core:test: 
+clubs-admin:build: cache miss, executing 8e3ba96a36743ed9
+clubs:build: cache miss, executing 5e68088f322aa6a0
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:lint: > @agilityhub/course-core@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:lint: 
+id:build: cache miss, executing 61d28cf76d9ddbe6
+@agilityhub/shared-types:test: cache hit, replaying logs 0d5094aa59df2bb0
+@agilityhub/auth:typecheck: cache hit, replaying logs c0277aee253c5cbc
+@agilityhub/auth:test: cache miss, executing 4b8a60c2f7bb9f25
+@agilityhub/course-core:build: cache hit, replaying logs e18b31668a225399
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: > @agilityhub/shared-types@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: > vitest run
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types[39m
+@agilityhub/shared-types:test: 
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/shared-types:test:  [32m✓[39m tests/build-session-export.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+@agilityhub/shared-types:test:  [32m✓[39m tests/json-schemas.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+@agilityhub/shared-types:test: [2m      Tests [22m [1m[32m38 passed[39m[22m[90m (38)[39m
+@agilityhub/shared-types:test: [2m   Start at [22m 16:01:24
+@agilityhub/shared-types:test: [2m   Duration [22m 740ms[2m (transform 70%, import 21%, tests 8%, worker 1%)[22m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:typecheck: cache hit, replaying logs c4cd70d7e3ccd8fa
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+clubs-admin:test: cache miss, executing f32af5cceacf0d4d
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+clubs:typecheck: cache miss, executing 556adcb6cee311ce
+clubs-admin:typecheck: cache hit, replaying logs eaf29264da516a8c
+clubs-admin:typecheck: 
+clubs-admin:typecheck: > clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:typecheck: > tsc --noEmit
+clubs-admin:typecheck: 
+id:test: cache miss, executing 678a5f3810c5d02a
+clubs:test: cache miss, executing b1ab3944b5b798b4
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: > vitest run
+@agilityhub/i18n:test: 
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+clubs:test: 
+clubs:test: > clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:test: > vitest run
+clubs:test: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test: > @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: > vitest run
+@agilityhub/auth:test: 
+id:build: 
+id:build: > id@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+clubs-admin:test: 
+clubs-admin:test: > clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:test: > vitest run
+clubs-admin:test: 
+id:test: 
+id:test: > id@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:test: > vitest run
+id:test: 
+clubs:typecheck: 
+clubs:typecheck: > clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:typecheck: > tsc --noEmit
+clubs:typecheck: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth[39m
+@agilityhub/auth:test: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n[39m
+@agilityhub/i18n:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client[39m
+@agilityhub/api-client:test: 
+clubs:test: 
+clubs:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs[39m
+clubs:test: 
+id:test: 
+clubs-admin:test: 
+clubs-admin:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin[39m
+clubs-admin:test: 
+id:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id[39m
+id:test: 
+@agilityhub/i18n:test:  [32m✓[39m src/masking.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/locale.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/activities.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 176[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/index.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 501[2mms[22m[39m
+@agilityhub/i18n:test:  [32m✓[39m src/format.test.ts [2m([22m[2m99 tests[22m[2m)[22m[33m 1437[2mms[22m[39m
+@agilityhub/i18n:test:    [32m✓[39m E8-W01 S12 §2 D6's month title (formatMonthTitle) [2m(1)[22m
+@agilityhub/i18n:test:      [33m[2m✓[22m[39m E8-W01: «Setembre 2026» · «Septiembre 2026» · «September 2026», never shifted by a zone[33m 672[2mms[22m[39m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+@agilityhub/i18n:test: [2m      Tests [22m [1m[32m120 passed[39m[22m[90m (120)[39m
+@agilityhub/i18n:test: [2m   Start at [22m 20:01:07
+@agilityhub/i18n:test: [2m   Duration [22m 6.48s[2m (transform 69%, tests 14%, import 12%, worker 4%)[22m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: [2m  Transform [22m [33mtransforming modules took 11.06s[39m[2m · 69% of tracked time, re-done on every run[22m
+@agilityhub/i18n:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/i18n:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/i18n:test: 
+id:typecheck: cache miss, executing d6446350e98c13ac
+id:typecheck: 
+id:typecheck: > id@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:typecheck: > tsc --noEmit
+id:typecheck: 
+@agilityhub/api-client:test:  [31m❯[39m src/mocks/auth-handoff.test.ts [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 6327[2mms[22m[39m
+@agilityhub/api-client:test:    [31m❯[39m T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads [2m(2)[22m
+@agilityhub/api-client:test: [31m     [31m×[31m redeem code 1, reload, redeem code 2, then code 1 again → refused (the whole redemption history stays spent)[39m[33m 5025[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m the back office never issues again a code it issued before its own reload[33m 1299[2mms[22m[39m
+@agilityhub/auth:test:  [32m✓[39m src/auth-client.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 1650[2mms[22m[39m
+@agilityhub/auth:test:    [32m✓[39m T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie [2m(3)[22m
+@agilityhub/auth:test:      [33m[2m✓[22m[39m /me keeps failing: the exchange rejects but the tab keeps that session, restores never read the cookie (also after a reload), and retryHandoff enters it[33m 313[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/index.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 1403[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m R-03-22 census list handlers [2m(2)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m serves 242 dogs and rejects unknown filter fields[33m 336[2mms[22m[39m
+@agilityhub/auth:test:  [32m✓[39m src/session.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1337[2mms[22m[39m
+@agilityhub/auth:test:    [32m✓[39m T-01-21 session and guards [2m(5)[22m
+@agilityhub/auth:test:      [33m[2m✓[22m[39m redirects anonymous users to /entrar without rendering protected content[33m 367[2mms[22m[39m
+@agilityhub/auth:test:      [33m[2m✓[22m[39m renders the translated unavailable page and omits disabled module items[33m 747[2mms[22m[39m
+@agilityhub/auth:test: 
+@agilityhub/auth:test: [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+@agilityhub/auth:test: [2m      Tests [22m [1m[32m32 passed[39m[22m[90m (32)[39m
+@agilityhub/auth:test: [2m   Start at [22m 20:01:07
+@agilityhub/auth:test: [2m   Duration [22m 14.63s[2m (environment 57%, transform 17%, import 15%, tests 11%)[22m
+@agilityhub/auth:test: 
+@agilityhub/api-client:test:  [32m✓[39m src/branding-cache.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 510[2mms[22m[39m
+@agilityhub/shared-types:build: cache hit, replaying logs a211f3de2fb8a1b3
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/signup-handlers.test.ts [2m([22m[2m32 tests[22m[2m)[22m[33m 2521[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/notification-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 2165[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E7-W02 step 8 · screen 11's feed follows the S11 contract (R-10, R-11) [2m(5)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m R-11-10 read and read-all are idempotent and agree with GET /me/home's bell[33m 333[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E7-W02 step 8 · screen 12's preferences follow the S11 contract (R-11-04, T-11-20) [2m(3)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m saves partially (an absent key keeps its value) and refuses an off-list reminder (422)[33m 563[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/messaging-handlers.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 2184[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E7-W01 step 10 · D9's templates follow the S11 contract (R-11-12) [2m(9)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m the log lists every delivery status, filters by member and status, and answers a detail with its deliveries; another role gets 403[33m 415[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/followup-handlers.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 2250[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E6-W02 step 7 · the tasks of 26 and D13 (R-10-10, §5), stateful [2m(6)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m DOG_NOT_ACTIVE, ATTACHMENT_ENTITY_MISMATCH and ATTACHMENT_LIMIT_REACHED are 422; a refused attachment leaves no task[33m 313[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/agenda-handlers.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 2216[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E6-W03 step 9 D14 GET /followup, unread-count, read and read-all (S10 §6, R-10-13) [2m(8)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m mockup D14 for an ADMIN: five rows, all unread, newest first; the counter says 5[33m 534[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/census-handlers.test.ts [2m([22m[2m104 tests[22m[2m)[22m[33m 2701[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/attendance-handlers.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 3417[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E6-W01 step 9 GET /instructor/day (S10 §6, R-10-01) as the api answers [2m(6)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m an ADMIN without a profile gets the first instructor by shortName; another instructor's day; an unknown one is 404; a bad date is 400[33m 501[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m a member gets 403 FORBIDDEN and an impersonation token 403 IMPERSONATION_DENIED on every S10 route[33m 623[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E6-W01 step 9 GET/PUT /class-sessions/{id}/attendance (S10 §6, R-10-02…R-10-06) [2m(10)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m R-10-03: closed window (attendanceClosed), notice disabled, not open yet, a cancelled class and the ADMIN's override[33m 499[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/training-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 3641[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATALEG_ERRORS §1 and rule 0) [2m(9)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m GET /me/training-summary: two eligible dogs, Rock by default at 2/3 with one cancellable session[33m 587[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m summary variants: no right, at the limit with and without cancellable sessions, group and levels off[33m 404[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m GET /training-slots (instructor): any active ring on request, with occupants, block and class[33m 567[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m POST /training-bookings: 201 with the counter, the key replays, then DOG_ALREADY_BOOKED, SLOT_TAKEN and the limit[33m 395[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/preferences-saver.test.ts [2m([22m[2m20 tests[22m[2m)[22m[33m 497[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/attendance-sheet.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 158[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/calendar-handlers.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 3937[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) [2m(7)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m serves the D4 week (form B) with the Thursday warning and the Carretera block[33m 357[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m R-06-08 validates the draft week and refuses the inconsistent one[33m 552[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m R-06-10 cancels with the notice text and R-06-09 checks the version[33m 630[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m R-06-05 answers RING_HAS_BOOKINGS when a class or a block moves onto a training booking[33m 357[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) [2m(5)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m E5-W05 round 2 #11.e: an ADMIN of another club lists no week and no class, and this world's week, calendar and class are 404 NOT_FOUND for it[33m 317[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m E5-W05 round 3 #3: an ADMIN of another club cannot write this club's weeks, classes or ring blocks either: validation, generation, PATCH, the cancellation preview, the cancellation, the risk exemption and the block's read, PATCH and cancellation are 404 NOT_FOUND, and nothing changes[33m 477[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/submission-key.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 196[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/api-error.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/list-fields.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/uploads.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 322[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/exports.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 149[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/club-pages.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 118[2mms[22m[39m
+id:test:  [32m✓[39m src/App.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 3206[2mms[22m[39m
+id:test:    [32m✓[39m T-01-22 apps/id [2m(9)[22m
+id:test:      [33m[2m✓[22m[39m resumes a server-side OIDC flow after password login[33m 1341[2mms[22m[39m
+id:test:      [33m[2m✓[22m[39m remembers the OIDC flow while sending a neutral magic-link request[33m 352[2mms[22m[39m
+id:test:      [33m[2m✓[22m[39m keeps a same-origin authorize continuation as a fallback[33m 302[2mms[22m[39m
+id:test:      [33m[2m✓[22m[39m serves the login page in Catalan, Spanish and English[33m 355[2mms[22m[39m
+id:test:      [33m[2m✓[22m[39m renders password and product pages and completes global logout[33m 351[2mms[22m[39m
+id:test: 
+id:test: [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+id:test: [2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+id:test: [2m   Start at [22m 20:01:07
+id:test: [2m   Duration [22m 17.76s[2m (environment 50%, transform 21%, tests 20%, setup 7%, import 2%)[22m
+id:test: 
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/activity-handlers.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 5599[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) [2m(14)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m serves form A, the member forms, the conflicts and the cancellation preview[33m 802[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m R-07-05 publishes the draft only after the conflict options (409 → 422 → 200)[33m 597[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m R-07-08/09 registers, answers ACTIVITY_FULL, joins the waitlist and promotes FIFO[33m 479[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHours, as the api answers [2m(7)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m PATCH of a published activity: a resync on a closed Friday is 422 and changes nothing; notes alone are saved; a wider ringBlockWindow is checked too[33m 340[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m E4-W14 S07 §6 the ring-conflicts preview refuses the window the publication would: 422 OUTSIDE_OPENING_HOURS and 400 INVALID_TIME_RANGE, without a field[33m 659[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E4-W13 step 0 S07 §6 CONVENCIONS_API §4 sparse fields and waitlistRank (api E5-T20) [2m(3)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m R-07-08 after a promotion the head of the queue reads waitlistRank 1 while its stored position keeps 2; ACTIVE and CANCELLED rows read null[33m 357[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/day-grid-handlers.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 1078[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E4-W03 day-grid MSW handlers: roles, impersonation and tenant (S06 §6, MATRIU_PERMISOS) [2m(16)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m gives staff the instructor projection of a class and the full block[33m 362[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/list-exports.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 953[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/club-settings-handlers.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 124[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/booking-handlers.test.ts [2m([22m[2m30 tests[22m[2m)[22m[33m 6433[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) [2m(11)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m POST /seat-holds: a plain hold of 30 s from the api clock; each refused row with its code, status and details[33m 366[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m POST /bookings confirms the hold (pack −1, calendar links); an expired hold is 409 SEAT_HOLD_EXPIRED[33m 348[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m bookingSingleClass: PAY_TO_BOOK answers PAYMENT_PENDING with a same-origin checkoutUrl; Rock is charged on the receipt[33m 432[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m the waitlist: join a WAITLIST_OPEN row (it leaves 04), refusals, the detail, leaving it, and the claim of a NOTIFIED entry[33m 567[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) [2m(8)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m E5-W05 round 2 #11.b: a PAYMENT_PENDING booking the hold cannot swap is LATE_WINDOW (the api's), beside the swappable Friday 7; a begun class DONE (bookingLimitDone: the refusal)[33m 310[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) [2m(7)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at 2026-08-02T20:30:00+02:00 (late window 240 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: false)[33m 364[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at 2026-08-02T19:59:00+02:00 (late window 240 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: false)[33m 538[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the bookingLimit (mockup 06) world at 2026-08-02T20:30:00+02:00 (late window 240 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: false)[33m 455[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/billing-handlers.test.ts [2m([22m[2m51 tests[22m[2m)[22m[33m 6619[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m T-12-21 / T-12-22 · S12 §6 guards: ADMIN only, no impersonation, BILLING on, the caller's club [2m(4)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-12-21 an INSTRUCTOR and a MEMBER get 403 FORBIDDEN and an impersonation token 403 IMPERSONATION_DENIED on /billing/*, /invoices and /remittances[33m 431[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-12-22 BILLING off → 404 MODULE_DISABLED on the month, the run, the receipts, the remittances and both exports[33m 554[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m S12 R-12-11 / R-12-12 · POST /billing/runs («2 · GENERA REMESA SEPA (XML)», T-12-09, T-12-10, T-12-29b, T-12-32) [2m(7)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-12-09 / T-12-13 after a rollback the old simulation is stale (409 SIMULATION_STALE); a new one generates the same numbers 2026-0912…2026-1079 (R-12-14)[33m 366[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-12-32 billingManualOnly: the run issues every receipt PENDING by hand and no remittance[33m 332[2mms[22m[39m
+@agilityhub/api-client:test:  [32m✓[39m src/mocks/fixtures.contract.test.ts [2m([22m[2m79 tests[22m[2m)[22m[33m 6701[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m T-01-25 OpenAPI mock fixture contract [2m(15)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m validates audit-entries.json[33m 351[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m validates branding-minim.json[33m 397[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m validates dashboard.json[33m 368[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m validates me-impersonated.json[33m 344[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m validates member-signup-review.json[33m 395[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W02 step 9 · the training world follows the S09 contract (TrainingSlots, TrainingSummary, TrainingBooking) [2m(5)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m validates the member and staff grids, the summaries and every booking (default)[33m 413[2mms[22m[39m
+clubs:test:  [32m✓[39m src/today/TodayPage.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 6610[2mms[22m[39m
+clubs:test:    [32m✓[39m T-06-29 screen 10 «Classes del dia» [2m(18)[22m
+clubs:test:      [33m[2m✓[22m[39m draws the mockup grid with identical ring columns, the date header and the week chips[33m 848[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m opens the risk balloon with the api riskText on tap and closes it on a second tap or elsewhere[33m 389[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m moves by chips and arrows (Sunday only by the arrows) and keeps ?date in the address[33m 794[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m falls back to the club-local today and rewrites the address for ?date=2026-08-32[33m 393[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m falls back to the club-local today and rewrites the address for ?date=2026-02-30[33m 390[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m R-06-14 in Pacific/Auckland: requested date, header and chips name the club's calendar day[33m 484[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m R-06-14 in Pacific/Kiritimati: requested date, header and chips name the club's calendar day[33m 308[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m R-06-14 in Europe/Madrid: requested date, header and chips name the club's calendar day[33m 451[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m R-06-14 in America/Bogota: requested date, header and chips name the club's calendar day[33m 515[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m shows the empty state (dayGridEmpty) and the error toast with retry[33m 391[2mms[22m[39m
+clubs-admin:test: Not implemented: navigation to another Document
+clubs:test:  [32m✓[39m src/history/history.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 6592[2mms[22m[39m
+clubs:test:    [32m✓[39m T-10-31 screen 25 «Històric» (S10 §2, R-10-14) [2m(11)[22m
+clubs:test:      [33m[2m✓[22m[39m mockup 25: the three dogs with «Tots» pressed by default, the four type chips, the window caption and the seven rows with their exact badges and lines[33m 1344[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a single accessible dog: no dog chips and no « · amb {gos}»; FREE_TRAINING and ACTIVITIES off: no type chips and no such rows[33m 384[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m the chips drive `dogId` and `type` (↔ ?dogId= and ?tipus=); arriving with ?dogId= preselects that dog[33m 403[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a dog that is not the member's (404 DOG_NOT_ACCESSIBLE) says so and goes back to «Tots»[33m 328[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m an impersonated session reads 25 with the banner; an instructor-only session does not get the page[33m 891[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m T-10-32 (25): es and en read the rows with no missing key (the titles are the api's)[33m 388[2mms[22m[39m
+clubs:test:    [32m✓[39m T-10-31 E6-W04 step 0b: screen 25's activity rows open their page (HistoryItem.activityId, S07 §6, rulings E74 and E75) [2m(5)[22m
+clubs:test:      [33m[2m✓[22m[39m E6-W04 step 0b (its review): the page the link opens answers in the mock world, as the api's does when it sends activityId[33m 747[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 step 2 (E6-W04 review #8): a plain click on the activity link moves in the app (no full page load): the activity's page shows in the same document[33m 698[2mms[22m[39m
+clubs:test:  [32m✓[39m src/training/TrainingDetailPage.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 6624[2mms[22m[39m
+clubs:test:    [32m✓[39m S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) [2m(6)[22m
+clubs:test:      [33m[2m✓[22m[39m a future booking: title, state, line, who booked it, and the cancellation back to 03[33m 2715[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m past cancellableUntil the button gives way to the notice; «Reservada pel club» for BACKOFFICE[33m 498[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m 422 TRAINING_CANCEL_TOO_LATE: the threshold and the minutes left, from the details, in the dialog[33m 752[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m 409 INVALID_STATE: the message and the booking read again (cancelled elsewhere)[33m 603[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m es and en: the same page in the reader's language[33m 357[2mms[22m[39m
+clubs:test:    [32m✓[39m E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): the training cancellation follows the shared submission-key rule [2m(1)[22m
+clubs:test:      [33m[2m✓[22m[39m T-09-25 E7-W07 step 4 (CONVENCIONS_API §7, E85): [ANUL·LA] sends an Idempotency-Key, keeps it through IN_PROGRESS («L'operació encara està en curs…») and a 503 with the api's body, and a 422 TRAINING_CANCEL_TOO_LATE retires it, so the same cancellation sent again takes a new key[33m 1220[2mms[22m[39m
+clubs:test:    [32m✓[39m E5-W05 step 13: the detail reaches DONE (E5-W02 round-2 review #3, S09 §5) [2m(1)[22m
+clubs:test:      [33m[2m✓[22m[39m E5-W05 step 13: with a controlled clock the booking reads «fet» after its endsAt, without a remount[33m 362[2mms[22m[39m
+@agilityhub/api-client:test:  [31m❯[39m src/mocks/mock-worlds.budget.test.ts [2m([22m[2m23 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 15117[2mms[22m[39m
+@agilityhub/api-client:test:    [31m❯[39m E3-W10 build-time budget of the MSW mock worlds [2m(23)[22m
+@agilityhub/api-client:test:      [32m✓[39m finds every stateful world the handlers reset[32m 5[2mms[22m[39m
+@agilityhub/api-client:test: [31m     [31m×[31m imports the mock modules afresh within the start-up budget[39m[33m 5721[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetActivityState within its budget[33m 448[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m builds resetAttendanceMockState within its budget[32m 232[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m builds resetAuditMockState within its budget[32m 194[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m builds resetAuthMockState within its budget[32m 184[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m builds resetBackofficeMockState within its budget[32m 248[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetBillingMockState within its budget[33m 369[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m builds resetBookingMockState within its budget[32m 252[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetCatalogState within its budget[33m 448[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m builds resetCensusRecordState within its budget[32m 299[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetDashboardMockState within its budget[33m 666[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetFollowupMockState within its budget[33m 519[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetMemberSelfServiceState within its budget[33m 704[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetMessagingMockState within its budget[33m 632[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetNotificationMockState within its budget[33m 556[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetOnboardingMockState within its budget[33m 583[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetPlanningState within its budget[33m 624[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetSettingsState within its budget[33m 664[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetSignupMockState within its budget[33m 518[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetTrainingMockState within its budget[33m 568[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m builds resetDayGridState within its budget[33m 513[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m rebuilds on reset the same worlds the browser starts with, whatever the day[32m 129[2mms[22m[39m
+clubs:test:  [32m✓[39m src/booking/home.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 7547[2mms[22m[39m
+clubs:test:    [32m✓[39m screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) [2m(9)[22m
+clubs:test:      [33m[2m✓[22m[39m the greeting and the bell, «Tots» last and pressed, the counters and the rows as the api delivers them[33m 2573[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 step 5 (E6-W04 question 6): each class booking's row of 03 carries data-booking-id, its booking's id; the training, waiting and activity rows carry none[33m 523[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W04 step 0 (mockup 03, api E5-T25): each class, waiting and training row carries its ring's dot in the api's `ringColor`; the activity row none[33m 439[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a dog selected: its rows without « · amb …» and the member's activity still there (the api keeps it), its counters, and «Tots» brings them back[33m 821[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a dog without reservations, for a member without activity registrations: «Encara no tens cap reserva» and a way to 04[33m 457[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m only one accessible dog: no «Tots», its chip selected and its rows without « · amb …» (V3); nothing unread: the bell is still[33m 556[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m R-08-20: a visible instructor is named; «es mostra 6 h abans» and «1,5 h» take the ICU `other` branch[33m 311[2mms[22m[39m
+clubs:test:    [32m✓[39m E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) [2m(3)[22m
+clubs:test:      [33m[2m✓[22m[39m es: 03 and 04 read in Spanish, with no Catalan article[33m 366[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m en: 04's badges and pack in English[33m 423[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a viewer in America/Bogota still reads the club's times (Europe/Madrid): «18:50» and «20:14»[33m 534[2mms[22m[39m
+clubs:test:  [32m✓[39m src/activities/activities.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 8762[2mms[22m[39m
+clubs:test:    [32m✓[39m T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 [2m(19)[22m
+clubs:test:      [33m[2m✓[22m[39m draws the 04 block with the exact badges; the full row with waitlist stays tappable[33m 715[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m R-07-14 without WAITLIST the full activity is «Completa» and inert; an open one without maximum is «Obertes»[33m 393[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m OPEN: [INSCRIU-M'HI] registers and then offers [ANUL·LA LA INSCRIPCIÓ][33m 696[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m FULL_WAITLIST: the waitlist dialog → toast «Ets a la llista d'espera» → [SURT DE LA LLISTA D'ESPERA][33m 888[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m registered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text[33m 763[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m R-07-08 ACTIVITY_FULL without a waitlist shows «Completa», no dialog[33m 347[2mms[22m[39m
+clubs:test:    [32m✓[39m T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review [2m(6)[22m
+clubs:test:      [33m[2m✓[22m[39m R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; 400 VALIDATION_ERROR on reason (details.field, the core's shape) stays on the field[33m 629[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; 400 VALIDATION_ERROR on reason (details.fieldErrors[]) stays on the field[33m 709[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m R-07-09 a member session asks for no reason and keeps sending {}[33m 387[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m R-07-09 checks the deadline again before opening the confirmation (a clock that jumped past it)[33m 305[2mms[22m[39m
+clubs:test:    [32m✓[39m T-07-30 E4-W13 step 0 R-07-08 the app shows the live waitlist rank (api E5-T20) [2m(1)[22m
+clubs:test:      [33m[2m✓[22m[39m the member's detail shows «en llista d'espera (1)» from waitlistRank once the entries ahead are promoted, although its position is 3[33m 322[2mms[22m[39m
+clubs:test:    [32m✓[39m E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): 13's registration keeps one key per submission [2m(1)[22m
+clubs:test:      [33m[2m✓[22m[39m T-07-30 T-07-14 E7-W07 step 4 (CONVENCIONS_API §7, E85): [INSCRIU-M'HI] keeps its Idempotency-Key through a network failure, IN_PROGRESS («L'operació encara està en curs…») and a 503 with the api's body; a 422 BOOKING_BLOCKED retires it, so the same registration sent again takes a new key[33m 708[2mms[22m[39m
+clubs:test:  [32m✓[39m src/booking/book.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 8565[2mms[22m[39m
+clubs:test:    [32m✓[39m T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) [2m(11)[22m
+clubs:test:      [33m[2m✓[22m[39m Duna: the chips without «Tots», the pack, the intro, the activities and the six rows (mockup 04's, with «ds 8» a normal row: E7-W07 step 6, ruling E85)[33m 1948[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m T-08-05 E7-W07 step 6 (R-08-03, ruling E85): mockup 04's «Límit setmanal» where the api sends it, Duna's week done in the bookingLimitDone world (Monday 3 at 20:00): every row of the week reads it in the warning tone and still acts (29 informs), next week's row is bookable[33m 583[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m Rock: «Sense sessions» is inert with an expiring pack; Toby: the block banner and inert rows without a badge[33m 1162[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m modules gate the page: ACTIVITIES off has no «Activitats» block, PACKS off has no pack card[33m 302[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m WAITLIST off: the full rows read «Completa» and do nothing[33m 325[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m SINGLE_CLASS: every badge carries the price (R-08-18)[33m 358[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m WAITLIST_OPEN asks first, joins with the selected dog, then the row leaves the list with «Ets a la llista d'espera»[33m 977[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 step 3 (E7-W05 review #2): a join whose reload fails shows 04's error with a retry, never the joined row next to the notice; the retry reads the list again without it[33m 1053[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a refused join keeps its message inside the dialog (409 WAITLIST_LIMIT)[33m 675[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a hold refused with any other code stays on 04 with its errors: message and the list read again[33m 470[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m the app mounts 04 on /reservar with the «Reservar» tab active[33m 702[2mms[22m[39m
+clubs:test:  [32m✓[39m src/today/OverviewPage.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 12215[2mms[22m[39m
+clubs:test:    [32m✓[39m T-06-29 screen 23 «Visió global» [2m(9)[22m
+clubs:test:      [33m[2m✓[22m[39m shows n/n +e with the planned instructor, training names, the block and the cancelled class[33m 813[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W03 step 1 lists the class's registrants and the «En espera» line in the drawer, read-only (S08 §6)[33m 1026[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W05 round 2 #3: the drawer's level chips are the dogs' own levels (Duna «C»), and none in a club with levels.enabled = false[33m 1593[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W05 steps 1 and 2: the drawer's chips read displayState («feta», «no presentat»), the level chip is levelCode (none when null), and «En espera: {guia} + {gos}» with the FIFO position[33m 867[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m opens the class drawer with the instructor projection of the tapped class[33m 868[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m opens the block drawer and cancels the block (POST /ring-blocks/{id}/cancellation)[33m 661[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m maps 409 INVALID_STATE and 422 RING_BLOCK_MANAGED_BY_ACTIVITY on the block cancellation[33m 954[2mms[22m[39m
+clubs:test:    [32m✓[39m T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m names the instructors (instructorNames[]) and the ring (ring.name) of GET /class-sessions/{id}, not of the tapped cell[33m 917[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a class without a ring (ring: null) has no «Pista» row; without names, no «Instructor» row[33m 551[2mms[22m[39m
+clubs:test:    [32m✓[39m T-06-29 E4-W14 screen 23's drawer: the instructors' label follows the count, the names are a list [2m(1)[22m
+clubs:test:      [33m[2m✓[22m[39m ca «Instructor: Marc» / «Instructors: Marc i Núria»; es «Instructores: Marc y Núria»; en «Instructors: Marc and Núria»[33m 3755[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/billing/RemittancesPage.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 11705[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12) [2m(10)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m lists the remittances newest first with month, creation, receipts, amount, collection date and status; no free-text search[33m 2188[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m [Descarrega l'XML] follows the api's signed URL (GET /remittances/{id}/file), never reading the XML[33m 865[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-12-15 [Marca com a enviada al banc]: a confirmation warns the rollback becomes impossible, then POST …/submission {submittedAt} with a key; the row reads «enviada al banc»[33m 1428[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-12-15 a remittance another admin sent meanwhile answers 409 INVALID_STATE: the error stays in the dialog and the list is read again[33m 1530[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-12-15 the day it went to the bank runs from the remittance's club-local day to today (snapshot b67a07b): outside it the field says so and nothing is sent[33m 994[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-12-15 the api's 400 VALIDATION_ERROR {submittedAt} sits on the field; 409 STALE_VERSION stays in the dialog and the list is read again[33m 893[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m «‹ Facturació» goes back to the month D6 came from (`?mes=` stays in the address)[33m 516[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m a ROLLED_BACK and a SUBMITTED remittance are read-only: their XML can be downloaded, never marked as sent[33m 425[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m opens a remittance: its message, sequences, XSD check and the creditor with the IBAN masked[33m 1360[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m filters by status through the universal filter (`filter=status:eq:…`)[33m 1499[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/census/NotificationPreferencesBlock.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[33m 12931[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) [2m(22)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders D10's wording: the four categories (the fourth CLUB_NEWS row), the App tick always on, «+SMS», the reminder «Mai» with the six options, the push toggle and «Avisos enviats ›»[33m 798[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m each change shows at once and the changes of 300 ms travel as one partial PUT[33m 585[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m «Avisos enviats ›» right after a change: the change is saved (and answered) before the log opens[33m 330[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m a refused save (422 INVALID_REMINDER_OPTION) puts back what the api holds and says why[33m 507[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W06 review #4: a save answered 409 MEMBER_ERASED (the member erased while D10 is open) ends the block with errors:MEMBER_ERASED — no controls left to change again[33m 354[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W01 round 2 #5: leaving the page sends every unsaved change with keepalive — the one on its way too — and the next visit sends it again[33m 809[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W04 step 3 (R-11-04): PERSONAL = false on its way, set back to true and the page left, the answers in reverse order — true is saved, and the recovery entry stays until it is[33m 555[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W04 step 4 (R-11-04): after a back-forward cache restore, leaving still saves — pagehide(persisted) → pageshow(persisted) → a change → leave at once: the PUT is sent and the outbox holds it[33m 324[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it[33m 995[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx[33m 581[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved[33m 626[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W05 step 5 (R-11-04): the departure's keepalive PUT is held across pagehide(persisted) and pageshow(persisted) — the kept change goes again as a normal save once it settles, and the outbox clears only when that save is answered[33m 700[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W06 (E7-W05 review #4): back from the back-forward cache with nothing unsaved, the record saves the change a newer visit left in the outbox instead of taking it over and ignoring it[33m 367[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W07 step 2 (E7-W06 review #3, ruling E85: option a; R-11-04): overlapping PUTs and the last one lost — the record reads GET again (the api holds off), shows the member's «on» as a pending change with «Desant…», sends it again, and its 2xx saves it and frees the outbox[33m 918[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W07 step 2 (ruling E85: option a): the retry is lost too and the admin leaves right after — the departure carries «on» with keepalive and keeps it, and the next visit within 5 minutes of leaving shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too — «on» stays shown and kept, and the admin's next change sends it[33m 2149[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W07 round 2 #2 (review #2; S14 §5, T-14-19): with the overlapping-save sequence, the resend answered 409 MEMBER_ERASED is final — the block says so, and no other PUT or GET follows, nothing is sent on departure, and the outbox entry goes[33m 1355[2mms[22m[39m
+clubs:test:  [32m✓[39m src/booking/detail.test.tsx [2m([22m[2m25 tests[22m[2m)[22m[33m 13324[2mms[22m[39m
+clubs:test:    [32m✓[39m T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) [2m(18)[22m
+clubs:test:      [33m[2m✓[22m[39m E5-W05 step 8: shows the mockup card, and a cancellation in time asks first and leaves the green note, which names no week («pots reservar una altra classe.»)[33m 2542[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m inside the 4 h threshold the dialog warns, and the late note names «4 hores»[33m 889[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W05 step 8: the threshold comes from the booking — a club with 90 minutes (`cancellableInTimeUntil` 17:20) at 2026-08-03T17:30:00+02:00 warns «Falten menys de 90 minuts»: true[33m 361[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W05 step 8: the threshold comes from the booking — a club with 90 minutes (`cancellableInTimeUntil` 17:20) at 2026-08-03T17:10:00+02:00 warns «Falten menys de 90 minuts»: false[33m 477[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a booking cancelled by a swap, opened later: its state chip only, no «dins el termini» note (review #4)[33m 1422[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a CANCELLED_LATE booking cancelled by MEMBER, opened later: its chip «anul·lada tard» only, no note (review #4)[33m 361[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W04 step 0 (api E5-T25): `BookedBy.self` decides, never the names — a namesake of the group is «Reservada per Biel»[33m 345[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m booked by the club reads «Reservada pel club el …»[33m 302[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T12:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T09:00:00Z the dialog warns: true[33m 400[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 step 3 (E7-W05 review #2): a cancellation whose reload fails shows 07's error with a retry, never the old «confirmada» card; the retry shows the cancelled booking and its note[33m 543[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m BOOKING_NOT_CANCELLABLE (422) shows its message inside the dialog and reads the booking again[33m 820[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m BOOKING_NOT_CANCELLABLE (409) shows its message inside the dialog and reads the booking again[33m 517[2mms[22m[39m
+clubs:test:    [32m✓[39m T-08-39 the waiting entry (/espera/:id, R-08-16) [2m(7)[22m
+clubs:test:      [33m[2m✓[22m[39m the card with «en llista d'espera», no position in ALL_AT_ONCE, and «SURT DE LA LLISTA D'ESPERA» back to 03[33m 872[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W05 step 10: a NOTIFIED entry reads «plaça alliberada» with [AGAFA LA PLAÇA]; an ACTIVE one keeps «en llista d'espera» without it[33m 565[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W05 step 9: the waiting entry's card (the same card as 07) carries its ring's dot before the title[33m 302[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m 422 WAITLIST_ENTRY_NOT_LIVE on leaving shows its message and reads the entry again[33m 522[2mms[22m[39m
+clubs:test:  [32m✓[39m src/notifications/push.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 2263[2mms[22m[39m
+clubs:test:    [32m✓[39m E7-W02 step 5 · web push in context (S11 R-11-07) [2m(13)[22m
+clubs:test:      [33m[2m✓[22m[39m subscribes with the key, upserts POST /push-subscriptions and keeps only the id[33m 907[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m logout sends the DELETE of this device's subscription, then logs out[33m 569[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W02 round 2 #2: a subscription that lands after the logout (the session gone) is unsubscribed in the browser, and its id is never stored[33m 384[2mms[22m[39m
+clubs:test:  [32m✓[39m src/today/literals.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 934[2mms[22m[39m
+clubs:test:    [32m✓[39m T-06-30 screens 10 / 23 vocabulary and ca literals [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m has no forbidden term nor internal code in home, instructor and enums (ca/es/en)[33m 558[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m keeps the exact ca literals of mockups 10 and 23[33m 373[2mms[22m[39m
+clubs:test:  [32m✓[39m src/instructor/attendance-rows.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 4295[2mms[22m[39m
+clubs:test:    [32m✓[39m T-10-27 E7-W06 step 5 (ruling E82, E6-W04 Q6): stable data attributes on screen 21's rows [2m(1)[22m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 step 5: each attendance row carries its booking's id and the state it shows (data-booking-id, data-attendance-state); a tap changes the state, and the saved list keeps it[33m 4287[2mms[22m[39m
+clubs:test:  [32m✓[39m src/InfoPage.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 5736[2mms[22m[39m
+clubs:test:    [32m✓[39m T-05-CP-07 screen 30 Info [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m shows FAQ, rules and other active pages only[33m 3072[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m T-11-36 keeps Info available without the FAQ module, omits the FAQ tab and never reads /faq-entries[33m 681[2mms[22m[39m
+clubs:test:    [32m✓[39m T-11-36 screen 30 FAQ (S11 R-11-14, S05 R-05-22) [2m(3)[22m
+clubs:test:      [33m[2m✓[22m[39m groups by category ordered by each group's lowest order, entries by order — never alphabetically nor as delivered[33m 741[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m opening one answer closes the previous; the answer is plain text with its line breaks[33m 1036[2mms[22m[39m
+clubs:test:  [32m✓[39m src/UnsubscribePage.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 4649[2mms[22m[39m
+clubs:test:    [32m✓[39m E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08) [2m(4)[22m
+clubs:test:      [33m[2m✓[22m[39m 200: sends the token once and confirms, with a way to the «Avisos» of 12 for a session[33m 2985[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a link without its token is invalid and sends nothing[33m 702[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a network error offers a retry, which sends the token again[33m 663[2mms[22m[39m
+clubs:test:  [32m✓[39m src/notifications/sw-logic.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+clubs:test:  [32m✓[39m src/training/i18n.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 7652[2mms[22m[39m
+clubs:test:    [32m✓[39m T-09-41 training and instructor vocabulary, locales and club time zone [2m(4)[22m
+clubs:test:      [33m[2m✓[22m[39m has no forbidden term nor requirement code in training, instructor and enums (ca/es/en)[33m 1032[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m formats in the club's zone, never the viewer's: an October 06:30Z slot reads «8:30»[33m 6431[2mms[22m[39m
+clubs:test:  [32m✓[39m src/notifications/locales.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 10238[2mms[22m[39m
+clubs:test:    [32m✓[39m E7-W02 round 2 #6 · screens 11, 12 and the unsubscribe page in es and en (Definition of Done) [2m(6)[22m
+clubs:test:      [33m[2m✓[22m[39m E7-W02 round 2 #6 (es): the feed, its actions and a club without SMS[33m 5399[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W02 round 2 #6 (en): the feed, its actions and a club without SMS[33m 3339[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W02 round 2 #6 (es): 12's «Avisos», the reminder options and a refused permission[33m 609[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W02 round 2 #6 (en): 12's «Avisos», the reminder options and a refused permission[33m 376[2mms[22m[39m
+clubs:test:  [32m✓[39m src/booking/confirm.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[33m 23698[2mms[22m[39m
+clubs:test:    [32m✓[39m T-08-36 the 30 s hold counts on the api clock, not the device's (R-08-07) [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m a device clock 5 min ahead still starts at 0:30, reaches 0 at the right instant, then the red note returns to 04[33m 1353[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m 409 SEAT_HOLD_EXPIRED on the confirmation shows the same red note[33m 1691[2mms[22m[39m
+clubs:test:    [32m✓[39m T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) [2m(4)[22m
+clubs:test:      [33m[2m✓[22m[39m single selection among the swappable bookings, the button names both days, then the swap is confirmed[33m 1654[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W07 round 2 #5a: the done one inert — the bookingLimitDone world at the clock (Sunday 2 at 20:30): Sunday 2's class has begun, so it is listed but cannot be chosen, and Monday 3 is the swap (2 of 2)[33m 987[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m «CANCEL·LAR LA NOVA RESERVA» releases the hold (DELETE) and goes back to 04[33m 1250[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m the back gesture leaves the page and releases the hold too[33m 891[2mms[22m[39m
+clubs:test:    [32m✓[39m 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) [2m(8)[22m
+clubs:test:      [33m[2m✓[22m[39m normal: no swap, «CONFIRMAR LA RESERVA», then the calendar links and the booking[33m 966[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m the limit done this week (CURRENT, per dog): the mockup's «Aquesta setmana ja has fet dues classes amb la Duna. … per a la setmana vinent a partir de diumenge 9 a les 20 h», without a countdown[33m 930[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W05 step 6: the limit of next week reached on a next-week row («dl 10», NEXT, per dog): «La setmana vinent ja tens una classe amb la Duna» and B1's «Podràs reservar aquesta classe a partir de diumenge 9 a les 20 h», the coming opening[33m 863[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W05 step 6: with `bookings.maxNextWeek = 0` (limit 0, unit DOG) the first sentence counts no class: «Encara no pots reservar classes de la setmana vinent.» and B1's second sentence[33m 720[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W05 step 6: with `bookings.maxNextWeek = 0` (limit 0, unit MEMBER) the first sentence counts no class: «Encara no pots reservar classes de la setmana vinent.» and B1's second sentence[33m 510[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m the limit per person (unit MEMBER) names no dog: «Aquesta setmana ja has fet dues classes.»[33m 553[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m «Properament»: «Disponible a partir de diumenge 9 a les 20 h.»[33m 678[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a seat another hold takes: the retry note, and a retry that gets the seat shows the countdown[33m 1194[2mms[22m[39m
+clubs:test:    [32m✓[39m R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) [2m(4)[22m
+clubs:test:      [33m[2m✓[22m[39m PAY_TO_BOOK: «PAGAR I CONFIRMAR (12,00 €)» opens the api's Checkout URL[33m 1338[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m CHARGE_ON_ATTENDANCE: the note above the normal button[33m 2435[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a confirmation that fails on the way stays on the page, and its retry sends the same key[33m 2102[2mms[22m[39m
+clubs:test:    [32m✓[39m R-08-15 the claim of a NOTIFIED waiting entry (step 5) [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m [AGAFA LA PLAÇA] holds with the entry, and the confirmation posts the claim with its key[33m 1076[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a claim that lost the seat (409 SEAT_TAKEN) goes back to 04 with its message[33m 846[2mms[22m[39m
+clubs:test:    [32m✓[39m T-08-16 E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): 06/29's booking keeps its key on IN_PROGRESS [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 step 1: 06's booking stays on the page with its Idempotency-Key on IN_PROGRESS (no return to 04), says «L'operació encara està en curs…», the retry sends the same key, and the same booking after the api's answer takes a new key[33m 831[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 step 1 (its review #11): 29's claim of a NOTIFIED entry stays on the page with its Idempotency-Key on IN_PROGRESS (no return to 04), says «L'operació encara està en curs…», and the retry sends the same key[33m 573[2mms[22m[39m
+clubs:test:  [32m✓[39m src/dog-tasks-contrast.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/instructor/student-record.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 22956[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m D13 as the mockup: the header chips, four metric cards with their subtitles, the three blocks with the api's tasks, and the «5 darreres classes» table[33m 2294[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m no classes in the window reads «—»; TASKS off drops the three blocks, the button and every task read; FREE_TRAINING off drops the training card[33m 553[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m [GESTIONAR TASQUES I NOTES] opens the same editor as 26 in a drawer; a task created there shows in the record's block and counters[33m 1815[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m T-10-32 (D13): en with no missing key; `Level.name` is the api's (its ca fallback), never translated here[33m 333[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E6-W02 round 2 (review of 30-09): D13 [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m #2 (R-10-10): the drawer reaches every task too — «Mostra'n més» reads the second page, and its oldest pending task is completed there[33m 3810[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m #3: a round trip through the history keeps the drawer's drafts — the new task's text and file and an open edit — and the focus comes back to the link[33m 2141[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m #4 (AGENTS rule 4): a clip of the record that cannot be opened says why next to it — by its code, or «No s'ha pogut obrir el fitxer.» without an answer[33m 325[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m #6 T-10-32 (D13): es renders every literal of the record in Spanish, with no missing key[33m 723[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E6-W05 (review of E6-W02's round 2): D13's drawer [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m step 3 (AGENTS rule 6): Escape in the delete confirmation closes the confirmation only; the drawer stays open with its unsaved task text and deletes nothing[33m 1631[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E6-W04 step 0d (review of E6-W05): D13's drawer [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m E6-W04 step 0d: an instructor's mixed selection on an open task attaches the JPEG and says «eina.exe: …» in the drawer[33m 2055[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-10-28 E7-W06 (E6-W04 question 5 and its report nits): D13's drawer [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W06 step 5 (E6-W04 Q5): an instructor's new task with a refused file names it — «eina.exe: …» — in the drawer, and creates nothing[33m 2897[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W06 review #6: a creation abandoned while on its way (the drawer closed) keeps nothing when its answer is lost — the same task and file later are uploaded again and sent with a new key[33m 2533[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W06 step 6 (E6-W04's report nit): the drawer closed after a refusal reopens without it[33m 827[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m «Alumnes» of the back office (mockups D12–D14, S10 §13-9) [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m instructors see «Alumnes» in the sidebar; the search reads GET /dogs and opens D13[33m 762[2mms[22m[39m
+clubs:test:  [32m✓[39m src/instructor/RingBlockPage.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 25028[2mms[22m[39m
+clubs:test:    [32m✓[39m screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) [2m(9)[22m
+clubs:test:      [33m[2m✓[22m[39m «Reserva de pista» first with its four reasons; «Bloqueig» hides them and offers its two[33m 2372[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m every active ring (also those closed to training), the route's ring preselected[33m 663[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a contiguous selection writes the summary and posts the block, then 23 with its toast[33m 3095[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m 409 RING_BLOCK_CONFLICT marks the conflicting cells, lists the overlaps and reads the grid again[33m 3132[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m 422 RING_HAS_BOOKINGS: the instructor is told to ask the administration, and nothing forces it[33m 1942[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m FREE_TRAINING off: only «Bloqueig», and the times are taken without a grid (the api validates)[33m 1332[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E5-W02 round 2 · review #5: without a grid the band's last half hour can be taken (13:30–14:00)[33m 1785[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m while the block is sent the button is busy and the grid, kinds and rings are inert[33m 3281[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a time refusal is shown by code (400 INVALID_TIME_RANGE), and a lost answer keeps its key[33m 3853[2mms[22m[39m
+clubs:test:    [32m✓[39m T-09-40 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 24's block keeps its key on IN_PROGRESS [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 step 1: 24's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key[33m 1890[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W07 step 4 (CONVENCIONS_API §7, E85; R-09-11): a 503 with the api's body keeps 24's key — the retry sends the same one; a 422 RING_NOT_RESERVABLE retires it — the same block sent again takes a new key[33m 1677[2mms[22m[39m
+clubs:test:  [32m✓[39m src/NotificationsPage.test.tsx [2m([22m[2m21 tests[22m[2m)[22m[33m 25538[2mms[22m[39m
+clubs:test:    [32m✓[39m T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) [2m(21)[22m
+clubs:test:      [33m[2m✓[22m[39m renders mockup 11's six cards as delivered: icon, tone, texts, relative time, «i per SMS», the buttons[33m 2295[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m never prints «i per SMS» without the SMS module, even for an SMS the api lists[33m 1548[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m [CANVIA DE CLASSE] opens 04 with the notification's dog[33m 1143[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m [AGAFA LA PLAÇA] reuses E5-W01's claim: the entry's seat hold, then the confirmation (06/29)[33m 1408[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m [AGAFA LA PLAÇA] reads disabled, with its hint, once the seat is gone (enabled: false)[33m 651[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W02 round 2 #4 (AGENTS rule 3): with WAITLIST off, a historical N-15 the api still lists is an informative card with no [AGAFA LA PLAÇA][33m 1476[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a hold refused with 409 SEAT_TAKEN shows E5-W01's message in the card[33m 748[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m an informative card opens its route on tap, without a button; one without an action is inert[33m 1552[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m entering calls read-all once, and 03's bell goes quiet[33m 724[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m back on 03 from the browser's page cache, the bell reads GET /me/home again[33m 1496[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W02 round 2 #3: a failed read-all is sent again (bounded retry), and its answer silences the bell[33m 930[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W02 round 2 #3: inside one document (the module store survives, as in an in-app return), a read-all answered after 03 mounted updates the bell (03 reads GET /me/home again)[33m 1693[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W05 step 3 (S11 §13-8): a read-all left without an answer stays pending in the tab's sessionStorage for this account and club, and a fresh 03 sends it again before it reads GET /me/home — the bell goes quiet[33m 2273[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W05 step 3: another account's or club's pending read-all is not sent from 03[33m 2332[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W05 step 6 (E7-W02 review #3): a quiet refetch of 03 that fails keeps the last rows on screen[33m 1678[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 step 3 (E7-W05 review #2): 03's other quiet reload — a read-all answered while 03 is shown — keeps the rows when its GET /me/home fails[33m 903[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 (E7-W05 review #5): while 03 sends a pending read-all again, the bell never shows the stale unread count — neither before the resend's answer nor before the GET /me/home read that follows it[33m 620[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a card tapped before read-all has landed is marked read on its own[33m 494[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m the empty state: «Encara no tens cap avís»[33m 332[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m loads the second page when the list end shows (no page buttons)[33m 614[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a failed read shows the error by its code, and [Torna-ho a provar] reads again[33m 603[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/JobsCard.test.tsx [2m([22m[2m29 tests[22m[2m)[22m[33m 26117[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) [2m(14)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run[33m 2059[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m paints a failed last run in the danger tone[33m 404[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m asks before disabling (S15 §2 literal) and writes PUT /jobs/{name}/switch {enabled: false} only after the confirmation[33m 1177[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-15-08 [Simula] shows the plan of the response (the WOULD_* items as delivered) and says nothing was applied[33m 467[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m R-15-09 [Executa ara] asks, runs {dryRun: false} and shows the run's summary, then reads the list again[33m 768[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m keeps one Idempotency-Key per payload while the outcome is unknown: a retry after a lost answer reuses it[33m 1211[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m 409 JOB_ALREADY_RUNNING shows its message inside the confirmation and reads the list again[33m 494[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m JOB_UNKNOWN (404: S15 writes 404, rule 0 implies 422) shows its message and reads the list again[33m 631[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m JOB_UNKNOWN (422: S15 writes 404, rule 0 implies 422) shows its message and reads the list again[33m 464[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m opens a process's run history and a run's sheet (effects and errors)[33m 994[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W03 round 2 · review #1: the run history pages through the api's list, and its filters narrow it[33m 2787[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W03 round 2 · E68: P1's and P8's counters read with their own labels[33m 506[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders the card in es[33m 322[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m shows the cadence in club-local time whatever the device's time zone[33m 354[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E5-W05 step 18 · the run drawer (S15 §2, R-15-21) [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 step 18: a failed history page keeps the pager and offers a retry, the drawer stays open, and the retry shows page 2[33m 2016[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 step 18 (R-15-21, T-15-35): a risk-review run's cancelled class opens in D4 on its week with the class selected, as D1's rows do[33m 2054[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E5-W05 round 2 #7 · a run's Week and Member effects link to D4 and D10 (R-15-21) [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 round 3 #5 (S15 R-15-11): with a Friday opening, the Week item opens D4 on the ISO week that holds `openedWeekKey` + 1 day (Saturday 8 → Monday 3), and the Member item opens D10[33m 1253[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 round 3 #5 (ruling E82, INC-53): when the api's Week item carries `isoWeekStart` in its detail, the link opens that week as it is[33m 1920[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 round 2 #7 (assumption A3): a class answer that arrives after the drawer closed navigates nowhere[33m 1200[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E5-W05 step 17 · D11 after a schedule change (R-15-01) [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 step 17: saving jobs.dailyTime reads GET /jobs again, so «Caducitats» and «Neteja tècnica» show the new time at once[33m 1440[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-15-32 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS [2m(5)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W06 step 1: [Simula] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new [Simula] after the api's answer takes a new key[33m 714[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W06 step 1: [Executa ara] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» inside the confirmation, which stays open, the retry sends the same key, and a new run after the api's answer takes a new key[33m 893[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W06 review #5: closing [Executa ara]'s confirmation after an unanswered run gives it up — a run asked for later is a new one with a new key, never the replay of the old one[33m 604[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W06 review #5: an unanswered [Simula] keeps its key for 5 minutes only — a simulation asked for later is a new one[33m 551[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m T-15-32 E7-W07 step 4 (CONVENCIONS_API §7, E85): [Simula] keeps its key after a 503 with the api's body — the retry sends the same one — and a 409 JOB_ALREADY_RUNNING retires it — the next [Simula] is a new submission[33m 427[2mms[22m[39m
+clubs:test: Not implemented: navigation to another Document
+clubs:test: Not implemented: navigation to another Document
+clubs:test:  [32m✓[39m src/profile/NoticesCard.test.tsx [2m([22m[2m27 tests[22m[2m)[22m[33m 27357[2mms[22m[39m
+clubs:test:    [32m✓[39m T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) [2m(27)[22m
+clubs:test:      [33m[2m✓[22m[39m the fixed green tick under «App», the four e-mail switches with the product defaults and «+SMS»[33m 1818[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m hides «+SMS» in a club without SMS (R-11-17)[33m 689[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m the reminder select lists «Mai» and the club's options[33m 699[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m each change shows at once and is saved as a partial PUT after the 300 ms pause[33m 1726[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m rolls a refused change back with its message (422 INVALID_REMINDER_OPTION)[33m 901[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m keeps a newer choice when an older save answers late (the answer rebases the member's edits)[33m 859[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W02 round 2 #1: leaving 12 while a PUT is on its way sends the waiting change at once, and the latest choice (120) is what the api keeps even when the older PUT answers last[33m 719[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W02 round 2 #1: a change kept across a reload is sent again on the next visit of the same account and club only[33m 1160[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it[33m 1831[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx[33m 967[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved[33m 847[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W05 step 2 (R-11-04): back from the back-forward cache, 12 saves again — pagehide with a change pending, pageshow(persisted), an edit while that PUT is out, leave: the edit is saved[33m 821[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W05 step 6 (E7-W02 review #4): an older visit's success never erases the entry a newer visit left in the outbox[33m 1367[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 (E7-W05 review #4): back from the back-forward cache with nothing unsaved, 12 saves the change a newer visit left in the outbox instead of taking it over and ignoring it[33m 1043[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W07 step 2 (E7-W06 review #3, ruling E85: option a; R-11-04): overlapping PUTs and the last one lost — 12 reads GET again (the api holds 1 h), shows the member's «2 h abans» as a pending change with «Desant…», sends it again, and its 2xx saves it and frees the outbox[33m 2233[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W07 step 2 (ruling E85: option a): the retry is lost too and the member leaves right after — the departure carries «2 h abans» and keeps it, so the next visit within 5 minutes of leaving shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too — «2 h abans» stays shown and kept, and the member's next change sends it[33m 3911[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W05 step 6 (E7-W02 review #5): an impersonated session never shows the browser-permission note (it never asks for push)[33m 508[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m asks for the browser's permission only on interaction, never on mount, and registers the subscription[33m 537[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a dismissed prompt (no answer) also leaves the hint under the switch[33m 336[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W02 round 2 #5: a permission already refused shows the explanation on arrival (read at mount, never asked), and a change still saves[33m 592[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m an iPhone outside the installed app gets the install hint and no permission prompt[33m 578[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m no push toggle without PushManager in the browser, nor in a club without PUSH[33m 444[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m «Aprèn amb AgilityHub ›» after «Els meus gossos» only with LEARN_LINK[33m 948[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m the language select writes Account.locale, switches the UI at once and says only new notices change[33m 654[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription[33m 723[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m logout deletes this device's subscription first, and never waits on it[33m 304[2mms[22m[39m
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 230 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-CIhKnQD-.css                           52.05 kB │ gzip:   9.48 kB
+id:build: dist/assets/notifications-ChKXsAvB.js                     0.75 kB │ gzip:   0.47 kB
+id:build: dist/assets/notifications-dxKZmlHL.js                     0.75 kB │ gzip:   0.43 kB
+id:build: dist/assets/notifications-BP8GtpgC.js                     0.75 kB │ gzip:   0.47 kB
+id:build: dist/assets/history-B1Xz7N4l.js                           1.27 kB │ gzip:   0.65 kB
+id:build: dist/assets/history-D5FndTjo.js                           1.32 kB │ gzip:   0.68 kB
+id:build: dist/assets/admin-training-DDv2dFuD.js                    1.35 kB │ gzip:   0.63 kB
+id:build: dist/assets/history-Bs5JKpAd.js                           1.35 kB │ gzip:   0.69 kB
+id:build: dist/assets/shell-C8-jwyq4.js                             1.41 kB │ gzip:   0.74 kB
+id:build: dist/assets/admin-training-Du9KAoeO.js                    1.42 kB │ gzip:   0.68 kB
+id:build: dist/assets/admin-training-CtWdBvS6.js                    1.44 kB │ gzip:   0.69 kB
+id:build: dist/assets/shell-BbrVQiYO.js                             1.47 kB │ gzip:   0.83 kB
+id:build: dist/assets/shell-CxXcYDDQ.js                             1.50 kB │ gzip:   0.83 kB
+id:build: dist/assets/training-CYuCURIa.js                          1.57 kB │ gzip:   0.80 kB
+id:build: dist/assets/home-CLVBc5a3.js                              1.59 kB │ gzip:   0.79 kB
+id:build: dist/assets/training-DhvOYmdN.js                          1.62 kB │ gzip:   0.85 kB
+id:build: dist/assets/training-B5riWOVN.js                          1.63 kB │ gzip:   0.86 kB
+id:build: dist/assets/home-DIaHUeYG.js                              1.65 kB │ gzip:   0.84 kB
+id:build: dist/assets/home-vQT0WHAi.js                              1.67 kB │ gzip:   0.84 kB
+id:build: dist/assets/activities-_j5UPNJ2.js                        1.79 kB │ gzip:   0.83 kB
+id:build: dist/assets/activities-D_fvQi10.js                        1.86 kB │ gzip:   0.91 kB
+id:build: dist/assets/activities-BKuUowmB.js                        1.88 kB │ gzip:   0.91 kB
+id:build: dist/assets/admin-dashboard-VZhOZ68T.js                   2.07 kB │ gzip:   1.02 kB
+id:build: dist/assets/admin-dashboard-MI69Hia9.js                   2.13 kB │ gzip:   1.10 kB
+id:build: dist/assets/admin-dashboard-DNVY2TkD.js                   2.18 kB │ gzip:   1.11 kB
+id:build: dist/assets/common-BpH9cuss.js                            2.30 kB │ gzip:   1.09 kB
+id:build: dist/assets/common-D5M4a98u.js                            2.39 kB │ gzip:   1.18 kB
+id:build: dist/assets/common-DLazKDt-.js                            2.45 kB │ gzip:   1.20 kB
+id:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+id:build: dist/assets/admin-audit-B0Z1oVf2.js                       2.95 kB │ gzip:   1.39 kB
+id:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+id:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+id:build: dist/assets/admin-audit-BS32JsSa.js                       3.20 kB │ gzip:   1.54 kB
+id:build: dist/assets/admin-audit-CkyykZV1.js                       3.28 kB │ gzip:   1.56 kB
+id:build: dist/assets/admin-messaging-Deb_qeG3.js                   4.53 kB │ gzip:   1.87 kB
+id:build: dist/assets/admin-messaging-BzpSHSUj.js                   4.70 kB │ gzip:   2.01 kB
+id:build: dist/assets/admin-messaging-dXGlHtst.js                   4.79 kB │ gzip:   2.03 kB
+id:build: dist/assets/booking-C2JFywZY.js                           4.84 kB │ gzip:   1.84 kB
+id:build: dist/assets/auth-C10lCXDJ.js                              5.05 kB │ gzip:   2.14 kB
+id:build: dist/assets/booking-BnHoP-fw.js                           5.18 kB │ gzip:   2.03 kB
+id:build: dist/assets/booking-oFemWAlT.js                           5.19 kB │ gzip:   2.03 kB
+id:build: dist/assets/admin-catalogs-p29fM8xq.js                    5.41 kB │ gzip:   2.01 kB
+id:build: dist/assets/auth-Uy3Y-og8.js                              5.63 kB │ gzip:   2.37 kB
+id:build: dist/assets/signup-BkgU37Eh.js                            5.63 kB │ gzip:   2.54 kB
+id:build: dist/assets/admin-catalogs-dZtpqy8S.js                    5.67 kB │ gzip:   2.23 kB
+id:build: dist/assets/auth-DU3LoyRH.js                              5.70 kB │ gzip:   2.38 kB
+id:build: dist/assets/admin-catalogs-D4wG5vIy.js                    5.87 kB │ gzip:   2.26 kB
+id:build: dist/assets/signup-Bi4UbtBk.js                            5.88 kB │ gzip:   2.80 kB
+id:build: dist/assets/signup-DQ9RZKro.js                            5.97 kB │ gzip:   2.82 kB
+id:build: dist/assets/admin-activities-Cmq1QEmn.js                  6.01 kB │ gzip:   2.42 kB
+id:build: dist/assets/admin-activities-p-Yew4Zm.js                  6.17 kB │ gzip:   2.62 kB
+id:build: dist/assets/admin-activities-7OuSwNid.js                  6.38 kB │ gzip:   2.68 kB
+id:build: dist/assets/census-Bur0wGCG.js                            6.46 kB │ gzip:   2.52 kB
+id:build: dist/assets/census-J8mVT_14.js                            6.81 kB │ gzip:   2.77 kB
+id:build: dist/assets/census-CazzAc0I.js                            7.00 kB │ gzip:   2.82 kB
+id:build: dist/assets/enums-Bdvw4838.js                             7.24 kB │ gzip:   3.06 kB
+id:build: dist/assets/enums-CI0rJjwt.js                             7.45 kB │ gzip:   3.18 kB
+id:build: dist/assets/enums-oWSHW7AF.js                             7.49 kB │ gzip:   3.18 kB
+id:build: dist/assets/admin-scheduling-nhXWwjRG.js                  8.23 kB │ gzip:   3.04 kB
+id:build: dist/assets/admin-scheduling-DeLeUPtJ.js                  8.64 kB │ gzip:   3.30 kB
+id:build: dist/assets/admin-scheduling-BhSriSnV.js                  8.64 kB │ gzip:   3.31 kB
+id:build: dist/assets/instructor-Drv5FS73.js                        8.95 kB │ gzip:   3.24 kB
+id:build: dist/assets/instructor-C9Nzp3I-.js                        9.33 kB │ gzip:   3.45 kB
+id:build: dist/assets/instructor-DOywIQyk.js                        9.43 kB │ gzip:   3.47 kB
+id:build: dist/assets/admin-billing-DCtYemNl.js                     9.70 kB │ gzip:   3.42 kB
+id:build: dist/assets/admin-billing-GmfsgUot.js                     9.89 kB │ gzip:   3.73 kB
+id:build: dist/assets/admin-billing-DU-wz1RL.js                    10.10 kB │ gzip:   3.76 kB
+id:build: dist/assets/admin-census-BTA4_eDJ.js                     12.07 kB │ gzip:   4.70 kB
+id:build: dist/assets/admin-census-CUKilySs.js                     12.85 kB │ gzip:   5.04 kB
+id:build: dist/assets/admin-census-DvpH3cY7.js                     13.23 kB │ gzip:   5.14 kB
+id:build: dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+id:build: dist/assets/admin-settings-D88R9-_P.js                   22.84 kB │ gzip:   7.93 kB
+id:build: dist/assets/errors-Bvp7svDM.js                           23.31 kB │ gzip:   7.57 kB
+id:build: dist/assets/errors-QdWmQXin.js                           23.32 kB │ gzip:   7.54 kB
+id:build: dist/assets/admin-settings-DTgov08s.js                   24.53 kB │ gzip:   8.60 kB
+id:build: dist/assets/admin-settings-Bbl1HsOL.js                   24.98 kB │ gzip:   8.61 kB
+id:build: dist/assets/index-3zGivSKH.js                           331.38 kB │ gzip: 101.83 kB
+id:build: 
+id:build: ✓ built in 1.28s
+clubs:test:  [32m✓[39m src/App.test.tsx [2m([22m[2m54 tests[22m[2m)[22m[33m 31227[2mms[22m[39m
+clubs:test:    [32m✓[39m T-02-14 clubs shell [2m(6)[22m
+clubs:test:      [33m[2m✓[22m[39m uses the compact mark with the runtime club name[33m 978[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m filters the six-tab mockup navigation by modules and roles[33m 455[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E6-W01 step 1: «El meu dia» and «Alumnes» lead to 20 and the student search; never while impersonating[33m 317[2mms[22m[39m
+clubs:test:    [32m✓[39m T-01-18 access screen [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m uses the exact access actions, focuses an empty email and gates signup[33m 759[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m shows the Retry-After countdown and disables requests[33m 407[2mms[22m[39m
+clubs:test:    [32m✓[39m T-01-19 activation screen [2m(1)[22m
+clubs:test:      [33m[2m✓[22m[39m renders gender-aware, reset and invalid-link variants[33m 938[2mms[22m[39m
+clubs:test:    [32m✓[39m T-01-20 profile choice [2m(1)[22m
+clubs:test:      [33m[2m✓[22m[39m shows cards for every available role and sends the remember choice[33m 307[2mms[22m[39m
+clubs:test:    [32m✓[39m E6-W01 round 2 #7 (ruling E71, mockup 20 V6): an instructor lands on 20 [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m a password login takes an instructor to /instructor/dia and a member-only account to /inici[33m 381[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m 03b: «Com a instructora» opens 20 and «Com a alumna» keeps 03[33m 534[2mms[22m[39m
+clubs:test:    [32m✓[39m T-01-21 profile access rows and impersonation [2m(3)[22m
+clubs:test:      [33m[2m✓[22m[39m renders the mockup rows in order without account sessions or backoffice handoff[33m 1548[2mms[22m[39m
+clubs:test:    [32m✓[39m T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app [2m(10)[22m
+clubs:test:      [33m[2m✓[22m[39m step 1: /entrar?handoff= takes the code out of the address, redeems it once, enters the session without refresh and opens 03 with the banner[33m 410[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m round 2 #1: a redeemed code whose /me keeps failing shows the error with a retry, never the admin's own session; the retry opens 03 with the banner[33m 707[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E4-W18 round 2 #1 (review #1, E47): a tab reloaded while /oauth2/token has not answered the code sends no refresh_token grant, opens no session (not the tab's own cookie) and says «Aquest enllaç ja no és vàlid»[33m 448[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E4-W18 round 2 #2: a background recovery that signs in before the retry's listener is attached still opens 03[33m 311[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E4-W18 step 1: after a 5xx the retry sends the same code again (never the cookie) and opens 03 with the banner[33m 310[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m step 2: a 401 ends the impersonation with «La sessió com l'abonat ha caducat» and a close button, never a refresh — also after a reload of the tab[33m 499[2mms[22m[39m
+clubs:test:    [32m✓[39m T-01-19 E4-W16 step 10 (INC-24, E49): password recovery after a RESET link [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m the reset screen sends {new, repeat} without `current` once; a second use says the link was used and offers «Recupera-la»[33m 459[2mms[22m[39m
+clubs:test:    [32m✓[39m E4-W16 step 12 member-app fixes [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m (b) «Canviar de perfil · {perfil}» follows the membership's gender (ICU select, as 03b)[33m 687[2mms[22m[39m
+clubs:test:    [32m✓[39m T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) [2m(3)[22m
+clubs:test:      [33m[2m✓[22m[39m an instructor-only session gets the usual no-access path: no detail, no /me/activities call[33m 601[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m a member session opens the detail[33m 327[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m an impersonated session opens the detail and its cancellation asks for «Motiu»[33m 529[2mms[22m[39m
+clubs:test:    [32m✓[39m T-01-26 imported-account onboarding and policy re-consent [2m(4)[22m
+clubs:test:      [33m[2m✓[22m[39m renders configured fields and sends consent, profile data and image choice[33m 757[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m redirects blocking onboarding and permits a policy postponement[33m 968[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m reloads an outdated policy version before accepting it[33m 1214[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m renders the screen and pop-up in Catalan, Spanish and English[33m 2982[2mms[22m[39m
+clubs:test:    [32m✓[39m T-03-40 mobile own dogs [2m(5)[22m
+clubs:test:      [33m[2m✓[22m[39m renders own dogs, saves the note, shows task totals and gates TASKS[33m 2183[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E36 (R-04-25): a dog added from the app shows «pendent de validació» and has no actions[33m 478[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E4-W16 step 11 (INC-26, R-03-18): the task rows under the counter — pending with a checkbox (live since E6-W04 step 0b) and «dd-mm · instructor», done struck through with «feta el dd-mm», the clip with the attachments, dates in the club's zone[33m 403[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E4-W16 step 6 (INC-22): «＋ DOC.» works again after a first upload, on another dog, with empty fields[33m 1037[2mms[22m[39m
+clubs:test:    [32m✓[39m E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) [2m(8)[22m
+clubs:test:      [33m[2m✓[22m[39m E6-W04 step 0b: a pending task's checkbox sends the completion (no body, no key), is busy meanwhile, then shows the task as the api returns it — checked, struck through, «feta per en Biel el 14-08» — and the counter; GET /me/dogs keeps it done[33m 703[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E6-W04 step 0b: 422 TASK_ALREADY_DONE (someone else completed it meanwhile) reads 13 again and shows the task done, with no error[33m 445[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E6-W04 step 0b: any other refusal is said by its code (404 NOT_FOUND: a task deleted meanwhile), a failure with no answer by the generic message, and the task stays pending and can be tried again[33m 642[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E6-W04 step 0b (its review): a failed completion's message goes when the next completion starts, so a successful retry leaves no stale error[33m 467[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E6-W04 step 0b (its review): a TASK_ALREADY_DONE re-read taken before another completion answered never shows that task pending again[33m 369[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E7-W06 step 6 (E6-W04's report nit): when 13's re-read after 422 TASK_ALREADY_DONE fails, the page says the task is already done, not the generic «No s'ha pogut completar l'acció.»[33m 329[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E6-W04 step 0b: an impersonated session completes it as the member — the impersonation token is sent and the line reads «feta per la Laura el 14-08»[33m 342[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m E6-W04 step 0b: es and en read the completed line with the reader's words[33m 595[2mms[22m[39m
+clubs:test:    [32m✓[39m T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) [2m(3)[22m
+clubs:test:      [33m[2m✓[22m[39m step 1: «＋ DOC.» offers the club's three types of GET /me/dogs in order, «Assegurança» sends INSURANCE, and /parameters is never read[33m 968[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m step 1: the labels are the reader's (es), as GET /me/dogs resolves them[33m 906[2mms[22m[39m
+clubs:test:      [33m[2m✓[22m[39m step 2: «Nivell {codi}» only when the dog carries its level (none without levels.enabled), without reading /parameters[33m 587[2mms[22m[39m
+clubs:test:    [32m✓[39m T-03-41 mobile own data [2m(2)[22m
+clubs:test:      [33m[2m✓[22m[39m keeps identity read-only, resolves towns, maps READ_ONLY and gates billing[33m 1213[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/catalogs/SettingsPage.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 31781[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-02-13 E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29) [2m(4)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m shows one switch per level with the help text: Teràpia is off, the progression levels on[33m 3636[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m saves a toggle with PATCH /levels/{id} {progression, version} and keeps the saved level[33m 3400[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m shows a refused toggle by its code next to the table and keeps the switch as saved; STALE_VERSION reloads the levels[33m 3729[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m the level form carries «Progressió»: a new level outside the progression is created with progression false; an edit keeps the level's value[33m 8550[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review [2m(5)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m S05 §2 the «Progressió» help names no club level, in ca, es and en[33m 2937[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m S05 §12 B32 the mock levels include «Pendent», outside the progression (off like Teràpia)[33m 839[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m a second toggle never re-enables a switch whose PATCH is still pending; each row keeps its own error[33m 4102[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m AGENTS rule 6: the catalog row buttons are named after the row's name, not its id[33m 1893[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m S05 §2 the help sits inside the «Nivells» card, and «Nou nivell» keeps its icon inline[33m 2634[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/training/TrainingRegisterPage.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 32412[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) [2m(8)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m tab 1 reads GET /training-bookings with the current week and startsAt,desc, and links the member to D10 (ADMIN)[33m 2860[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m offers the api's values with their counts in the universal filter (E5-W05: GET /training-bookings/filter-values)[33m 1562[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m S14 R-14-12 exports the list's filters and columns (ADMIN) and never for an INSTRUCTOR[33m 1895[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m T-08-47/T-09-24 pattern: an undeclared filter shows the list's own INVALID_FILTER message[33m 420[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m tab 2 lists the blocks and ring reservations; [Anul·la el bloqueig] is hidden for an activity's block and cancels the others[33m 1703[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m 409 INVALID_STATE on a cancellation shows why and reads the list again; an INSTRUCTOR has no row action[33m 2567[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W03 round 2 · review #9: the date and relation filters offer only operators that take one value, and the query says so[33m 5912[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W03 round 2 · review #8: a past block on a deactivated ring names its ring, never its id[33m 3012[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values [2m(8)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 step 3: «Dia i hora» reads «dl 3 · 7:00–7:30» with endsAtLocal, and «Abonat» «{nom complet} · {número}»[33m 924[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 step 3: a member without a number reads the name alone, without « · »[33m 1906[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 step 3: every block names its ring from the row (ringName, ringColor), a deactivated ring's included, for an INSTRUCTOR too[33m 437[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 step 5: with more than 1000 rows, the member filter offers «Nil Fictici Soler», who appears only after row 1000, from GET /training-bookings/filter-values[33m 2416[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 step 5: the week filter the api echoes as a JSON array (`between`) reads «Dia i hora = «3 al 9 d’agost»», never «»[33m 382[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 round 2 #1: the blocks tab asks GET /ring-blocks/filter-values once when it settles, and a second ring picked in «Valor» stays selected[33m 1704[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 round 2 #2 (ruling E80): the blocks' «Dia i hora» filter is a range of club dates sent as `between` with the club's day bounds, with no suggested values[33m 2949[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E5-W05 step 5: with more than 1000 blocks, the ring filter offers «Cadells», which appears only after row 1000, from GET /ring-blocks/filter-values[33m 1743[2mms[22m[39m
+clubs-admin:test:  [32m✓[39m src/census/CensusRecordPage.test.tsx [2m([22m[2m24 tests[22m[2m)[22m[33m 33458[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-39 D10 member record [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL[33m 3066[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m blocks and unblocks new bookings with the required reason[33m 2277[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m maps STALE_VERSION when another administrator edited the member[33m 1644[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the api's launchUrl [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m opens exactly the launchUrl with the one-time code, in a new tab, and never writes the token into a URL[33m 1305[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m a response without launchUrl is an error in the dialog and opens nothing (no same-origin guess)[33m 1453[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E7-W01 round 2 #4: D10's «Preferències d'avisos» reads its own route [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m an overview without the preferences (the free-form field the api may shape otherwise) still shows the block, from GET /members/{id}/notification-preferences[33m 1103[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-14-19 E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15) [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W06 step 5: an erased member's «Preferències d'avisos» say MEMBER_ERASED as final — its own message, no «Torna-ho a provar» — and ask nothing the api refuses with 409[33m 376[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final [2m(8)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved[33m 1842[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved[33m 2367[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/{id}/roles) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved[33m 3050[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved[33m 2792[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved[33m 1006[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/access-resend) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved[33m 1066[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id}/impersonation-token) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved[33m 1377[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m E7-W07 step 3 (S14 §5, R-14-15): an erased member's record offers none of the changes the api refuses with 409 MEMBER_ERASED, and sends none[33m 459[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-39 E4-W17 step 9 (AGENTS rule 1): D10's «Pagament» row names a cash member's method [2m(1)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m reads «Efectiu» in ca, «Efectivo» in es and «Cash» in en, never the raw MANUAL[33m 1383[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-34 (front) E4-W16 step 7 (INC-27, R-03-30): D10 without BILLING keeps its actions [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m keeps «Bloqueja les reserves», «Inactivitat», «Baixa (amb data)», «Tota l'auditoria ›» and the recent changes; only the invoice rows and «Tots els rebuts» go[33m 696[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m with BILLING the card keeps its invoice rows and «Tots els rebuts»[33m 1222[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) [2m(3)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m names a pending document by its type's label, as D2 does, and a type the club no longer lists as «Document pendent»[33m 1001[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m never shows the raw key while the labels load or when they cannot be read[33m 923[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m shows no «núm.» badge for a member without a number[33m 502[2mms[22m[39m
+clubs-admin:test:    [32m✓[39m T-03-38 dog record [2m(2)[22m
+clubs-admin:test:      [33m[2m✓[22m[39m shows the complete dog record and changes level without a booking warning[33m 1286[2mms[22m[39m
+clubs-admin:test:      [33m[2m✓[22m[39m deactivates and reactivates a dog without deleting its record[33m 1135[2mms[22m[39m
+@agilityhub/api-client:test:  [31m❯[39m src/mocks/backoffice-handlers.test.ts [2m([22m[2m43 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 41954[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W03 step 8 · S15 processes (GET /jobs, trigger, switch, runs) answer like the api [2m(5)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-15-32 lists the processes whose module is on: 10 in the full club, 9 in the Cànic, 8 in the club mínim[33m 631[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m R-15-08 [Simula] answers the plan (WOULD_*), [Executa ara] the run; both are a JobRun and the history shows them[33m 370[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m R-15-09 refuses an INSTRUCTOR and an impersonation token; JOB_UNKNOWN and MODULE_DISABLED are 404; a running process is 409[32m 291[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m R-15-09 the switch answers {name, enabled} and GET /jobs reflects it; a disabled process still runs by hand[32m 162[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E7-W03 step 0e · R-15-14 [Simula] on reminders plans WOULD_REMIND {bookingId, memberId, startsAt, lead} for a booking due now, and [Executa ara] the same item as REMIND[32m 218[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W03 step 8 · S15 §6 form A (GET /risk-review) [2m(2)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-15-33 sends the four statuses of the spec's example on the club's today; riskReviewEmpty sends none; MEMBER → 403[33m 608[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m E5-W03 round 2 · review #5: on the example day each item is a calendar class of its day, and its registrants are the notified ones[33m 302[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W05 step 15 · the risk review's rows are classes of the calendar world on any day [2m(5)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m E5-W05 step 15: on S15's example day (dl 10 at 8:12) each row is a class of its week in the state its status implies, and the WILL_CANCEL class is still active[33m 560[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 step 15: on dt 11-08 at 9:00, the day after the example each row is a class of its week in the state its status implies[32m 55[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m E5-W05 step 15: on dc 23-09 at 10:00, after that day's review each row is a class of its week in the state its status implies[33m 488[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 step 15: on dl 21-09 at 12:00, a Monday after its review (Wednesday's «Cadells» ahead) each row is a class of its week in the state its status implies[32m 281[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 round 2 #12: on dg 27-09 at 12:00, the review's probe day, the form has no row because no active class falls in its window: the week ahead is still a draft[32m 144[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W05 step 16 · the back-office mock finds classes and waiting entries in the caller's club only [2m(1)[22m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 step 16: an ADMIN of another club cannot cancel the entry (404), nor read the class's registrants and waiting list, nor see its classes in the risk review[32m 234[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W03 step 8 · S08 staff reads (registrants, waiting list, GET /bookings) [2m(3)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m answers the D4 class's 4 bookings (+ 1 late cancellation) and its 2 waiting entries; R-08-16 removal, then WAITLIST_ENTRY_NOT_LIVE[33m 417[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E5-W03 round 2 · review #7: a removal checks WAITLIST, the role and the entry's owner; an impersonation never reaches another member's entry[32m 109[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-47 GET /bookings filters by member, refuses an undeclared filter (400 INVALID_FILTER) and a MEMBER (403)[33m 325[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W03 step 8 · S09 ring-usage register (GET /training-bookings, GET /ring-blocks) [2m(2)[22m
+@agilityhub/api-client:test:      [32m✓[39m T-09-27 lists the week's training bookings for the staff (MEMBER 403, FREE_TRAINING off 404) and exports only for ADMIN[32m 51[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m T-09-30 redacts the blocks for a MEMBER, refuses him `note`, and keeps the activity's block and a cancelled one from being cancelled[32m 53[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W05 step 7 · the staff lists' bookingWeekKey follows R-08-01 (the opening's hour) [2m(1)[22m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 step 7: Duna's class of Sunday 2 at 20:00 (mockup 06's done class) belongs to the week that opens then, 2026-08-02, as Monday 3's does[32m 272[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75) [2m(7)[22m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 step 5: registerMany has more than 1000 training bookings; «Nil Fictici Soler» is not in the first 1000, and GET /training-bookings/filter-values counts him over the whole set[32m 226[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 step 5: GET /ring-blocks/filter-values counts every block, «Cadells» (only after row 1000) included, labelled with the ring's name[32m 43[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 step 5: GET /bookings/filter-values counts the member's classes by state; GET /bookings has no search (a non-blank q is INVALID_FILTER, E75)[32m 86[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 round 2 #11.a: GET /bookings/filter-values labels a class «{club-local start YYYY-MM-DDTHH:mm} · {description}», as the core does[32m 155[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 step 5: a ring block's search reads its ring's name and, for staff, its note (S09 §2, E75)[32m 16[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 round 2 #4: an ADMIN of another club (adminOtherClub) finds no booking, training booking or ring block of this club, and no filter value: the tenant comes from the JWT[32m 125[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E7-W07 step 8 (E5-W05 round 3 review #1, R-09-13): an ADMIN of another club cannot cancel a block of this club's register (404 NOT_FOUND, the activity's block too), and the block is still ACTIVE for this club's own ADMIN, who cancels it[32m 61[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W05 round 2 · the staff registrants' level is the dog's own, and follows levels.enabled (S08 §6) [2m(2)[22m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 round 2 #3: GET /class-sessions/{id}/bookings sends each dog's own level (D4's «B+C»: Duna «C», Mixa «C», Kai «B», Coco «C», Rumba «B»), and null in a club with levels.enabled = false[32m 94[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m E5-W05 round 3 #4: in every class of the calendar and day-grid worlds each registrant's level is one the class allows (S08 R-08-04), no dog is listed twice, and the rows match the class's counters[33m 1579[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E5-W05 round 2 · the jobs mock reads its parameters (S15 R-15-01, R-15-12) [2m(4)[22m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 round 2 #11.d: no-show-notices runs at messaging.noShowNoticeTime (08:00): its schedule, its runs and its next run; a saved change moves the schedule and the next run[32m 149[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 round 2 #14: nextScheduledForLocal follows jobs.dailyTime, classes.riskReviewTime and bookings.weekOpensAt, as schedule.localTime does[32m 69[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m E5-W05 round 2 #14: the risk review reads classes.minDogs, as D4's risk mark does: with minDogs = 1 the class with one dog is at risk in neither D1 nor D4[33m 399[2mms[22m[39m
+@agilityhub/api-client:test:      [32m✓[39m E5-W05 round 2 #14: with the risk review switched off, no active class names notified members (no review ran); a class it cancelled keeps the ones it notified[32m 175[2mms[22m[39m
+@agilityhub/api-client:test:    [31m❯[39m E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19) [2m(7)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 10 at 8:12 (D1 and D10, S15's example day) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice[33m 3313[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dc 12 at 10:00 (D4) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice[33m 2537[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 7:10 (the ring-usage register) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice[33m 2871[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 21:00 (screen 23's drawer) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice[33m 2416[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dg 2 at 20:30 (the member world) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice[33m 3308[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-03 E7-W07 round 2 #3 (R-08-02, R-08-19): at dl 10 at 8:12, cancelling Tuesday's 18:50 class leaves Wednesday's registrants as they were (ids, dogs, states, bookedAt), in D4 and in D10's list; Tuesday's are the same dogs under the same ids, now CANCELLED_BY_CLUB, and its late cancellation stays CANCELLED_LATE[33m 1250[2mms[22m[39m
+@agilityhub/api-client:test: [31m     [31m×[31m T-08-03 E7-W07 round 2 #3 (R-08-02, R-08-03): after Tuesday's 18:50 class is cancelled, still no dog of the calendar or the day grid is booked over its week's limit, and every class lists its counters' registrants[39m[33m 7379[2mms[22m[39m
+@agilityhub/api-client:test:    [32m✓[39m E7-W07 round 2 #5b · the staff rows were booked, and the waiting entries joined, before now (S08 R-08-01) [2m(4)[22m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-03 E7-W07 round 2 #5b (R-08-01): at dl 10 at 8:12 (D1 and D10, S15's example day) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened[33m 2239[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-03 E7-W07 round 2 #5b (R-08-01): at dc 12 at 10:00 (D4) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened[33m 2889[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-03 E7-W07 round 2 #5b (R-08-01): at dl 3 at 7:10 (the ring-usage register) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened[33m 2755[2mms[22m[39m
+@agilityhub/api-client:test:      [33m[2m✓[22m[39m T-08-03 E7-W07 round 2 #5b (R-08-01): at dg 2 at 20:30 (the member world) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened[33m 2232[2mms[22m[39m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [41m[1m FAIL [22m[49m src/mocks/auth-handoff.test.ts[2m > [22mT-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads[2m > [22mredeem code 1, reload, redeem code 2, then code 1 again → refused (the whole redemption history stays spent)
+@agilityhub/api-client:test: [31m[1mError[22m: Test timed out in 5000ms.
+@agilityhub/api-client:test: If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+@agilityhub/api-client:test: [36m [2m❯[22m src/mocks/auth-handoff.test.ts:[2m78:3[22m[39m
+@agilityhub/api-client:test:     [90m 76|[39m
+@agilityhub/api-client:test:     [90m 77|[39m describe("T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code…
+@agilityhub/api-client:test:     [90m 78|[39m   it("redeem code 1, reload, redeem code 2, then code 1 again → refuse…
+@agilityhub/api-client:test:     [90m   |[39m   [31m^[39m
+@agilityhub/api-client:test:     [90m 79|[39m     const clubApp = new OriginStorage();
+@agilityhub/api-client:test:     [90m 80|[39m     const [first, second] = ["mock-impersonation-handoff-41", "mock-im…
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [41m[1m FAIL [22m[49m src/mocks/backoffice-handlers.test.ts[2m > [22mE7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19)[2m > [22mT-08-03 E7-W07 round 2 #3 (R-08-02, R-08-03): after Tuesday's 18:50 class is cancelled, still no dog of the calendar or the day grid is booked over its week's limit, and every class lists its counters' registrants
+@agilityhub/api-client:test: [31m[1mError[22m: Test timed out in 5000ms.
+@agilityhub/api-client:test: If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+@agilityhub/api-client:test: [36m [2m❯[22m src/mocks/backoffice-handlers.test.ts:[2m1272:3[22m[39m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [41m[1m FAIL [22m[49m src/mocks/mock-worlds.budget.test.ts[2m > [22mE3-W10 build-time budget of the MSW mock worlds[2m > [22mimports the mock modules afresh within the start-up budget
+@agilityhub/api-client:test: [31m[1mError[22m: Test timed out in 5000ms.
+@agilityhub/api-client:test: If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+@agilityhub/api-client:test: [36m [2m❯[22m src/mocks/mock-worlds.budget.test.ts:[2m183:3[22m[39m
+@agilityhub/api-client:test:     [90m181|[39m   });
+@agilityhub/api-client:test:     [90m182|[39m
+@agilityhub/api-client:test:     [90m183|[39m   it("imports the mock modules afresh within the start-up budget", asy…
+@agilityhub/api-client:test:     [90m   |[39m   [31m^[39m
+@agilityhub/api-client:test:     [90m184|[39m     let fresh: typeof startup.handlers = startup.handlers;
+@agilityhub/api-client:test:     [90m185|[39m     const cost = await relativeCpuCost(
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯[22m[39m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m Test Files [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m26 passed[39m[22m[90m (29)[39m
+@agilityhub/api-client:test: [2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m635 passed[39m[22m[90m (638)[39m
+@agilityhub/api-client:test: [2m   Start at [22m 20:01:07
+@agilityhub/api-client:test: [2m   Duration [22m 54.63s[2m (tests 38%, transform 36%, import 26%)[22m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [2m  Transform [22m [33mtransforming modules took 113.55s[39m[2m · 36% of tracked time, re-done on every run[22m
+@agilityhub/api-client:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/api-client:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  ELIFECYCLE  Test failed. See above for more details.
+clubs:test:  ELIFECYCLE  Test failed. See above for more details.
+clubs-admin:test:  ELIFECYCLE  Test failed. See above for more details.
+@agilityhub/api-client#test:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run test exited (1)
+
+ Tasks:    28 successful, 34 total
+Cached:    23 cached, 34 total
+  Time:    56.531s 
+Failed:    @agilityhub/api-client#test
+
+ ERROR  run failed: command  exited (1)

@@ -252,6 +252,24 @@ function truncated(value: null | string | undefined): null | string {
 const demoNow = clubInstant(weekStart, "07:00");
 const registryPath = join(evidenceDirectory, "e7-core-run.json");
 
+/**
+ * Step 2: `POST /test/clock` is detected once, at the preflight. `pnpm e2e:core <ID> e7-core.spec.ts
+ * no-clock` forces the detection off (`CORE_CLOCK_DETECTION=off`, E7-W03 round 2), as an image
+ * without the `test` profile would answer.
+ */
+const clockForcedOff = process.env.CORE_CLOCK_DETECTION === "off";
+/**
+ * Without the clock, (c), (d) and (h) are skipped with this reason; every other step runs at the
+ * core's own time.
+ */
+const NO_CLOCK_REASON =
+  "POST /test/clock is not available: week 0 is not open for the bookings (c), (d) and (h) add, " +
+  "and (h) needs the clock two hours before its class (api evidence: E7-T07's smoke and " +
+  "NotificationEngineIT for P4, cited in the report)";
+let clockAvailable = false;
+/** The core's clock was moved by this run (the `afterAll` puts it back to the real instant). */
+let clockMoved = false;
+
 function readRecord(): RunRecord {
   try {
     return JSON.parse(readFileSync(registryPath, "utf8")) as RunRecord;
@@ -625,6 +643,7 @@ async function setCoreClock(browser: Browser, instant: string): Promise<CoreAnsw
   }
   await context.close();
   note(`clock-${instant}`, { status: answer.status });
+  if (answer.status === 200) clockMoved = true;
   return answer;
 }
 
@@ -1214,17 +1233,34 @@ test.describe.configure({ mode: "serial" });
 /** The processes the preflight switched off (switched on again in `afterAll`). */
 let jobsSwitchedOff: string[] = [];
 
-// Even after a failure: the core's clock back to the real instant first (the processes never run
-// at the test clock, as E6-W04 does now), then the safety net — a template step (c) left
-// customized, the e-mail preference step (d) left off, the push subscription step (f) left
-// registered — and last the processes back on.
+// Even after a failure: the core's clock back to the real instant first when the run moved it (the
+// processes never run at the test clock, as E6-W04 does now), then the safety net — a template step
+// (c) left customized, the e-mail preference step (d) left off, the push subscription step (f) left
+// registered, the `es` language of step (b), the reminder and the booking of step (h), whatever (j)
+// did not undo — and last the processes back on.
 test.afterAll(async ({ browser }) => {
   test.setTimeout(300_000);
   await closeSessions();
-  const restored = await setCoreClock(browser, new Date().toISOString());
-  note("j-clock-restored", { status: restored.status });
+  const restored = clockMoved ? await setCoreClock(browser, new Date().toISOString()) : null;
+  note("j-clock-restored", { moved: clockMoved, status: restored?.status ?? null });
   const admin = await adminSession(browser);
   const safety: Record<string, number> = {};
+  if (created.localeEs !== undefined && created.localeRestored === undefined) {
+    const es = await clubsSession(browser, MEMBER_ES, "es");
+    safety.locale = (await call(es, "/me", "PATCH", { locale: "ca" })).status;
+  }
+  if (created.reminderSet !== undefined && created.reminderCleared === undefined) {
+    const ca = await clubsSession(browser, MEMBER_CA, "ca");
+    safety.reminder = (
+      await call(ca, "/me/notification-preferences", "PUT", { reminderMinutesBefore: null })
+    ).status;
+  }
+  if (created.bookingH !== undefined && created.bookingHCancelled === undefined) {
+    const ca = await clubsSession(browser, MEMBER_CA, "ca");
+    safety.bookingH = (
+      await call(ca, `/bookings/${created.bookingH}/cancellation`, "POST", {})
+    ).status;
+  }
   if (created.templateEdited !== undefined && created.templateReset === undefined) {
     safety.templateReset = (
       await call(admin, `/message-templates/${created.templateEdited}/reset`, "POST")
@@ -1250,13 +1286,13 @@ test.afterAll(async ({ browser }) => {
     note("jobs-switched-on", switchedOn);
   }
   await closeSessions();
-  expect(restored.status).toBe(200);
+  if (restored !== null) expect(restored.status).toBe(200);
   for (const answer of Object.values(switchedOn)) {
     expect(answer).toEqual({ enabled: true, status: 200 });
   }
 });
 
-test("E7-W03 steps 1–2 · preflight (the S11 answers, the VAPID key, the jobs), the processes off, POST /test/clock to demoNow (Monday 07:00), the parameters and the scene read from the core", async ({
+test("E7-W03 steps 1–2 · preflight (the S11 answers, the VAPID key, the jobs, the core's build), the processes off, POST /test/clock to demoNow (Monday 07:00) or, without it, the reason (c), (d) and (h) skip; the parameters and the scene read from the core", async ({
   browser,
 }) => {
   test.setTimeout(420_000);
@@ -1294,10 +1330,28 @@ test("E7-W03 steps 1–2 · preflight (the S11 answers, the VAPID key, the jobs)
   for (const answer of Object.values(switchedOff)) {
     expect(answer).toEqual({ enabled: false, status: 200 });
   }
-  // Step 2: the clock, detected once (the reminder step needs it; every other step uses it too).
-  const clock = await setCoreClock(browser, demoNow);
-  note("clock", { instant: demoNow, status: clock.status });
-  expect(clock.status, "POST /test/clock").toBe(200);
+  // Round 2 #8: the core's own build (`GET /health`: version and builtAt), next to the image the
+  // wrapper names, since the published image may carry no revision label.
+  const health = await call<Partial<Schemas["HealthResponse"]>>(before, "/health");
+  note("core-health", {
+    builtAt: health.body.builtAt ?? null,
+    status: health.status,
+    version: health.body.version ?? null,
+  });
+  expect(health.status, "GET /health").toBe(200);
+  // Step 2: the clock, detected once. Without it, (c), (d) and (h) are skipped with
+  // `NO_CLOCK_REASON` and every other step runs at the core's own time.
+  if (clockForcedOff) {
+    note("clock", { forcedOff: true, reason: NO_CLOCK_REASON });
+  } else {
+    const clock = await setCoreClock(browser, demoNow);
+    clockAvailable = clock.status === 200;
+    note("clock", {
+      instant: demoNow,
+      status: clock.status,
+      ...(clockAvailable ? {} : { reason: NO_CLOCK_REASON }),
+    });
+  }
   const admin = await adminSession(browser);
   const parameters: Record<string, unknown> = {};
   for (const key of [
@@ -1364,6 +1418,8 @@ test("T-11-39 (a)(b)(g) R-11-01 R-11-02 R-11-10 R-11-11 · D4c cancels the seede
   const esSession = await clubsSession(browser, MEMBER_ES, "es");
   const mailboxBefore = mailboxFiles();
   const n08aBefore = new Set((await recentNotices(admin, "N-08a")).map((row) => row.id));
+  // Round 2 nit #7: her unread count before the cancellation, so the bell is tied to the new card.
+  const unreadBefore = (await meHome(caSession)).notifications.unreadCount;
 
   const { cancellation, preview } = await cancelAtD4c(admin, classA.id, adminTexts.a);
   expect(cancellation?.adminText).toBe(adminTexts.a);
@@ -1391,10 +1447,11 @@ test("T-11-39 (a)(b)(g) R-11-01 R-11-02 R-11-10 R-11-11 · D4c cancels the seede
   const aCa = theCard("aCa");
   const aEs = theCard("aEs");
 
-  // (a) The bell rang on 03 before the visit.
+  // (a) The bell rang on 03 before the visit, one notice more than before the cancellation: hers.
   const bellBefore = await open03(caSession.page);
-  expect(bellBefore.unread).toBeGreaterThan(0);
+  expect(bellBefore.unread).toBe(unreadBefore + 1);
   expect(bellBefore).toMatchObject({ dot: 1, ringing: 1 });
+  expect(aCa.readAt ?? null).toBeNull();
 
   // 11: the new card first, as mockup 11's first one, and the visit's read-all.
   const { feed, readAll } = await open11(caSession.page);
@@ -1414,7 +1471,8 @@ test("T-11-39 (a)(b)(g) R-11-01 R-11-02 R-11-10 R-11-11 · D4c cancels the seede
   expect(view.borderLeft).toMatch(/^solid [1-9]/u);
   expect(view.meta.endsWith(ui.ca.viaSms)).toBe(true);
   // The body: the class's date, time and description, her dog and the quoted admin text (S11 §8).
-  const classDay = classA.date === weekStart ? "avui" : null;
+  // «avui» at the test clock (Monday 07:00); at the core's own time the class is another day.
+  const classDay = clockAvailable && classA.date === weekStart ? "avui" : null;
   expect(view.body).toBe(aCa.body.replace(/\s+/gu, " ").trim());
   expect(view.body).toContain(shortTime(classA.time));
   expect(view.body).toContain(classA.description);
@@ -1495,12 +1553,16 @@ test("T-11-39 (a)(b)(g) R-11-01 R-11-02 R-11-10 R-11-11 · D4c cancels the seede
   expect(messageText(toEs[0] ?? {})).toContain(adminTexts.a);
 
   // (g) The SMS: the local stack's fake/log sender, SENT (or QUEUED). The stack passes no Twilio
-  // credentials to the core (and a real sender would text the seed's fictional numbers): the
-  // real SMS is a staging check.
+  // credentials to the core, and the seed's numbers are fictional (a real sender would text
+  // them): the real SMS is the api smoke's (E7-T07) and staging's (ruling E89, round 2 #3).
   const sms = caDetail.deliveries.filter((delivery) => delivery.channel === "SMS");
-  console.log("real SMS skipped: no Twilio credentials");
+  console.log("real SMS skipped: no Twilio credentials on the local stack, fictional numbers");
   expect(sms.length).toBeGreaterThan(0);
-  for (const delivery of sms) expect(["QUEUED", "SENT"]).toContain(delivery.status);
+  for (const delivery of sms) {
+    expect(["QUEUED", "SENT"]).toContain(delivery.status);
+    // A sent SMS carries the sender's reference (the fake sender's `log-…`).
+    if (delivery.status === "SENT") expect(delivery.providerRef ?? "").not.toBe("");
+  }
 
   // R-11-02: one notification per dog and audience — the registrants, the class's instructor and
   // the club's admins (staff texts are product copy), all about class A.
@@ -1554,6 +1616,8 @@ test("T-11-37 (c) R-11-12 · D9 edits N-08a's ca and es bodies with the run's ma
   browser,
 }) => {
   test.setTimeout(480_000);
+  if (!clockAvailable) note("c-skipped", { reason: NO_CLOCK_REASON });
+  test.skip(!clockAvailable, NO_CLOCK_REASON);
   const { ca, es, n08aTemplateId } = theScene();
   const admin = await adminSession(browser);
   const { page } = admin;
@@ -1696,6 +1760,8 @@ test("T-11-35 T-11-38 (d) R-11-03 R-11-04 · screen 12 turns «Canvis en reserve
   browser,
 }) => {
   test.setTimeout(480_000);
+  if (!clockAvailable) note("d-skipped", { reason: NO_CLOCK_REASON });
+  test.skip(!clockAvailable, NO_CLOCK_REASON);
   const { ca } = theScene();
   const admin = await adminSession(browser);
   const caSession = await clubsSession(browser, MEMBER_CA, "ca");
@@ -1970,7 +2036,7 @@ test("T-11-35 (f) R-11-07 · web push in context: no permission prompt at boot n
   expect([200, 201]).toContain(again.status);
 });
 
-test("T-11-38 T-11-18 (e) R-11-13 · D5 selects the ten fictional members, «Enviar comunicat» with the seeded CUSTOM template, «S'enviarà a 10 abonats», [ENVIA] → 202; the log lists ten rows of one batch; one of them sees it in her feed, a member outside it does not; the filter shape counts what D5 lists; the push subscription is deleted at logout", async ({
+test("T-11-38 T-11-18 (e) R-11-13 · D5 selects the ten fictional members, «Enviar comunicat» with the seeded CUSTOM template, «S'enviarà a 10 abonats», [ENVIA] → 202; the log lists ten rows of one batch and no other recipient; one of them sees it in her feed, admin@ (not selected) does not; the filter shape counts what D5 lists; the push subscription is deleted at logout", async ({
   browser,
 }) => {
   test.setTimeout(480_000);
@@ -2138,8 +2204,10 @@ test("T-11-38 T-11-18 (e) R-11-13 · D5 selects the ten fictional members, «Env
   ).toHaveAttribute("data-delivery-status", "DELIVERED");
   await shot(page, "log-notificacions-core-1280.png");
 
-  // One of the ten sees it in her feed with the club's text (in her language); admin@ (a member
-  // outside the selection) does not.
+  // One of the ten sees it in her feed with the club's text (in her language). That no member
+  // outside the ten received it is the log's proof above (`others`: no row of the batch's code for
+  // any other recipient, logins or not). admin@'s own feed, a login outside the selection, is
+  // checked too (round 2 nit #8: a log-level proof, plus this feed).
   const caSession = await clubsSession(browser, MEMBER_CA, "ca");
   const { feed } = await open11(caSession.page);
   const announcement = feed.items[0];
@@ -2309,11 +2377,13 @@ test("T-11-12 T-11-16 T-11-18 T-11-20 T-11-21 E7-W03 step 5 · the core's codes 
       endpoint: `https://push.example.test/invalid-${runId}`,
       keys: { auth: "AAAA", p256dh: "AAAA" },
     }),
+    // A version the template does not have: the previous one, or the next one on a template never
+    // saved (version 0 on a fresh seed, when the clock did not let (c) edit it; -1 is invalid).
     staleVersion: await probe(
       admin,
       `/message-templates/${n08aTemplateId}`,
       "PUT",
-      update({ version: detail.version - 1 }),
+      update({ version: detail.version === 0 ? 1 : detail.version - 1 }),
     ),
     // Only on a mandatory template (the catalog's N-08a is one): never disable another.
     templateMandatory: detail.mandatory
@@ -2362,6 +2432,12 @@ test("T-11-12 T-11-16 T-11-18 T-11-20 T-11-21 E7-W03 step 5 · the core's codes 
       }),
     ),
   );
+  // Round 2 #4: each probe answers the code its test id cites. The status stays recorded above,
+  // not asserted: it is what step 5's proposals compared with S11 §6.
+  for (const [key, answer] of Object.entries(observed)) {
+    if (answer === null) continue;
+    expect(answer.code, key).toBe(documented[key as keyof typeof observed].code);
+  }
   // Anything the core accepted by mistake is undone (never left for the next steps).
   const undone: Record<string, number> = {};
   const after = await call<TemplateDetail>(admin, `/message-templates/${n08aTemplateId}`);
@@ -2424,7 +2500,9 @@ test("T-11-36 T-11-34 T-11-35 (i) R-11-14 · screen 30: the FAQ groups in R-05-2
   const esView = await clubsSession(browser, MEMBER_CA, "es");
   await open11(esView.page);
   await expect(esView.page.getByRole("heading", { level: 1, name: ui.es.title })).toBeVisible();
-  for (const key of ["aCa", "dCa"] as const) {
+  // (d)'s card exists only when the clock let (d) run (step 2).
+  const keys = cards.dCa === undefined ? (["aCa"] as const) : (["aCa", "dCa"] as const);
+  for (const key of keys) {
     const view = await cardView(feedCard(esView.page, theCard(key).id));
     expect(view.meta.endsWith(ui.es.viaSms)).toBe(true);
     expect(view.button).toBe(ui.es.changeClass);
@@ -2455,6 +2533,8 @@ test("T-11-35 (h) R-11-16 R-15-14 · «Recordatori de classe: 2 h abans» on 12,
   browser,
 }) => {
   test.setTimeout(480_000);
+  if (!clockAvailable) note("h-skipped", { reason: NO_CLOCK_REASON });
+  test.skip(!clockAvailable, NO_CLOCK_REASON);
   const { ca } = theScene();
   let caSession = await clubsSession(browser, MEMBER_CA, "ca");
   const excluded = [theScene().classA.id, theClass("c").id, theClass("d").id];
@@ -2574,6 +2654,7 @@ test("(j) cleanup for idempotence · the reminder back to «Mai», the run's boo
   const reminder = await call<Preferences>(caSession, "/me/notification-preferences", "PUT", {
     reminderMinutesBefore: null,
   });
+  if (reminder.status === 200) remember("reminderCleared", ca.memberId);
   const bookingH = created.bookingH;
   const cancelled =
     bookingH === undefined
@@ -2584,8 +2665,10 @@ test("(j) cleanup for idempotence · the reminder back to «Mai», the run's boo
           "POST",
           {},
         );
+  if (cancelled?.status === 200) remember("bookingHCancelled", bookingH ?? "");
   const esSession = await clubsSession(browser, MEMBER_ES, "es");
   const locale = await call<Me>(esSession, "/me", "PATCH", { locale: "ca" });
+  if (locale.status === 200) remember("localeRestored", theScene().es.memberId);
   const admin = await adminSession(browser);
   const template = await call<TemplateDetail>(admin, `/message-templates/${n08aTemplateId}`);
   const preferences = await call<Preferences>(
@@ -2602,7 +2685,8 @@ test("(j) cleanup for idempotence · the reminder back to «Mai», the run's boo
   });
   expect(reminder.status).toBe(200);
   expect(reminder.body.reminderMinutesBefore ?? null).toBeNull();
-  expect(cancelled?.status).toBe(200);
+  // (h)'s booking exists only when the clock let (h) run (step 2).
+  if (bookingH !== undefined || clockAvailable) expect(cancelled?.status).toBe(200);
   expect(locale.status).toBe(200);
   expect(locale.body.account.locale).toBe("ca");
   expect(template.body.customized).toBe(false);

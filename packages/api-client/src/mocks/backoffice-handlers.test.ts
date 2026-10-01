@@ -94,19 +94,116 @@ afterAll(() => {
   server.close();
 });
 
+/** `GET /jobs`'s route ids, after checking the answer against the contract. */
+async function jobNames(scenario: MockScenario): Promise<string[]> {
+  const answer = await as<JobSummaries>(scenario, "GET", "/jobs");
+  expect(answer.status).toBe(200);
+  valid("JobSummaries", answer.body);
+  return answer.body.items.map((item) => item.name);
+}
+
+/**
+ * What the core's `GET /jobs` listed for the Cànic (its 13 modules, the mock Cànic's; `waitlist.mode`
+ * ALL_AT_ONCE), in catalog order: E7-W03 `106-e6-core-run.json` and `107-e6-core-run.json`,
+ * `steps.jobs-listed.names`, image `c374bb2`.
+ */
+const CORE_CANIC_JOBS = [
+  "week-opening",
+  "risk-review",
+  "no-show-notices",
+  "reminders",
+  "expirations",
+  "class-finishing",
+  "cleanup",
+];
+
+describe("E7-W03 round 2 #6 · S15 §6 `GET /jobs`: the processes of a module that is off are absent (R-15-01, R-15-16)", () => {
+  it("E7-W03 round 2 #6 · T-15-32: under waitlist.mode = ALL_AT_ONCE the Cànic lists the core's processes in catalog order — no waitlist-fifo — plus billing-reminder (BILLING on, a P10 the core does not register yet)", async () => {
+    expect(findParameter("waitlist.mode")?.value).toBe("ALL_AT_ONCE");
+    const canic = await jobNames("admin");
+    expect(canic).toEqual([
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "reminders",
+      "expirations",
+      "class-finishing",
+      "cleanup",
+      "billing-reminder",
+    ]);
+    expect(canic.filter((name) => name !== "billing-reminder")).toEqual(CORE_CANIC_JOBS);
+    // The club mínim (WAITLIST, FAQ, PUSH) in the same mode: exactly the core's seven.
+    expect(await jobNames("jobsMinimalClub")).toEqual(CORE_CANIC_JOBS);
+    // With SINGLE_CLASS on: `payment-timeouts` at its catalog place, still no `waitlist-fifo`.
+    const full = await jobNames("jobsFullClub");
+    expect(full).not.toContain("waitlist-fifo");
+    expect(full.slice(5, 7)).toEqual(["payment-timeouts", "class-finishing"]);
+    expect(full).toHaveLength(9);
+  });
+
+  it("E7-W03 round 2 #6 · R-15-09: under ALL_AT_ONCE waitlist-fifo's routes answer like a process whose module is off — 404 MODULE_DISABLED (CATALEG_ERRORS §1) — and nothing runs or switches", async () => {
+    const answers = [
+      await as<ApiError>("admin", "GET", "/jobs/waitlist-fifo/runs?page=0&size=20"),
+      await as<ApiError>("admin", "GET", "/jobs/waitlist-fifo/runs/run-waitlist-fifo-3"),
+      await as<ApiError>("admin", "POST", "/jobs/waitlist-fifo/trigger", { dryRun: true }),
+      await as<ApiError>("admin", "POST", "/jobs/waitlist-fifo/trigger", { dryRun: false }),
+      await as<ApiError>("admin", "PUT", "/jobs/waitlist-fifo/switch", { enabled: false }),
+      await as<ApiError>("jobsMinimalClub", "POST", "/jobs/waitlist-fifo/trigger", {
+        dryRun: true,
+      }),
+    ];
+    for (const answer of answers) {
+      expect([answer.status, answer.body.code]).toEqual([404, "MODULE_DISABLED"]);
+      valid("ApiError", answer.body);
+    }
+    expect(findParameter("jobs.waitlistFifo.enabled")?.value).toBe(true);
+    // A process the catalog does not know is still JOB_UNKNOWN.
+    const unknown = await as<ApiError>("admin", "GET", "/jobs/foo/runs");
+    expect([unknown.status, unknown.body.code]).toEqual([404, "JOB_UNKNOWN"]);
+  });
+
+  it("E7-W03 round 2 #6 · T-15-24: with waitlist.mode = FIFO waitlist-fifo is listed at its catalog place and runs — its history is a FIFO club's, never SKIPPED{MODULE_OFF}", async () => {
+    setParameter("waitlist.mode", "FIFO");
+    const canic = await jobNames("admin");
+    expect(canic).toHaveLength(9);
+    expect(canic[5]).toBe("waitlist-fifo");
+    expect(await jobNames("jobsMinimalClub")).toEqual([
+      ...CORE_CANIC_JOBS.slice(0, 5),
+      "waitlist-fifo",
+      ...CORE_CANIC_JOBS.slice(5),
+    ]);
+    const runs = await as<components["schemas"]["ListPageJobRunListItem"]>(
+      "admin",
+      "GET",
+      "/jobs/waitlist-fifo/runs?page=0&size=20",
+    );
+    expect(runs.status).toBe(200);
+    valid("ListPageJobRunListItem", runs.body);
+    expect(runs.body.items.length).toBeGreaterThan(0);
+    expect(runs.body.items.filter((item) => item.skipReason === "MODULE_OFF")).toEqual([]);
+    const plan = await as<JobRun>("admin", "POST", "/jobs/waitlist-fifo/trigger", { dryRun: true });
+    expect(plan.status).toBe(200);
+    valid("JobRun", plan.body);
+    expect(plan.body).toMatchObject({ dryRun: true, skipReason: null, status: "SUCCEEDED" });
+    const off = await as<components["schemas"]["JobSwitchResponse"]>(
+      "admin",
+      "PUT",
+      "/jobs/waitlist-fifo/switch",
+      { enabled: false },
+    );
+    expect(off.body).toEqual({ enabled: false, name: "waitlist-fifo" });
+  });
+});
+
 describe("E5-W03 step 8 · S15 processes (GET /jobs, trigger, switch, runs) answer like the api", () => {
-  it("T-15-32 lists the processes whose module is on: 10 in the full club, 9 in the Cànic, 8 in the club mínim", async () => {
-    const names = async (scenario: MockScenario) => {
-      const answer = await as<JobSummaries>(scenario, "GET", "/jobs");
-      expect(answer.status).toBe(200);
-      valid("JobSummaries", answer.body);
-      return answer.body.items.map((item) => item.name);
-    };
-    expect(await names("jobsFullClub")).toHaveLength(10);
+  it("T-15-32 with waitlist.mode = FIFO lists the processes whose module is on: 10 in the full club, 9 in the Cànic, 8 in the club mínim", async () => {
+    // T-15-32's «P6 present» needs a FIFO club (R-15-01: `WAITLIST` + `waitlist.mode=FIFO`).
+    setParameter("waitlist.mode", "FIFO");
+    expect(await jobNames("jobsFullClub")).toHaveLength(10);
     // The Cànic has no SINGLE_CLASS: no `payment-timeouts`.
-    expect(await names("admin")).not.toContain("payment-timeouts");
-    expect(await names("admin")).toHaveLength(9);
-    const minimal = await names("jobsMinimalClub");
+    expect(await jobNames("admin")).not.toContain("payment-timeouts");
+    expect(await jobNames("admin")).toHaveLength(9);
+    const minimal = await jobNames("jobsMinimalClub");
     expect(minimal).toHaveLength(8);
     expect(minimal).toContain("waitlist-fifo");
     expect(minimal).not.toContain("billing-reminder");
@@ -220,6 +317,18 @@ describe("E5-W03 step 8 · S15 processes (GET /jobs, trigger, switch, runs) answ
     const run = await as<JobRun>("admin", "POST", "/jobs/reminders/trigger", { dryRun: false });
     valid("JobRun", run.body);
     expect(run.body.effects.items).toEqual([{ ...item, action: "REMIND" }]);
+  });
+
+  it("E7-W03 round 2 #5 (D11) · R-15-14: [Simula] on reminders counts WOULD_REMIND and [Executa ara] classReminders, as the core does", async () => {
+    // The core's plan and run of P4 (E7-W03 `106/107-e7-core-run.json`, `h-reminder.plan/run`).
+    const plan = await as<JobRun>("admin", "POST", "/jobs/reminders/trigger", { dryRun: true });
+    expect(plan.body.effects.counters).toEqual({ WOULD_REMIND: 1 });
+    const run = await as<JobRun>("admin", "POST", "/jobs/reminders/trigger", { dryRun: false });
+    expect(run.body.effects.counters).toEqual({ classReminders: 1 });
+    const jobs = await as<JobSummaries>("admin", "GET", "/jobs");
+    expect(jobs.body.items.find((job) => job.name === "reminders")?.lastRun?.counters).toEqual({
+      classReminders: 1,
+    });
   });
 });
 

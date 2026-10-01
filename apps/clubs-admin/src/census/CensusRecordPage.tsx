@@ -26,7 +26,7 @@ import {
 import { type ReactNode, type SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { AuditTrail } from "../audit/AuditPage";
+import { AuditTrail, auditActionLabel, auditRoleLabel } from "../audit/AuditPage";
 import { loadDogDocumentTypes } from "../dashboard/readmission";
 import { NotificationPreferencesBlock } from "../messaging/NotificationPreferencesBlock";
 
@@ -533,7 +533,8 @@ function MemberSummary({
   setDialog: (dialog: MemberDialog) => void;
 }) {
   const branding = useBranding();
-  const { i18n, t } = useTranslation(["admin-census", "errors"]);
+  // `admin-audit` names the actions and roles of «Darrers canvis» (S14 R-14-11).
+  const { i18n, t } = useTranslation(["admin-census", "admin-audit", "errors"]);
   const member = overview.member;
   const modules = branding.modules;
   const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
@@ -840,11 +841,19 @@ function MemberSummary({
           </div>
           <p className="census-record__muted">
             <Icon aria-hidden="true" name="lock" /> {t("admin-census:member.audit.recent")}:{" "}
+            {/* S14 R-14-11 / R-03-26: «{dd/mm} {action} ({role} {name})», with the labels of the
+                action and of the role, never their codes (E7-W03 round 2 #5, AGENTS rule 1). */}
             {overview.recentAudit
-              .map(
-                (audit) =>
-                  `${formatDate(audit.at, locale, false)} ${audit.action} (${audit.actorRole})`,
-              )
+              .map((audit) => {
+                const values = {
+                  action: auditActionLabel(t, audit.action),
+                  date: formatDate(audit.at, locale, false),
+                  role: auditRoleLabel(t, audit.actorRole),
+                };
+                return audit.actorName === undefined || audit.actorName === ""
+                  ? t("admin-census:member.audit.entryWithoutName", values)
+                  : t("admin-census:member.audit.entry", { ...values, name: audit.actorName });
+              })
               .join(" · ")}
           </p>
           {/* S14 §5: an erased member takes no S03/S13 change (`409 MEMBER_ERASED`), so none is

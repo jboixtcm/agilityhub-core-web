@@ -10,7 +10,7 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -210,6 +210,97 @@ describe("T-15-27 E7-W07 step 8 (E7-W06's report; S15 R-15-19): D11 names every 
       });
       for (const label of labels) expect(last.textContent).toContain(label);
       for (const key of CLEANUP_COUNTERS) expect(last.textContent).not.toContain(key);
+    },
+  );
+});
+
+describe("T-15-34 E7-W03 round 2 #5 (D11; ruling E89, INC-53 item 15): P4's dry-run counter WOULD_REMIND and its run's classReminders read with their labels (S15 R-15-14)", () => {
+  it.each([
+    {
+      close: "Cerrar",
+      language: "es",
+      name: "Recordatorios",
+      plan: "1 recordatorio previsto",
+      planTitle: "Simulación: qué haría ahora · Recordatorios",
+      run: "Ejecuta ahora",
+      runLabel: "Ejecuta ahora Recordatorios",
+      runTitle: "Ejecutar «Recordatorios» ahora",
+      simulate: "Simula Recordatorios",
+      summary: "Recordatorios: correcta · 1 recordatorio de clase",
+      tag: "simulación",
+    },
+    {
+      close: "Close",
+      language: "en",
+      name: "Reminders",
+      plan: "1 planned reminder",
+      planTitle: "Simulation: what it would do now · Reminders",
+      run: "Run now",
+      runLabel: "Run Reminders now",
+      runTitle: "Run «Reminders» now",
+      simulate: "Simulate Reminders",
+      summary: "Reminders: succeeded · 1 class reminder",
+      tag: "simulation",
+    },
+    {
+      close: "Tanca",
+      language: "ca",
+      name: "Recordatoris",
+      plan: "1 recordatori previst",
+      planTitle: "Simulació: què faria ara · Recordatoris",
+      run: "Executa ara",
+      runLabel: "Executa ara Recordatoris",
+      runTitle: "Executar «Recordatoris» ara",
+      simulate: "Simula Recordatoris",
+      summary: "Recordatoris: correcta · 1 recordatori de classe",
+      tag: "simulació",
+    },
+  ] as const)(
+    "T-15-34 E7-W03 round 2 #5 ($language): «$name»'s last run and [Simula] plan say «$plan», its [Executa ara] summary the class reminders' label, never WOULD_REMIND or classReminders",
+    async (expected) => {
+      mockScenario("admin");
+      const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+      // A simulation already ran: it is the process's last run (R-15-08).
+      const earlier = await client.POST("/jobs/{name}/trigger", {
+        body: { dryRun: true },
+        params: { path: { name: "reminders" } },
+      });
+      expect(earlier.data?.dryRun).toBe(true);
+      const i18n = await createI18n({
+        branding,
+        browserLanguages: [expected.language],
+        initialNamespaces: ["admin-settings", "enums", "errors"],
+        storage: undefined,
+      });
+      render(
+        <I18nextProvider i18n={i18n}>
+          <BrandingProvider branding={branding}>
+            <JobsCard client={client} />
+          </BrandingProvider>
+        </I18nextProvider>,
+      );
+      const row = (await screen.findByText(expected.name)).closest("li");
+      if (row === null) throw new TypeError(`No row ${expected.name}`);
+      const raw = /WOULD_REMIND|classReminders|trainingReminders/u;
+
+      const last = await within(row).findByRole("button", {
+        name: new RegExp(` · ${expected.tag} · ${expected.plan}$`, "u"),
+      });
+      expect(last.textContent).not.toMatch(raw);
+
+      fireEvent.click(within(row).getByRole("button", { name: expected.simulate }));
+      const plan = await screen.findByRole("dialog", { name: expected.planTitle });
+      expect(within(plan).getByText(new RegExp(`${expected.plan}$`, "u"))).toBeVisible();
+      // The plan's item keeps the api's action (`{entityType} {entityId} · {action}`); its counter
+      // never reads as `{key}: {count}`.
+      expect(plan.textContent).not.toMatch(/WOULD_REMIND: |classReminders|trainingReminders/u);
+      fireEvent.click(within(plan).getAllByRole("button", { name: expected.close })[0] as Element);
+
+      fireEvent.click(within(row).getByRole("button", { name: expected.runLabel }));
+      const confirm = await screen.findByRole("dialog", { name: expected.runTitle });
+      fireEvent.click(within(confirm).getByRole("button", { name: expected.run }));
+      expect(await screen.findByText(expected.summary)).toBeVisible();
+      expect(screen.queryByText(raw)).toBeNull();
     },
   );
 });

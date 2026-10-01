@@ -130,7 +130,12 @@
       "maintenance": "Mantenimiento",
       "monthlyFee": "Cuota mensual"
     },
-    "audit": { "all": "Toda la auditoría ›", "recent": "Últimos cambios" },
+    "audit": {
+      "all": "Toda la auditoría ›",
+      "entry": "{date} {action} ({role} {name})",
+      "entryWithoutName": "{date} {action} ({role})",
+      "recent": "Últimos cambios"
+    },
     "block": {
       "description": "El bloqueo impide reservas nuevas y muestra este motivo al abonado. Las reservas existentes se mantienen.",
       "reason": "Motivo del bloqueo",

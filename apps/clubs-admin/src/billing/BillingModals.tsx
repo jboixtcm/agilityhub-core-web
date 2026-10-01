@@ -123,10 +123,18 @@ export function GenerateModal({
   const nextPeriod = shiftPeriod(period, 1);
   const code = isApiError(failure) ? failure.code : undefined;
 
-  const generate = async () => {
+  /**
+   * `collectionDate` only when the admin takes the api's `earliest` after `422
+   * COLLECTION_DATE_TOO_SOON` (`BillingRunRequest.collectionDate`): another payload, another key.
+   */
+  const generate = async (collectionDate?: string) => {
     setPending(true);
     setFailure(undefined);
-    const body = { period, simulationId: simulation.id };
+    const body = {
+      ...(collectionDate === undefined ? {} : { collectionDate }),
+      period,
+      simulationId: simulation.id,
+    };
     try {
       const result = await keys.send(JSON.stringify(["runs", body]), (key) =>
         client.POST("/billing/runs", {
@@ -156,6 +164,12 @@ export function GenerateModal({
   const details = errorDetails(failure);
   const dateOf = (value: unknown) =>
     typeof value === "string" ? formats.formatPlainDate(value) : "";
+  const earliest =
+    code === "COLLECTION_DATE_TOO_SOON" &&
+    typeof details.earliest === "string" &&
+    /^\d{4}-\d{2}-\d{2}$/u.test(details.earliest)
+      ? details.earliest
+      : undefined;
 
   return (
     <Modal
@@ -225,14 +239,27 @@ export function GenerateModal({
             </Alert>
           )}
           <Actions>
-            <Button
-              disabled={nextDay === undefined}
-              loading={pending}
-              loadingLabel={t("admin-billing:confirm.generating")}
-              onClick={() => void generate()}
-            >
-              {t("admin-billing:confirm.generate")}
-            </Button>
+            {earliest === undefined ? (
+              <Button
+                disabled={nextDay === undefined}
+                loading={pending}
+                loadingLabel={t("admin-billing:confirm.generating")}
+                onClick={() => void generate()}
+              >
+                {t("admin-billing:confirm.generate")}
+              </Button>
+            ) : (
+              // The default day is too soon: the admin may take the first day the api allows.
+              <Button
+                loading={pending}
+                loadingLabel={t("admin-billing:confirm.generating")}
+                onClick={() => void generate(earliest)}
+              >
+                {t("admin-billing:confirm.generateWithEarliest", {
+                  date: formats.formatPlainDate(earliest),
+                })}
+              </Button>
+            )}
             <Button disabled={pending} onClick={onClose} variant="ghost">
               {t("admin-billing:actions.cancel")}
             </Button>

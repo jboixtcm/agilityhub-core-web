@@ -1149,6 +1149,134 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
   }, 30_000);
 });
 
+describe("E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt", () => {
+  async function openManual() {
+    fireEvent.click(screen.getByRole("button", { name: "Rebut manual" }));
+    const dialog = await screen.findByRole("dialog", { name: "Rebut manual" });
+    fireEvent.change(within(dialog).getByLabelText("Abonat"), { target: { value: "Laura" } });
+    fireEvent.click(
+      await within(dialog).findByRole("radio", { name: "Laura Serra Vidal · núm. 87" }),
+    );
+    fireEvent.change(within(dialog).getByLabelText("Concepte (línia 1)"), {
+      target: { value: "Material" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("Import (línia 1)"), {
+      target: { value: "15" },
+    });
+    return dialog;
+  }
+
+  it("R-12-19: a new search drops the chosen member, so the receipt never goes to a member the list no longer shows", async () => {
+    await renderPage();
+    const dialog = await openManual();
+    expect(
+      within(dialog).getByRole("checkbox", { name: "Cobra'l amb la propera remesa" }),
+    ).toBeVisible();
+    fireEvent.change(within(dialog).getByLabelText("Abonat"), { target: { value: "Pere" } });
+    expect(within(dialog).queryByRole("radio", { name: "Laura Serra Vidal · núm. 87" })).toBeNull();
+    expect(
+      within(dialog).queryByRole("checkbox", { name: "Cobra'l amb la propera remesa" }),
+    ).toBeNull();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Crea el rebut" }));
+    expect(await within(dialog).findByText("Tria un abonat.")).toBeVisible();
+    expect(requests("POST", "/invoices")).toHaveLength(0);
+  });
+
+  it("R-12-19: the api's 400 on a line's member (lines[0].description) sits on that line, and on includeInNextRun under its checkbox, with no second generic alert", async () => {
+    server.use(
+      http.post("*/api/v1/invoices", () =>
+        HttpResponse.json(
+          {
+            code: "VALIDATION_ERROR",
+            details: {
+              fieldErrors: [
+                { code: "TOO_LONG", field: "lines[0].description" },
+                { code: "INVALID", field: "includeInNextRun" },
+              ],
+            },
+            message: "Invalid",
+            traceId: "t-400",
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    await renderPage();
+    const dialog = await openManual();
+    fireEvent.click(
+      within(dialog).getByRole("checkbox", { name: "Cobra'l amb la propera remesa" }),
+    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "Crea el rebut" }));
+    // FormField draws its error inside the field's own block.
+    const fieldOf = (label: string) => {
+      const field = within(dialog).getByLabelText(label).closest(".ah-form-field");
+      if (!(field instanceof HTMLElement)) throw new TypeError(`No field ${label}`);
+      return field;
+    };
+    await waitFor(() => {
+      expect(fieldOf("Concepte (línia 1)")).toHaveTextContent("Reviseu els camps destacats.");
+    });
+    expect(fieldOf("Import (línia 1)")).not.toHaveTextContent("Reviseu els camps destacats.");
+    expect(
+      within(dialog).getByRole("checkbox", { name: "Cobra'l amb la propera remesa" }),
+    ).toHaveAccessibleDescription("Reviseu els camps destacats.");
+    // The two field messages only: no general alert repeating them.
+    expect(within(dialog).getAllByRole("alert")).toHaveLength(2);
+  });
+
+  it("R-12-11: after 422 COLLECTION_DATE_TOO_SOON the admin generates with the api's first day (collectionDate = details.earliest, another payload, another key)", async () => {
+    vi.setSystemTime(new Date("2026-08-31T08:00:00Z"));
+    await renderPage({ scenario: "billingStale" });
+    const [simulate] = screen.getAllByRole("button", { name: "1 · SIMULA EL MES" });
+    if (simulate === undefined) throw new TypeError("No simulate button");
+    fireEvent.click(simulate);
+    await screen.findByText("Mes simulat.");
+    fireEvent.click(screen.getByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }));
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    const earliest = await within(dialog).findByRole("button", {
+      name: "Genera amb cobrament el 02/09/2026",
+    });
+    expect(within(dialog).queryByRole("button", { name: "Genera" })).toBeNull();
+    fireEvent.click(earliest);
+    expect(await screen.findByText(/rebuts generats/u)).toBeVisible();
+    const runs = requests("POST", "/billing/runs");
+    expect(runs).toHaveLength(2);
+    expect(runs[0]?.body).not.toHaveProperty("collectionDate");
+    expect(runs[1]?.body).toMatchObject({ collectionDate: "2026-09-02", period: "2026-09" });
+    expect(runs[1]?.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(runs[1]?.idempotencyKey).not.toBe(runs[0]?.idempotencyKey);
+  });
+
+  it("R-12-14 E89: a receipt the admin cancelled before the rollback reads «anul·lat · retrocés» in the list and in its drawer, with its own reason", async () => {
+    const api = client();
+    const found = await api.GET("/invoices", { params: { query: { q: "2026-0915" } } });
+    const joan = found.data?.items[0];
+    if (joan === undefined) throw new TypeError("No 2026-0915");
+    const read = await api.GET("/invoices/{id}", { params: { path: { id: joan.id } } });
+    await api.POST("/invoices/{id}/cancellation", {
+      body: { reason: "Baixa del club", version: read.data?.version ?? 0 },
+      params: { header: { "Idempotency-Key": crypto.randomUUID() }, path: { id: joan.id } },
+    });
+    const period = await api.GET("/billing/periods/{period}", {
+      params: { path: { period: "2026-09" } },
+    });
+    await api.POST("/billing/runs/{id}/rollback", {
+      body: { confirmation: "RETROCEDIR", reason: "Preu equivocat" },
+      params: {
+        header: { "Idempotency-Key": crypto.randomUUID() },
+        path: { id: period.data?.run?.id ?? "" },
+      },
+    });
+    await renderPage({ search: "?mes=2026-09&filter=status:eq:CANCELLED" });
+    expect(cells(await invoiceRow("2026-0915")).at(6)).toBe("anul·lat · retrocés");
+    const dialog = await openDrawer("2026-0915");
+    await within(dialog).findByText("Quota Abonat — Setembre 2026");
+    expect(dialog).toHaveTextContent("anul·lat · retrocés");
+    expect(dialog).toHaveTextContent("retrocés de la remesa · Baixa del club");
+  });
+});
+
 describe("R-12-19 and R-12-26: the manual receipt and the accounting export", () => {
   it("R-12-19: [Rebut manual] finds the member, sends the lines in minor units, and the api's numbering blocks the rollback (MANUAL_INVOICE_AFTER)", async () => {
     await renderPage();

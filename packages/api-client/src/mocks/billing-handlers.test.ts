@@ -593,6 +593,78 @@ describe("S12 R-12-14 · GET /billing/runs/{id} and POST /billing/runs/{id}/roll
     });
   });
 
+  it("T-12-13 E89 (R-12-14): the rollback takes the whole run, also a receipt the admin cancelled meanwhile: it leaves «Tots», lists under CANCELLED as rolled back and keeps its own reason", async () => {
+    const joan = await receipt("2026-0915");
+    expect((await cancel(joan)).response.status).toBe(200);
+    // Cancelled by the admin, before any rollback: still one of the month's receipts.
+    expect((await month()).counts.all).toBe(168);
+    expect((await rollback(await liveRunId())).response.status).toBe(200);
+    expect((await month()).counts.all).toBe(0);
+    const rows = (
+      await list({
+        filter: [`period:eq:${SEPTEMBER}`, "status:eq:CANCELLED", `memberId:eq:${joan.memberId}`],
+      })
+    ).data;
+    expectValid("InvoicePage", rows);
+    expect(rows?.items.find((item) => item.id === joan.id)).toMatchObject({
+      rolledBack: true,
+      status: "CANCELLED",
+    });
+    expect((await readInvoice(joan.id)).data).toMatchObject({
+      cancelReason: "Baixa del club",
+      status: "CANCELLED",
+    });
+  });
+
+  it("T-12-13 E87 (R-12-19): a manual SEPA receipt with includeInNextRun goes into the next run's remittance (COLLECTING); the run's rollback returns it to PENDING, still waiting", async () => {
+    const marc = await receipt("2026-0913");
+    const created = await createManual({
+      includeInNextRun: true,
+      lines: [{ base: eur(1500), description: "Material", taxPercent: 0 }],
+      memberId: marc.memberId,
+      note: "",
+    });
+    const id = created.data?.id ?? "";
+    expect(created.data).toMatchObject({
+      includeInNextRun: true,
+      remittanceId: null,
+      status: "PENDING",
+    });
+    const generated = await generate({
+      period: "2026-10",
+      simulationId: await simulationId("2026-10"),
+    });
+    expect(generated.response.status).toBe(201);
+    const remittance = generated.data?.remittance;
+    // October's 164 direct debits (6.240,00 €) and the waiting 15,00 €.
+    expect(remittance).toMatchObject({ count: 165, total: eur(625500) });
+    const carried = (await readInvoice(id)).data;
+    expectValid("Invoice", carried);
+    expect(carried).toMatchObject({ remittanceId: remittance?.id, status: "COLLECTING" });
+    expect(carried?.collections).toHaveLength(1);
+    expect(carried?.collections[0]).toMatchObject({
+      provider: "SEPA_XML",
+      remittanceId: remittance?.id,
+      status: "SUBMITTED",
+    });
+    expect(remittance?.collectionIds).toContain(carried?.collections[0]?.id);
+    // It was issued before the run: no MANUAL_INVOICE_AFTER.
+    expect(generated.data?.run).toMatchObject({ rollbackBlockers: [], rollbackable: true });
+
+    expect((await rollback(generated.data?.run.id ?? "")).response.status).toBe(200);
+    const back = (await readInvoice(id)).data;
+    expectValid("Invoice", back);
+    expect(back).toMatchObject({ includeInNextRun: true, remittanceId: null, status: "PENDING" });
+    expect(back?.collections.map((entry) => [entry.status, entry.failureCode])).toEqual([
+      ["FAILED", "ROLLBACK"],
+      ["CREATED", null],
+    ]);
+    const row = (await list({ q: back?.displayNumber ?? "" })).data?.items.find(
+      (item) => item.id === id,
+    );
+    expect(row).toMatchObject({ rolledBack: false, status: "PENDING" });
+  });
+
   it("T-12-13 billingRollbackBlocked: another admin submits the remittance just before → 409 RUN_NOT_ROLLBACKABLE {REMITTANCE_SUBMITTED}, and the month reads it", async () => {
     use("billingRollbackBlocked");
     const before = await month();
@@ -1179,7 +1251,9 @@ describe("S12 R-12-15 · the remittances page (GET /remittances, file, submissio
         params: { path: { id: item?.id ?? "" } },
       });
       expectValid("RemittanceFile", file.data);
-      expect(file.data?.fileName).toBe(`${item?.messageId ?? ""}.xml`);
+      // The snapshot's attachment name (b67a07b): `remesa-{period}.xml`.
+      expect(file.data?.fileName).toBe(`remesa-${item?.period ?? ""}.xml`);
+      expect(file.data?.downloadUrl).toMatch(/\/remesa-2026-0[89]\.xml\?/u);
     }
     expect(
       await failure(client.GET("/remittances/{id}", { params: { path: { id: UNKNOWN_ID } } })),
@@ -1188,11 +1262,15 @@ describe("S12 R-12-15 · the remittances page (GET /remittances, file, submissio
 
   it("T-12-30 [Marca com a enviada al banc] → 200 SUBMITTED; again → 409 INVALID_STATE; the run is no longer rollbackable {REMITTANCE_SUBMITTED}", async () => {
     const remittanceId = (await month()).remittance?.id ?? "";
-    expect(await failure(submit(remittanceId, "2026-08-27"))).toEqual({
-      code: "VALIDATION_ERROR",
-      details: { fieldErrors: [{ code: "INVALID", field: "submittedAt" }] },
-      status: 400,
-    });
+    // submittedAt is a club-local day from the remittance's day (25-08, created 09:20 local) to
+    // today (26-08): after today or before that day → 400 VALIDATION_ERROR on the field (b67a07b).
+    for (const outside of ["2026-08-27", "2026-08-24"]) {
+      expect(await failure(submit(remittanceId, outside))).toEqual({
+        code: "VALIDATION_ERROR",
+        details: { fieldErrors: [{ code: "INVALID", field: "submittedAt" }] },
+        status: 400,
+      });
+    }
     const { data, response } = await submit(remittanceId);
     expect(response.status).toBe(200);
     expectValid("Remittance", data);

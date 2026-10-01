@@ -19,6 +19,7 @@ import { censusMembers } from "./fixtures/census";
 import { dayGridClassSessions } from "./fixtures/day-grid";
 import {
   JOBS_MOCK_NOW,
+  jobModuleOn,
   jobsState,
   jobSummary,
   manualRun,
@@ -645,22 +646,25 @@ function isRegisterBlock(id: string): boolean {
 // ---------------------------------------------------------------------------------------------
 // S15 processes (R-15-01, R-15-09) and the D1 risk review (form A).
 
+/** A process whose module is on for the caller's club (`jobModuleOn`: P6 also needs FIFO). */
+function moduleOn(scenario: MockScenarioDefinition, job: StoredJob): boolean {
+  return jobModuleOn(job.entry, scenario.branding.modules, (key) => findParameter(key)?.value);
+}
+
+/** S15 §6: `GET /jobs` lists the processes whose module is on; the others are absent. */
 function visibleJobs(scenario: MockScenarioDefinition): StoredJob[] {
-  return jobsState.jobs.filter(
-    (job) => job.entry.module === null || scenario.branding.modules.includes(job.entry.module),
-  );
+  return jobsState.jobs.filter((job) => moduleOn(scenario, job));
 }
 
 /**
  * `{name}` of a process: unknown → `404 JOB_UNKNOWN` (S15 §6 and CATALEG_ERRORS rule 0 amended
- * 24-09); module off → `404 MODULE_DISABLED` (R-15-09).
+ * 24-09); module off — P6 under `waitlist.mode = ALL_AT_ONCE` too — → `404 MODULE_DISABLED`
+ * (R-15-09; the contract's `/jobs/{name}*`: «module of the process off → MODULE_DISABLED»).
  */
 function jobFor(scenario: MockScenarioDefinition, name: string): StoredJob | Response {
   const job = jobsState.jobs.find((item) => item.entry.name === name);
   if (job === undefined) return apiError("JOB_UNKNOWN", "Unknown process", 404);
-  if (job.entry.module !== null && !scenario.branding.modules.includes(job.entry.module)) {
-    return apiError("MODULE_DISABLED", "Module disabled", 404);
-  }
+  if (!moduleOn(scenario, job)) return apiError("MODULE_DISABLED", "Module disabled", 404);
   return job;
 }
 
@@ -932,12 +936,8 @@ export const backofficeHandlers = [
     if (job.entry.name === "class-finishing") {
       return apiError("JOB_ALREADY_RUNNING", "The process is already running", 409);
     }
+    // Under `waitlist.mode = ALL_AT_ONCE` P6 never gets here (`jobFor`: 404 MODULE_DISABLED).
     const result = manualRun(job, body.dryRun, nowMs());
-    if (job.entry.name === "waitlist-fifo" && !fifo()) {
-      // `waitlist.mode = ALL_AT_ONCE`: nothing to expire (R-15-03 `SKIPPED{MODULE_OFF}`).
-      result.status = "SKIPPED";
-      result.skipReason = "MODULE_OFF";
-    }
     job.runs = [result, ...job.runs];
     return HttpResponse.json(result);
   }),

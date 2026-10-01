@@ -1,0 +1,62 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/billing-handlers.test.ts (53 tests | 2 failed | 51 skipped) 52ms
+   ❯ S12 R-12-14 · GET /billing/runs/{id} and POST /billing/runs/{id}/rollback (T-12-13, T-12-25) (8)
+     × T-12-13 E89 (R-12-14): the rollback takes the whole run, also a receipt the admin cancelled meanwhile: it leaves «Tots», lists under CANCELLED as rolled back and keeps its own reason 35ms
+     × T-12-13 E87 (R-12-19): a manual SEPA receipt with includeInNextRun goes into the next run's remittance (COLLECTING); the run's rollback returns it to PENDING, still waiting 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/billing-handlers.test.ts > S12 R-12-14 · GET /billing/runs/{id} and POST /billing/runs/{id}/rollback (T-12-13, T-12-25) > T-12-13 E89 (R-12-14): the rollback takes the whole run, also a receipt the admin cancelled meanwhile: it leaves «Tots», lists under CANCELLED as rolled back and keeps its own reason
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/mocks/billing-handlers.test.ts:602:40
+    600|     expect((await month()).counts.all).toBe(168);
+    601|     expect((await rollback(await liveRunId())).response.status).toBe(2…
+    602|     expect((await month()).counts.all).toBe(0);
+       |                                        ^
+    603|     const rows = (
+    604|       await list({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/billing-handlers.test.ts > S12 R-12-14 · GET /billing/runs/{id} and POST /billing/runs/{id}/rollback (T-12-13, T-12-25) > T-12-13 E87 (R-12-19): a manual SEPA receipt with includeInNextRun goes into the next run's remittance (COLLECTING); the run's rollback returns it to PENDING, still waiting
+AssertionError: expected { collectionIds: [ …(164) ], …(16) } to match object { count: 165, total: { …(2) } }
+(21 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "count": 165,
++   "count": 164,
+    "total": {
+-     "amountMinor": 625500,
++     "amountMinor": 624000,
+      "currency": "EUR",
+    },
+  }
+
+ ❯ src/mocks/billing-handlers.test.ts:640:24
+    638|     const remittance = generated.data?.remittance;
+    639|     // October's 164 direct debits (624,00 € × 10) and the waiting 15,…
+    640|     expect(remittance).toMatchObject({ count: 165, total: eur(625500) …
+       |                        ^
+    641|     const carried = (await readInvoice(id)).data;
+    642|     expectValid("Invoice", carried);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 51 skipped (53)
+   Start at  20:15:34
+   Duration  861ms (transform 56%, import 37%, tests 7%)
+

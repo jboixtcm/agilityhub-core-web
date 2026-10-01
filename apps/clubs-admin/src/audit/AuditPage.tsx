@@ -130,6 +130,32 @@ function actionLabel(t: Translation, action: string): string {
   return t(`admin-audit:actions.${action}`, { defaultValue: action });
 }
 
+const AUDIT_ROLES: readonly string[] = [
+  "ADMIN",
+  "INSTRUCTOR",
+  "MEMBER",
+  "PLATFORM",
+  "SYSTEM",
+  "WEBHOOK",
+] satisfies readonly AuditRole[];
+
+function isAuditRole(value: string): value is AuditRole {
+  return AUDIT_ROLES.includes(value);
+}
+
+/**
+ * The label of an `AuditAction` and of an actor's role wherever an entry is summarised outside the
+ * list, e.g. D10's «Darrers canvis» (S14 R-14-11): never the code (AGENTS rule 1). A value the
+ * snapshot does not know keeps its code, as the list does.
+ */
+export function auditActionLabel(t: Translation, action: string): string {
+  return actionLabel(t, action);
+}
+
+export function auditRoleLabel(t: Translation, role: string): string {
+  return isAuditRole(role) ? roleLabel(t, role) : role;
+}
+
 function originLabel(t: Translation, origin: AuditOrigin): string {
   switch (origin) {
     case "APP":
@@ -167,11 +193,8 @@ function filterLabel(t: Translation, field: string, value: string): string {
   if (field === "origin" && ["APP", "BACKOFFICE", "PUBLIC", "SYSTEM", "WEBHOOK"].includes(value)) {
     return originLabel(t, value as AuditOrigin);
   }
-  if (
-    field === "actorRole" &&
-    ["ADMIN", "INSTRUCTOR", "MEMBER", "PLATFORM", "SYSTEM", "WEBHOOK"].includes(value)
-  ) {
-    return roleLabel(t, value as AuditRole);
+  if (field === "actorRole" && isAuditRole(value)) {
+    return roleLabel(t, value);
   }
   return value;
 }

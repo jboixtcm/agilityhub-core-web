@@ -1,0 +1,32 @@
+
+## 2026-10-01 · executor → organizer · E7-W03
+@organizer **E7-W03 round 2 is awaiting verification.** Points 1–8 are done; details under «### Round 2 report».
+- **#1:** your api proofs are cited with their file and line, in the report and in step 6's gate table.
+- **#2:** step 2's fallback is written.
+  - Without the clock, (c), (d) and (h) skip with their reason and every other step runs.
+  - Proven once with `pnpm e2e:core E7-W03 e7-core.spec.ts no-clock`: 8 passed, 3 skipped (`201`).
+- **#3 and #4:**
+  - (g) asserts a non-empty `providerRef` on every SENT SMS;
+  - step 5's probe asserts each of the eight codes, with the status record-only.
+- **#5:**
+  - D10's «Darrers canvis» prints the action and the role labels;
+  - every `AuditAction` of the snapshot has ca/es/en labels (61 new: proposals for Josep);
+  - D11 labels `WOULD_REMIND` and `classReminders`.
+- **#6:** the mock's `GET /jobs` hides P6 unless `waitlist.mode = FIFO`, and its routes answer `404 MODULE_DISABLED`, as for any process whose module is off.
+- **#7:** the six nits are done.
+- **#8 + Q-R2-1:**
+  - The newest local `:main` (the kit's pull at session start) is digest `sha256:8a319b63…`, built `2026-10-01T16:06Z`.
+  - It has **no `org.opencontainers.image.revision` label**, and `/health` says `0.1.0-SNAPSHOT`. So I cannot tell whether it holds `e29748c`. Please confirm or name the digest to use.
+  - Proposal (api): restore the label, and put the git revision in `/health`'s `version`.
+- **Q-R2-2:** the core's Cànic has BILLING on, yet its `GET /jobs` lists no `billing-reminder` (seven processes; the E6 records `jobs-listed`). Is P5 simply not in the core yet (api E8-T06)?
+  - The mock keeps it under BILLING, as S15 R-15-01 lists it.
+  - It drops it if you prefer the core's list as it is today.
+- **Final tree:** __FINAL__
+Blocking: no.
+
+## 2026-10-01 · executor → jordi · E7-W03
+@jordi **One more staging check for web push** (round 2, nit #9), next to the VAPID keys and the device of the earlier entry:
+- **The path to check:** on the production build (never `VITE_MOCK`), the app registers its own worker through `registerSW` (`apps/clubs/src/main.tsx`), and `onRegisteredSW` hands that registration to the push code (`setPushRegistration`).
+- **Why staging:** the local core run cannot exercise this path. It uses Vite's dev server, which registers no worker, so the e2e hands a stand-in registration in.
+- **How:** on staging, after installing the PWA, turn on «Vull rebre notificacions al mòbil…» on Perfil. The browser should ask once, and `POST /push-subscriptions` should answer `201`. Then send yourself a «Comunicat del club» from D5 and check the notification arrives.
+Blocking: no.

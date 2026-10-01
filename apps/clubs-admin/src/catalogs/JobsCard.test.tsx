@@ -94,6 +94,20 @@ async function renderCard(scenario: MockScenario = "jobsFullClub", language = "c
   });
 }
 
+/** The club's `waitlist.mode = FIFO`, saved as D11 saves it (`PUT /parameters/{key}`, R-15-01). */
+async function saveFifoMode(scenario: MockScenario): Promise<void> {
+  mockScenario(scenario);
+  const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+  const mode = await client.GET("/parameters/{key}", {
+    params: { path: { key: "waitlist.mode" } },
+  });
+  const saved = await client.PUT("/parameters/{key}", {
+    body: { value: "FIFO", version: mode.data?.version ?? 0 },
+    params: { path: { key: "waitlist.mode" } },
+  });
+  expect(saved.data?.value).toBe("FIFO");
+}
+
 function rowOf(card: HTMLElement, name: string): HTMLElement {
   const row = within(card).getByText(name).closest("li");
   if (row === null) throw new TypeError(`No row ${name}`);
@@ -101,7 +115,28 @@ function rowOf(card: HTMLElement, name: string): HTMLElement {
 }
 
 describe("T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09)", () => {
-  it("lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run", async () => {
+  it("E7-W03 round 2 #6 · S15 §2 «fila absent»: under waitlist.mode = ALL_AT_ONCE the Cànic's card has no «Llista d'espera (FIFO)» row — the core's seven processes plus «Recordatori de facturació»", async () => {
+    const card = await renderCard("admin");
+    await within(card).findByText("Revisió de classes en risc");
+    expect(
+      within(card)
+        .getAllByRole("listitem")
+        .map((row) => row.getAttribute("data-job")),
+    ).toEqual([
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "reminders",
+      "expirations",
+      "class-finishing",
+      "cleanup",
+      "billing-reminder",
+    ]);
+    expect(within(card).queryByText("Llista d'espera (FIFO)")).toBeNull();
+  });
+
+  it("with waitlist.mode = FIFO lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run", async () => {
+    await saveFifoMode("jobsFullClub");
     const card = await renderCard();
     await within(card).findByText("Revisió de classes en risc");
     expect(within(card).getAllByRole("listitem")).toHaveLength(10);
@@ -119,9 +154,11 @@ describe("T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15
     expect(
       within(rowOf(card, "Recordatori de facturació")).getByText("el dia 22 a les 6:00"),
     ).toBeVisible();
-    expect(
-      within(rowOf(card, "Llista d'espera (FIFO)")).getByRole("button", { name: /omesa/u }),
-    ).toBeVisible();
+    // A FIFO club's P6 runs every minute (R-15-16): never «omesa» for a module that is off.
+    const fifo = rowOf(card, "Llista d'espera (FIFO)");
+    expect(within(fifo).getByText("continu")).toBeVisible();
+    expect(within(fifo).getByRole("button", { name: /correcta/u })).toBeVisible();
+    expect(within(fifo).queryByRole("button", { name: /omesa/u })).toBeNull();
 
     cleanup();
     const minimal = await renderCard("jobsMinimalClub");

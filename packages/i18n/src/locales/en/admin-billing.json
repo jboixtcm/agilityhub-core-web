@@ -29,6 +29,7 @@
     "generateTitle": "Generate the receipts · {month}",
     "generateBody": "{count} receipts will be generated for a total of {total}. The members' next receipt date will move to {nextDate}.",
     "generate": "Generate",
+    "generateWithEarliest": "Generate with collection on {date}",
     "generating": "Generating the receipts…",
     "rollbackTitle": "Roll back the remittance · {month}",
     "rollbackIntro": "The month's generation will be undone:",
@@ -284,7 +285,8 @@
     "loadPeriod": "The month could not be loaded.",
     "trace": "Error reference: {traceId}",
     "chargingSlow": "The card charges are still being processed.",
-    "dateAfterToday": "The date cannot be later than today."
+    "dateAfterToday": "The date cannot be later than today.",
+    "submittedAtRange": "The date must be between {earliest} and today."
   },
   "toasts": {
     "simulated": "Month simulated.",

@@ -408,7 +408,8 @@ test.describe("E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW)", () => {
       new RegExp(`^/remittances/${remittanceId ?? ""}/[^/]+\\.xml$`, "u"),
     );
     expect(saved.suggestedFilename()).toBe(signed.pathname.split("/").at(-1));
-    expect(saved.suggestedFilename()).toMatch(/2026-09.*\.xml$/u);
+    // The api's attachment name (snapshot b67a07b).
+    expect(saved.suggestedFilename()).toBe("remesa-2026-09.xml");
     // The page stays: the file is a download, never a navigation away from the list.
     await expect(page).toHaveURL(/\/facturacio\/remeses/u);
     await expect(september).toBeVisible();

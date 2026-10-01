@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/billing-handlers.test.ts (51 tests | 1 failed) 5929ms
+   ❯ S12 R-12-15 · the remittances page (GET /remittances, file, submission; T-12-30) (4)
+     × T-12-30 [Marca com a enviada al banc] → 200 SUBMITTED; again → 409 INVALID_STATE; the run is no longer rollbackable {REMITTANCE_SUBMITTED} 114ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/billing-handlers.test.ts > S12 R-12-15 · the remittances page (GET /remittances, file, submission; T-12-30) > T-12-30 [Marca com a enviada al banc] → 200 SUBMITTED; again → 409 INVALID_STATE; the run is no longer rollbackable {REMITTANCE_SUBMITTED}
+Error: Expected an ApiError
+ ❯ failure src/mocks/billing-handlers.test.ts:51:9
+     49|     throw error;
+     50|   }
+     51|   throw new Error("Expected an ApiError");
+       |         ^
+     52| }
+     53|
+ ❯ src/mocks/billing-handlers.test.ts:1196:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 50 passed (51)
+   Start at  19:57:58
+   Duration  14.80s (tests 45%, transform 34%, import 21%)
+
+  Transform  transforming modules took 4.48s · 34% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

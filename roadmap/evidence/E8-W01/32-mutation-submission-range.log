@@ -1,0 +1,225 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/RemittancesPage.test.tsx (10 tests | 2 failed) 10904ms
+   ❯ S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12) (10)
+     × R-12-15 the day it went to the bank runs from the remittance's club-local day to today (snapshot b67a07b): outside it the field says so and nothing is sent 43ms
+     × R-12-15 the api's 400 VALIDATION_ERROR {submittedAt} sits on the field; 409 STALE_VERSION stays in the dialog and the list is read again 10056ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/RemittancesPage.test.tsx > S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12) > R-12-15 the day it went to the bank runs from the remittance's club-local day to today (snapshot b67a07b): outside it the field says so and nothing is sent
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"min"[32m[39m[2m, [22m[32m[32m"2026-08-25"[32m[39m[2m) // element.getAttribute("min") === "2026-08-25"[22m
+
+Expected the element to have attribute:
+[32m  min="2026-08-25"[39m
+Received:
+[31m  null[39m
+ ❯ src/billing/RemittancesPage.test.tsx:248:18
+    246|     const date = within(dialog).getByLabelText("Data d'enviament al ba…
+    247|     // Created 25/08 at 09:20 club time; today is 26/08 (club time).
+    248|     expect(date).toHaveAttribute("min", "2026-08-25");
+       |                  ^
+    249|     expect(date).toHaveAttribute("max", "2026-08-26");
+    250|     const confirm = within(dialog).getByRole("button", { name: "Marca …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/billing/RemittancesPage.test.tsx > S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12) > R-12-15 the api's 400 VALIDATION_ERROR {submittedAt} sits on the field; 409 STALE_VERSION stays in the dialog and the list is read again
+TestingLibraryElementError: Unable to find an element with the text: La data ha de ser entre el 25/08/2026 i avui.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_3_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_3_"[39m
+    [36m>[39m
+      [0mMarca com a enviada al banc · Setembre 2026[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"billing-modal__body"[39m
+    [36m>[39m
+      [0mLa remesa quedarà marcada com a enviada al banc. A partir d'aquí ja no es podrà retrocedir.[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-form-field ah-form-field--error"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"ah-form-field__label"[39m
+        [33mfor[39m=[32m"billing-submitted-at"[39m
+      [36m>[39m
+        [0mData d'enviament al banc[0m
+      [36m</label>[39m
+      [36m<input[39m
+        [33mclass[39m=[32m"ah-input"[39m
+        [33mid[39m=[32m"billing-submitted-at"[39m
+        [33mmax[39m=[32m"2026-08-26"[39m
+        [33mrequired[39m=[32m""[39m
+        [33mtype[39m=[32m"date"[39m
+        [33mvalue[39m=[32m"2026-08-26"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field__error"[39m
+        [33mid[39m=[32m"billing-submitted-at-error"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mLa data no pot ser posterior a avui.[0m
+      [36m</div>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-modal__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mMarca com a enviada[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_3_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_3_"[39m
+    [36m>[39m
+      [0mMarca com a enviada al banc · Setembre 2026[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"billing-modal__body"[39m
+    [36m>[39m
+      [0mLa remesa quedarà marcada com a enviada al banc. A partir d'aquí ja no es podrà retrocedir.[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-form-field ah-form-field--error"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"ah-form-field__label"[39m
+        [33mfor[39m=[32m"billing-submitted-at"[39m
+      [36m>[39m
+        [0mData d'enviament al banc[0m
+      [36m</label>[39m
+      [36m<input[39m
+        [33mclass[39m=[32m"ah-input"[39m
+        [33mid[39m=[32m"billing-submitted-at"[39m
+        [33mmax[39m=[32m"2026-08-26"[39m
+        [33mrequired[39m=[32m""[39m
+        [33mtype[39m=[32m"date"[39m
+        [33mvalue[39m=[32m"2026-08-26"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field__error"[39m
+        [33mid[39m=[32m"billing-submitted-at-error"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mLa data no pot ser posterior a avui.[0m
+      [36m</div>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-modal__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mMarca com a enviada[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/RemittancesPage.test.tsx:294:28
+    292|     fireEvent.click(confirm);
+    293|     expect(
+    294|       await within(dialog).findByText("La data ha de ser entre el 25/0…
+       |                            ^
+    295|     ).toBeVisible();
+    296|     // Only the field's message: no second, generic error under it.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  19:56:58
+   Duration  12.16s (tests 90%, transform 4%, environment 3%, import 2%, setup 1%)
+

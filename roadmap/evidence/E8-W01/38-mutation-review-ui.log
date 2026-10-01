@@ -1,0 +1,394 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (39 tests | 4 failed | 35 skipped) 21953ms
+   ❯ E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt (4)
+     × R-12-19: a new search drops the chosen member, so the receipt never goes to a member the list no longer shows 877ms
+     × R-12-19: the api's 400 on a line's member (lines[0].description) sits on that line, and on includeInNextRun under its checkbox, with no second generic alert 10720ms
+     × R-12-11: after 422 COLLECTION_DATE_TOO_SOON the admin generates with the api's first day (collectionDate = details.earliest, another payload, another key) 10136ms
+     × R-12-14 E89: a receipt the admin cancelled before the rollback reads «anul·lat · retrocés» in the list and in its drawer, with its own reason 216ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > R-12-19: a new search drops the chosen member, so the receipt never goes to a member the list no longer shows
+AssertionError: expected <input class="ah-checkbox" …(1)></input> to be null
+
+- Expected:
+null
+
++ Received:
+<input
+  class="ah-checkbox"
+  type="checkbox"
+/>
+
+ ❯ src/billing/BillingPage.test.tsx:1177:7
+    1175|     expect(
+    1176|       within(dialog).queryByRole("checkbox", { name: "Cobra'l amb la p…
+    1177|     ).toBeNull();
+       |       ^
+    1178|     fireEvent.click(within(dialog).getByRole("button", { name: "Crea e…
+    1179|     expect(await within(dialog).findByText("Tria un abonat.")).toBeVis…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > R-12-19: the api's 400 on a line's member (lines[0].description) sits on that line, and on includeInNextRun under its checkbox, with no second generic alert
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Reviseu els camps destacats.[39m
+Received:
+[31m  Concepte (línia 1)[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"billing-header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSetembre 2026[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Canvi de mes"[39m
+            [33mclass[39m=[32m"billing-stepper"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Mes anterior"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m‹ mes[0m
+            [36m</button>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m·[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Mes següent"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mmes ›[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"billing-header__spacer"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m1 · SIMULA EL MES[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-describedby[39m=[32m"billing-generate-why"[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0m2 · GENERA REMESA SEPA (XML)[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mid[39m=[32m"billing-generate-why"[39m
+            [36m>[39m
+              [0mEls rebuts d'aquest mes ja s'han generat.[0m
+            [36m</span>[39m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost billing-action"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mRetrocedeix la remesa[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Rebut manual"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+            [33mtitle[39m=[32m"Rebut manual"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-feedback"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card billing-simulation"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"billing-simulation__head"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mPas 1 — Simulació: incidències primer[0m
+              [36m</h2>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m2[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0m2 incidències[0m
+                [36m</span>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"billing-members"[39m
+            [36m>[39m
+              [36m<tbody>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"row"[39m
+                  [36m>[39m
+                    [0mJoan Vila[0m
+                  [36m</th>[39m
+                  [36m<td>[39m
+                    [0msense compte bancari informat[0m
+                  [36m</td>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"billing-members__action"[39m
+                  [36m>[39m
+                    [36m<a[39m
+                      [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                      [33mclass[39m=[32m"ah-button ah-button--gh...
+ ❯ src/billing/BillingPage.test.tsx:1213:45
+    1211|     };
+    1212|     await waitFor(() => {
+    1213|       expect(fieldOf("Concepte (línia 1)")).toHaveTextContent("Reviseu…
+       |                                             ^
+    1214|     });
+    1215|     expect(fieldOf("Import (línia 1)")).not.toHaveTextContent("Reviseu…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > R-12-11: after 422 COLLECTION_DATE_TOO_SOON the admin generates with the api's first day (collectionDate = details.earliest, another payload, another key)
+TestingLibraryElementError: Unable to find role="button" and name "Genera amb cobrament el 02/09/2026"
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_2_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_2_"[39m
+    [36m>[39m
+      [0mGenera els rebuts · Setembre 2026[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"billing-modal__body"[39m
+    [36m>[39m
+      [0mEs generaran 168 rebuts per un total de 6.480,00 €. La data del proper rebut dels abonats avançarà al dia 1 d’octubre.[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-modal__error"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [0mLa data de cobrament 01/09/2026 és massa propera: la primera possible és 02/09/2026.[0m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-modal__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mGenera[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_2_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_2_"[39m
+    [36m>[39m
+      [0mGenera els rebuts · Setembre 2026[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"billing-modal__body"[39m
+    [36m>[39m
+      [0mEs generaran 168 rebuts per un total de 6.480,00 €. La data del proper rebut dels abonats avançarà al dia 1 d’octubre.[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-modal__error"[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [0mLa data de cobrament 01/09/2026 és massa propera: la primera possible és 02/09/2026.[0m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-modal__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mGenera[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/BillingPage.test.tsx:1233:43
+    1231|     const dialog = await screen.findByRole("dialog");
+    1232|     fireEvent.click(within(dialog).getByRole("button", { name: "Genera…
+    1233|     const earliest = await within(dialog).findByRole("button", {
+       |                                           ^
+    1234|       name: "Genera amb cobrament el 02/09/2026",
+    1235|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > R-12-14 E89: a receipt the admin cancelled before the rollback reads «anul·lat · retrocés» in the list and in its drawer, with its own reason
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  anul·lat · retrocés[39m
+Received:
+[31m  Rebut 2026-0915anul·latJoan VilaMesSetembre 2026Data d'emissió25/08/2026Anul·lat el26/08/2026 · Baixa del clubLíniesConcepteTotalQuota Abonat — Setembre 2026Quota mensual60,00 €Total60,00 €Mètode de pagamentTipusEfectiuCanalEfectiuCobramentsManual · intent 1 · creat25/08/2026 09:20Descarrega el justificant[39m
+ ❯ src/billing/BillingPage.test.tsx:1271:20
+    1269|     const dialog = await openDrawer("2026-0915");
+    1270|     await within(dialog).findByText("Quota Abonat — Setembre 2026");
+    1271|     expect(dialog).toHaveTextContent("anul·lat · retrocés");
+       |                    ^
+    1272|     expect(dialog).toHaveTextContent("retrocés de la remesa · Baixa de…
+    1273|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 35 skipped (39)
+   Start at  20:15:01
+   Duration  23.50s (tests 94%, transform 3%, environment 2%, import 1%)
+

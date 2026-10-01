@@ -520,8 +520,9 @@ const scenarios = {
     sessions: accountSessions,
   },
   /**
-   * S15 T-15-32: a club with every process of R1 — the Cànic plus `SINGLE_CLASS`, so `GET /jobs`
-   * lists all ten (the Cànic itself has no `payment-timeouts`).
+   * S15 T-15-32: a club with every module of R1's processes — the Cànic plus `SINGLE_CLASS`, so
+   * `GET /jobs` lists `payment-timeouts` (the Cànic has none): ten in a FIFO club, nine under the
+   * mock's `waitlist.mode = ALL_AT_ONCE` (no `waitlist-fifo`, R-15-01).
    */
   jobsFullClub: {
     branding: {
@@ -532,7 +533,10 @@ const scenarios = {
     me: meAdmin as Me,
     sessions: accountSessions,
   },
-  /** S15 T-15-32 «club mínim» (WAITLIST, FAQ, PUSH): eight processes, `waitlist-fifo` included. */
+  /**
+   * S15 T-15-32 «club mínim» (WAITLIST, FAQ, PUSH): eight processes in a FIFO club, `waitlist-fifo`
+   * included; seven under `waitlist.mode = ALL_AT_ONCE`.
+   */
   jobsMinimalClub: {
     branding: { ...minimal, locales: ["ca", "es", "en"] },
     me: meAdmin as Me,

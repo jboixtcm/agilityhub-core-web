@@ -9,6 +9,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -157,8 +158,9 @@ describe("S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system
     await waitFor(() => {
       expect(clicked).toHaveLength(1);
     });
+    // The api's attachment name (snapshot b67a07b): `remesa-{period}.xml`.
     expect(clicked[0]).toMatch(
-      /^https:\/\/files\.example\.test\/remittances\/[0-9a-f-]+\/canic-2026-09-\d+\.xml\?/u,
+      /^https:\/\/files\.example\.test\/remittances\/[0-9a-f-]+\/remesa-2026-09\.xml\?/u,
     );
     const file = sent.filter((entry) => entry.url.pathname.endsWith("/file"));
     expect(file.map((entry) => entry.method)).toEqual(["GET"]);
@@ -230,6 +232,81 @@ describe("S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system
       const [first] = await rows();
       if (first === undefined) throw new TypeError("No first row");
       expect(text(first).at(5)).toBe("enviada al banc");
+    });
+  });
+
+  it("R-12-15 the day it went to the bank runs from the remittance's club-local day to today (snapshot b67a07b): outside it the field says so and nothing is sent", async () => {
+    await renderPage();
+    const [september] = await rows();
+    if (september === undefined) throw new TypeError("No September row");
+    fireEvent.click(within(september).getByRole("button", { name: "Marca com a enviada al banc" }));
+    const dialog = await screen.findByRole("dialog", {
+      name: "Marca com a enviada al banc · Setembre 2026",
+    });
+    const date = within(dialog).getByLabelText("Data d'enviament al banc");
+    // Created 25/08 at 09:20 club time; today is 26/08 (club time).
+    expect(date).toHaveAttribute("min", "2026-08-25");
+    expect(date).toHaveAttribute("max", "2026-08-26");
+    const confirm = within(dialog).getByRole("button", { name: "Marca com a enviada" });
+    for (const outside of ["2026-08-24", "2026-08-27"]) {
+      fireEvent.change(date, { target: { value: outside } });
+      expect(
+        within(dialog).getByText("La data ha de ser entre el 25/08/2026 i avui."),
+      ).toBeVisible();
+      expect(confirm).toBeDisabled();
+    }
+    fireEvent.change(date, { target: { value: "2026-08-25" } });
+    expect(within(dialog).queryByText("La data ha de ser entre el 25/08/2026 i avui.")).toBeNull();
+    fireEvent.click(confirm);
+    expect(await screen.findByText("Remesa marcada com a enviada al banc.")).toBeVisible();
+    const submissions = sent.filter((entry) => entry.url.pathname.endsWith("/submission"));
+    expect(submissions.map((entry) => entry.body)).toEqual([{ submittedAt: "2026-08-25" }]);
+  });
+
+  it("R-12-15 the api's 400 VALIDATION_ERROR {submittedAt} sits on the field; 409 STALE_VERSION stays in the dialog and the list is read again", async () => {
+    let answer: "invalid" | "stale" = "invalid";
+    server.use(
+      http.post("*/api/v1/remittances/:id/submission", () =>
+        answer === "invalid"
+          ? HttpResponse.json(
+              {
+                code: "VALIDATION_ERROR",
+                details: { field: "submittedAt" },
+                message: "Invalid",
+                traceId: "t-400",
+              },
+              { status: 400 },
+            )
+          : HttpResponse.json(
+              { code: "STALE_VERSION", details: {}, message: "Stale version", traceId: "t-409" },
+              { status: 409 },
+            ),
+      ),
+    );
+    await renderPage();
+    const [september] = await rows();
+    if (september === undefined) throw new TypeError("No September row");
+    fireEvent.click(within(september).getByRole("button", { name: "Marca com a enviada al banc" }));
+    const dialog = await screen.findByRole("dialog", {
+      name: "Marca com a enviada al banc · Setembre 2026",
+    });
+    const confirm = within(dialog).getByRole("button", { name: "Marca com a enviada" });
+    fireEvent.click(confirm);
+    expect(
+      await within(dialog).findByText("La data ha de ser entre el 25/08/2026 i avui."),
+    ).toBeVisible();
+    // Only the field's message: no second, generic error under it.
+    expect(within(dialog).getAllByRole("alert")).toHaveLength(1);
+    answer = "stale";
+    const listReads = sent.filter((entry) => entry.url.pathname === "/api/v1/remittances").length;
+    fireEvent.click(confirm);
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "Aquest element s'ha modificat des d'un altre lloc.",
+    );
+    await waitFor(() => {
+      expect(
+        sent.filter((entry) => entry.url.pathname === "/api/v1/remittances").length,
+      ).toBeGreaterThan(listReads);
     });
   });
 

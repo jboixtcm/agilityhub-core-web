@@ -28,6 +28,11 @@ interface CatalogEntry {
   module: JobModule | null;
   /** R-15-01 route id. */
   name: string;
+  /**
+   * R-15-01's «Mòdul» column beyond the module: the club parameter value the process also needs
+   * (P6 `waitlist-fifo`: `waitlist.mode = FIFO`; under ALL_AT_ONCE it is `MODULE_OFF`, R-15-16).
+   */
+  needs?: { key: string; value: string };
   /** The `jobs.<name>.enabled` parameter the switch writes (S15 §9). */
   parameter: string;
   schedule: JobSummary["schedule"];
@@ -53,8 +58,10 @@ const continuous: JobSummary["schedule"] = {
 
 /**
  * R-15-01, in the catalog's fixed order. The api lists a process only when its module is on
- * (`GET /jobs`): the full club shows the ten, the «club mínim» (WAITLIST, FAQ, PUSH) eight — no
- * `payment-timeouts` (SINGLE_CLASS) nor `billing-reminder` (BILLING).
+ * (`GET /jobs`, S15 §6; `jobModuleOn`), and P6 only in a FIFO club. Under the mock's
+ * `waitlist.mode = ALL_AT_ONCE` the Cànic lists eight (no `waitlist-fifo`, no `payment-timeouts`:
+ * the core's seven plus `billing-reminder`), the full club (+ SINGLE_CLASS) nine and the «club
+ * mínim» (WAITLIST, FAQ, PUSH) seven; in a FIFO club ten, nine and eight (T-15-32).
  */
 export const JOB_CATALOG: readonly CatalogEntry[] = [
   {
@@ -101,6 +108,7 @@ export const JOB_CATALOG: readonly CatalogEntry[] = [
     jobName: "WAITLIST_FIFO",
     module: "WAITLIST",
     name: "waitlist-fifo",
+    needs: { key: "waitlist.mode", value: "FIFO" },
     parameter: "jobs.waitlistFifo.enabled",
     schedule: continuous,
   },
@@ -368,13 +376,6 @@ function initialRuns(entry: CatalogEntry): JobRun[] {
         at(2, { local: "2026-08-09T06:00", status: "SUCCEEDED" }),
         at(1, { local: "2026-08-08T06:00", status: "SUCCEEDED" }),
       ];
-    case "waitlist-fifo":
-      // `waitlist.mode = ALL_AT_ONCE` in the club: skipped once an hour (R-15-03).
-      return [
-        at(3, { local: "2026-08-10T08:00", skipReason: "MODULE_OFF", status: "SKIPPED" }),
-        at(2, { local: "2026-08-10T07:00", skipReason: "MODULE_OFF", status: "SKIPPED" }),
-        at(1, { local: "2026-08-10T06:00", skipReason: "MODULE_OFF", status: "SKIPPED" }),
-      ];
     case "billing-reminder":
       return [
         at(3, { local: "2026-07-22T06:00", skipReason: "DISABLED", status: "SKIPPED" }),
@@ -451,9 +452,11 @@ export function jobEffects(name: string, dryRun: boolean): JobRun["effects"] {
     case "reminders":
       // R-15-14: `WOULD_REMIND {bookingId, memberId, startsAt, lead}` for a booking due now
       // (`startsAt − lead ≤ now < startsAt`): the 8:30 class of the example day (06:30Z in CEST)
-      // with a 2 h reminder, at 8:12.
+      // with a 2 h reminder, at 8:12. The counters as the core sends them: the plan counts
+      // `WOULD_REMIND`, the run `classReminders` (E7-W03 `106/107-e7-core-run.json`, `h-reminder`;
+      // one name for both is INC-53 item 15).
       return {
-        counters: { classReminders: 1, trainingReminders: 0 },
+        counters: dryRun ? { WOULD_REMIND: 1 } : { classReminders: 1 },
         items: [
           {
             action: action("REMIND"),
@@ -565,6 +568,22 @@ function nextOccurrence(schedule: JobSummary["schedule"], now: number): string |
     if (`${date}T${time}` > current) return `${date}T${time}`;
   }
   return null;
+}
+
+/**
+ * Whether the process's module is on for the club (R-15-01's «Mòdul» column), as `GET /jobs` lists
+ * it (S15 §6: the processes of a module that is off are absent; §2 D11: «fila absent») and its
+ * `{name}` routes reach it (R-15-09: otherwise `404 MODULE_DISABLED`): its module, if any, is on
+ * and, for P6, the club's `waitlist.mode` is FIFO (under ALL_AT_ONCE P6 is `MODULE_OFF`, R-15-16;
+ * the core omits it from the Cànic's list, E7-W03 step 5 #7, ruling E89).
+ */
+export function jobModuleOn(
+  entry: CatalogEntry,
+  modules: readonly string[],
+  parameterValue: (key: string) => unknown,
+): boolean {
+  if (entry.module !== null && !modules.includes(entry.module)) return false;
+  return entry.needs === undefined || parameterValue(entry.needs.key) === entry.needs.value;
 }
 
 export function jobSummary(

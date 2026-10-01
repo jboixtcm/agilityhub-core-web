@@ -1,0 +1,741 @@
+# E7-W03 round 2 #6 and #5 (D11): the new tests against the unfixed mock and locales (2026-10-01)
+
+$ pnpm --dir packages/api-client exec vitest run src/mocks/backoffice-handlers.test.ts -t "E7-W03 round 2|T-15-32"
+# exit code: 1
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/backoffice-handlers.test.ts (47 tests | 4 failed | 42 skipped) 226ms
+   ❯ E7-W03 round 2 #6 · S15 §6 `GET /jobs`: the processes of a module that is off are absent (R-15-01, R-15-16) (3)
+     × E7-W03 round 2 #6 · T-15-32: under waitlist.mode = ALL_AT_ONCE the Cànic lists the core's processes in catalog order — no waitlist-fifo — plus billing-reminder (BILLING on, a P10 the core does not register yet) 78ms
+     × E7-W03 round 2 #6 · R-15-09: under ALL_AT_ONCE waitlist-fifo's routes answer like a process whose module is off — 404 MODULE_DISABLED (CATALEG_ERRORS §1) — and nothing runs or switches 49ms
+     × E7-W03 round 2 #6 · T-15-24: with waitlist.mode = FIFO waitlist-fifo is listed at its catalog place and runs — its history is a FIFO club's, never SKIPPED{MODULE_OFF} 38ms
+   ❯ E5-W03 step 8 · S15 processes (GET /jobs, trigger, switch, runs) answer like the api (6)
+     × E7-W03 round 2 #5 (D11) · R-15-14: [Simula] on reminders counts WOULD_REMIND and [Executa ara] classReminders, as the core does 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E7-W03 round 2 #6 · S15 §6 `GET /jobs`: the processes of a module that is off are absent (R-15-01, R-15-16) > E7-W03 round 2 #6 · T-15-32: under waitlist.mode = ALL_AT_ONCE the Cànic lists the core's processes in catalog order — no waitlist-fifo — plus billing-reminder (BILLING on, a P10 the core does not register yet)
+AssertionError: expected [ 'week-opening', 'risk-review', …(7) ] to deeply equal [ 'week-opening', 'risk-review', …(6) ]
+
+- Expected
++ Received
+
+@@ -2,9 +2,10 @@
+    "week-opening",
+    "risk-review",
+    "no-show-notices",
+    "reminders",
+    "expirations",
++   "waitlist-fifo",
+    "class-finishing",
+    "cleanup",
+    "billing-reminder",
+  ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:124:19
+    122|     expect(findParameter("waitlist.mode")?.value).toBe("ALL_AT_ONCE");
+    123|     const canic = await jobNames("admin");
+    124|     expect(canic).toEqual([
+       |                   ^
+    125|       "week-opening",
+    126|       "risk-review",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E7-W03 round 2 #6 · S15 §6 `GET /jobs`: the processes of a module that is off are absent (R-15-01, R-15-16) > E7-W03 round 2 #6 · R-15-09: under ALL_AT_ONCE waitlist-fifo's routes answer like a process whose module is off — 404 MODULE_DISABLED (CATALEG_ERRORS §1) — and nothing runs or switches
+AssertionError: expected [ 200, undefined ] to deeply equal [ 404, 'MODULE_DISABLED' ]
+
+- Expected
++ Received
+
+  [
+-   404,
+-   "MODULE_DISABLED",
++   200,
++   undefined,
+  ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:156:49
+    154|     ];
+    155|     for (const answer of answers) {
+    156|       expect([answer.status, answer.body.code]).toEqual([404, "MODULE_…
+       |                                                 ^
+    157|       valid("ApiError", answer.body);
+    158|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E7-W03 round 2 #6 · S15 §6 `GET /jobs`: the processes of a module that is off are absent (R-15-01, R-15-16) > E7-W03 round 2 #6 · T-15-24: with waitlist.mode = FIFO waitlist-fifo is listed at its catalog place and runs — its history is a FIFO club's, never SKIPPED{MODULE_OFF}
+AssertionError: expected [ { counters: {}, …(11) }, …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "counters": {},
++     "dryRun": false,
++     "durationMs": 1200,
++     "errorCount": 0,
++     "finishedAt": "2026-08-10T06:00:01.200Z",
++     "runId": "run-waitlist-fifo-3",
++     "scheduledFor": "2026-08-10T06:00:00Z",
++     "scheduledForLocal": "2026-08-10T08:00",
++     "skipReason": "MODULE_OFF",
++     "startedAt": "2026-08-10T06:00:00Z",
++     "status": "SKIPPED",
++     "trigger": "SCHEDULE",
++   },
++   {
++     "counters": {},
++     "dryRun": false,
++     "durationMs": 1200,
++     "errorCount": 0,
++     "finishedAt": "2026-08-10T05:00:01.200Z",
++     "runId": "run-waitlist-fifo-2",
++     "scheduledFor": "2026-08-10T05:00:00Z",
++     "scheduledForLocal": "2026-08-10T07:00",
++     "skipReason": "MODULE_OFF",
++     "startedAt": "2026-08-10T05:00:00Z",
++     "status": "SKIPPED",
++     "trigger": "SCHEDULE",
++   },
++   {
++     "counters": {},
++     "dryRun": false,
++     "durationMs": 1200,
++     "errorCount": 0,
++     "finishedAt": "2026-08-10T04:00:01.200Z",
++     "runId": "run-waitlist-fifo-1",
++     "scheduledFor": "2026-08-10T04:00:00Z",
++     "scheduledForLocal": "2026-08-10T06:00",
++     "skipReason": "MODULE_OFF",
++     "startedAt": "2026-08-10T04:00:00Z",
++     "status": "SKIPPED",
++     "trigger": "SCHEDULE",
++   },
++ ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:183:80
+    181|     valid("ListPageJobRunListItem", runs.body);
+    182|     expect(runs.body.items.length).toBeGreaterThan(0);
+    183|     expect(runs.body.items.filter((item) => item.skipReason === "MODUL…
+       |                                                                                ^
+    184|     const plan = await as<JobRun>("admin", "POST", "/jobs/waitlist-fif…
+    185|     expect(plan.status).toBe(200);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W03 step 8 · S15 processes (GET /jobs, trigger, switch, runs) answer like the api > E7-W03 round 2 #5 (D11) · R-15-14: [Simula] on reminders counts WOULD_REMIND and [Executa ara] classReminders, as the core does
+AssertionError: expected { classReminders: 1, …(1) } to deeply equal { WOULD_REMIND: 1 }
+
+- Expected
++ Received
+
+  {
+-   "WOULD_REMIND": 1,
++   "classReminders": 1,
++   "trainingReminders": 0,
+  }
+
+ ❯ src/mocks/backoffice-handlers.test.ts:325:40
+    323|     // The core's plan and run of P4 (E7-W03 `106/107-e7-core-run.json…
+    324|     const plan = await as<JobRun>("admin", "POST", "/jobs/reminders/tr…
+    325|     expect(plan.body.effects.counters).toEqual({ WOULD_REMIND: 1 });
+       |                                        ^
+    326|     const run = await as<JobRun>("admin", "POST", "/jobs/reminders/tri…
+    327|     expect(run.body.effects.counters).toEqual({ classReminders: 1 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed | 42 skipped (47)
+   Start at  20:49:32
+   Duration  2.29s (transform 49%, import 40%, tests 11%)
+
+
+$ pnpm --dir apps/clubs-admin exec vitest run src/catalogs/JobsCard.test.tsx src/catalogs/JobsCardCounters.test.tsx -t "E7-W03 round 2|with waitlist.mode = FIFO"
+# exit code: 1
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/JobsCard.test.tsx (30 tests | 2 failed | 28 skipped) 540ms
+   ❯ T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) (15)
+     × E7-W03 round 2 #6 · S15 §2 «fila absent»: under waitlist.mode = ALL_AT_ONCE the Cànic's card has no «Llista d'espera (FIFO)» row — the core's seven processes plus «Recordatori de facturació» 364ms
+     × with waitlist.mode = FIFO lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run 171ms
+ ❯ src/catalogs/JobsCardCounters.test.tsx (9 tests | 3 failed | 6 skipped) 30424ms
+   ❯ T-15-34 E7-W03 round 2 #5 (D11; ruling E89, INC-53 item 15): P4's dry-run counter WOULD_REMIND and its run's classReminders read with their labels (S15 R-15-14) (3)
+     × T-15-34 E7-W03 round 2 #5 (es): «Recordatorios»'s last run and [Simula] plan say «1 recordatorio previsto», its [Executa ara] summary the class reminders' label, never WOULD_REMIND or classReminders 10217ms
+     × T-15-34 E7-W03 round 2 #5 (en): «Reminders»'s last run and [Simula] plan say «1 planned reminder», its [Executa ara] summary the class reminders' label, never WOULD_REMIND or classReminders 10083ms
+     × T-15-34 E7-W03 round 2 #5 (ca): «Recordatoris»'s last run and [Simula] plan say «1 recordatori previst», its [Executa ara] summary the class reminders' label, never WOULD_REMIND or classReminders 10114ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > E7-W03 round 2 #6 · S15 §2 «fila absent»: under waitlist.mode = ALL_AT_ONCE the Cànic's card has no «Llista d'espera (FIFO)» row — the core's seven processes plus «Recordatori de facturació»
+AssertionError: expected [ 'week-opening', 'risk-review', …(7) ] to deeply equal [ 'week-opening', 'risk-review', …(6) ]
+
+- Expected
++ Received
+
+@@ -2,9 +2,10 @@
+    "week-opening",
+    "risk-review",
+    "no-show-notices",
+    "reminders",
+    "expirations",
++   "waitlist-fifo",
+    "class-finishing",
+    "cleanup",
+    "billing-reminder",
+  ]
+
+ ❯ src/catalogs/JobsCard.test.tsx:125:7
+    123|         .getAllByRole("listitem")
+    124|         .map((row) => row.getAttribute("data-job")),
+    125|     ).toEqual([
+       |       ^
+    126|       "week-opening",
+    127|       "risk-review",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > with waitlist.mode = FIFO lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/correcta/u`
+
+Here are the accessible roles:
+
+  strong:
+
+  Name "":
+  <strong />
+
+  --------------------------------------------------
+  button:
+
+  Name "fa 12 min · omesa":
+  <button
+    class="jobs-card__last"
+    type="button"
+  />
+
+  --------------------------------------------------switch:
+
+  Name "Llista d'espera (FIFO) activat":
+  <button
+    aria-checked="true"
+    aria-label="Llista d'espera (FIFO) activat"
+    class="ah-switch ah-switch--checked"
+    role="switch"
+    type="button"
+  />
+
+  --------------------------------------------------
+  button:
+
+  Name "Simula Llista d'espera (FIFO)":
+  <button
+    aria-label="Simula Llista d'espera (FIFO)"
+    class="ah-button ah-button--secondary"
+    type="button"
+  />
+
+  Name "Executa ara Llista d'espera (FIFO)":
+  <button
+    aria-label="Executa ara Llista d'espera (FIFO)"
+    class="ah-button ah-button--ghost"
+    type="button"
+  />
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+<li
+  class="jobs-card__row"
+  data-job="waitlist-fifo"
+>
+  <div
+    class="jobs-card__main"
+  >
+    <strong>
+      Llista d'espera (FIFO)
+    </strong>
+    <span>
+      continu
+    </span>
+    <button
+      class="jobs-card__last"
+      type="button"
+    >
+      fa 12 min · omesa
+    </button>
+  </div>
+  <div
+    class="jobs-card__actions"
+  >
+    <button
+      aria-checked="true"
+      aria-label="Llista d'espera (FIFO) activat"
+      class="ah-switch ah-switch--checked"
+      role="switch"
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        class="ah-switch__thumb"
+      />
+    </button>
+    <button
+      aria-label="Simula Llista d'espera (FIFO)"
+      class="ah-button ah-button--secondary"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Simula
+      </span>
+    </button>
+    <button
+      aria-label="Executa ara Llista d'espera (FIFO)"
+      class="ah-button ah-button--ghost"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Executa ara
+      </span>
+    </button>
+  </div>
+</li>
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/catalogs/JobsCard.test.tsx:160:25
+    158|     const fifo = rowOf(card, "Llista d'espera (FIFO)");
+    159|     expect(within(fifo).getByText("continu")).toBeVisible();
+    160|     expect(within(fifo).getByRole("button", { name: /correcta/u })).to…
+       |                         ^
+    161|     expect(within(fifo).queryByRole("button", { name: /omesa/u })).toB…
+    162|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/catalogs/JobsCardCounters.test.tsx > T-15-34 E7-W03 round 2 #5 (D11; ruling E89, INC-53 item 15): P4's dry-run counter WOULD_REMIND and its run's classReminders read with their labels (S15 R-15-14) > T-15-34 E7-W03 round 2 #5 (es): «Recordatorios»'s last run and [Simula] plan say «1 recordatorio previsto», its [Executa ara] summary the class reminders' label, never WOULD_REMIND or classReminders
+TestingLibraryElementError: Unable to find role="button" and name `/ · simulación · 1 recordatorio previsto$/u`
+
+Ignored nodes: comments, script, style
+<li
+  class="jobs-card__row"
+  data-job="reminders"
+>
+  <div
+    class="jobs-card__main"
+  >
+    <strong>
+      Recordatorios
+    </strong>
+    <span>
+      continuo
+    </span>
+    <button
+      class="jobs-card__last"
+      type="button"
+    >
+      hace 0 min · correcta · simulación · 1 recordatorio de clase
+    </button>
+  </div>
+  <div
+    class="jobs-card__actions"
+  >
+    <button
+      aria-checked="true"
+      aria-label="Recordatorios activado"
+      class="ah-switch ah-switch--checked"
+      role="switch"
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        class="ah-switch__thumb"
+      />
+    </button>
+    <button
+      aria-label="Simula Recordatorios"
+      class="ah-button ah-button--secondary"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Simula
+      </span>
+    </button>
+    <button
+      aria-label="Ejecuta ahora Recordatorios"
+      class="ah-button ah-button--ghost"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Ejecuta ahora
+      </span>
+    </button>
+  </div>
+</li>
+
+Ignored nodes: comments, script, style
+<li
+  class="jobs-card__row"
+  data-job="reminders"
+>
+  <div
+    class="jobs-card__main"
+  >
+    <strong>
+      Recordatorios
+    </strong>
+    <span>
+      continuo
+    </span>
+    <button
+      class="jobs-card__last"
+      type="button"
+    >
+      hace 0 min · correcta · simulación · 1 recordatorio de clase
+    </button>
+  </div>
+  <div
+    class="jobs-card__actions"
+  >
+    <button
+      aria-checked="true"
+      aria-label="Recordatorios activado"
+      class="ah-switch ah-switch--checked"
+      role="switch"
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        class="ah-switch__thumb"
+      />
+    </button>
+    <button
+      aria-label="Simula Recordatorios"
+      class="ah-button ah-button--secondary"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Simula
+      </span>
+    </button>
+    <button
+      aria-label="Ejecuta ahora Recordatorios"
+      class="ah-button ah-button--ghost"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Ejecuta ahora
+      </span>
+    </button>
+  </div>
+</li>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/JobsCardCounters.test.tsx:286:38
+    284|       const raw = /WOULD_REMIND|classReminders|trainingReminders/u;
+    285|
+    286|       const last = await within(row).findByRole("button", {
+       |                                      ^
+    287|         name: new RegExp(` · ${expected.tag} · ${expected.plan}$`, "u"…
+    288|       });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/catalogs/JobsCardCounters.test.tsx > T-15-34 E7-W03 round 2 #5 (D11; ruling E89, INC-53 item 15): P4's dry-run counter WOULD_REMIND and its run's classReminders read with their labels (S15 R-15-14) > T-15-34 E7-W03 round 2 #5 (en): «Reminders»'s last run and [Simula] plan say «1 planned reminder», its [Executa ara] summary the class reminders' label, never WOULD_REMIND or classReminders
+TestingLibraryElementError: Unable to find role="button" and name `/ · simulation · 1 planned reminder$/u`
+
+Ignored nodes: comments, script, style
+<li
+  class="jobs-card__row"
+  data-job="reminders"
+>
+  <div
+    class="jobs-card__main"
+  >
+    <strong>
+      Reminders
+    </strong>
+    <span>
+      continuous
+    </span>
+    <button
+      class="jobs-card__last"
+      type="button"
+    >
+      0 min. ago · succeeded · simulation · 1 class reminder
+    </button>
+  </div>
+  <div
+    class="jobs-card__actions"
+  >
+    <button
+      aria-checked="true"
+      aria-label="Reminders on"
+      class="ah-switch ah-switch--checked"
+      role="switch"
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        class="ah-switch__thumb"
+      />
+    </button>
+    <button
+      aria-label="Simulate Reminders"
+      class="ah-button ah-button--secondary"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Simulate
+      </span>
+    </button>
+    <button
+      aria-label="Run Reminders now"
+      class="ah-button ah-button--ghost"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Run now
+      </span>
+    </button>
+  </div>
+</li>
+
+Ignored nodes: comments, script, style
+<li
+  class="jobs-card__row"
+  data-job="reminders"
+>
+  <div
+    class="jobs-card__main"
+  >
+    <strong>
+      Reminders
+    </strong>
+    <span>
+      continuous
+    </span>
+    <button
+      class="jobs-card__last"
+      type="button"
+    >
+      0 min. ago · succeeded · simulation · 1 class reminder
+    </button>
+  </div>
+  <div
+    class="jobs-card__actions"
+  >
+    <button
+      aria-checked="true"
+      aria-label="Reminders on"
+      class="ah-switch ah-switch--checked"
+      role="switch"
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        class="ah-switch__thumb"
+      />
+    </button>
+    <button
+      aria-label="Simulate Reminders"
+      class="ah-button ah-button--secondary"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Simulate
+      </span>
+    </button>
+    <button
+      aria-label="Run Reminders now"
+      class="ah-button ah-button--ghost"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Run now
+      </span>
+    </button>
+  </div>
+</li>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/JobsCardCounters.test.tsx:286:38
+    284|       const raw = /WOULD_REMIND|classReminders|trainingReminders/u;
+    285|
+    286|       const last = await within(row).findByRole("button", {
+       |                                      ^
+    287|         name: new RegExp(` · ${expected.tag} · ${expected.plan}$`, "u"…
+    288|       });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/catalogs/JobsCardCounters.test.tsx > T-15-34 E7-W03 round 2 #5 (D11; ruling E89, INC-53 item 15): P4's dry-run counter WOULD_REMIND and its run's classReminders read with their labels (S15 R-15-14) > T-15-34 E7-W03 round 2 #5 (ca): «Recordatoris»'s last run and [Simula] plan say «1 recordatori previst», its [Executa ara] summary the class reminders' label, never WOULD_REMIND or classReminders
+TestingLibraryElementError: Unable to find role="button" and name `/ · simulació · 1 recordatori previst$/u`
+
+Ignored nodes: comments, script, style
+<li
+  class="jobs-card__row"
+  data-job="reminders"
+>
+  <div
+    class="jobs-card__main"
+  >
+    <strong>
+      Recordatoris
+    </strong>
+    <span>
+      continu
+    </span>
+    <button
+      class="jobs-card__last"
+      type="button"
+    >
+      fa 0 min · correcta · simulació · 1 recordatori de classe
+    </button>
+  </div>
+  <div
+    class="jobs-card__actions"
+  >
+    <button
+      aria-checked="true"
+      aria-label="Recordatoris activat"
+      class="ah-switch ah-switch--checked"
+      role="switch"
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        class="ah-switch__thumb"
+      />
+    </button>
+    <button
+      aria-label="Simula Recordatoris"
+      class="ah-button ah-button--secondary"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Simula
+      </span>
+    </button>
+    <button
+      aria-label="Executa ara Recordatoris"
+      class="ah-button ah-button--ghost"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Executa ara
+      </span>
+    </button>
+  </div>
+</li>
+
+Ignored nodes: comments, script, style
+<li
+  class="jobs-card__row"
+  data-job="reminders"
+>
+  <div
+    class="jobs-card__main"
+  >
+    <strong>
+      Recordatoris
+    </strong>
+    <span>
+      continu
+    </span>
+    <button
+      class="jobs-card__last"
+      type="button"
+    >
+      fa 0 min · correcta · simulació · 1 recordatori de classe
+    </button>
+  </div>
+  <div
+    class="jobs-card__actions"
+  >
+    <button
+      aria-checked="true"
+      aria-label="Recordatoris activat"
+      class="ah-switch ah-switch--checked"
+      role="switch"
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        class="ah-switch__thumb"
+      />
+    </button>
+    <button
+      aria-label="Simula Recordatoris"
+      class="ah-button ah-button--secondary"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Simula
+      </span>
+    </button>
+    <button
+      aria-label="Executa ara Recordatoris"
+      class="ah-button ah-button--ghost"
+      type="button"
+    >
+      <span
+        class="ah-button__content"
+      >
+        Executa ara
+      </span>
+    </button>
+  </div>
+</li>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/JobsCardCounters.test.tsx:286:38
+    284|       const raw = /WOULD_REMIND|classReminders|trainingReminders/u;
+    285|
+    286|       const last = await within(row).findByRole("button", {
+       |                                      ^
+    287|         name: new RegExp(` · ${expected.tag} · ${expected.plan}$`, "u"…
+    288|       });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 34 skipped (39)
+   Start at  20:50:26
+   Duration  33.64s (tests 83%, transform 7%, environment 5%, import 3%, setup 1%)
+
