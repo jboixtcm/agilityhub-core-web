@@ -8,6 +8,7 @@ export const namespaces = [
   "activities",
   "admin-activities",
   "admin-audit",
+  "admin-billing",
   "admin-catalogs",
   "admin-census",
   "admin-dashboard",

@@ -242,5 +242,83 @@
     "ACTIVE": "activa",
     "DISABLED": "desactivada",
     "ARCHIVED": "arxivada"
+  },
+  "invoiceStatus": {
+    "PENDING": "pendent",
+    "COLLECTING": "remesat",
+    "PAID": "cobrat",
+    "FAILED": "impagat",
+    "CANCELLED": "anul·lat"
+  },
+  "invoiceKind": {
+    "PERIODIC": "Mensual",
+    "MANUAL": "Manual",
+    "MIGRATED": "Migrat"
+  },
+  "paymentMethodType": {
+    "SEPA_DD": "Domiciliació",
+    "CARD": "Targeta",
+    "MANUAL": "Efectiu"
+  },
+  "billingIncident": {
+    "NO_BANK_ACCOUNT": "sense compte bancari informat",
+    "NO_PRICE": "sense tarifa assignada",
+    "NO_PLAN": "sense modalitat assignada",
+    "CARD_INVALID": "targeta no vàlida",
+    "CURRENCY_MISMATCH": "moneda diferent de la del club",
+    "PROVIDER_DISABLED": "proveïdor de pagament desactivat"
+  },
+  "paymentChannel": {
+    "CASH": "Efectiu",
+    "TRANSFER": "Transferència",
+    "BIZUM": "Bizum"
+  },
+  "remittanceStatus": {
+    "GENERATED": "generada",
+    "SUBMITTED": "enviada al banc",
+    "ROLLED_BACK": "retrocedida"
+  },
+  "rollbackBlocker": {
+    "REMITTANCE_SUBMITTED": "la remesa ja s'ha enviat al banc",
+    "COLLECTION_SUBMITTED": "hi ha cobraments enviats",
+    "INVOICE_PAID": "hi ha rebuts cobrats",
+    "MANUAL_INVOICE_AFTER": "s'ha emès un rebut manual després de la generació"
+  },
+  "upfrontConcept": {
+    "ENTRY_FEE": "Entrada",
+    "FIRST_MONTH": "Primer mes",
+    "PACK": "Pack",
+    "SINGLE_CLASS": "Classe individual",
+    "ACTIVITY": "Activitat",
+    "OTHER": "Altres"
+  },
+  "invoiceLineOrigin": {
+    "MONTHLY_FEE": "Quota mensual",
+    "MAINTENANCE_FEE": "Quota de manteniment",
+    "INACTIVITY_FEE": "Quota d'inactivitat",
+    "SINGLE_CLASS": "Classe individual",
+    "PACK": "Pack",
+    "ADJUSTMENT": "Ajust",
+    "MIGRATED": "Migrat"
+  },
+  "collectionProvider": {
+    "SEPA_XML": "Remesa SEPA",
+    "STRIPE": "Targeta",
+    "MANUAL": "Manual"
+  },
+  "collectionStatus": {
+    "CREATED": "creat",
+    "SUBMITTED": "enviat",
+    "SUCCEEDED": "cobrat",
+    "FAILED": "fallit",
+    "REFUNDED": "reemborsat"
+  },
+  "collectionFailure": {
+    "ROLLBACK": "retrocés de la remesa",
+    "BANK_RETURN": "devolució bancària",
+    "NO_PAYMENT_METHOD": "sense targeta vàlida",
+    "card_declined": "targeta rebutjada",
+    "expired_card": "targeta caducada",
+    "insufficient_funds": "fons insuficients"
   }
 }

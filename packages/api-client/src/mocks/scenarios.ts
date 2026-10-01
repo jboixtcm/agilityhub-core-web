@@ -1,6 +1,7 @@
 import type { components } from "../generated/schema";
 
 import type { AttendanceVariant } from "./fixtures/attendance";
+import type { BillingVariant } from "./fixtures/billing";
 import brandingCanic from "./fixtures/branding-canic.json";
 import brandingMinim from "./fixtures/branding-minim.json";
 import type { FollowupVariant, HistoryVariant, InboxVariant } from "./fixtures/followup";
@@ -22,6 +23,11 @@ type OnboardingState = components["schemas"]["OnboardingState"];
 export interface MockScenarioDefinition {
   /** The S10 world's club-wide variant (`fixtures/attendance.ts`, screens 20–22). */
   attendance?: AttendanceVariant;
+  /**
+   * The S12 world of D6 (`fixtures/billing.ts`, E8-W01): the club's payment providers and the
+   * month's state. Default: the Cànic's SEPA + cash with the mockup's generated September.
+   */
+  billing?: BillingVariant;
   branding: Branding;
   /**
    * S08 R-08-09, the limit worlds (`fixtures/bookings.ts`), both at 2 of 2 (R-08-03): `swap`
@@ -112,6 +118,60 @@ const scenarios = {
   adminExportsQueued: {
     branding: { ...canic, locales: ["ca", "es", "en"] },
     exportsQueued: true,
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /**
+   * S12 R-12-28 (E8-W01): a club paying by hand only (`MANUAL`): D6's button 2 reads «2 · GENERA
+   * ELS REBUTS», September is simulated and not generated yet, and a run makes no remittance.
+   */
+  billingManualOnly: {
+    billing: "manualOnly",
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /**
+   * S12 R-12-13 (E8-W01): a card club (`STRIPE` + `MANUAL`): the card KPI, September generated and
+   * its cards not charged yet ([COBRA LES TARGETES]); charging declines one card («impagat
+   * (targeta)») and finds another withdrawn.
+   */
+  billingStripe: {
+    billing: "stripe",
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /**
+   * S12 R-12-14 (E8-W01): the month reads rollbackable, but another admin marks the remittance as
+   * sent just before the rollback: `409 RUN_NOT_ROLLBACKABLE {reasons: [REMITTANCE_SUBMITTED]}`.
+   */
+  billingRollbackBlocked: {
+    billing: "rollbackBlocked",
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /**
+   * S12 R-12-29 (E8-W01): an ADMIN of another club with BILLING on, so the billing routes answer by
+   * tenant (404, an empty month), not by module.
+   */
+  billingOtherClub: {
+    branding: {
+      ...minimal,
+      locales: ["ca", "es", "en"],
+      modules: [...minimal.modules, "BILLING"],
+    },
+    me: {
+      ...admin,
+      membership: { ...adminMembership, clubId: "50000000-0000-4000-8000-000000000002" },
+    },
+    sessions: accountSessions,
+  },
+  /** S12 R-12-07 (E8-W01): September's simulation is older than the last change (409 SIMULATION_STALE). */
+  billingStale: {
+    billing: "stale",
+    branding: { ...canic, locales: ["ca", "es", "en"] },
     me: meAdmin as Me,
     sessions: accountSessions,
   },

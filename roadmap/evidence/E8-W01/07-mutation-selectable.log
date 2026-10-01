@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (34 tests | 1 failed | 31 skipped) 1180ms
+   ❯ T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) (2)
+     × T-12-25: a selection enables [Marcar cobrat (selecció)]; remitted rows cannot be selected; the bulk payment marks them paid 230ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) > T-12-25: a selection enables [Marcar cobrat (selecció)]; remitted rows cannot be selected; the bulk payment marks them paid
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<input
+  aria-label="Selecciona el rebut 2026-0912"
+  class="ah-checkbox"
+  type="checkbox"
+/>[39m
+ ❯ src/billing/BillingPage.test.tsx:580:7
+    578|         name: "Selecciona el rebut 2026-0912",
+    579|       }),
+    580|     ).toBeDisabled();
+       |       ^
+    581|     fireEvent.click(
+    582|       within(await invoiceRow("2026-0915")).getByRole("checkbox", {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed | 31 skipped (34)
+   Start at  18:32:58
+   Duration  3.09s (tests 40%, transform 30%, environment 16%, import 10%, setup 3%)
+

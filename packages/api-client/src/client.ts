@@ -45,6 +45,14 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   "/followup/read-all",
   // S11 «Enviar comunicat» and its dryRun (R-11-13).
   /^\/message-templates\/[^/]+\/send$/,
+  // S12 D6 and the remittances page (R-12-11, R-12-13…R-12-20, R-12-29): every write the contract
+  // keys. Not `POST /billing/simulations`: its contract declares no key.
+  /^\/billing\/runs$/,
+  /^\/billing\/runs\/[^/]+\/(card-charges|rollback)$/,
+  /^\/invoices$/,
+  /^\/invoices\/payments$/,
+  /^\/invoices\/[^/]+\/(payment|failure|retry|refund|cancellation)$/,
+  /^\/remittances\/[^/]+\/submission$/,
   // Not S11's member writes (screen 11's read and read-all, 12's push subscription): their
   // contract declares no Idempotency-Key, and a key goes only where it is declared (CONVENCIONS_API
   // §7, E79; E7-W02 round 2 #8).

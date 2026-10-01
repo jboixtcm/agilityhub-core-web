@@ -700,7 +700,7 @@ export interface paths {
         };
         /**
          * billingPeriod
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6's month (`?mes=YYYY-MM`): its last simulation (step 1), its live run with rollbackable and rollbackBlockers (R-12-14), its remittance and the chip counts. A month is not a stored resource: every club reads its own, null parts until they exist. period not YYYY-MM → 400 VALIDATION_ERROR. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6's month (`?mes=YYYY-MM`): its last simulation (step 1), its live run — else its last rolled-back one — with rollbackable and rollbackBlockers computed now (R-12-14), its remittance and the chip counts (all, pending = PENDING, remitted = COLLECTING, paid, failed). A month is not a stored resource: every club reads its own, null parts until they exist. period not YYYY-MM → 400 VALIDATION_ERROR. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["billingPeriod"];
         put?: never;
@@ -722,7 +722,7 @@ export interface paths {
         put?: never;
         /**
          * createBillingRun
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-11/12 «2 · GENERA REMESA SEPA (XML)»: one Mongo transaction under the club's billing lock (409 BILLING_BUSY) creates the PENDING/COLLECTING invoices numbered {series}-{number:04d}, one Collection each, the remittance (pain.008 validated against the XSD before the commit), advances nextInvoiceDate, marks the PendingCharges; InvoiceIssued per invoice, InvoiceCollecting (SEPA), RemittanceGenerated, BillingRunCreated, REMITTANCE_GENERATED audit. One live run per month (409 RUN_EXISTS); the simulation must be the month's, made after the last relevant change (409 SIMULATION_STALE; another club's or an unknown one → 404). collectionDate defaults to billing.sepa.collectionDayOfMonth of the billed month; too soon → 422 COLLECTION_DATE_TOO_SOON {requested, earliest}. Nothing to bill → 422 NO_INVOICES; SEPA members without the club's creditor → 422 SEPA_NOT_CONFIGURED. The same Idempotency-Key answers the same run. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-11/12 «2 · GENERA REMESA SEPA (XML)»: one Mongo transaction under the club's billing lock (409 BILLING_BUSY) creates the PENDING/COLLECTING invoices numbered {series}-{number:04d} in the members' order (last names, first name, member number), one Collection each, the remittance (pain.008 written and validated before the commit), advances the included members' nextInvoiceDate, marks the PendingCharges; InvoiceIssued per invoice, InvoiceCollecting (SEPA), RemittanceGenerated, BillingRunCreated, one REMITTANCE_GENERATED audit entry with details.invoiceIds. One live run per month (409 RUN_EXISTS); the simulation must be the month's, made after the last change of the members, family groups, plans, prices and billing.* parameters (409 SIMULATION_STALE; another club's or an unknown one → 404). Members with an incident are skipped (skipped[]). collectionDate (SEPA only) defaults to billing.sepa.collectionDayOfMonth of the billed month (0 = its last day) and must leave two business days after today → otherwise 422 COLLECTION_DATE_TOO_SOON {requested, earliest}. Nothing to bill → 422 NO_INVOICES; SEPA members without a SEPA writer → 422 SEPA_NOT_CONFIGURED (until E8-T03). The same Idempotency-Key answers the same run. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["createBillingRun"];
         delete?: never;
@@ -740,7 +740,7 @@ export interface paths {
         };
         /**
          * billingRun
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. A run with rollbackable and rollbackBlockers computed now (R-12-14). Another club's → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. A run with rollbackable and rollbackBlockers computed now (R-12-14). Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["billingRun"];
         put?: never;
@@ -762,7 +762,7 @@ export interface paths {
         put?: never;
         /**
          * chargeRunCards
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-13 [COBRA LES TARGETES]: an off-session PaymentIntent per CARD invoice of the run (idempotencyKey = invoiceId, batches of 25), Collection SUBMITTED, invoice COLLECTING; run CHARGING until every Stripe collection is resolved by webhook. An invoice without a valid card → FAILED{NO_PAYMENT_METHOD} + N-35, listed in skipped. CARD_CHARGES_STARTED audit. A run not GENERATED → 409 INVALID_STATE; STRIPE not enabled → 422 PAYMENT_PROVIDER_NOT_ENABLED. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-13 [COBRA LES TARGETES]: an off-session PaymentIntent per CARD invoice of the run (idempotencyKey = invoiceId, batches of 25), Collection SUBMITTED, invoice COLLECTING; run CHARGING until every Stripe collection is resolved by webhook. An invoice without a valid card → FAILED{NO_PAYMENT_METHOD} + N-35, listed in skipped. CARD_CHARGES_STARTED audit. A run not GENERATED → 409 INVALID_STATE; STRIPE not enabled → 422 PAYMENT_PROVIDER_NOT_ENABLED. Until E8-T04 there is no card provider: every call answers 422 PAYMENT_PROVIDER_NOT_ENABLED after the guards. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["chargeRunCards"];
         delete?: never;
@@ -782,7 +782,7 @@ export interface paths {
         put?: never;
         /**
          * rollbackBillingRun
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-14 [Retrocedeix la remesa] with the typed confirmation: invoices CANCELLED{ROLLBACK}, a FAILED{ROLLBACK} collection each, remittance ROLLED_BACK (file kept), numbering and nextInvoiceDate restored, PendingCharge.invoiceId cleared; RemittanceRolledBack, InvoiceCancelled each, REMITTANCE_ROLLED_BACK audit. Not allowed → 409 RUN_NOT_ROLLBACKABLE {reasons[]: REMITTANCE_SUBMITTED · COLLECTION_SUBMITTED · INVOICE_PAID · MANUAL_INVOICE_AFTER}. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-14 [Retrocedeix la remesa] with the typed confirmation (exactly RETROCEDIR, otherwise 400 VALIDATION_ERROR): one transaction under the billing lock — invoices CANCELLED{ROLLBACK}, a new FAILED{ROLLBACK} collection each, remittance ROLLED_BACK (file kept), the numbering given back, each member's nextInvoiceDate restored, PendingCharge.invoiceId cleared; RemittanceRolledBack, InvoiceCancelled each, one REMITTANCE_ROLLED_BACK audit entry. The month can then be simulated and generated again with the same numbers. Not allowed → 409 RUN_NOT_ROLLBACKABLE {reasons[]: REMITTANCE_SUBMITTED · COLLECTION_SUBMITTED · INVOICE_PAID · MANUAL_INVOICE_AFTER (an invoice numbered after the run)}; a run already rolled back → 409 RUN_NOT_ROLLBACKABLE {reasons: []}. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["rollbackBillingRun"];
         delete?: never;
@@ -802,7 +802,7 @@ export interface paths {
         put?: never;
         /**
          * simulateBilling
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-07 «1 · SIMULA EL MES»: computes R-12-01…05 without writing business data (incidents NO_BANK_ACCOUNT, NO_PLAN, NO_PRICE, CARD_INVALID, CURRENCY_MISMATCH, PROVIDER_DISABLED; cash members with their planned leave; preview and KPIs) and keeps it as the month's only simulation; RemittanceSimulated. A month more than three months ahead → 400 VALIDATION_ERROR (S12 §13). Another simulation, run or rollback holding the club's billing lock → 409 BILLING_BUSY. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-07 «1 · SIMULA EL MES»: computes R-12-01…05 without writing business data (incidents NO_BANK_ACCOUNT, NO_PLAN, NO_PRICE, CARD_INVALID, CURRENCY_MISMATCH, PROVIDER_DISABLED; cash members with their planned leave; preview and KPIs) and keeps it as the month's only simulation; RemittanceSimulated. A month more than three months ahead → 400 VALIDATION_ERROR (S12 §13). Another simulation, run or rollback holding the club's billing lock → 409 BILLING_BUSY. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["simulateBilling"];
         delete?: never;
@@ -942,7 +942,7 @@ export interface paths {
         put?: never;
         /**
          * Create signup checkout session
-         * @description S04 §6, R-04-20/26. BILLING required. ANON by host with signupToken, MEMBER for self, ADMIN for tenant member. Idempotency-Key is a UUID. Anonymous limit 10/hour per club and IP from proxy-injected X-Forwarded-For. No cookies or CSRF. E3-T03 enforces capability/ownership/redirect checks, encrypted anonymous replay protection and limits. E5-T28 (A3-06): the session and its rows commit in the signup's retried transaction (a concurrent census write never gives a 500), and the provider session opens after that commit; a provider failure expires the session again. A rejection of the signup expires its open session (A3-01) and gives the rows of other submissions it charged back to DUE; a rejection that lands while the provider opens the session gives 409 INVALID_STATE and no checkoutUrl. A retry with the same Idempotency-Key after a lost answer returns the same checkout session. E8-T01 (S12 §6): bookingId (S08 R-08-18, a PAY_TO_BOOK booking) and upfrontPaymentIds (the member's DUE rows, e.g. a pack from the app) are published; E8-T04 serves them: until then a request with either answers NOT_IMPLEMENTED after the same guards and writes nothing.
+         * @description S04 §6, R-04-20/26. BILLING required. ANON by host with signupToken, MEMBER for self, ADMIN for tenant member. Idempotency-Key is a UUID. Anonymous limit 10/hour per club and IP from proxy-injected X-Forwarded-For. No cookies or CSRF. E3-T03 enforces capability/ownership/redirect checks, encrypted anonymous replay protection and limits. E5-T28 (A3-06): the session and its rows commit in the signup's retried transaction (a concurrent census write never gives a 500), and the provider session opens after that commit; a provider failure expires the session again. A rejection of the signup expires its open session (A3-01) and gives the rows of other submissions it charged back to DUE; a rejection that lands while the provider opens the session gives 409 INVALID_STATE and no checkoutUrl. A retry with the same Idempotency-Key after a lost answer returns the same checkout session. E8-T01 (S12 §6): bookingId (S08 R-08-18, a PAY_TO_BOOK booking) and upfrontPaymentIds (the member's DUE rows, e.g. a pack from the app) are published; E8-T04 serves them. Until then a request with either first passes the same role, member and club checks as the signup checkout, then the booking and every upfront payment named must be that member's in the club (another member's, another club's or an unknown one → 404 NOT_FOUND), and only then answers NOT_IMPLEMENTED; it writes nothing.
          */
         post: operations["create_1"];
         delete?: never;
@@ -2094,7 +2094,7 @@ export interface paths {
         head?: never;
         /**
          * changeInactivity
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. R-13-05 [Modifica els mesos]: as the member's change (R-13-04), with overrideDeadline; months already billed are not recomputed (an ADJUSTMENT invoice in S12). An old version → 409 STALE_VERSION. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. R-13-05 [Modifica els mesos]: as the member's change (R-13-04), with overrideDeadline; months already billed are not recomputed (an ADJUSTMENT invoice in S12). An old version → 409 STALE_VERSION. Field presence: an omitted field stays, toMonth: null opens the period, fromMonth: null or an unknown field → 400 VALIDATION_ERROR. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
          */
         patch: operations["changeInactivity"];
         trace?: never;
@@ -2276,13 +2276,13 @@ export interface paths {
         };
         /**
          * invoices
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6's receipts, universal list (CONVENCIONS_API §4), newest number first; the chips Tots · Pendents · Remesats · Cobrats · Impagats are status filters; q searches the number and the member's name; D10's «Tots els rebuts ›» is filter=memberId:eq:{id}. total filters on amountMinor. An undeclared filter, sort or fields key → 400 INVALID_FILTER. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6's receipts, universal list (CONVENCIONS_API §4), newest number first; the chips Tots · Pendents · Remesats · Cobrats · Impagats are status filters; q searches the number and the member's name; D10's «Tots els rebuts ›» is filter=memberId:eq:{id}. total filters on amountMinor. concept is the first line's frozen description, «(+n)» when there are more lines. A receipt cancelled by a rollback (R-12-14: its number was reissued) is listed, counted and searched only when the status filter selects CANCELLED (eq or in), with rolledBack = true. An undeclared filter, sort or fields key → 400 INVALID_FILTER. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["invoices"];
         put?: never;
         /**
          * createManualInvoice
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-19: a MANUAL invoice (ADJUSTMENT lines, positive or negative) numbered like the others, PENDING; collected by hand (R-12-16) or, for SEPA_DD with includeInNextRun, by the next remittance. INVOICE_CREATED_MANUAL audit, InvoiceIssued. A line in another currency → 422 CURRENCY_MISMATCH; another club's member → 404; an erased one → 409 MEMBER_ERASED. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-19: a MANUAL invoice (ADJUSTMENT lines, positive or negative, base + round_half_even(base × taxPercent / 100)) numbered like the others from the series counter, PENDING, with the member's payment method frozen; collected by hand (R-12-16) or, for SEPA_DD with includeInNextRun, by a later remittance. INVOICE_CREATED_MANUAL audit, InvoiceIssued. While a run holds the club's billing lock → 409 BILLING_BUSY. A line in another currency → 422 CURRENCY_MISMATCH; another club's member → 404; an erased one → 409 MEMBER_ERASED. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["createManualInvoice"];
         delete?: never;
@@ -2322,7 +2322,7 @@ export interface paths {
         put?: never;
         /**
          * markInvoicesPaid
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-16 [Marcar cobrat (selecció)]: the same as one payment for every invoice, all or none (one of them in another state → 409 INVALID_STATE; another club's → 404). Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-16 [Marcar cobrat (selecció)]: the same as one payment for every invoice, in one transaction, all or none (one of them in another state → 409 INVALID_STATE; another club's → 404). Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["markInvoicesPaid"];
         delete?: never;
@@ -2340,7 +2340,7 @@ export interface paths {
         };
         /**
          * invoice
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6's drawer: the invoice, its lines, its collections (attempts and refunds) and refundedTotal. Another club's → 404 (T-12-21). Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D6's drawer: the invoice, its lines, its collections (attempts and refunds, oldest first) and refundedTotal. A collection's providerRef is Stripe's PaymentIntent, «{mandateRef}/{endToEndId}» for SEPA, the channel (and reference) of a manual payment. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["invoice"];
         put?: never;
@@ -2362,7 +2362,7 @@ export interface paths {
         put?: never;
         /**
          * cancelInvoice
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-19: a PENDING or FAILED invoice → CANCELLED{ADMIN}, InvoiceCancelled, INVOICE_CANCELLED audit; never PAID or COLLECTING (409 INVALID_STATE). Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-19: a PENDING or FAILED invoice → CANCELLED with the admin's reason, InvoiceCancelled{reason: ADMIN}, INVOICE_CANCELLED audit; never PAID or COLLECTING (409 INVALID_STATE {status}). The reason ROLLBACK is the rollback's own (R-12-14) → 400 VALIDATION_ERROR {field: reason}. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["cancelInvoice"];
         delete?: never;
@@ -2380,7 +2380,7 @@ export interface paths {
         };
         /**
          * invoiceDocument
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. The receipt PDF with the club's brand (S14 engine, T-12-20), in the member's language with the frozen descriptions. Another club's → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. The receipt PDF («Rebut») with the club's mark (T-12-20), rendered synchronously in the member's language (their signup language, else the club's) with the descriptions frozen at issue; the payment method masked, never an IBAN. Content-Disposition attachment «{displayNumber}.pdf». Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["invoiceDocument"];
         put?: never;
@@ -2402,7 +2402,7 @@ export interface paths {
         put?: never;
         /**
          * markInvoiceFailed
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-17 «impagat (manual)»: a COLLECTING SEPA invoice, or a PAID one with a SEPA collection (a later bank return) → Collection FAILED{BANK_RETURN} (appended), invoice FAILED, InvoiceFailed → N-10, INVOICE_MARKED_FAILED audit. No automatic claim or booking block (BR-08). Another state → 409 INVALID_STATE. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-17 «impagat (manual)»: a COLLECTING SEPA invoice, or a PAID one with a SEPA collection (a later bank return) → Collection FAILED{BANK_RETURN} (appended), invoice FAILED with the reason, InvoiceFailed → N-10 to the admins, INVOICE_MARKED_FAILED audit. No automatic claim or booking block (BR-08). at is a club-local day, not after today. Another state → 409 INVALID_STATE {status}. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["markInvoiceFailed"];
         delete?: never;
@@ -2422,7 +2422,7 @@ export interface paths {
         put?: never;
         /**
          * markInvoicePaid
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-16 [Marcar cobrat]: a PENDING or FAILED invoice paid by MANUAL or SEPA_DD (e.g. a transfer after a return) → Collection MANUAL SUCCEEDED, invoice PAID, InvoicePaid{provider: MANUAL}, INVOICE_MARKED_PAID audit. Another state → 409 INVALID_STATE; an old version → 409 STALE_VERSION. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-16 [Marcar cobrat]: a PENDING or FAILED invoice paid by MANUAL or SEPA_DD (e.g. a transfer after a return) → Collection MANUAL SUCCEEDED (channel, reference), invoice PAID, InvoicePaid{provider: MANUAL}, INVOICE_MARKED_PAID audit. paidAt is a club-local day, not after today (400 VALIDATION_ERROR). Another state or method → 409 INVALID_STATE {status}; an old version → 409 STALE_VERSION. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["markInvoicePaid"];
         delete?: never;
@@ -3082,7 +3082,7 @@ export interface paths {
         head?: never;
         /**
          * changeMyInactivity
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. R-13-04 [MODIFICA]: REQUESTED everything, APPROVED the months and comments, ACTIVE only toMonth (lengthen, shorten, set or open the end), within R-13-03's day-25 rule (422 INACTIVITY_DEADLINE_PASSED {earliestMonth}); applied without a new approval, history +1, InactivityChanged → N-18d; bookings in added months are cancelled (R-13-06). FINISHED/DENIED/CANCELLED → 409 INACTIVITY_INVALID_STATE; an old version → 409 STALE_VERSION. Another member's → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. R-13-04 [MODIFICA]: REQUESTED everything, APPROVED the months and comments, ACTIVE only toMonth (lengthen, shorten, set or open the end), within R-13-03's day-25 rule (422 INACTIVITY_DEADLINE_PASSED {earliestMonth}); applied without a new approval, history +1, InactivityChanged → N-18d; bookings in added months are cancelled (R-13-06). FINISHED/DENIED/CANCELLED → 409 INACTIVITY_INVALID_STATE; an old version → 409 STALE_VERSION (the version comes with each period of GET /me/inactivity-periods). Another member's → 404. Field presence: an omitted field stays, toMonth: null opens the period, fromMonth: null or an unknown field → 400 VALIDATION_ERROR. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
          */
         patch: operations["changeMyInactivity"];
         trace?: never;
@@ -3116,7 +3116,7 @@ export interface paths {
         };
         /**
          * myInvoices
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). BILLING off → 404 MODULE_DISABLED. R-12-27 screen 12 «Rebuts»: the caller's invoices and those of the family group holder that cover them (familyGroup = true), newest first, read only, never an IBAN. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). BILLING off → 404 MODULE_DISABLED. R-12-27 screen 12 «Rebuts»: the caller's invoices and, with FAMILY_GROUP, those of the holder of the family group the caller belongs to (familyGroup = true), newest first, read only, never an IBAN. The lines keep their frozen descriptions; the client formats period and amounts in the reader's locale (R-12-30). Tenant comes from the JWT; another member's or another club's invoice → 404.
          */
         get: operations["myInvoices"];
         put?: never;
@@ -3136,7 +3136,7 @@ export interface paths {
         };
         /**
          * myInvoice
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). BILLING off → 404 MODULE_DISABLED. R-12-27: one of the caller's invoices; another member's or another club's → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). BILLING off → 404 MODULE_DISABLED. R-12-27: one of the caller's invoices, or of their family group's holder (familyGroup = true). Tenant comes from the JWT; another member's or another club's invoice → 404.
          */
         get: operations["myInvoice"];
         put?: never;
@@ -3156,7 +3156,7 @@ export interface paths {
         };
         /**
          * myInvoiceDocument
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). BILLING off → 404 MODULE_DISABLED. [Descarrega el justificant]: the receipt PDF of one of the caller's invoices (T-12-20); another member's → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). BILLING off → 404 MODULE_DISABLED. [Descarrega el justificant]: the receipt PDF («Rebut», T-12-20) of one of the caller's invoices (or of their family group's holder), in the caller's language with the frozen descriptions and the club's mark; never an IBAN. Tenant comes from the JWT; another member's or another club's invoice → 404.
          */
         get: operations["myInvoiceDocument"];
         put?: never;
@@ -3840,7 +3840,7 @@ export interface paths {
         };
         /**
          * pendingCharges
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. SINGLE_CLASS off → 404 MODULE_DISABLED. R-12-25: the member's single classes charged by consumption, billed (invoiceId) or not yet, voided ones included. Another club's member → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. SINGLE_CLASS off → 404 MODULE_DISABLED. R-12-25: the member's single classes charged by consumption (CHARGE_ON_ATTENDANCE: attended, no-show or cancelled late), newest first, billed (invoiceId) or not yet, voided ones included. Another club's member → 404. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["pendingCharges"];
         put?: never;
@@ -5926,7 +5926,7 @@ export interface paths {
         put?: never;
         /**
          * receiveStripeEvent
-         * @description Roles: Stripe (signature), no bearer token. R-12-21: the Stripe-Signature header is verified with the club's webhookSecret (invalid or missing → 401 WEBHOOK_SIGNATURE_INVALID and a SecurityEvent); the event is stored once per eventId (a second delivery → 200 with no effect) and processed in a transaction by type (checkout.session.completed/expired, payment_intent.succeeded/payment_failed, charge.refunded, setup_intent.succeeded, payment_method.detached, customer.deleted); an out-of-order event is IGNORED. 2xx as soon as the event is stored. An unknown club, or one without BILLING (MODULE_DISABLED) or without an enabled STRIPE provider → 404. Contract only; returns 501 NOT_IMPLEMENTED after the club and signature-presence guards (E8-T01).
+         * @description Roles: Stripe (signature), no bearer token. R-12-21: before anything else the Stripe-Signature header (t={unix seconds},v1={hex HMAC-SHA256 of "{t}.{raw body}"}) is verified with the club's webhook secret, with Stripe's 5-minute tolerance on t; a missing, wrong or stale signature, a tampered body, an unknown club or a club without a webhook secret → 401 WEBHOOK_SIGNATURE_INVALID and a SecurityEvent, nothing else stored. Then a club without BILLING → 404 MODULE_DISABLED, without an enabled STRIPE provider → 404. The event is stored once per eventId (a second delivery → 200 with no effect) and processed in a transaction by type (checkout.session.completed/expired, payment_intent.succeeded/payment_failed, charge.refunded, setup_intent.succeeded, payment_method.detached, customer.deleted); an out-of-order event is IGNORED. 2xx as soon as the event is stored. Contract only; returns 501 NOT_IMPLEMENTED after the signature and the club guards (E8-T01).
          */
         post: operations["receiveStripeEvent"];
         delete?: never;
@@ -6402,22 +6402,28 @@ export interface components {
         AdminCancellationRequest: {
             note?: string;
         };
+        /** @description R-13-04 from D-screens: only the fields sent change; an unknown field → 400 VALIDATION_ERROR */
         AdminInactivityPatchRequest: {
-            comments?: string;
+            /** @description Omitted = the comments stay; null clears them */
+            comments?: string | null;
+            /** @description Omitted = the start stays; never null */
             fromMonth?: string;
+            /** @description «Salta el termini del dia {D}» (R-13-03, audited) */
             overrideDeadline?: boolean;
-            toMonth?: string;
+            /** @description Omitted = the end stays; null = the period becomes open («— encara no ho sé») */
+            toMonth?: string | null;
             /** Format: int64 */
             version: number;
         };
         AdminInactivityRequest: {
-            comments?: string;
+            comments?: string | null;
             fromMonth: string;
             /** Format: uuid */
             memberId: string;
             /** @description «Salta el termini del dia {D}» (R-13-03, audited) */
             overrideDeadline?: boolean;
-            toMonth?: string;
+            /** @description Absent or null = «— encara no ho sé» (open) */
+            toMonth?: string | null;
         };
         /** @description Membership adminProfile projection; no separate administrator entity. */
         Administrator: {
@@ -8720,10 +8726,14 @@ export interface components {
             /** Format: uuid */
             periodId: string;
         };
+        /** @description R-13-04: only the fields sent change; an unknown field → 400 VALIDATION_ERROR */
         InactivityPatchRequest: {
-            comments?: string;
+            /** @description Omitted = the comments stay; null clears them */
+            comments?: string | null;
+            /** @description Omitted = the start stays; never null */
             fromMonth?: string;
-            toMonth?: string;
+            /** @description Omitted = the end stays; null = the period becomes open («— encara no ho sé») */
+            toMonth?: string | null;
             /** Format: int64 */
             version: number;
         };
@@ -8798,10 +8808,10 @@ export interface components {
             feeSchedule: components["schemas"]["FeeScheduleItem"][];
         };
         InactivityRequest: {
-            comments?: string;
+            comments?: string | null;
             fromMonth: string;
             /** @description Absent or null = «— encara no ho sé» (open) */
-            toMonth?: string;
+            toMonth?: string | null;
         };
         /** @enum {string} */
         InactivityState: "REQUESTED" | "APPROVED" | "ACTIVE" | "FINISHED" | "DENIED" | "CANCELLED";
@@ -9073,6 +9083,8 @@ export interface components {
             refundedTotal?: components["schemas"]["Money"];
             /** Format: uuid */
             remittanceId?: string | null;
+            /** @description CANCELLED by a rollback (R-12-14): its number was reissued; listed only under the CANCELLED filter */
+            rolledBack?: boolean;
             /** Format: uuid */
             runId?: string | null;
             status?: components["schemas"]["InvoiceStatus"];
@@ -9869,7 +9881,7 @@ export interface components {
             periods: components["schemas"]["MeInactivityPeriod"][];
             proposedFromMonth: string;
         };
-        /** @description A period of the caller in screen 14's context (S13 §6 JSON) */
+        /** @description A period of the caller in screen 14's context (S13 §6 JSON). version is the period's optimistic lock: the member's PATCH /me/inactivity-periods/{id} sends it back (R-13-04; an old one → 409 STALE_VERSION, T-13-26) */
         MeInactivityPeriod: {
             comments?: string | null;
             editable: components["schemas"]["InactivityEditable"];
@@ -9879,6 +9891,8 @@ export interface components {
             id: string;
             state: components["schemas"]["InactivityState"];
             toMonth?: string | null;
+            /** Format: int64 */
+            version: number;
         };
         /** @description R-12-27: an invoice of the caller, or of the family group holder the caller belongs to (familyGroup = true). Lines keep their frozen description; the client formats period in the reader's locale. No IBAN: maskedAccount only. */
         MeInvoice: {
@@ -18946,7 +18960,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description RUN_EXISTS, SIMULATION_STALE, BILLING_BUSY, IDEMPOTENCY_KEY_REUSED */
+            /** @description RUN_EXISTS, SIMULATION_STALE, BILLING_BUSY, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -19323,7 +19337,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description RUN_NOT_ROLLBACKABLE, BILLING_BUSY, IDEMPOTENCY_KEY_REUSED */
+            /** @description RUN_NOT_ROLLBACKABLE, BILLING_BUSY, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -30912,7 +30926,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED */
+            /** @description MEMBER_ERASED, BILLING_BUSY, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -31184,7 +31198,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -34783,7 +34797,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MODULE_DISABLED */
+            /** @description NOT_FOUND, MODULE_DISABLED */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -34792,7 +34806,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IDEMPOTENCY_KEY_REUSED */
+            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -36029,7 +36043,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MODULE_DISABLED */
+            /** @description NOT_FOUND, MODULE_DISABLED */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -36156,7 +36170,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MODULE_DISABLED */
+            /** @description NOT_FOUND, MODULE_DISABLED */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -36165,7 +36179,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description LEAVE_ALREADY_SCHEDULED, INACTIVITY_OVERLAP, IDEMPOTENCY_KEY_REUSED */
+            /** @description MEMBER_ERASED, LEAVE_ALREADY_SCHEDULED, INACTIVITY_OVERLAP, IDEMPOTENCY_KEY_REUSED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -36280,7 +36294,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MODULE_DISABLED */
+            /** @description NOT_FOUND, MODULE_DISABLED */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -37022,7 +37036,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not Found */
+            /** @description NOT_FOUND */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -37149,7 +37163,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not Found */
+            /** @description NOT_FOUND */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -37158,7 +37172,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description LEAVE_ALREADY_REQUESTED, LEAVE_ALREADY_SCHEDULED, IDEMPOTENCY_KEY_REUSED */
+            /** @description MEMBER_ERASED, LEAVE_ALREADY_REQUESTED, LEAVE_ALREADY_SCHEDULED, IDEMPOTENCY_KEY_REUSED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -38375,7 +38389,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MODULE_DISABLED */
+            /** @description NOT_FOUND, MODULE_DISABLED */
             404: {
                 headers: {
                     [name: string]: unknown;

@@ -1,0 +1,972 @@
+heavy.sh: 18:33 waiting for the host lock, held by: 18:30 agilityhub-core-api: ./mvnw -q clean verify
+heavy.sh: 18:48 got the host lock after 15 min 47 s
+
+> agilityhub-core-web@0.0.0 e2e:docker /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-docker.sh E8-W01
+
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: E8-W01
+Capture folder of the permanent mock specs: <the task of each spec>
+Playwright arguments: <none, complete suite>
+Checkout copied into the container: 344M
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:23) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +852
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 852, reused 0, downloaded 112, added 112
+Progress: resolved 852, reused 0, downloaded 291, added 290
+Progress: resolved 852, reused 0, downloaded 490, added 490
+Progress: resolved 852, reused 0, downloaded 550, added 550
+Progress: resolved 852, reused 0, downloaded 596, added 596
+Progress: resolved 852, reused 0, downloaded 723, added 723
+Progress: resolved 852, reused 0, downloaded 815, added 815
+Progress: resolved 852, reused 0, downloaded 849, added 849
+Progress: resolved 852, reused 0, downloaded 851, added 851
+Progress: resolved 852, reused 0, downloaded 852, added 852, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/unrs-resolver postinstall: Done
+.../node_modules/msw postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 10.5s using pnpm v9.15.9
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+
+> agilityhub-core-web@0.0.0 e2e /work
+> turbo run e2e --concurrency=1
+
+
+Attention:
+Turborepo now collects completely anonymous telemetry regarding usage.
+This information is used to shape the Turborepo roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://turborepo.dev/docs/telemetry
+
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running e2e in 10 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache miss, executing e18b31668a225399
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /work/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache miss, executing a211f3de2fb8a1b3
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /work/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+clubs-admin:build: cache miss, executing 1b82bb8df75a1ecb
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /work/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs-admin:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs-admin:build: transforming...
+clubs-admin:build: ✓ 307 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/index.html                                             2.65 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs-admin:build: dist/assets/index-D_RSZIri.css                            132.92 kB │ gzip:  20.03 kB
+clubs-admin:build: dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+clubs-admin:build: dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+clubs-admin:build: dist/assets/notifications-BP8GtpgC.js                       0.75 kB │ gzip:   0.47 kB
+clubs-admin:build: dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+clubs-admin:build: dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-DDv2dFuD.js                      1.35 kB │ gzip:   0.63 kB
+clubs-admin:build: dist/assets/history-Bs5JKpAd.js                             1.35 kB │ gzip:   0.69 kB
+clubs-admin:build: dist/assets/admin-training-Du9KAoeO.js                      1.42 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-CtWdBvS6.js                      1.44 kB │ gzip:   0.69 kB
+clubs-admin:build: dist/assets/training-CYuCURIa.js                            1.57 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/home-CLVBc5a3.js                                1.59 kB │ gzip:   0.79 kB
+clubs-admin:build: dist/assets/training-DhvOYmdN.js                            1.62 kB │ gzip:   0.85 kB
+clubs-admin:build: dist/assets/training-B5riWOVN.js                            1.63 kB │ gzip:   0.86 kB
+clubs-admin:build: dist/assets/home-DIaHUeYG.js                                1.65 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/home-vQT0WHAi.js                                1.67 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs-admin:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/admin-dashboard-VZhOZ68T.js                     2.07 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/admin-dashboard-MI69Hia9.js                     2.13 kB │ gzip:   1.10 kB
+clubs-admin:build: dist/assets/admin-dashboard-DNVY2TkD.js                     2.18 kB │ gzip:   1.11 kB
+clubs-admin:build: dist/assets/id-cJQwgM2i.js                                  2.89 kB │ gzip:   1.28 kB
+clubs-admin:build: dist/assets/admin-audit-B0Z1oVf2.js                         2.95 kB │ gzip:   1.39 kB
+clubs-admin:build: dist/assets/id-Dio3OKNo.js                                  3.04 kB │ gzip:   1.41 kB
+clubs-admin:build: dist/assets/id-Rnv2hXs4.js                                  3.10 kB │ gzip:   1.42 kB
+clubs-admin:build: dist/assets/admin-audit-BS32JsSa.js                         3.20 kB │ gzip:   1.54 kB
+clubs-admin:build: dist/assets/admin-audit-CkyykZV1.js                         3.28 kB │ gzip:   1.56 kB
+clubs-admin:build: dist/assets/admin-messaging-Deb_qeG3.js                     4.53 kB │ gzip:   1.87 kB
+clubs-admin:build: dist/assets/admin-messaging-BzpSHSUj.js                     4.70 kB │ gzip:   2.01 kB
+clubs-admin:build: dist/assets/admin-messaging-dXGlHtst.js                     4.79 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/booking-C2JFywZY.js                             4.84 kB │ gzip:   1.84 kB
+clubs-admin:build: dist/assets/auth-C10lCXDJ.js                                5.05 kB │ gzip:   2.14 kB
+clubs-admin:build: dist/assets/booking-BnHoP-fw.js                             5.18 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/booking-oFemWAlT.js                             5.19 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/admin-catalogs-p29fM8xq.js                      5.41 kB │ gzip:   2.01 kB
+clubs-admin:build: dist/assets/auth-Uy3Y-og8.js                                5.63 kB │ gzip:   2.37 kB
+clubs-admin:build: dist/assets/signup-BkgU37Eh.js                              5.63 kB │ gzip:   2.54 kB
+clubs-admin:build: dist/assets/admin-catalogs-dZtpqy8S.js                      5.67 kB │ gzip:   2.23 kB
+clubs-admin:build: dist/assets/auth-DU3LoyRH.js                                5.70 kB │ gzip:   2.38 kB
+clubs-admin:build: dist/assets/admin-catalogs-D4wG5vIy.js                      5.87 kB │ gzip:   2.26 kB
+clubs-admin:build: dist/assets/signup-Bi4UbtBk.js                              5.88 kB │ gzip:   2.80 kB
+clubs-admin:build: dist/assets/signup-DQ9RZKro.js                              5.97 kB │ gzip:   2.82 kB
+clubs-admin:build: dist/assets/admin-activities-Cmq1QEmn.js                    6.01 kB │ gzip:   2.42 kB
+clubs-admin:build: dist/assets/admin-activities-p-Yew4Zm.js                    6.17 kB │ gzip:   2.62 kB
+clubs-admin:build: dist/assets/admin-activities-7OuSwNid.js                    6.38 kB │ gzip:   2.68 kB
+clubs-admin:build: dist/assets/census-Bur0wGCG.js                              6.46 kB │ gzip:   2.52 kB
+clubs-admin:build: dist/assets/census-J8mVT_14.js                              6.81 kB │ gzip:   2.77 kB
+clubs-admin:build: dist/assets/census-CazzAc0I.js                              7.00 kB │ gzip:   2.82 kB
+clubs-admin:build: dist/assets/enums-Bdvw4838.js                               7.24 kB │ gzip:   3.06 kB
+clubs-admin:build: dist/assets/enums-CI0rJjwt.js                               7.45 kB │ gzip:   3.18 kB
+clubs-admin:build: dist/assets/enums-oWSHW7AF.js                               7.49 kB │ gzip:   3.18 kB
+clubs-admin:build: dist/assets/admin-scheduling-nhXWwjRG.js                    8.23 kB │ gzip:   3.04 kB
+clubs-admin:build: dist/assets/admin-scheduling-DeLeUPtJ.js                    8.64 kB │ gzip:   3.30 kB
+clubs-admin:build: dist/assets/admin-scheduling-BhSriSnV.js                    8.64 kB │ gzip:   3.31 kB
+clubs-admin:build: dist/assets/instructor-Drv5FS73.js                          8.95 kB │ gzip:   3.24 kB
+clubs-admin:build: dist/assets/instructor-C9Nzp3I-.js                          9.33 kB │ gzip:   3.45 kB
+clubs-admin:build: dist/assets/instructor-DOywIQyk.js                          9.43 kB │ gzip:   3.47 kB
+clubs-admin:build: dist/assets/admin-billing-kg2PtxOX.js                       9.63 kB │ gzip:   3.40 kB
+clubs-admin:build: dist/assets/admin-billing-DS40H6HN.js                       9.83 kB │ gzip:   3.71 kB
+clubs-admin:build: dist/assets/admin-billing-DYvfItew.js                      10.04 kB │ gzip:   3.73 kB
+clubs-admin:build: dist/assets/admin-census-BTA4_eDJ.js                       12.07 kB │ gzip:   4.70 kB
+clubs-admin:build: dist/assets/admin-census-CUKilySs.js                       12.85 kB │ gzip:   5.04 kB
+clubs-admin:build: dist/assets/admin-census-DvpH3cY7.js                       13.23 kB │ gzip:   5.14 kB
+clubs-admin:build: dist/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+clubs-admin:build: dist/assets/admin-settings-D88R9-_P.js                     22.84 kB │ gzip:   7.93 kB
+clubs-admin:build: dist/assets/errors-Bvp7svDM.js                             23.31 kB │ gzip:   7.57 kB
+clubs-admin:build: dist/assets/errors-QdWmQXin.js                             23.32 kB │ gzip:   7.54 kB
+clubs-admin:build: dist/assets/admin-settings-DTgov08s.js                     24.53 kB │ gzip:   8.60 kB
+clubs-admin:build: dist/assets/admin-settings-Bbl1HsOL.js                     24.98 kB │ gzip:   8.61 kB
+clubs-admin:build: dist/assets/index-7MXteqEL.js                           1,197.74 kB │ gzip: 411.81 kB
+clubs-admin:build: 
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [33m[plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: [39m
+clubs-admin:build: [32m✓ built in 4.45s[39m
+clubs-admin:build: [33m[33m[PLUGIN_TIMINGS] [0mPlugin hooks ran for 1.6s of this 4.4s build (37%).
+clubs-admin:build: 2 hooks are listed without a time. Their calls overlapped, so the time inside one call includes work from other calls. To find their cost, profile the build with `node --cpu-prof`:
+clubs-admin:build:   - vite:css transform (22 calls)
+clubs-admin:build:   - @tailwindcss/vite:generate:build transform (22 calls)
+clubs-admin:build: See https://rolldown.rs/reference/InputOptions.checks#plugintimings for more details.
+clubs-admin:build: [39m
+clubs:build: cache miss, executing d6774b2be0801df3
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /work/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+clubs:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs:build: transforming...
+clubs:build: ✓ 282 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/index.html                                           2.71 kB │ gzip:   0.94 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+clubs:build: dist/assets/index-BVVXHeOi.css                          116.04 kB │ gzip:  18.27 kB
+clubs:build: dist/assets/notifications-ChKXsAvB.js                     0.75 kB │ gzip:   0.47 kB
+clubs:build: dist/assets/notifications-dxKZmlHL.js                     0.75 kB │ gzip:   0.43 kB
+clubs:build: dist/assets/notifications-BP8GtpgC.js                     0.75 kB │ gzip:   0.47 kB
+clubs:build: dist/assets/virtual_pwa-register-u3F6VoOp.js              1.12 kB │ gzip:   0.59 kB
+clubs:build: dist/assets/history-B1Xz7N4l.js                           1.27 kB │ gzip:   0.65 kB
+clubs:build: dist/assets/history-D5FndTjo.js                           1.32 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/admin-training-DDv2dFuD.js                    1.35 kB │ gzip:   0.63 kB
+clubs:build: dist/assets/history-Bs5JKpAd.js                           1.35 kB │ gzip:   0.69 kB
+clubs:build: dist/assets/admin-training-Du9KAoeO.js                    1.42 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/admin-training-CtWdBvS6.js                    1.44 kB │ gzip:   0.69 kB
+clubs:build: dist/assets/training-CYuCURIa.js                          1.57 kB │ gzip:   0.80 kB
+clubs:build: dist/assets/home-CLVBc5a3.js                              1.59 kB │ gzip:   0.79 kB
+clubs:build: dist/assets/training-DhvOYmdN.js                          1.62 kB │ gzip:   0.85 kB
+clubs:build: dist/assets/training-B5riWOVN.js                          1.63 kB │ gzip:   0.86 kB
+clubs:build: dist/assets/home-DIaHUeYG.js                              1.65 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/home-vQT0WHAi.js                              1.67 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/activities-_j5UPNJ2.js                        1.79 kB │ gzip:   0.83 kB
+clubs:build: dist/assets/activities-D_fvQi10.js                        1.86 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/activities-BKuUowmB.js                        1.88 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/admin-dashboard-VZhOZ68T.js                   2.07 kB │ gzip:   1.02 kB
+clubs:build: dist/assets/admin-dashboard-MI69Hia9.js                   2.13 kB │ gzip:   1.10 kB
+clubs:build: dist/assets/admin-dashboard-DNVY2TkD.js                   2.18 kB │ gzip:   1.11 kB
+clubs:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+clubs:build: dist/assets/admin-audit-B0Z1oVf2.js                       2.95 kB │ gzip:   1.39 kB
+clubs:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+clubs:build: dist/assets/admin-audit-BS32JsSa.js                       3.20 kB │ gzip:   1.54 kB
+clubs:build: dist/assets/admin-audit-CkyykZV1.js                       3.28 kB │ gzip:   1.56 kB
+clubs:build: dist/assets/admin-messaging-Deb_qeG3.js                   4.53 kB │ gzip:   1.87 kB
+clubs:build: dist/assets/admin-messaging-BzpSHSUj.js                   4.70 kB │ gzip:   2.01 kB
+clubs:build: dist/assets/admin-messaging-dXGlHtst.js                   4.79 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/booking-C2JFywZY.js                           4.84 kB │ gzip:   1.84 kB
+clubs:build: dist/assets/auth-C10lCXDJ.js                              5.05 kB │ gzip:   2.14 kB
+clubs:build: dist/assets/booking-BnHoP-fw.js                           5.18 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/booking-oFemWAlT.js                           5.19 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/admin-catalogs-p29fM8xq.js                    5.41 kB │ gzip:   2.01 kB
+clubs:build: dist/assets/auth-Uy3Y-og8.js                              5.63 kB │ gzip:   2.37 kB
+clubs:build: dist/assets/signup-BkgU37Eh.js                            5.63 kB │ gzip:   2.54 kB
+clubs:build: dist/assets/workbox-window.prod.es5-Bd17z0YL.js           5.65 kB │ gzip:   2.20 kB
+clubs:build: dist/assets/admin-catalogs-dZtpqy8S.js                    5.67 kB │ gzip:   2.23 kB
+clubs:build: dist/assets/auth-DU3LoyRH.js                              5.70 kB │ gzip:   2.38 kB
+clubs:build: dist/assets/admin-catalogs-D4wG5vIy.js                    5.87 kB │ gzip:   2.26 kB
+clubs:build: dist/assets/signup-Bi4UbtBk.js                            5.88 kB │ gzip:   2.80 kB
+clubs:build: dist/assets/signup-DQ9RZKro.js                            5.97 kB │ gzip:   2.82 kB
+clubs:build: dist/assets/admin-activities-Cmq1QEmn.js                  6.01 kB │ gzip:   2.42 kB
+clubs:build: dist/assets/admin-activities-p-Yew4Zm.js                  6.17 kB │ gzip:   2.62 kB
+clubs:build: dist/assets/admin-activities-7OuSwNid.js                  6.38 kB │ gzip:   2.68 kB
+clubs:build: dist/assets/census-Bur0wGCG.js                            6.46 kB │ gzip:   2.52 kB
+clubs:build: dist/assets/census-J8mVT_14.js                            6.81 kB │ gzip:   2.77 kB
+clubs:build: dist/assets/census-CazzAc0I.js                            7.00 kB │ gzip:   2.82 kB
+clubs:build: dist/assets/enums-Bdvw4838.js                             7.24 kB │ gzip:   3.06 kB
+clubs:build: dist/assets/enums-CI0rJjwt.js                             7.45 kB │ gzip:   3.18 kB
+clubs:build: dist/assets/enums-oWSHW7AF.js                             7.49 kB │ gzip:   3.18 kB
+clubs:build: dist/assets/admin-scheduling-nhXWwjRG.js                  8.23 kB │ gzip:   3.04 kB
+clubs:build: dist/assets/admin-scheduling-DeLeUPtJ.js                  8.64 kB │ gzip:   3.30 kB
+clubs:build: dist/assets/admin-scheduling-BhSriSnV.js                  8.64 kB │ gzip:   3.31 kB
+clubs:build: dist/assets/instructor-Drv5FS73.js                        8.95 kB │ gzip:   3.24 kB
+clubs:build: dist/assets/instructor-C9Nzp3I-.js                        9.33 kB │ gzip:   3.45 kB
+clubs:build: dist/assets/instructor-DOywIQyk.js                        9.43 kB │ gzip:   3.47 kB
+clubs:build: dist/assets/admin-billing-kg2PtxOX.js                     9.63 kB │ gzip:   3.40 kB
+clubs:build: dist/assets/admin-billing-DS40H6HN.js                     9.83 kB │ gzip:   3.71 kB
+clubs:build: dist/assets/admin-billing-DYvfItew.js                    10.04 kB │ gzip:   3.73 kB
+clubs:build: dist/assets/admin-census-BTA4_eDJ.js                     12.07 kB │ gzip:   4.70 kB
+clubs:build: dist/assets/admin-census-CUKilySs.js                     12.85 kB │ gzip:   5.04 kB
+clubs:build: dist/assets/admin-census-DvpH3cY7.js                     13.23 kB │ gzip:   5.14 kB
+clubs:build: dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+clubs:build: dist/assets/admin-settings-D88R9-_P.js                   22.84 kB │ gzip:   7.93 kB
+clubs:build: dist/assets/errors-Bvp7svDM.js                           23.31 kB │ gzip:   7.57 kB
+clubs:build: dist/assets/errors-QdWmQXin.js                           23.32 kB │ gzip:   7.54 kB
+clubs:build: dist/assets/admin-settings-DTgov08s.js                   24.53 kB │ gzip:   8.60 kB
+clubs:build: dist/assets/admin-settings-Bbl1HsOL.js                   24.98 kB │ gzip:   8.61 kB
+clubs:build: dist/assets/index-C4vCcl0D.js                           650.79 kB │ gzip: 187.50 kB
+clubs:build: 
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [33m[plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: [39m
+clubs:build: [32m✓ built in 1.30s[39m
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: Building src/sw.ts service worker ("es" format)...
+clubs:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+clubs:build: [warn] `inlineDynamicImports` option is deprecated, please use `codeSplitting: false` instead.
+clubs:build: transforming...
+clubs:build: ✓ 60 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/sw.mjs  17.90 kB │ gzip: 6.01 kB
+clubs:build: 
+clubs:build: [32m✓ built in 43ms[39m
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      injectManifest
+clubs:build: format:   es
+clubs:build: precache  74 entries (1201.19 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+id:build: cache miss, executing 30b5a5577182c51d
+id:build: 
+id:build: > id@0.0.0 build /work/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+id:build: [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+id:build: transforming...
+id:build: ✓ 230 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-CIhKnQD-.css                           52.05 kB │ gzip:   9.48 kB
+id:build: dist/assets/notifications-ChKXsAvB.js                     0.75 kB │ gzip:   0.47 kB
+id:build: dist/assets/notifications-dxKZmlHL.js                     0.75 kB │ gzip:   0.43 kB
+id:build: dist/assets/notifications-BP8GtpgC.js                     0.75 kB │ gzip:   0.47 kB
+id:build: dist/assets/history-B1Xz7N4l.js                           1.27 kB │ gzip:   0.65 kB
+id:build: dist/assets/history-D5FndTjo.js                           1.32 kB │ gzip:   0.68 kB
+id:build: dist/assets/admin-training-DDv2dFuD.js                    1.35 kB │ gzip:   0.63 kB
+id:build: dist/assets/history-Bs5JKpAd.js                           1.35 kB │ gzip:   0.69 kB
+id:build: dist/assets/shell-C8-jwyq4.js                             1.41 kB │ gzip:   0.74 kB
+id:build: dist/assets/admin-training-Du9KAoeO.js                    1.42 kB │ gzip:   0.68 kB
+id:build: dist/assets/admin-training-CtWdBvS6.js                    1.44 kB │ gzip:   0.69 kB
+id:build: dist/assets/shell-BbrVQiYO.js                             1.47 kB │ gzip:   0.83 kB
+id:build: dist/assets/shell-CxXcYDDQ.js                             1.50 kB │ gzip:   0.83 kB
+id:build: dist/assets/training-CYuCURIa.js                          1.57 kB │ gzip:   0.80 kB
+id:build: dist/assets/home-CLVBc5a3.js                              1.59 kB │ gzip:   0.79 kB
+id:build: dist/assets/training-DhvOYmdN.js                          1.62 kB │ gzip:   0.85 kB
+id:build: dist/assets/training-B5riWOVN.js                          1.63 kB │ gzip:   0.86 kB
+id:build: dist/assets/home-DIaHUeYG.js                              1.65 kB │ gzip:   0.84 kB
+id:build: dist/assets/home-vQT0WHAi.js                              1.67 kB │ gzip:   0.84 kB
+id:build: dist/assets/activities-_j5UPNJ2.js                        1.79 kB │ gzip:   0.83 kB
+id:build: dist/assets/activities-D_fvQi10.js                        1.86 kB │ gzip:   0.91 kB
+id:build: dist/assets/activities-BKuUowmB.js                        1.88 kB │ gzip:   0.91 kB
+id:build: dist/assets/admin-dashboard-VZhOZ68T.js                   2.07 kB │ gzip:   1.02 kB
+id:build: dist/assets/admin-dashboard-MI69Hia9.js                   2.13 kB │ gzip:   1.10 kB
+id:build: dist/assets/admin-dashboard-DNVY2TkD.js                   2.18 kB │ gzip:   1.11 kB
+id:build: dist/assets/common-BpH9cuss.js                            2.30 kB │ gzip:   1.09 kB
+id:build: dist/assets/common-D5M4a98u.js                            2.39 kB │ gzip:   1.18 kB
+id:build: dist/assets/common-DLazKDt-.js                            2.45 kB │ gzip:   1.20 kB
+id:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+id:build: dist/assets/admin-audit-B0Z1oVf2.js                       2.95 kB │ gzip:   1.39 kB
+id:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+id:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+id:build: dist/assets/admin-audit-BS32JsSa.js                       3.20 kB │ gzip:   1.54 kB
+id:build: dist/assets/admin-audit-CkyykZV1.js                       3.28 kB │ gzip:   1.56 kB
+id:build: dist/assets/admin-messaging-Deb_qeG3.js                   4.53 kB │ gzip:   1.87 kB
+id:build: dist/assets/admin-messaging-BzpSHSUj.js                   4.70 kB │ gzip:   2.01 kB
+id:build: dist/assets/admin-messaging-dXGlHtst.js                   4.79 kB │ gzip:   2.03 kB
+id:build: dist/assets/booking-C2JFywZY.js                           4.84 kB │ gzip:   1.84 kB
+id:build: dist/assets/auth-C10lCXDJ.js                              5.05 kB │ gzip:   2.14 kB
+id:build: dist/assets/booking-BnHoP-fw.js                           5.18 kB │ gzip:   2.03 kB
+id:build: dist/assets/booking-oFemWAlT.js                           5.19 kB │ gzip:   2.03 kB
+id:build: dist/assets/admin-catalogs-p29fM8xq.js                    5.41 kB │ gzip:   2.01 kB
+id:build: dist/assets/auth-Uy3Y-og8.js                              5.63 kB │ gzip:   2.37 kB
+id:build: dist/assets/signup-BkgU37Eh.js                            5.63 kB │ gzip:   2.54 kB
+id:build: dist/assets/admin-catalogs-dZtpqy8S.js                    5.67 kB │ gzip:   2.23 kB
+id:build: dist/assets/auth-DU3LoyRH.js                              5.70 kB │ gzip:   2.38 kB
+id:build: dist/assets/admin-catalogs-D4wG5vIy.js                    5.87 kB │ gzip:   2.26 kB
+id:build: dist/assets/signup-Bi4UbtBk.js                            5.88 kB │ gzip:   2.80 kB
+id:build: dist/assets/signup-DQ9RZKro.js                            5.97 kB │ gzip:   2.82 kB
+id:build: dist/assets/admin-activities-Cmq1QEmn.js                  6.01 kB │ gzip:   2.42 kB
+id:build: dist/assets/admin-activities-p-Yew4Zm.js                  6.17 kB │ gzip:   2.62 kB
+id:build: dist/assets/admin-activities-7OuSwNid.js                  6.38 kB │ gzip:   2.68 kB
+id:build: dist/assets/census-Bur0wGCG.js                            6.46 kB │ gzip:   2.52 kB
+id:build: dist/assets/census-J8mVT_14.js                            6.81 kB │ gzip:   2.77 kB
+id:build: dist/assets/census-CazzAc0I.js                            7.00 kB │ gzip:   2.82 kB
+id:build: dist/assets/enums-Bdvw4838.js                             7.24 kB │ gzip:   3.06 kB
+id:build: dist/assets/enums-CI0rJjwt.js                             7.45 kB │ gzip:   3.18 kB
+id:build: dist/assets/enums-oWSHW7AF.js                             7.49 kB │ gzip:   3.18 kB
+id:build: dist/assets/admin-scheduling-nhXWwjRG.js                  8.23 kB │ gzip:   3.04 kB
+id:build: dist/assets/admin-scheduling-DeLeUPtJ.js                  8.64 kB │ gzip:   3.30 kB
+id:build: dist/assets/admin-scheduling-BhSriSnV.js                  8.64 kB │ gzip:   3.31 kB
+id:build: dist/assets/instructor-Drv5FS73.js                        8.95 kB │ gzip:   3.24 kB
+id:build: dist/assets/instructor-C9Nzp3I-.js                        9.33 kB │ gzip:   3.45 kB
+id:build: dist/assets/instructor-DOywIQyk.js                        9.43 kB │ gzip:   3.47 kB
+id:build: dist/assets/admin-billing-kg2PtxOX.js                     9.63 kB │ gzip:   3.40 kB
+id:build: dist/assets/admin-billing-DS40H6HN.js                     9.83 kB │ gzip:   3.71 kB
+id:build: dist/assets/admin-billing-DYvfItew.js                    10.04 kB │ gzip:   3.73 kB
+id:build: dist/assets/admin-census-BTA4_eDJ.js                     12.07 kB │ gzip:   4.70 kB
+id:build: dist/assets/admin-census-CUKilySs.js                     12.85 kB │ gzip:   5.04 kB
+id:build: dist/assets/admin-census-DvpH3cY7.js                     13.23 kB │ gzip:   5.14 kB
+id:build: dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+id:build: dist/assets/admin-settings-D88R9-_P.js                   22.84 kB │ gzip:   7.93 kB
+id:build: dist/assets/errors-Bvp7svDM.js                           23.31 kB │ gzip:   7.57 kB
+id:build: dist/assets/errors-QdWmQXin.js                           23.32 kB │ gzip:   7.54 kB
+id:build: dist/assets/admin-settings-DTgov08s.js                   24.53 kB │ gzip:   8.60 kB
+id:build: dist/assets/admin-settings-Bbl1HsOL.js                   24.98 kB │ gzip:   8.61 kB
+id:build: dist/assets/index-aBaOmG7q.js                           331.38 kB │ gzip: 101.83 kB
+id:build: 
+id:build: [32m✓ built in 1.58s[39m
+clubs-admin:e2e: cache bypass, force executing 53813f5ee2a8b6e9
+clubs-admin:e2e: 
+clubs-admin:e2e: > clubs-admin@0.0.0 e2e /work/apps/clubs-admin
+clubs-admin:e2e: > playwright test
+clubs-admin:e2e: 
+clubs-admin:e2e: [WebServer] (node:662) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+clubs-admin:e2e: [WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+clubs-admin:e2e: 
+clubs-admin:e2e: Running 78 tests using 9 workers
+clubs-admin:e2e: ···F·F····F·T··········FTTFTFTTT···········T··T·······T·······················
+clubs-admin:e2e: 
+clubs-admin:e2e:   1) e2e/activities.spec.ts:130:3 › E4-W04 D7 activities › registrants of a full activity with the FIFO waitlist positions 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator:  getByText('en llista d\'espera (1)')
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Received: undefined
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByText('en llista d\'espera (1)') with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByText('en llista d\'espera (1)')
+clubs-admin:e2e:       - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       138 |       page.getByRole("heading", { name: "Inscrits — Taller de contactes" }),
+clubs-admin:e2e:       139 |     ).toBeVisible();
+clubs-admin:e2e:     > 140 |     await expect(page.getByText("en llista d'espera (1)")).toBeVisible();
+clubs-admin:e2e:           |                                                            ^
+clubs-admin:e2e:       141 |     await expect(page.getByText("en llista d'espera (2)")).toBeVisible();
+clubs-admin:e2e:       142 |     await page
+clubs-admin:e2e:       143 |       .getByRole("heading", { name: "Inscrits — Taller de contactes" })
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/activities.spec.ts:140:60
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/activities-E4-W04-D7-activ-95763-the-FIFO-waitlist-positions/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/activities-E4-W04-D7-activ-95763-the-FIFO-waitlist-positions/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/activities-E4-W04-D7-activ-95763-the-FIFO-waitlist-positions/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   2) e2e/audit.spec.ts:38:1 › T-14-26 shows member/global audit, masked diffs, LastChange and queued exports 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.click: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByRole('link', { name: 'amb històric' }).first()
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:        96 |   await page.goto(`${baseUrl}/parametres`);
+clubs-admin:e2e:        97 |   await expect(page.getByText(/últim canvi:/u).first()).toBeVisible();
+clubs-admin:e2e:     >  98 |   await page.getByRole("link", { name: "amb històric" }).first().click();
+clubs-admin:e2e:           |                                                                  ^
+clubs-admin:e2e:        99 |   await page.waitForURL(/\/auditoria\?entityType=Parameter/u);
+clubs-admin:e2e:       100 |   await expect(page.getByRole("heading", { name: "Auditoria" })).toBeVisible();
+clubs-admin:e2e:       101 |   await expect(page.getByRole("link", { name: "Capacitat per nivell" })).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/audit.spec.ts:98:66
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/audit-T-14-26-shows-member-81fc8-stChange-and-queued-exports/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/audit-T-14-26-shows-member-81fc8-stChange-and-queued-exports/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/audit-T-14-26-shows-member-81fc8-stChange-and-queued-exports/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   3) e2e/audit.spec.ts:109:1 › T-14-27 renders the audit and PDF export state in ca/es/en without missing keys 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: locator.click: Test ended.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - waiting for getByText('Excel · PDF')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       126 |     await expect(page.locator("body")).not.toContainText(/(?:admin-audit|census):/u);
+clubs-admin:e2e:       127 |
+clubs-admin:e2e:     > 128 |     await page.getByText("Excel · PDF").click();
+clubs-admin:e2e:           |                                         ^
+clubs-admin:e2e:       129 |     await page.getByRole("button", { name: "PDF" }).click();
+clubs-admin:e2e:       130 |     const drawer = page.getByRole("dialog");
+clubs-admin:e2e:       131 |     await expect(drawer.getByRole("button", { name: /\.pdf$/u })).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/audit.spec.ts:128:41
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/audit-T-14-27-renders-the--18440--es-en-without-missing-keys/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/audit-T-14-27-renders-the--18440--es-en-without-missing-keys/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/audit-T-14-27-renders-the--18440--es-en-without-missing-keys/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   4) e2e/billing.spec.ts:81:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 D6 as the mockup draws it: incidents first, cash members, KPIs, chips and the month's receipts 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toHaveText(expected) failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: locator('.billing-simulation').getByLabel('2 incidències')
+clubs-admin:e2e:     Expected: "2"
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toHaveText" locator('.billing-simulation').getByLabel('2 incidències') with timeout 5000ms
+clubs-admin:e2e:       - waiting for locator('.billing-simulation').getByLabel('2 incidències')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:        95 |       simulation.getByRole("heading", { name: "Pas 1 — Simulació: incidències primer" }),
+clubs-admin:e2e:        96 |     ).toBeVisible();
+clubs-admin:e2e:     >  97 |     await expect(simulation.getByLabel("2 incidències")).toHaveText("2");
+clubs-admin:e2e:           |                                                          ^
+clubs-admin:e2e:        98 |     const incidents = simulation.getByRole("table").nth(0);
+clubs-admin:e2e:        99 |     const cash = simulation.getByRole("table").nth(1);
+clubs-admin:e2e:       100 |     // Incidents first (R-12-07), each with its label and its «Obre fitxa» link.
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/billing.spec.ts:97:58
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-00cc5-ps-and-the-month-s-receipts/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-00cc5-ps-and-the-month-s-receipts/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-00cc5-ps-and-the-month-s-receipts/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   5) e2e/billing.spec.ts:218:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 the rollback stays disabled until «RETROCEDIR» is typed, then the month's 168 receipts are cancelled 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: page.screenshot: Test timeout of 30000ms exceeded.
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - taking page screenshot
+clubs-admin:e2e:       - waiting for fonts to load...
+clubs-admin:e2e:       - fonts loaded
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       236 |     await expect(confirm).toBeEnabled();
+clubs-admin:e2e:       237 |     await expectIconsPainted(dialog);
+clubs-admin:e2e:     > 238 |     await page.screenshot({ path: resolve(evidenceDirectory, "D6-facturacio-retroces-1280.png") });
+clubs-admin:e2e:           |                ^
+clubs-admin:e2e:       239 |
+clubs-admin:e2e:       240 |     const rolledBack = page.waitForRequest(
+clubs-admin:e2e:       241 |       (request) => request.method() === "POST" && request.url().endsWith("/rollback"),
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/billing.spec.ts:238:16
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-62780--168-receipts-are-cancelled/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-62780--168-receipts-are-cancelled/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-62780--168-receipts-are-cancelled/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   6) e2e/catalogs.spec.ts:145:3 › E2-W04 club catalogs › T-05-24 edits plan copy, billing modes and pricing while respecting module gates 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('dialog', { name: 'Edita Abonat' }).getByText('No es pot afegir: la data correspon a un període de preu bloquejat.')
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('dialog', { name: 'Edita Abonat' }).getByText('No es pot afegir: la data correspon a un període de preu bloquejat.') with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('dialog', { name: 'Edita Abonat' }).getByText('No es pot afegir: la data correspon a un període de preu bloquejat.')
+clubs-admin:e2e:       - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       176 |     await expect(
+clubs-admin:e2e:       177 |       dialog.getByText("No es pot afegir: la data correspon a un període de preu bloquejat."),
+clubs-admin:e2e:     > 178 |     ).toBeVisible();
+clubs-admin:e2e:           |       ^
+clubs-admin:e2e:       179 |     await context.close();
+clubs-admin:e2e:       180 |
+clubs-admin:e2e:       181 |     const minimalContext = await browser.newContext({ viewport: { height: 900, width: 1280 } });
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/catalogs.spec.ts:178:7
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-05b8e-ile-respecting-module-gates/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-05b8e-ile-respecting-module-gates/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-05b8e-ile-respecting-module-gates/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   7) e2e/catalogs.spec.ts:198:3 › E2-W04 club catalogs › T-05-25 manages local levels and FAQ CRUD/reorder with FAQ module gating 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('heading', { name: 'Nivells' })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: 'Nivells' }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: 'Nivells' })
+clubs-admin:e2e:       - Test ended.
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       242 |     await prepareAdmin(noFaqPage, "catalogsNoFaq", brandingWithoutFaq);
+clubs-admin:e2e:       243 |     await noFaqPage.goto(`${baseUrl}/parametres`);
+clubs-admin:e2e:     > 244 |     await expect(noFaqPage.getByRole("heading", { name: "Nivells" })).toBeVisible();
+clubs-admin:e2e:           |                                                                       ^
+clubs-admin:e2e:       245 |     await expect(noFaqPage.getByRole("heading", { name: /Preguntes freqüents/u })).toHaveCount(0);
+clubs-admin:e2e:       246 |     await noFaqContext.close();
+clubs-admin:e2e:       247 |   });
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/catalogs.spec.ts:244:71
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-2962b-rder-with-FAQ-module-gating/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-2962b-rder-with-FAQ-module-gating/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/catalogs-E2-W04-club-catal-2962b-rder-with-FAQ-module-gating/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   8) e2e/census-lists.spec.ts:51:3 › E2-W01 census universal lists › T-03-32 reorders columns and creates a saved view 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('link', { name: 'Laura Serra Vidal', exact: true })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('link', { name: 'Laura Serra Vidal', exact: true }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('link', { name: 'Laura Serra Vidal', exact: true })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       52 |     await prepareAdmin(page);
+clubs-admin:e2e:       53 |     await page.goto(`${baseUrl}/abonats`);
+clubs-admin:e2e:     > 54 |     await expect(page.getByRole("link", { exact: true, name: "Laura Serra Vidal" })).toBeVisible();
+clubs-admin:e2e:          |                                                                                      ^
+clubs-admin:e2e:       55 |
+clubs-admin:e2e:       56 |     await page.locator("summary").filter({ hasText: "Columnes" }).click();
+clubs-admin:e2e:       57 |     const dogs = page.locator(".ah-universal-list__columns li").filter({
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-lists.spec.ts:54:86
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/census-lists-E2-W01-census-09cea-ns-and-creates-a-saved-view/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-lists-E2-W01-census-09cea-ns-and-creates-a-saved-view/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-lists-E2-W01-census-09cea-ns-and-creates-a-saved-view/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   9) e2e/census-lists.spec.ts:87:3 › E2-W01 census universal lists › T-03-34 D15 opens a dog record and matches the approved 1280 layout 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator:  getByText('FCAG 3241 (Iniciació) · RSCE 13298 (2)')
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Received: undefined
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByText('FCAG 3241 (Iniciació) · RSCE 13298 (2)') with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByText('FCAG 3241 (Iniciació) · RSCE 13298 (2)')
+clubs-admin:e2e:       - Protocol error (Runtime.callFunctionOn): Internal server error, session closed.
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       92 |     await expect(page.getByText("242 actius")).toBeVisible();
+clubs-admin:e2e:       93 |     await expect(page.getByRole("columnheader", { name: "Entrenament lliure" })).toBeVisible();
+clubs-admin:e2e:     > 94 |     await expect(page.getByText("FCAG 3241 (Iniciació) · RSCE 13298 (2)")).toBeVisible();
+clubs-admin:e2e:          |                                                                            ^
+clubs-admin:e2e:       95 |     await page.evaluate(() => {
+clubs-admin:e2e:       96 |       window.scrollTo(0, 0);
+clubs-admin:e2e:       97 |     });
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-lists.spec.ts:94:76
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/census-lists-E2-W01-census-e3ce3-es-the-approved-1280-layout/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-lists-E2-W01-census-e3ce3-es-the-approved-1280-layout/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-lists-E2-W01-census-e3ce3-es-the-approved-1280-layout/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   10) e2e/census-records.spec.ts:182:3 › E2-W02 census records › T-03-38 completes the dog record actions and captures its 1280 layout 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('heading', { name: 'Duna' })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: 'Duna' }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: 'Duna' })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       186 |     await page.goto(`${baseUrl}/gossos/dog-duna`);
+clubs-admin:e2e:       187 |
+clubs-admin:e2e:     > 188 |     await expect(page.getByRole("heading", { name: "Duna" })).toBeVisible();
+clubs-admin:e2e:           |                                                               ^
+clubs-admin:e2e:       189 |     await expect(
+clubs-admin:e2e:       190 |       page.locator("strong").filter({ hasText: /^Cartilla de vacunes$/u }),
+clubs-admin:e2e:       191 |     ).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/census-records.spec.ts:188:63
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/census-records-E2-W02-cens-4ece2-nd-captures-its-1280-layout/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/census-records-E2-W02-cens-4ece2-nd-captures-its-1280-layout/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/census-records-E2-W02-cens-4ece2-nd-captures-its-1280-layout/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   11) e2e/club-pages.spec.ts:53:1 › T-05-CP-07 publishes a club page from D11 and exposes Normes in screen 30 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('button', { name: /Normes del club/u })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('button', { name: /Normes del club/u }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('button', { name: /Normes del club/u })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       59 |   await admin.goto(`${adminUrl}/parametres`);
+clubs-admin:e2e:       60 |   const rules = admin.getByRole("button", { name: /Normes del club/u });
+clubs-admin:e2e:     > 61 |   await expect(rules).toBeVisible();
+clubs-admin:e2e:          |                       ^
+clubs-admin:e2e:       62 |   await admin.screenshot({
+clubs-admin:e2e:       63 |     fullPage: true,
+clubs-admin:e2e:       64 |     path: resolve(evidenceDirectory, "D11-club-pages-1280.png"),
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/club-pages.spec.ts:61:23
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/club-pages-T-05-CP-07-publ-5e005-exposes-Normes-in-screen-30/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/club-pages-T-05-CP-07-publ-5e005-exposes-Normes-in-screen-30/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/club-pages-T-05-CP-07-publ-5e005-exposes-Normes-in-screen-30/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   12) e2e/e5-backoffice.spec.ts:118:3 › E5-W03 «Entrenaments» · the ring-usage register (S09 §2, §13-8, no mockup) › an ADMIN lists the week's training bookings and the ring blocks, exports and cancels a block 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('heading', { name: 'Entrenaments', level: 1 })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: 'Entrenaments', level: 1 }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: 'Entrenaments', level: 1 })
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       122 |     await page.getByRole("link", { exact: true, name: "Entrenaments" }).click();
+clubs-admin:e2e:       123 |     await page.waitForURL("**/entrenaments");
+clubs-admin:e2e:     > 124 |     await expect(page.getByRole("heading", { level: 1, name: "Entrenaments" })).toBeVisible();
+clubs-admin:e2e:           |                                                                                 ^
+clubs-admin:e2e:       125 |     const bookings = page.getByRole("region", { name: "Reserves d'entrenament" });
+clubs-admin:e2e:       126 |     await expect(bookings.getByRole("row").filter({ hasText: "Rock" }).first()).toBeVisible();
+clubs-admin:e2e:       127 |     // E5-W05 step 3: the slot's end (endsAtLocal) and «{nom complet} · {número}» (memberNumber).
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/e5-backoffice.spec.ts:124:81
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/e5-backoffice-E5-W03-«Entr-4ca6d-exports-and-cancels-a-block/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/e5-backoffice-E5-W03-«Entr-4ca6d-exports-and-cancels-a-block/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/e5-backoffice-E5-W03-«Entr-4ca6d-exports-and-cancels-a-block/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   13) e2e/follow-up.spec.ts:121:3 › E6-W03 T-10-30 D14 «Seguiment alumnes» against MSW › everything read (followupAllRead): no counter, «0 pendents de llegir», no highlighted row 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/follow-up-E6-W03-T-10-30-D-ee5e5--llegir»-no-highlighted-row/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/follow-up-E6-W03-T-10-30-D-ee5e5--llegir»-no-highlighted-row/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/follow-up-E6-W03-T-10-30-D-ee5e5--llegir»-no-highlighted-row/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   14) e2e/messaging.spec.ts:63:3 › E7-W01 T-11-37 / T-11-38 D9, the log and D10 (S11) against MSW › D9 as the mockup (N-28 open in «Comunicats individuals»), its preview, and «Enviar comunicat» with the dryRun count 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByText('/^Comunicat enviat a \\d+ abonats/u')
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Timeout: 5000ms
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByText('/^Comunicat enviat a \\d+ abonats/u') with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByText('/^Comunicat enviat a \\d+ abonats/u')
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       102 |     await page.screenshot({ path: resolve(evidenceDirectory, "D9-enviar-comunicat-1280.png") });
+clubs-admin:e2e:       103 |     await send.getByRole("button", { name: "ENVIA" }).click();
+clubs-admin:e2e:     > 104 |     await expect(page.getByText(/^Comunicat enviat a \d+ abonats/u)).toBeVisible();
+clubs-admin:e2e:           |                                                                      ^
+clubs-admin:e2e:       105 |     await page.getByRole("link", { name: "Avisos enviats ›" }).first().click();
+clubs-admin:e2e:       106 |     await page.waitForURL("**/notificacions");
+clubs-admin:e2e:       107 |     await expect(page.getByRole("heading", { level: 1, name: "Avisos enviats" })).toBeVisible();
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/messaging.spec.ts:104:70
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/messaging-E7-W01-T-11-37-T-f7cf8-icat»-with-the-dryRun-count/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/messaging-E7-W01-T-11-37-T-f7cf8-icat»-with-the-dryRun-count/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/messaging-E7-W01-T-11-37-T-f7cf8-icat»-with-the-dryRun-count/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   15) e2e/planning-calendar.spec.ts:65:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 edits and cancels a class with registrants, blocks a ring, validates the draft week and opens the day view 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/planning-calendar-E4-W02-D-952c0-week-and-opens-the-day-view/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/planning-calendar-E4-W02-D-952c0-week-and-opens-the-day-view/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/planning-calendar-E4-W02-D-952c0-week-and-opens-the-day-view/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   16) e2e/settings.spec.ts:79:3 › E2-W05 generated club settings › T-02-13 generates D11 from the catalog with typed drawers, history and module gates 
+clubs-admin:e2e: 
+clubs-admin:e2e:     Test timeout of 30000ms exceeded.
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error: expect(locator).toBeVisible() failed
+clubs-admin:e2e: 
+clubs-admin:e2e:     Locator: getByRole('heading', { name: 'Llista d\'espera' })
+clubs-admin:e2e:     Expected: visible
+clubs-admin:e2e:     Error: element(s) not found
+clubs-admin:e2e: 
+clubs-admin:e2e:     Call log:
+clubs-admin:e2e:       - Expect "toBeVisible" getByRole('heading', { name: 'Llista d\'espera' }) with timeout 5000ms
+clubs-admin:e2e:       - waiting for getByRole('heading', { name: 'Llista d\'espera' })
+clubs-admin:e2e:       - Test ended.
+clubs-admin:e2e: 
+clubs-admin:e2e: 
+clubs-admin:e2e:       179 |     );
+clubs-admin:e2e:       180 |     await expect(minimalPage.getByRole("heading", { name: "Recorreguts" })).toHaveCount(0);
+clubs-admin:e2e:     > 181 |     await expect(minimalPage.getByRole("heading", { name: "Llista d'espera" })).toBeVisible();
+clubs-admin:e2e:           |                                                                                 ^
+clubs-admin:e2e:       182 |     await expect(minimalPage.locator('[data-derived-setting="freeTrainingLevels"]')).toHaveCount(0);
+clubs-admin:e2e:       183 |     await expect(minimalPage.locator('[data-derived-setting="packExpiry"]')).toHaveCount(0);
+clubs-admin:e2e:       184 |     await expect(minimalPage.locator('[data-derived-setting="sepaCreditor"]')).toHaveCount(0);
+clubs-admin:e2e:         at /work/apps/clubs-admin/e2e/settings.spec.ts:181:81
+clubs-admin:e2e: 
+clubs-admin:e2e:     Error Context: ../../test-results/clubs-admin/settings-E2-W05-generated--1ee83-rs-history-and-module-gates/error-context.md
+clubs-admin:e2e: 
+clubs-admin:e2e:     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+clubs-admin:e2e:     ../../test-results/clubs-admin/settings-E2-W05-generated--1ee83-rs-history-and-module-gates/trace.zip
+clubs-admin:e2e:     Usage:
+clubs-admin:e2e: 
+clubs-admin:e2e:         pnpm exec playwright show-trace ../../test-results/clubs-admin/settings-E2-W05-generated--1ee83-rs-history-and-module-gates/trace.zip
+clubs-admin:e2e: 
+clubs-admin:e2e:     ────────────────────────────────────────────────────────────────────────────────────────────────
+clubs-admin:e2e: 
+clubs-admin:e2e:   16 failed
+clubs-admin:e2e:     e2e/activities.spec.ts:130:3 › E4-W04 D7 activities › registrants of a full activity with the FIFO waitlist positions 
+clubs-admin:e2e:     e2e/audit.spec.ts:38:1 › T-14-26 shows member/global audit, masked diffs, LastChange and queued exports 
+clubs-admin:e2e:     e2e/audit.spec.ts:109:1 › T-14-27 renders the audit and PDF export state in ca/es/en without missing keys 
+clubs-admin:e2e:     e2e/billing.spec.ts:81:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 D6 as the mockup draws it: incidents first, cash members, KPIs, chips and the month's receipts 
+clubs-admin:e2e:     e2e/billing.spec.ts:218:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › T-12-25 the rollback stays disabled until «RETROCEDIR» is typed, then the month's 168 receipts are cancelled 
+clubs-admin:e2e:     e2e/catalogs.spec.ts:145:3 › E2-W04 club catalogs › T-05-24 edits plan copy, billing modes and pricing while respecting module gates 
+clubs-admin:e2e:     e2e/catalogs.spec.ts:198:3 › E2-W04 club catalogs › T-05-25 manages local levels and FAQ CRUD/reorder with FAQ module gating 
+clubs-admin:e2e:     e2e/census-lists.spec.ts:51:3 › E2-W01 census universal lists › T-03-32 reorders columns and creates a saved view 
+clubs-admin:e2e:     e2e/census-lists.spec.ts:87:3 › E2-W01 census universal lists › T-03-34 D15 opens a dog record and matches the approved 1280 layout 
+clubs-admin:e2e:     e2e/census-records.spec.ts:182:3 › E2-W02 census records › T-03-38 completes the dog record actions and captures its 1280 layout 
+clubs-admin:e2e:     e2e/club-pages.spec.ts:53:1 › T-05-CP-07 publishes a club page from D11 and exposes Normes in screen 30 
+clubs-admin:e2e:     e2e/e5-backoffice.spec.ts:118:3 › E5-W03 «Entrenaments» · the ring-usage register (S09 §2, §13-8, no mockup) › an ADMIN lists the week's training bookings and the ring blocks, exports and cancels a block 
+clubs-admin:e2e:     e2e/follow-up.spec.ts:121:3 › E6-W03 T-10-30 D14 «Seguiment alumnes» against MSW › everything read (followupAllRead): no counter, «0 pendents de llegir», no highlighted row 
+clubs-admin:e2e:     e2e/messaging.spec.ts:63:3 › E7-W01 T-11-37 / T-11-38 D9, the log and D10 (S11) against MSW › D9 as the mockup (N-28 open in «Comunicats individuals»), its preview, and «Enviar comunicat» with the dryRun count 
+clubs-admin:e2e:     e2e/planning-calendar.spec.ts:65:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 edits and cancels a class with registrants, blocks a ring, validates the draft week and opens the day view 
+clubs-admin:e2e:     e2e/settings.spec.ts:79:3 › E2-W05 generated club settings › T-02-13 generates D11 from the catalog with typed drawers, history and module gates 
+clubs-admin:e2e:   62 passed (2.7m)
+clubs-admin:e2e:  ELIFECYCLE  Command failed with exit code 1.
+clubs:e2e: cache bypass, force executing 042e4aedca05d456
+id:e2e: cache bypass, force executing f8fb0c5ec56f5ac3
+clubs-admin#e2e:  ERROR  command (/work/apps/clubs-admin) /usr/bin/pnpm run e2e exited (1)
+
+ Tasks:    5 successful, 8 total
+Cached:    0 cached, 8 total
+  Time:    3m23.584s 
+Failed:    clubs-admin#e2e
+
+ ERROR  run failed: command  exited (1)
+ ELIFECYCLE  Command failed with exit code 1.
+evidence: E8-W01/D6-facturacio-confirmacio-1280.png
+evidence: E8-W01/remeses-1280.png
+evidence: E8-W01/D6-facturacio-manual-only-1280.png
+evidence: E8-W01/D6-facturacio-calaix-rebut-1280.png
+ ELIFECYCLE  Command failed with exit code 1.

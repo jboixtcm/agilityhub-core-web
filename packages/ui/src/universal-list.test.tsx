@@ -244,6 +244,91 @@ describe("E5-W05 round 2 #2 · a range filter with no suggested values (ruling E
   });
 });
 
+describe("E8-W01 · a selection the screen holds and rows the selection cannot take (D6, ruling E87)", () => {
+  const state: UniversalListState = {
+    columns: ["id"],
+    filters: [],
+    page: 0,
+    q: "",
+    size: 50,
+    sort: [],
+  };
+  function renderSelectable(selected: ReadonlySet<string>, onSelectedChange = vi.fn()) {
+    render(
+      <UniversalList<Row>
+        appliedFilters={[]}
+        caption="Rebuts"
+        columns={[{ key: "id", label: "Id", render: (row) => row.id }]}
+        filterColumns={[]}
+        isRowSelectable={(row) => row.id !== "collecting"}
+        labels={listLabels}
+        listKey="selection-test"
+        loadFilterValues={() => Promise.resolve([])}
+        onCreateView={() => Promise.reject(new Error("unused"))}
+        onDeleteView={() => Promise.resolve()}
+        onExport={() => undefined}
+        onRenameView={() => Promise.reject(new Error("unused"))}
+        onRetry={() => undefined}
+        onSelectedChange={onSelectedChange}
+        onStateChange={() => undefined}
+        rowKey={(row) => row.id}
+        rows={[{ id: "pending" }, { id: "collecting" }, { id: "failed" }]}
+        savedViews={[]}
+        selectable
+        selected={selected}
+        state={state}
+        totalPages={1}
+      />,
+    );
+    return onSelectedChange;
+  }
+
+  it("E8-W01: an unselectable row has a disabled checkbox and «select all» takes only the others", () => {
+    const onSelectedChange = renderSelectable(new Set());
+    expect(screen.getByRole("checkbox", { name: "collecting" })).toBeDisabled();
+    expect(screen.getByRole("checkbox", { name: "pending" })).toBeEnabled();
+    fireEvent.click(screen.getByRole("checkbox", { name: "Tot" }));
+    expect(onSelectedChange).toHaveBeenLastCalledWith(new Set(["pending", "failed"]));
+  });
+
+  it("E8-W01: a held selection is what the checkboxes show, and a click reports the next one", () => {
+    const onSelectedChange = renderSelectable(new Set(["failed"]));
+    expect(screen.getByRole("checkbox", { name: "failed" })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: "pending" })).not.toBeChecked();
+    fireEvent.click(screen.getByRole("checkbox", { name: "pending" }));
+    expect(onSelectedChange).toHaveBeenLastCalledWith(new Set(["failed", "pending"]));
+    // The list does not keep a copy: until the screen passes the new set, nothing changes.
+    expect(screen.getByRole("checkbox", { name: "pending" })).not.toBeChecked();
+  });
+
+  it("E8-W01: a list without free text (`searchable={false}`, the remittances) has no search box", () => {
+    render(
+      <UniversalList<Row>
+        appliedFilters={[]}
+        caption="Remeses"
+        columns={[{ key: "id", label: "Id", render: (row) => row.id }]}
+        filterColumns={[]}
+        labels={listLabels}
+        listKey="no-search-test"
+        loadFilterValues={() => Promise.resolve([])}
+        onCreateView={() => Promise.reject(new Error("unused"))}
+        onDeleteView={() => Promise.resolve()}
+        onExport={() => undefined}
+        onRenameView={() => Promise.reject(new Error("unused"))}
+        onRetry={() => undefined}
+        onStateChange={() => undefined}
+        rowKey={(row) => row.id}
+        rows={[{ id: "r-1" }]}
+        savedViews={[]}
+        searchable={false}
+        state={state}
+        totalPages={1}
+      />,
+    );
+    expect(screen.queryByRole("searchbox", { name: "Cerca" })).toBeNull();
+  });
+});
+
 describe("E7-W06 step 5 (ruling E82, E6-W04 Q6) · stable data attributes on a list's rows", () => {
   it("E7-W06 step 5: `rowAttributes` puts each row's data attributes on its <tr> (D14: data-followup-id, data-unread), next to its class", () => {
     const state: UniversalListState = {

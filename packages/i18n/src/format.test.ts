@@ -14,6 +14,7 @@ import {
   formatDuration,
   formatList,
   formatMoney,
+  formatMonthTitle,
   formatPlainDate,
   formatTime,
   formatWeekRange,
@@ -21,6 +22,19 @@ import {
   parsePlainDate,
   personArticle,
 } from "./format";
+
+describe("E8-W01 S12 §2 D6's month title (formatMonthTitle)", () => {
+  it("E8-W01: «Setembre 2026» · «Septiembre 2026» · «September 2026», never shifted by a zone", () => {
+    expect(formatMonthTitle("2026-09", "ca")).toBe("Setembre 2026");
+    expect(formatMonthTitle("2026-09", "es")).toBe("Septiembre 2026");
+    expect(formatMonthTitle("2026-09", "en")).toBe("September 2026");
+    expect(formatMonthTitle("2027-01", "ca")).toBe("Gener 2027");
+    expect(createClubFormats("ca", "Pacific/Kiritimati", "EUR").formatMonthTitle("2026-10")).toBe(
+      "Octubre 2026",
+    );
+    expect(() => formatMonthTitle("setembre", "ca")).toThrow(RangeError);
+  });
+});
 
 describe("E6-W01 S10 §10 the Catalan personal article of a person (personArticle)", () => {
   it.each([

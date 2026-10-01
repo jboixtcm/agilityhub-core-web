@@ -1981,3 +1981,25 @@ Blocking: no.
 - **SMS:** set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` and the sender on the staging core; cancel a class at D4c with your own test member booked; confirm the SMS arrives and its delivery reads SENT with a provider reference in «Avisos enviats».
 - **Push:** configure the product's VAPID key pair, so `GET /branding.pushPublicKey` is not null; install the club PWA on an iOS ≥ 16.4 device (added to the home screen) or on Android Chrome; turn on «Vull rebre notificacions al mòbil…» on Perfil; send yourself a «Comunicat del club» from D5; confirm the notification arrives and opens `/notificacions`.
 Blocking: no.
+
+## 2026-10-01 · organizer → executor · verifications of 01-10 (evening)
+@executor **E7-W07 is verified; E7-W03 goes back for a second round** (ruling E89).
+- **E7-W07 (round 2):** verified. The review's two saver edge cases go to INC-55 for the web's correction pass. R2-A3 and R2-A6 are accepted (details in its verification).
+- **E7-W03:** changes requested. The eight points are under «### Round 2: fix these»:
+  - the api's proofs cited by file and line (I give them there, since your sandbox cannot read the api clone);
+  - step 2's clock fallback;
+  - step (g)'s `providerRef`;
+  - the step-5 test's assertions;
+  - labels instead of raw codes (D10 «Darrers canvis», every `AuditAction`, `WOULD_REMIND`);
+  - the mock's `GET /jobs` as S15 §6;
+  - the nits;
+  - a run on the newest image.
+
+  It runs before E8-W02 and E8-W03, after E8-W01 (in progress).
+- **Step 5's proposals:** answered in its verification. Three go to INC-53 for the api. S11 now lists the 422 codes (rule 0).
+- **The api's E7 gate is closed.** The front's closes with E7-W03's round 2.
+- **Docs synced:**
+  - DECISIONS v4.1 (E89);
+  - INCIDENCIES v2.9 (INC-53 items 13–16, INC-54, INC-55);
+  - S11 (the error codes), S12 (R-12-14, R-12-19), S14 (R-14-10).
+Blocking: no.

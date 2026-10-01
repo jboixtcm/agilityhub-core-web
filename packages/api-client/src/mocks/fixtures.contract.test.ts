@@ -9,6 +9,19 @@ import openapiDocument from "../../openapi/openapi.json";
 import pendingDocument from "../../openapi/pending.json";
 
 import {
+  BILLING_MOCK_PERIOD,
+  createBillingWorld,
+  eur,
+  frozenMonth,
+  listItem,
+  periodCounts,
+  periodRun,
+  remittanceListItem,
+  runResource,
+  type BillingVariant,
+  type BillingWorld,
+} from "./fixtures/billing";
+import {
   BOOKING_DOG_IDS,
   BOOKING_LIMIT_DONE_NOW,
   BOOKING_MOCK_NOW,
@@ -820,5 +833,287 @@ describe("E5-W02 step 9 · the training world follows the S09 contract (Training
       start: "2026-10-25T19:00:00Z",
     });
     expect(clubInstant("2026-10-25", "07:00")).toBe("2026-10-25T06:00:00Z");
+  });
+});
+
+describe("E8-W01 billing fixtures follow the S12 contract (BillingPeriod, BillingSimulation, BillingRun, Remittance, Invoice, InvoiceListItem)", () => {
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
+  ajv.addSchema(mergedDocument, openapiSchemaId);
+  const schema = (name: string) =>
+    ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
+  const variants: BillingVariant[] = [
+    "default",
+    "manualOnly",
+    "stripe",
+    "rollbackBlocked",
+    "stale",
+  ];
+
+  /** D6's month as `GET /billing/periods/{period}` projects it from the world's records. */
+  function billingPeriodOf(world: BillingWorld, period: string) {
+    const simulation = world.simulations.get(period)?.simulation;
+    const stored = periodRun(world, period);
+    const run = stored === undefined ? undefined : runResource(world, stored);
+    const remittance =
+      stored === undefined
+        ? undefined
+        : world.remittances.find((entry) => entry.runId === stored.run.id);
+    return {
+      counts: periodCounts(world, period),
+      period,
+      remittance:
+        remittance === undefined
+          ? null
+          : {
+              fileAvailable: remittance.fileAvailable,
+              id: remittance.id,
+              status: remittance.status,
+            },
+      run:
+        run === undefined
+          ? null
+          : {
+              byProvider: run.byProvider,
+              id: run.id,
+              rollbackBlockers: run.rollbackBlockers,
+              rollbackable: run.rollbackable,
+              status: run.status,
+            },
+      simulation:
+        simulation === undefined
+          ? null
+          : {
+              at: simulation.at,
+              cashMembers: simulation.cashMembers,
+              id: simulation.id,
+              incidents: simulation.incidents,
+              kpis: simulation.kpis,
+            },
+    };
+  }
+
+  it.each(variants)(
+    "validates every receipt, list row, remittance, run, simulation and month of the %s world",
+    (variant) => {
+      const world = createBillingWorld(variant);
+      const invoice = schema("Invoice");
+      const row = schema("InvoiceListItem");
+      for (const item of world.invoices) {
+        const label = `${item.invoice.displayNumber}${item.rolledBack ? " (rolled back)" : ""}`;
+        expect(invoice(item.invoice), `${label}: ${JSON.stringify(invoice.errors)}`).toBe(true);
+        expect(row(listItem(item)), `${label}: ${JSON.stringify(row.errors)}`).toBe(true);
+      }
+      const remittance = schema("Remittance");
+      const remittanceRow = schema("RemittanceListItem");
+      for (const item of world.remittances) {
+        expect(remittance(item), JSON.stringify(remittance.errors, null, 2)).toBe(true);
+        expect(
+          remittanceRow(remittanceListItem(item)),
+          JSON.stringify(remittanceRow.errors, null, 2),
+        ).toBe(true);
+      }
+      const run = schema("BillingRun");
+      for (const stored of world.runs) {
+        expect(run(runResource(world, stored)), JSON.stringify(run.errors, null, 2)).toBe(true);
+      }
+      const simulation = schema("BillingSimulation");
+      for (const stored of world.simulations.values()) {
+        expect(simulation(stored.simulation), JSON.stringify(simulation.errors, null, 2)).toBe(
+          true,
+        );
+      }
+      const month = schema("BillingPeriod");
+      for (const period of ["2026-08", BILLING_MOCK_PERIOD, "2026-10"]) {
+        expect(
+          month(billingPeriodOf(world, period)),
+          `${period}: ${JSON.stringify(month.errors)}`,
+        ).toBe(true);
+      }
+    },
+  );
+
+  it("carries D6's September: the 25/08 simulation (168 receipts, 6.480 €), its KPIs, incidents and cash members", () => {
+    const world = createBillingWorld();
+    const stored = world.simulations.get(BILLING_MOCK_PERIOD);
+    expect(stored?.stale).toBe(false);
+    const simulation = stored?.simulation;
+    expect(simulation?.kpis).toEqual({
+      byProvider: {
+        MANUAL: { count: 4, total: eur(24000) },
+        SEPA_XML: { count: 164, total: eur(624000) },
+      },
+      cashPending: 4,
+      count: 168,
+      inactivityFees: { count: 2, firstMonth: eur(2000), following: eur(1000) },
+      total: eur(648000),
+    });
+    expect(simulation?.invoicesPreview).toHaveLength(168);
+    expect(simulation?.incidents.map((incident) => [incident.memberName, incident.code])).toEqual([
+      ["Joan Vila", "NO_BANK_ACCOUNT"],
+      ["Pau Riera", "NO_PRICE"],
+    ]);
+    expect(
+      simulation?.cashMembers.map((member) => [member.memberName, member.plannedLeaveDate]),
+    ).toEqual([
+      ["Joan Vila", "2026-12-31"],
+      ["Roser Camps", "2027-06-30"],
+    ]);
+    expect(periodCounts(world, BILLING_MOCK_PERIOD)).toEqual({
+      all: 168,
+      failed: 2,
+      paid: 0,
+      pending: 4,
+      remitted: 162,
+    });
+    expect(frozenMonth(BILLING_MOCK_PERIOD)).toBe("Setembre 2026");
+  });
+
+  it("carries D6's receipts 2026-0912…0915 and August's bank return 2026-0871, and September adds up to the simulation", () => {
+    const world = createBillingWorld();
+    const live = world.invoices.filter((item) => !item.rolledBack);
+    const row = (displayNumber: string) => {
+      const found = live.find((item) => item.invoice.displayNumber === displayNumber)?.invoice;
+      if (found === undefined) throw new TypeError(`Missing the receipt ${displayNumber}`);
+      return [
+        found.memberSnapshot.fullName,
+        found.lines[0]?.description,
+        found.total.amountMinor,
+        found.status,
+        found.paymentMethod.type,
+      ];
+    };
+    expect(row("2026-0912")).toEqual([
+      "Laura Serra",
+      "Quota Abonat 2 gossos — Setembre 2026",
+      9000,
+      "COLLECTING",
+      "SEPA_DD",
+    ]);
+    expect(row("2026-0913")).toEqual([
+      "Marc Prats",
+      "Quota Abonat — Setembre 2026",
+      6000,
+      "COLLECTING",
+      "SEPA_DD",
+    ]);
+    expect(row("2026-0914")).toEqual([
+      "Eva Perez",
+      "Quota inactivitat — Setembre 2026",
+      1000,
+      "COLLECTING",
+      "SEPA_DD",
+    ]);
+    expect(row("2026-0915")).toEqual([
+      "Joan Vila",
+      "Quota Abonat — Setembre 2026",
+      6000,
+      "PENDING",
+      "MANUAL",
+    ]);
+    expect(row("2026-0871")).toEqual([
+      "Pere Soler",
+      "Quota Abonat — Agost 2026",
+      6000,
+      "FAILED",
+      "SEPA_DD",
+    ]);
+    // August's first run was rolled back: its 2026-0871 is CANCELLED{ROLLBACK} and the number reissued.
+    const august = world.invoices.filter((item) => item.invoice.displayNumber === "2026-0871");
+    expect(august.map((item) => [item.invoice.status, item.rolledBack])).toEqual([
+      ["CANCELLED", true],
+      ["FAILED", false],
+    ]);
+    expect(august[1]?.invoice.collections.at(-1)).toMatchObject({
+      failureCode: "BANK_RETURN",
+      provider: "SEPA_XML",
+      status: "FAILED",
+    });
+
+    const september = live.filter((item) => item.invoice.period === BILLING_MOCK_PERIOD);
+    expect(september).toHaveLength(168);
+    expect(september.reduce((sum, item) => sum + item.invoice.total.amountMinor, 0)).toBe(
+      world.simulations.get(BILLING_MOCK_PERIOD)?.simulation.kpis.total.amountMinor,
+    );
+    expect(
+      september.map((item) => item.invoice.number).sort((left, right) => left - right),
+    ).toEqual(Array.from({ length: 168 }, (_, index) => 912 + index));
+    expect(world.nextNumber).toBe(1080);
+  });
+
+  it("collects September on 01/09 (ruling A28): the run and its remittance of the 164 direct debits", () => {
+    const world = createBillingWorld();
+    const stored = periodRun(world, BILLING_MOCK_PERIOD);
+    if (stored === undefined) throw new TypeError("Missing September's run");
+    expect(runResource(world, stored)).toMatchObject({
+      collectionDate: "2026-09-01",
+      rollbackBlockers: [],
+      rollbackable: true,
+      status: "GENERATED",
+    });
+    expect(stored.run.invoiceIds).toHaveLength(168);
+    expect(stored.run.skipped.map((incident) => incident.code)).toEqual([
+      "NO_BANK_ACCOUNT",
+      "NO_PRICE",
+    ]);
+    const remittance = world.remittances.find((entry) => entry.runId === stored.run.id);
+    expect(remittance).toMatchObject({
+      count: 164,
+      requestedCollectionDate: "2026-09-01",
+      sequenceBreakdown: { FRST: 0, RCUR: 164 },
+      status: "GENERATED",
+      total: eur(624000),
+    });
+    expect(world.remittances.map((entry) => [entry.period, entry.status])).toEqual([
+      ["2026-09", "GENERATED"],
+      ["2026-08", "SUBMITTED"],
+      ["2026-08", "ROLLED_BACK"],
+    ]);
+  });
+
+  it("builds the provider variants: cash only without a run, cards generated and not charged, a stale simulation, the rollback race", () => {
+    const manualOnly = createBillingWorld("manualOnly");
+    expect(manualOnly.runs).toEqual([]);
+    expect(manualOnly.remittances).toEqual([]);
+    expect(manualOnly.simulations.get(BILLING_MOCK_PERIOD)?.simulation.kpis.byProvider).toEqual({
+      MANUAL: { count: 168, total: eur(648000) },
+    });
+    expect(
+      manualOnly.simulations
+        .get(BILLING_MOCK_PERIOD)
+        ?.simulation.incidents.map((incident) => incident.code),
+    ).toEqual(["NO_PRICE", "PROVIDER_DISABLED"]);
+
+    const stripe = createBillingWorld("stripe");
+    const cards = periodRun(stripe, BILLING_MOCK_PERIOD);
+    expect(cards?.run).toMatchObject({
+      byProvider: {
+        MANUAL: { count: 4, total: eur(24000) },
+        STRIPE: { charged: 0, count: 164, failed: 0, total: eur(624000) },
+      },
+      collectionDate: null,
+      status: "GENERATED",
+    });
+    expect(stripe.remittances).toEqual([]);
+    expect(periodCounts(stripe, BILLING_MOCK_PERIOD)).toEqual({
+      all: 168,
+      failed: 0,
+      paid: 0,
+      pending: 168,
+      remitted: 0,
+    });
+    expect(
+      stripe.invoices.filter((item) => item.invoice.paymentMethod.type === "CARD"),
+    ).toHaveLength(164);
+
+    const stale = createBillingWorld("stale");
+    expect(stale.simulations.get(BILLING_MOCK_PERIOD)?.stale).toBe(true);
+    expect(stale.runs).toEqual([]);
+
+    const race = createBillingWorld("rollbackBlocked");
+    expect(race.rollbackRace).toBe(true);
+    expect(periodCounts(race, BILLING_MOCK_PERIOD)).toEqual(
+      periodCounts(createBillingWorld(), BILLING_MOCK_PERIOD),
+    );
   });
 });

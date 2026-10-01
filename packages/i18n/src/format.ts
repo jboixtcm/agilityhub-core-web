@@ -338,6 +338,21 @@ export function formatMonth(value: DateInput, locale: Locale, timeZone: string):
   }).format(toDate(value));
 }
 
+/**
+ * A billed month `YYYY-MM` as a title: «Setembre 2026», «Septiembre 2026», «September 2026» (D6's
+ * header, S12 §2). A month is a calendar value, never shifted by a time zone.
+ */
+export function formatMonthTitle(period: string, locale: Locale): string {
+  const [year = Number.NaN, month = Number.NaN] = period.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, 1));
+  if (Number.isNaN(date.getTime())) throw new RangeError(`Invalid month: ${period}`);
+  const name = new Intl.DateTimeFormat(intlLocales[locale], {
+    month: "long",
+    timeZone: "UTC",
+  }).format(date);
+  return `${name.charAt(0).toLocaleUpperCase(intlLocales[locale])}${name.slice(1)} ${String(year)}`;
+}
+
 function zoneOffsetMinutes(instant: number, timeZone: string): number {
   const parts = new Intl.DateTimeFormat("en-US", {
     day: "2-digit",
@@ -583,6 +598,8 @@ export interface ClubFormats {
   formatList: (values: readonly string[]) => string;
   formatMoney: (amount: number) => string;
   formatMonth: (value: DateInput) => string;
+  /** A billed month `YYYY-MM` as a title, «Setembre 2026» (D6). */
+  formatMonthTitle: (period: string) => string;
   /** «fa 8 mesos» from an instant, in club-local days (S10 R-10-09). */
   formatMonthsSince: (value: DateInput, now?: DateInput) => string;
   /** A `YYYY-MM-DD` business date, never shifted by the club's zone (R-06-14). */
@@ -607,6 +624,7 @@ export function createClubFormats(locale: Locale, timeZone: string, currency: st
     formatList: (values) => formatList(values, locale),
     formatMoney: (amount) => formatMoney(amount, locale, currency),
     formatMonth: (value) => formatMonth(value, locale, timeZone),
+    formatMonthTitle: (period) => formatMonthTitle(period, locale),
     formatMonthsSince: (value, now) => formatMonthsSince(value, locale, timeZone, now),
     formatPlainDate: (value, presentation) => formatPlainDate(value, locale, presentation),
     formatTime: (value) => formatTime(value, locale, timeZone),

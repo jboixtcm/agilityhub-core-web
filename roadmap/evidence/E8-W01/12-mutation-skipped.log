@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (35 tests | 1 failed | 34 skipped) 217ms
+   ❯ E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides (10)
+     × R-12-07: the run's skipped members are not repeated under the incidents; «Omesos de la generació» lists only the others 215ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-07: the run's skipped members are not repeated under the incidents; «Omesos de la generació» lists only the others
+AssertionError: expected <h3 …(1)></h3> to be null
+
+- Expected:
+null
+
++ Received:
+<h3
+  class="billing-simulation__subtitle"
+>
+  Omesos de la generació
+</h3>
+
+ ❯ src/billing/BillingPage.test.tsx:896:79
+    894|     // The fixture's run skipped exactly the simulation's two incident…
+    895|     await screen.findByText("data de cobrament: 01/09");
+    896|     expect(screen.queryByRole("heading", { name: "Omesos de la generac…
+       |                                                                               ^
+    897|     cleanup();
+    898|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 34 skipped (35)
+   Start at  19:38:40
+   Duration  1.69s (transform 37%, environment 26%, import 17%, tests 14%, setup 6%)
+

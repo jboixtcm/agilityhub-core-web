@@ -208,6 +208,21 @@ const dynamicKeyPrefixes = [
   "enums:skipReason.",
   // S09 (E5-W02): the api's `SlotCell.reason` names why a half hour is taken.
   "enums:slotReason.",
+  // S12 (E8-W01): D6's receipt states (from the api's status, method and refunds) and the api's
+  // billing enums (incidents, methods, channels, remittances, rollback reasons, lines, concepts).
+  "admin-billing:status.",
+  "enums:billingIncident.",
+  "enums:collectionFailure.",
+  "enums:collectionProvider.",
+  "enums:collectionStatus.",
+  "enums:invoiceKind.",
+  "enums:invoiceLineOrigin.",
+  "enums:invoiceStatus.",
+  "enums:paymentChannel.",
+  "enums:paymentMethodType.",
+  "enums:remittanceStatus.",
+  "enums:rollbackBlocker.",
+  "enums:upfrontConcept.",
   "enums:templateKind.",
   "enums:weekState.",
 ];

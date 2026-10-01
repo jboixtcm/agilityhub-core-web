@@ -646,7 +646,9 @@ describe("MSW bootstrap handlers", () => {
     // E5-W05 round 2: + the calendar world's `GET /class-sessions` list (`calendar-handlers.ts`).
     // E6-W04 steps 0b and 0c: + screen 13's completion of a `GET /me/dogs` task (`handlers.ts`)
     // and D14's `GET /followup/filter-values` (`followup-handlers.ts`).
-    expect(handlers).toHaveLength(265);
+    // E8-W01: + the 20 S12 handlers of billing-handlers.ts (D6, the receipt drawer, the remittances
+    // page) and GET /billing/exports and GET /invoices/export (handlers.ts).
+    expect(handlers).toHaveLength(287);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

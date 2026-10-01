@@ -213,7 +213,23 @@ export interface UniversalListProps<Row> {
   loading?: boolean;
   /** The page sizes the list's contract accepts (default all four of CONVENCIONS_API §4). */
   pageSizes?: readonly UniversalListState["size"][];
+  /**
+   * `false` for a list whose contract has no free-text `q` (a `q` there is `400 INVALID_FILTER`,
+   * CONVENCIONS_API §4, ruling E75), e.g. the remittances: no search box.
+   */
+  searchable?: boolean;
   selectable?: boolean;
+  /**
+   * A row the selection may take (D6: only the receipts «Marcar cobrat» applies to, ruling E87).
+   * The others show a disabled checkbox and «select all» leaves them out. Default: every row.
+   */
+  isRowSelectable?: (row: Row) => boolean;
+  /**
+   * The selected row ids, when the screen holds the selection itself (D6's [Marcar cobrat
+   * (selecció)] sits above the list, as the mockup draws it). Omitted: the list keeps its own.
+   */
+  selected?: ReadonlySet<string>;
+  onSelectedChange?: (selected: Set<string>) => void;
 }
 
 function isFilterOperator(value: string): value is UniversalFilterOperator {
@@ -313,6 +329,7 @@ export function UniversalList<Row>({
   exportBusy = false,
   exportError,
   filterColumns,
+  isRowSelectable,
   labels,
   listKey,
   loadFilterValues,
@@ -323,6 +340,7 @@ export function UniversalList<Row>({
   onRenameView,
   onRetry,
   onRowActivate,
+  onSelectedChange,
   onStateChange,
   pageSizes = UNIVERSAL_LIST_PAGE_SIZES,
   rowAttributes,
@@ -331,7 +349,9 @@ export function UniversalList<Row>({
   rowKey,
   rows,
   savedViews,
+  searchable = true,
   selectable = false,
+  selected: controlledSelected,
   state,
   statusFilter,
   totalPages,
@@ -364,7 +384,14 @@ export function UniversalList<Row>({
         ? range.toValue(rangeStart, rangeEnd)
         : "";
   const [searchValue, setSearchValue] = useState(state.q);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [ownSelected, setOwnSelected] = useState<Set<string>>(new Set());
+  const selected = controlledSelected ?? ownSelected;
+  const setSelected = (update: (current: ReadonlySet<string>) => Set<string>) => {
+    const next = update(selected);
+    if (controlledSelected === undefined) setOwnSelected(next);
+    onSelectedChange?.(next);
+  };
+  const canSelect = (row: Row) => isRowSelectable?.(row) ?? true;
   const [selectedViewId, setSelectedViewId] = useState(() => {
     if (typeof localStorage === "undefined") {
       return savedViews[0]?.id ?? "";
@@ -484,11 +511,12 @@ export function UniversalList<Row>({
   };
 
   const clearSelection = () => {
-    setSelected(new Set());
+    setSelected(() => new Set());
   };
 
+  const selectableRows = rows.filter(canSelect);
   const toggleAll = () => {
-    const rowIds = rows.map(rowKey);
+    const rowIds = selectableRows.map(rowKey);
     const allSelected = rowIds.length > 0 && rowIds.every((id) => selected.has(id));
     setSelected((current) => {
       const next = new Set(current);
@@ -546,19 +574,21 @@ export function UniversalList<Row>({
       )}
 
       <div className="ah-universal-list__toolbar">
-        <label className="ah-universal-list__search">
-          <span className="ah-sr-only">{labels.search}</span>
-          <Icon aria-hidden="true" name="search" />
-          <input
-            aria-label={labels.search}
-            onChange={(event) => {
-              setSearchValue(event.currentTarget.value);
-            }}
-            placeholder={labels.search}
-            type="search"
-            value={searchValue}
-          />
-        </label>
+        {searchable ? (
+          <label className="ah-universal-list__search">
+            <span className="ah-sr-only">{labels.search}</span>
+            <Icon aria-hidden="true" name="search" />
+            <input
+              aria-label={labels.search}
+              onChange={(event) => {
+                setSearchValue(event.currentTarget.value);
+              }}
+              placeholder={labels.search}
+              type="search"
+              value={searchValue}
+            />
+          </label>
+        ) : null}
 
         {statusFilter === undefined ? null : (
           <select
@@ -916,7 +946,11 @@ export function UniversalList<Row>({
                 <th className="ah-universal-list__selection" scope="col">
                   <Checkbox
                     aria-label={labels.selectAll}
-                    checked={rows.length > 0 && rows.every((row) => selected.has(rowKey(row)))}
+                    checked={
+                      selectableRows.length > 0 &&
+                      selectableRows.every((row) => selected.has(rowKey(row)))
+                    }
+                    disabled={selectableRows.length === 0}
                     onChange={toggleAll}
                   />
                 </th>
@@ -977,6 +1011,7 @@ export function UniversalList<Row>({
                           <Checkbox
                             aria-label={(labels.selectCheckbox ?? labels.selectRow)(row)}
                             checked={selected.has(id)}
+                            disabled={!canSelect(row)}
                             onChange={() => {
                               setSelected((current) => {
                                 const next = new Set(current);

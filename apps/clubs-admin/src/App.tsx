@@ -41,6 +41,8 @@ import { ActivitiesPage } from "./activities/ActivitiesPage";
 import { ActivityRegistrantsPage } from "./activities/ActivityRegistrantsPage";
 import { AuditPage, MemberAuditPage } from "./audit/AuditPage";
 import { ExportJobsProvider, useExportsDrawer } from "./audit/ExportsDrawer";
+import { BillingPage } from "./billing/BillingPage";
+import { RemittancesPage } from "./billing/RemittancesPage";
 import { PlansPage } from "./catalogs/PlansPage";
 import { RingsPage } from "./catalogs/RingsPage";
 import { SettingsPage } from "./catalogs/SettingsPage";
@@ -414,7 +416,9 @@ export function AdminNavigation({
             // Mockup D13: «Alumnes» stays lit on a student's record.
             (entry.id === "students" && matchesPath(pathname, "/alumnes/:id")) ||
             // The notification log belongs to «Comunicats» (S11 §2).
-            (entry.id === "announcements" && matchesPath(pathname, "/notificacions")),
+            (entry.id === "announcements" && matchesPath(pathname, "/notificacions")) ||
+            // The remittances page belongs to «Facturació» (S12 §2).
+            (entry.id === "billing" && matchesPath(pathname, "/facturacio/remeses")),
           ...(entry.count === undefined ? {} : { count: entry.count }),
           href: entry.href,
           icon: entry.icon,
@@ -589,6 +593,13 @@ function routeContent(
   }
   if (route.path === "/modalitats") {
     return <PlansPage client={client} />;
+  }
+  if (route.path === "/facturacio") {
+    // D6 (S12 §2): ADMIN, module BILLING through `modules.ts` (INSTRUCTOR: no route, no entry).
+    return <BillingPage client={client} onNavigate={onNavigate} />;
+  }
+  if (route.path === "/facturacio/remeses") {
+    return <RemittancesPage client={client} onNavigate={onNavigate} />;
   }
   if (route.path === "/auditoria") {
     return <AuditPage client={client} />;

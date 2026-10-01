@@ -69,6 +69,27 @@ function queuedJobId(body: unknown): string | undefined {
   return typeof body.jobId === "string" && body.jobId !== "" ? body.jobId : undefined;
 }
 
+/** An export's answer read as a Blob: the `202` job, or the `200` file with its name. */
+async function exportResult(
+  data: Blob | undefined,
+  response: Response,
+  fallbackFileName: string,
+): Promise<ExportResult> {
+  if (response.status === 202) {
+    const jobId = queuedJobId(data === undefined ? undefined : JSON.parse(await data.text()));
+    if (jobId === undefined) throw new TypeError("The queued export answer has no job id");
+    return { jobId, kind: "queued" };
+  }
+  if (data === undefined) throw new TypeError("The export answer has no file");
+  const type = response.headers.get("Content-Type") ?? data.type;
+  return {
+    blob: data.type === type ? data : new Blob([await data.arrayBuffer()], { type }),
+    fileName:
+      contentDispositionFileName(response.headers.get("Content-Disposition")) ?? fallbackFileName,
+    kind: "file",
+  };
+}
+
 /**
  * Runs a list export (CONVENCIONS_API §4, S14 R-14-12). The body is read as a Blob, never as text,
  * so the file keeps its bytes; errors (`EXPORT_LIMIT`, `EXPORT_TOO_LARGE`, …) arrive as `ApiError`
@@ -84,20 +105,24 @@ export async function requestExport(
     params: { query },
     parseAs: "blob",
   });
-  if (response.status === 202) {
-    const jobId = queuedJobId(data === undefined ? undefined : JSON.parse(await data.text()));
-    if (jobId === undefined) throw new TypeError("The queued export answer has no job id");
-    return { jobId, kind: "queued" };
-  }
-  if (data === undefined) throw new TypeError("The export answer has no file");
-  const type = response.headers.get("Content-Type") ?? data.type;
-  return {
-    blob: data.type === type ? data : new Blob([await data.arrayBuffer()], { type }),
-    fileName:
-      contentDispositionFileName(response.headers.get("Content-Disposition")) ??
-      `${path.slice(1, -"/export".length)}.${query.format}`,
-    kind: "file",
-  };
+  return exportResult(data, response, `${path.slice(1, -"/export".length)}.${query.format}`);
+}
+
+export type AccountingExportFormat = "csv" | "xlsx";
+
+/**
+ * «Exporta per a comptabilitat» (S12 R-12-26, S14 engine, `listKey = accounting`): the same
+ * `200` file or `202` job as a list export, for one billed month.
+ */
+export async function requestAccountingExport(
+  client: ApiClient,
+  query: { format: AccountingExportFormat; period: string },
+): Promise<ExportResult> {
+  const { data, response } = await client.GET("/billing/exports", {
+    params: { query },
+    parseAs: "blob",
+  });
+  return exportResult(data, response, `facturacio-${query.period}.${query.format}`);
 }
 
 const EXPORT_DOWNLOAD_PATH = /\/exports\/([^/]+)\/download$/u;

@@ -242,5 +242,83 @@
     "ACTIVE": "active",
     "DISABLED": "disabled",
     "ARCHIVED": "archived"
+  },
+  "invoiceStatus": {
+    "PENDING": "pending",
+    "COLLECTING": "in remittance",
+    "PAID": "paid",
+    "FAILED": "unpaid",
+    "CANCELLED": "cancelled"
+  },
+  "invoiceKind": {
+    "PERIODIC": "Monthly",
+    "MANUAL": "Manual",
+    "MIGRATED": "Migrated"
+  },
+  "paymentMethodType": {
+    "SEPA_DD": "Direct debit",
+    "CARD": "Card",
+    "MANUAL": "Cash"
+  },
+  "billingIncident": {
+    "NO_BANK_ACCOUNT": "no bank account on file",
+    "NO_PRICE": "no rate assigned",
+    "NO_PLAN": "no modality assigned",
+    "CARD_INVALID": "card not valid",
+    "CURRENCY_MISMATCH": "currency other than the club's",
+    "PROVIDER_DISABLED": "payment provider turned off"
+  },
+  "paymentChannel": {
+    "CASH": "Cash",
+    "TRANSFER": "Bank transfer",
+    "BIZUM": "Bizum"
+  },
+  "remittanceStatus": {
+    "GENERATED": "generated",
+    "SUBMITTED": "sent to the bank",
+    "ROLLED_BACK": "rolled back"
+  },
+  "rollbackBlocker": {
+    "REMITTANCE_SUBMITTED": "the remittance has already been sent to the bank",
+    "COLLECTION_SUBMITTED": "there are charges already sent",
+    "INVOICE_PAID": "there are paid receipts",
+    "MANUAL_INVOICE_AFTER": "a manual receipt was issued after the generation"
+  },
+  "upfrontConcept": {
+    "ENTRY_FEE": "Entry fee",
+    "FIRST_MONTH": "First month",
+    "PACK": "Pack",
+    "SINGLE_CLASS": "Single class",
+    "ACTIVITY": "Activity",
+    "OTHER": "Other"
+  },
+  "invoiceLineOrigin": {
+    "MONTHLY_FEE": "Monthly fee",
+    "MAINTENANCE_FEE": "Maintenance fee",
+    "INACTIVITY_FEE": "Inactivity fee",
+    "SINGLE_CLASS": "Single class",
+    "PACK": "Pack",
+    "ADJUSTMENT": "Adjustment",
+    "MIGRATED": "Migrated"
+  },
+  "collectionProvider": {
+    "SEPA_XML": "SEPA remittance",
+    "STRIPE": "Card",
+    "MANUAL": "Manual"
+  },
+  "collectionStatus": {
+    "CREATED": "created",
+    "SUBMITTED": "sent",
+    "SUCCEEDED": "collected",
+    "FAILED": "failed",
+    "REFUNDED": "refunded"
+  },
+  "collectionFailure": {
+    "ROLLBACK": "remittance rollback",
+    "BANK_RETURN": "bank return",
+    "NO_PAYMENT_METHOD": "no valid card",
+    "card_declined": "card declined",
+    "expired_card": "expired card",
+    "insufficient_funds": "insufficient funds"
   }
 }

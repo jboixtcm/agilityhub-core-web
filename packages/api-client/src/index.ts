@@ -35,6 +35,7 @@ export {
 export { apiClient, createApiClient, type ApiClient, type ApiClientOptions } from "./client";
 export { getPublicClubPage, type PublicClubPageRequest } from "./club-pages";
 export {
+  type AccountingExportFormat,
   contentDispositionFileName,
   downloadExportJob,
   type ExportResult,
@@ -42,6 +43,7 @@ export {
   type ListExportPath,
   type ListExportQuery,
   openDownloadUrl,
+  requestAccountingExport,
   requestExport,
   saveFile,
 } from "./exports";

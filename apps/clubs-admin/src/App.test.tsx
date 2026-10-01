@@ -8,7 +8,7 @@ import {
   SessionProvider,
 } from "@agilityhub/auth";
 import { createI18n } from "@agilityhub/i18n";
-import { type Branding, BrandingProvider } from "@agilityhub/ui";
+import { type Branding, BrandingProvider, requiredModulesForUiItem } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
@@ -163,6 +163,58 @@ describe("T-02-14 clubs-admin shell", () => {
         "/auditoria",
         "/consola/*",
       ]),
+    );
+  });
+});
+
+describe("E8-W01 step 1: D6 «Facturació» is ADMIN only and belongs to BILLING (MATRIU_PERMISOS, R-12-28)", () => {
+  async function renderBillingNavigation(
+    roles: ("ADMIN" | "INSTRUCTOR")[],
+    modules: readonly string[],
+    pathname: string,
+  ) {
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["shell"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={{ ...branding, modules: [...modules] }}>
+          <AdminNavigation modules={modules} pathname={pathname} roles={roles} />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+  }
+
+  it("E8-W01: both routes are ADMIN only and need BILLING; an INSTRUCTOR has no «Facturació» entry", async () => {
+    expect(
+      ADMIN_ROUTES.filter((route) => route.path.startsWith("/facturacio")).map((route) => [
+        route.path,
+        route.roles,
+        requiredModulesForUiItem("routes", route.path),
+      ]),
+    ).toEqual([
+      ["/facturacio", ["ADMIN"], ["BILLING"]],
+      ["/facturacio/remeses", ["ADMIN"], ["BILLING"]],
+    ]);
+    await renderBillingNavigation(["INSTRUCTOR"], branding.modules, "/agenda");
+    expect(screen.queryByRole("link", { name: "Facturació" })).toBeNull();
+  });
+
+  it("E8-W01: without BILLING the entry is gone; with it, «Facturació» stays lit on the remittances page", async () => {
+    await renderBillingNavigation(
+      ["ADMIN"],
+      branding.modules.filter((module) => module !== "BILLING"),
+      "/tauler",
+    );
+    expect(screen.queryByRole("link", { name: "Facturació" })).toBeNull();
+    cleanup();
+    await renderBillingNavigation(["ADMIN"], branding.modules, "/facturacio/remeses");
+    expect(screen.getByRole("link", { name: "Facturació" })).toHaveAttribute(
+      "aria-current",
+      "page",
     );
   });
 });

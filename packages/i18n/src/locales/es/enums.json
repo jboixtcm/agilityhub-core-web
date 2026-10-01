@@ -242,5 +242,83 @@
     "ACTIVE": "activa",
     "DISABLED": "desactivada",
     "ARCHIVED": "archivada"
+  },
+  "invoiceStatus": {
+    "PENDING": "pendiente",
+    "COLLECTING": "remesado",
+    "PAID": "cobrado",
+    "FAILED": "impagado",
+    "CANCELLED": "anulado"
+  },
+  "invoiceKind": {
+    "PERIODIC": "Mensual",
+    "MANUAL": "Manual",
+    "MIGRATED": "Migrado"
+  },
+  "paymentMethodType": {
+    "SEPA_DD": "Domiciliación",
+    "CARD": "Tarjeta",
+    "MANUAL": "Efectivo"
+  },
+  "billingIncident": {
+    "NO_BANK_ACCOUNT": "sin cuenta bancaria informada",
+    "NO_PRICE": "sin tarifa asignada",
+    "NO_PLAN": "sin modalidad asignada",
+    "CARD_INVALID": "tarjeta no válida",
+    "CURRENCY_MISMATCH": "moneda distinta de la del club",
+    "PROVIDER_DISABLED": "proveedor de pago desactivado"
+  },
+  "paymentChannel": {
+    "CASH": "Efectivo",
+    "TRANSFER": "Transferencia",
+    "BIZUM": "Bizum"
+  },
+  "remittanceStatus": {
+    "GENERATED": "generada",
+    "SUBMITTED": "enviada al banco",
+    "ROLLED_BACK": "retrocedida"
+  },
+  "rollbackBlocker": {
+    "REMITTANCE_SUBMITTED": "la remesa ya se ha enviado al banco",
+    "COLLECTION_SUBMITTED": "hay cobros enviados",
+    "INVOICE_PAID": "hay recibos cobrados",
+    "MANUAL_INVOICE_AFTER": "se ha emitido un recibo manual después de la generación"
+  },
+  "upfrontConcept": {
+    "ENTRY_FEE": "Entrada",
+    "FIRST_MONTH": "Primer mes",
+    "PACK": "Pack",
+    "SINGLE_CLASS": "Clase individual",
+    "ACTIVITY": "Actividad",
+    "OTHER": "Otros"
+  },
+  "invoiceLineOrigin": {
+    "MONTHLY_FEE": "Cuota mensual",
+    "MAINTENANCE_FEE": "Cuota de mantenimiento",
+    "INACTIVITY_FEE": "Cuota de inactividad",
+    "SINGLE_CLASS": "Clase individual",
+    "PACK": "Pack",
+    "ADJUSTMENT": "Ajuste",
+    "MIGRATED": "Migrado"
+  },
+  "collectionProvider": {
+    "SEPA_XML": "Remesa SEPA",
+    "STRIPE": "Tarjeta",
+    "MANUAL": "Manual"
+  },
+  "collectionStatus": {
+    "CREATED": "creado",
+    "SUBMITTED": "enviado",
+    "SUCCEEDED": "cobrado",
+    "FAILED": "fallido",
+    "REFUNDED": "reembolsado"
+  },
+  "collectionFailure": {
+    "ROLLBACK": "retroceso de la remesa",
+    "BANK_RETURN": "devolución bancaria",
+    "NO_PAYMENT_METHOD": "sin tarjeta válida",
+    "card_declined": "tarjeta rechazada",
+    "expired_card": "tarjeta caducada",
+    "insufficient_funds": "fondos insuficientes"
   }
 }

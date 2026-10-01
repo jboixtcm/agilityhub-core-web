@@ -12,6 +12,13 @@ import {
   resetBackofficeMockState,
   trainingBookingExportRows,
 } from "./backoffice-handlers";
+import {
+  accountingRows,
+  billingExportRefusal,
+  billingHandlers,
+  invoiceExportRows,
+  resetBillingMockState,
+} from "./billing-handlers";
 import { bookingHandlers, bookingState, resetBookingMockState } from "./booking-handlers";
 import { calendarHandlers } from "./calendar-handlers";
 import { dayGridHandlers } from "./day-grid-handlers";
@@ -19,6 +26,7 @@ import { activityState, resetActivityState } from "./fixtures/activities";
 import { AGENDA_MOCK_NOW, AGENDA_SELECTED_CLASS_ID } from "./fixtures/agenda";
 import { ATTENDANCE_MOCK_NOW } from "./fixtures/attendance";
 import auditEntriesFixture from "./fixtures/audit-entries.json";
+import { BILLING_MOCK_NOW, billingState, isPeriod } from "./fixtures/billing";
 import {
   catalogState,
   type Administrator,
@@ -1083,6 +1091,14 @@ function submittedQuote(request: Request, planId: string | undefined) {
 function clubPaymentProviders(): NonNullable<ClubSettings["paymentProviders"]> {
   const scenario = currentMockScenario();
   if (!scenario.branding.modules.includes("BILLING")) return {};
+  // S12 R-12-28 (E8-W01): D6's provider variants, a cash-only club and a card club.
+  if (scenario.billing === "manualOnly") return { MANUAL: { configured: false, enabled: true } };
+  if (scenario.billing === "stripe") {
+    return {
+      STRIPE: { configured: true, enabled: true },
+      MANUAL: { configured: false, enabled: true },
+    };
+  }
   return {
     SEPA_XML: { configured: true, enabled: true },
     ...(scenario.signupStripe === true ? { STRIPE: { configured: true, enabled: true } } : {}),
@@ -2246,6 +2262,40 @@ export const handlers = [
           label: "Entrada per gos",
           type: "MONEY",
           value: { amountMinor: 10000, currency: "EUR" },
+          version: 1,
+        });
+      }
+      // CATALEG_PARAMETRES «Quotes i remesa» (R-12-06): the day of M+1 a run moves the next receipt to.
+      if (key === "billing.nextInvoiceDayOfMonth") {
+        if (!scenario.branding.modules.includes("BILLING")) {
+          return apiError("MODULE_DISABLED", "Module disabled", 404);
+        }
+        return HttpResponse.json<Parameter>({
+          ...base,
+          constraints: { max: 28, min: 1 },
+          default: 1,
+          key,
+          label: "Dia del proper rebut",
+          module: "BILLING",
+          type: "INT",
+          value: 1,
+          version: 1,
+        });
+      }
+      // CATALEG_PARAMETRES «Quotes i remesa» (R-12-26): the accounting export's default format.
+      if (key === "billing.accountingExportFormat") {
+        if (!scenario.branding.modules.includes("BILLING")) {
+          return apiError("MODULE_DISABLED", "Module disabled", 404);
+        }
+        return HttpResponse.json<Parameter>({
+          ...base,
+          constraints: { values: ["CSV", "XLSX"] },
+          default: "CSV",
+          key,
+          label: "Format de l'export comptable",
+          module: "BILLING",
+          type: "ENUM",
+          value: "CSV",
           version: 1,
         });
       }
@@ -4090,6 +4140,66 @@ export const handlers = [
     savedViews.splice(index, 1);
     return new HttpResponse(null, { status: 204 });
   }),
+  // S12 R-12-26 (E8-W01) «Exporta per a comptabilitat» (S14 engine, listKey accounting): one row per
+  // receipt line; `200` with `facturacio-YYYY-MM.{csv|xlsx}`, or a queued `ACCOUNTING` job above
+  // `syncMaxRows` (and under `exportsQueued`) followed in the exports drawer. ExportJob.format has no
+  // CSV: a queued accounting export is the XLSX one (E8-W01 report, question to the api).
+  http.get("*/api/v1/billing/exports", ({ request }) => {
+    const refused = billingExportRefusal();
+    if (refused !== undefined) return refused;
+    const url = new URL(request.url);
+    const period = url.searchParams.get("period") ?? "";
+    const format = url.searchParams.get("format") ?? "csv";
+    if (!isPeriod(period)) return validationError([{ code: "INVALID_FORMAT", field: "period" }]);
+    if (format !== "csv" && format !== "xlsx") {
+      return validationError([{ code: "INVALID", field: "format" }]);
+    }
+    const rows = accountingRows(period);
+    if (format === "xlsx" && exportQueued(rows)) {
+      const jobId = "00000000-0000-4000-8000-000000000e81";
+      const job: ExportJob = {
+        createdAt: "2026-08-26T08:00:00Z",
+        format: "XLSX",
+        id: jobId,
+        kind: "ACCOUNTING",
+        listKey: "accounting",
+        progressPct: 0,
+        status: "QUEUED",
+      };
+      exportPolls = 0;
+      queuedExportRows.set(jobId, rows);
+      exportJobsState = [job, ...exportJobsState.filter((item) => item.id !== job.id)];
+      return HttpResponse.json({ jobId, statusUrl: `/api/v1/exports/${jobId}` }, { status: 202 });
+    }
+    const fileName = `facturacio-${period}.${format}`;
+    return format === "csv"
+      ? new HttpResponse(
+          // UTF-8 with BOM and `;` (R-12-26); the rows themselves are the api's (E8-T02).
+          `\uFEFFnúmero;data;mes;número d'abonat;nom;NIF;concepte;base;% impost;impost;total;mètode;estat;data de cobrament;remesa;referència\n`,
+          {
+            headers: {
+              "Content-Disposition": `attachment; filename="${fileName}"`,
+              "Content-Type": "text/csv; charset=utf-8",
+            },
+          },
+        )
+      : new HttpResponse(mockExportBody("xlsx"), {
+          headers: {
+            "Content-Disposition": `attachment; filename="${fileName}"`,
+            "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          },
+        });
+  }),
+  // S14 R-14-12 (E2): the receipts' list export, before the receipts' `GET /invoices/:id`.
+  http.get("*/api/v1/invoices/export", ({ request }) => {
+    const refused = billingExportRefusal();
+    if (refused !== undefined) return refused;
+    const rows = invoiceExportRows(request);
+    if (rows instanceof Response) return rows;
+    return listExport(request, "invoices", rows, "00000000-0000-4000-8000-000000000e82");
+  }),
+  // S12 (E8-W01): D6, the receipt drawer and the remittances page.
+  ...billingHandlers,
   // E5-W03 (S08/S09/S15 back office) first: a waiting entry or a ring block of another world falls
   // through to its own handlers.
   ...backofficeHandlers,
@@ -4118,6 +4228,8 @@ export {
   AGENDA_MOCK_NOW,
   AGENDA_SELECTED_CLASS_ID,
   ATTENDANCE_MOCK_NOW,
+  BILLING_MOCK_NOW,
+  billingState,
   INBOX_ALL_READ_AT,
   bookingState,
   catalogState,
@@ -4132,6 +4244,7 @@ export {
   resetAuditMockState,
   resetAuthMockState,
   resetBackofficeMockState,
+  resetBillingMockState,
   resetBookingMockState,
   resetCatalogState,
   resetCensusRecordState,
