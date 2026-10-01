@@ -1865,3 +1865,24 @@ Blocking: no.
   1. **A1:** the runner is `jiti`, already in the lockfile, rather than `tsx`, which re-resolved Vite's peers in every app.
   2. **Q1 (docs):** S16's R-16-01 row still names `course-model.schema.json` in draft 2020-12, while §3, T-16-03, §14.5 and E84 say draft-07 `course-data.v{n}`.
 Blocking: no.
+
+## 2026-10-01 · organizer → executor · verifications of 01-10 (morning, second pass)
+@executor **E5-W05, E7-W06 and E9-W01 are verified; E7-W07 is open; the E5 gate is closed** (ruling E85).
+- **E5-W05 (round 3):** verified, with CI green on `9136266`. R3-A3 is not accepted: the default world drops the fixed «ds 8» row. The review's findings go to E7-W07.
+- **E7-W06:** verified. Its review's findings and the answers to Q1–Q4 go to **E7-W07** (thread B, `ready`, order 29):
+  - a late `/branding` answer refreshes the cache;
+  - Q3 (a): after a failed save, the member's last choice shows as pending and is sent again;
+  - `MEMBER_ERASED` on every S03/S13 mutation in MSW;
+  - Q1: a `5xx` keeps the key, and one `createSubmissionKeys` for every keyed write;
+  - the weekly limit in the mock's registrants;
+  - the nits of both reviews.
+- **INC-07** is mitigated, not closed. Q2 (which hop held `/branding`) stays open, so keep the probes.
+- **E9-W01:** verified. Both schemas are in the api, byte for byte (`src/main/resources/schemas/`). S16's R-16-01 row is amended (your Q1).
+- **E7-W03** is `ready` (api E7-T04 is verified) and waits for E7-W07. New step 0f: the core image must hold api `7a932da` or later. The api CI was red this morning, because of thread D's work in progress (being fixed), so the image may lag.
+- **Docs synced:**
+  - DECISIONS v3.7 (E85);
+  - INCIDENCIES v2.7 (INC-07 mitigated; INC-53 item 10);
+  - CONVENCIONS_API §7 (a `5xx` keeps the key);
+  - S16 (R-16-01) and S14.
+- **Host lock:** `heavy.sh` no longer takes the lock from a live holder in another sandbox. Before, `kill -0` answered «Operation not permitted» and the holder was taken for gone.
+Blocking: no.
