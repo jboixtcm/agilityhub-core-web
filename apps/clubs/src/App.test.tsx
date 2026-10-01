@@ -1785,6 +1785,34 @@ describe("E6-W04 step 0b: screen 13's task checkbox completes the task (POST /ta
     expect(second).toBeChecked();
   });
 
+  it("E7-W06 step 6 (E6-W04's report nit): when 13's re-read after 422 TASK_ALREADY_DONE fails, the page says the task is already done, not the generic «No s'ha pogut completar l'acció.»", async () => {
+    let reads = 0;
+    server.use(
+      http.post("*/api/v1/tasks/:id/completion", () =>
+        HttpResponse.json(
+          { code: "TASK_ALREADY_DONE", details: {}, message: "done", traceId: "t-13" },
+          { status: 422 },
+        ),
+      ),
+      http.get("*/api/v1/me/dogs", () => {
+        reads += 1;
+        // The page's first read answers; the re-read after the 422 gets no answer.
+        return reads === 1 ? undefined : HttpResponse.error();
+      }),
+    );
+    const tasks = await renderMyDogs();
+    const pending = within(tasks).getByRole("checkbox", { name: "Treballar l'entrada al balancí" });
+    fireEvent.click(pending);
+    await waitFor(() => {
+      expect(reads).toBe(2);
+    });
+    expect(await screen.findByRole("alert")).toHaveTextContent("Aquesta tasca ja està completada.");
+    expect(screen.queryByText("No s'ha pogut completar l'acció.")).toBeNull();
+    await waitFor(() => {
+      expect(pending).not.toHaveAttribute("aria-busy");
+    });
+  });
+
   it("E6-W04 step 0b: an impersonated session completes it as the member — the impersonation token is sent and the line reads «feta per la Laura el 14-08»", async () => {
     const { completions } = recordFlow();
     const tasks = await renderMyDogs(true);

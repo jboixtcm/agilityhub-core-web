@@ -46,11 +46,27 @@ function zoneOffsetMinutes(instant: number, timeZone: string): number {
   return Math.round((local - instant) / 60_000);
 }
 
+// The answers of `clubInstant`, which never change for the same input. The mock lists of more than
+// 1000 rows (E5-W05 step 5) ask for thousands of instants per request, and the ~55 samples per call
+// timed the step-5 test out on CI (E5-W05 round 3 #1).
+const clubInstants = new Map<string, string>();
+const CLUB_INSTANTS_MAX = 50_000;
+
 /**
  * UTC instant of a club-local date + time (R-06-14), without milliseconds, with the api's
  * `ZonedDateTime.of` rules: first occurrence of an ambiguous time, a time in the gap moves forward.
  */
 export function clubInstant(date: string, time: string, timeZone = clubTimeZone): string {
+  const key = `${timeZone} ${date}T${time}`;
+  const known = clubInstants.get(key);
+  if (known !== undefined) return known;
+  if (clubInstants.size >= CLUB_INSTANTS_MAX) clubInstants.clear();
+  const instant = computeClubInstant(date, time, timeZone);
+  clubInstants.set(key, instant);
+  return instant;
+}
+
+function computeClubInstant(date: string, time: string, timeZone: string): string {
   const local = Date.parse(`${date}T${time}:00Z`);
   // Every offset the zone uses from wall − 26 h to wall + 26 h (hourly samples).
   const samples = Array.from({ length: 53 }, (_, hour) => {

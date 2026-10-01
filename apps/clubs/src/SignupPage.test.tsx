@@ -1123,7 +1123,19 @@ describe("M2 api errors land on their field and step (§2, CATALEG_ERRORS)", () 
     },
   ];
 
-  it.each(cases)("$code ($status) → $path", async ({ code, details, focus, headers, path, status, text }) => {
+  // E7-W06 (E7-W05 review #6): each title says what its row asserts — the code, the status and the
+  // api's `details.reason` when it has one, and where the form goes (vitest cuts each value at 40
+  // characters, so they stay apart).
+  const titled = cases.map((item) => ({
+    ...item,
+    answer:
+      typeof item.details === "object" && item.details !== null && "reason" in item.details && typeof item.details.reason === "string"
+        ? `${String(item.status)}, ${item.details.reason}`
+        : String(item.status),
+    where: item.path ?? "the payment step",
+  }));
+
+  it.each(titled)("$code ($answer) → $where", async ({ code, details, focus, headers, path, status, text }) => {
     server.use(
       http.post("*/api/v1/signup", () => apiErrorResponse(code, status, details ?? {}, headers)),
     );

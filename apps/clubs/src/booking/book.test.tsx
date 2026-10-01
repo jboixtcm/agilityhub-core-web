@@ -174,6 +174,33 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
     expect(joins).toEqual([{ classSessionId: "class-2026-08-06-2000-cd", dogId: "dog-duna" }]);
   });
 
+  it("E7-W06 step 3 (E7-W05 review #2): a join whose reload fails shows 04's error with a retry, never the joined row next to the notice; the retry reads the list again without it", async () => {
+    let reads = 0;
+    let failing = true;
+    server.use(
+      http.get("*/api/v1/me/bookable-classes", () => {
+        reads += 1;
+        if (reads === 1 || !failing) return undefined;
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "boom", traceId: "t" },
+          { status: 500 },
+        );
+      }),
+    );
+    await renderBook();
+    fireEvent.click(within(rows()[1] ?? document.body).getByRole("button"));
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "APUNTA'M" }));
+    expect(await screen.findByText("No s'han pogut carregar les classes.")).toBeVisible();
+    expect(rows()).toEqual([]);
+    expect(document.querySelector('[data-class-id="class-2026-08-06-2000-cd"]')).toBeNull();
+    failing = false;
+    fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
+    await waitFor(() => {
+      expect(rows()).toHaveLength(5);
+    });
+    expect(document.querySelector('[data-class-id="class-2026-08-06-2000-cd"]')).toBeNull();
+  });
+
   it("a refused join keeps its message inside the dialog (409 WAITLIST_LIMIT)", async () => {
     server.use(
       http.post("*/api/v1/waitlist-entries", () =>

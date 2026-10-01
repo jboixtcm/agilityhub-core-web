@@ -1,4 +1,10 @@
-import { type ApiClient, isApiError } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  isApiError,
+  isInProgress,
+  isUnanswered,
+  useSubmissionKeys,
+} from "@agilityhub/api-client";
 import { dogArticle, useClubFormats } from "@agilityhub/i18n";
 import { AppBar, Badge, Button, Card, Chip, Icon, IconButton } from "@agilityhub/ui";
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
@@ -102,21 +108,8 @@ function NewBookingCard({
   );
 }
 
-/** One key per payload (R-08-08): a retry of the same confirmation replays the api's answer. */
-function useIdempotencyKeys() {
-  const keys = useRef(new Map<string, string>());
-  return (payload: unknown) => {
-    const signature = JSON.stringify(payload);
-    const known = keys.current.get(signature);
-    if (known !== undefined) return known;
-    const key = crypto.randomUUID();
-    keys.current.set(signature, key);
-    return key;
-  };
-}
-
 function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
-  const { t } = useTranslation(["booking", "errors"]);
+  const { t } = useTranslation(["booking", "errors", "common"]);
   const formats = useClubFormats();
   const dayTime = useDayTime();
   const hold: SeatHoldResponse = seat.hold;
@@ -126,7 +119,9 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
   const [booked, setBooked] = useState<Booking>();
-  const idempotencyKey = useIdempotencyKeys();
+  // One key per submission (R-08-08, CONVENCIONS_API §7, E74): a retry of the same confirmation
+  // while the api has not answered it replays the api's answer; an answer retires the key.
+  const submissions = useSubmissionKeys();
   // The hold is released when the page is left, unless the booking consumed it or it was released.
   const kept = useRef(false);
   const keep = useCallback(() => kept.current, []);
@@ -152,7 +147,8 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
       seatHoldId: hold.id,
       ...(swap && swapId !== undefined ? { swapBookingId: swapId } : {}),
     };
-    const header = { "Idempotency-Key": idempotencyKey(body) };
+    const signature = JSON.stringify(body);
+    const header = { "Idempotency-Key": submissions.keyFor(signature) };
     setPending(true);
     setError(undefined);
     try {
@@ -163,6 +159,7 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
               body,
               params: { header, path: { id: seat.waitlistEntryId } },
             });
+      submissions.forget(signature);
       const booking = response.data;
       if (booking === undefined) throw new TypeError("The booking response did not contain data");
       kept.current = true;
@@ -173,15 +170,23 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
       }
       setBooked(booking);
     } catch (cause) {
+      // An answer retires the key: the same confirmation sent again is a new submission. No answer
+      // (offline, or IN_PROGRESS: the first request still runs, E79) keeps it, and so does a 5xx,
+      // whose retry R-08-08 sends with the same key.
+      if (!isUnanswered(cause) && !(isApiError(cause) && cause.status >= 500)) {
+        submissions.forget(signature);
+      }
       if (isApiError(cause, "SEAT_HOLD_EXPIRED")) {
         setExpiredByApi(true);
       } else if (
+        isInProgress(cause) ||
         isApiError(cause, "SWAP_NOT_ALLOWED") ||
         !isApiError(cause) ||
         cause.code === "NETWORK" ||
         cause.status >= 500
       ) {
-        // The member stays with the hold: a retry sends the same payload with the same key.
+        // The member stays with the hold: a retry sends the same payload (with the same key while
+        // unanswered); IN_PROGRESS reads the shared «L'operació encara està en curs…» (E80).
         setError(errorText(t, cause));
       } else {
         // Claim refusals (SEAT_TAKEN, WAITLIST_*) and any other code: back to 04 with the message.

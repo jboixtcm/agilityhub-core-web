@@ -5,10 +5,12 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import openapiDocument from "../../openapi/openapi.json";
 import type { components } from "../generated/schema";
 
+import { dayGridClassSessions } from "./fixtures/day-grid";
 import { findParameter, settingsState } from "./fixtures/settings";
 import {
   JOBS_MOCK_NOW,
   mockScenario,
+  planningState,
   resetBackofficeMockState,
   resetBookingMockState,
   resetPlanningState,
@@ -234,10 +236,12 @@ describe("E5-W03 step 8 · S15 §6 form A (GET /risk-review)", () => {
     // The notified members are the registrants of the classes the review cancelled or flagged.
     // c4 is the calendar's own Wednesday class: active and without registrants until the Wednesday
     // review cancels it (E5-W05 step 15; before, the world showed it already cancelled here).
+    // E5-W05 round 3 #4: «Nivell D» takes a D dog and «F i G» an F or G one (R-08-04), where mockup
+    // D1 names Laura + Duna («C») and Pau + Blat («B»).
     expect(seen).toEqual([
       "AUTO_CANCELLED: ",
-      "AUTO_CANCELLED: Laura + Duna CANCELLED_BY_CLUB",
-      "AT_RISK: Pau + Blat ACTIVE",
+      "AUTO_CANCELLED: Clara + Trevi CANCELLED_BY_CLUB",
+      "AT_RISK: Dani + Rayo ACTIVE",
       "WILL_CANCEL: ",
     ]);
   });
@@ -399,14 +403,15 @@ describe("E5-W03 step 8 · S08 staff reads (registrants, waiting list, GET /book
       `/class-sessions/${D4_CLASS}/bookings`,
     );
     valid("ClassBookings", bookings.body);
+    // E5-W05 round 3 #4: a «B+C» class takes only B and C dogs (R-08-04).
     expect(
       bookings.body.items.map((item) => `${item.memberName} + ${item.dogName}:${item.state}`),
     ).toEqual([
       "Laura + Duna:ACTIVE",
-      "Marc + Chun-li:ACTIVE",
       "Anna + Nass:ACTIVE",
       "Eva + Fish:ACTIVE",
-      "Sergio + Thai:CANCELLED_LATE",
+      "Pau + Blat:ACTIVE",
+      "Jana + Mixa:CANCELLED_LATE",
     ]);
     const waitlist = await as<components["schemas"]["ClassWaitlist"]>(
       "instructor",
@@ -792,7 +797,7 @@ describe("E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the 
 });
 
 describe("E5-W05 round 2 · the staff registrants' level is the dog's own, and follows levels.enabled (S08 §6)", () => {
-  it("E5-W05 round 2 #3: GET /class-sessions/{id}/bookings sends each dog's own level (Duna «C», Chun-li «A», Nass «B», Fish «B», Thai «E»), and null in a club with levels.enabled = false", async () => {
+  it("E5-W05 round 2 #3: GET /class-sessions/{id}/bookings sends each dog's own level (D4's «B+C»: Duna «C», Nass «B», Fish «B», Blat «B», Mixa «C»), and null in a club with levels.enabled = false", async () => {
     const levels = async (scenario: MockScenario) => {
       const answer = await as<ClassBookings>(
         scenario,
@@ -803,7 +808,8 @@ describe("E5-W05 round 2 · the staff registrants' level is the dog's own, and f
       valid("ClassBookings", answer.body);
       return answer.body.items.map((item) => `${item.dogName}:${item.levelCode ?? "—"}`);
     };
-    expect(await levels("admin")).toEqual(["Duna:C", "Chun-li:A", "Nass:B", "Fish:B", "Thai:E"]);
+    // E5-W05 round 3 #4: D4's «B+C» takes only B and C dogs (R-08-04), Duna «C» first.
+    expect(await levels("admin")).toEqual(["Duna:C", "Nass:B", "Fish:B", "Blat:B", "Mixa:C"]);
     expect(await levels("planningNoLevels")).toEqual([
       "Duna:—",
       "Chun-li:—",
@@ -811,6 +817,50 @@ describe("E5-W05 round 2 · the staff registrants' level is the dog's own, and f
       "Fish:—",
       "Thai:—",
     ]);
+  });
+
+  it("E5-W05 round 3 #4: in every class of the calendar and day-grid worlds each registrant's level is one the class allows (S08 R-08-04), no dog is listed twice, and the rows match the class's counters", async () => {
+    mockScenario("admin");
+    const sessions = [...planningState.sessions, ...dayGridClassSessions()].filter(
+      (session) => session.state !== "DRAFT",
+    );
+    expect(sessions.length).toBeGreaterThan(0);
+    const problems: string[] = [];
+    for (const session of sessions) {
+      const answer = await as<ClassBookings>(
+        "admin",
+        "GET",
+        `/class-sessions/${session.id}/bookings`,
+      );
+      expect(answer.status, session.id).toBe(200);
+      const allowed = new Set(
+        session.levelIds.map((id) => id.replace(/^level-/u, "").toUpperCase()),
+      );
+      const items = answer.body.items;
+      const expected =
+        session.state === "CANCELLED"
+          ? (session.cancellation?.affectedBookings ?? 0)
+          : session.counters.booked;
+      const counted = items.filter((item) =>
+        session.state === "CANCELLED"
+          ? item.state === "CANCELLED_BY_CLUB"
+          : item.state === "ACTIVE",
+      ).length;
+      if (counted !== expected) {
+        problems.push(`${session.id}: ${String(counted)} rows for ${String(expected)}`);
+      }
+      if (new Set(items.map((item) => item.dogId)).size !== items.length) {
+        problems.push(`${session.id}: a dog twice`);
+      }
+      for (const item of items) {
+        if (allowed.size > 0 && !allowed.has(item.levelCode ?? "")) {
+          problems.push(
+            `${session.id} (${[...allowed].join("+")}): ${item.dogName} ${item.levelCode ?? "—"}`,
+          );
+        }
+      }
+    }
+    expect(problems).toEqual([]);
   });
 });
 

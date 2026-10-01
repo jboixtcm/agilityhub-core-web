@@ -148,7 +148,12 @@ function SheetRow({
   const name = studentName(t, row);
   const lines = statusLines(t, row, noShowNoticeTime);
   return (
-    <li className="instructor-sheet__row">
+    // Stable hooks for the core specs (E6-W04 Q6): the booking and the state the row shows.
+    <li
+      className="instructor-sheet__row"
+      data-attendance-state={value}
+      data-booking-id={row.bookingId}
+    >
       <div className="instructor-sheet__main">
         {row.dogPhotoUrl == null ? (
           <span className="instructor-sheet__photo">
@@ -209,6 +214,9 @@ function noticeToast(
       return { message: t("instructor:attendance.saved"), tone: "success" };
     case "stale":
       return { message: t("instructor:attendance.staleToast"), tone: "warning" };
+    case "inProgress":
+      // Not the save's answer: [DESA] sends it again with the same key (CONVENCIONS_API §7, E80).
+      return { message: t("common:inProgress"), tone: "warning" };
     case "error":
       return {
         message: t(`errors:${notice.code}`, { defaultValue: t("errors:INTERNAL_ERROR") }),
@@ -223,7 +231,7 @@ function noticeToast(
  * lines built from the api's fields only, [DESA] with the changed rows, and the waiting list.
  */
 export function AttendancePage({ classId, client }: { classId: string; client: ApiClient }) {
-  const { t } = useTranslation(["instructor", "enums", "errors", "home"]);
+  const { t } = useTranslation(["instructor", "enums", "errors", "home", "common"]);
   const branding = useBranding();
   const formats = useClubFormats();
   const sheet = useAttendanceSheet(client, classId);

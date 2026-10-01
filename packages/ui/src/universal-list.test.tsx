@@ -243,3 +243,54 @@ describe("E5-W05 round 2 #2 · a range filter with no suggested values (ruling E
     expect(loadFilterValues.mock.calls.map(([field]) => field)).toEqual(["ringId"]);
   });
 });
+
+describe("E7-W06 step 5 (ruling E82, E6-W04 Q6) · stable data attributes on a list's rows", () => {
+  it("E7-W06 step 5: `rowAttributes` puts each row's data attributes on its <tr> (D14: data-followup-id, data-unread), next to its class", () => {
+    const state: UniversalListState = {
+      columns: ["id"],
+      filters: [],
+      page: 0,
+      q: "",
+      size: 50,
+      sort: [],
+    };
+    render(
+      <UniversalList<Row>
+        appliedFilters={[]}
+        caption="Seguiment"
+        columns={[{ key: "id", label: "Id", render: (row) => row.id }]}
+        filterColumns={[]}
+        labels={listLabels}
+        listKey="row-attributes-test"
+        loadFilterValues={() => Promise.resolve([])}
+        onCreateView={() => Promise.reject(new Error("unused"))}
+        onDeleteView={() => Promise.resolve()}
+        onExport={() => undefined}
+        onRenameView={() => Promise.reject(new Error("unused"))}
+        onRetry={() => undefined}
+        onStateChange={() => undefined}
+        rowAttributes={(row) => ({
+          "data-followup-id": row.id,
+          "data-unread": String(row.id === "f-1"),
+        })}
+        rowClassName={(row) => (row.id === "f-1" ? "unread" : undefined)}
+        rowKey={(row) => row.id}
+        rows={[{ id: "f-1" }, { id: "f-2" }]}
+        savedViews={[]}
+        state={state}
+        totalPages={1}
+      />,
+    );
+    const rows = [...document.querySelectorAll("tbody tr")];
+    expect(
+      rows.map((row) => [
+        row.getAttribute("data-followup-id"),
+        row.getAttribute("data-unread"),
+        row.getAttribute("class"),
+      ]),
+    ).toEqual([
+      ["f-1", "true", "unread"],
+      ["f-2", "false", null],
+    ]);
+  });
+});

@@ -1,4 +1,12 @@
-import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  type components,
+  type HeldKey,
+  heldKeyFor,
+  isApiError,
+  isInProgress,
+  isUnanswered,
+} from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
@@ -192,8 +200,12 @@ function commonLabels(t: Translate) {
   };
 }
 
-/** A failure by its code; `400 INVALID_FILTER` keeps the list's own message (T-08-47). */
+/**
+ * A failure by its code; `400 INVALID_FILTER` keeps the list's own message (T-08-47). A write still
+ * in progress (read-all keeps its key) reads the shared `common:inProgress` (CONVENCIONS_API §7, E80).
+ */
 function errorText(t: Translate, error: unknown, fallback: string): string {
+  if (isInProgress(error)) return t("common:inProgress");
   return isApiError(error) && error.status !== 0
     ? t(`errors:${error.code}`, { defaultValue: fallback })
     : fallback;
@@ -237,7 +249,7 @@ export function FollowUpPage({
   client: ApiClient;
   onNavigate: (path: string) => void;
 }) {
-  const { t } = useTranslation(["admin-census", "census", "enums", "errors"]);
+  const { t } = useTranslation(["admin-census", "census", "enums", "errors", "common"]);
   const formats = useClubFormats();
   const shell = useUnreadFollowUpContext();
   const own = useUnreadFollowUp(client, shell === undefined);
@@ -252,7 +264,7 @@ export function FollowUpPage({
   const [readingAll, setReadingAll] = useState(false);
   const [feedback, setFeedback] = useState<string>();
   // «Marcar-ho tot com a llegit»'s key: kept only while the api has not answered (CONVENCIONS_API §7).
-  const readAllKey = useRef<string | undefined>(undefined);
+  const readAllKey = useRef(new Map<string, HeldKey>());
 
   useEffect(() => {
     let current = true;
@@ -595,18 +607,24 @@ export function FollowUpPage({
     if (readingAll) return;
     setReadingAll(true);
     setFeedback(undefined);
-    readAllKey.current ??= crypto.randomUUID();
+    // Kept for `HELD_KEY_TTL_MS` at most: a read-all asked for later is a new one, which moves
+    // `readAllAt` on instead of replaying an old answer (E7-W06 review #5).
+    const key = heldKeyFor(readAllKey.current, "read-all");
+    const retire = () => {
+      if (readAllKey.current.get("read-all")?.key === key) readAllKey.current.delete("read-all");
+    };
     try {
       await client.POST("/followup/read-all", {
-        params: { header: { "Idempotency-Key": readAllKey.current } },
+        params: { header: { "Idempotency-Key": key } },
       });
-      readAllKey.current = undefined;
+      retire();
       unread.markAllRead();
       unread.refresh();
       retry();
     } catch (cause) {
-      // Answered: the next attempt is a new request; unanswered (offline): the same one again.
-      if (!isApiError(cause) || cause.status !== 0) readAllKey.current = undefined;
+      // Answered: the next attempt is a new request; unanswered (offline, or IN_PROGRESS: the
+      // first request still runs, E79): the same one again, with «L'operació encara està en curs…».
+      if (!isUnanswered(cause)) retire();
       setFeedback(errorText(t, cause, t("errors:INTERNAL_ERROR")));
     } finally {
       setReadingAll(false);
@@ -698,6 +716,11 @@ export function FollowUpPage({
         onStateChange={setState}
         pageSizes={FOLLOWUP_PAGE_SIZES}
         rowClassName={(row) => (row.unread === true ? "followup__row--unread" : undefined)}
+        // E7-W06 step 5 (E6-W04 question 6): stable hooks for the real-core specs.
+        rowAttributes={(row) => ({
+          "data-followup-id": row.id,
+          "data-unread": String(row.unread === true),
+        })}
         rowHref={(row) => `/alumnes/${encodeURIComponent(row.dogId ?? "")}`}
         rowKey={(row) => row.id}
         rows={rows}

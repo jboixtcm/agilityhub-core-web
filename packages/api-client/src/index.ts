@@ -13,12 +13,14 @@ export {
   attendanceSheetTransport,
 } from "./attendance-sheet";
 export {
+  BRANDING_BOOT_TIMEOUT_MS,
   BRANDING_CACHE_PREFIX,
   brandingCacheKey,
   normalizeBranding,
   readCachedBranding,
   refreshBranding,
   type NormalizedBranding,
+  type RefreshBrandingOptions,
   writeCachedBranding,
 } from "./branding-cache";
 export {
@@ -109,6 +111,15 @@ export {
   studentSearchGuide,
   useStudentSearch,
 } from "./student-search";
+export {
+  createSubmissionKeys,
+  HELD_KEY_TTL_MS,
+  type HeldKey,
+  heldKeyFor,
+  isUnanswered,
+  type SubmissionKeys,
+  useSubmissionKeys,
+} from "./submission-key";
 export {
   type FileLimits,
   loadFileLimits,

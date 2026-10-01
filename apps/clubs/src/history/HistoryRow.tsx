@@ -1,6 +1,29 @@
 import { Badge, Card, type Tone } from "@agilityhub/ui";
+import type { MouseEvent } from "react";
+
+import { navigateInApp } from "../booking/shared";
 
 import "./history.css";
+
+/**
+ * A plain click on the row's link moves in the app (`navigateInApp`), never a full page load
+ * (E7-W06 step 2, E6-W04 review #8); a click that asks for another tab or window keeps the link's
+ * own behaviour.
+ */
+function followInApp(event: MouseEvent<HTMLAnchorElement>, href: string): void {
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  ) {
+    return;
+  }
+  event.preventDefault();
+  navigateInApp(href);
+}
 
 /**
  * One row of screen 25 (mockup V8): «{dl 28/07}» · «{títol} · amb {gos}» · the state badge, and
@@ -28,7 +51,13 @@ export function HistoryRow({
         {href === undefined ? (
           <span className="history-row__title">{title}</span>
         ) : (
-          <a className="history-row__title history-row__link" href={href}>
+          <a
+            className="history-row__title history-row__link"
+            href={href}
+            onClick={(event) => {
+              followInApp(event, href);
+            }}
+          >
             {title}
           </a>
         )}

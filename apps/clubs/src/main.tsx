@@ -1,4 +1,9 @@
-import { createApiClient, normalizeBranding, refreshBranding } from "@agilityhub/api-client";
+import {
+  BRANDING_BOOT_TIMEOUT_MS,
+  createApiClient,
+  normalizeBranding,
+  refreshBranding,
+} from "@agilityhub/api-client";
 import {
   AuthClient,
   createAuthenticatedApiClient,
@@ -49,9 +54,12 @@ async function bootstrap(root: HTMLElement) {
 
   const apiBaseUrl = env.VITE_API_BASE_URL ?? "/api/v1";
   const identityBaseUrl = env.VITE_IDENTITY_BASE_URL ?? "";
+  // E7-W06 step 2: with a cached branding the boot never waits forever for the live one.
   const source = await refreshBranding(
     createApiClient({ baseUrl: apiBaseUrl, credentials: "include" }),
     window.location.host,
+    localStorage,
+    { cachedTimeoutMs: BRANDING_BOOT_TIMEOUT_MS },
   );
   const branding = normalizeBranding(source);
   applyBrandingTheme(branding.theme);

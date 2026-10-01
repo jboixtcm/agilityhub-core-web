@@ -169,6 +169,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
     - two calendar-dependent expectations of e3 and e4 follow the club's date;
     - `scripts/e2e-core.sh` runs each stage without a TTY, under an init, and stops on 130/143;
   - the permanent mock specs write their captures to their own task, or to `pnpm e2e:docker <ID> --capture-task=<ID>`.
+- E5-W05 round 3 (ruling E82):
+  - a run's `Week` effect opens D4 on the ISO week that holds `openedWeekKey` + 1 day (S15 R-15-11), or on the item's own `isoWeekStart` when the api sends it;
+  - MSW behaves like the api:
+    - `clubInstant` remembers its answers, so the 1,005-row register lists build in milliseconds (the step-5 test took over 5 s on CI);
+    - a hold is refused with `BOOKING_LIMIT_REACHED` only when the week's limit is reached and nothing can be swapped (R-08-09), and such rows read «Límit setmanal» (R-08-03); a new `bookingLimitDone` scenario (Duna's two classes of the week done, read on Monday 3 at 20:00) gives 29's «Aquesta setmana ja has fet dues classes amb la Duna»;
+    - another club's ADMIN gets `404 NOT_FOUND` from the week validation and generation, the class `PATCH`, cancellation preview, cancellation and risk exemption, and a ring block's read, `PATCH` and cancellation;
+    - a class's registrants have a level it allows (R-08-04), from a larger fictional pool.
 - E6 integration (E6-W04):
   - the api snapshot `e34bf04` is adopted byte for byte. It brings `GET /followup/filter-values`, `InstructorWeek.trainingSlotMinutes`, S11's error-detail schemas, and `GET /members/{id}/notification-preferences`, which leaves `pending.json` (now without paths);
   - MSW follows the snapshot:
@@ -244,6 +251,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - An impersonated session never shows the browser-permission note.
   - `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` reads one shared text, `common:inProgress`, on every write that keeps its key: D9's send, 26 and D13, D4c, D7's publication and cancellation, and the public signup, add-dog and checkout. `admin-messaging:send.inProgress` is gone, and `DIFFERENT_REQUEST` keeps `errors:IDEMPOTENCY_KEY_REUSED`. `isInProgress` is exported from `@agilityhub/api-client`.
   - D9: an older save answer leaves the detail alone but still drops the draft it carried.
+- Follow-ups of E6-W04's and E7-W05's reviews (E7-W06):
+  - Every keyed write keeps its `Idempotency-Key` until the api answers and says `common:inProgress` on `IN_PROGRESS`: D14's read-all and row read, S15's [Simula] and [Executa ara], 08's training booking, the ring blocks of 24, D12 and D4's drawer (one key per submission), the attendance sheets of 21 and D12, D3's generation (its modal stays on the confirmed week) and 06/29's booking and claim (no return to 04). One shared rule, `isUnanswered` and `createSubmissionKeys` in `@agilityhub/api-client`: a network failure or a gateway's answer without the api's body keeps the key, any api answer retires it, and an answer retires only its own key. A process run or a read-all keeps an unanswered key for 5 minutes at most, and closing [Executa ara]'s confirmation gives it up.
+  - T-04-34's blank add-dog success page (INC-07): the session was never lost; the page's boot waited for a `GET /branding` that never answered. With a cached branding, both apps now give that read 4 s (`BRANDING_BOOT_TIMEOUT_MS`) and start with the cache. The real-core e3 spec records the success page's calls and, on a failure, its unfinished requests and two probes; the token-call log names each browser context, the page, overlapping renewals, the `Set-Cookie` attributes and every full page load with its cookie names (never a value).
+  - 25's activity link moves in the app on a plain click.
+  - Only 03's quiet reloads keep their rows when they fail; 04, 07 and the waitlist detail show their error with a retry.
+  - Screen 12 and D10: after a failed save that followed overlapping `PUT`s, the page reads the preferences again, and the outbox keeps the latest choice until its 2xx; a restored page adopts what the outbox hands over; no bell flash on 03 while a read-all is being sent again.
+  - D10: `409 MEMBER_ERASED` (the record, or the preferences read or save) is final, with no retry; MSW models an erased member.
+  - D11's cleanup counter `ttlPendingRingSlotLocks` has a label; the mock's `SMS_BODY_TOO_LONG` counts the SMS rendered with the preview data, without `admin_text`, in GSM-7.
+  - The new-task form of 26 and D13 names each refused file; abandoned submissions drop their keys and files; 13's re-read after a 422 says the right error; D13's drawer reopens clean.
+  - Stable row attributes for the core specs: `data-booking-id` (03, 25, 21, D12), `data-attendance-state` (21, D12), `data-followup-id` and `data-unread` (D14); `UniversalList` takes `rowAttributes`.
 - The attendance sheet after a refusal (E6-W03 steps 11–14, E6-W01 round-2 review): a list read again drops the choices it no longer allows (`mergeSheet` takes the sheet's permissions and its base rows are required), a save's `Idempotency-Key` is kept only after a network failure, the student search's «Mostra'n més» answers at once after a new query, and a save no longer fades every circle (only those the api refuses).
 
 - Corrections of the global audit of 26-09 (E4-W16; INC-15 web half, INC-18…INC-22, INC-24 web half, INC-26…INC-29):

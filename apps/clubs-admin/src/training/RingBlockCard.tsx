@@ -112,7 +112,14 @@ export function RingBlockCard({
   /** A block or reservation was created (D12 reads its week again, E6-W03). */
   onCreated?: () => void;
 }) {
-  const { t } = useTranslation(["instructor", "enums", "errors", "admin-scheduling", "training"]);
+  const { t } = useTranslation([
+    "instructor",
+    "enums",
+    "errors",
+    "admin-scheduling",
+    "training",
+    "common",
+  ]);
   const formats = useClubFormats();
   const branding = useBranding();
   const session = useSession();
@@ -186,10 +193,13 @@ export function RingBlockCard({
     if (result.failure.kind === "conflict" || result.failure.kind === "bookings") grid.refetch();
   };
 
+  // IN_PROGRESS keeps the block's key: the shared text, and a retry sends the same one (E80).
   const message =
     failure === undefined
       ? undefined
-      : t(`errors:${failure.code}`, { defaultValue: t("errors:INTERNAL_ERROR") });
+      : failure.kind === "inProgress"
+        ? t("common:inProgress")
+        : t(`errors:${failure.code}`, { defaultValue: t("errors:INTERNAL_ERROR") });
   const confirmBookings = failure?.kind === "bookings" && admin && pinned !== undefined;
 
   return (

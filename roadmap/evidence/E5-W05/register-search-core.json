@@ -3,12 +3,12 @@
     "byNote": {
       "allMatch": true,
       "code": null,
-      "q": "E5 or1al8",
+      "q": "E5 ozzkzz",
       "returned": 1,
       "rows": [
         {
-          "id": "492200b1-e98f-4344-a974-772973be9053",
-          "note": "E5 or1al8",
+          "id": "69d1f805-3e0b-4918-934f-8c8798bd8b38",
+          "note": "E5 ozzkzz",
           "ringName": "Muntanya",
           "state": "CANCELLED"
         }
@@ -23,8 +23,8 @@
       "returned": 1,
       "rows": [
         {
-          "id": "492200b1-e98f-4344-a974-772973be9053",
-          "note": "E5 or1al8",
+          "id": "69d1f805-3e0b-4918-934f-8c8798bd8b38",
+          "note": "E5 ozzkzz",
           "ringName": "Muntanya",
           "state": "CANCELLED"
         }
@@ -47,7 +47,7 @@
       "rows": [
         {
           "dogName": "Ginesta 191",
-          "id": "82308104-fd9b-4ee3-8e9d-2d69fe1f554b",
+          "id": "9e1665d4-0410-4019-9c2c-867b16dadbf0",
           "memberName": "Aina Fictici007",
           "ringName": "Central",
           "state": "ACTIVE"
@@ -64,7 +64,7 @@
       "rows": [
         {
           "dogName": "Ginesta 191",
-          "id": "82308104-fd9b-4ee3-8e9d-2d69fe1f554b",
+          "id": "9e1665d4-0410-4019-9c2c-867b16dadbf0",
           "memberName": "Aina Fictici007",
           "ringName": "Central",
           "state": "ACTIVE"

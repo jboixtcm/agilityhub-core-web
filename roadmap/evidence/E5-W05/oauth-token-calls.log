@@ -1,173 +1,229 @@
-# stage start 2026-09-30T23:36:29.917Z · e1-core.spec.ts e2-core.spec.ts
-2026-09-30T23:36:30.684Z grant_type=refresh_token status=400 cookie=none test="T-01-18 password login reaches the seeded account" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:30.851Z grant_type=password status=200 cookie=none test="T-01-18 password login reaches the seeded account"
-2026-09-30T23:36:31.047Z grant_type=refresh_token status=200 cookie=sent test="T-01-18 password login reaches the seeded account"
-2026-09-30T23:36:31.383Z grant_type=refresh_token status=400 cookie=none test="T-01-21 seeded administrator opens the real backoffice" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:31.603Z grant_type=password status=200 cookie=none test="T-01-21 seeded administrator opens the real backoffice"
-2026-09-30T23:36:31.778Z grant_type=refresh_token status=200 cookie=sent test="T-01-21 seeded administrator opens the real backoffice"
-2026-09-30T23:36:32.138Z grant_type=refresh_token status=400 cookie=none test="T-01-20 club session is restored by the core" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:32.225Z grant_type=password status=200 cookie=none test="T-01-20 club session is restored by the core"
-2026-09-30T23:36:32.387Z grant_type=refresh_token status=200 cookie=sent test="T-01-20 club session is restored by the core"
-2026-09-30T23:36:32.530Z grant_type=refresh_token status=200 cookie=sent test="T-01-20 club session is restored by the core"
-2026-09-30T23:36:32.882Z grant_type=refresh_token status=400 cookie=none test="T-01-20 club session is restored by the core" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:32.958Z grant_type=password status=200 cookie=none test="T-01-20 club session is restored by the core"
-2026-09-30T23:36:33.117Z grant_type=refresh_token status=200 cookie=sent test="T-01-20 club session is restored by the core"
-2026-09-30T23:36:33.419Z grant_type=refresh_token status=400 cookie=none test="T-01-19 magic link is delivered and exchanged end to end" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:33.815Z grant_type=urn:agilityhub:grant:magic-link status=200 cookie=none test="T-01-19 magic link is delivered and exchanged end to end"
-2026-09-30T23:36:34.039Z grant_type=refresh_token status=200 cookie=sent test="T-01-19 magic link is delivered and exchanged end to end"
-2026-09-30T23:36:34.334Z grant_type=refresh_token status=400 cookie=none test="T-01-26 published seed enters without pending onboarding" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:34.433Z grant_type=password status=200 cookie=none test="T-01-26 published seed enters without pending onboarding"
-2026-09-30T23:36:34.593Z grant_type=refresh_token status=200 cookie=sent test="T-01-26 published seed enters without pending onboarding"
-2026-09-30T23:36:34.878Z grant_type=refresh_token status=400 cookie=none test="T-01-22 apps/id resumes a real authorize flow through oauth2/session" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:35.020Z grant_type=password status=200 cookie=none test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
-2026-09-30T23:36:35.165Z grant_type=refresh_token status=200 cookie=sent test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
-2026-09-30T23:36:35.383Z grant_type=refresh_token status=200 cookie=sent test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
-2026-09-30T23:36:35.737Z grant_type=refresh_token status=400 cookie=sent test="T-01-22 apps/id resumes a real authorize flow through oauth2/session" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:35.892Z grant_type=password status=200 cookie=sent test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
-2026-09-30T23:36:36.246Z grant_type=refresh_token status=400 cookie=none test="T-02-07 E3-W12 step 5 · the public footer of 01 shows /branding's identity and registered office (S02 R-02-02)" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:36.604Z grant_type=refresh_token status=400 cookie=none test="T-03-42 real census flow, booking block and member profile" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:36.707Z grant_type=password status=200 cookie=none test="T-03-42 real census flow, booking block and member profile"
-2026-09-30T23:36:36.879Z grant_type=refresh_token status=200 cookie=sent test="T-03-42 real census flow, booking block and member profile"
-2026-09-30T23:36:41.245Z grant_type=refresh_token status=400 cookie=none test="T-03-42 real census flow, booking block and member profile" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:41.340Z grant_type=password status=200 cookie=none test="T-03-42 real census flow, booking block and member profile"
-2026-09-30T23:36:41.491Z grant_type=refresh_token status=200 cookie=sent test="T-03-42 real census flow, booking block and member profile"
-2026-09-30T23:36:41.649Z grant_type=refresh_token status=200 cookie=sent test="T-03-42 real census flow, booking block and member profile"
-2026-09-30T23:36:41.882Z grant_type=refresh_token status=200 cookie=sent test="T-03-42 real census flow, booking block and member profile"
-2026-09-30T23:36:47.690Z grant_type=refresh_token status=400 cookie=none test="T-05-CP-07 real club page edit renders styled Markdown on screen 30" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:47.777Z grant_type=password status=200 cookie=none test="T-05-CP-07 real club page edit renders styled Markdown on screen 30"
-2026-09-30T23:36:47.927Z grant_type=refresh_token status=200 cookie=sent test="T-05-CP-07 real club page edit renders styled Markdown on screen 30"
-2026-09-30T23:36:48.087Z grant_type=refresh_token status=200 cookie=sent test="T-05-CP-07 real club page edit renders styled Markdown on screen 30"
-2026-09-30T23:36:48.480Z grant_type=refresh_token status=400 cookie=none test="T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:36:48.556Z grant_type=password status=200 cookie=none test="T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)"
-2026-09-30T23:36:48.707Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)"
-2026-09-30T23:36:48.869Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)"
-# stage end 2026-09-30T23:36:49.145Z · e1-core.spec.ts e2-core.spec.ts · 42 calls · 13 non-2xx
-# stage start 2026-09-30T23:37:44.071Z · e4w16-core.spec.ts
-2026-09-30T23:37:44.789Z grant_type=refresh_token status=400 cookie=none test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:37:44.967Z grant_type=password status=200 cookie=none test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
-2026-09-30T23:37:45.276Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
-2026-09-30T23:37:46.162Z grant_type=refresh_token status=400 cookie=none test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:37:46.239Z grant_type=password status=200 cookie=none test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
-2026-09-30T23:37:46.392Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
-2026-09-30T23:37:46.569Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
-2026-09-30T23:37:46.783Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
-2026-09-30T23:37:47.223Z grant_type=refresh_token status=400 cookie=none test="T-01-19 E4-W16 step 10 · a RESET link sets the new password once without `current`" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:37:47.581Z grant_type=urn:agilityhub:grant:magic-link status=200 cookie=none test="T-01-19 E4-W16 step 10 · a RESET link sets the new password once without `current`"
-2026-09-30T23:37:49.023Z grant_type=urn:agilityhub:grant:handoff status=200 cookie=sent test="T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through the one-time code, once; E5-W05 step 24 · its banner names the member record, not the account"
-2026-09-30T23:37:51.822Z grant_type=urn:agilityhub:grant:handoff status=400 cookie=sent test="T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through the one-time code, once; E5-W05 step 24 · its banner names the member record, not the account" body={"code":"HANDOFF_INVALID"}
-# stage end 2026-09-30T23:37:53.517Z · e4w16-core.spec.ts · 12 calls · 4 non-2xx
-# stage start 2026-09-30T23:38:48.619Z · e3-signup.spec.ts
-2026-09-30T23:38:49.411Z grant_type=refresh_token status=400 cookie=none test="T-02-07 E3-W12 step 5 · the signup's public footer shows /branding's identity and registered office (S02 R-02-02)" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:49.867Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:50.348Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:50.683Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:50.971Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:51.439Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:51.849Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:52.000Z grant_type=password status=200 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link"
-2026-09-30T23:38:52.188Z grant_type=refresh_token status=200 cookie=sent test="T-04-34 public signup is validated and enters through the N-02 welcome link"
-2026-09-30T23:38:55.627Z grant_type=urn:agilityhub:grant:magic-link status=200 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link"
-2026-09-30T23:38:55.850Z grant_type=refresh_token status=200 cookie=sent test="T-04-34 public signup is validated and enters through the N-02 welcome link"
-2026-09-30T23:38:56.149Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:56.492Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:56.833Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:57.009Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:57.390Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:57.969Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:58.352Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:58.752Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:59.037Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:38:59.378Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:39:01.860Z grant_type=refresh_token status=200 cookie=sent test="T-04-34 public signup is validated and enters through the N-02 welcome link"
-2026-09-30T23:39:02.318Z grant_type=refresh_token status=200 cookie=sent test="T-04-34 public signup is validated and enters through the N-02 welcome link"
-2026-09-30T23:39:02.825Z grant_type=refresh_token status=200 cookie=sent test="T-04-34 public signup is validated and enters through the N-02 welcome link"
-2026-09-30T23:39:06.051Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:39:06.407Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:39:06.695Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:39:06.878Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:39:07.216Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:39:11.511Z grant_type=refresh_token status=400 cookie=none test="T-04-34 signup.enabled=false shows only the configured closed text" body={"code":"REFRESH_EXPIRED"}
-# stage end 2026-09-30T23:39:11.610Z · e3-signup.spec.ts · 30 calls · 23 non-2xx
-# stage start 2026-09-30T23:40:06.011Z · e4-core.spec.ts
-2026-09-30T23:40:06.823Z grant_type=refresh_token status=400 cookie=none test="T-06-28 E2E (a) D3: the three seeded templates, «Setmana B» blocked by its inconsistency, «Setmana A» generates the proposed week, D3b per ring" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:40:06.991Z grant_type=password status=200 cookie=none test="T-06-28 E2E (a) D3: the three seeded templates, «Setmana B» blocked by its inconsistency, «Setmana A» generates the proposed week, D3b per ring"
-2026-09-30T23:40:07.196Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (a) D3: the three seeded templates, «Setmana B» blocked by its inconsistency, «Setmana A» generates the proposed week, D3b per ring"
-2026-09-30T23:40:10.749Z grant_type=refresh_token status=400 cookie=none test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:40:10.830Z grant_type=password status=200 cookie=none test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
-2026-09-30T23:40:10.982Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
-2026-09-30T23:40:11.145Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
-2026-09-30T23:40:11.388Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
-2026-09-30T23:40:11.748Z grant_type=refresh_token status=400 cookie=none test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:40:11.840Z grant_type=password status=200 cookie=none test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
-2026-09-30T23:40:12.016Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
-2026-09-30T23:40:12.179Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
-2026-09-30T23:40:15.462Z grant_type=refresh_token status=400 cookie=none test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:40:15.545Z grant_type=password status=200 cookie=none test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
-2026-09-30T23:40:15.699Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
-2026-09-30T23:40:15.860Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
-2026-09-30T23:40:16.173Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
-2026-09-30T23:40:16.489Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
-2026-09-30T23:40:16.729Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
-2026-09-30T23:40:17.023Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
-2026-09-30T23:40:17.244Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
-2026-09-30T23:40:18.464Z grant_type=refresh_token status=400 cookie=none test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:40:18.548Z grant_type=password status=200 cookie=none test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
-2026-09-30T23:40:18.699Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
-2026-09-30T23:40:18.856Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
-2026-09-30T23:40:19.261Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
-2026-09-30T23:40:19.539Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
-2026-09-30T23:40:19.782Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
-2026-09-30T23:40:20.075Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
-2026-09-30T23:40:20.296Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
-2026-09-30T23:40:20.586Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
-2026-09-30T23:40:21.889Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
-# stage end 2026-09-30T23:40:22.881Z · e4-core.spec.ts · 32 calls · 5 non-2xx
-# stage start 2026-09-30T23:41:18.122Z · e5-core.spec.ts
-2026-09-30T23:41:18.971Z grant_type=refresh_token status=400 cookie=none test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:19.141Z grant_type=password status=200 cookie=none test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read"
-2026-09-30T23:41:19.342Z grant_type=refresh_token status=200 cookie=sent test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read"
-2026-09-30T23:41:19.909Z grant_type=refresh_token status=400 cookie=none test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:20.240Z grant_type=refresh_token status=400 cookie=none test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:20.349Z grant_type=password status=200 cookie=none test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read"
-2026-09-30T23:41:20.537Z grant_type=refresh_token status=200 cookie=sent test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read"
-2026-09-30T23:41:20.979Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:21.068Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation"
-2026-09-30T23:41:21.226Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation"
-2026-09-30T23:41:22.701Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:22.776Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation"
-2026-09-30T23:41:22.932Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation"
-2026-09-30T23:41:23.606Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:23.676Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29"
-2026-09-30T23:41:23.824Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29"
-2026-09-30T23:41:24.858Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:24.943Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim"
-2026-09-30T23:41:25.105Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim"
-2026-09-30T23:41:25.929Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:26.047Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim"
-2026-09-30T23:41:26.201Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim"
-2026-09-30T23:41:27.824Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (g) · the same flows in es: (a) a booking inside the hold, on 03; (d) a waiting entry, gone from 04 and on 03, claimed" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:27.895Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (g) · the same flows in es: (a) a booking inside the hold, on 03; (d) a waiting entry, gone from 04 and on 03, claimed"
-2026-09-30T23:41:28.052Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (g) · the same flows in es: (a) a booking inside the hold, on 03; (d) a waiting entry, gone from 04 and on 03, claimed"
-2026-09-30T23:41:31.030Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24 blocks a ring, never over bookings" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:31.140Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24 blocks a ring, never over bookings"
-2026-09-30T23:41:31.303Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24 blocks a ring, never over bookings"
-2026-09-30T23:41:36.200Z grant_type=refresh_token status=400 cookie=none test="R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:36.478Z grant_type=refresh_token status=400 cookie=none test="R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:36.559Z grant_type=password status=200 cookie=none test="R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter"
-2026-09-30T23:41:36.710Z grant_type=refresh_token status=200 cookie=sent test="R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter"
-2026-09-30T23:41:37.437Z grant_type=refresh_token status=400 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:37.723Z grant_type=refresh_token status=400 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:37.805Z grant_type=password status=200 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
-2026-09-30T23:41:37.956Z grant_type=refresh_token status=200 cookie=sent test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
-2026-09-30T23:41:38.465Z grant_type=refresh_token status=400 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:38.749Z grant_type=refresh_token status=400 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:38.825Z grant_type=password status=200 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
-2026-09-30T23:41:38.976Z grant_type=refresh_token status=200 cookie=sent test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
-2026-09-30T23:41:39.382Z grant_type=refresh_token status=400 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:39.492Z grant_type=password status=200 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
-2026-09-30T23:41:39.659Z grant_type=refresh_token status=200 cookie=sent test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
-2026-09-30T23:41:41.810Z grant_type=refresh_token status=400 cookie=none test="(outside a test)" body={"code":"REFRESH_EXPIRED"}
-2026-09-30T23:41:41.909Z grant_type=password status=200 cookie=none test="(outside a test)"
-2026-09-30T23:41:42.086Z grant_type=refresh_token status=200 cookie=sent test="(outside a test)"
-2026-09-30T23:41:42.511Z grant_type=refresh_token status=400 cookie=none test="(outside a test)" body={"code":"REFRESH_EXPIRED"}
-# stage end 2026-09-30T23:41:42.584Z · e5-core.spec.ts · 47 calls · 19 non-2xx
+# stage start 2026-10-01T03:46:44.825Z · e1-core.spec.ts e2-core.spec.ts
+2026-10-01T03:46:45.643Z grant_type=refresh_token status=400 cookie=none test="T-01-18 password login reaches the seeded account" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:46:45.828Z grant_type=password status=200 cookie=none test="T-01-18 password login reaches the seeded account"
+2026-10-01T03:46:46.024Z grant_type=refresh_token status=200 cookie=sent test="T-01-18 password login reaches the seeded account"
+2026-10-01T03:46:46.357Z grant_type=refresh_token status=400 cookie=none test="T-01-21 seeded administrator opens the real backoffice" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:46:46.485Z grant_type=password status=200 cookie=none test="T-01-21 seeded administrator opens the real backoffice"
+2026-10-01T03:46:46.666Z grant_type=refresh_token status=200 cookie=sent test="T-01-21 seeded administrator opens the real backoffice"
+2026-10-01T03:46:47.045Z grant_type=refresh_token status=400 cookie=none test="T-01-20 club session is restored by the core" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:46:47.124Z grant_type=password status=200 cookie=none test="T-01-20 club session is restored by the core"
+2026-10-01T03:46:47.289Z grant_type=refresh_token status=200 cookie=sent test="T-01-20 club session is restored by the core"
+2026-10-01T03:46:47.452Z grant_type=refresh_token status=200 cookie=sent test="T-01-20 club session is restored by the core"
+2026-10-01T03:46:47.832Z grant_type=refresh_token status=400 cookie=none test="T-01-20 club session is restored by the core" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:46:47.921Z grant_type=password status=200 cookie=none test="T-01-20 club session is restored by the core"
+2026-10-01T03:46:48.083Z grant_type=refresh_token status=200 cookie=sent test="T-01-20 club session is restored by the core"
+2026-10-01T03:46:48.377Z grant_type=refresh_token status=400 cookie=none test="T-01-19 magic link is delivered and exchanged end to end" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:46:48.789Z grant_type=urn:agilityhub:grant:magic-link status=200 cookie=none test="T-01-19 magic link is delivered and exchanged end to end"
+2026-10-01T03:46:49.008Z grant_type=refresh_token status=200 cookie=sent test="T-01-19 magic link is delivered and exchanged end to end"
+2026-10-01T03:46:49.318Z grant_type=refresh_token status=400 cookie=none test="T-01-26 published seed enters without pending onboarding" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:46:49.407Z grant_type=password status=200 cookie=none test="T-01-26 published seed enters without pending onboarding"
+2026-10-01T03:46:49.568Z grant_type=refresh_token status=200 cookie=sent test="T-01-26 published seed enters without pending onboarding"
+2026-10-01T03:46:49.854Z grant_type=refresh_token status=400 cookie=none test="T-01-22 apps/id resumes a real authorize flow through oauth2/session" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:46:50.029Z grant_type=password status=200 cookie=none test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
+2026-10-01T03:46:50.189Z grant_type=refresh_token status=200 cookie=sent test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
+2026-10-01T03:46:50.428Z grant_type=refresh_token status=200 cookie=sent test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
+2026-10-01T03:46:50.832Z grant_type=refresh_token status=400 cookie=sent test="T-01-22 apps/id resumes a real authorize flow through oauth2/session" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:46:50.990Z grant_type=password status=200 cookie=sent test="T-01-22 apps/id resumes a real authorize flow through oauth2/session"
+2026-10-01T03:46:51.375Z grant_type=refresh_token status=400 cookie=none test="T-02-07 E3-W12 step 5 · the public footer of 01 shows /branding's identity and registered office (S02 R-02-02)" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:46:51.764Z grant_type=refresh_token status=400 cookie=none test="T-03-42 real census flow, booking block and member profile" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:46:51.891Z grant_type=password status=200 cookie=none test="T-03-42 real census flow, booking block and member profile"
+2026-10-01T03:46:52.091Z grant_type=refresh_token status=200 cookie=sent test="T-03-42 real census flow, booking block and member profile"
+2026-10-01T03:46:56.715Z grant_type=refresh_token status=400 cookie=none test="T-03-42 real census flow, booking block and member profile" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:46:56.809Z grant_type=password status=200 cookie=none test="T-03-42 real census flow, booking block and member profile"
+2026-10-01T03:46:56.976Z grant_type=refresh_token status=200 cookie=sent test="T-03-42 real census flow, booking block and member profile"
+2026-10-01T03:46:57.149Z grant_type=refresh_token status=200 cookie=sent test="T-03-42 real census flow, booking block and member profile"
+2026-10-01T03:46:57.393Z grant_type=refresh_token status=200 cookie=sent test="T-03-42 real census flow, booking block and member profile"
+2026-10-01T03:47:04.646Z grant_type=refresh_token status=400 cookie=none test="T-05-CP-07 real club page edit renders styled Markdown on screen 30" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:47:04.748Z grant_type=password status=200 cookie=none test="T-05-CP-07 real club page edit renders styled Markdown on screen 30"
+2026-10-01T03:47:04.912Z grant_type=refresh_token status=200 cookie=sent test="T-05-CP-07 real club page edit renders styled Markdown on screen 30"
+2026-10-01T03:47:05.090Z grant_type=refresh_token status=200 cookie=sent test="T-05-CP-07 real club page edit renders styled Markdown on screen 30"
+2026-10-01T03:47:05.538Z grant_type=refresh_token status=400 cookie=none test="T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:47:05.628Z grant_type=password status=200 cookie=none test="T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)"
+2026-10-01T03:47:05.800Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)"
+2026-10-01T03:47:06.009Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)"
+# stage end 2026-10-01T03:47:06.316Z · e1-core.spec.ts e2-core.spec.ts · 42 calls · 13 non-2xx
+# stage start 2026-10-01T03:48:07.025Z · e4w16-core.spec.ts
+2026-10-01T03:48:07.843Z grant_type=refresh_token status=400 cookie=none test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:48:08.028Z grant_type=password status=200 cookie=none test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
+2026-10-01T03:48:08.358Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
+2026-10-01T03:48:09.281Z grant_type=refresh_token status=400 cookie=none test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:48:09.367Z grant_type=password status=200 cookie=none test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
+2026-10-01T03:48:09.530Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
+2026-10-01T03:48:09.706Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
+2026-10-01T03:48:09.920Z grant_type=refresh_token status=200 cookie=sent test="T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through"
+2026-10-01T03:48:10.355Z grant_type=refresh_token status=400 cookie=none test="T-01-19 E4-W16 step 10 · a RESET link sets the new password once without `current`" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:48:10.597Z grant_type=urn:agilityhub:grant:magic-link status=200 cookie=none test="T-01-19 E4-W16 step 10 · a RESET link sets the new password once without `current`"
+2026-10-01T03:48:11.978Z grant_type=urn:agilityhub:grant:handoff status=200 cookie=sent test="T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through the one-time code, once; E5-W05 step 24 · its banner names the member record, not the account"
+2026-10-01T03:48:14.778Z grant_type=urn:agilityhub:grant:handoff status=400 cookie=sent test="T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through the one-time code, once; E5-W05 step 24 · its banner names the member record, not the account" body={"code":"HANDOFF_INVALID"}
+# stage end 2026-10-01T03:48:16.560Z · e4w16-core.spec.ts · 12 calls · 4 non-2xx
+# stage start 2026-10-01T03:49:15.280Z · e3-signup.spec.ts
+2026-10-01T03:49:16.268Z grant_type=refresh_token status=400 cookie=none test="T-02-07 E3-W12 step 5 · the signup's public footer shows /branding's identity and registered office (S02 R-02-02)" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:16.884Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:17.477Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:17.843Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:18.188Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:18.784Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:19.255Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:19.435Z grant_type=password status=200 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-10-01T03:49:19.657Z grant_type=refresh_token status=200 cookie=sent test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-10-01T03:49:22.396Z grant_type=urn:agilityhub:grant:magic-link status=200 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-10-01T03:49:22.662Z grant_type=refresh_token status=200 cookie=sent test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-10-01T03:49:23.017Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:23.438Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:23.817Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:24.006Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:24.443Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:25.127Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:25.551Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:25.987Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:26.334Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:26.765Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:28.417Z grant_type=refresh_token status=200 cookie=sent test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-10-01T03:49:29.120Z grant_type=refresh_token status=200 cookie=sent test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-10-01T03:49:29.791Z grant_type=refresh_token status=200 cookie=sent test="T-04-34 public signup is validated and enters through the N-02 welcome link"
+2026-10-01T03:49:33.717Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:34.149Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:34.473Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:34.675Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:35.078Z grant_type=refresh_token status=400 cookie=none test="T-04-34 public signup is validated and enters through the N-02 welcome link" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:49:39.881Z grant_type=refresh_token status=400 cookie=none test="T-04-34 signup.enabled=false shows only the configured closed text" body={"code":"REFRESH_EXPIRED"}
+# stage end 2026-10-01T03:49:39.974Z · e3-signup.spec.ts · 30 calls · 23 non-2xx
+# stage start 2026-10-01T03:50:37.388Z · e4-core.spec.ts
+2026-10-01T03:50:38.145Z grant_type=refresh_token status=400 cookie=none test="T-06-28 E2E (a) D3: the three seeded templates, «Setmana B» blocked by its inconsistency, «Setmana A» generates the proposed week, D3b per ring" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:50:38.288Z grant_type=password status=200 cookie=none test="T-06-28 E2E (a) D3: the three seeded templates, «Setmana B» blocked by its inconsistency, «Setmana A» generates the proposed week, D3b per ring"
+2026-10-01T03:50:38.480Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (a) D3: the three seeded templates, «Setmana B» blocked by its inconsistency, «Setmana A» generates the proposed week, D3b per ring"
+2026-10-01T03:50:42.001Z grant_type=refresh_token status=400 cookie=none test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:50:42.079Z grant_type=password status=200 cookie=none test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
+2026-10-01T03:50:42.232Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
+2026-10-01T03:50:42.406Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
+2026-10-01T03:50:42.684Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
+2026-10-01T03:50:43.063Z grant_type=refresh_token status=400 cookie=none test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:50:43.142Z grant_type=password status=200 cookie=none test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
+2026-10-01T03:50:43.312Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
+2026-10-01T03:50:43.474Z grant_type=refresh_token status=200 cookie=sent test="T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n"
+2026-10-01T03:50:46.674Z grant_type=refresh_token status=400 cookie=none test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:50:46.763Z grant_type=password status=200 cookie=none test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
+2026-10-01T03:50:46.925Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
+2026-10-01T03:50:47.095Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
+2026-10-01T03:50:47.509Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
+2026-10-01T03:50:47.833Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
+2026-10-01T03:50:48.079Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
+2026-10-01T03:50:48.372Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
+2026-10-01T03:50:48.604Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place"
+2026-10-01T03:50:49.818Z grant_type=refresh_token status=400 cookie=none test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:50:49.888Z grant_type=password status=200 cookie=none test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
+2026-10-01T03:50:50.041Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
+2026-10-01T03:50:50.212Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
+2026-10-01T03:50:50.579Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
+2026-10-01T03:50:50.861Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
+2026-10-01T03:50:51.112Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
+2026-10-01T03:50:51.402Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
+2026-10-01T03:50:51.637Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
+2026-10-01T03:50:51.890Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
+2026-10-01T03:50:53.118Z grant_type=refresh_token status=200 cookie=sent test="T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»"
+# stage end 2026-10-01T03:50:54.150Z · e4-core.spec.ts · 32 calls · 5 non-2xx
+# stage start 2026-10-01T03:51:54.856Z · e5-core.spec.ts
+2026-10-01T03:51:55.614Z grant_type=refresh_token status=400 cookie=none test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:51:55.783Z grant_type=password status=200 cookie=none test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read"
+2026-10-01T03:51:55.978Z grant_type=refresh_token status=200 cookie=sent test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read"
+2026-10-01T03:51:56.529Z grant_type=refresh_token status=400 cookie=none test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:51:56.863Z grant_type=refresh_token status=400 cookie=none test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:51:56.979Z grant_type=password status=200 cookie=none test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read"
+2026-10-01T03:51:57.157Z grant_type=refresh_token status=200 cookie=sent test="E5-W04 step 2 · the automatic processes off, POST /test/clock to demoNow, and the parameters the flows read"
+2026-10-01T03:51:57.580Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:51:57.659Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation"
+2026-10-01T03:51:57.816Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation"
+2026-10-01T03:51:59.271Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:51:59.358Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation"
+2026-10-01T03:51:59.516Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (a)(b) · 03 and 04 from the seed, a booking inside the 30 s hold, an in-time and a late cancellation"
+2026-10-01T03:52:00.204Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:00.285Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29"
+2026-10-01T03:52:00.437Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (c) · 06 swaps the week's booking in one step; without a swappable one, 29"
+2026-10-01T03:52:01.493Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:01.578Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim"
+2026-10-01T03:52:01.746Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim"
+2026-10-01T03:52:02.577Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:02.679Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim"
+2026-10-01T03:52:02.845Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (d) · ALL_AT_ONCE: join a full class, a seat released more than 30 min ahead, NOTIFIED, claim"
+2026-10-01T03:52:05.279Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-08-40 (g) · the same flows in es: (a) a booking inside the hold, on 03; (d) a waiting entry, gone from 04 and on 03, claimed" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:05.355Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-08-40 (g) · the same flows in es: (a) a booking inside the hold, on 03; (d) a waiting entry, gone from 04 and on 03, claimed"
+2026-10-01T03:52:05.518Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-08-40 (g) · the same flows in es: (a) a booking inside the hold, on 03; (d) a waiting entry, gone from 04 and on 03, claimed"
+2026-10-01T03:52:08.261Z grant_type=refresh_token status=400 cookie=none test="week 0 at demoNow › T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24 blocks a ring, never over bookings" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:08.341Z grant_type=password status=200 cookie=none test="week 0 at demoNow › T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24 blocks a ring, never over bookings"
+2026-10-01T03:52:08.500Z grant_type=refresh_token status=200 cookie=sent test="week 0 at demoNow › T-09-40 (e) · 08 counts 3/week in the day+3 window with «Qualsevol»; 24 blocks a ring, never over bookings"
+2026-10-01T03:52:13.009Z grant_type=refresh_token status=400 cookie=none test="R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:13.292Z grant_type=refresh_token status=400 cookie=none test="R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:13.368Z grant_type=password status=200 cookie=none test="R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter"
+2026-10-01T03:52:13.520Z grant_type=refresh_token status=200 cookie=sent test="R-09-05 · 08 counts by session date: on Sunday the day+3 window reaches the next week, and a Monday booking moves only Monday's counter"
+2026-10-01T03:52:14.213Z grant_type=refresh_token status=400 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:14.496Z grant_type=refresh_token status=400 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:14.584Z grant_type=password status=200 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
+2026-10-01T03:52:14.743Z grant_type=refresh_token status=200 cookie=sent test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
+2026-10-01T03:52:15.254Z grant_type=refresh_token status=400 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:15.544Z grant_type=refresh_token status=400 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:15.617Z grant_type=password status=200 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
+2026-10-01T03:52:15.773Z grant_type=refresh_token status=200 cookie=sent test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
+2026-10-01T03:52:16.178Z grant_type=refresh_token status=400 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:16.305Z grant_type=password status=200 cookie=none test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
+2026-10-01T03:52:16.473Z grant_type=refresh_token status=200 cookie=sent test="R-15-11 (f) · P1 with the clock advanced: NOT_YET_OPEN before Sunday 20:00, BOOKABLE by the clock at 20:01, and [Executa ara] opens the week"
+2026-10-01T03:52:18.637Z grant_type=refresh_token status=400 cookie=none test="(outside a test)" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:52:18.736Z grant_type=password status=200 cookie=none test="(outside a test)"
+2026-10-01T03:52:18.911Z grant_type=refresh_token status=200 cookie=sent test="(outside a test)"
+2026-10-01T03:52:19.333Z grant_type=refresh_token status=400 cookie=none test="(outside a test)" body={"code":"REFRESH_EXPIRED"}
+# stage end 2026-10-01T03:52:19.402Z · e5-core.spec.ts · 47 calls · 19 non-2xx
+# stage start 2026-10-01T03:53:19.546Z · e6-core.spec.ts
+2026-10-01T03:53:20.345Z grant_type=refresh_token status=400 cookie=none test="E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:20.495Z grant_type=password status=200 cookie=none test="E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read"
+2026-10-01T03:53:20.691Z grant_type=refresh_token status=200 cookie=sent test="E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read"
+2026-10-01T03:53:21.296Z grant_type=refresh_token status=400 cookie=none test="E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:21.620Z grant_type=refresh_token status=400 cookie=none test="E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:21.734Z grant_type=password status=200 cookie=none test="E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read"
+2026-10-01T03:53:21.901Z grant_type=refresh_token status=200 cookie=sent test="E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/clock to Monday 04:00 and the parameters the flows read"
+2026-10-01T03:53:22.551Z grant_type=refresh_token status=400 cookie=none test="Monday 04:00 › (f) 22 · the seeded month gives the card's metrics (86%, 7 classes, 2,3 a week) and its three blocks, before anything is marked" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:22.651Z grant_type=password status=200 cookie=none test="Monday 04:00 › (f) 22 · the seeded month gives the card's metrics (86%, 7 classes, 2,3 a week) and its three blocks, before anything is marked"
+2026-10-01T03:53:22.818Z grant_type=refresh_token status=200 cookie=sent test="Monday 04:00 › (f) 22 · the seeded month gives the card's metrics (86%, 7 classes, 2,3 a week) and its three blocks, before anything is marked"
+2026-10-01T03:53:23.605Z grant_type=refresh_token status=400 cookie=none test="Monday 04:00 › (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:23.691Z grant_type=password status=200 cookie=none test="Monday 04:00 › (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves"
+2026-10-01T03:53:23.850Z grant_type=refresh_token status=200 cookie=sent test="Monday 04:00 › (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves"
+2026-10-01T03:53:24.400Z grant_type=refresh_token status=200 cookie=sent test="Monday 04:00 › (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves"
+2026-10-01T03:53:26.041Z grant_type=refresh_token status=400 cookie=none test="Monday 04:00 › (d) D12 · the week with the class, a training at half height and a block; the panel cycles Martí to «present» through the same contract; the week PDF" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:26.154Z grant_type=password status=200 cookie=none test="Monday 04:00 › (d) D12 · the week with the class, a training at half height and a block; the panel cycles Martí to «present» through the same contract; the week PDF"
+2026-10-01T03:53:26.324Z grant_type=refresh_token status=200 cookie=sent test="Monday 04:00 › (d) D12 · the week with the class, a training at half height and a block; the panel cycles Martí to «present» through the same contract; the week PDF"
+2026-10-01T03:53:27.422Z grant_type=refresh_token status=200 cookie=sent test="Monday 04:00 › (d) D12 · the week with the class, a training at half height and a block; the panel cycles Martí to «present» through the same contract; the week PDF"
+2026-10-01T03:53:28.782Z grant_type=refresh_token status=400 cookie=none test="Monday 04:00 › (f) 26 → D13 → 13 · a task with a real signed upload, edited, done and reopened; D13 shows it with the counters; Rita sees it on her screens and no /me answer carries DOG_OBSERVATIONS" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:28.872Z grant_type=password status=200 cookie=none test="Monday 04:00 › (f) 26 → D13 → 13 · a task with a real signed upload, edited, done and reopened; D13 shows it with the counters; Rita sees it on her screens and no /me answer carries DOG_OBSERVATIONS"
+2026-10-01T03:53:29.028Z grant_type=refresh_token status=200 cookie=sent test="Monday 04:00 › (f) 26 → D13 → 13 · a task with a real signed upload, edited, done and reopened; D13 shows it with the counters; Rita sees it on her screens and no /me answer carries DOG_OBSERVATIONS"
+2026-10-01T03:53:30.287Z grant_type=refresh_token status=400 cookie=none test="Monday 04:00 › (h) D14 · per-account unread marks: instructor A reads a row and then everything; instructor B still has them unread, and not the task she wrote" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:30.421Z grant_type=password status=200 cookie=none test="Monday 04:00 › (h) D14 · per-account unread marks: instructor A reads a row and then everything; instructor B still has them unread, and not the task she wrote"
+2026-10-01T03:53:30.598Z grant_type=refresh_token status=200 cookie=sent test="Monday 04:00 › (h) D14 · per-account unread marks: instructor A reads a row and then everything; instructor B still has them unread, and not the task she wrote"
+2026-10-01T03:53:31.347Z grant_type=refresh_token status=400 cookie=none test="(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:31.669Z grant_type=refresh_token status=400 cookie=none test="(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:31.774Z grant_type=password status=200 cookie=none test="(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist"
+2026-10-01T03:53:31.950Z grant_type=refresh_token status=200 cookie=sent test="(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist"
+2026-10-01T03:53:32.959Z grant_type=refresh_token status=400 cookie=none test="(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:33.040Z grant_type=password status=200 cookie=none test="(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist"
+2026-10-01T03:53:33.198Z grant_type=refresh_token status=200 cookie=sent test="(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist"
+2026-10-01T03:53:33.584Z grant_type=refresh_token status=400 cookie=none test="(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:33.701Z grant_type=password status=200 cookie=none test="(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist"
+2026-10-01T03:53:33.877Z grant_type=refresh_token status=200 cookie=sent test="(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entry and writes nothing; the run finishes it, the sheet stays markable and the entry leaves the waitlist"
+2026-10-01T03:53:34.434Z grant_type=refresh_token status=400 cookie=none test="(e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:34.755Z grant_type=refresh_token status=400 cookie=none test="(e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:34.896Z grant_type=password status=200 cookie=none test="(e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new"
+2026-10-01T03:53:35.074Z grant_type=refresh_token status=200 cookie=sent test="(e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new"
+2026-10-01T03:53:36.645Z grant_type=refresh_token status=400 cookie=none test="(e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:36.717Z grant_type=password status=200 cookie=none test="(e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new"
+2026-10-01T03:53:36.873Z grant_type=refresh_token status=200 cookie=sent test="(e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new"
+2026-10-01T03:53:37.238Z grant_type=refresh_token status=400 cookie=none test="(g) 25 · Rita's history: the Monday class «feta», the seeded no-show, the club's cancellation with its message, the late cancellation; Alba's notice never on her account" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:37.321Z grant_type=password status=200 cookie=none test="(g) 25 · Rita's history: the Monday class «feta», the seeded no-show, the club's cancellation with its message, the late cancellation; Alba's notice never on her account"
+2026-10-01T03:53:37.468Z grant_type=refresh_token status=200 cookie=sent test="(g) 25 · Rita's history: the Monday class «feta», the seeded no-show, the club's cancellation with its message, the late cancellation; Alba's notice never on her account"
+2026-10-01T03:53:37.914Z grant_type=refresh_token status=400 cookie=none test="(i) es · T-10-32 on real data: 20 and 21 in Spanish (a save round trip that leaves the states), and 25's badges and detail lines" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:37.986Z grant_type=password status=200 cookie=none test="(i) es · T-10-32 on real data: 20 and 21 in Spanish (a save round trip that leaves the states), and 25's badges and detail lines"
+2026-10-01T03:53:38.140Z grant_type=refresh_token status=200 cookie=sent test="(i) es · T-10-32 on real data: 20 and 21 in Spanish (a save round trip that leaves the states), and 25's badges and detail lines"
+2026-10-01T03:53:38.842Z grant_type=refresh_token status=400 cookie=none test="(i) es · T-10-32 on real data: 20 and 21 in Spanish (a save round trip that leaves the states), and 25's badges and detail lines" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:38.921Z grant_type=password status=200 cookie=none test="(i) es · T-10-32 on real data: 20 and 21 in Spanish (a save round trip that leaves the states), and 25's badges and detail lines"
+2026-10-01T03:53:39.077Z grant_type=refresh_token status=200 cookie=sent test="(i) es · T-10-32 on real data: 20 and 21 in Spanish (a save round trip that leaves the states), and 25's badges and detail lines"
+2026-10-01T03:53:39.599Z grant_type=refresh_token status=400 cookie=none test="(outside a test)" body={"code":"REFRESH_EXPIRED"}
+2026-10-01T03:53:39.719Z grant_type=password status=200 cookie=none test="(outside a test)"
+2026-10-01T03:53:39.890Z grant_type=refresh_token status=200 cookie=sent test="(outside a test)"
+2026-10-01T03:53:40.318Z grant_type=refresh_token status=400 cookie=none test="(outside a test)" body={"code":"REFRESH_EXPIRED"}
+# stage end 2026-10-01T03:53:40.378Z · e6-core.spec.ts · 54 calls · 20 non-2xx

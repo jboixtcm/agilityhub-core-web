@@ -1,0 +1,198 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/tasks.test.tsx (32 tests | 1 failed | 31 skipped) 10163ms
+   ❯ E7-W06 (E6-W04 question 5 and its report nits): screen 26's new-task form (4)
+     × E7-W06 step 5 (E6-W04 Q5): a creation the api refuses for its only file (400 FILE_TOO_LARGE on POST /tasks) names that file — «vídeo_salt.mp4: …» — and keeps the form 10161ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/tasks.test.tsx > E7-W06 (E6-W04 question 5 and its report nits): screen 26's new-task form > E7-W06 step 5 (E6-W04 Q5): a creation the api refuses for its only file (400 FILE_TOO_LARGE on POST /tasks) names that file — «vídeo_salt.mp4: …» — and keeps the form
+AssertionError: expected [ 'El fitxer és massa gran.' ] to deeply equal [ Array(1) ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"instructor-screen instructor-tasks"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Torna"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__title"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mTasques i notes — Laura + Duna[0m
+            [36m</h1>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+          [36m/>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-followup"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-labelledby[39m=[32m"_r_0_-title"[39m
+            [33mclass[39m=[32m"ah-followup__block"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"ah-followup__title"[39m
+              [33mid[39m=[32m"_r_0_-title"[39m
+            [36m>[39m
+              [0mObservacions[0m
+              [0m [0m
+              [36m<span>[39m
+                [0m· privades · camp únic[0m
+              [36m</span>[39m
+            [36m</h2>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mfor[39m=[32m"_r_0_"[39m
+            [36m>[39m
+              [0mObservacions privades[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+              [33mid[39m=[32m"_r_0_"[39m
+              [33mmaxlength[39m=[32m"2000"[39m
+              [33mrows[39m=[32m"3"[39m
+            [36m>[39m
+              [0mVa molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.[0m
+            [36m</textarea>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-followup__clips"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-picker"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [0m [0m
+                    [0mAdjunta un fitxer[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Adjunta un fitxer"[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                  [33mmultiple[39m=[32m""[39m
+                  [33mtabindex[39m=[32m"-1"[39m
+                  [33mtype[39m=[32m"file"[39m
+                [36m/>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+          [36m<section[39m
+            [33maria-labelledby[39m=[32m"_r_1_"[39m
+            [33mclass[39m=[32m"ah-tasks"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"ah-tasks__header"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"ah-tasks__title"[39m
+                [33mid[39m=[32m"_r_1_"[39m
+              [36m>[39m
+                [0mTasques[0m
+              [36m</h2>[39m
+            [36m</header>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-tasks__error"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [0mEl fitxer és massa gran.[0m
+            [36m</div>[39m
+            [36m<form[39m
+              [33maria-label[39m=[32m"Nova tasca"[39m
+              [33mclass[39m=[32m"ah-task ah-task--form"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+                [33mfor[39m=[32m"_r_1_-new"[39m
+              [36m>[39m
+                [0mText de la tasca nova[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"_r_1_-new"[39m
+                [33mmaxlength[39m=[32m"2000"[39m
+                [33mrows[39m=[32m"3"[39m
+              [36m>[39m
+                [0mSalts amb calma[0m
+              [36m</textarea>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-chips"[39m
+        ...
+
+- Expected
++ Received
+
+  [
+-   "vídeo_salt.mp4: El fitxer és massa gran.",
++   "El fitxer és massa gran.",
+  ]
+
+ ❯ src/instructor/tasks.test.tsx:1257:28
+    1255|     const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "v…
+    1256|     await waitFor(() => {
+    1257|       expect(alertLines()).toEqual(["vídeo_salt.mp4: El fitxer és mass…
+       |                            ^
+    1258|     });
+    1259|     expect(within(form).getByLabelText("Text de la tasca nova")).toHav…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 skipped (32)
+   Start at  06:22:21
+   Duration  11.58s (tests 88%, transform 7%, environment 2%, import 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/tasks.test.tsx -t only file
+exit 1

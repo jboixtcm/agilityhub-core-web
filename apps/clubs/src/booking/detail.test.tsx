@@ -235,6 +235,35 @@ describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R
     },
   );
 
+  it("E7-W06 step 3 (E7-W05 review #2): a cancellation whose reload fails shows 07's error with a retry, never the old «confirmada» card; the retry shows the cancelled booking and its note", async () => {
+    let reads = 0;
+    let failing = true;
+    server.use(
+      http.get("*/api/v1/bookings/:id", () => {
+        reads += 1;
+        if (reads === 1 || !failing) return undefined;
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "boom", traceId: "t" },
+          { status: 500 },
+        );
+      }),
+    );
+    await openBooking();
+    fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" }));
+    fireEvent.click(within(screen.getByRole("dialog")).getByRole("button", { name: "ANUL·LA" }));
+    expect(await screen.findByText("No s'ha pogut carregar la reserva.")).toBeVisible();
+    expect(screen.queryByText("confirmada")).toBeNull();
+    expect(screen.queryByRole("button", { name: "ANUL·LA LA RESERVA" })).toBeNull();
+    failing = false;
+    fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
+    expect(await screen.findByText("anul·lada")).toBeVisible();
+    expect(
+      screen.getByText(
+        "Anul·lació feta dins el termini establert: pots reservar una altra classe.",
+      ),
+    ).toBeVisible();
+  });
+
   it.each([422, 409])(
     "BOOKING_NOT_CANCELLABLE (%i) shows its message inside the dialog and reads the booking again",
     async (status) => {

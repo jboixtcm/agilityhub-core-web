@@ -119,9 +119,16 @@ describe("E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19)", () => 
     ).toBeVisible();
     const classes = within(card).getByRole("table", { name: "Classes" });
     const firstRow = within(classes).getAllByRole("row")[1];
-    // Saturday 15 at 8:30 is the latest class of the current week the api lists for Laura, booked
-    // by the club for her (`origin: BACKOFFICE`).
-    expect(firstRow?.textContent).toBe("ds 15/08 · 8:30B+CCentralDunaconfirmadaclub");
+    // Saturday 15 at 8:30 is the latest class of the current week the api lists for Laura (E5-W05
+    // round 3 #4: B+C takes B and C dogs only, so Duna comes first, booked in the app).
+    expect(firstRow?.textContent).toBe("ds 15/08 · 8:30B+CCentralDunaconfirmadaapp");
+    // A class the club booked for her reads «club» (`origin: BACKOFFICE`).
+    expect(
+      within(classes)
+        .getAllByRole("row")
+        .slice(1)
+        .some((row) => row.textContent.endsWith("club")),
+    ).toBe(true);
     const bookings = requests.find((url) => url.pathname.endsWith("/api/v1/bookings"));
     expect(bookings?.searchParams.getAll("filter")).toEqual(["memberId:eq:member-laura"]);
     expect(bookings?.searchParams.getAll("sort")).toEqual(["classStartsAt,desc"]);

@@ -1,0 +1,12 @@
+Scope: 5 of 11 workspace projects
+packages/api-client lint$ eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+packages/ui lint$ eslint src --max-warnings 0 --config ../../eslint.config.mjs
+packages/ui lint: Done
+packages/api-client lint: Done
+packages/i18n lint$ eslint src --max-warnings 0 --config ../../eslint.config.mjs
+packages/i18n lint: Done
+apps/clubs lint$ eslint . --max-warnings 0 --config ../../eslint.config.mjs
+apps/clubs-admin lint$ eslint . --max-warnings 0 --config ../../eslint.config.mjs
+apps/clubs lint: Done
+apps/clubs-admin lint: Done
+exit 0

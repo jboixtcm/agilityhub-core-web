@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/tasks.test.tsx (33 tests | 1 failed | 32 skipped) 174ms
+   ❯ E6-W05 (reviews of E6-W02's round 2): screen 26 (9)
+     × E7-W06 review #3 (CONVENCIONS_API §7, E79): a gateway's 504 without the api's body is no answer — the retry keeps the key and the files, and one task is created 173ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/tasks.test.tsx > E6-W05 (reviews of E6-W02's round 2): screen 26 > E7-W06 review #3 (CONVENCIONS_API §7, E79): a gateway's 504 without the api's body is no answer — the retry keeps the key and the files, and one task is created
+AssertionError: expected '22542b56-7ae7-4228-9adc-0221bbd6e297' to be 'ef69f366-20c0-42f5-bc14-2faab0b1b7ce' // Object.is equality
+
+Expected: "ef69f366-20c0-42f5-bc14-2faab0b1b7ce"
+Received: "22542b56-7ae7-4228-9adc-0221bbd6e297"
+
+ ❯ src/instructor/tasks.test.tsx:868:27
+    866|     const posts = requests.filter((request) => request.line === "POST …
+    867|     expect(posts).toHaveLength(2);
+    868|     expect(posts[1]?.key).toBe(posts[0]?.key);
+       |                           ^
+    869|     expect(posts[1]?.body).toEqual(posts[0]?.body);
+    870|     expect(writes(requests).filter((line) => line.startsWith("POST /at…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 32 skipped (33)
+   Start at  07:10:03
+   Duration  1.27s (transform 47%, environment 19%, import 15%, tests 15%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/tasks.test.tsx -t review #3
+exit 1

@@ -1,4 +1,4 @@
-import { type ApiClient, isApiError } from "@agilityhub/api-client";
+import { type ApiClient, isApiError, isInProgress, isUnanswered } from "@agilityhub/api-client";
 import { Button, Toast } from "@agilityhub/ui";
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -68,7 +68,8 @@ export function useUnreadFollowUp(client: ApiClient, enabled: boolean): UnreadFo
   const sequence = useRef(0);
   // The counter as shown, for the local changes that depend on it (a decrement given back).
   const shown = useRef<number | undefined>(undefined);
-  // CONVENCIONS_API §7: a read's key is kept only after a network failure (no answer), by row.
+  // CONVENCIONS_API §7 (E79): a read's key is kept, by row, only while the api has not answered
+  // it (a network failure, or IN_PROGRESS: its first request still runs).
   const unansweredKeys = useRef(new Map<string, string>());
   // The reads on their way, by row: the one running (a second read of the row joins it), and
   // whether it took one off the counter (given back if it fails).
@@ -148,7 +149,7 @@ export function useUnreadFollowUp(client: ApiClient, enabled: boolean): UnreadFo
           },
           (error: unknown) => {
             inFlight.current.delete(item.id);
-            if (!isApiError(error) || error.status === 0) unansweredKeys.current.set(item.id, key);
+            if (isUnanswered(error)) unansweredKeys.current.set(item.id, key);
             // The decrement is given back here, whatever the refresh below does (offline it
             // fails too); the api's count replaces it when it answers.
             if (entry.decremented) change((value) => (value === undefined ? value : value + 1));
@@ -206,11 +207,13 @@ export function useUnreadFollowUpContext(): UnreadFollowUp | undefined {
  * is: the shell renders it over every page (D14 itself when it runs without the shell).
  */
 export function FollowUpReadFailureNotice({ unread }: { unread: UnreadFollowUp }) {
-  const { t } = useTranslation(["admin-census", "errors"]);
+  const { t } = useTranslation(["admin-census", "errors", "common"]);
   const { failure } = unread;
   if (failure === undefined) return null;
-  const reason =
-    isApiError(failure.error) && failure.error.status !== 0
+  // IN_PROGRESS is not the read's answer: the retry sends the same key (CONVENCIONS_API §7, E80).
+  const reason = isInProgress(failure.error)
+    ? t("common:inProgress")
+    : isApiError(failure.error) && failure.error.status !== 0
       ? t(`errors:${failure.error.code}`, { defaultValue: t("errors:INTERNAL_ERROR") })
       : t("admin-census:followup.readOffline");
   return (

@@ -1,0 +1,115 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ↓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > without eligible dogs the tab is absent and /entrenaments goes back to 03
+ ↓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > with Rock and Toby the tab exists and Rock (defaultDogId) is the selected chip
+ ↓ src/training/TrainingPage.test.tsx > T-09-37 screen 08 exists only with a dog allowed to train alone > FREE_TRAINING off: no tab, and the route shows nothing of the module
+ ↓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > draws the api's cells: free outlined and pressable, struck, «classe» dimmed
+ ↓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > «Qualsevol» with two free rings asks which one, Muntanya first, and books with it
+ ↓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > the counter card reads the selected day's week and follows the dog
+ ↓ src/training/TrainingPage.test.tsx > T-09-38 screen 08 grid, «Qualsevol» and the confirmation > a closed day says so and draws no grid
+ ↓ src/training/TrainingPage.test.tsx > T-09-39 screen 08 at the weekly limit (R-09-05) > with cancellable sessions: no button, the message and a link to each
+ ↓ src/training/TrainingPage.test.tsx > T-09-39 screen 08 at the weekly limit (R-09-05) > without any cancellable session: the short message
+ ↓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 409 SLOT_TAKEN: the message, the grid read again and the api's free rings offered
+ ↓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 409 TRAINING_LIMIT_REACHED on a stale counter: the R-09-05 message from the details
+ ↓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > 422 codes show their message by code, never the api's text
+ ↓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > while the booking is sent the button is busy and the grid, days and dogs are inert
+ ↓ src/training/TrainingPage.test.tsx > screen 08 refusals by code (S09 §6, R-09-06) > a lost answer keeps its Idempotency-Key for the retry; an answer drops it
+ ↓ src/training/TrainingPage.test.tsx > E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03) > E5-W05 step 11: another member books the chosen slot; the focus refresh clears the choice and [Confirma] is disabled
+ ↓ src/training/TrainingPage.test.tsx > E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03) > E5-W05 step 11: with «Qualsevol», the chosen ring taken meanwhile clears the choice and its chooser
+ ↓ src/training/TrainingPage.test.tsx > E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03) > E5-W05 round 2 #13: a refresh that clears the choice a SLOT_TAKEN offered also clears that message
+ ↓ src/training/TrainingPage.test.tsx > E5-W05 step 12: the offline copy blocks the booking (E5-W02 round-2 review #2, S09 §2) > E5-W05 step 12: a NETWORK answer while navigator.onLine is true: «pot no estar al dia», [Confirma] disabled, and the retry reads again
+ ↓ src/training/TrainingPage.test.tsx > E5-W05 step 12: the offline copy blocks the booking (E5-W02 round-2 review #2, S09 §2) > E5-W05 step 12: the counter's offline copy blocks the booking too
+ ↓ src/training/TrainingPage.test.tsx > screen 08 without network (S09 §2 «sense connexió») > keeps the last grid marked «pot no estar al dia» and blocks the booking
+ ↓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #1: the offline copy of 08 is per club and person (S09 §6) > A's answers never show for B after a network failure, and B's session drops A's copy
+ ↓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #1: the offline copy of 08 is per club and person (S09 §6) > an impersonated session never reads the answers the account's own session kept
+ ↓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > rights granted while away: the tab appears when the app regains focus
+ ↓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > rights revoked while away: the tab goes when the app regains focus
+ ↓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) > a MODULE_DISABLED from any training read asks the rights again, and the tab goes
+ ↓ src/training/TrainingPage.test.tsx > E5-W02 round 2 · review #4: a failed counter (S09 §2 states) > shows its error and retry, and [Confirma] stays disabled until the summary is there
+ ↓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > «Reserva de pista» first with its four reasons; «Bloqueig» hides them and offers its two
+ ↓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > every active ring (also those closed to training), the route's ring preselected
+ ↓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > a contiguous selection writes the summary and posts the block, then 23 with its toast
+ ↓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > 409 RING_BLOCK_CONFLICT marks the conflicting cells, lists the overlaps and reads the grid again
+ ↓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > 422 RING_HAS_BOOKINGS: the instructor is told to ask the administration, and nothing forces it
+ ↓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > FREE_TRAINING off: only «Bloqueig», and the times are taken without a grid (the api validates)
+ ↓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > E5-W02 round 2 · review #5: without a grid the band's last half hour can be taken (13:30–14:00)
+ ↓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > while the block is sent the button is busy and the grid, kinds and rings are inert
+ ↓ src/instructor/RingBlockPage.test.tsx > screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) > a time refusal is shown by code (400 INVALID_TIME_RANGE), and a lost answer keeps its key
+ ↓ src/booking/confirm.test.tsx > T-08-36 the 30 s hold counts on the api clock, not the device's (R-08-07) > a device clock 5 min ahead still starts at 0:30, reaches 0 at the right instant, then the red note returns to 04
+ ↓ src/booking/confirm.test.tsx > T-08-36 the 30 s hold counts on the api clock, not the device's (R-08-07) > 409 SEAT_HOLD_EXPIRED on the confirmation shows the same red note
+ ↓ src/booking/confirm.test.tsx > T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) > single selection among the swappable bookings, the done one inert, the button names both days, then the swap is confirmed
+ ↓ src/booking/confirm.test.tsx > T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) > «CANCEL·LAR LA NOVA RESERVA» releases the hold (DELETE) and goes back to 04
+ ↓ src/booking/confirm.test.tsx > T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) > the back gesture leaves the page and releases the hold too
+ ↓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > normal: no swap, «CONFIRMAR LA RESERVA», then the calendar links and the booking
+ ↓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > the limit done this week (CURRENT, per dog): the mockup's «Aquesta setmana ja has fet dues classes amb la Duna. … per a la setmana vinent a partir de diumenge 9 a les 20 h», without a countdown
+ ↓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > E5-W05 step 6: the limit of next week reached on a next-week row («dl 10», NEXT, per dog): «La setmana vinent ja tens una classe amb la Duna» and B1's «Podràs reservar aquesta classe a partir de diumenge 9 a les 20 h», the coming opening
+ ↓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > E5-W05 step 6: with `bookings.maxNextWeek = 0` (limit 0, unit DOG) the first sentence counts no class: «Encara no pots reservar classes de la setmana vinent.» and B1's second sentence
+ ↓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > E5-W05 step 6: with `bookings.maxNextWeek = 0` (limit 0, unit MEMBER) the first sentence counts no class: «Encara no pots reservar classes de la setmana vinent.» and B1's second sentence
+ ↓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > the limit per person (unit MEMBER) names no dog: «Aquesta setmana ja has fet dues classes.»
+ ↓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > «Properament»: «Disponible a partir de diumenge 9 a les 20 h.»
+ ↓ src/booking/confirm.test.tsx > 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) > a seat another hold takes: the retry note, and a retry that gets the seat shows the countdown
+ ↓ src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > PAY_TO_BOOK: «PAGAR I CONFIRMAR (12,00 €)» opens the api's Checkout URL
+ ↓ src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > E5-W05 step 8: PAY_TO_BOOK with a swap keeps the price in view: «En confirmar, pagaràs aquesta classe (12,00 €).» above «ANUL·LA … I CONFIRMA …» (review #8)
+ ↓ src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > CHARGE_ON_ATTENDANCE: the note above the normal button
+ ↓ src/booking/confirm.test.tsx > R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) > a confirmation that fails on the way stays on the page, and its retry sends the same key
+ ↓ src/booking/confirm.test.tsx > R-08-15 the claim of a NOTIFIED waiting entry (step 5) > [AGAFA LA PLAÇA] holds with the entry, and the confirmation posts the claim with its key
+ ↓ src/booking/confirm.test.tsx > R-08-15 the claim of a NOTIFIED waiting entry (step 5) > a claim that lost the seat (409 SEAT_TAKEN) goes back to 04 with its message
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > mockup 20: the day chips, each class with n/n, the hourglass and its second line, the legend and the block with its reason and note
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a chip changes the day (?date=); an empty day reads «Cap classe aquest dia»; the instructor chip offers no «Tot el club» and shows another's day
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a tap on a class opens 21; [RESERVAR O BLOQUEJAR PISTA] opens 24 on the day's first ring
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a cancelled class reads «anul·lada»; a closed day shows no «passar llista pendent»
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > WAITLIST off: no hourglass on the cards and no waiting part in the legend
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > T-10-32 a viewer in America/Bogota at 0:30 club-local still asks for the club's day (Europe/Madrid)
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) > a failed read shows the error with a retry, which reads the day again
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > mockup 21: the title, n/n, «1 en espera», the instructor, the rows in the api's order, the status lines and the waiting list with its rule
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a tap changes the circle locally with no request; [DESA] sends only the changed items with the current version and a UUID key
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a saved «ha avisat» row is inert; «ha avisat» saved now shows its line from the answer
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > the circles are inert when canMarkPresence and canMarkNotice are false (window closed) and the yellow one alone without the notice
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > the dog's photo opens full screen; a tap closes it and the screen is as before
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > round 2 #5 (review #6, AGENTS rule 6): the photo is a modal: Tab and Shift+Tab stay inside, the page behind is inert and does not scroll, Escape restores everything
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > 409 STALE_VERSION: the toast, the other's change kept, and only the caller's own edit sent again with the new version
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a refusal is shown by its code and nothing is lost: ATTENDANCE_NOT_OPEN reads the list again
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > after a refusal the list is read again and the caller's choices are rebased: a row someone else changed meanwhile is theirs
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a network failure keeps the choice and a retry sends the same payload with the same key
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > R-10-05 FIFO: the rule sentence with the confirmation minutes
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > a class cancelled by the club: the banner, every circle inert and no [DESA]
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > «avís ja enviat» after the 8:00 batch; «2 tasques pendents» with TASKS, none without
+ ↓ src/instructor/instructor.test.tsx > T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) > R-10-00: a dog led by its guide reads «Júlia Roca + Rock» with «(abonat: Laura Serra Vidal)»
+ ↓ src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > after a refused PUT every circle and [DESA] stay locked until the list is read again; a tap or [DESA] meanwhile sends nothing
+ ↓ src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > the hook refuses a save captured before the refusal while that read is in flight
+ ↓ src/instructor/instructor.test.tsx > E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save > a read answered after a newer save is dropped: the sheet stays at version 5 with its draft and «Llista desada»
+ ↓ src/instructor/instructor.test.tsx > T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09) > mockup 22: the header, «C · fa 8 mesos», the three metrics, the five badges, the three blocks and the manage button
+ ↓ src/instructor/instructor.test.tsx > T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09) > no classes in the window reads «—»; TASKS off drops the three blocks and the button; FREE_TRAINING off drops the training tile
+ ↓ src/instructor/instructor.test.tsx > T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09) > a dog that left shows «baixa»; levels off shows no level chip; the search icon opens the student search
+ ↓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > lists the active dogs as «{guia} + {gos} · {nivell}», asks the api for the typed text after 300 ms and opens 22
+ ↓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > round 2 #2 (review #2): with 51 matching dogs the first page shows 50 and «Mostra'n més» appends the 51st from the next page
+ ↓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > round 2 #2 and #4: a failed next page keeps the 50 rows, says why by its code, and «Mostra'n més» asks it again
+ ↓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > E5-W05 step 23 (R-10-00): the guide is the owner's first name the api sends, a compound one whole («Joan Antoni + Toby»), and a dog led by another guide adds «(abonat: {nom i cognom})»
+ ↓ src/instructor/instructor.test.tsx > E6-W01 step 6 the instructor's student search (S10 §2, §13-9) > E5-W05 round 2 #5 (R-10-00): a handlerName equal to the owner's first name («Joan Antoni») is the owner, so the row adds no «(abonat: …)»
+ ↓ src/instructor/instructor.test.tsx > E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, by its code > 20, 21, 22 and the search show the catalog message of NOT_FOUND and FORBIDDEN
+ ↓ src/instructor/instructor.test.tsx > E6-W01 round 2 #4 (review #5, AGENTS rule 4): a failed read says why, by its code > without an answer from the api (offline) each screen keeps its own «No s'ha pogut carregar…»
+ ↓ src/instructor/instructor.test.tsx > T-10-32 (20/21/22) the three locales, with no missing key > es
+ ↓ src/instructor/instructor.test.tsx > T-10-32 (20/21/22) the three locales, with no missing key > en
+ ↓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > an instructor opens 20 at /instructor/dia with «El meu dia» current in the mockup's four tabs
+ ↓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > an impersonated session reaching 21 directly reads «No es permet la suplantació.» and asks nothing
+ ↓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > a member cannot open 22 (RequireRole); screen 26 is E6-W02's page under «Alumnes»
+ ↓ src/instructor/instructor.test.tsx > E6-W01 steps 1 and 7 the routes in the app: roles, tabs and impersonation > round 2 #3 (review #4, S10 §9) with E6-W02 step 5: TASKS off sends screen 26's route back to 22 with the MODULE_DISABLED note
+ ↓ src/instructor/instructor.test.tsx > E6-W03 step 11 on screen 21 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > a PUT refused with 422 ATTENDANCE_WINDOW_CLOSED whose re-read is closed leaves no choice behind and [DESA] disabled
+ ↓ src/instructor/instructor.test.tsx > E6-W03 step 11 on screen 21 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > once the api has answered, a later save of the same payload sends a new Idempotency-Key (the mock replays a key's first answer)
+ ↓ src/instructor/instructor.test.tsx > E6-W03 step 13 (E6-W01 round-2 review #3): «Mostra'n més» after a new query > a next page still loading for the old query does not hold the new query's «Mostra'n més»
+ ✓ src/instructor/instructor.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 21's sheet keeps its key on IN_PROGRESS > E7-W06 step 1: 21's attendance save keeps its Idempotency-Key and the choice on IN_PROGRESS, says «L'operació encara està en curs…» without reading the list again, the retry sends the same key, and the same save after the api's answer takes a new key 226ms
+ ✓ src/booking/confirm.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): 06/29's booking keeps its key on IN_PROGRESS > E7-W06 step 1: 06's booking stays on the page with its Idempotency-Key on IN_PROGRESS (no return to 04), says «L'operació encara està en curs…», the retry sends the same key, and the same booking after the api's answer takes a new key 279ms
+ ✓ src/instructor/RingBlockPage.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 24's block keeps its key on IN_PROGRESS > E7-W06 step 1: 24's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key 349ms
+ ✓ src/training/TrainingPage.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 08's booking keeps its key on IN_PROGRESS > E7-W06 step 1: 08's training booking keeps its Idempotency-Key and its choice on IN_PROGRESS, says «L'operació encara està en curs…» (the shared errorText), the retry sends the same key, and the same booking after the api's answer takes a new key 384ms
+
+ Test Files  4 passed (4)
+      Tests  4 passed | 97 skipped (101)
+   Start at  06:16:46
+   Duration  1.96s (transform 42%, environment 21%, tests 17%, import 14%, setup 6%)
+
+  Transform  transforming modules took 2.99s · 42% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit 0

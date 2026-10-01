@@ -263,7 +263,11 @@ export function HistoryPage({ client }: { client: ApiClient }) {
       ) : (
         <ul aria-label={t("history:list")} className="history-screen__list">
           {data.items.map((item) => (
-            <li key={`${item.type}-${item.id}`}>
+            // E7-W06 step 5 (E6-W04 question 6): a class booking's row carries its id.
+            <li
+              key={`${item.type}-${item.id}`}
+              {...(item.type === "CLASS" ? { "data-booking-id": item.id } : {})}
+            >
               <HistoryRow
                 badge={{
                   label: t(`enums:historyState.${badgeKey(item)}`),

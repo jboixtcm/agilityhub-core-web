@@ -12,6 +12,7 @@ import {
   findClass,
   findDog,
   limitReachedDetails,
+  limitRefuses,
   localInstant,
   meHome,
   nextBookingId,
@@ -32,7 +33,7 @@ type ReservationRow = components["schemas"]["ReservationRow"];
 type SeatHoldRequest = components["schemas"]["SeatHoldRequest"];
 type WaitlistEntryRequest = components["schemas"]["WaitlistEntryRequest"];
 
-// The scenario the booking world was drawn for: `bookingLimit` starts with two bookings this week.
+// The scenario the booking world was drawn for: the limit scenarios start with more bookings.
 let worldScenario: MockScenario | undefined;
 
 // In the browser the handlers live in the page: the world survives a full page load (a link, the
@@ -71,7 +72,7 @@ function restore(name: MockScenario): boolean {
 /** Resets the booking world (tests call it between cases, like the other mock states). */
 export function resetBookingMockState(): void {
   worldScenario = undefined;
-  resetBookingState(false);
+  resetBookingState();
   try {
     tabStorage()?.removeItem(STORAGE_KEY);
   } catch {
@@ -84,11 +85,11 @@ function options(request: Request): BookingOptions {
   const name = currentMockScenarioName();
   if (worldScenario !== name) {
     worldScenario = name;
-    if (!restore(name)) resetBookingState(scenario.bookingLimit === true, viewerFirstName());
+    if (!restore(name)) resetBookingState(scenario.bookingLimit ?? null, viewerFirstName());
   }
   const threshold = findParameter("bookings.lateCancelThresholdMinutes")?.value;
   return {
-    limit: scenario.bookingLimit === true,
+    limit: scenario.bookingLimit === "swap",
     locale: readerLocale(request),
     modules: scenario.branding.modules,
     now: Date.now(),
@@ -189,12 +190,19 @@ function holdFailure(body: SeatHoldRequest, context: BookingOptions) {
       });
     case "WEEKLY_LIMIT_DONE":
       // The class's booking week at the clock (R-08-01), counted over the dog's bookings of it.
-      return apiError(
-        "BOOKING_LIMIT_REACHED",
-        "Booking limit reached",
-        409,
-        limitReachedDetails(body.dogId, row.week, context),
-      );
+      // Refused only as the api refuses (R-08-09): mockup 04's fixed «Límit setmanal» (A6) holds
+      // the seat while the limit is not reached or a booking can still be swapped.
+      if (limitRefuses(body.dogId, row.week, context)) {
+        return apiError(
+          "BOOKING_LIMIT_REACHED",
+          "Booking limit reached",
+          409,
+          limitReachedDetails(body.dogId, row.week, context),
+        );
+      }
+      return row.heldByOther === true
+        ? apiError("CLASS_FULL", "Class full", 409, { heldOnly: true })
+        : undefined;
     case "FULL":
     case "WAITLIST_FULL":
     case "WAITLIST_OPEN":

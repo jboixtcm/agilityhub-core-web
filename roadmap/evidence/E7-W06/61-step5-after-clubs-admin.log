@@ -1,0 +1,14 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  4 passed (4)
+      Tests  8 passed | 26 skipped (34)
+   Start at  06:25:10
+   Duration  1.95s (transform 41%, environment 25%, tests 14%, import 14%, setup 6%)
+
+  Transform  transforming modules took 2.55s · 41% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit 0

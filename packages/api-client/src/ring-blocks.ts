@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { isApiError } from "./api-error";
+import { isApiError, isInProgress } from "./api-error";
 import type { ApiClient } from "./client";
 import type { components } from "./generated/schema";
+import { isUnanswered } from "./submission-key";
 
 export type RingBlockKind = components["schemas"]["RingBlockCreateRequest"]["kind"];
 export type RingBlockReason = components["schemas"]["RingBlockCreateRequest"]["reason"];
@@ -42,12 +43,15 @@ export interface RingBlockConflict {
  *   with `cancelBookings: true`);
  * - `time`: the times are wrong (`INVALID_TIME_RANGE`, `INVALID_SLOT_GRANULARITY`,
  *   `OUTSIDE_OPENING_HOURS`);
+ * - `inProgress`: `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}`, the block's first request
+ *   still runs: not its answer, so the form keeps its key and says `common:inProgress`
+ *   (CONVENCIONS_API §7, E79, E80);
  * - `general`: anything else, shown with its code's message.
  */
 export type RingBlockFailure =
   | { code: string; conflicts: RingBlockConflict[]; kind: "conflict" }
   | { bookings: unknown[]; code: string; kind: "bookings" }
-  | { code: string; kind: "general" | "time" };
+  | { code: string; kind: "general" | "inProgress" | "time" };
 
 const TIME_CODES = new Set([
   "INVALID_SLOT_GRANULARITY",
@@ -57,6 +61,7 @@ const TIME_CODES = new Set([
 
 export function ringBlockFailure(cause: unknown): RingBlockFailure {
   const code = isApiError(cause) ? cause.code : "INTERNAL_ERROR";
+  if (isInProgress(cause)) return { code, kind: "inProgress" };
   const details =
     isApiError(cause) && typeof cause.details === "object" && cause.details !== null
       ? (cause.details as Record<string, unknown>)
@@ -106,9 +111,9 @@ export function ringBlockCreateBody(
 }
 
 /**
- * `POST /ring-blocks` (R-06-11, R-09-11). `idempotencyKey` is the payload's key: the caller keeps
- * one key per body (CONVENCIONS_API §7), so a retry of the same body replays its answer and any
- * other body gets a new one.
+ * `POST /ring-blocks` (R-06-11, R-09-11). `idempotencyKey` is the submission's key: the caller keeps
+ * one key per submission (CONVENCIONS_API §7, E74), so a retry of the same body while the api has
+ * not answered it replays its answer, and an answer retires it.
  */
 export async function createRingBlock(
   client: ApiClient,
@@ -347,8 +352,9 @@ export type RingBlockSubmission =
 
 /**
  * `POST /ring-blocks` for screen 24 and the D12 card (R-09-11): one `Idempotency-Key` per payload,
- * kept only while its outcome is unknown (an answer lost to the network), so a retry replays it
- * instead of creating a second block; any answer drops it, and a changed payload gets its own.
+ * kept only while the api has not answered it (an answer lost to the network, or IN_PROGRESS: its
+ * first request still runs, E79), so a retry replays it instead of creating a second block; any
+ * answer drops it, and a changed payload gets its own.
  */
 export function useRingBlockSubmit(client: ApiClient) {
   const keys = useRef(new Map<string, string>());
@@ -365,7 +371,7 @@ export function useRingBlockSubmit(client: ApiClient) {
         keys.current.delete(fingerprint);
         return { block, status: "created" };
       } catch (cause) {
-        if (!isApiError(cause, "NETWORK")) keys.current.delete(fingerprint);
+        if (!isUnanswered(cause)) keys.current.delete(fingerprint);
         return { failure: ringBlockFailure(cause), status: "failed" };
       } finally {
         setPending(false);

@@ -1,0 +1,52 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+ ❯ src/universal-list.test.tsx (7 tests | 1 failed | 6 skipped) 36ms
+   ❯ E7-W06 step 5 (ruling E82, E6-W04 Q6) · stable data attributes on a list's rows (1)
+     × E7-W06 step 5: `rowAttributes` puts each row's data attributes on its <tr> (D14: data-followup-id, data-unread), next to its class 35ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/universal-list.test.tsx > E7-W06 step 5 (ruling E82, E6-W04 Q6) · stable data attributes on a list's rows > E7-W06 step 5: `rowAttributes` puts each row's data attributes on its <tr> (D14: data-followup-id, data-unread), next to its class
+AssertionError: expected [ [ null, null, 'unread' ], …(1) ] to deeply equal [ [ 'f-1', 'true', 'unread' ], …(1) ]
+
+- Expected
++ Received
+
+  [
+    [
+-     "f-1",
+-     "true",
++     null,
++     null,
+      "unread",
+    ],
+    [
+-     "f-2",
+-     "false",
++     null,
++     null,
+      null,
+    ],
+  ]
+
+ ❯ src/universal-list.test.tsx:291:7
+    289|         row.getAttribute("class"),
+    290|       ]),
+    291|     ).toEqual([
+       |       ^
+    292|       ["f-1", "true", "unread"],
+    293|       ["f-2", "false", null],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  06:17:40
+   Duration  747ms (environment 64%, setup 17%, transform 11%, tests 6%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/universal-list.test.tsx -t E7-W06
+exit 1

@@ -683,9 +683,16 @@ function icuFemale(text: string): string {
   );
 }
 
-function render(text: string, locale: MessagingLocale, clubName: string, warnings: Set<string>) {
+function render(
+  text: string,
+  locale: MessagingLocale,
+  clubName: string,
+  warnings: Set<string>,
+  omitted: readonly string[] = [],
+) {
   const rendered = icuFemale(text).replace(VARIABLE_PATTERN, (_, raw: string) => {
     const key = raw.trim();
+    if (omitted.includes(key)) return "";
     if (key === "club_name") return clubName;
     const value = PREVIEW_VALUES[key]?.[locale];
     if (value === undefined) {
@@ -718,8 +725,22 @@ const GSM7: Readonly<Record<string, string>> = {
   ü: "u",
 };
 
+/** R-11-06: the SMS text transliterated to GSM-7. */
+function gsm7(text: string): string {
+  return text.replace(/./gsu, (character) => GSM7[character] ?? character);
+}
+
+/**
+ * The length `SMS_BODY_TOO_LONG` counts against 160 (R-11-06; ruling E82 on E6-W04 Q3): the SMS
+ * text rendered with the preview data of its language, without `admin_text` (the admin writes it
+ * at each send, so N-08a's own text is not refused for it), and transliterated to GSM-7.
+ */
+export function smsCheckedLength(text: string, locale: string, clubName: string): number {
+  return gsm7(render(text, messagingLocale(locale), clubName, new Set(), ["admin_text"])).length;
+}
+
 function smsPreview(text: string) {
-  const transliterated = text.replace(/./gsu, (character) => GSM7[character] ?? character);
+  const transliterated = gsm7(text);
   const truncated = transliterated.length > 160;
   const final = truncated ? `${transliterated.slice(0, 159)}…` : transliterated;
   return { length: final.length, segments: Math.ceil(final.length / 160), text: final, truncated };

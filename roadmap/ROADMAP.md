@@ -81,7 +81,7 @@ E5 03/04/06/07/29 bookings + 08/24 training + D12 card · E6 20/21/22/25/26 + D1
 Sizes: S ≤ ½ session · M = 1 · L = 1–2 · XL = 2–3. Api tasks are listed in the api repo's `ROADMAP.md`. A web task whose only open dependencies are `external:` stays `not_open` until the organizer opens it (the picker does not read `external:`).
 
 **E9 · Courses and build sessions (S16).** Organizer prep done 30-09 (ruling E77: `course-core` is the only placement engine; the api stores its warnings and enforces the `critical` → ADMIN `force` policy).
-- **E9-W01** · `course-core` JSON Schema export (zod-to-json-schema), fixtures validated (T-16-03), the artefact copied to the api · E0-W08 · S
+- **E9-W01** · `course-core` JSON Schema export (zod-to-json-schema), fixtures validated (T-16-03), the artefact copied to the api · E0-W08 · S · **installed 01-10 (`ready`; ruling E84: the version lives in the file name and `$id`, the organizer copies the files to the api)**
 - **E9-W02** · `packages/course-ui` port and `CoreApiStore implements PlannerStore` (WP-16-B′) · E0-W08, api E9-T01 · XL
 - **E9-W03** · clubs-admin: D18 `/recorreguts` (list and wizard), detail 2D/3D, placement editor, build-sheet PDF, D16 «Geometria», D7 «Col·locacions», D3/D4 «Recorregut previst» (WP-16-E′) · E9-W02, api E9-T02 and E9-T03 · XL · the PDFs are cut #4, the library chip cut #3
 - **E9-W04** · clubs app: viewer, «Registra què hi ha muntat», mobile build session, integrations with 08, 10, 23, 07 and D12 (WP-16-F′) · E9-W02, api E9-T03, E5-W02, E6-W03 · L · the live part is cut #2

@@ -1,0 +1,616 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/instructor/attendance-rows.test.tsx (1 test | 1 failed) 77ms
+   ❯ E7-W06 step 5 (ruling E82, E6-W04 Q6): stable data attributes on screen 21's rows (1)
+     × E7-W06 step 5: each attendance row carries its booking's id and the state it shows (data-booking-id, data-attendance-state); a tap changes the state, and the saved list keeps it 75ms
+ ❯ src/App.test.tsx (54 tests | 1 failed | 53 skipped) 131ms
+   ❯ E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) (8)
+     × E7-W06 step 6 (E6-W04's report nit): when 13's re-read after 422 TASK_ALREADY_DONE fails, the page says the task is already done, not the generic «No s'ha pogut completar l'acció.» 129ms
+ ❯ src/instructor/tasks.test.tsx (31 tests | 3 failed | 28 skipped) 30365ms
+   ❯ E7-W06 (E6-W04 question 5 and its report nits): screen 26's new-task form (3)
+     × E7-W06 step 5 (E6-W04 Q5): an instructor's new task with refused files names each one — «prog.exe: …», «vídeo_llarg.mp4: …» — creates nothing and keeps the form; without them the same form creates the task with the file already uploaded 10159ms
+     × E7-W06 step 6 (E6-W04's report nit): a creation whose answer was lost and whose text was then edited is abandoned — its key is dropped, so the first text written again later is a new task with a new key 10113ms
+     × E7-W06 step 6 (E6-W04's report nit): a creation whose answer was lost and whose form was then cancelled is abandoned — the same text in a new form is a new task with a new key 10091ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) > E7-W06 step 6 (E6-W04's report nit): when 13's re-read after 422 TASK_ALREADY_DONE fails, the page says the task is already done, not the generic «No s'ha pogut completar l'acció.»
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Aquesta tasca ja està completada.[39m
+Received:
+[31m  No s'ha pogut completar l'acció.[39m
+ ❯ src/App.test.tsx:1809:46
+    1807|       expect(reads).toBe(2);
+    1808|     });
+    1809|     expect(await screen.findByRole("alert")).toHaveTextContent(
+       |                                              ^
+    1810|       "Aquesta tasca ja està completada.",
+    1811|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/instructor/attendance-rows.test.tsx > E7-W06 step 5 (ruling E82, E6-W04 Q6): stable data attributes on screen 21's rows > E7-W06 step 5: each attendance row carries its booking's id and the state it shows (data-booking-id, data-attendance-state); a tap changes the state, and the saved list keeps it
+AssertionError: expected [ Array(4) ] to deeply equal [ [ 'b1', 'PRESENT' ], …(3) ]
+
+- Expected
++ Received
+
+  [
+    [
+-     "b1",
+-     "PRESENT",
++     null,
++     null,
+    ],
+    [
+-     "b2",
+-     "PENDING",
++     null,
++     null,
+    ],
+    [
+-     "b3",
+-     "NOTIFIED",
++     null,
++     null,
+    ],
+    [
+-     "b4",
+-     "NO_SHOW",
++     null,
++     null,
+    ],
+  ]
+
+ ❯ src/instructor/attendance-rows.test.tsx:76:26
+     74|   it("E7-W06 step 5: each attendance row carries its booking's id and …
+     75|     await renderSheet();
+     76|     expect(attributes()).toEqual([
+       |                          ^
+     77|       ["b1", "PRESENT"],
+     78|       ["b2", "PENDING"],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/instructor/tasks.test.tsx > E7-W06 (E6-W04 question 5 and its report nits): screen 26's new-task form > E7-W06 step 5 (E6-W04 Q5): an instructor's new task with refused files names each one — «prog.exe: …», «vídeo_llarg.mp4: …» — creates nothing and keeps the form; without them the same form creates the task with the file already uploaded
+AssertionError: expected [ Array(1) ] to deeply equal [ …(2) ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"instructor-screen instructor-tasks"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Torna"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__title"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mTasques i notes — Laura + Duna[0m
+            [36m</h1>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+          [36m/>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-followup"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-labelledby[39m=[32m"_r_0_-title"[39m
+            [33mclass[39m=[32m"ah-followup__block"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"ah-followup__title"[39m
+              [33mid[39m=[32m"_r_0_-title"[39m
+            [36m>[39m
+              [0mObservacions[0m
+              [0m [0m
+              [36m<span>[39m
+                [0m· privades · camp únic[0m
+              [36m</span>[39m
+            [36m</h2>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mfor[39m=[32m"_r_0_"[39m
+            [36m>[39m
+              [0mObservacions privades[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+              [33mid[39m=[32m"_r_0_"[39m
+              [33mmaxlength[39m=[32m"2000"[39m
+              [33mrows[39m=[32m"3"[39m
+            [36m>[39m
+              [0mVa molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.[0m
+            [36m</textarea>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-followup__clips"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-picker"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [0m [0m
+                    [0mAdjunta un fitxer[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Adjunta un fitxer"[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                  [33mmultiple[39m=[32m""[39m
+                  [33mtabindex[39m=[32m"-1"[39m
+                  [33mtype[39m=[32m"file"[39m
+                [36m/>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+          [36m<section[39m
+            [33maria-labelledby[39m=[32m"_r_1_"[39m
+            [33mclass[39m=[32m"ah-tasks"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"ah-tasks__header"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"ah-tasks__title"[39m
+                [33mid[39m=[32m"_r_1_"[39m
+              [36m>[39m
+                [0mTasques[0m
+              [36m</h2>[39m
+            [36m</header>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-tasks__error"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [0mAquest tipus de fitxer no està permès.[0m
+            [36m</div>[39m
+            [36m<form[39m
+              [33maria-label[39m=[32m"Nova tasca"[39m
+              [33mclass[39m=[32m"ah-task ah-task--form"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+                [33mfor[39m=[32m"_r_1_-new"[39m
+              [36m>[39m
+                [0mText de la tasca nova[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"_r_1_-new"[39m
+                [33mmaxlength[39m=[32m"2000"[39m
+                [33mrows[39m=[32m"3"[39m
+              [36m>[39m
+                [0mSalts amb calma[0m
+              [36m</textarea>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-chips"...
+
+- Expected
++ Received
+
+  [
+-   "prog.exe: Aquest tipus de fitxer no està permès.",
+-   "vídeo_llarg.mp4: El fitxer és massa gran.",
++   "Aquest tipus de fitxer no està permès.",
+  ]
+
+ ❯ src/instructor/tasks.test.tsx:1214:28
+    1212|     ]);
+    1213|     await waitFor(() => {
+    1214|       expect(alertLines()).toEqual([
+       |                            ^
+    1215|         "prog.exe: Aquest tipus de fitxer no està permès.",
+    1216|         "vídeo_llarg.mp4: El fitxer és massa gran.",
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/instructor/tasks.test.tsx > E7-W06 (E6-W04 question 5 and its report nits): screen 26's new-task form > E7-W06 step 6 (E6-W04's report nit): a creation whose answer was lost and whose text was then edited is abandoned — its key is dropped, so the first text written again later is a new task with a new key
+AssertionError: expected [ <li …(1)>…(3)</li>, …(4) ] to have a length of 6 but got 5
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"instructor-screen instructor-tasks"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Torna"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__title"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mTasques i notes — Laura + Duna[0m
+            [36m</h1>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+          [36m/>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-followup"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-labelledby[39m=[32m"_r_3_-title"[39m
+            [33mclass[39m=[32m"ah-followup__block"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"ah-followup__title"[39m
+              [33mid[39m=[32m"_r_3_-title"[39m
+            [36m>[39m
+              [0mObservacions[0m
+              [0m [0m
+              [36m<span>[39m
+                [0m· privades · camp únic[0m
+              [36m</span>[39m
+            [36m</h2>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mfor[39m=[32m"_r_3_"[39m
+            [36m>[39m
+              [0mObservacions privades[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+              [33mid[39m=[32m"_r_3_"[39m
+              [33mmaxlength[39m=[32m"2000"[39m
+              [33mrows[39m=[32m"3"[39m
+            [36m>[39m
+              [0mVa molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.[0m
+            [36m</textarea>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-followup__clips"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-picker"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [0m [0m
+                    [0mAdjunta un fitxer[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Adjunta un fitxer"[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                  [33mmultiple[39m=[32m""[39m
+                  [33mtabindex[39m=[32m"-1"[39m
+                  [33mtype[39m=[32m"file"[39m
+                [36m/>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+          [36m<section[39m
+            [33maria-labelledby[39m=[32m"_r_4_"[39m
+            [33mclass[39m=[32m"ah-tasks"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"ah-tasks__header"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"ah-tasks__title"[39m
+                [33mid[39m=[32m"_r_4_"[39m
+              [36m>[39m
+                [0mTasques[0m
+              [36m</h2>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-tasks__add"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0m [0m
+                  [0mAfegir[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</header>[39m
+            [36m<ul[39m
+              [33mclass[39m=[32m"ah-tasks__list"[39m
+            [36m>[39m
+              [36m<li[39m
+                [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+      ...
+
+- Expected
++ Received
+
+- 6
++ 5
+
+ ❯ src/instructor/tasks.test.tsx:1260:23
+    1258|     newTask("Salts amb calma");
+    1259|     await waitFor(() => {
+    1260|       expect(cards()).toHaveLength(6);
+       |                       ^
+    1261|     });
+    1262|     const posts = requests.filter((request) => request.line === "POST …
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/instructor/tasks.test.tsx > E7-W06 (E6-W04 question 5 and its report nits): screen 26's new-task form > E7-W06 step 6 (E6-W04's report nit): a creation whose answer was lost and whose form was then cancelled is abandoned — the same text in a new form is a new task with a new key
+AssertionError: expected [ <li …(1)>…(3)</li>, …(3) ] to have a length of 5 but got 4
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"instructor-screen instructor-tasks"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"ah-app-bar instructor-screen__bar"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Torna"[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button instructor-screen__back"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__title"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mTasques i notes — Laura + Duna[0m
+            [36m</h1>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+          [36m/>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-followup"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-labelledby[39m=[32m"_r_6_-title"[39m
+            [33mclass[39m=[32m"ah-followup__block"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"ah-followup__title"[39m
+              [33mid[39m=[32m"_r_6_-title"[39m
+            [36m>[39m
+              [0mObservacions[0m
+              [0m [0m
+              [36m<span>[39m
+                [0m· privades · camp únic[0m
+              [36m</span>[39m
+            [36m</h2>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mfor[39m=[32m"_r_6_"[39m
+            [36m>[39m
+              [0mObservacions privades[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea ah-followup__field"[39m
+              [33mid[39m=[32m"_r_6_"[39m
+              [33mmaxlength[39m=[32m"2000"[39m
+              [33mrows[39m=[32m"3"[39m
+            [36m>[39m
+              [0mVa molt bé amb reforç de pilota. Evitar sobrecàrrega de salts: revisar espatlla dreta si coixeja. Parlar amb la Laura del pas a D a final de temporada.[0m
+            [36m</textarea>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-followup__clips"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-picker"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [0m [0m
+                    [0mAdjunta un fitxer[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Adjunta un fitxer"[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                  [33mmultiple[39m=[32m""[39m
+                  [33mtabindex[39m=[32m"-1"[39m
+                  [33mtype[39m=[32m"file"[39m
+                [36m/>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+          [36m<section[39m
+            [33maria-labelledby[39m=[32m"_r_7_"[39m
+            [33mclass[39m=[32m"ah-tasks"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"ah-tasks__header"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"ah-tasks__title"[39m
+                [33mid[39m=[32m"_r_7_"[39m
+              [36m>[39m
+                [0mTasques[0m
+              [36m</h2>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-tasks__add"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0m [0m
+                  [0mAfegir[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</header>[39m
+            [36m<ul[39m
+              [33mclass[39m=[32m"ah-tasks__list"[39m
+            [36m>[39m
+              [36m<li[39m
+                [33mclass[39m=[32m"ah-task ah-task--pending"[39m
+      ...
+
+- Expected
++ Received
+
+- 5
++ 4
+
+ ❯ src/instructor/tasks.test.tsx:1283:23
+    1281|     newTask("Salts amb calma");
+    1282|     await waitFor(() => {
+    1283|       expect(cards()).toHaveLength(5);
+       |                       ^
+    1284|     });
+    1285|     const posts = requests.filter((request) => request.line === "POST …
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  5 failed | 81 skipped (86)
+   Start at  06:17:01
+   Duration  31.68s (tests 90%, transform 5%, environment 3%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/App.test.tsx src/instructor/tasks.test.tsx src/instructor/attendance-rows.test.tsx -t E7-W06
+exit 1

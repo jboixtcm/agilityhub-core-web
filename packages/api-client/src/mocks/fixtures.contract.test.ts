@@ -10,6 +10,7 @@ import pendingDocument from "../../openapi/pending.json";
 
 import {
   BOOKING_DOG_IDS,
+  BOOKING_LIMIT_DONE_NOW,
   BOOKING_MOCK_NOW,
   bookableClasses,
   bookingResource,
@@ -20,6 +21,7 @@ import {
   resetBookingState,
   seatHoldResponse,
   waitlistResource,
+  type BookingLimitWorld,
   type BookingOptions,
 } from "./fixtures/bookings";
 import brandingCanicFixture from "./fixtures/branding-canic.json";
@@ -663,27 +665,40 @@ describe("E5-W01 step 10 · the booking world follows the S08 contract (MeHome, 
   const schema = (name: string) =>
     ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
   const canicModules = (brandingCanicFixture as { modules: string[] }).modules;
-  const bookingOptions = (modules: readonly string[], limit: boolean): BookingOptions => ({
+  const bookingOptions = (
+    modules: readonly string[],
+    limit: boolean,
+    now = BOOKING_MOCK_NOW,
+  ): BookingOptions => ({
     limit,
     locale: "ca",
     modules,
-    now: Date.parse(BOOKING_MOCK_NOW),
+    now: Date.parse(now),
     thresholdMinutes: 240,
   });
-  const variants: [string, BookingOptions][] = [
-    ["canic", bookingOptions(canicModules, false)],
-    ["limit", bookingOptions(canicModules, true)],
-    ["no waitlist", bookingOptions(canicModules.filter((module) => module !== "WAITLIST"), false)],
-    ["single class", bookingOptions([...canicModules, "SINGLE_CLASS"], false)],
-    ["no modules", bookingOptions([], false)],
+  const variants: [string, BookingOptions, BookingLimitWorld | null][] = [
+    ["canic", bookingOptions(canicModules, false), null],
+    ["limit", bookingOptions(canicModules, true), "swap"],
+    // E5-W05 round 3 #2: the refused limit of mockup 29.
+    ["limit done", bookingOptions(canicModules, false, BOOKING_LIMIT_DONE_NOW), "done"],
+    [
+      "no waitlist",
+      bookingOptions(
+        canicModules.filter((module) => module !== "WAITLIST"),
+        false,
+      ),
+      null,
+    ],
+    ["single class", bookingOptions([...canicModules, "SINGLE_CLASS"], false), null],
+    ["no modules", bookingOptions([], false), null],
   ];
 
   afterEach(() => {
     resetBookingState();
   });
 
-  it.each(variants)("validates the 03 and 04 aggregates of every dog (%s)", (_name, options) => {
-    resetBookingState(options.limit);
+  it.each(variants)("validates the 03 and 04 aggregates of every dog (%s)", (_name, options, world) => {
+    resetBookingState(world);
     const home = schema("MeHome");
     const bookable = schema("BookableClasses");
     for (const dogId of [null, ...Object.values(BOOKING_DOG_IDS)]) {
@@ -696,8 +711,8 @@ describe("E5-W01 step 10 · the booking world follows the S08 contract (MeHome, 
     }
   });
 
-  it.each(variants)("validates the holds, bookings, waitlist entries and the limit details (%s)", (_name, options) => {
-    resetBookingState(options.limit);
+  it.each(variants)("validates the holds, bookings, waitlist entries and the limit details (%s)", (_name, options, world) => {
+    resetBookingState(world);
     const hold = schema("SeatHoldResponse");
     const booking = schema("Booking");
     const entry = schema("WaitlistEntry");

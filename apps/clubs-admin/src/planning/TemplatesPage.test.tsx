@@ -1,6 +1,7 @@
 import { createApiClient } from "@agilityhub/api-client";
 import {
   mockScenario,
+  planningState,
   resetCatalogState,
   resetPlanningState,
   resetSettingsState,
@@ -1053,5 +1054,109 @@ describe("T-06-26 E4-W11 D3 follow-ups of the E4-W10 review", () => {
     ).toBeVisible();
     await settle();
     expect(seen).toEqual([]);
+  });
+});
+
+/** `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` as the api answers it (CONVENCIONS_API §6, §7). */
+const IN_PROGRESS_BODY = {
+  code: "IDEMPOTENCY_KEY_REUSED",
+  details: { reason: "IN_PROGRESS" },
+  message: "The first request with this Idempotency-Key is still in progress",
+  traceId: "t-in-progress",
+};
+/** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
+const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
+
+describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D3's week generation keeps its key on IN_PROGRESS", () => {
+  it("E7-W06 step 1: D3's generation modal stays open with its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» in the modal, the retry sends the same key, and the same generation after the api's answer takes a new key", async () => {
+    const sent: { body: unknown; key: string | null }[] = [];
+    server.use(
+      http.post("*/api/v1/weeks/:id/generation", async ({ request }) => {
+        sent.push({
+          body: await request.clone().json(),
+          key: request.headers.get("Idempotency-Key"),
+        });
+        if (sent.length === 1) return HttpResponse.json(IN_PROGRESS_BODY, { status: 409 });
+        if (sent.length === 2) {
+          return HttpResponse.json(
+            { code: "WEEK_IN_PAST", details: {}, message: "past", traceId: "t-past" },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await renderTemplates();
+    const generate = await screen.findByRole("button", { name: "GENERAR CLASSES" });
+    await waitFor(() => {
+      expect(generate).toBeEnabled();
+    });
+    const confirm = async () => {
+      const dialog = await screen.findByRole("dialog", { name: "Generar classes — per setmanes" });
+      fireEvent.click(within(dialog).getByRole("button", { name: "GENERAR CLASSES" }));
+      return dialog;
+    };
+    fireEvent.click(generate);
+    const dialog = await confirm();
+    expect(await within(dialog).findByText(IN_PROGRESS_TEXT)).toBeVisible();
+    // Not the generation's answer: the modal stays, and its button sends the same submission.
+    expect(screen.getByRole("dialog", { name: "Generar classes — per setmanes" })).toBe(dialog);
+    await waitFor(() => {
+      expect(within(dialog).getByRole("button", { name: "GENERAR CLASSES" })).toBeEnabled();
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "GENERAR CLASSES" }));
+    expect(await screen.findByText("Aquesta setmana ja ha passat.")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).toBeNull();
+    });
+    // The api answered: generating the same week again is a new submission.
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "GENERAR CLASSES" })).toBeEnabled();
+    });
+    fireEvent.click(screen.getByRole("button", { name: "GENERAR CLASSES" }));
+    await confirm();
+    expect(await screen.findByText("46 classes generades")).toBeVisible();
+    expect(sent).toHaveLength(3);
+    expect(sent[1]?.body).toEqual(sent[0]?.body);
+    expect(sent[2]?.body).toEqual(sent[0]?.body);
+    expect(sent[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(sent[1]?.key).toBe(sent[0]?.key);
+    expect(sent[2]?.key).not.toBe(sent[0]?.key);
+  });
+
+  it("E7-W06 step 1 (its review #1): the modal stays on the week the admin confirmed — when the first request did generate it meanwhile (the candidates reload no longer offers it), the modal closes and never sends the next week", async () => {
+    const sent: { path: string }[] = [];
+    let confirmedDate: string | undefined;
+    server.use(
+      http.post("*/api/v1/weeks/:id/generation", ({ params }) => {
+        sent.push({ path: String(params.id) });
+        // The first request commits behind the IN_PROGRESS answer: its week is generated now.
+        const week = planningState.weeks.find((item) => item.id === String(params.id));
+        if (week !== undefined) {
+          confirmedDate = week.startDate;
+          week.generatedAt = new Date().toISOString();
+        }
+        return HttpResponse.json(IN_PROGRESS_BODY, { status: 409 });
+      }),
+    );
+    await renderTemplates();
+    const generate = await screen.findByRole("button", { name: "GENERAR CLASSES" });
+    await waitFor(() => {
+      expect(generate).toBeEnabled();
+    });
+    fireEvent.click(generate);
+    const dialog = await screen.findByRole("dialog", { name: "Generar classes — per setmanes" });
+    const confirmText = dialog.textContent;
+    fireEvent.click(within(dialog).getByRole("button", { name: "GENERAR CLASSES" }));
+    await waitFor(() => {
+      expect(sent).toHaveLength(1);
+    });
+    // The candidates read again after the answer no longer hold the confirmed week.
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).toBeNull();
+    });
+    expect(confirmedDate).toBeDefined();
+    expect(confirmText).not.toBe("");
+    expect(sent).toHaveLength(1);
   });
 });

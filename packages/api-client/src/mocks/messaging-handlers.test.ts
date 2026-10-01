@@ -7,7 +7,12 @@ import { isApiError } from "../api-error";
 import { createApiClient } from "../client";
 
 import { findParameter, replaceParameter, resetSettingsState } from "./fixtures/settings";
-import { mockScenario, resetMessagingMockState, type MockScenario } from "./handlers";
+import {
+  ERASED_MEMBER_ID,
+  mockScenario,
+  resetMessagingMockState,
+  type MockScenario,
+} from "./handlers";
 import { server } from "./server";
 
 const openapiSchemaId = "https://agilityhub.local/messaging-openapi.json";
@@ -528,5 +533,103 @@ describe("E7-W01 step 10 · D9's templates follow the S11 contract (R-11-12)", (
       { field: "createdAt", op: "between", value: ["2026-08-01", "2026-08-31"] },
       { field: "status", op: "nin", value: ["FAILED"] },
     ]);
+  });
+});
+
+describe("E7-W06 step 5 (ruling E82, E6-W04 Q3) · SMS_BODY_TOO_LONG counts the SMS as the api does (S11 R-11-06)", () => {
+  /** N-08a's saved texts with `smsCa` as its Catalan SMS (its SMS cell is on). */
+  async function n08aWithSms(smsCa: string) {
+    const n08a = (await detail("tpl-n-08a")).data;
+    if (n08a === undefined) throw new TypeError("No N-08a");
+    return client.PUT("/message-templates/{id}", {
+      body: {
+        body: n08a.bodyI18n,
+        color: n08a.color,
+        enabled: true,
+        icon: n08a.icon,
+        matrix: n08a.matrix,
+        smsBody: { ...n08a.smsBodyI18n, ca: smsCa },
+        title: n08a.titleI18n,
+        version: n08a.version,
+      },
+      params: { path: { id: "tpl-n-08a" } },
+    });
+  }
+
+  it("E7-W06 step 5: a text longer than 160 as typed but within 160 once rendered with the preview data and transliterated to GSM-7 is saved", async () => {
+    // 175 characters as typed; «B+C B+C …», 31, once rendered.
+    const sms = Array.from({ length: 8 }, () => "[[class_description]]").join(" ");
+    expect(sms.length).toBeGreaterThan(160);
+    const saved = await n08aWithSms(sms);
+    expect(saved.response.status).toBe(200);
+    expect(saved.data?.smsBodyI18n?.ca).toBe(sms);
+  });
+
+  it("E7-W06 step 5: a text within 160 as typed but longer once rendered (the club's name) is refused with the api's details: 400 SMS_BODY_TOO_LONG {field: smsBody.ca, max: 160}", async () => {
+    const shown = await client.POST("/message-templates/{id}/preview", {
+      body: { draft: { body: "[[club_name]]", title: "[[club_name]]" }, locale: "ca" },
+      params: { path: { id: "tpl-n-08a" } },
+    });
+    const clubName = shown.data?.title ?? "";
+    expect(clubName.length).toBeGreaterThan("[[club_name]]".length);
+    const sms = `${"x".repeat(160 - "[[club_name]]".length)}[[club_name]]`;
+    expect(sms).toHaveLength(160);
+    const refused = await failure(n08aWithSms(sms));
+    expect(refused).toMatchObject({ code: "SMS_BODY_TOO_LONG", status: 400 });
+    expectValid("TemplateFieldDetails", refused.details);
+    expect(refused.details).toEqual({ field: "smsBody.ca", max: 160 });
+  });
+
+  it("E7-W06 step 5: N-08a's own seed is saved — `admin_text`, written by the admin at each send, does not count, though the preview with its sample text is over 160", async () => {
+    const n08a = (await detail("tpl-n-08a")).data;
+    const seed = n08a?.smsBodyI18n?.ca ?? "";
+    expect(seed).toContain("[[admin_text]]");
+    const preview = await client.POST("/message-templates/{id}/preview", {
+      body: { locale: "ca" },
+      params: { path: { id: "tpl-n-08a" } },
+    });
+    expect(preview.data?.sms?.truncated).toBe(true);
+    const saved = await n08aWithSms(seed);
+    expect(saved.response.status).toBe(200);
+  });
+});
+
+describe("E7-W06 step 5 (ruling E82, E6-W04 Q3) · an erased member on D10 (S14 §5, R-14-15)", () => {
+  it("E7-W06 step 5: the erased member's overview answers pseudonymised with its erasedAt; D10's preferences read and save answer 409 MEMBER_ERASED in the api's envelope", async () => {
+    const overview = await client.GET("/members/{id}/overview", {
+      params: { path: { id: ERASED_MEMBER_ID } },
+    });
+    expectValid("MemberOverview", overview.data);
+    expect(overview.data?.member).toMatchObject({
+      contactEmails: [],
+      displayStatus: { kind: "ERASED" },
+      firstName: "Abonat suprimit",
+      id: ERASED_MEMBER_ID,
+      phones: [],
+      status: "LEFT",
+    });
+    expect(overview.data?.member.erasedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/u);
+    const read = await failure(
+      client.GET("/members/{id}/notification-preferences", {
+        params: { path: { id: ERASED_MEMBER_ID } },
+      }),
+    );
+    expect(read).toEqual({ code: "MEMBER_ERASED", details: {}, status: 409 });
+    const saved = await failure(
+      client.PUT("/members/{id}/notification-preferences", {
+        body: { pushClubNews: false },
+        params: { path: { id: ERASED_MEMBER_ID } },
+      }),
+    );
+    expect(saved).toEqual({ code: "MEMBER_ERASED", details: {}, status: 409 });
+    // The roles come first, as on any member: a non-ADMIN is 403.
+    use("instructor");
+    await expect(
+      failure(
+        client.GET("/members/{id}/notification-preferences", {
+          params: { path: { id: ERASED_MEMBER_ID } },
+        }),
+      ),
+    ).resolves.toMatchObject({ code: "FORBIDDEN", status: 403 });
   });
 });

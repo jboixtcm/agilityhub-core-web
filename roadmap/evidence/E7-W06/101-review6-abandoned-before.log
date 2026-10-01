@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/instructor/student-record.test.tsx (15 tests | 1 failed | 14 skipped) 350ms
+   ❯ E7-W06 (E6-W04 question 5 and its report nits): D13's drawer (3)
+     × E7-W06 review #6: a creation abandoned while on its way (the drawer closed) keeps nothing when its answer is lost — the same task and file later are uploaded again and sent with a new key 347ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/student-record.test.tsx > E7-W06 (E6-W04 question 5 and its report nits): D13's drawer > E7-W06 review #6: a creation abandoned while on its way (the drawer closed) keeps nothing when its answer is lost — the same task and file later are uploaded again and sent with a new key
+AssertionError: expected [ 'POST /attachments/upload-url' ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/instructor/student-record.test.tsx:527:77
+    525|     expect(keys[1]).not.toBe(keys[0]);
+    526|     // The file is uploaded again: the api may have bound the first up…
+    527|     expect(lines.filter((line) => line === "POST /attachments/upload-u…
+       |                                                                             ^
+    528|   });
+    529|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  07:14:58
+   Duration  1.58s (transform 45%, tests 23%, environment 16%, import 13%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/student-record.test.tsx -t review #6
+exit 1

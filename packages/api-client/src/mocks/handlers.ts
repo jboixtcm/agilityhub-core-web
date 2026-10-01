@@ -37,6 +37,8 @@ import {
   censusLevels,
   censusMemberFirstNames,
   censusMembers,
+  ERASED_MEMBER_ID,
+  erasedMemberOverview,
   initialSavedViews,
   resetCensusRecordState,
   type DogListItem,
@@ -1389,6 +1391,11 @@ function memberPreferencesRefusal(memberId: string) {
   if (!(scenario.me.membership?.roles.includes("ADMIN") ?? false)) {
     return apiError("FORBIDDEN", "Forbidden", 403);
   }
+  // S14 §5 (E7-W06, ruling E82): an erased member's block is refused, its read too, as the
+  // snapshot declares (409 MEMBER_ERASED, CATALEG_ERRORS §2; no details).
+  if (memberId === ERASED_MEMBER_ID) {
+    return apiError("MEMBER_ERASED", "Member erased", 409);
+  }
   if (memberId !== censusRecordState.memberOverview.member.id) {
     return apiError("NOT_FOUND", "Member not found", 404);
   }
@@ -2663,6 +2670,8 @@ export const handlers = [
       : listExport(request, "members", filtered.length, "00000000-0000-4000-8000-000000000403");
   }),
   http.get("*/api/v1/members/:id/overview", ({ params }) => {
+    // S14 R-14-15: an erased member's record is read with what the api keeps.
+    if (String(params.id) === ERASED_MEMBER_ID) return HttpResponse.json(erasedMemberOverview());
     if (String(params.id) !== censusRecordState.memberOverview.member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
     }
@@ -4064,6 +4073,7 @@ export {
   INBOX_ALL_READ_AT,
   bookingState,
   catalogState,
+  ERASED_MEMBER_ID,
   JOBS_MOCK_NOW,
   mockExportBody,
   mockScenario,

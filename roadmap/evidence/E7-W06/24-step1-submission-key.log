@@ -1,0 +1,16 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ✓ src/submission-key.test.ts > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission > isUnanswered: a network failure (status 0) → unanswered: the key is kept 1ms
+ ✓ src/submission-key.test.ts > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission > isUnanswered: a gateway's answer without the api's error body (NETWORK, 502) → unanswered: the key is kept 0ms
+ ✓ src/submission-key.test.ts > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission > isUnanswered: 409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS} → unanswered: the key is kept 0ms
+ ✓ src/submission-key.test.ts > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission > isUnanswered: 409 IDEMPOTENCY_KEY_REUSED {reason: DIFFERENT_REQUEST} → answered: the key is retired 0ms
+ ✓ src/submission-key.test.ts > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission > isUnanswered: 422 WEEK_IN_PAST → answered: the key is retired 0ms
+ ✓ src/submission-key.test.ts > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission > send keeps the key while the api has not answered (IN_PROGRESS, offline), retires it on an answer, and a new submission of the same payload takes a new key 4ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  06:19:12
+   Duration  148ms (transform 57%, import 26%, tests 13%, worker 4%)
+
+exit 0

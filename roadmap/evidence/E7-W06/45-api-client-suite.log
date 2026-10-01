@@ -1,0 +1,69 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/messaging-handlers.test.ts (19 tests | 3 failed) 390ms
+   ❯ E7-W06 step 5 (ruling E82, E6-W04 Q3) · SMS_BODY_TOO_LONG counts the SMS as the api does (S11 R-11-06) (3)
+     × E7-W06 step 5: a text longer than 160 as typed but within 160 once rendered with the preview data and transliterated to GSM-7 is saved 3ms
+     × E7-W06 step 5: a text within 160 as typed but longer once rendered (the club's name) is refused with the api's details: 400 SMS_BODY_TOO_LONG {field: smsBody.ca, max: 160} 3ms
+   ❯ E7-W06 step 5 (ruling E82, E6-W04 Q3) · an erased member on D10 (S14 §5, R-14-15) (1)
+     × E7-W06 step 5: the erased member's overview answers pseudonymised with its erasedAt; D10's preferences read and save answer 409 MEMBER_ERASED in the api's envelope 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/messaging-handlers.test.ts > E7-W06 step 5 (ruling E82, E6-W04 Q3) · SMS_BODY_TOO_LONG counts the SMS as the api does (S11 R-11-06) > E7-W06 step 5: a text longer than 160 as typed but within 160 once rendered with the preview data and transliterated to GSM-7 is saved
+ApiError: SMS_BODY_TOO_LONG
+ ❯ Function.fromResponse src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse src/client.ts:120:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:219:28
+ ❯ src/mocks/messaging-handlers.test.ts:558:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/mocks/messaging-handlers.test.ts > E7-W06 step 5 (ruling E82, E6-W04 Q3) · SMS_BODY_TOO_LONG counts the SMS as the api does (S11 R-11-06) > E7-W06 step 5: a text within 160 as typed but longer once rendered (the club's name) is refused with the api's details: 400 SMS_BODY_TOO_LONG {field: smsBody.ca, max: 160}
+Error: Expected an ApiError
+ ❯ failure src/mocks/messaging-handlers.test.ts:40:9
+     38|     throw error;
+     39|   }
+     40|   throw new Error("Expected an ApiError");
+       |         ^
+     41| }
+     42|
+ ❯ src/mocks/messaging-handlers.test.ts:572:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/mocks/messaging-handlers.test.ts > E7-W06 step 5 (ruling E82, E6-W04 Q3) · an erased member on D10 (S14 §5, R-14-15) > E7-W06 step 5: the erased member's overview answers pseudonymised with its erasedAt; D10's preferences read and save answer 409 MEMBER_ERASED in the api's envelope
+ApiError: Member not found
+ ❯ Function.fromResponse src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse src/client.ts:120:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:219:28
+ ❯ src/mocks/messaging-handlers.test.ts:594:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed | 23 passed (24)
+      Tests  3 failed | 412 passed (415)
+   Start at  06:16:22
+   Duration  2.73s (import 42%, tests 31%, transform 27%)
+
+  Transform  transforming modules took 7.71s · 27% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run
+exit 1

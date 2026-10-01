@@ -1,0 +1,41 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/attendance-sheet.test.ts (3 tests | 1 failed) 7ms
+   ❯ E7-W06 review #3 · the attendance save keeps its key by the shared rule (isUnanswered, CONVENCIONS_API §7, E79) (3)
+     × E7-W06 review #3: a gateway's 504 without the api's body is no answer — the save is «unanswered» and keeps its key, as every other keyed write 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/attendance-sheet.test.ts > E7-W06 review #3 · the attendance save keeps its key by the shared rule (isUnanswered, CONVENCIONS_API §7, E79) > E7-W06 review #3: a gateway's 504 without the api's body is no answer — the save is «unanswered» and keeps its key, as every other keyed write
+AssertionError: expected { code: 'NETWORK', kind: 'refused' } to match object { kind: 'unanswered' }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "kind": "unanswered",
++   "kind": "refused",
+  }
+
+ ❯ src/attendance-sheet.test.ts:24:49
+     22|       "cls-1",
+     23|     );
+     24|     expect(await transport.save(body, "key-1")).toMatchObject({ kind: …
+       |                                                 ^
+     25|   });
+     26|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  07:09:17
+   Duration  119ms (import 43%, transform 39%, tests 15%, worker 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/attendance-sheet.test.ts
+exit 1

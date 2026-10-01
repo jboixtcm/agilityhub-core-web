@@ -6,6 +6,7 @@ import {
   expect,
   type Browser,
   type BrowserContext,
+  type Page,
   type Request,
   type Response,
 } from "@playwright/test";
@@ -15,9 +16,22 @@ import {
 
 export interface OAuthTokenCall {
   body?: { code?: unknown; error?: unknown; error_description?: unknown } | string;
+  /**
+   * E7-W06 step 2 (INC-07, INC-36): the browser context that sent it (`c1`, `c2`… in the order the
+   * worker saw them), so the calls of one tab can be told from another's.
+   */
+  context?: string;
   /** Whether the browser sent a Cookie header (the HttpOnly refresh cookie); never its value. */
   cookie: "none" | "sent";
   grantType: string;
+  /** Another token call of the same context was still running when this one started. */
+  overlap?: string;
+  /** The path of the page that sent it, at the time it was sent. */
+  page?: string;
+  /** The `Set-Cookie` headers of the answer: names and attributes, never a value. */
+  setCookie?: string;
+  /** When the request left (the time above is when its answer, or its failure, arrived). */
+  startedAt?: string;
   status: number | string;
   test: string;
   time: string;
@@ -41,7 +55,39 @@ export function formatOAuthTokenCall(call: OAuthTokenCall): string {
     call.body === undefined
       ? ""
       : ` body=${typeof call.body === "string" ? call.body : JSON.stringify(call.body)}`;
-  return `${call.time} grant_type=${call.grantType} status=${String(call.status)} cookie=${call.cookie} test="${call.test}"${body}`;
+  const optional = (name: string, value: string | undefined) =>
+    value === undefined ? "" : ` ${name}=${value}`;
+  return `${call.time} grant_type=${call.grantType} status=${String(call.status)} cookie=${call.cookie}${optional("context", call.context)}${optional("page", call.page)}${optional("started", call.startedAt)}${optional("overlap", call.overlap)}${optional("set-cookie", call.setCookie)} test="${call.test}"${body}`;
+}
+
+/**
+ * The `Set-Cookie` headers of an answer without their values: `name(Path=…; Max-Age=…; HttpOnly;
+ * SameSite=…)`, or `none`. A refresh that rotates the token must set the new cookie; one that
+ * clears it says so with `Max-Age=0` or a past `Expires`.
+ */
+export function describeSetCookies(headers: readonly { name: string; value: string }[]): string {
+  const cookies = headers
+    .filter((header) => header.name.toLowerCase() === "set-cookie")
+    .flatMap((header) => header.value.split("\n"))
+    .filter((value) => value.trim() !== "")
+    .map((value) => {
+      const [pair = "", ...attributes] = value.split(";").map((part) => part.trim());
+      const name = pair.split("=")[0] ?? "";
+      const empty = pair.slice(name.length + 1) === "";
+      return `${name}${empty ? "(empty)" : ""}(${attributes.join("; ")})`;
+    });
+  return cookies.length === 0 ? "none" : cookies.join(",");
+}
+
+/** The path (and query names, never their values) of a page or request URL. */
+function pathOf(url: string): string {
+  try {
+    const parsed = new URL(url);
+    const keys = [...new Set(parsed.searchParams.keys())];
+    return `${parsed.host}${parsed.pathname}${keys.length === 0 ? "" : `?${keys.join("&")}`}`;
+  } catch {
+    return "unknown";
+  }
 }
 
 async function cookieSent(request: Request): Promise<OAuthTokenCall["cookie"]> {
@@ -70,23 +116,54 @@ async function errorBody(response: Response): Promise<NonNullable<OAuthTokenCall
   }
 }
 
+/** The page that sent a request, as a path (a worker's request has no frame). */
+function pageOf(request: Request): string {
+  try {
+    return pathOf(request.frame().url());
+  } catch {
+    return "(no frame)";
+  }
+}
+
 class OAuthTokenRecorder {
   readonly calls: OAuthTokenCall[] = [];
   currentTest = "(outside a test)";
   private readonly attached = new WeakSet<BrowserContext>();
+  private contextCount = 0;
+  /** E7-W06 step 2: the token requests of each context that have not answered yet. */
+  private readonly inFlight = new Map<string, Map<Request, string>>();
   private readonly pending = new Set<Promise<void>>();
+  private readonly starts = new WeakMap<Request, { overlap: string; startedAt: string }>();
 
   attach(context: BrowserContext): void {
     if (this.attached.has(context)) return;
     this.attached.add(context);
+    this.contextCount += 1;
+    // Unique across the run: a worker restarted after a failure counts from 1 again, so the id
+    // carries Playwright's worker index (never reused within a run).
+    const id = `w${process.env.TEST_WORKER_INDEX ?? "0"}c${String(this.contextCount)}`;
+    this.inFlight.set(id, new Map());
+    context.on("request", (request) => {
+      if (!isTokenRequest(request)) return;
+      const running = this.inFlight.get(id) ?? new Map<Request, string>();
+      // Another token call of this context still out: two renewals racing (INC-36).
+      const overlap = [...running.values()].join("+");
+      const startedAt = new Date().toISOString();
+      running.set(request, `${grantType(request)}@${startedAt}`);
+      this.starts.set(request, { overlap: overlap === "" ? "no" : overlap, startedAt });
+    });
     context.on("response", (response) => {
       if (!isTokenRequest(response.request())) return;
-      this.track(this.fromResponse(response));
+      this.track(this.fromResponse(response, id));
     });
     context.on("requestfailed", (request) => {
       if (!isTokenRequest(request)) return;
+      this.inFlight.get(id)?.delete(request);
       const call = {
+        ...this.startOf(request),
+        context: id,
         grantType: grantType(request),
+        page: pageOf(request),
         status: `failed (${request.failure()?.errorText ?? "unknown"})`,
         test: this.currentTest,
         time: new Date().toISOString(),
@@ -97,6 +174,42 @@ class OAuthTokenRecorder {
         }),
       );
     });
+    // E7-W06 step 2: every full page load of the context, with the names, paths and expiry of the
+    // cookies the browser holds for it at that moment (never a value), so a load whose refresh
+    // goes without a cookie shows whether the jar still had one.
+    const watchPage = (page: Page) => {
+      page.on("load", () => {
+        // The moment and the test of the load itself, not of the cookie read that follows.
+        const url = page.url();
+        const time = new Date().toISOString();
+        const test = this.currentTest;
+        this.track(
+          context
+            .cookies()
+            .then(
+              (cookies) =>
+                cookies
+                  .map(
+                    (cookie) =>
+                      `${cookie.name}(${cookie.domain}${cookie.path}; expires=${cookie.expires === -1 ? "session" : new Date(cookie.expires * 1_000).toISOString()}${cookie.httpOnly ? "; HttpOnly" : ""}; SameSite=${cookie.sameSite})`,
+                  )
+                  .join(",") || "empty",
+              () => "unreadable",
+            )
+            .then((jar) => {
+              appendOAuthTokenLog(
+                `${time} load context=${id} page=${pathOf(url)} jar=${jar} test="${test}"`,
+              );
+            }),
+        );
+      });
+    };
+    for (const page of context.pages()) watchPage(page);
+    context.on("page", watchPage);
+  }
+
+  private startOf(request: Request): { overlap?: string; startedAt?: string } {
+    return this.starts.get(request) ?? {};
   }
 
   watch(browser: Browser): void {
@@ -115,14 +228,19 @@ class OAuthTokenRecorder {
     void promise.finally(() => this.pending.delete(promise));
   }
 
-  private async fromResponse(response: Response): Promise<void> {
+  private async fromResponse(response: Response, context: string): Promise<void> {
     const time = new Date().toISOString();
     const test = this.currentTest;
     const status = response.status();
     const request = response.request();
+    this.inFlight.get(context)?.delete(request);
     const call: OAuthTokenCall = {
+      ...this.startOf(request),
+      context,
       cookie: await cookieSent(request),
       grantType: grantType(request),
+      page: pageOf(request),
+      setCookie: await response.headersArray().then(describeSetCookies, () => "unreadable"),
       status,
       test,
       time,

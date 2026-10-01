@@ -6,12 +6,12 @@ import {
   resetNotificationMockState,
 } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { delay, http, HttpResponse } from "msw";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { canic, renderApp, without } from "./booking/test-utils";
-import { READ_ALL_PENDING_KEY } from "./notifications/unread";
+import { publishUnreadCount, READ_ALL_PENDING_KEY } from "./notifications/unread";
 
 interface Seen {
   body: unknown;
@@ -352,12 +352,18 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
     });
     cleanup();
     await renderApp("/inici");
-    // The api has not read everything yet: 03 still shows two.
-    expect(await screen.findByRole("link", { name: "Avisos: 2 sense llegir" })).toBeVisible();
+    // The api has not read everything yet, and 03 has read GET /me/home (it still counts two); the
+    // read-all is still pending, so 03 sends it again and keeps the bell quiet meanwhile — never
+    // the two it is marking read (E7-W06, E7-W05 review #5).
+    expect(await screen.findByRole("heading", { name: "Les meves reserves" })).toBeVisible();
+    expect(count("GET", "/me/home")).toBe(1);
+    expect(screen.getByRole("link", { name: "Avisos" })).toBeVisible();
     const homeReads = count("GET", "/me/home");
     release();
+    await waitFor(() => {
+      expect(count("GET", "/me/home")).toBeGreaterThan(homeReads);
+    });
     expect(await screen.findByRole("link", { name: "Avisos" })).toBeVisible();
-    expect(count("GET", "/me/home")).toBeGreaterThan(homeReads);
   });
 
   it("E7-W05 step 3 (S11 §13-8): a read-all left without an answer stays pending in the tab's sessionStorage for this account and club, and a fresh 03 sends it again before it reads GET /me/home — the bell goes quiet", async () => {
@@ -433,6 +439,95 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
     expect(screen.queryByText("No s'han pogut carregar les teves reserves.")).toBeNull();
     expect(rows()).toBe(shown);
     expect(screen.getByRole("link", { name: "Avisos: 2 sense llegir" })).toBeVisible();
+  });
+
+  it("E7-W06 step 3 (E7-W05 review #2): 03's other quiet reload — a read-all answered while 03 is shown — keeps the rows when its GET /me/home fails", async () => {
+    await renderApp("/inici");
+    expect(await screen.findByRole("link", { name: "Avisos: 2 sense llegir" })).toBeVisible();
+    const rows = () => document.querySelectorAll(".reservation-row, .activity-row").length;
+    await waitFor(() => {
+      expect(rows()).toBeGreaterThan(0);
+    });
+    const shown = rows();
+    let failed = 0;
+    server.use(
+      http.get("*/api/v1/me/home", () => {
+        failed += 1;
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "boom", traceId: "t" },
+          { status: 500 },
+        );
+      }),
+    );
+    act(() => {
+      publishUnreadCount(0);
+    });
+    await waitFor(() => {
+      expect(failed).toBe(1);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(screen.queryByText("No s'han pogut carregar les teves reserves.")).toBeNull();
+    expect(rows()).toBe(shown);
+  });
+
+  it("E7-W06 (E7-W05 review #5): while 03 sends a pending read-all again, the bell never shows the stale unread count — neither before the resend's answer nor before the GET /me/home read that follows it", async () => {
+    sessionStorage.setItem(
+      `${READ_ALL_PENDING_KEY}:10000000-0000-4000-8000-000000000002:50000000-0000-4000-8000-000000000001`,
+      JSON.stringify({ at: Date.now() }),
+    );
+    let answer: () => void = () => undefined;
+    const answered = new Promise<void>((resolve) => {
+      answer = resolve;
+    });
+    let reread: () => void = () => undefined;
+    const rereadOpened = new Promise<void>((resolve) => {
+      reread = resolve;
+    });
+    let homeReads = 0;
+    server.use(
+      http.post("*/api/v1/me/notifications/read-all", async () => {
+        await answered;
+        return undefined;
+      }),
+      http.get("*/api/v1/me/home", async () => {
+        homeReads += 1;
+        if (homeReads > 1) await rereadOpened;
+        return undefined;
+      }),
+    );
+    // Every state of the bell the page ever shows.
+    const seen = new Set<string>();
+    const observer = new MutationObserver(() => {
+      const bell = document.querySelector(".home-header__bell");
+      if (bell !== null) seen.add(bell.getAttribute("aria-label") ?? "");
+      if (document.querySelector(".home-header__dot") !== null) seen.add("dot");
+    });
+    observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+    await renderApp("/inici");
+    // The first read has landed (the rows show) while the resend is out: the bell stays quiet.
+    await waitFor(() => {
+      expect(document.querySelectorAll(".reservation-row, .activity-row").length).toBeGreaterThan(
+        0,
+      );
+    });
+    expect(count("POST", "/me/notifications/read-all")).toBe(1);
+    expect(screen.getByRole("link", { name: "Avisos" })).toBeVisible();
+    answer();
+    // The resend answered (the marker is gone); the read that follows has not landed yet.
+    await waitFor(() => {
+      expect(homeReads).toBe(2);
+    });
+    await waitFor(() => {
+      expect(
+        Object.keys(sessionStorage).filter((key) => key.startsWith(READ_ALL_PENDING_KEY)),
+      ).toEqual([]);
+    });
+    expect(screen.getByRole("link", { name: "Avisos" })).toBeVisible();
+    reread();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(screen.getByRole("link", { name: "Avisos" })).toBeVisible();
+    observer.disconnect();
+    expect([...seen].filter((label) => label !== "Avisos")).toEqual([]);
   });
 
   it("a card tapped before read-all has landed is marked read on its own", async () => {

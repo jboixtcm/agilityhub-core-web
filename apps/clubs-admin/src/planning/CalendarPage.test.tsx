@@ -1742,3 +1742,57 @@ describe("T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is
     expect(cells[0]).toHaveAccessibleName(name);
   });
 });
+
+/** `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` as the api answers it (CONVENCIONS_API §6, §7). */
+const IN_PROGRESS_BODY = {
+  code: "IDEMPOTENCY_KEY_REUSED",
+  details: { reason: "IN_PROGRESS" },
+  message: "The first request with this Idempotency-Key is still in progress",
+  traceId: "t-in-progress",
+};
+/** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
+const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
+
+describe("E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): the block drawer keeps one key per submission", () => {
+  it("E7-W06 step 1: the ring-block drawer keeps its Idempotency-Key on IN_PROGRESS (one key per submission, not per attempt), says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key", async () => {
+    const keys: string[] = [];
+    const bodies = captureBodies("POST", "/ring-blocks");
+    server.use(
+      http.post("*/api/v1/ring-blocks", ({ request }) => {
+        keys.push(request.headers.get("Idempotency-Key") ?? "");
+        if (keys.length === 1) return HttpResponse.json(IN_PROGRESS_BODY, { status: 409 });
+        if (keys.length === 2) {
+          return HttpResponse.json(
+            { code: "INVALID_TIME_RANGE", details: {}, message: "range", traceId: "trace-range" },
+            { status: 400 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja pista" }));
+    const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
+    fireEvent.change(within(drawer).getByLabelText("Pista"), { target: { value: "ring-cadells" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "13082026" } });
+    fireEvent.change(within(drawer).getByLabelText("De"), { target: { value: "16:00" } });
+    fireEvent.change(within(drawer).getByLabelText("A"), { target: { value: "17:00" } });
+    const save = () => within(drawer).getByRole("button", { name: "DESA EL BLOQUEIG" });
+    fireEvent.click(save());
+    expect(await within(drawer).findByText(IN_PROGRESS_TEXT)).toBeVisible();
+    fireEvent.click(save());
+    expect(await within(drawer).findByText("L'interval horari no és vàlid.")).toBeVisible();
+    // The api answered: the same block sent again is a new submission.
+    fireEvent.click(save());
+    expect(await screen.findByText("Bloqueig desat")).toBeVisible();
+    await waitFor(() => {
+      expect(bodies).toHaveLength(3);
+    });
+    expect(bodies[1]).toEqual(bodies[0]);
+    expect(bodies[2]).toEqual(bodies[0]);
+    expect(keys[0]).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[0]);
+  });
+});

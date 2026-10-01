@@ -1,0 +1,32 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/branding-cache.test.ts (3 tests | 1 failed) 5159ms
+   ❯ E7-W06 step 2 · the boot never waits forever for /branding (INC-07: the add-dog success page left blank) (3)
+     × E7-W06 step 2: with a cached branding, a /branding read that never answers gives up after the boot's limit and the cache is used 5008ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/branding-cache.test.ts > E7-W06 step 2 · the boot never waits forever for /branding (INC-07: the add-dog success page left blank) > E7-W06 step 2: with a cached branding, a /branding read that never answers gives up after the boot's limit and the cache is used
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/branding-cache.test.ts:61:3
+     59|
+     60| describe("E7-W06 step 2 · the boot never waits forever for /branding (…
+     61|   it("E7-W06 step 2: with a cached branding, a /branding read that nev…
+       |   ^
+     62|     const storage = memoryStorage();
+     63|     writeCachedBranding(cached, host, storage);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  06:57:26
+   Duration  5.29s (tests 99%, transform 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/branding-cache.test.ts
+exit 1

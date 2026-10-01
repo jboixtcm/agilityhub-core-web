@@ -1,0 +1,1768 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/training/RingBlockCard.test.tsx (8 tests | 1 failed | 7 skipped) 265ms
+   ❯ E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's ring card keeps its key on IN_PROGRESS (1)
+     × E7-W06 step 1: D12's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key 263ms
+ ❯ src/planning/CalendarPage.test.tsx (45 tests | 1 failed | 44 skipped) 389ms
+   ❯ E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): the block drawer keeps one key per submission (1)
+     × E7-W06 step 1: the ring-block drawer keeps its Idempotency-Key on IN_PROGRESS (one key per submission, not per attempt), says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key 387ms
+ ❯ src/catalogs/JobsCard.test.tsx (26 tests | 2 failed | 24 skipped) 10174ms
+   ❯ E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS (2)
+     × E7-W06 step 1: [Simula] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new [Simula] after the api's answer takes a new key 10127ms
+     × E7-W06 step 1: [Executa ara] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» inside the confirmation, which stays open, the retry sends the same key, and a new run after the api's answer takes a new key 45ms
+ ❯ src/planning/TemplatesPage.test.tsx (30 tests | 1 failed | 29 skipped) 10313ms
+   ❯ E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D3's week generation keeps its key on IN_PROGRESS (1)
+     × E7-W06 step 1: D3's generation modal stays open with its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» in the modal, the retry sends the same key, and the same generation after the api's answer takes a new key 10311ms
+ ❯ src/instructor/week-agenda.test.tsx (20 tests | 1 failed | 19 skipped) 10294ms
+   ❯ E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's sheet keeps its key on IN_PROGRESS (1)
+     × E7-W06 step 1: D12's attendance save keeps its Idempotency-Key and the choice on IN_PROGRESS, says «L'operació encara està en curs…» without reading the list again, the retry sends the same key, and the same save after the api's answer takes a new key 10291ms
+ ❯ src/followup/followup.test.tsx (25 tests | 2 failed | 23 skipped) 20208ms
+   ❯ E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS (2)
+     × E7-W06 step 1: D14's read-all keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new read-all after the api's answer takes a new key 10140ms
+     × E7-W06 step 1: D14's row read keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» with its retry, the retry sends the same key, and the next read of that row after the api's answer takes a new key 10065ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS > E7-W06 step 1: [Simula] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new [Simula] after the api's answer takes a new key
+TestingLibraryElementError: Unable to find an element with the text: L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"jobs-card-title"[39m
+  [33mclass[39m=[32m"ah-card settings-card jobs-card"[39m
+  [33mid[39m=[32m"processos"[39m
+  [33mrole[39m=[32m"region"[39m
+[36m>[39m
+  [36m<h2[39m
+    [33mid[39m=[32m"jobs-card-title"[39m
+  [36m>[39m
+    [0mProcessos automàtics[0m
+  [36m</h2>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m>[39m
+    [36m<span>[39m
+      [0mLa clau d'idempotència ja s'ha utilitzat per a una altra petició.[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<ul[39m
+    [33mclass[39m=[32m"jobs-card__list"[39m
+  [36m>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"jobs-card__row"[39m
+      [33mdata-job[39m=[32m"week-opening"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__main"[39m
+      [36m>[39m
+        [36m<strong>[39m
+          [0mObertura de la setmana[0m
+        [36m</strong>[39m
+        [36m<span>[39m
+          [0mdiumenge a les 20:00[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"jobs-card__last"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mfa 12 h · correcta · 28 classes actives · 184 avisos enviats · 1 setmana oberta[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Obertura de la setmana activat"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Simula Obertura de la setmana"[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSimula[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Executa ara Obertura de la setmana"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mExecuta ara[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"jobs-card__row"[39m
+      [33mdata-job[39m=[32m"risk-review"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__main"[39m
+      [36m>[39m
+        [36m<strong>[39m
+          [0mRevisió de classes en risc[0m
+        [36m</strong>[39m
+        [36m<span>[39m
+          [0mcada dia a les 7:30[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"jobs-card__last"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mfa 42 min · correcta · 1 en risc · 2 anul·lades · 1 sense inscrits · 1 alumne avisat · 4 classes revisades[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Revisió de classes en risc activat"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Simula Revisió de classes en risc"[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSimula[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Executa ara Revisió de classes en risc"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mExecuta ara[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"jobs-card__row"[39m
+      [33mdata-job[39m=[32m"no-show-notices"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__main"[39m
+      [36m>[39m
+        [36m<strong>[39m
+          [0mAvisos de no presentat[0m
+        [36m</strong>[39m
+        [36m<span>[39m
+          [0mcada dia a les 8:00[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"jobs-card__last jobs-card__last--failed"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mfa 12 min · fallida[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Avisos de no presentat activat"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Simula Avisos de no presentat"[39m
+      ...
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33maria-labelledby[39m=[32m"jobs-card-title"[39m
+  [33mclass[39m=[32m"ah-card settings-card jobs-card"[39m
+  [33mid[39m=[32m"processos"[39m
+  [33mrole[39m=[32m"region"[39m
+[36m>[39m
+  [36m<h2[39m
+    [33mid[39m=[32m"jobs-card-title"[39m
+  [36m>[39m
+    [0mProcessos automàtics[0m
+  [36m</h2>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m>[39m
+    [36m<span>[39m
+      [0mLa clau d'idempotència ja s'ha utilitzat per a una altra petició.[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<ul[39m
+    [33mclass[39m=[32m"jobs-card__list"[39m
+  [36m>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"jobs-card__row"[39m
+      [33mdata-job[39m=[32m"week-opening"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__main"[39m
+      [36m>[39m
+        [36m<strong>[39m
+          [0mObertura de la setmana[0m
+        [36m</strong>[39m
+        [36m<span>[39m
+          [0mdiumenge a les 20:00[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"jobs-card__last"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mfa 12 h · correcta · 28 classes actives · 184 avisos enviats · 1 setmana oberta[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Obertura de la setmana activat"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Simula Obertura de la setmana"[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSimula[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Executa ara Obertura de la setmana"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mExecuta ara[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"jobs-card__row"[39m
+      [33mdata-job[39m=[32m"risk-review"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__main"[39m
+      [36m>[39m
+        [36m<strong>[39m
+          [0mRevisió de classes en risc[0m
+        [36m</strong>[39m
+        [36m<span>[39m
+          [0mcada dia a les 7:30[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"jobs-card__last"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mfa 42 min · correcta · 1 en risc · 2 anul·lades · 1 sense inscrits · 1 alumne avisat · 4 classes revisades[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Revisió de classes en risc activat"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Simula Revisió de classes en risc"[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mSimula[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Executa ara Revisió de classes en risc"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mExecuta ara[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</li>[39m
+    [36m<li[39m
+      [33mclass[39m=[32m"jobs-card__row"[39m
+      [33mdata-job[39m=[32m"no-show-notices"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__main"[39m
+      [36m>[39m
+        [36m<strong>[39m
+          [0mAvisos de no presentat[0m
+        [36m</strong>[39m
+        [36m<span>[39m
+          [0mcada dia a les 8:00[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"jobs-card__last jobs-card__last--failed"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mfa 12 min · fallida[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"jobs-card__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Avisos de no presentat activat"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Simula Avisos de no presentat"[39m
+      ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/JobsCard.test.tsx:812:31
+    810|       within(risk).getByRole("button", { name: "Simula Revisió de clas…
+    811|     fireEvent.click(simulate());
+    812|     expect(await within(card).findByText(IN_PROGRESS_TEXT)).toBeVisibl…
+       |                               ^
+    813|     expect(screen.queryByRole("dialog")).toBeNull();
+    814|     fireEvent.click(simulate());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS > E7-W06 step 1: [Executa ara] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» inside the confirmation, which stays open, the retry sends the same key, and a new run after the api's answer takes a new key
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.[39m
+Received:
+[31m  La clau d'idempotència ja s'ha utilitzat per a una altra petició.[39m
+ ❯ src/catalogs/JobsCard.test.tsx:842:54
+    840|     });
+    841|     fireEvent.click(within(dialog).getByRole("button", { name: "Execut…
+    842|     expect(await within(dialog).findByRole("alert")).toHaveTextContent…
+       |                                                      ^
+    843|     fireEvent.click(within(dialog).getByRole("button", { name: "Execut…
+    844|     expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/followup/followup.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS > E7-W06 step 1: D14's read-all keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new read-all after the api's answer takes a new key
+TestingLibraryElementError: Unable to find an element with the text: L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"followup"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"followup__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSeguiment alumnes[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0m5 pendents de llegir[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Què es mostra"[39m
+            [33mclass[39m=[32m"followup__chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTot[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNotes d'alumnes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mMarcar-ho tot com a llegit[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mLa clau d'idempotència ja s'ha utilitzat per a una altra petició.[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Tanca"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca al seguiment[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca al seguiment"[39m
+              [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"kind"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"unread"[39m
+                  [36m>[39m
+                    [0mPendent de llegir[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"dogId"[39m
+                  [36m>[39m
+                    [0mGos[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"authorAccountId"[39m
+                  [36m>[39m
+                    [0mCreador[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+       ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"followup"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"followup__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSeguiment alumnes[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0m5 pendents de llegir[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Què es mostra"[39m
+            [33mclass[39m=[32m"followup__chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTot[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNotes d'alumnes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mMarcar-ho tot com a llegit[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mLa clau d'idempotència ja s'ha utilitzat per a una altra petició.[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Tanca"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca al seguiment[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca al seguiment"[39m
+              [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"kind"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"unread"[39m
+                  [36m>[39m
+                    [0mPendent de llegir[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"dogId"[39m
+                  [36m>[39m
+                    [0mGos[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"authorAccountId"[39m
+                  [36m>[39m
+                    [0mCreador[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+       ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/followup/followup.test.tsx:880:25
+    878|     const posts = () => requests.filter((request) => request.line === …
+    879|     fireEvent.click(readAll());
+    880|     expect(await screen.findByText(IN_PROGRESS_TEXT)).toBeVisible();
+       |                         ^
+    881|     expect(screen.queryByText(KEY_REUSED_TEXT)).toBeNull();
+    882|     // Not the read-all's answer: nothing is marked read yet.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/followup/followup.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS > E7-W06 step 1: D14's row read keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» with its retry, the retry sends the same key, and the next read of that row after the api's answer takes a new key
+TestingLibraryElementError: Unable to find an element with the text: No s'ha pogut marcar com a llegit el seguiment de Blat. L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"followup"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"followup__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSeguiment alumnes[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0m5 pendents de llegir[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Què es mostra"[39m
+            [33mclass[39m=[32m"followup__chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTot[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNotes d'alumnes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mMarcar-ho tot com a llegit[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"followup-read-failure"[39m
+          [36m>[39m
+            [0mNo s'ha pogut marcar com a llegit el seguiment de Blat.[0m
+            [0m [0m
+            [0mLa clau d'idempotència ja s'ha utilitzat per a una altra petició.[0m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mTorna-ho a provar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Tanca"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca al seguiment[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca al seguiment"[39m
+              [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"kind"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"unread"[39m
+                  [36m>[39m
+                    [0mPendent de llegir[0m
+                  [36m</option>[39m
+                  [36m<opti...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"followup"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"followup__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSeguiment alumnes[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+          [36m>[39m
+            [0m5 pendents de llegir[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"followup__actions"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Què es mostra"[39m
+            [33mclass[39m=[32m"followup__chips"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"true"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTot[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mclass[39m=[32m"followup__chip"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mNotes d'alumnes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mMarcar-ho tot com a llegit[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"followup-read-failure"[39m
+          [36m>[39m
+            [0mNo s'ha pogut marcar com a llegit el seguiment de Blat.[0m
+            [0m [0m
+            [0mLa clau d'idempotència ja s'ha utilitzat per a una altra petició.[0m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mTorna-ho a provar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Tanca"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Tasques i notes d'alumnes, les no llegides primer"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca al seguiment[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca al seguiment"[39m
+              [33mplaceholder[39m=[32m"Cerca al seguiment"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"kind"[39m
+                  [36m>[39m
+                    [0mTipus[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"unread"[39m
+                  [36m>[39m
+                    [0mPendent de llegir[0m
+                  [36m</option>[39m
+                  [36m<opti...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/followup/followup.test.tsx:913:32
+    911|       requests.filter((request) => request.line === "POST /followup/f-…
+    912|     fireEvent.click(blat());
+    913|     const alert = await screen.findByText(
+       |                                ^
+    914|       `No s'ha pogut marcar com a llegit el seguiment de Blat. ${IN_PR…
+    915|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/instructor/week-agenda.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's sheet keeps its key on IN_PROGRESS > E7-W06 step 1: D12's attendance save keeps its Idempotency-Key and the choice on IN_PROGRESS, says «L'operació encara està en curs…» without reading the list again, the retry sends the same key, and the same save after the api's answer takes a new key
+TestingLibraryElementError: Unable to find an element with the text: L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"week-agenda"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"week-agenda__header"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mAgenda de la setmana[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"week-agenda__navigator"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana anterior"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow week-agenda__arrow--previous"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<strong[39m
+            [33mclass[39m=[32m"week-agenda__current"[39m
+          [36m>[39m
+            [0mSetmana actual[0m
+          [36m</strong>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana següent"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"week-agenda__range"[39m
+          [36m>[39m
+            [0mdel 10 al 15 d’agost[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Filtres de l'agenda"[39m
+          [33mclass[39m=[32m"week-agenda__filters"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"week-agenda__filter week-agenda__filter--instructor"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mInstructor[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Instructor"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mInstructor: Tots[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"me"[39m
+              [36m>[39m
+                [0mInstructor: Els meus[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-estel"[39m
+              [36m>[39m
+                [0mInstructor: Estel[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-marc"[39m
+              [36m>[39m
+                [0mInstructor: Marc[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-nuria"[39m
+              [36m>[39m
+                [0mInstructor: Núria[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"week-agenda__filter"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mFiltre de pista[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Filtre de pista"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes les pistes[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-muntanya"[39m
+              [36m>[39m
+                [0mMuntanya[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-central"[39m
+              [36m>[39m
+                [0mCentral[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-carretera"[39m
+              [36m>[39m
+                [0mCarretera[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-cadells"[39m
+              [36m>[39m
+                [0mCadells[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-petita"[39m
+              [36m>[39m
+                [0mPetita[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mPDF[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+ ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"week-agenda"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"week-agenda__header"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mAgenda de la setmana[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"week-agenda__navigator"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana anterior"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow week-agenda__arrow--previous"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<strong[39m
+            [33mclass[39m=[32m"week-agenda__current"[39m
+          [36m>[39m
+            [0mSetmana actual[0m
+          [36m</strong>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana següent"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"week-agenda__range"[39m
+          [36m>[39m
+            [0mdel 10 al 15 d’agost[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Filtres de l'agenda"[39m
+          [33mclass[39m=[32m"week-agenda__filters"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"week-agenda__filter week-agenda__filter--instructor"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mInstructor[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Instructor"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mInstructor: Tots[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"me"[39m
+              [36m>[39m
+                [0mInstructor: Els meus[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-estel"[39m
+              [36m>[39m
+                [0mInstructor: Estel[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-marc"[39m
+              [36m>[39m
+                [0mInstructor: Marc[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-nuria"[39m
+              [36m>[39m
+                [0mInstructor: Núria[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"week-agenda__filter"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mFiltre de pista[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Filtre de pista"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes les pistes[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-muntanya"[39m
+              [36m>[39m
+                [0mMuntanya[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-central"[39m
+              [36m>[39m
+                [0mCentral[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-carretera"[39m
+              [36m>[39m
+                [0mCarretera[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-cadells"[39m
+              [36m>[39m
+                [0mCadells[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-petita"[39m
+              [36m>[39m
+                [0mPetita[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mPDF[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+ ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/instructor/week-agenda.test.tsx:830:25
+    828|     expect(pau()).toHaveTextContent("present");
+    829|     fireEvent.click(save());
+    830|     expect(await screen.findByText(IN_PROGRESS_TEXT)).toBeVisible();
+       |                         ^
+    831|     // Not the save's answer: the list is not read again, and the choi…
+    832|     expect(reads()).toHaveLength(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): the block drawer keeps one key per submission > E7-W06 step 1: the ring-block drawer keeps its Idempotency-Key on IN_PROGRESS (one key per submission, not per attempt), says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key
+AssertionError: expected '2ff053e9-9241-47e9-aae0-91aba500bdb7' to be '88b9f262-b6e7-419c-a01f-3155150bbc5e' // Object.is equality
+
+Expected: "88b9f262-b6e7-419c-a01f-3155150bbc5e"
+Received: "2ff053e9-9241-47e9-aae0-91aba500bdb7"
+
+ ❯ src/planning/CalendarPage.test.tsx:1795:21
+    1793|     expect(bodies[2]).toEqual(bodies[0]);
+    1794|     expect(keys[0]).toMatch(/^[0-9a-f-]{36}$/u);
+    1795|     expect(keys[1]).toBe(keys[0]);
+       |                     ^
+    1796|     expect(keys[2]).not.toBe(keys[0]);
+    1797|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D3's week generation keeps its key on IN_PROGRESS > E7-W06 step 1: D3's generation modal stays open with its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» in the modal, the retry sends the same key, and the same generation after the api's answer takes a new key
+TestingLibraryElementError: Unable to find an element with the text: L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_1_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_1_"[39m
+    [36m>[39m
+      [0mGenerar classes — per setmanes[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p>[39m
+      [0mEs generaran com a esborrany les classes de la setmana del 19/10/2026[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"planning-form__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-busy[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-spinner"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+        [36m>[39m
+          [0mGENERAR CLASSES[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mDesant…[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_1_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_1_"[39m
+    [36m>[39m
+      [0mGenerar classes — per setmanes[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p>[39m
+      [0mEs generaran com a esborrany les classes de la setmana del 19/10/2026[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"planning-form__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-busy[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-spinner"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+        [36m>[39m
+          [0mGENERAR CLASSES[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mDesant…[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/planning/TemplatesPage.test.tsx:1100:33
+    1098|     fireEvent.click(generate);
+    1099|     const dialog = await confirm();
+    1100|     expect(await within(dialog).findByText(IN_PROGRESS_TEXT)).toBeVisi…
+       |                                 ^
+    1101|     // Not the generation's answer: the modal stays, and its button se…
+    1102|     expect(screen.getByRole("dialog", { name: "Generar classes — per s…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/training/RingBlockCard.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's ring card keeps its key on IN_PROGRESS > E7-W06 step 1: D12's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.[39m
+Received:
+[31m  La clau d'idempotència ja s'ha utilitzat per a una altra petició.[39m
+ ❯ src/training/RingBlockCard.test.tsx:351:46
+    349|     await choose("2026-08-06", "ring-petita", "18:00", "19:00");
+    350|     fireEvent.click(screen.getByRole("button", { name: "Reserva" }));
+    351|     expect(await screen.findByRole("alert")).toHaveTextContent(IN_PROG…
+       |                                              ^
+    352|     fireEvent.click(screen.getByRole("button", { name: "Reserva" }));
+    353|     expect(await screen.findByText("L'interval horari no és vàlid.")).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  6 failed (6)
+      Tests  8 failed | 146 skipped (154)
+   Start at  06:10:17
+   Duration  22.26s (tests 84%, transform 7%, environment 5%, import 3%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/followup/followup.test.tsx src/catalogs/JobsCard.test.tsx src/training/RingBlockCard.test.tsx src/planning/CalendarPage.test.tsx src/instructor/week-agenda.test.tsx src/planning/TemplatesPage.test.tsx -t E7-W06 step 1
+exit 1

@@ -1,0 +1,96 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > renders mockup 11's six cards as delivered: icon, tone, texts, relative time, «i per SMS», the buttons
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > never prints «i per SMS» without the SMS module, even for an SMS the api lists
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [CANVIA DE CLASSE] opens 04 with the notification's dog
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [AGAFA LA PLAÇA] reuses E5-W01's claim: the entry's seat hold, then the confirmation (06/29)
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > [AGAFA LA PLAÇA] reads disabled, with its hint, once the seat is gone (enabled: false)
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W02 round 2 #4 (AGENTS rule 3): with WAITLIST off, a historical N-15 the api still lists is an informative card with no [AGAFA LA PLAÇA]
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a hold refused with 409 SEAT_TAKEN shows E5-W01's message in the card
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > an informative card opens its route on tap, without a button; one without an action is inert
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > entering calls read-all once, and 03's bell goes quiet
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > back on 03 from the browser's page cache, the bell reads GET /me/home again
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W02 round 2 #3: a failed read-all is sent again (bounded retry), and its answer silences the bell
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W02 round 2 #3: inside one document (the module store survives, as in an in-app return), a read-all answered after 03 mounted updates the bell (03 reads GET /me/home again)
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W05 step 3 (S11 §13-8): a read-all left without an answer stays pending in the tab's sessionStorage for this account and club, and a fresh 03 sends it again before it reads GET /me/home — the bell goes quiet
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W05 step 3: another account's or club's pending read-all is not sent from 03
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W05 step 6 (E7-W02 review #3): a quiet refetch of 03 that fails keeps the last rows on screen
+ ↓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > Duna: the chips without «Tots», the pack, the intro, the activities and the six mockup rows
+ ↓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > Rock: «Sense sessions» is inert with an expiring pack; Toby: the block banner and inert rows without a badge
+ ↓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > modules gate the page: ACTIVITIES off has no «Activitats» block, PACKS off has no pack card
+ ↓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > WAITLIST off: the full rows read «Completa» and do nothing
+ ↓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > SINGLE_CLASS: every badge carries the price (R-08-18)
+ ↓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > WAITLIST_OPEN asks first, joins with the selected dog, then the row leaves the list with «Ets a la llista d'espera»
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: shows the mockup card, and a cancellation in time asks first and leaves the green note, which names no week («pots reservar una altra classe.»)
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > inside the 4 h threshold the dialog warns, and the late note names «4 hores»
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: the threshold comes from the booking — a club with 90 minutes (`cancellableInTimeUntil` 17:20) at 2026-08-03T17:30:00+02:00 warns «Falten menys de 90 minuts»: true
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 8: the threshold comes from the booking — a club with 90 minutes (`cancellableInTimeUntil` 17:20) at 2026-08-03T17:10:00+02:00 warns «Falten menys de 90 minuts»: false
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > a booking cancelled by a swap, opened later: its state chip only, no «dins el termini» note (review #4)
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > a CANCELLED booking cancelled by SYSTEM, opened later: its chip «anul·lada» only, no note (review #4)
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > a CANCELLED_LATE booking cancelled by MEMBER, opened later: its chip «anul·lada tard» only, no note (review #4)
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 9 (mockup 07, api E5-T29): the ring's dot before the title, in the booking's `classSession.ringColor`
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W05 step 9: a ring without a colour (`ringColor` null) draws no dot
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > who booked it: another member of the group
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (api E5-T25): `BookedBy.self` decides, never the names — a namesake of the group is «Reservada per Biel»
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (api E5-T25): the reader's own booking reads «Reservada el …» whatever the name it carries
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > booked by the club reads «Reservada pel club el …»
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T16:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T16:00:00Z the dialog warns: false
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T12:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T09:00:00Z the dialog warns: true
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the fixed green tick under «App», the four e-mail switches with the product defaults and «+SMS»
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > hides «+SMS» in a club without SMS (R-11-17)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the reminder select lists «Mai» and the club's options
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > each change shows at once and is saved as a partial PUT after the 300 ms pause
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > rolls a refused change back with its message (422 INVALID_REMINDER_OPTION)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > keeps a newer choice when an older save answers late (the answer rebases the member's edits)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W02 round 2 #1: leaving 12 while a PUT is on its way sends the waiting change at once, and the latest choice (120) is what the api keeps even when the older PUT answers last
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W02 round 2 #1: a change kept across a reload is sent again on the next visit of the same account and club only
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 2 (R-11-04): back from the back-forward cache, 12 saves again — pagehide with a change pending, pageshow(persisted), an edit while that PUT is out, leave: the edit is saved
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 6 (E7-W02 review #4): an older visit's success never erases the entry a newer visit left in the outbox
+ ✓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E7-W06 step 3 (E7-W05 review #2): a cancellation whose reload fails shows 07's error with a retry, never the old «confirmada» card; the retry shows the cancelled booking and its note 215ms
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > BOOKING_NOT_CANCELLABLE (422) shows its message inside the dialog and reads the booking again
+ ↓ src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > BOOKING_NOT_CANCELLABLE (409) shows its message inside the dialog and reads the booking again
+ ↓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > the card with «en llista d'espera», no position in ALL_AT_ONCE, and «SURT DE LA LLISTA D'ESPERA» back to 03
+ ↓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > E5-W05 step 10: a NOTIFIED entry reads «plaça alliberada» with [AGAFA LA PLAÇA]; an ACTIVE one keeps «en llista d'espera» without it
+ ↓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > E5-W05 step 9: the waiting entry's card (the same card as 07) carries its ring's dot before the title
+ ↓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > a FIFO club's NOTIFIED entry: the position, the deadline and [AGAFA LA PLAÇA]
+ ↓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > an entry no longer live is read-only with its state; leaving a dead one says so
+ ↓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > 422 WAITLIST_ENTRY_NOT_LIVE on leaving shows its message and reads the entry again
+ ↓ src/booking/detail.test.tsx > T-08-39 the waiting entry (/espera/:id, R-08-16) > WAITLIST off: there is no waiting entry page
+ ✓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > E7-W06 step 3 (E7-W05 review #2): a join whose reload fails shows 04's error with a retry, never the joined row next to the notice; the retry reads the list again without it 227ms
+ ↓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > a refused join keeps its message inside the dialog (409 WAITLIST_LIMIT)
+ ↓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > a hold refused with any other code stays on 04 with its errors: message and the list read again
+ ↓ src/booking/book.test.tsx > T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) > the app mounts 04 on /reservar with the «Reservar» tab active
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W06 step 3 (E7-W05 review #2): 03's other quiet reload — a read-all answered while 03 is shown — keeps the rows when its GET /me/home fails 328ms
+ ✓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > E7-W06 (E7-W05 review #5): while 03 sends a pending read-all again, the bell never shows the stale unread count — neither before the resend's answer nor before the GET /me/home read that follows it 183ms
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a card tapped before read-all has landed is marked read on its own
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > the empty state: «Encara no tens cap avís»
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > loads the second page when the list end shows (no page buttons)
+ ↓ src/NotificationsPage.test.tsx > T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) > a failed read shows the error by its code, and [Torna-ho a provar] reads again
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W06 (E7-W05 review #4): back from the back-forward cache with nothing unsaved, 12 saves the change a newer visit left in the outbox instead of taking it over and ignoring it 490ms
+ ✓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W06 step 4 (E7-W05 review #1): restored while both PUTs of its departure were out, the older one landing last, and the resend and the adopted save failing — 12 reads GET again and shows what the api holds (1 h), and the outbox keeps the latest choice (2 h) 733ms
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W05 step 6 (E7-W02 review #5): an impersonated session never shows the browser-permission note (it never asks for push)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > asks for the browser's permission only on interaction, never on mount, and registers the subscription
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > a dismissed prompt (no answer) also leaves the hint under the switch
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W02 round 2 #5: a permission already refused shows the explanation on arrival (read at mount, never asked), and a change still saves
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > an iPhone outside the installed app gets the install hint and no permission prompt
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > no push toggle without PushManager in the browser, nor in a club without PUSH
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > «Aprèn amb AgilityHub ›» after «Els meus gossos» only with LEARN_LINK
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > the language select writes Account.locale, switches the UI at once and says only new notices change
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > staff without the MEMBER role have no «Avisos» block and no request (S11 §6)
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription
+ ↓ src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > logout deletes this device's subscription first, and never waits on it
+
+ Test Files  4 passed (4)
+      Tests  6 passed | 76 skipped (82)
+   Start at  06:14:26
+   Duration  2.76s (transform 33%, tests 27%, environment 22%, import 13%, setup 5%)
+
+  Transform  transforming modules took 2.63s · 33% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit 0

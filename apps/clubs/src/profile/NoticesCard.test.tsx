@@ -537,6 +537,77 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     expect(noticesOutbox()).toMatchObject({ patch: { emailByCategory: { OPERATIONAL: true } } });
   });
 
+  it("E7-W06 (E7-W05 review #4): back from the back-forward cache with nothing unsaved, 12 saves the change a newer visit left in the outbox instead of taking it over and ignoring it", async () => {
+    await openProfile();
+    transition("pagehide", true);
+    // Meanwhile a newer visit of 12 in this tab left reminder 60 unsaved.
+    sessionStorage.setItem(
+      NOTICES_OUTBOX_KEY,
+      JSON.stringify({
+        accountId: "10000000-0000-4000-8000-000000000002",
+        at: Date.now(),
+        clubId: "50000000-0000-4000-8000-000000000001",
+        patch: { reminderMinutesBefore: 60 },
+        visit: "a-newer-visit",
+      }),
+    );
+    transition("pageshow", true);
+    await waitFor(() => {
+      expect(puts()).toEqual([{ reminderMinutesBefore: 60 }]);
+    });
+    expect(reminderSelect()).toHaveValue("60");
+    await waitFor(() => {
+      expect(noticesOutbox()).toBeNull();
+    });
+    expect(await storedReminder()).toBe(60);
+  });
+
+  it("E7-W06 step 4 (E7-W05 review #1): restored while both PUTs of its departure were out, the older one landing last, and the resend and the adopted save failing — 12 reads GET again and shows what the api holds (1 h), and the outbox keeps the latest choice (2 h)", async () => {
+    const older = gate();
+    const departure = gate();
+    const landed = planPuts([
+      // 60: reaches the api only after the departure's 120.
+      { landAfter: older.opened },
+      // 120 with keepalive: lands at once, answers when the test says.
+      { answerAfter: departure.opened },
+      // The resend of 120 and the adopted save of 120 never reach the api.
+      { lost: true, networkFailure: true },
+      { lost: true, networkFailure: true },
+    ]);
+    await openProfile();
+    fireEvent.change(reminderSelect(), { target: { value: "60" } });
+    await waitFor(() => {
+      expect(puts()).toHaveLength(1);
+    });
+    fireEvent.change(reminderSelect(), { target: { value: "120" } });
+    transition("pagehide", true);
+    await waitFor(() => {
+      expect(landed).toEqual([{ reminderMinutesBefore: 120 }]);
+    });
+    transition("pageshow", true);
+    departure.open();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    older.open();
+    await waitFor(() => {
+      expect(puts()).toHaveLength(4);
+    });
+    expect(puts()).toEqual([
+      { reminderMinutesBefore: 60 },
+      { reminderMinutesBefore: 120 },
+      { reminderMinutesBefore: 120 },
+      { reminderMinutesBefore: 120 },
+    ]);
+    await waitFor(() => {
+      expect(reminderSelect()).toHaveValue("60");
+    });
+    // The page's first read and the read after the failure.
+    expect(
+      requests.filter((item) => item.method === "GET" && item.path === PREFERENCES),
+    ).toHaveLength(2);
+    expect(await storedReminder()).toBe(60);
+    expect(noticesOutbox()).toMatchObject({ patch: { reminderMinutesBefore: 120 } });
+  });
+
   it("E7-W05 step 6 (E7-W02 review #5): an impersonated session never shows the browser-permission note (it never asks for push)", async () => {
     const { requestPermission } = browserWithPush("denied");
     vi.stubGlobal("Notification", { permission: "denied", requestPermission });

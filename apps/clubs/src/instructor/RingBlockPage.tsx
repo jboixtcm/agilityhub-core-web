@@ -128,7 +128,7 @@ export function RingBlockPage({
   client: ApiClient;
   ringId: string;
 }) {
-  const { t } = useTranslation(["instructor", "enums", "errors", "training", "booking"]);
+  const { t } = useTranslation(["instructor", "enums", "errors", "training", "booking", "common"]);
   const formats = useClubFormats();
   const branding = useBranding();
   const kinds = ringBlockKinds(branding.modules);
@@ -245,10 +245,13 @@ export function RingBlockPage({
     if (result.failure.kind === "conflict" || result.failure.kind === "bookings") grid.refetch();
   };
 
+  // IN_PROGRESS keeps the block's key: the shared text, and a retry sends the same one (E80).
   const failureMessage =
     failure === undefined
       ? undefined
-      : t(`errors:${failure.code}`, { defaultValue: t("errors:INTERNAL_ERROR") });
+      : failure.kind === "inProgress"
+        ? t("common:inProgress")
+        : t(`errors:${failure.code}`, { defaultValue: t("errors:INTERNAL_ERROR") });
 
   const segment = (
     <div

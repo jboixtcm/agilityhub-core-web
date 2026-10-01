@@ -143,8 +143,19 @@ function LoadingRecord() {
   );
 }
 
-function LoadError({ onRetry }: { onRetry: () => void }) {
-  const { t } = useTranslation("admin-census");
+/**
+ * The record could not be read: a retry. An erased member (`409 MEMBER_ERASED`, S14 §5) is final
+ * instead — its own message and nothing to retry (E7-W06, ruling E82 on E6-W04 Q3).
+ */
+function LoadError({ error, onRetry }: { error?: unknown; onRetry: () => void }) {
+  const { t } = useTranslation(["admin-census", "errors"]);
+  if (isApiError(error, "MEMBER_ERASED")) {
+    return (
+      <Card className="census-record__load-error">
+        <p role="alert">{t("errors:MEMBER_ERASED")}</p>
+      </Card>
+    );
+  }
   return (
     <Card className="census-record__load-error">
       <p role="alert">{t("admin-census:common.loadError")}</p>
@@ -744,14 +755,23 @@ function MemberSummary({
         </Card>
 
         {/* E7-W01 round 2 #4: the block reads its own route, so it never depends on the free-form
-            `MemberOverview.notificationPreferences` and never disappears. */}
-        <NotificationPreferencesBlock
-          client={client}
-          // One block per member: its saves on their way never mix with another member's.
-          key={member.id}
-          memberId={member.id}
-          onFeedback={onFeedback}
-        />
+            `MemberOverview.notificationPreferences` and never disappears. An erased member's
+            preferences are refused (`409 MEMBER_ERASED`, S14 §5): the block says so as final,
+            with nothing to read, save or retry (E7-W06, ruling E82 on E6-W04 Q3). */}
+        {member.erasedAt == null ? (
+          <NotificationPreferencesBlock
+            client={client}
+            // One block per member: its saves on their way never mix with another member's.
+            key={member.id}
+            memberId={member.id}
+            onFeedback={onFeedback}
+          />
+        ) : (
+          <Card className="notification-preferences">
+            <SectionTitle>{t("admin-census:member.sections.preferences")}</SectionTitle>
+            <p role="status">{t("errors:MEMBER_ERASED")}</p>
+          </Card>
+        )}
 
         {/* R-03-30 (INC-27): only the invoice rows and «Tots els rebuts» belong to BILLING; the
             audit, the booking block, «Inactivitat» (INACTIVITY) and «Baixa» stay without it. */}
@@ -1137,7 +1157,8 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
   const branding = useBranding();
   const { t } = useTranslation("admin-census");
   const [overview, setOverview] = useState<MemberOverview>();
-  const [failure, setFailure] = useState(false);
+  // Why the record could not be read: a `409 MEMBER_ERASED` is final, anything else retried.
+  const [failure, setFailure] = useState<{ error: unknown }>();
   const [reload, setReload] = useState(0);
   const [editOpen, setEditOpen] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>();
@@ -1149,23 +1170,24 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
       (result) => {
         if (!current) return;
         if (result.data === undefined) {
-          setFailure(true);
+          setFailure({ error: undefined });
         } else {
           setOverview(result.data);
-          setFailure(false);
+          setFailure(undefined);
         }
       },
-      () => {
-        if (current) setFailure(true);
+      (error: unknown) => {
+        if (current) setFailure({ error });
       },
     );
     return () => {
       current = false;
     };
   }, [client, id, reload]);
-  if (failure) {
+  if (failure !== undefined) {
     return (
       <LoadError
+        error={failure.error}
         onRetry={() => {
           setReload((value) => value + 1);
         }}

@@ -299,3 +299,53 @@ describe("screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11)", (
     expect(requests.keys[1]).toBe(requests.keys[0]);
   });
 });
+
+/** `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` as the api answers it (CONVENCIONS_API §6, §7). */
+const IN_PROGRESS_BODY = {
+  code: "IDEMPOTENCY_KEY_REUSED",
+  details: { reason: "IN_PROGRESS" },
+  message: "The first request with this Idempotency-Key is still in progress",
+  traceId: "t-in-progress",
+};
+/** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
+const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
+
+describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 24's block keeps its key on IN_PROGRESS", () => {
+  it("E7-W06 step 1: 24's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key", async () => {
+    const requests = recordRequests();
+    let calls = 0;
+    server.use(
+      http.post("*/api/v1/ring-blocks", () => {
+        calls += 1;
+        if (calls === 1) return HttpResponse.json(IN_PROGRESS_BODY, { status: 409 });
+        if (calls === 2) {
+          return HttpResponse.json(
+            { code: "INVALID_TIME_RANGE", details: {}, message: "range", traceId: "trace-range" },
+            { status: 400 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await openRingBlock();
+    await pick("2026-08-06", "afternoon");
+    fireEvent.click(cell("18:00, lliure"));
+    fireEvent.click(screen.getByRole("button", { name: "Reserva la pista" }));
+    expect(await screen.findByText(IN_PROGRESS_TEXT)).toBeVisible();
+    expect(window.location.pathname).toBe("/instructor/pistes/ring-petita/reservar");
+    fireEvent.click(screen.getByRole("button", { name: "Reserva la pista" }));
+    expect(await screen.findByText("L'interval horari no és vàlid.")).toBeVisible();
+    // The api answered: the same block sent again is a new submission.
+    fireEvent.click(screen.getByRole("button", { name: "Reserva la pista" }));
+    expect(await screen.findByText("Pista reservada")).toBeVisible();
+    await waitFor(() => {
+      expect(requests.bodies.get("/ring-blocks")).toHaveLength(3);
+    });
+    const bodies = requests.bodies.get("/ring-blocks") ?? [];
+    expect(bodies[1]).toEqual(bodies[0]);
+    expect(bodies[2]).toEqual(bodies[0]);
+    expect(requests.keys).toHaveLength(3);
+    expect(requests.keys[1]).toBe(requests.keys[0]);
+    expect(requests.keys[2]).not.toBe(requests.keys[0]);
+  });
+});

@@ -818,6 +818,10 @@ export const backofficeHandlers = [
     const scenario = currentMockScenario();
     const refused = refuse(scenario, ["INSTRUCTOR", "ADMIN"]);
     if (refused !== undefined) return refused;
+    // The tenant comes from the JWT: another club's token finds none of this club's blocks.
+    if (!callerClubOwnsTheWorld(scenario)) {
+      return apiError("NOT_FOUND", "Ring block not found", 404);
+    }
     if (id === ACTIVITY_RING_BLOCK.id) {
       return apiError("RING_BLOCK_MANAGED_BY_ACTIVITY", "Managed by an activity", 422);
     }

@@ -1,0 +1,787 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/instructor/week-agenda-rows.test.tsx (1 test | 1 failed) 175ms
+   ❯ E7-W06 step 5 (ruling E82, E6-W04 Q6): stable data attributes on D12's attendance rows (1)
+     × E7-W06 step 5: each row carries its booking's id and the state its badge shows (data-booking-id, data-attendance-state), the api's, and a cycled badge changes it 173ms
+ ❯ src/census/CensusRecordPage.test.tsx (16 tests | 2 failed | 14 skipped) 10072ms
+   ❯ E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15) (2)
+     × E7-W06 step 5: an erased member's «Preferències d'avisos» say MEMBER_ERASED as final — its own message, no «Torna-ho a provar» — and ask nothing the api refuses with 409 10025ms
+     × E7-W06 step 5: a record read answered 409 MEMBER_ERASED is final — its own message, no «Torna-ho a provar» 46ms
+ ❯ src/instructor/student-record.test.tsx (14 tests | 2 failed | 12 skipped) 10253ms
+   ❯ E7-W06 (E6-W04 question 5 and its report nits): D13's drawer (2)
+     × E7-W06 step 5 (E6-W04 Q5): an instructor's new task with a refused file names it — «eina.exe: …» — in the drawer, and creates nothing 10165ms
+     × E7-W06 step 6 (E6-W04's report nit): the drawer closed after a refusal reopens without it 87ms
+ ❯ src/catalogs/JobsCardCounters.test.tsx (3 tests | 3 failed) 30164ms
+   ❯ E7-W06 step 5 (ruling E82, E6-W04 Q3): D11 names the cleanup's ring-slot counter (S15 R-15-19) (3)
+     × E7-W06 step 5 (ca): the last run of «Neteja tècnica» reads «2 bloquejos tècnics de pista caducats», never the raw ttlPendingRingSlotLocks 10084ms
+     × E7-W06 step 5 (es): the last run of «Limpieza técnica» reads «2 bloqueos técnicos de pista caducados», never the raw ttlPendingRingSlotLocks 10040ms
+     × E7-W06 step 5 (en): the last run of «Technical cleanup» reads «2 expired technical ring locks», never the raw ttlPendingRingSlotLocks 10038ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/JobsCardCounters.test.tsx > E7-W06 step 5 (ruling E82, E6-W04 Q3): D11 names the cleanup's ring-slot counter (S15 R-15-19) > E7-W06 step 5 (ca): the last run of «Neteja tècnica» reads «2 bloquejos tècnics de pista caducats», never the raw ttlPendingRingSlotLocks
+TestingLibraryElementError: Unable to find role="button" and name `/2 bloquejos tècnics de pista caducats/u`
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mNeteja tècnica[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mcada dia a les 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mfa 2 h · correcta · ttlPendingRingSlotLocks: 2[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Neteja tècnica activat"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simula Neteja tècnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimula[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Executa ara Neteja tècnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mExecuta ara[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mNeteja tècnica[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mcada dia a les 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mfa 2 h · correcta · ttlPendingRingSlotLocks: 2[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Neteja tècnica activat"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simula Neteja tècnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimula[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Executa ara Neteja tècnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mExecuta ara[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/JobsCardCounters.test.tsx:114:38
+    112|       serveCleanupCounters();
+    113|       const row = await cleanupRow(language, name);
+    114|       const last = await within(row).findByRole("button", { name: new …
+       |                                      ^
+    115|       expect(last).toBeVisible();
+    116|       expect(last.textContent).not.toContain("ttlPendingRingSlotLocks"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/catalogs/JobsCardCounters.test.tsx > E7-W06 step 5 (ruling E82, E6-W04 Q3): D11 names the cleanup's ring-slot counter (S15 R-15-19) > E7-W06 step 5 (es): the last run of «Limpieza técnica» reads «2 bloqueos técnicos de pista caducados», never the raw ttlPendingRingSlotLocks
+TestingLibraryElementError: Unable to find role="button" and name `/2 bloqueos técnicos de pista caducados/u`
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mLimpieza técnica[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mcada día a las 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mhace 2 h · correcta · ttlPendingRingSlotLocks: 2[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Limpieza técnica activado"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simula Limpieza técnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimula[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Ejecuta ahora Limpieza técnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mEjecuta ahora[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mLimpieza técnica[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mcada día a las 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mhace 2 h · correcta · ttlPendingRingSlotLocks: 2[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Limpieza técnica activado"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simula Limpieza técnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimula[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Ejecuta ahora Limpieza técnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mEjecuta ahora[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/JobsCardCounters.test.tsx:114:38
+    112|       serveCleanupCounters();
+    113|       const row = await cleanupRow(language, name);
+    114|       const last = await within(row).findByRole("button", { name: new …
+       |                                      ^
+    115|       expect(last).toBeVisible();
+    116|       expect(last.textContent).not.toContain("ttlPendingRingSlotLocks"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/catalogs/JobsCardCounters.test.tsx > E7-W06 step 5 (ruling E82, E6-W04 Q3): D11 names the cleanup's ring-slot counter (S15 R-15-19) > E7-W06 step 5 (en): the last run of «Technical cleanup» reads «2 expired technical ring locks», never the raw ttlPendingRingSlotLocks
+TestingLibraryElementError: Unable to find role="button" and name `/2 expired technical ring locks/u`
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mTechnical cleanup[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mevery day at 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m2 hr. ago · succeeded · ttlPendingRingSlotLocks: 2[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Technical cleanup on"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simulate Technical cleanup"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimulate[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Run Technical cleanup now"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mRun now[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mTechnical cleanup[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mevery day at 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m2 hr. ago · succeeded · ttlPendingRingSlotLocks: 2[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Technical cleanup on"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simulate Technical cleanup"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimulate[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Run Technical cleanup now"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mRun now[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/JobsCardCounters.test.tsx:114:38
+    112|       serveCleanupCounters();
+    113|       const row = await cleanupRow(language, name);
+    114|       const last = await within(row).findByRole("button", { name: new …
+       |                                      ^
+    115|       expect(last).toBeVisible();
+    116|       expect(last.textContent).not.toContain("ttlPendingRingSlotLocks"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15) > E7-W06 step 5: an erased member's «Preferències d'avisos» say MEMBER_ERASED as final — its own message, no «Torna-ho a provar» — and ask nothing the api refuses with 409
+TestingLibraryElementError: Unable to find role="heading" and name "Abonat suprimit #64"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card census-record__load-error"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mNo s'ha pogut carregar la fitxa.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTorna-ho a provar[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card census-record__load-error"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mNo s'ha pogut carregar la fitxa.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTorna-ho a provar[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/CensusRecordPage.test.tsx:223:27
+    221|     try {
+    222|       await renderRecord("member", branding, "member-erased");
+    223|       expect(await screen.findByRole("heading", { name: "Abonat suprim…
+       |                           ^
+    224|       const heading = await screen.findByRole("heading", {
+    225|         name: "Preferències d'avisos (mantenibles aquí i al perfil)",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15) > E7-W06 step 5: a record read answered 409 MEMBER_ERASED is final — its own message, no «Torna-ho a provar»
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Aquest abonat ha estat suprimit i ja no es pot modificar.[39m
+Received:
+[31m  No s'ha pogut carregar la fitxa.[39m
+ ❯ src/census/CensusRecordPage.test.tsx:249:46
+    247|     );
+    248|     await renderRecord("member");
+    249|     expect(await screen.findByRole("alert")).toHaveTextContent(erased);
+       |                                              ^
+    250|     expect(screen.queryByRole("button", { name: "Torna-ho a provar" })…
+    251|     expect(screen.queryByText("No s'ha pogut carregar la fitxa.")).toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/instructor/student-record.test.tsx > E7-W06 (E6-W04 question 5 and its report nits): D13's drawer > E7-W06 step 5 (E6-W04 Q5): an instructor's new task with a refused file names it — «eina.exe: …» — in the drawer, and creates nothing
+AssertionError: expected [ Array(1) ] to deeply equal [ Array(1) ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"student-record"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"student-record__header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"student-record__identity"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mLaura + Duna[0m
+            [36m</h1>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-chip ah-tone--neutral student-record__level"[39m
+              [33mtitle[39m=[32m"Nivell C"[39m
+            [36m>[39m
+              [0mNivell C · fa 8 mesos[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-chip ah-tone--neutral"[39m
+            [36m>[39m
+              [0mAbonada[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-chip ah-tone--neutral student-record__dog"[39m
+            [36m>[39m
+              [0mBorder collie · 4 anys[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary student-record__manage"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0m [0m
+              [0mGestionar tasques i notes[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"student-record__metrics"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card student-record__metric"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0m86%[0m
+            [36m</strong>[39m
+            [36m<span>[39m
+              [0mAssistència · darrers 30 dies[0m
+            [36m</span>[39m
+            [36m<small>[39m
+              [0m1 no presentat · 1 avisat[0m
+            [36m</small>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card student-record__metric"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0m7[0m
+            [36m</strong>[39m
+            [36m<span>[39m
+              [0mClasses · darrers 30 dies[0m
+            [36m</span>[39m
+            [36m<small>[39m
+              [0mmes mòbil[0m
+            [36m</small>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card student-record__metric"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0m2,3[0m
+            [36m</strong>[39m
+            [36m<span>[39m
+              [0mEntrenaments / setmana[0m
+            [36m</span>[39m
+            [36m<small>[39m
+              [0mmitjana 30 dies[0m
+            [36m</small>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card student-record__metric"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mdl 03/08[0m
+            [36m</strong>[39m
+            [36m<span>[39m
+              [0mDarrera classe[0m
+            [36m</span>[39m
+            [36m<small>[39m
+              [0mA+B · Central · Estel[0m
+            [36m</small>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"student-record__blocks"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card student-record__block"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mNotes als instructors — de l'alumne[0m
+            [36m</h2>[39m
+            [36m<p>[39m
+              [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"student-record__clips"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-attachment-chips"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-attachment-chip"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-attachment-chip__open"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [36m<span>[39m
+                      [0mfoto_balancí.jpg[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</span>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card student-record__block"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"student-record__block-head"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mTasques — les veu i marca l'alumne[0m
+              [36m</h2>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0m2 pendents[0m
+              [36m</...
+
+- Expected
++ Received
+
+  [
+-   "eina.exe: Aquest tipus de fitxer no està permès.",
++   "Aquest tipus de fitxer no està permès.",
+  ]
+
+ ❯ src/instructor/student-record.test.tsx:469:9
+    467|           .getAllByRole("alert")
+    468|           .map((alert) => alert.textContent),
+    469|       ).toEqual(["eina.exe: Aquest tipus de fitxer no està permès."]);
+       |         ^
+    470|     });
+    471|     expect(lines.filter((line) => line === "POST /tasks")).toHaveLengt…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/instructor/student-record.test.tsx > E7-W06 (E6-W04 question 5 and its report nits): D13's drawer > E7-W06 step 6 (E6-W04's report nit): the drawer closed after a refusal reopens without it
+AssertionError: expected <div …(2)></div> to be null
+
+- Expected:
+null
+
++ Received:
+<div
+  class="ah-followup__error"
+  role="alert"
+>
+  eina.exe: Aquest tipus de fitxer no està permès.
+</div>
+
+ ❯ src/instructor/student-record.test.tsx:497:49
+    495|     });
+    496|     drawer = await openDrawer(lines);
+    497|     expect(within(drawer).queryByRole("alert")).toBeNull();
+       |                                                 ^
+    498|     expect(within(drawer).queryByText(/eina\.exe/u)).toBeNull();
+    499|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/instructor/week-agenda-rows.test.tsx > E7-W06 step 5 (ruling E82, E6-W04 Q6): stable data attributes on D12's attendance rows > E7-W06 step 5: each row carries its booking's id and the state its badge shows (data-booking-id, data-attendance-state), the api's, and a cycled badge changes it
+AssertionError: expected [ Array(5) ] to deeply equal [ [ 'b-d12-1', 'PRESENT' ], …(4) ]
+
+- Expected
++ Received
+
+  [
+    [
+-     "b-d12-1",
+-     "PRESENT",
++     null,
++     null,
+    ],
+    [
+-     "b-d12-2",
+-     "PRESENT",
++     null,
++     null,
+    ],
+    [
+-     "b-d12-3",
+-     "NOTIFIED",
++     null,
++     null,
+    ],
+    [
+-     "b-d12-4",
+-     "NO_SHOW",
++     null,
++     null,
+    ],
+    [
+-     "b-d12-5",
+-     "PENDING",
++     null,
++     null,
+    ],
+  ]
+
+ ❯ src/instructor/week-agenda-rows.test.tsx:96:26
+     94|     if (data === undefined) throw new TypeError("The mock sheet did no…
+     95|     await renderPanel();
+     96|     expect(attributes()).toEqual(data.rows.map((row) => [row.bookingId…
+       |                          ^
+     97|     const pau = rows().find((row) => row.textContent.includes("Pau + B…
+     98|     if (pau === undefined) throw new TypeError("No row of Pau + Blat");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  8 failed | 26 skipped (34)
+   Start at  06:16:17
+   Duration  31.32s (tests 91%, transform 4%, environment 2%, import 1%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/CensusRecordPage.test.tsx src/catalogs/JobsCardCounters.test.tsx src/instructor/student-record.test.tsx src/instructor/week-agenda-rows.test.tsx -t E7-W06
+exit 1

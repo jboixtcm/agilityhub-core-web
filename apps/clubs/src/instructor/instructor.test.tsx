@@ -1342,3 +1342,71 @@ describe("E6-W03 step 13 (E6-W01 round-2 review #3): «Mostra'n més» after a n
     release?.();
   });
 });
+
+/** `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` as the api answers it (CONVENCIONS_API §6, §7). */
+const IN_PROGRESS_BODY = {
+  code: "IDEMPOTENCY_KEY_REUSED",
+  details: { reason: "IN_PROGRESS" },
+  message: "The first request with this Idempotency-Key is still in progress",
+  traceId: "t-in-progress",
+};
+/** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
+const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
+
+describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 21's sheet keeps its key on IN_PROGRESS", () => {
+  it("E7-W06 step 1: 21's attendance save keeps its Idempotency-Key and the choice on IN_PROGRESS, says «L'operació encara està en curs…» without reading the list again, the retry sends the same key, and the same save after the api's answer takes a new key", async () => {
+    const requests = recordRequests();
+    let calls = 0;
+    server.use(
+      http.put("*/api/v1/class-sessions/:id/attendance", () => {
+        calls += 1;
+        if (calls === 1) return HttpResponse.json(IN_PROGRESS_BODY, { status: 409 });
+        if (calls === 2) {
+          return HttpResponse.json(
+            { code: "ATTENDANCE_NOT_OPEN", details: {}, message: "not open", traceId: "t" },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await sheetPage();
+    fireEvent.click(
+      within(await sheetRow("Marc + Chun-li")).getByRole("radio", { name: "present" }),
+    );
+    const reads = () =>
+      requests.filter((request) => request.line === "GET /class-sessions/c1/attendance");
+    fireEvent.click(screen.getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText(IN_PROGRESS_TEXT)).toBeVisible();
+    // Not the save's answer: the list is not read again, and the choice stays to be sent again.
+    expect(reads()).toHaveLength(1);
+    expect(
+      within(await sheetRow("Marc + Chun-li")).getByRole("radio", { name: "present" }),
+    ).toHaveAttribute("aria-checked", "true");
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Desa" })).toBeEnabled();
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("Encara no es pot passar llista.")).toBeVisible();
+    await waitFor(() => {
+      expect(reads()).toHaveLength(2);
+    });
+    // The api answered: the same save sent again is a new submission.
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Desa" })).toBeEnabled();
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Desa" }));
+    expect(await screen.findByText("Llista desada")).toBeVisible();
+    const puts = requests.filter((request) => request.line.startsWith("PUT"));
+    await waitFor(() => {
+      expect(puts.map((request) => request.body)).toEqual([
+        { items: [{ bookingId: "b2", state: "PRESENT" }], version: 4 },
+        { items: [{ bookingId: "b2", state: "PRESENT" }], version: 4 },
+        { items: [{ bookingId: "b2", state: "PRESENT" }], version: 4 },
+      ]);
+    });
+    expect(puts[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(puts[1]?.key).toBe(puts[0]?.key);
+    expect(puts[2]?.key).not.toBe(puts[0]?.key);
+  });
+});

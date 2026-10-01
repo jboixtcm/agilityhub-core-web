@@ -50,7 +50,9 @@ export function NotificationPreferencesBlock({
   onNavigate?: ((path: string) => void) | undefined;
 }) {
   const { t } = useTranslation(["admin-census", "errors"]);
-  const [status, setStatus] = useState<"error" | "loading" | "ready">("loading");
+  // `erased`: the api answered `409 MEMBER_ERASED` (a member erased after the record was read):
+  // final, so no retry (E7-W06 step 5).
+  const [status, setStatus] = useState<"erased" | "error" | "loading" | "ready">("loading");
   const [attempt, setAttempt] = useState(0);
   // What the api holds, with the changes not yet confirmed (waiting or on their way) on top.
   const [saverState, setSaverState] = useState<PreferencesSaverState>();
@@ -64,6 +66,14 @@ export function NotificationPreferencesBlock({
           if (unsaved === undefined) kept.clear();
           else kept.write(unsaved);
         },
+        // After a failed save that followed overlapping PUTs of a departure, D10 shows what the
+        // api holds, not the last answer (E7-W06 step 4).
+        read: async () =>
+          (
+            await client.GET("/members/{id}/notification-preferences", {
+              params: { path: { id: memberId } },
+            })
+          ).data,
         save: async (body, keepalive) =>
           (
             await client.PUT("/members/{id}/notification-preferences", {
@@ -80,6 +90,12 @@ export function NotificationPreferencesBlock({
   useEffect(() => {
     saver.listen({
       failed: (error) => {
+        // The member was erased while D10 was open: final, the block stops offering changes (no
+        // retry, E7-W06 review #4); the message is the block's own.
+        if (isApiError(error, "MEMBER_ERASED")) {
+          setStatus("erased");
+          return;
+        }
         onFeedback({
           message: isApiError(error)
             ? t(`errors:${error.code}`, { defaultValue: t("admin-census:common.genericError") })
@@ -115,8 +131,8 @@ export function NotificationPreferencesBlock({
           const kept = outbox.take();
           if (kept !== undefined) saver.adopt(kept);
         },
-        () => {
-          if (current) setStatus("error");
+        (error: unknown) => {
+          if (current) setStatus(isApiError(error, "MEMBER_ERASED") ? "erased" : "error");
         },
       );
     return () => {
@@ -128,8 +144,10 @@ export function NotificationPreferencesBlock({
   // link, the browser's back, a reload) — sends everything unsaved, also the request on its way,
   // with `keepalive` so it outlives the page, and keeps it for the next visit to send again until
   // the latest choice is saved (E7-W04, E7-W05 step 1). Back from the back-forward cache
-  // (`persisted`), the record saves as before, and what its departure kept and nothing confirmed
-  // since goes again as a normal save once the request on its way settles (E7-W04 step 4).
+  // (`persisted`), the record saves as before, and what the outbox hands over — its departure's
+  // change and nothing confirmed since, or a newer visit's — goes again as a normal save once the
+  // request on its way settles, also when this page left with nothing unsaved (E7-W04 step 4,
+  // E7-W06).
   useEffect(() => {
     const leave = () => {
       saver.leave();
@@ -176,6 +194,16 @@ export function NotificationPreferencesBlock({
       <Card className="notification-preferences">
         {heading}
         <Skeleton height="12rem" label={t("admin-census:member.preferences.loading")} />
+      </Card>
+    );
+  }
+  if (status === "erased") {
+    return (
+      <Card className="notification-preferences">
+        {heading}
+        <p className="messaging-editor__error" role="alert">
+          {t("errors:MEMBER_ERASED")}
+        </p>
       </Card>
     );
   }

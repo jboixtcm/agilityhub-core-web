@@ -1,0 +1,10 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+
+ Test Files  15 passed (15)
+      Tests  152 passed (152)
+   Start at  06:23:12
+   Duration  1.48s (environment 62%, setup 17%, transform 10%, tests 10%, import 1%)
+
+exit 0

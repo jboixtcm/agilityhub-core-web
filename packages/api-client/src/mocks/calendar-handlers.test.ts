@@ -406,6 +406,51 @@ describe("E5-W05 round 2 · the calendar world's reads are the caller's club's, 
     }
   });
 
+  it("E5-W05 round 3 #3: an ADMIN of another club cannot write this club's weeks, classes or ring blocks either: validation, generation, PATCH, the cancellation preview, the cancellation, the risk exemption and the block's read, PATCH and cancellation are 404 NOT_FOUND, and nothing changes", async () => {
+    const block = "/ring-blocks/block-2026-08-12-carretera";
+    const before = {
+      block: await read("admin", block),
+      monday: await read("admin", "/class-sessions/cls-2026-08-12-1850-0"),
+      week: await read("admin", "/weeks/week-2026-08-17"),
+    };
+    expect([before.block.status, before.monday.status, before.week.status]).toEqual([
+      200, 200, 200,
+    ]);
+    const writes: [method: string, path: string, body?: unknown][] = [
+      ["POST", "/weeks/week-2026-08-17/validation"],
+      ["POST", "/weeks/week-2026-08-24/generation", { weekdayTemplateId: "tpl-weekdays" }],
+      ["PATCH", "/class-sessions/cls-2026-08-12-1850-0", { notes: "Una altra nota", version: 1 }],
+      ["GET", "/class-sessions/cls-2026-08-12-1850-0/cancellation-preview"],
+      [
+        "POST",
+        "/class-sessions/cls-2026-08-12-1850-0/cancellation",
+        { adminText: "Anul·lada per un altre club", reason: "CLUB_MANUAL" },
+      ],
+      ["POST", "/class-sessions/cls-2026-08-12-1850-0/risk-exemption", { exempt: true }],
+      ["GET", block],
+      ["PATCH", block, { note: "Una altra nota", version: 1 }],
+      ["POST", `${block}/cancellation`],
+    ];
+    mockScenario("adminOtherClub");
+    const answers: string[] = [];
+    for (const [method, path, body] of writes) {
+      const response = await fetch(`https://core.example.test/api/v1${path}`, {
+        ...(body === undefined
+          ? {}
+          : { body: JSON.stringify(body), headers: { "Content-Type": "application/json" } }),
+        method,
+      });
+      const answer = (await response.json()) as { code?: string };
+      answers.push(`${method} ${path} ${String(response.status)} ${answer.code ?? ""}`);
+    }
+    expect(answers).toEqual(writes.map(([method, path]) => `${method} ${path} 404 NOT_FOUND`));
+    expect((await read("admin", "/class-sessions/cls-2026-08-12-1850-0")).body).toEqual(
+      before.monday.body,
+    );
+    expect((await read("admin", "/weeks/week-2026-08-17")).body).toEqual(before.week.body);
+    expect((await read("admin", block)).body).toEqual(before.block.body);
+  });
+
   it("E5-W05 round 2 #11.e: GET /class-sessions is the staff's (a MEMBER is 403) and filters by the snapshot's x-filterable fields", async () => {
     const wednesday = await read(
       "instructor",

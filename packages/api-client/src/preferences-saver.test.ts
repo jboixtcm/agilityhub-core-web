@@ -28,17 +28,25 @@ interface Put {
   ok: () => void;
 }
 
-/** A saver whose `PUT`s wait for the test, and an api that applies a body when the test says so. */
+/**
+ * A saver whose `PUT`s wait for the test, and an api that applies a body when the test says so;
+ * its `GET` (`read`) answers at once with what the api holds.
+ */
 function harness() {
   const puts: Put[] = [];
   let api: NotificationPreferences = PREFERENCES;
   const kept: (PreferencesPatch | undefined)[] = [];
   const failed: unknown[] = [];
+  const reads = { count: 0 };
   const saver = createPreferencesSaver(
     {
       changed: () => undefined,
       failed: (cause) => failed.push(cause),
       kept: (unsaved) => kept.push(unsaved),
+      read: () => {
+        reads.count += 1;
+        return Promise.resolve(api);
+      },
       save: (body, keepalive) =>
         new Promise((resolve, reject) => {
           puts.push({
@@ -70,7 +78,7 @@ function harness() {
     if (put === undefined) throw new TypeError(`No PUT ${String(index)} yet`);
     return put;
   };
-  return { api: () => api, at, failed, kept, land, puts, saver };
+  return { api: () => api, at, failed, kept, land, puts, reads, saver };
 }
 
 /** A `sessionStorage` for the node environment. */
@@ -193,6 +201,82 @@ describe("E7-W05 step 1: the shared preference saver (R-11-04) — the latest ch
     expect(h.failed).toHaveLength(1);
     expect(h.kept).toEqual([undefined]);
     expect(shownPreferences(h.saver.state())?.reminderMinutesBefore).toBeNull();
+  });
+});
+
+describe("E7-W06 step 4 (E7-W05 review #1): a failed save after a restore whose departure overlapped", () => {
+  it("seq1 {false} out, seq2 {true} with keepalive, restored before either settles, seq1 lands after seq2, the resend seq3 and the adopted save seq4 fail — the page reads the api again (GET) and shows false, and the outbox keeps the latest choice", async () => {
+    const h = harness();
+    await offOnLeave(h);
+    // Back from the back-forward cache before either PUT settled: the departure's entry is adopted.
+    h.saver.restore({ emailByCategory: { PERSONAL: true } });
+    await tick();
+    expect(h.puts).toHaveLength(2);
+    // seq2 lands and answers first; seq1 lands after it, so the api holds false.
+    h.land(h.at(1).body);
+    h.at(1).ok();
+    await tick();
+    h.land(h.at(0).body);
+    h.at(0).ok();
+    await tick();
+    expect(h.api().emailByCategory.PERSONAL).toBe(false);
+    expect(h.puts[2]).toMatchObject({
+      body: { emailByCategory: { PERSONAL: true } },
+      keepalive: false,
+    });
+    h.at(2).fail();
+    await tick();
+    expect(h.puts[3]).toMatchObject({
+      body: { emailByCategory: { PERSONAL: true } },
+      keepalive: false,
+    });
+    h.at(3).fail();
+    await tick();
+    expect(h.failed).toHaveLength(2);
+    // Not the last answer (seq2's true): what the api holds, read again.
+    expect(h.reads.count).toBe(1);
+    expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL).toBe(false);
+    // The latest choice never got a 2xx: it stays kept for the next visit.
+    expect(h.kept).toEqual([{ emailByCategory: { PERSONAL: true } }]);
+    // The member chooses true again and that save gets its 2xx: only now is the entry freed.
+    h.saver.edit({ emailByCategory: { PERSONAL: true } });
+    await tick();
+    expect(h.puts).toHaveLength(5);
+    h.land(h.at(4).body);
+    h.at(4).ok();
+    await tick();
+    expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL).toBe(true);
+    expect(h.kept).toEqual([{ emailByCategory: { PERSONAL: true } }, undefined]);
+  });
+
+  it("without overlapping PUTs a failed save shows the last answer, reads nothing and frees what it took over (unchanged)", async () => {
+    const h = harness();
+    h.saver.adopt({ emailByCategory: { PERSONAL: false } });
+    await tick();
+    h.at(0).fail();
+    await tick();
+    expect(h.reads.count).toBe(0);
+    expect(h.kept).toEqual([undefined]);
+    expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL).toBe(true);
+  });
+});
+
+describe("E7-W06 (E7-W05 review #4): a restored page that was not left", () => {
+  it("adopts what the outbox hands it (a newer visit's entry) instead of ignoring it: the change is saved and freed after its 2xx", async () => {
+    const h = harness();
+    // Left with nothing unsaved: the saver was not left.
+    h.saver.leave();
+    expect(h.puts).toHaveLength(0);
+    h.saver.restore({ emailByCategory: { OPERATIONAL: true } });
+    expect(shownPreferences(h.saver.state())?.emailByCategory.OPERATIONAL).toBe(true);
+    await tick();
+    expect(h.puts.map((put) => [put.body, put.keepalive])).toEqual([
+      [{ emailByCategory: { OPERATIONAL: true } }, false],
+    ]);
+    h.land(h.at(0).body);
+    h.at(0).ok();
+    await tick();
+    expect(h.kept).toEqual([undefined]);
   });
 });
 

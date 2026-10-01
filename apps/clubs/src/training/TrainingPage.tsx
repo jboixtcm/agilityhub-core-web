@@ -1,4 +1,4 @@
-import type { ApiClient } from "@agilityhub/api-client";
+import { type ApiClient, isUnanswered } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   AppBar,
@@ -151,7 +151,10 @@ export function TrainingPage({ client }: { client: ApiClient }) {
   }
   const [pending, setPending] = useState(false);
   const [booked, setBooked] = useState(false);
-  /** One `Idempotency-Key` per payload, kept only while its outcome is unknown (a lost answer). */
+  /**
+   * One `Idempotency-Key` per payload, kept only while the api has not answered it (a lost answer,
+   * or IN_PROGRESS: CONVENCIONS_API §7, E79).
+   */
   const keys = useRef(new Map<string, string>());
 
   const refetchAll = useCallback(() => {
@@ -321,8 +324,10 @@ export function TrainingPage({ client }: { client: ApiClient }) {
       refetchAll();
     } catch (cause) {
       const code = codeOf(cause);
-      // A lost answer keeps its key, so a retry replays it instead of booking twice.
-      if (code !== "NETWORK") keys.current.delete(fingerprint);
+      // A lost answer, or IN_PROGRESS (the first request still runs, E79), is not the booking's
+      // answer: it keeps its key and the choice, so a retry replays it instead of booking twice.
+      const unanswered = isUnanswered(cause);
+      if (!unanswered) keys.current.delete(fingerprint);
       reportTrainingRefusal(cause);
       const details = detailsOf(cause);
       if (code === "MODULE_DISABLED") {
@@ -359,11 +364,11 @@ export function TrainingPage({ client }: { client: ApiClient }) {
           setChoice({ ringId: first, startsAt: choice.startsAt });
           setChooser({ ringIds: free, startsAt: choice.startsAt });
         }
-      } else if (code !== "NETWORK") {
+      } else if (!unanswered) {
         setChoice(undefined);
         setChooser(undefined);
       }
-      if (code !== "NETWORK") refetchAll();
+      if (!unanswered) refetchAll();
     } finally {
       setPending(false);
     }

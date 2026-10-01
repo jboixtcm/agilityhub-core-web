@@ -659,3 +659,66 @@ describe("E5-W02 round 2 · review #4: a failed counter (S09 §2 states)", () =>
     expect(confirmButton()).toBeEnabled();
   });
 });
+
+/** `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` as the api answers it (CONVENCIONS_API §6, §7). */
+const IN_PROGRESS_BODY = {
+  code: "IDEMPOTENCY_KEY_REUSED",
+  details: { reason: "IN_PROGRESS" },
+  message: "The first request with this Idempotency-Key is still in progress",
+  traceId: "t-in-progress",
+};
+/** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
+const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
+
+describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 08's booking keeps its key on IN_PROGRESS", () => {
+  it("E7-W06 step 1: 08's training booking keeps its Idempotency-Key and its choice on IN_PROGRESS, says «L'operació encara està en curs…» (the shared errorText), the retry sends the same key, and the same booking after the api's answer takes a new key", async () => {
+    const requests = recordRequests();
+    let calls = 0;
+    server.use(
+      http.post("*/api/v1/training-bookings", () => {
+        calls += 1;
+        if (calls === 1) return HttpResponse.json(IN_PROGRESS_BODY, { status: 409 });
+        if (calls === 2) {
+          return HttpResponse.json(
+            { code: "BOOKING_BLOCKED", details: {}, message: "blocked", traceId: "t-blocked" },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await openTraining();
+    const choose = () => {
+      fireEvent.click(within(group("Matí")).getByRole("button", { name: "7:30, lliure" }));
+      fireEvent.click(
+        within(screen.getAllByRole("group", { name: "Pista" })[1] ?? document.body).getByRole(
+          "button",
+          { name: "Muntanya" },
+        ),
+      );
+    };
+    choose();
+    fireEvent.click(confirmButton());
+    expect(await screen.findByText(IN_PROGRESS_TEXT)).toBeVisible();
+    // Not the booking's answer: the choice stays, so the retry is the same submission.
+    expect(confirmButton()).toHaveTextContent("Confirma Dilluns 3 · 7:30–8:00 · Muntanya");
+    expect(confirmButton()).toBeEnabled();
+    fireEvent.click(confirmButton());
+    expect(
+      await screen.findByText("Les reserves estan bloquejades per a aquest abonament."),
+    ).toBeVisible();
+    // The api answered: the same booking chosen again is a new submission.
+    choose();
+    fireEvent.click(confirmButton());
+    expect(await screen.findByText("Entrenament reservat")).toBeVisible();
+    await waitFor(() => {
+      expect(requests.bodies.get("/training-bookings")).toHaveLength(3);
+    });
+    const [first, second, third] = requests.bodies.get("/training-bookings") ?? [];
+    expect(second).toEqual(first);
+    expect(third).toEqual(first);
+    expect(requests.keys).toHaveLength(3);
+    expect(requests.keys[1]).toBe(requests.keys[0]);
+    expect(requests.keys[2]).not.toBe(requests.keys[0]);
+  });
+});

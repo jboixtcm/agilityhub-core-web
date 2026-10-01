@@ -76,9 +76,10 @@ test.describe("E5-W03 D4 · the registrants of the selected class (S08 §6, R-08
     const card = page.getByRole("region", { name: /^Classe seleccionada/u });
     const panel = card.getByRole("region", { name: "Inscrits (4/5)" });
     // E5-W05 steps 1 and 2: the level chip (levelCode, round 2 #3: Duna's own «C»), the
-    // displayState chip and «{guia} + {gos}».
+    // displayState chip and «{guia} + {gos}». Round 3 #4: «B+C» lists B and C dogs only (R-08-04).
     await expect(panel.getByRole("listitem").first()).toHaveText("Laura + DunaCconfirmada");
-    await expect(panel.getByText("Sergio + Thai")).toBeVisible();
+    await expect(panel.locator(".ah-registrants__level")).toHaveText(["C", "B", "B", "B", "C"]);
+    await expect(panel.getByText("Jana + Mixa")).toBeVisible();
     await expect(panel.getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
     await card.scrollIntoViewIfNeeded();
     await expectIconsPainted(card);
@@ -235,8 +236,10 @@ test.describe("E5-W03 D1 · «Revisió de classes en risc» (S15 §6 form A)", (
   test("T-15-33 renders the four statuses and opens D4 on the class", async ({ page }) => {
     await signIn(page, "admin", jobsNow);
     const card = page.locator(".dashboard-risk");
-    await expect(card.getByText("anul·lada · avisada Laura + Duna")).toBeVisible();
-    await expect(card.getByText("en risc · avisats Pau + Blat")).toBeVisible();
+    // E5-W05 round 3 #4: a D dog in «Nivell D» and an F one in «F i G» (S08 R-08-04), where mockup
+    // D1 names Laura + Duna («C») and Pau + Blat («B»).
+    await expect(card.getByText("anul·lada · avisada Clara + Trevi")).toBeVisible();
+    await expect(card.getByText("en risc · avisats Dani + Rayo")).toBeVisible();
     await expect(card.getByText("s'anul·larà dc a les 7:30")).toBeVisible();
     await expectIconsPainted(card);
     await card.screenshot({ path: resolve(evidenceDirectory, "D1-risc-1280.png") });
@@ -263,6 +266,6 @@ test.describe("E5-W03 D1 · «Revisió de classes en risc» (S15 §6 form A)", (
       "true",
     );
     await expect(selected).toContainText("dl 10 · 17:40 · Nivell D");
-    await expect(selected).toContainText("Laura + Duna");
+    await expect(selected).toContainText("Clara + Trevi");
   });
 });

@@ -237,13 +237,16 @@ describe("29: the normal confirmation and the informative variants (S08 §2 29, 
     );
   });
 
-  it("the limit done this week (CURRENT, per dog): the mockup's «… per a la setmana vinent a partir de diumenge 9 a les 20 h», without a countdown", async () => {
-    await tapRow(3);
-    // E5-W05 round 2 #6: the refusal counts Duna's real bookings of the week at the clock (her
-    // Monday 3, as 03 counts it), not a made-up two; the fixed «Límit setmanal» row is kept (A6).
+  it("the limit done this week (CURRENT, per dog): the mockup's «Aquesta setmana ja has fet dues classes amb la Duna. … per a la setmana vinent a partir de diumenge 9 a les 20 h», without a countdown", async () => {
+    // E5-W05 round 3 #2: the `bookingLimitDone` world read on Monday 3 at 20:00
+    // (`BOOKING_LIMIT_DONE_NOW`): Duna's two classes of the week are done, nothing can be swapped,
+    // so the api refuses the hold (R-08-09) with current = limit = 2.
+    vi.setSystemTime(new Date("2026-08-03T20:00:00+02:00"));
+    await tapRow(3, { scenario: "bookingLimitDone" });
+    expect(within(refusedCard()).getByText("Dissabte 8 · 9:00–10:00")).toBeVisible();
     expect(
       screen.getByText(
-        "Aquesta setmana ja has fet una classe amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
+        "Aquesta setmana ja has fet dues classes amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
       ),
     ).toBeVisible();
     expect(screen.queryByText(/Podràs reservar aquesta classe/u)).toBeNull();
@@ -547,5 +550,96 @@ describe("R-08-15 the claim of a NOTIFIED waiting entry (step 5)", () => {
     fireEvent.click(await screen.findByRole("button", { name: "CONFIRMAR LA RESERVA" }));
     expect(await screen.findByText("Aquesta plaça s'acaba d'ocupar.")).toBeVisible();
     expect(window.location.pathname).toBe("/reservar");
+  });
+});
+
+/** `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` as the api answers it (CONVENCIONS_API §6, §7). */
+const IN_PROGRESS_BODY = {
+  code: "IDEMPOTENCY_KEY_REUSED",
+  details: { reason: "IN_PROGRESS" },
+  message: "The first request with this Idempotency-Key is still in progress",
+  traceId: "t-in-progress",
+};
+/** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
+const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
+
+describe("E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): 06/29's booking keeps its key on IN_PROGRESS", () => {
+  it("E7-W06 step 1: 06's booking stays on the page with its Idempotency-Key on IN_PROGRESS (no return to 04), says «L'operació encara està en curs…», the retry sends the same key, and the same booking after the api's answer takes a new key", async () => {
+    const writes: Recorded[] = [];
+    server.use(
+      http.post("*/api/v1/bookings", async ({ request }) => {
+        writes.push({
+          body: await request.clone().json(),
+          key: request.headers.get("Idempotency-Key"),
+          method: "POST",
+          path: "/api/v1/bookings",
+        });
+        if (writes.length === 1) return HttpResponse.json(IN_PROGRESS_BODY, { status: 409 });
+        if (writes.length === 2) {
+          return HttpResponse.json(
+            { code: "SWAP_NOT_ALLOWED", details: {}, message: "x", traceId: "t-swap" },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await tapRow(3, { scenario: "bookingLimit" });
+    const confirm = () =>
+      screen.getByRole("button", { name: "ANUL·LA DILLUNS 3 I CONFIRMA DISSABTE 8" });
+    fireEvent.click(confirm());
+    expect(await screen.findByRole("alert")).toHaveTextContent(IN_PROGRESS_TEXT);
+    // Not the booking's answer: the member stays with the hold, and no notice goes to 04.
+    expect(window.location.pathname).toBe("/reservar/confirmar");
+    await waitFor(() => {
+      expect(confirm()).toBeEnabled();
+    });
+    fireEvent.click(confirm());
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Aquesta reserva no es pot intercanviar.",
+      );
+    });
+    expect(window.location.pathname).toBe("/reservar/confirmar");
+    // The api answered: the same booking sent again is a new submission.
+    await waitFor(() => {
+      expect(confirm()).toBeEnabled();
+    });
+    fireEvent.click(confirm());
+    expect(await screen.findByText("Reserva confirmada. Afegeix-la al calendari:")).toBeVisible();
+    expect(writes).toHaveLength(3);
+    expect(writes[1]?.body).toEqual(writes[0]?.body);
+    expect(writes[2]?.body).toEqual(writes[0]?.body);
+    expect(writes[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(writes[1]?.key).toBe(writes[0]?.key);
+    expect(writes[2]?.key).not.toBe(writes[0]?.key);
+  });
+
+  it("E7-W06 step 1 (its review #11): 29's claim of a NOTIFIED entry stays on the page with its Idempotency-Key on IN_PROGRESS (no return to 04), says «L'operació encara està en curs…», and the retry sends the same key", async () => {
+    const keys: (string | null)[] = [];
+    server.use(
+      http.post("*/api/v1/waitlist-entries/:id/claim", ({ request }) => {
+        keys.push(request.headers.get("Idempotency-Key"));
+        return keys.length === 1 ? HttpResponse.json(IN_PROGRESS_BODY, { status: 409 }) : undefined;
+      }),
+    );
+    await fetch(`${window.location.origin}/api/v1/waitlist-entries/waitlist-duna-thu6`);
+    const entry = bookingState.entries.find((item) => item.id === "waitlist-duna-thu6");
+    if (entry === undefined) throw new TypeError("Missing the waiting entry");
+    entry.state = "NOTIFIED";
+    await renderApp("/espera/waitlist-duna-thu6");
+    fireEvent.click(await screen.findByRole("button", { name: "AGAFA LA PLAÇA" }));
+    const confirm = () => screen.getByRole("button", { name: "CONFIRMAR LA RESERVA" });
+    fireEvent.click(await screen.findByRole("button", { name: "CONFIRMAR LA RESERVA" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(IN_PROGRESS_TEXT);
+    expect(window.location.pathname).toBe("/reservar/confirmar");
+    await waitFor(() => {
+      expect(confirm()).toBeEnabled();
+    });
+    fireEvent.click(confirm());
+    expect(await screen.findByText("Reserva confirmada. Afegeix-la al calendari:")).toBeVisible();
+    expect(keys).toHaveLength(2);
+    expect(keys[0]).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(keys[1]).toBe(keys[0]);
   });
 });

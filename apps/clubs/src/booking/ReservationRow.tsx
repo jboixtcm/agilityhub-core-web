@@ -91,7 +91,11 @@ export function ReservationRow({ row, showDog }: { row: ReservationRowData; show
     </>
   );
   return (
-    <Card className="reservation-row">
+    // E7-W06 step 5 (E6-W04 question 6): a class booking's row carries its id for the core specs.
+    <Card
+      className="reservation-row"
+      {...(row.type === "CLASS" ? { "data-booking-id": row.id } : {})}
+    >
       {link === undefined ? (
         <div className="reservation-row__body">{content}</div>
       ) : (

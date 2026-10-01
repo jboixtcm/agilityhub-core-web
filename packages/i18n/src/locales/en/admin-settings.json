@@ -775,7 +775,8 @@
       "opened": "{count, plural, one {# week opened} other {# weeks opened}}",
       "swept": "{count, plural, one {# waiting entry closed} other {# waiting entries closed}}",
       "finished": "{count, plural, one {# class closed} other {# classes closed}}",
-      "activitiesFinished": "{count, plural, one {# activity closed} other {# activities closed}}"
+      "activitiesFinished": "{count, plural, one {# activity closed} other {# activities closed}}",
+      "ttlPendingRingSlotLocks": "{count, plural, one {# expired technical ring lock} other {# expired technical ring locks}}"
     },
     "counterRaw": "{key}: {count}",
     "switchLabel": "{name} on",

@@ -31,6 +31,14 @@ type WaitlistEntry = components["schemas"]["WaitlistEntry"];
  */
 export const BOOKING_MOCK_NOW = "2026-08-02T20:30:00+02:00";
 
+/**
+ * The instant the `bookingLimitDone` world is read at (mockup 29's «Si aquesta setmana ja has fet
+ * les 2 classes»): Monday 3 August 2026 at 20:00, still in W0, after Duna's Monday class. Both of
+ * her classes of the week have begun, so nothing can be swapped and the hold is refused
+ * (R-08-09, E5-W05 round 3 #2).
+ */
+export const BOOKING_LIMIT_DONE_NOW = "2026-08-03T20:00:00+02:00";
+
 export const BOOKING_DOG_IDS = { duna: "dog-duna", rock: "dog-rock", toby: "dog-toby" } as const;
 
 /** The mockup member (fictional): Laura, with Duna and Rock, and Toby of Joan Antoni's group. */
@@ -284,7 +292,14 @@ function booking(
   };
 }
 
-function initialBookings(limit: boolean): StoredBooking[] {
+/**
+ * The booking worlds of the limit (R-08-09): `swap` (mockup 06), Duna has two cancellable classes
+ * this week and a done one; `done` (mockup 29), Duna's week holds Sunday 2's class and Monday 3's,
+ * both done at `BOOKING_LIMIT_DONE_NOW`.
+ */
+export type BookingLimitWorld = "done" | "swap";
+
+function initialBookings(limit: BookingLimitWorld | null): StoredBooking[] {
   return [
     booking(
       "booking-duna-mon3",
@@ -300,9 +315,8 @@ function initialBookings(limit: boolean): StoredBooking[] {
       "ACTIVE",
       "2026-07-31T07:40:00Z",
     ),
-    // `bookingLimit` (mockup 06): a second cancellable class this week, and tonight's first class
-    // of the week (Sunday 2 at 20:00), already begun (`notSelectable{DONE}`, R-08-09).
-    ...(limit
+    // `bookingLimit` (mockup 06): a second cancellable class this week.
+    ...(limit === "swap"
       ? [
           booking(
             "booking-duna-fri7",
@@ -311,6 +325,13 @@ function initialBookings(limit: boolean): StoredBooking[] {
             "ACTIVE",
             "2026-07-30T18:20:00Z",
           ),
+        ]
+      : []),
+    // Both limit worlds: the first class of the week (Sunday 2 at 20:00), already begun
+    // (`notSelectable{DONE}`, R-08-09).
+    ...(limit === null
+      ? []
+      : [
           booking(
             "booking-duna-done",
             CLASSES.done.id,
@@ -318,8 +339,7 @@ function initialBookings(limit: boolean): StoredBooking[] {
             "ACTIVE",
             "2026-07-27T19:02:00Z",
           ),
-        ]
-      : []),
+        ]),
   ];
 }
 
@@ -344,7 +364,7 @@ function initialEntries(): StoredEntry[] {
 }
 
 export const bookingState: BookingWorld = {
-  bookings: initialBookings(false),
+  bookings: initialBookings(null),
   entries: initialEntries(),
   holds: [],
   lastDogForClass: BOOKING_DOG_IDS.duna,
@@ -352,10 +372,14 @@ export const bookingState: BookingWorld = {
 };
 
 /**
- * A fresh world; `viewer` is the first name of the session's account, the `bookedBy` of the
- * fixture bookings (07 reads «Reservada el …» for the viewer, «Reservada per {name}» otherwise).
+ * A fresh world (`limit`: one of the limit worlds, or `null` for the mockups' own); `viewer` is the
+ * first name of the session's account, the `bookedBy` of the fixture bookings (07 reads «Reservada
+ * el …» for the viewer, «Reservada per {name}» otherwise).
  */
-export function resetBookingState(limit = false, viewer = MEMBER.firstName): void {
+export function resetBookingState(
+  limit: BookingLimitWorld | null = null,
+  viewer = MEMBER.firstName,
+): void {
   viewerFirstName = viewer;
   bookingState.bookings = initialBookings(limit);
   bookingState.entries = initialEntries();
@@ -370,7 +394,7 @@ export function nextBookingId(prefix: string): string {
 }
 
 export interface BookingOptions {
-  /** `bookingLimit` scenario: Duna has two bookings this week, both cancellable (R-08-09). */
+  /** `bookingLimit` scenario (the `swap` world): Duna has two cancellable bookings this week (R-08-09). */
   limit: boolean;
   locale: string;
   modules: readonly string[];
@@ -606,7 +630,9 @@ function rowsFor(dogId: string, options: BookingOptions): MockRow[] {
     { classId: CLASSES.wed5.id, freeSeats: 2, state: "BOOKABLE" },
     { classId: CLASSES.thu6.id, freeSeats: 0, state: "WAITLIST_OPEN", waiting: 1 },
     { classId: CLASSES.fri7Therapy.id, freeSeats: 0, state: "WAITLIST_FULL", waiting: 3 },
-    // With a cancellable booking the api proposes the swap (a normal row); without one the limit is done.
+    // Mockup 04's «Límit setmanal» beside 03's cancellable Monday (assumption A6): a fixed row,
+    // whose hold the api's rule decides (`limitRefuses`, R-08-09). In the `swap` world it is the
+    // normal row that 06 swaps.
     {
       classId: CLASSES.sat8.id,
       freeSeats: 3,
@@ -623,7 +649,7 @@ function rowsFor(dogId: string, options: BookingOptions): MockRow[] {
  * up to the end of W2; a W2 row is «Properament» (`NOT_YET_OPEN`, after `NOT_BOOKABLE` in the
  * order of R-08-03) with `opensAt`. `undefined` when 04 does not list the class.
  */
-function listedRow(row: MockRow, options: BookingOptions): ListedRow | undefined {
+function listedRow(dogId: string, row: MockRow, options: BookingOptions): ListedRow | undefined {
   const session = findClass(row.classId);
   if (session === undefined) return undefined;
   if (Date.parse(localInstant(session.startsAtLocal)) <= options.now) return undefined;
@@ -634,7 +660,7 @@ function listedRow(row: MockRow, options: BookingOptions): ListedRow | undefined
   return {
     ...row,
     opensAt: soon ? opensAtOf(session) : null,
-    state: soon ? "NOT_YET_OPEN" : rowState(row, options.modules),
+    state: soon ? "NOT_YET_OPEN" : rowState(dogId, row, week, options),
     week,
   };
 }
@@ -678,10 +704,22 @@ function packFor(dogId: string, options: BookingOptions): PackCard | null {
   return null;
 }
 
-/** A row's state once a module is off (S08 §9): no waitlist → «Completa», inert. */
-function rowState(row: MockRow, modules: readonly string[]): BookableClass["state"] {
+/**
+ * A row's state in R-08-03's order: a blocked, «Properament» or «Sense sessions» row keeps its
+ * state; then the week's limit reached with nothing to swap is «Límit setmanal» (R-08-09); then a
+ * module off (S08 §9): no waitlist → «Completa», inert.
+ */
+function rowState(
+  dogId: string,
+  row: MockRow,
+  week: BookingWeek,
+  options: BookingOptions,
+): BookableClass["state"] {
+  if (row.state === "NOT_BOOKABLE" || row.state === "NOT_YET_OPEN" || row.state === "PACK_EMPTY")
+    return row.state;
+  if (limitRefuses(dogId, week, options)) return "WEEKLY_LIMIT_DONE";
   if (
-    !modules.includes("WAITLIST") &&
+    !options.modules.includes("WAITLIST") &&
     (row.state === "WAITLIST_OPEN" || row.state === "WAITLIST_FULL")
   )
     return "FULL";
@@ -714,7 +752,7 @@ export function bookableClasses(
     .filter((row) => !taken.has(row.classId))
     .flatMap((row): BookableClass[] => {
       const session = findClass(row.classId);
-      const listed = listedRow(row, options);
+      const listed = listedRow(selected.id, row, options);
       if (session === undefined || listed === undefined) return [];
       return [
         {
@@ -763,7 +801,7 @@ export function bookableRow(
   options: BookingOptions,
 ): ListedRow | undefined {
   const row = rowsFor(dogId, options).find((item) => item.classId === classId);
-  return row === undefined ? undefined : listedRow(row, options);
+  return row === undefined ? undefined : listedRow(dogId, row, options);
 }
 
 function swapOption(item: StoredBooking): SwapOption[] {
@@ -838,13 +876,21 @@ export function limitStatus(
 }
 
 /**
- * `409 BOOKING_LIMIT_REACHED` details (S08 §6) of a `WEEKLY_LIMIT_DONE` row at the clock: the
- * class's week and the club's limit of it, the dog's bookings that count there (`current`, the
- * count `/me/home` shows for that week) and those it cannot swap (`notSelectable`, R-08-09), no
- * swappable booking, and `nextBookableAt` = the start of the next booking week, the coming
- * opening, for a CURRENT class and a NEXT one alike (api E5-T29, R-08-01). The row itself is the
- * fixture's «Límit setmanal» (mockup 04 beside 03's cancellable Monday, assumption A6), so below
- * the limit `current` stays the world's count rather than a made-up one.
+ * S08 R-08-09 (§6 pseudo-code): the api refuses a hold of the dog in `week` only when the week's
+ * limit is reached **and** no booking of it can be swapped; otherwise it holds the seat (with the
+ * swap when the limit is reached). R-08-03 shows those rows as «Límit setmanal».
+ */
+export function limitRefuses(dogId: string, week: BookingWeek, options: BookingOptions): boolean {
+  const limit = limitStatus(dogId, week, options);
+  return limit.reached && limit.swappable.length === 0;
+}
+
+/**
+ * `409 BOOKING_LIMIT_REACHED` details (S08 §6) of a hold `limitRefuses` refuses: the class's week
+ * and the club's limit of it, the dog's bookings that count there (`current`, the count `/me/home`
+ * shows for that week) and those it cannot swap (`notSelectable`, R-08-09), no swappable booking,
+ * and `nextBookableAt` = the start of the next booking week, the coming opening, for a CURRENT
+ * class and a NEXT one alike (api E5-T29, R-08-01).
  */
 export function limitReachedDetails(
   dogId: string,
@@ -1035,13 +1081,92 @@ const DOG_LEVELS: Readonly<Record<string, string>> = {
   Trevi: "D",
 };
 
-/** The class's slice of the pool: by its start time, and by its place among that time's classes. */
-function registrantsOf(session: ClassSession, count: number) {
+/**
+ * More registrants (fictional), drawn only for classes whose levels the first pool cannot fill:
+ * Cadells, A, B, C, D, E, F, G and Teràpia (E5-W05 round 3 #4).
+ */
+const LEVEL_POOL: readonly (readonly [string, string, "FEMALE" | "MALE", string])[] = [
+  ["Rita", "Pipa", "FEMALE", "P"],
+  ["Gerard", "Mel", "FEMALE", "P"],
+  ["Sílvia", "Tofu", "MALE", "P"],
+  ["Bernat", "Neu", "FEMALE", "P"],
+  ["Mireia", "Cuca", "FEMALE", "P"],
+  ["Oriana", "Lia", "FEMALE", "A"],
+  ["Àlex", "Bru", "MALE", "A"],
+  ["Txell", "Kora", "FEMALE", "A"],
+  ["Joel", "Rumba", "FEMALE", "B"],
+  ["Núria", "Pruna", "FEMALE", "C"],
+  ["Hugo", "Xispa", "FEMALE", "C"],
+  ["Elna", "Ombra", "FEMALE", "D"],
+  ["Roc", "Tro", "MALE", "D"],
+  ["Laia", "Sol", "FEMALE", "E"],
+  ["Quim", "Llop", "MALE", "E"],
+  ["Aina", "Fura", "FEMALE", "E"],
+  ["Biel", "Zeta", "FEMALE", "E"],
+  ["Dani", "Rayo", "MALE", "F"],
+  ["Marta", "Núvol", "MALE", "F"],
+  ["Pere", "Gin", "MALE", "F"],
+  ["Ona", "Tango", "MALE", "F"],
+  ["Lluc", "Vent", "MALE", "G"],
+  ["Clàudia", "Fosca", "FEMALE", "G"],
+  ["Arnau", "Flama", "FEMALE", "G"],
+  ["Judit", "Lira", "FEMALE", "G"],
+  ["Francesc", "Calma", "FEMALE", "T"],
+  ["Glòria", "Dolça", "FEMALE", "T"],
+];
+
+/** A registrant's dog level: the first pool's own, or the extra pool's. */
+function registrantLevel(dog: string): string | undefined {
+  return DOG_LEVELS[dog] ?? LEVEL_POOL.find((entry) => entry[1] === dog)?.[3];
+}
+
+/**
+ * The level codes a class allows (S08 R-08-04, `Dog.levelId ∈ ClassSession.levelIds` with
+ * `levels.enabled`): `undefined` when any dog may come (levels off, or a class without levels).
+ */
+function allowedLevels(session: ClassSession, levelsEnabled: boolean): Set<string> | undefined {
+  if (!levelsEnabled || session.levelIds.length === 0) return undefined;
+  return new Set(session.levelIds.map((id) => id.replace(/^level-/u, "").toUpperCase()));
+}
+
+/**
+ * The class's registrants: the slice of the pool by its start time and its place among that time's
+ * classes, keeping only the dogs whose level the class allows (then the extra pool's), so D4's
+ * «B+C» lists Duna «C» first and never an «A» or «E» dog (E5-W05 round 3 #4).
+ */
+function registrantsOf(
+  session: ClassSession,
+  count: number,
+  allowed: Set<string> | undefined,
+): (readonly [string, string, "FEMALE" | "MALE"])[] {
   const slot = Number(/-(\d+)$/u.exec(session.id)?.[1] ?? "0");
   const offset = (POOL_OFFSETS[session.startTime] ?? 8) + slot * 5;
-  return Array.from(
-    { length: Math.min(count, REGISTRANT_POOL.length) },
+  const rotated = REGISTRANT_POOL.map(
     (_, index) => REGISTRANT_POOL[(offset + index) % REGISTRANT_POOL.length] ?? LATE_CANCELLER,
+  );
+  const extra = LEVEL_POOL.map(([member, dog, sex]) => [member, dog, sex] as const);
+  const candidates =
+    allowed === undefined
+      ? rotated
+      : [...rotated, ...extra].filter(([, dog]) => allowed.has(registrantLevel(dog) ?? ""));
+  return candidates.slice(0, count);
+}
+
+/**
+ * The 18:50 classes' late cancellation (the api's «any state»): Sergio + Thai («E») where the class
+ * allows him, else the next allowed dog of the pool that is not booked.
+ */
+function lateCancellerOf(
+  session: ClassSession,
+  booked: readonly (readonly [string, string, string])[],
+  allowed: Set<string> | undefined,
+): readonly [string, string, string] | undefined {
+  if (allowed === undefined || allowed.has(DOG_LEVELS[LATE_CANCELLER[1]] ?? "")) {
+    return LATE_CANCELLER;
+  }
+  const taken = new Set(booked.map(([, dog]) => dog));
+  return registrantsOf(session, REGISTRANT_POOL.length + LEVEL_POOL.length, allowed).find(
+    ([, dog]) => !taken.has(dog),
   );
 }
 /** [member's first name, dog, sex, the guide when it is not the member (`Dog.handlerName`)]. */
@@ -1086,25 +1211,27 @@ export function classBookingItems(
     dogName: dog,
     id: `cb-${session.id}-${String(index)}`,
     late: state === "CANCELLED_LATE" ? true : state === "ACTIVE" ? null : false,
-    levelCode: levelsEnabled ? (DOG_LEVELS[dog] ?? null) : null,
+    levelCode: levelsEnabled ? (registrantLevel(dog) ?? null) : null,
     memberId: `member-${slug(member)}`,
     memberName: member,
     origin: index === 1 ? "BACKOFFICE" : "APP",
     state,
   });
   if (session.state === "DRAFT") return [];
+  const allowed = allowedLevels(session, levelsEnabled);
   if (session.state === "CANCELLED") {
     const affected = session.cancellation?.affectedBookings ?? 0;
-    return registrantsOf(session, affected).map((person, index) =>
+    return registrantsOf(session, affected, allowed).map((person, index) =>
       item(person, index, "CANCELLED_BY_CLUB"),
     );
   }
-  const booked = registrantsOf(session, session.counters.booked).map((person, index) =>
-    item(person, index, "ACTIVE"),
-  );
-  return booked.length === 0 || session.startTime !== "18:50"
-    ? booked
-    : [...booked, item(LATE_CANCELLER, booked.length, "CANCELLED_LATE")];
+  const people = registrantsOf(session, session.counters.booked, allowed);
+  const booked = people.map((person, index) => item(person, index, "ACTIVE"));
+  const late =
+    booked.length === 0 || session.startTime !== "18:50"
+      ? undefined
+      : lateCancellerOf(session, people, allowed);
+  return late === undefined ? booked : [...booked, item(late, booked.length, "CANCELLED_LATE")];
 }
 
 /** The staff-read waiting entries of each class, made on first read (removals change them). */

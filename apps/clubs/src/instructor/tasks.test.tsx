@@ -843,6 +843,33 @@ describe("E6-W05 (reviews of E6-W02's round 2): screen 26", () => {
     expect(writes(requests).filter((line) => line.startsWith("POST /attachments"))).toHaveLength(1);
   });
 
+  it("E7-W06 review #3 (CONVENCIONS_API §7, E79): a gateway's 504 without the api's body is no answer — the retry keeps the key and the files, and one task is created", async () => {
+    let answers = 0;
+    server.use(
+      http.post("*/api/v1/tasks", () => {
+        answers += 1;
+        if (answers === 1) return new HttpResponse("Gateway Timeout", { status: 504 });
+        return undefined;
+      }),
+    );
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
+    expect(await within(tasksBlock()).findByRole("alert")).toBeVisible();
+    await waitFor(() => {
+      expect(within(form).getByRole("button", { name: "Afegeix" })).toBeEnabled();
+    });
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(4);
+    });
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(posts).toHaveLength(2);
+    expect(posts[1]?.key).toBe(posts[0]?.key);
+    expect(posts[1]?.body).toEqual(posts[0]?.body);
+    expect(writes(requests).filter((line) => line.startsWith("POST /attachments"))).toHaveLength(1);
+  });
+
   it("E7-W05 step 4 (CONVENCIONS_API §7, E80): a task whose first request is still running says so with the shared in-progress text, never the key's technical one, and its retry creates one task", async () => {
     let answers = 0;
     server.use(
@@ -1150,6 +1177,164 @@ describe("E6-W04 step 0d (review of E6-W05): screen 26", () => {
     // «primer.jpg» was registered before «segon.jpg» failed: the block shows it.
     expect(await screen.findByRole("button", { name: "primer.jpg" })).toBeVisible();
     expect(screen.queryByRole("button", { name: "segon.jpg" })).toBeNull();
+  });
+});
+
+describe("E7-W06 (E6-W04 question 5 and its report nits): screen 26's new-task form", () => {
+  const openForm = (text: string, files: File[] = []) => {
+    fireEvent.click(screen.getByRole("button", { name: "Afegir" }));
+    const form = screen.getByRole("form", { name: "Nova tasca" });
+    fireEvent.change(within(form).getByLabelText("Text de la tasca nova"), {
+      target: { value: text },
+    });
+    if (files.length > 0) {
+      fireEvent.change(within(form).getByLabelText("Adjunta un fitxer", { selector: "input" }), {
+        target: { files },
+      });
+    }
+    return form;
+  };
+  const newTask = (text: string, files: File[] = []) => {
+    const form = openForm(text, files);
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    return form;
+  };
+  const tasksBlock = () =>
+    present(screen.getByRole("heading", { name: "Tasques" }).closest<HTMLElement>("section"));
+  /** The lines of the tasks block's alert, one per refused file or failure. */
+  const alertLines = () => {
+    const alert = within(tasksBlock()).getByRole("alert");
+    const lines = [...alert.querySelectorAll(".ah-followup__line")].map((line) => line.textContent);
+    return lines.length > 0 ? lines : [alert.textContent];
+  };
+  /** The api creates the first task it is sent, and its answer never arrives. */
+  const loseFirstCreation = () => {
+    let lost = true;
+    server.use(
+      http.post("*/api/v1/tasks", async ({ request }) => {
+        if (!lost) return undefined;
+        lost = false;
+        await getResponse(handlers, request.clone());
+        return HttpResponse.error();
+      }),
+    );
+  };
+
+  it("E7-W06 step 5 (E6-W04 Q5): an instructor's new task with refused files names each one — «prog.exe: …», «vídeo_llarg.mp4: …» — creates nothing and keeps the form; without them the same form creates the task with the file already uploaded", async () => {
+    const requests = recordRequests();
+    await renderTasks();
+    // An instructor cannot read the file limits (403): every file goes to the api.
+    await waitFor(() => {
+      expect(
+        requests.filter((request) => request.line.startsWith("GET /parameters/files.")),
+      ).toHaveLength(3);
+    });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    const form = newTask("Salts amb calma", [
+      file("espatlla.jpg", "image/jpeg"),
+      file("prog.exe", "application/x-msdownload"),
+      file("vídeo_llarg.mp4", "video/mp4", 30 * 1024 * 1024),
+    ]);
+    await waitFor(() => {
+      expect(alertLines()).toEqual([
+        "prog.exe: Aquest tipus de fitxer no està permès.",
+        "vídeo_llarg.mp4: El fitxer és massa gran.",
+      ]);
+    });
+    expect(requests.some((request) => request.line === "POST /tasks")).toBe(false);
+    expect(within(form).getByLabelText("Text de la tasca nova")).toHaveValue("Salts amb calma");
+    expect(within(form).getByRole("button", { name: "prog.exe" })).toBeVisible();
+    expect(cards()).toHaveLength(3);
+
+    fireEvent.click(within(form).getByRole("button", { name: "Treu prog.exe" }));
+    fireEvent.click(within(form).getByRole("button", { name: "Treu vídeo_llarg.mp4" }));
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(4);
+    });
+    expect(within(tasksBlock()).queryByRole("alert")).toBeNull();
+    // «espatlla.jpg» was uploaded once, by the refused submission, and claimed by this one.
+    expect(requests.filter((request) => request.line.startsWith("PUT "))).toHaveLength(1);
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(posts).toHaveLength(1);
+    expect(cards().map(cardText)).toContain(
+      "pendent | Salts amb calma | 03-08 · Estel · espatlla.jpg",
+    );
+  });
+
+  it("E7-W06 step 5 (E6-W04 Q5): a creation the api refuses for its only file (400 FILE_TOO_LARGE on POST /tasks) names that file — «vídeo_salt.mp4: …» — and keeps the form", async () => {
+    server.use(
+      http.post("*/api/v1/tasks", () =>
+        HttpResponse.json(
+          {
+            code: "FILE_TOO_LARGE",
+            details: { maxSizeMb: 25 },
+            message: "File too large",
+            traceId: "t-26",
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    await renderTasks();
+    const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
+    await waitFor(() => {
+      expect(alertLines()).toEqual(["vídeo_salt.mp4: El fitxer és massa gran."]);
+    });
+    expect(within(form).getByLabelText("Text de la tasca nova")).toHaveValue("Salts amb calma");
+    expect(cards()).toHaveLength(3);
+  });
+
+  it("E7-W06 step 6 (E6-W04's report nit): a creation whose answer was lost and whose text was then edited is abandoned — its key is dropped, so the first text written again later is a new task with a new key", async () => {
+    loseFirstCreation();
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma");
+    expect(await within(tasksBlock()).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat.",
+    );
+    fireEvent.change(within(form).getByLabelText("Text de la tasca nova"), {
+      target: { value: "Girs a la dreta" },
+    });
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(5);
+    });
+    await waitFor(() => {
+      expect(screen.queryByRole("form", { name: "Nova tasca" })).toBeNull();
+    });
+    newTask("Salts amb calma");
+    await waitFor(() => {
+      expect(cards()).toHaveLength(6);
+    });
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(posts).toHaveLength(3);
+    expect(posts[2]?.key).not.toBe(posts[0]?.key);
+    expect(cards().filter((item) => item.textContent.includes("Salts amb calma"))).toHaveLength(2);
+  });
+
+  it("E7-W06 step 6 (E6-W04's report nit): a creation whose answer was lost and whose form was then cancelled is abandoned — the same text in a new form is a new task with a new key", async () => {
+    loseFirstCreation();
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma");
+    expect(await within(tasksBlock()).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat.",
+    );
+    await waitFor(() => {
+      expect(within(form).getByRole("button", { name: "Cancel·la" })).toBeEnabled();
+    });
+    fireEvent.click(within(form).getByRole("button", { name: "Cancel·la" }));
+    expect(screen.queryByRole("form", { name: "Nova tasca" })).toBeNull();
+    newTask("Salts amb calma");
+    await waitFor(() => {
+      expect(cards()).toHaveLength(5);
+    });
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(posts).toHaveLength(2);
+    expect(posts[1]?.key).not.toBe(posts[0]?.key);
   });
 });
 

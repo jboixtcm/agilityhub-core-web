@@ -1,0 +1,583 @@
+{
+  "fields": {
+    "classSessionId": {
+      "code": null,
+      "status": 200,
+      "values": [
+        {
+          "value": "4d488036-7b5f-4906-8818-b15e3ad2b855",
+          "label": "2026-10-08T17:40 · D+E",
+          "count": 6
+        },
+        {
+          "value": "ac41a632-0875-4992-aeb9-82e637bfb7ea",
+          "label": "2026-10-21T08:30 · A+B",
+          "count": 5
+        },
+        {
+          "value": "0f2a619b-4a59-4e91-8166-8c5151047544",
+          "label": "2026-10-19T08:30 · A+B",
+          "count": 4
+        },
+        {
+          "value": "319771cf-15a6-4c21-afb4-7ea2153e8a85",
+          "label": "2026-10-05T08:30 · A+B",
+          "count": 4
+        },
+        {
+          "value": "d38eea5c-e1d1-4acb-9033-6d3243dbcac3",
+          "label": "2026-10-21T18:50 · B+C",
+          "count": 4
+        },
+        {
+          "value": "f87271b2-6324-4d1f-a63c-4b65150f7c5f",
+          "label": "2026-10-06T17:40 · D+E",
+          "count": 4
+        },
+        {
+          "value": "133816ef-d2c5-489d-9bf7-3172fd37131d",
+          "label": "2026-10-19T08:30 · C+D+E",
+          "count": 3
+        },
+        {
+          "value": "2544beb1-29b0-44f9-86ee-e2780786f88c",
+          "label": "2026-10-08T20:00 · D i sup.",
+          "count": 3
+        },
+        {
+          "value": "3d8b0871-f914-4191-ac2c-8467d1d46d04",
+          "label": "2026-09-30T08:30 · A+B",
+          "count": 3
+        },
+        {
+          "value": "5720365a-9cf0-4e91-a1a8-e61770555d51",
+          "label": "2026-10-05T08:30 · C+D+E",
+          "count": 3
+        },
+        {
+          "value": "5e51e07c-44f8-4793-a846-708782867943",
+          "label": "2026-09-28T08:30 · A+B",
+          "count": 3
+        },
+        {
+          "value": "61e65490-163e-4de4-b657-2c5863c69629",
+          "label": "2026-09-23T08:30 · A+B",
+          "count": 3
+        },
+        {
+          "value": "857776be-a3ef-46ac-ac61-204c16e2a19a",
+          "label": "2026-09-16T08:30 · A+B",
+          "count": 3
+        },
+        {
+          "value": "ae2c0bc3-1a4f-403a-9870-97775a234a78",
+          "label": "2026-09-07T08:30 · A+B",
+          "count": 3
+        },
+        {
+          "value": "bade02a9-bf7f-49a0-a274-91727dad7d61",
+          "label": "2026-09-14T08:30 · A+B",
+          "count": 3
+        },
+        {
+          "value": "e00079f6-d795-4311-b0ac-6fc62d44da2b",
+          "label": "2026-08-24T08:30 · A+B",
+          "count": 3
+        },
+        {
+          "value": "e3c7fd1e-147c-46f0-a925-21cce463f4f5",
+          "label": "2026-08-31T08:30 · A+B",
+          "count": 3
+        },
+        {
+          "value": "eb2cbb88-a63f-4f8f-9f7e-a7c18f3036e2",
+          "label": "2026-09-09T08:30 · A+B",
+          "count": 3
+        },
+        {
+          "value": "f29b00c2-f1de-4ddd-a021-3884fb06814b",
+          "label": "2026-09-21T08:30 · A+B",
+          "count": 3
+        },
+        {
+          "value": "5b504df3-510c-4293-89e6-6d715dec4a41",
+          "label": "2026-10-24T18:30 · A+B",
+          "count": 2
+        },
+        {
+          "value": "9dffbdfd-e019-490c-8078-6ca7e4c5cd63",
+          "label": "2026-10-22T18:50 · Cadells",
+          "count": 2
+        },
+        {
+          "value": "099de56c-c4ff-43c0-86b9-9e826d0872c8",
+          "label": "2026-10-10T16:30 · D+E",
+          "count": 1
+        },
+        {
+          "value": "1a775575-645a-4065-823a-dcdf9262e69c",
+          "label": "2026-10-05T09:30 · D i sup.",
+          "count": 1
+        },
+        {
+          "value": "2257570c-20bd-45c0-b0ff-06693aeb4c26",
+          "label": "2026-10-09T09:30 · A+B",
+          "count": 1
+        },
+        {
+          "value": "72046a95-f7b5-436f-b2ea-c30df5d0b934",
+          "label": "2026-10-08T08:30 · C+D+E",
+          "count": 1
+        },
+        {
+          "value": "bd2214dc-1a12-42db-ba5e-ac3dc5c9870c",
+          "label": "2026-10-07T08:30 · C+D+E",
+          "count": 1
+        },
+        {
+          "value": "ca1dc956-e9e4-4833-a770-d8bf95171aa3",
+          "label": "2026-10-23T17:40 · Particular",
+          "count": 1
+        },
+        {
+          "value": "cb204d09-1961-45b2-948e-ee564ffaf1c2",
+          "label": "2026-10-06T20:00 · B+C",
+          "count": 1
+        },
+        {
+          "value": "ce3fac1e-d83a-47c8-8082-1ed398037b6f",
+          "label": "2026-10-06T18:50 · A+B",
+          "count": 1
+        },
+        {
+          "value": "e6b0c2ba-5e6e-48c6-9ac0-1ebab82ec690",
+          "label": "2026-10-22T18:50 · Particular",
+          "count": 1
+        },
+        {
+          "value": "f6a7d727-e2be-4f8c-8889-27a314bfa05d",
+          "label": "2026-10-19T17:40 · Teràpia",
+          "count": 1
+        }
+      ]
+    },
+    "memberId": {
+      "code": null,
+      "status": 200,
+      "values": [
+        {
+          "value": "26d1d39f-22f9-3d04-bfa2-3fbd221f23fd",
+          "label": "Rita Fictici013 ",
+          "count": 13
+        },
+        {
+          "value": "2d4e9714-ba80-3743-99f6-51125f75aa1b",
+          "label": "Alba Fictici076 ",
+          "count": 11
+        },
+        {
+          "value": "90fb3fb0-c11e-38d3-8a21-56f2a88d93ba",
+          "label": "Martí Fictici071 ",
+          "count": 11
+        },
+        {
+          "value": "0d9c42d6-7d37-36ba-b1b8-b3cd0e719333",
+          "label": "Aina Fictici007 ",
+          "count": 3
+        },
+        {
+          "value": "b357a92e-7dc5-3710-86ff-3db62e6067bd",
+          "label": "Ona Fictici008 ",
+          "count": 3
+        },
+        {
+          "value": "167b13f3-d621-33de-84d6-156da962a264",
+          "label": "Gala Fictici176 ",
+          "count": 2
+        },
+        {
+          "value": "2ff950d8-b16f-31f7-a8c0-5a11cc736b91",
+          "label": "Aleix Fictici125 ",
+          "count": 2
+        },
+        {
+          "value": "694686bf-fe5f-3353-8fe8-a7510b88e2d1",
+          "label": "Aleix Fictici026 ",
+          "count": 2
+        },
+        {
+          "value": "e6df9668-34f7-3334-b914-75592bfa7e02",
+          "label": "Laia Fictici006 ",
+          "count": 2
+        },
+        {
+          "value": "1001d08c-758d-37f5-a590-49e6efaa51d1",
+          "label": "Jana Fictici171 ",
+          "count": 1
+        },
+        {
+          "value": "1041322d-9b85-3883-baa0-2f4677e0e926",
+          "label": "Roc Fictici158 ",
+          "count": 1
+        },
+        {
+          "value": "13f534c4-e947-3271-8d9a-f207ea3c3105",
+          "label": "Pol Fictici011 ",
+          "count": 1
+        },
+        {
+          "value": "34349911-9947-324c-a72f-71f46635d347",
+          "label": "Laia Fictici038 ",
+          "count": 1
+        },
+        {
+          "value": "36c1496a-5ab5-386e-aabc-745773711bdd",
+          "label": "Gala Fictici019 ",
+          "count": 1
+        },
+        {
+          "value": "3b84ebf3-29e5-38bc-887e-2674b3353c1d",
+          "label": "Guillem Fictici126 ",
+          "count": 1
+        },
+        {
+          "value": "42af5471-8c8b-361b-b4f1-2d21cf753de6",
+          "label": "Aleix Fictici150 ",
+          "count": 1
+        },
+        {
+          "value": "43080125-5cbc-3d36-85e6-49259fed98fb",
+          "label": "Queralt Fictici030 ",
+          "count": 1
+        },
+        {
+          "value": "552db8da-90e3-32ef-8228-def0ae38daca",
+          "label": "Bruna Fictici111 ",
+          "count": 1
+        },
+        {
+          "value": "5975ba2c-f5c4-3336-a762-8fde20c580fe",
+          "label": "Arnau Fictici040 ",
+          "count": 1
+        },
+        {
+          "value": "6a3775e9-d0b2-36e4-97bd-0be46a4e043f",
+          "label": "Laia Fictici050 ",
+          "count": 1
+        },
+        {
+          "value": "6deefdcb-dc48-3ce3-bbfd-fef227ffbee8",
+          "label": "Gala Fictici084 ",
+          "count": 1
+        },
+        {
+          "value": "77c0a232-1c98-3edf-9fe6-44146d55e01a",
+          "label": "Jana Fictici184 ",
+          "count": 1
+        },
+        {
+          "value": "7804b19a-1265-37fc-840d-35c50ba518dd",
+          "label": "Nil Fictici081 ",
+          "count": 1
+        },
+        {
+          "value": "8fe262b7-8607-3a70-ae0e-78e3f56d3f2a",
+          "label": "Aleix Fictici021 ",
+          "count": 1
+        },
+        {
+          "value": "927fba8e-918e-3429-b6c7-23ad0cc600d4",
+          "label": "Gala Fictici091 ",
+          "count": 1
+        },
+        {
+          "value": "99f523fb-ae31-36f7-bb30-ecdc1fbf832c",
+          "label": "Biel Fictici063 ",
+          "count": 1
+        },
+        {
+          "value": "9c911813-276d-3f86-926c-288e91fb5e89",
+          "label": "Guillem Fictici010 ",
+          "count": 1
+        },
+        {
+          "value": "a485731b-cc53-3c2e-974a-d7d0c5f61dc0",
+          "label": "Aleix Fictici009 ",
+          "count": 1
+        },
+        {
+          "value": "b0a25455-23c1-30a1-a9e3-e3360b318d37",
+          "label": "Pau Fictici049 ",
+          "count": 1
+        },
+        {
+          "value": "b0e9d6a5-4539-3e45-9a23-d1053a0f5e68",
+          "label": "Jana Fictici037 ",
+          "count": 1
+        },
+        {
+          "value": "c06423cc-2834-33ab-9308-f1973d6382e3",
+          "label": "Biel Fictici141 ",
+          "count": 1
+        },
+        {
+          "value": "c1b39653-9d04-3511-a79a-699176319353",
+          "label": "Aina Fictici069 ",
+          "count": 1
+        },
+        {
+          "value": "d27f6a2f-f642-385a-b2fe-f1ec757e696c",
+          "label": "Ferran Fictici082 ",
+          "count": 1
+        },
+        {
+          "value": "d28e2230-bce1-388d-a3c4-9e6306c1d6d1",
+          "label": "Biel Fictici097 ",
+          "count": 1
+        },
+        {
+          "value": "d425ce19-2397-39a7-891c-33ce81a84ad5",
+          "label": "Bruna Fictici065 ",
+          "count": 1
+        },
+        {
+          "value": "d738af87-af10-35a5-ab07-2d5a636e71f4",
+          "label": "Biel Fictici067 ",
+          "count": 1
+        },
+        {
+          "value": "d77df541-ac49-3bf7-a2c7-15051b251ee2",
+          "label": "Mariona Fictici068 ",
+          "count": 1
+        },
+        {
+          "value": "dc608add-817b-3fd1-b126-bde4c03eaa7e",
+          "label": "Guillem Fictici174 ",
+          "count": 1
+        },
+        {
+          "value": "e69277ea-1bda-3879-a331-b0abdb4e3f1a",
+          "label": "Jana Fictici052 ",
+          "count": 1
+        },
+        {
+          "value": "ffa33cc0-19b5-3503-9188-81bb8ea97952",
+          "label": "Biel Fictici017 ",
+          "count": 1
+        }
+      ]
+    },
+    "dogId": {
+      "code": null,
+      "status": 200,
+      "values": [
+        {
+          "value": "37633783-a40d-3364-a2e3-dfaf94abc052",
+          "label": "Mel",
+          "count": 12
+        },
+        {
+          "value": "3d33de32-8661-3a6c-a9cd-5b5ae9d2fcc6",
+          "label": "Sorra",
+          "count": 11
+        },
+        {
+          "value": "5b748058-ebf7-31f2-9c21-34d0755fa494",
+          "label": "Pinya",
+          "count": 11
+        },
+        {
+          "value": "0bdf42e5-6615-35d1-b74b-5be498a633e2",
+          "label": "Ginesta 191",
+          "count": 3
+        },
+        {
+          "value": "d5e66866-199b-3189-990c-2af6d898d236",
+          "label": "Neu 192",
+          "count": 3
+        },
+        {
+          "value": "539eb574-11a0-3ecf-bb5d-9a5ec3d77139",
+          "label": "Roc 125",
+          "count": 2
+        },
+        {
+          "value": "9617e1c1-1643-33bc-8337-c3d8ae1dfb91",
+          "label": "Neu 176",
+          "count": 2
+        },
+        {
+          "value": "d4bf4fa0-47a1-3c52-bc8a-e67d020ae88b",
+          "label": "Bruc 26",
+          "count": 2
+        },
+        {
+          "value": "f00114e8-a935-3c05-b26f-2a25fd215f37",
+          "label": "Suro 190",
+          "count": 2
+        },
+        {
+          "value": "1084c230-44e8-3132-8d58-9002b05b22f3",
+          "label": "Roc 52",
+          "count": 1
+        },
+        {
+          "value": "1149077a-ac20-33b8-b286-0f49dad62b47",
+          "label": "Neu 224",
+          "count": 1
+        },
+        {
+          "value": "1845052c-11cf-30da-9608-a0d317dbcc82",
+          "label": "Ginesta 91",
+          "count": 1
+        },
+        {
+          "value": "24133908-6fde-3cea-a1d6-266b5ea01cae",
+          "label": "Bruc 194",
+          "count": 1
+        },
+        {
+          "value": "264a9eef-de39-3c09-99f3-8000e6cb71b3",
+          "label": "Taca 37",
+          "count": 1
+        },
+        {
+          "value": "3397b9e9-e973-317a-bbbf-7e1707b1b725",
+          "label": "Ona 65",
+          "count": 1
+        },
+        {
+          "value": "4736cccf-8d1d-3816-a0fc-a5f3e1a6ef3b",
+          "label": "Foc 50",
+          "count": 1
+        },
+        {
+          "value": "4ad66504-b0a9-3850-b217-a593c03136f9",
+          "label": "Ona 195",
+          "count": 1
+        },
+        {
+          "value": "4ca07f5a-0c3b-3385-b261-1b5bff4d46de",
+          "label": "Bruc 49",
+          "count": 1
+        },
+        {
+          "value": "4cb4faf2-5435-3395-819a-c3a2ea23ce10",
+          "label": "Bruc 197",
+          "count": 1
+        },
+        {
+          "value": "592393f2-8d27-3a5d-aa01-b2b4eea86fbd",
+          "label": "Ona 68",
+          "count": 1
+        },
+        {
+          "value": "5b2ebf05-64f4-3048-ae92-8955797ef112",
+          "label": "Neu 203",
+          "count": 1
+        },
+        {
+          "value": "61eadd95-d181-3844-a148-88f5f72b831f",
+          "label": "Ona 21",
+          "count": 1
+        },
+        {
+          "value": "678971e0-ec86-3898-a955-f22189c041c3",
+          "label": "Suro 193",
+          "count": 1
+        },
+        {
+          "value": "68e86686-481f-3dbf-8c89-548913c0720a",
+          "label": "Bruc 184",
+          "count": 1
+        },
+        {
+          "value": "6d9cf891-c212-35fa-9bf4-0a3a6669863e",
+          "label": "Ona 126",
+          "count": 1
+        },
+        {
+          "value": "6f7486a5-15f6-355c-ba72-33f8fe4cda3b",
+          "label": "Ginesta 69",
+          "count": 1
+        },
+        {
+          "value": "8415abdf-b1ed-3069-9d47-00f3b77785b0",
+          "label": "Ginesta 158",
+          "count": 1
+        },
+        {
+          "value": "90fe3f22-54dd-33de-9677-d17abbf8b7cc",
+          "label": "Taca 30",
+          "count": 1
+        },
+        {
+          "value": "afc6a50d-7845-3d5c-a244-e25c8510f0c4",
+          "label": "Taca 67",
+          "count": 1
+        },
+        {
+          "value": "bfff8cbc-7ee2-36da-a855-a2cf5adeabeb",
+          "label": "Vent 82",
+          "count": 1
+        },
+        {
+          "value": "c9282c3e-fddb-341f-b95e-6cabc9501333",
+          "label": "Ginesta 97",
+          "count": 1
+        },
+        {
+          "value": "cb05eccf-3407-372f-a1d7-b060d8118bbb",
+          "label": "Suro 84",
+          "count": 1
+        },
+        {
+          "value": "cf882ca8-0040-3ba2-8d0e-9f9b50ab11e2",
+          "label": "Vent 150",
+          "count": 1
+        },
+        {
+          "value": "d099e61f-36b8-3417-8e31-fdf4e3a533ba",
+          "label": "Vent 171",
+          "count": 1
+        },
+        {
+          "value": "d245f557-53c5-37b8-8ff8-7c4acebf760f",
+          "label": "Xispa 63",
+          "count": 1
+        },
+        {
+          "value": "ddd83fc5-44a7-36d5-94c2-475c3bea0285",
+          "label": "Trufa",
+          "count": 1
+        },
+        {
+          "value": "e59df520-f560-3028-864c-032dd4783456",
+          "label": "Roc 38",
+          "count": 1
+        },
+        {
+          "value": "ea0ceb1c-2746-30b8-bad5-933eb7be6c12",
+          "label": "Boira 17",
+          "count": 1
+        },
+        {
+          "value": "ec1d60d4-c5d9-3195-8e78-7f8b2edee940",
+          "label": "Boira 174",
+          "count": 1
+        },
+        {
+          "value": "ec723778-5226-397b-ab3f-911b933d4cd6",
+          "label": "Neu 141",
+          "count": 1
+        },
+        {
+          "value": "f43af8a1-dc94-34ba-a6de-2b108123ec63",
+          "label": "Boira 111",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "path": "GET /bookings/filter-values?field=…"
+}

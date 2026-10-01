@@ -338,6 +338,61 @@ export const censusRecordState: {
   memberOverview: structuredClone(memberOverviewFixture),
 };
 
+/**
+ * A member whose data were erased (S14 R-14-15), with its own id so `member-laura`'s record stays
+ * as it is (E7-W06 step 5, ruling E82 on E6-W04 Q3): its overview answers with what the api keeps
+ * — «Abonat suprimit #64», no contact, notes or account, `erasedAt` — and D10's preferences read
+ * and save answer `409 MEMBER_ERASED`. `address` and `birthDate` are required by the snapshot's
+ * `Member`, so they carry an empty address and a date where R-14-15 says null.
+ */
+export const ERASED_MEMBER_ID = "64000000-0000-4000-8000-000000000064";
+
+export function erasedMemberOverview(): MemberOverview {
+  return {
+    dogs: [],
+    invoicesCount: 12,
+    member: {
+      accountId: null,
+      address: { city: "", country: null, postalCode: "", province: null, street: "" },
+      birthDate: "1979-06-02",
+      bookingBlock: { active: false },
+      // Kept by R-14-15: the versions and the dates.
+      consents: {
+        imageRights: { at: "2019-09-01T09:00:00Z", granted: false, version: "2019-01" },
+        privacyPolicy: { acceptedAt: "2019-09-01T09:00:00Z", version: "2019-01" },
+      },
+      contactEmails: [],
+      displayStatus: { kind: "ERASED", label: "suprimit" },
+      erasedAt: "2026-09-30T06:00:00Z",
+      erasureRequestId: "64000000-0000-4000-8000-0000000000e5",
+      familyGroupId: null,
+      firstName: "Abonat suprimit",
+      fullName: "Abonat suprimit #64",
+      gender: "MALE",
+      id: ERASED_MEMBER_ID,
+      idDocument: { number: `ERASED-${ERASED_MEMBER_ID}`, type: "ERASED" },
+      internalNotes: null,
+      joinedAt: "2019-09-01T09:00:00Z",
+      lastName1: "#64",
+      lastName2: null,
+      leaveDate: "2026-07-31",
+      memberNumber: 64,
+      nextInvoiceDate: null,
+      paymentMethod: { holderName: null, maskedAccount: null, type: "SEPA_DD" },
+      phones: [],
+      planId: null,
+      priceId: null,
+      remarks: null,
+      roles: [],
+      status: "LEFT",
+      version: 9,
+    },
+    notificationPreferences: {},
+    recentAudit: [],
+    recentInvoices: [],
+  };
+}
+
 export function resetCensusRecordState(): void {
   censusRecordState.memberOverview = structuredClone(memberOverviewFixture);
   censusRecordState.dogs = {

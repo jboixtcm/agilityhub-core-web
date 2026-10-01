@@ -1,0 +1,55 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/calendar-handlers.test.ts (14 tests | 1 failed | 13 skipped) 51ms
+   ❯ E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) (4)
+     × E5-W05 round 3 #3: an ADMIN of another club cannot write this club's weeks, classes or ring blocks either: validation, generation, PATCH, the cancellation preview, the cancellation, the risk exemption and the block's read, PATCH and cancellation are 404 NOT_FOUND, and nothing changes 49ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/calendar-handlers.test.ts > E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) > E5-W05 round 3 #3: an ADMIN of another club cannot write this club's weeks, classes or ring blocks either: validation, generation, PATCH, the cancellation preview, the cancellation, the risk exemption and the block's read, PATCH and cancellation are 404 NOT_FOUND, and nothing changes
+AssertionError: expected [ …(9) ] to deeply equal [ …(9) ]
+
+- Expected
++ Received
+
+  [
+-   "POST /weeks/week-2026-08-17/validation 404 NOT_FOUND",
+-   "POST /weeks/week-2026-08-24/generation 404 NOT_FOUND",
+-   "PATCH /class-sessions/cls-2026-08-12-1850-0 404 NOT_FOUND",
+-   "GET /class-sessions/cls-2026-08-12-1850-0/cancellation-preview 404 NOT_FOUND",
+-   "POST /class-sessions/cls-2026-08-12-1850-0/cancellation 404 NOT_FOUND",
+-   "POST /class-sessions/cls-2026-08-12-1850-0/risk-exemption 404 NOT_FOUND",
+-   "GET /ring-blocks/block-2026-08-12-carretera 404 NOT_FOUND",
+-   "PATCH /ring-blocks/block-2026-08-12-carretera 404 NOT_FOUND",
+-   "POST /ring-blocks/block-2026-08-12-carretera/cancellation 404 NOT_FOUND",
++   "POST /weeks/week-2026-08-17/validation 200 ",
++   "POST /weeks/week-2026-08-24/generation 409 WEEK_ALREADY_GENERATED",
++   "PATCH /class-sessions/cls-2026-08-12-1850-0 200 ",
++   "GET /class-sessions/cls-2026-08-12-1850-0/cancellation-preview 200 ",
++   "POST /class-sessions/cls-2026-08-12-1850-0/cancellation 200 ",
++   "POST /class-sessions/cls-2026-08-12-1850-0/risk-exemption 409 INVALID_STATE",
++   "GET /ring-blocks/block-2026-08-12-carretera 200 ",
++   "PATCH /ring-blocks/block-2026-08-12-carretera 200 ",
++   "POST /ring-blocks/block-2026-08-12-carretera/cancellation 200 ",
+  ]
+
+ ❯ src/mocks/calendar-handlers.test.ts:446:21
+    444|       answers.push(`${method} ${path} ${String(response.status)} ${ans…
+    445|     }
+    446|     expect(answers).toEqual(
+       |                     ^
+    447|       writes.map(([method, path]) => `${method} ${path} 404 NOT_FOUND`…
+    448|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 skipped (14)
+   Start at  05:33:28
+   Duration  681ms (transform 53%, import 39%, tests 8%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/calendar-handlers.test.ts -t round 3 #3

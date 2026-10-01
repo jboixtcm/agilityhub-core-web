@@ -1,5 +1,9 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { mockScenario, resetCensusRecordState } from "@agilityhub/api-client/mocks";
+import {
+  ERASED_MEMBER_ID,
+  mockScenario,
+  resetCensusRecordState,
+} from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
@@ -31,7 +35,11 @@ afterAll(() => {
   server.close();
 });
 
-async function renderRecord(kind: "dog" | "member", recordBranding: Branding = branding) {
+async function renderRecord(
+  kind: "dog" | "member",
+  recordBranding: Branding = branding,
+  memberId = "member-laura",
+) {
   const i18n = await createI18n({
     branding: recordBranding,
     browserLanguages: ["ca"],
@@ -43,7 +51,7 @@ async function renderRecord(kind: "dog" | "member", recordBranding: Branding = b
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={recordBranding}>
         {kind === "member" ? (
-          <MemberRecordPage client={client} id="member-laura" />
+          <MemberRecordPage client={client} id={memberId} />
         ) : (
           <DogRecordPage client={client} id="dog-duna" />
         )}
@@ -201,6 +209,50 @@ describe("E7-W01 round 2 #4: D10's «Preferències d'avisos» reads its own rout
     ).toBeVisible();
     expect(await screen.findByLabelText("Recordatori de classe")).toBeVisible();
     expect(screen.getByRole("link", { name: "Avisos enviats ›" })).toBeVisible();
+  });
+});
+
+describe("E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15)", () => {
+  const erased = "Aquest abonat ha estat suprimit i ja no es pot modificar.";
+
+  it("E7-W06 step 5: an erased member's «Preferències d'avisos» say MEMBER_ERASED as final — its own message, no «Torna-ho a provar» — and ask nothing the api refuses with 409", async () => {
+    const lines: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      const url = new URL(request.url);
+      lines.push(`${request.method} ${url.pathname.replace(/^\/api\/v1/u, "")}`);
+    };
+    server.events.on("request:start", listener);
+    try {
+      await renderRecord("member", branding, ERASED_MEMBER_ID);
+      expect(await screen.findByRole("heading", { name: "Abonat suprimit #64" })).toBeVisible();
+      const heading = await screen.findByRole("heading", {
+        name: "Preferències d'avisos (mantenibles aquí i al perfil)",
+      });
+      const block = heading.closest<HTMLElement>(".ah-card");
+      if (block === null) throw new TypeError("The preferences block has no card");
+      expect(within(block).getByText(erased)).toBeVisible();
+      expect(within(block).queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
+      expect(within(block).queryByLabelText("Recordatori de classe")).toBeNull();
+      expect(lines).toContain(`GET /members/${ERASED_MEMBER_ID}/overview`);
+      expect(lines.filter((line) => line.includes("/notification-preferences"))).toEqual([]);
+    } finally {
+      server.events.removeListener("request:start", listener);
+    }
+  });
+
+  it("E7-W06 step 5: a record read answered 409 MEMBER_ERASED is final — its own message, no «Torna-ho a provar»", async () => {
+    server.use(
+      http.get("*/api/v1/members/:id/overview", () =>
+        HttpResponse.json(
+          { code: "MEMBER_ERASED", details: {}, message: "Member erased", traceId: "t-d10" },
+          { status: 409 },
+        ),
+      ),
+    );
+    await renderRecord("member");
+    expect(await screen.findByRole("alert")).toHaveTextContent(erased);
+    expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
+    expect(screen.queryByText("No s'ha pogut carregar la fitxa.")).toBeNull();
   });
 });
 

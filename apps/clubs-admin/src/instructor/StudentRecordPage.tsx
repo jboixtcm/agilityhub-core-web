@@ -179,6 +179,8 @@ export function StudentRecordPage({ client, dogId }: { client: ApiClient; dogId:
           <Button
             className="student-record__manage"
             onClick={() => {
+              // A refusal said before the drawer closed is not this visit's (E6-W04's report nit).
+              followup.clearError();
               setDrawer(true);
             }}
             variant="secondary"
@@ -336,7 +338,11 @@ export function StudentRecordPage({ client, dogId }: { client: ApiClient; dogId:
           onClose={() => {
             // From the history, closing goes back to the editor.
             if (history) setHistory(false);
-            else setDrawer(false);
+            else {
+              // The new-task form goes with the drawer: its unanswered submission is abandoned.
+              followup.abandonCreate();
+              setDrawer(false);
+            }
           }}
           open={drawer}
           title={history ? texts.history.title : t("instructor:card.manageButton")}

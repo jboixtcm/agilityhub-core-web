@@ -79,10 +79,13 @@ describe("T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A", () =>
       }),
     ).toBeVisible();
     expect(screen.getByText("4 avisos")).toHaveClass("ah-badge");
+    // E5-W05 round 3 #4: the notified dogs have a level their class allows (S08 R-08-04): a D dog
+    // in «Nivell D» and an F one in «F i G», where mockup D1 names Clara + Trevi («C») and Pau +
+    // Blat («B»).
     expect(rowTexts()).toEqual([
       "Cadells · avui 9:30 · Cadells0 inscritsanul·lada",
-      "Nivell D · avui 17:40 · Petita1 inscritanul·lada · avisada Laura + Duna",
-      "F i G · demà 20:00 · Carretera1 inscriten risc · avisats Pau + Blat",
+      "Nivell D · avui 17:40 · Petita1 inscritanul·lada · avisada Clara + Trevi",
+      "F i G · demà 20:00 · Carretera1 inscriten risc · avisats Dani + Rayo",
       "Cadells · dc 9:30 · Cadells0 inscritss'anul·larà dc a les 7:30",
     ]);
   });
@@ -181,8 +184,8 @@ describe("T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (
 
   it.each([
     ["Cadells · avui 9:30 · Cadells", "anul·lades", /dl 10 · 9:30 · Cadells/u, null],
-    ["Nivell D · avui 17:40 · Petita", "anul·lades", /dl 10 · 17:40 · Nivell D/u, "Laura + Duna"],
-    ["F i G · demà 20:00 · Carretera", "actives", /dt 11 · 20:00 · F i G/u, "Pau + Blat"],
+    ["Nivell D · avui 17:40 · Petita", "anul·lades", /dl 10 · 17:40 · Nivell D/u, "Clara + Trevi"],
+    ["F i G · demà 20:00 · Carretera", "actives", /dt 11 · 20:00 · F i G/u, "Dani + Rayo"],
     ["Cadells · dc 9:30 · Cadells", "actives", /dc 12 · 9:30 · Cadells/u, null],
   ])("«%s» → D4 «%s», that week, that class selected", async (row, filter, card, notified) => {
     const onNavigate = await renderCard();
@@ -225,12 +228,12 @@ describe("T-15-34 the risk card in es and en, and in club-local time on a device
     [
       "es",
       "Cadells · mié 9:30 · Cadells0 inscritosse anulará mié a las 7:30",
-      "F i G · mañana 20:00 · Carretera1 inscritoen riesgo · avisados Pau + Blat",
+      "F i G · mañana 20:00 · Carretera1 inscritoen riesgo · avisados Dani + Rayo",
     ],
     [
       "en",
       "Cadells · Wed 9:30 · Cadells0 bookedwill be cancelled Wed at 7:30",
-      "F i G · tomorrow 20:00 · Carretera1 bookedat risk · notified Pau + Blat",
+      "F i G · tomorrow 20:00 · Carretera1 bookedat risk · notified Dani + Rayo",
     ],
   ])("renders the statuses in %s", async (language, willCancel, atRisk) => {
     await renderCard("admin", language);

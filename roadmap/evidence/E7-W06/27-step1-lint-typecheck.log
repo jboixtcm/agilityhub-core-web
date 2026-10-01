@@ -1,0 +1,61 @@
+
+> @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+
+api-client lint exit 0
+
+> @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> tsc --noEmit
+
+src/mocks/fixtures/census.ts(354,5): error TS2375: Type '{ accountId: null; address: { city: string; country: null; postalCode: string; province: null; street: string; }; birthDate: string; bookingBlock: { active: false; }; consents: { imageRights: components["schemas"]["ImageRights"]; privacyPolicy: components["schemas"]["PrivacyPolicyConsent"]; } | null | undefined; ......' is not assignable to type '{ accountId?: string | null; accountMissing?: boolean; address: { city: string; country?: string | null; postalCode: string; province?: string | null; street: string; }; billedViaMemberId?: string | null; ... 29 more ...; version: number; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'consents' are incompatible.
+    Type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null | undefined' is not assignable to type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null'.
+      Type 'undefined' is not assignable to type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null'.
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/api-client@0.0.0 typecheck: `tsc --noEmit`
+Exit status 2
+api-client typecheck exit 2
+
+> clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> eslint . --max-warnings 0 --config ../../eslint.config.mjs
+
+clubs lint exit 0
+
+> clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> eslint . --max-warnings 0 --config ../../eslint.config.mjs
+
+clubs-admin lint exit 0
+
+> clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> tsc --noEmit
+
+../../packages/api-client/src/mocks/fixtures/census.ts(354,5): error TS2375: Type '{ accountId: null; address: { city: string; country: null; postalCode: string; province: null; street: string; }; birthDate: string; bookingBlock: { active: false; }; consents: { imageRights: components["schemas"]["ImageRights"]; privacyPolicy: components["schemas"]["PrivacyPolicyConsent"]; } | null | undefined; ......' is not assignable to type '{ accountId?: string | null; accountMissing?: boolean; address: { city: string; country?: string | null; postalCode: string; province?: string | null; street: string; }; billedViaMemberId?: string | null; ... 29 more ...; version: number; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'consents' are incompatible.
+    Type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null | undefined' is not assignable to type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null'.
+      Type 'undefined' is not assignable to type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null'.
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 typecheck: `tsc --noEmit`
+Exit status 2
+clubs-admin typecheck exit 2
+
+> clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> tsc --noEmit
+
+../../packages/api-client/src/mocks/fixtures/census.ts(354,5): error TS2375: Type '{ accountId: null; address: { city: string; country: null; postalCode: string; province: null; street: string; }; birthDate: string; bookingBlock: { active: false; }; consents: { imageRights: components["schemas"]["ImageRights"]; privacyPolicy: components["schemas"]["PrivacyPolicyConsent"]; } | null | undefined; ......' is not assignable to type '{ accountId?: string | null; accountMissing?: boolean; address: { city: string; country?: string | null; postalCode: string; province?: string | null; street: string; }; billedViaMemberId?: string | null; ... 29 more ...; version: number; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'consents' are incompatible.
+    Type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null | undefined' is not assignable to type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null'.
+      Type 'undefined' is not assignable to type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null'.
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 typecheck: `tsc --noEmit`
+Exit status 2
+clubs typecheck exit 2
+
+> @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+> eslint src --max-warnings 0 --config ../../eslint.config.mjs
+
+ui lint exit 0
+
+> @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+> tsc --noEmit
+
+ui typecheck exit 0

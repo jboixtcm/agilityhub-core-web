@@ -1,0 +1,59 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/preferences-saver.test.ts (10 tests | 2 failed) 39ms
+   ❯ E7-W06 step 4 (E7-W05 review #1): a failed save after a restore whose departure overlapped (2)
+     × seq1 {false} out, seq2 {true} with keepalive, restored before either settles, seq1 lands after seq2, the resend seq3 and the adopted save seq4 fail — the page reads the api again (GET) and shows false, and the outbox keeps the latest choice 10ms
+   ❯ E7-W06 (E7-W05 review #4): a restored page that was not left (1)
+     × adopts what the outbox hands it (a newer visit's entry) instead of ignoring it: the change is saved and freed after its 2xx 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/preferences-saver.test.ts > E7-W06 step 4 (E7-W05 review #1): a failed save after a restore whose departure overlapped > seq1 {false} out, seq2 {true} with keepalive, restored before either settles, seq1 lands after seq2, the resend seq3 and the adopted save seq4 fail — the page reads the api again (GET) and shows false, and the outbox keeps the latest choice
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/preferences-saver.test.ts:237:27
+    235|     expect(h.failed).toHaveLength(2);
+    236|     // Not the last answer (seq2's true): what the api holds, read aga…
+    237|     expect(h.reads.count).toBe(1);
+       |                           ^
+    238|     expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL…
+    239|     // The latest choice never got a 2xx: it stays kept for the next v…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/preferences-saver.test.ts > E7-W06 (E7-W05 review #4): a restored page that was not left > adopts what the outbox hands it (a newer visit's entry) instead of ignoring it: the change is saved and freed after its 2xx
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/preferences-saver.test.ts:271:76
+    269|     expect(h.puts).toHaveLength(0);
+    270|     h.saver.restore({ emailByCategory: { OPERATIONAL: true } });
+    271|     expect(shownPreferences(h.saver.state())?.emailByCategory.OPERATIO…
+       |                                                                            ^
+    272|     await tick();
+    273|     expect(h.puts.map((put) => [put.body, put.keepalive])).toEqual([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  06:11:27
+   Duration  151ms (tests 56%, transform 32%, import 9%, worker 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/preferences-saver.test.ts
+exit 1

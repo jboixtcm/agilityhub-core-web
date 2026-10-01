@@ -108,13 +108,40 @@ export function writeCachedBranding(
   }
 }
 
+/**
+ * How long an app's boot waits for the live `/branding` when it has a cached one (E7-W06 step 2):
+ * past it, the app starts with the cache. A read that never answered left the add-dog success page
+ * blank — never rendered, so its session was never restored (T-04-34, INC-07).
+ */
+export const BRANDING_BOOT_TIMEOUT_MS = 4_000;
+
+export interface RefreshBrandingOptions {
+  /** With a cached branding, give up the live read after this long and use the cache. */
+  cachedTimeoutMs?: number;
+}
+
 export async function refreshBranding(
   client: ApiClient,
   host: string,
   storage: Pick<Storage, "getItem" | "setItem"> = localStorage,
+  options: RefreshBrandingOptions = {},
 ): Promise<NormalizedBranding> {
+  // Without a cache there is nothing to fall back on: the read is waited for as before.
+  const limit =
+    options.cachedTimeoutMs !== undefined && readCachedBranding(host, storage) !== null
+      ? new AbortController()
+      : undefined;
+  const timer =
+    limit === undefined
+      ? undefined
+      : setTimeout(() => {
+          limit.abort(new DOMException("The branding read took too long", "TimeoutError"));
+        }, options.cachedTimeoutMs);
   try {
-    const result = await client.GET("/branding");
+    const result = await client.GET(
+      "/branding",
+      limit === undefined ? {} : { signal: limit.signal },
+    );
     if (result.data === undefined) {
       throw new TypeError("The branding response did not contain data", { cause: result.error });
     }
@@ -127,5 +154,7 @@ export async function refreshBranding(
       return cached;
     }
     throw error;
+  } finally {
+    clearTimeout(timer);
   }
 }

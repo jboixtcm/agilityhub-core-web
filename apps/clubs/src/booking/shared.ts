@@ -1,4 +1,4 @@
-import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
+import { type ApiClient, type components, isApiError, isInProgress } from "@agilityhub/api-client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { useTranslation } from "react-i18next";
 
@@ -66,8 +66,13 @@ export function pageNotice(): PageNotice | undefined {
   return typeof notice === "object" && notice !== null ? (notice as PageNotice) : undefined;
 }
 
-/** The message of a failed request, by its `code` (never the api `message` as copy). */
+/**
+ * The message of a failed request, by its `code` (never the api `message` as copy). A keyed write
+ * whose first request still runs (`409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}`) keeps its key
+ * and reads the shared `common:inProgress`, never `DIFFERENT_REQUEST`'s text (CONVENCIONS_API §7, E80).
+ */
 export function errorText(t: Translate, cause: unknown): string {
+  if (isInProgress(cause)) return t("common:inProgress");
   const fallback = t("errors:INTERNAL_ERROR");
   return isApiError(cause) ? t(`errors:${cause.code}`, { defaultValue: fallback }) : fallback;
 }
@@ -75,10 +80,12 @@ export function errorText(t: Translate, cause: unknown): string {
 /**
  * A request's state; `load` changes with its inputs (a dog, an id), and an answer that arrives
  * after they changed is dropped. `refetch(true)` and a new `refresh` read the same request again
- * with the rows kept on screen — also when that read fails (E7-W02 review #3); another request
- * (another dog) shows its own error.
+ * with the rows kept on screen while they load. A quiet read that fails shows the error with its
+ * retry (04's join and failed hold, 07, the waiting entry), unless `keepRows`: only 03 keeps its
+ * rows then, for its `refresh` and `pageshow` reads (E7-W02 review #3, E7-W06 step 3). Another
+ * request (another dog) always shows its own error.
  */
-export function useLoader<Data>(load: () => Promise<Data>, refresh?: unknown) {
+export function useLoader<Data>(load: () => Promise<Data>, refresh?: unknown, keepRows = false) {
   const [state, setState] = useState<LoadState<Data>>({ status: "loading" });
   const [reload, setReload] = useState(0);
   // The request whose rows are on screen.
@@ -94,7 +101,7 @@ export function useLoader<Data>(load: () => Promise<Data>, refresh?: unknown) {
       (error: unknown) => {
         if (!current) return;
         setState((previous) =>
-          previous.status === "ready" && shownBy.current === load
+          keepRows && previous.status === "ready" && shownBy.current === load
             ? previous
             : { error, status: "error" },
         );
@@ -103,7 +110,7 @@ export function useLoader<Data>(load: () => Promise<Data>, refresh?: unknown) {
     return () => {
       current = false;
     };
-  }, [load, refresh, reload]);
+  }, [keepRows, load, refresh, reload]);
   const refetch = useCallback((quiet = false) => {
     if (!quiet) setState({ status: "loading" });
     setReload((value) => value + 1);
@@ -118,8 +125,9 @@ function required<Data>(data: Data | undefined): Data {
 
 /**
  * `GET /me/home?dogId=` (03): no `dogId` = «Tots». A new `refresh` (a read-all that landed, S11
- * R-11-10) reads it again with the rows kept on screen, even if that read fails; an older answer
- * is dropped.
+ * R-11-10) and `refetch(true)` (back from the page cache) read it again with the rows kept on
+ * screen, even if that read fails (the only screen that keeps them, E7-W06 step 3); an older
+ * answer is dropped.
  */
 export function useMeHome(client: ApiClient, dogId: string | null, refresh = 0) {
   const load = useCallback(
@@ -133,7 +141,7 @@ export function useMeHome(client: ApiClient, dogId: string | null, refresh = 0) 
       ),
     [client, dogId],
   );
-  return useLoader(load, refresh);
+  return useLoader(load, refresh, true);
 }
 
 /** `GET /me/bookable-classes?dogId=` (04): no `dogId` = the api's proposed dog. */

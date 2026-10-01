@@ -1,0 +1,107 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/booking-handlers.test.ts (22 tests | 4 failed | 11 skipped) 100ms
+   ❯ E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them (4)
+     × E5-W05 step 7: one minute before the opening (Sunday 2 at 19:59) the weeks are one earlier: Wednesday 5 to Saturday 8 are next week's, Monday 10 opens at 20:00, Monday 17 is not listed yet, and Saturday 8 swaps next week's Monday 3 10ms
+   ❯ E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) (7)
+     × E5-W05 round 3 #2: the hold is refused only when the week's limit is reached and nothing can be swapped (R-08-09): mockup 04's fixed «Límit setmanal» in the member world (Duna 1 of 2, her Monday 3 cancellable) holds the seat 5ms
+     × E5-W05 round 3 #2: bookingLimitDone at Monday 3 at 20:00 (mockup 29): every row of Duna's week reads «Límit setmanal» (R-08-03), and the refusal has current = limit = 2 = /me/home's count, the two done classes as notSelectable (real ids), no swap and the coming opening 6ms
+     × E5-W05 round 2 #11.b: the hold lists Duna's PAYMENT_PENDING class of the week as LATE_WINDOW and counts it (bookingSingleClass, PAY_TO_BOOK); Monday 3 is still the swap 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: one minute before the opening (Sunday 2 at 19:59) the weeks are one earlier: Wednesday 5 to Saturday 8 are next week's, Monday 10 opens at 20:00, Monday 17 is not listed yet, and Saturday 8 swaps next week's Monday 3
+AssertionError: expected 409 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 409
+
+ ❯ src/mocks/booking-handlers.test.ts:534:29
+    532|       dogId: "dog-duna",
+    533|     });
+    534|     expect(saturday.status).toBe(201);
+       |                             ^
+    535|     expect((saturday.body as SeatHoldResponse).limit).toMatchObject({
+    536|       count: 1,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 3 #2: the hold is refused only when the week's limit is reached and nothing can be swapped (R-08-09): mockup 04's fixed «Límit setmanal» in the member world (Duna 1 of 2, her Monday 3 cancellable) holds the seat
+AssertionError: expected 409 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 409
+
+ ❯ src/mocks/booking-handlers.test.ts:617:29
+    615|       dogId: "dog-duna",
+    616|     });
+    617|     expect(saturday.status).toBe(201);
+       |                             ^
+    618|     expect((saturday.body as SeatHoldResponse).limit).toMatchObject({
+    619|       count: 1,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 3 #2: bookingLimitDone at Monday 3 at 20:00 (mockup 29): every row of Duna's week reads «Límit setmanal» (R-08-03), and the refusal has current = limit = 2 = /me/home's count, the two done classes as notSelectable (real ids), no swap and the coming opening
+AssertionError: expected [ …(6) ] to deeply equal [ …(6) ]
+
+- Expected
++ Received
+
+  [
+-   "2026-08-05T18:50 CURRENT WEEKLY_LIMIT_DONE",
+-   "2026-08-06T20:00 CURRENT WEEKLY_LIMIT_DONE",
+-   "2026-08-07T17:40 CURRENT WEEKLY_LIMIT_DONE",
++   "2026-08-05T18:50 CURRENT BOOKABLE",
++   "2026-08-06T20:00 CURRENT WAITLIST_OPEN",
++   "2026-08-07T17:40 CURRENT WAITLIST_FULL",
+    "2026-08-08T09:00 CURRENT WEEKLY_LIMIT_DONE",
+    "2026-08-10T18:50 NEXT BOOKABLE",
+    "2026-08-17T09:30 LATER NOT_YET_OPEN",
+  ]
+
+ ❯ src/mocks/booking-handlers.test.ts:635:18
+    633|       (row) => `${row.startsAtLocal} ${row.week} ${row.state}`,
+    634|     );
+    635|     expect(rows).toEqual([
+       |                  ^
+    636|       "2026-08-05T18:50 CURRENT WEEKLY_LIMIT_DONE",
+    637|       "2026-08-06T20:00 CURRENT WEEKLY_LIMIT_DONE",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 #11.b: the hold lists Duna's PAYMENT_PENDING class of the week as LATE_WINDOW and counts it (bookingSingleClass, PAY_TO_BOOK); Monday 3 is still the swap
+AssertionError: expected 409 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 409
+
+ ❯ src/mocks/booking-handlers.test.ts:781:29
+    779|       dogId: "dog-duna",
+    780|     });
+    781|     expect(saturday.status).toBe(201);
+       |                             ^
+    782|     const limit = (saturday.body as SeatHoldResponse).limit;
+    783|     expect(limit).toMatchObject({ count: 2, max: 2, reached: true, wee…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 7 passed | 11 skipped (22)
+   Start at  05:30:51
+   Duration  542ms (transform 49%, import 29%, tests 21%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/booking-handlers.test.ts -t round 3 #2|round 2 #6|round 2 #11|step 7

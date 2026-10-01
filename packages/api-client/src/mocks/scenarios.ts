@@ -23,8 +23,12 @@ export interface MockScenarioDefinition {
   /** The S10 world's club-wide variant (`fixtures/attendance.ts`, screens 20–22). */
   attendance?: AttendanceVariant;
   branding: Branding;
-  /** S08 (mockup 06): Duna has two cancellable bookings this week, so a hold proposes the swap. */
-  bookingLimit?: boolean;
+  /**
+   * S08 R-08-09, the limit worlds (`fixtures/bookings.ts`): `swap` (mockup 06), Duna has two
+   * cancellable bookings this week, so a hold proposes the swap; `done` (mockup 29), her week holds
+   * two classes, both done at `BOOKING_LIMIT_DONE_NOW`, so the hold is refused.
+   */
+  bookingLimit?: "done" | "swap";
   dashboardNulls?: boolean;
   /** Every list export answers `202 {jobId, statusUrl}`, as above `ExportPolicy.syncMaxRows` (R-14-12). */
   exportsQueued?: boolean;
@@ -165,7 +169,18 @@ const scenarios = {
   },
   /** S08 R-08-09 (mockup 06): the week's limit is reached with two cancellable bookings. */
   bookingLimit: {
-    bookingLimit: true,
+    bookingLimit: "swap",
+    branding: canic,
+    me: member,
+    sessions: accountSessions,
+  },
+  /**
+   * S08 R-08-09 (mockup 29, «Si aquesta setmana ja has fet les 2 classes»): Duna's week holds Sunday
+   * 2's class and Monday 3's; read at `BOOKING_LIMIT_DONE_NOW` both are done, nothing can be swapped
+   * and the hold answers `409 BOOKING_LIMIT_REACHED` (E5-W05 round 3 #2).
+   */
+  bookingLimitDone: {
+    bookingLimit: "done",
     branding: canic,
     me: member,
     sessions: accountSessions,

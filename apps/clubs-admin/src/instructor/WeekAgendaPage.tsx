@@ -219,6 +219,9 @@ function noticeToast(t: Translate, notice: AttendanceSheetNotice) {
       return { message: t("instructor:attendance.saved"), tone: "success" as const };
     case "stale":
       return { message: t("instructor:attendance.staleToast"), tone: "warning" as const };
+    case "inProgress":
+      // Not the save's answer: [DESA LA LLISTA] sends it again with the same key (E80).
+      return { message: t("common:inProgress"), tone: "warning" as const };
     case "error":
       return {
         message: t(`errors:${notice.code}`, { defaultValue: t("errors:INTERNAL_ERROR") }),
@@ -273,7 +276,7 @@ function AttendancePanel({
   onListChanged: () => void;
   onNavigate: (path: string) => void;
 }) {
-  const { t } = useTranslation(["instructor", "enums", "errors"]);
+  const { t } = useTranslation(["instructor", "enums", "errors", "common"]);
   const formats = useClubFormats();
   const branding = useBranding();
   const transport = useMemo(() => attendanceSheetTransport(client, classId), [client, classId]);
@@ -359,7 +362,13 @@ function AttendancePanel({
           const line = statusLine(t, row, sheet.sheet.sheet.noShowNoticeTime);
           const href = `/alumnes/${encodeURIComponent(row.dogId)}`;
           return (
-            <li className="week-agenda__row" key={row.bookingId}>
+            // Stable hooks for the core specs (E6-W04 Q6): the booking and the state shown.
+            <li
+              className="week-agenda__row"
+              data-attendance-state={value}
+              data-booking-id={row.bookingId}
+              key={row.bookingId}
+            >
               <span className="week-agenda__who">
                 <a
                   className="week-agenda__student"

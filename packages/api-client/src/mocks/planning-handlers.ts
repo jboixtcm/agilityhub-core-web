@@ -742,7 +742,10 @@ export const planningHandlers = [
       : HttpResponse.json(weekResource(week));
   }),
   http.post("*/api/v1/weeks/:id/generation", async ({ params, request }) => {
-    const week = planningState.weeks.find((candidate) => candidate.id === String(params.id));
+    // The tenant comes from the JWT: another club's token generates none of this club's weeks.
+    const week = callerClubOwnsTheWorld()
+      ? planningState.weeks.find((candidate) => candidate.id === String(params.id))
+      : undefined;
     if (week === undefined) {
       return apiError("NOT_FOUND", "Week not found", 404);
     }

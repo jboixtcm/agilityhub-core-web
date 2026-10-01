@@ -775,7 +775,8 @@
       "opened": "{count, plural, one {# setmana oberta} other {# setmanes obertes}}",
       "swept": "{count, plural, one {# entrada d'espera tancada} other {# entrades d'espera tancades}}",
       "finished": "{count, plural, one {# classe tancada} other {# classes tancades}}",
-      "activitiesFinished": "{count, plural, one {# activitat tancada} other {# activitats tancades}}"
+      "activitiesFinished": "{count, plural, one {# activitat tancada} other {# activitats tancades}}",
+      "ttlPendingRingSlotLocks": "{count, plural, one {# bloqueig tècnic de pista caducat} other {# bloquejos tècnics de pista caducats}}"
     },
     "counterRaw": "{key}: {count}",
     "switchLabel": "{name} activat",

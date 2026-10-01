@@ -433,6 +433,127 @@ describe("E6-W04 step 0d (review of E6-W05): D13's drawer", () => {
   });
 });
 
+describe("E7-W06 (E6-W04 question 5 and its report nits): D13's drawer", () => {
+  const manage = "Gestionar tasques i notes";
+  async function openDrawer(lines: string[]) {
+    fireEvent.click(screen.getByRole("button", { name: manage }));
+    const drawer = await screen.findByRole("dialog", { name: manage });
+    await waitFor(() => {
+      expect(drawer.querySelectorAll(".ah-tasks__list > .ah-task")).toHaveLength(3);
+    });
+    // An instructor cannot read the file limits (403): every file goes to the api.
+    await waitFor(() => {
+      expect(lines.filter((line) => line.startsWith("GET /parameters/files."))).toHaveLength(3);
+    });
+    return drawer;
+  }
+
+  it("E7-W06 step 5 (E6-W04 Q5): an instructor's new task with a refused file names it — «eina.exe: …» — in the drawer, and creates nothing", async () => {
+    const lines = requestLines();
+    await renderRecord();
+    const drawer = await openDrawer(lines);
+    fireEvent.click(within(drawer).getByRole("button", { name: "Afegir" }));
+    const form = within(drawer).getByRole("form", { name: "Nova tasca" });
+    fireEvent.change(within(form).getByLabelText("Text de la tasca nova"), {
+      target: { value: "Salts amb calma" },
+    });
+    fireEvent.change(within(form).getByLabelText("Adjunta un fitxer", { selector: "input" }), {
+      target: { files: [new File(["x"], "eina.exe", { type: "application/x-msdownload" })] },
+    });
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(
+        within(drawer)
+          .getAllByRole("alert")
+          .map((alert) => alert.textContent),
+      ).toEqual(["eina.exe: Aquest tipus de fitxer no està permès."]);
+    });
+    expect(lines.filter((line) => line === "POST /tasks")).toHaveLength(0);
+    expect(within(form).getByLabelText("Text de la tasca nova")).toHaveValue("Salts amb calma");
+  });
+
+  it("E7-W06 review #6: a creation abandoned while on its way (the drawer closed) keeps nothing when its answer is lost — the same task and file later are uploaded again and sent with a new key", async () => {
+    const lines = requestLines();
+    const keys: (string | null)[] = [];
+    let release: () => void = () => undefined;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      http.post("*/api/v1/tasks", async ({ request }) => {
+        keys.push(request.headers.get("Idempotency-Key"));
+        if (keys.length > 1) return undefined;
+        await gate;
+        return HttpResponse.error();
+      }),
+    );
+    const photo = new File(["x"], "salt.jpg", { type: "image/jpeg" });
+    const create = (drawer: HTMLElement) => {
+      fireEvent.click(within(drawer).getByRole("button", { name: "Afegir" }));
+      const form = within(drawer).getByRole("form", { name: "Nova tasca" });
+      fireEvent.change(within(form).getByLabelText("Text de la tasca nova"), {
+        target: { value: "Salts amb calma" },
+      });
+      fireEvent.change(within(form).getByLabelText("Adjunta un fitxer", { selector: "input" }), {
+        target: { files: [photo] },
+      });
+      fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    };
+    await renderRecord();
+    let drawer = await openDrawer(lines);
+    create(drawer);
+    await waitFor(() => {
+      expect(keys).toHaveLength(1);
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Tanca" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: manage })).toBeNull();
+    });
+    release();
+    await waitFor(() => {
+      expect(lines.filter((line) => line === "POST /tasks")).toHaveLength(1);
+    });
+    // Let the lost answer settle before the drawer opens again.
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50);
+    });
+    drawer = await openDrawer(lines);
+    create(drawer);
+    await waitFor(() => {
+      expect(keys).toHaveLength(2);
+    });
+    expect(keys[1]).not.toBe(keys[0]);
+    // The file is uploaded again: the api may have bound the first upload to what it created.
+    expect(lines.filter((line) => line === "POST /attachments/upload-url")).toHaveLength(2);
+  });
+
+  it("E7-W06 step 6 (E6-W04's report nit): the drawer closed after a refusal reopens without it", async () => {
+    const lines = requestLines();
+    await renderRecord();
+    let drawer = await openDrawer(lines);
+    const observations = within(drawer).getAllByLabelText("Adjunta un fitxer", {
+      selector: "input",
+    })[0];
+    fireEvent.change(present(observations), {
+      target: { files: [new File(["x"], "eina.exe", { type: "application/x-msdownload" })] },
+    });
+    await waitFor(() => {
+      expect(
+        within(drawer)
+          .getAllByRole("alert")
+          .map((alert) => alert.textContent),
+      ).toEqual(["eina.exe: Aquest tipus de fitxer no està permès."]);
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Tanca" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: manage })).toBeNull();
+    });
+    drawer = await openDrawer(lines);
+    expect(within(drawer).queryByRole("alert")).toBeNull();
+    expect(within(drawer).queryByText(/eina\.exe/u)).toBeNull();
+  });
+});
+
 describe("«Alumnes» of the back office (mockups D12–D14, S10 §13-9)", () => {
   it("instructors see «Alumnes» in the sidebar; the search reads GET /dogs and opens D13", async () => {
     const i18n = await createI18n({

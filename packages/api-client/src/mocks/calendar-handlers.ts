@@ -99,6 +99,14 @@ function findWeek(id: string): MockWeek | undefined {
   return planningState.weeks.find((week) => week.id === id);
 }
 
+/**
+ * A week of the caller's club: the tenant comes from the JWT, so another club's token finds none
+ * of this club's weeks, for a read or a write (E5-W05 round 3 #3).
+ */
+function ownWeek(id: string): MockWeek | undefined {
+  return callerClubOwnsTheWorld() ? findWeek(id) : undefined;
+}
+
 function blocksOfWeek(week: MockWeek): RingBlock[] {
   return planningState.blocks.filter(
     (block) =>
@@ -447,6 +455,18 @@ function findSession(id: string): ClassSession | undefined {
   return planningState.sessions.find((session) => session.id === id);
 }
 
+/** A class of the caller's club (the JWT's tenant), for a read or a write (E5-W05 round 3 #3). */
+function ownSession(id: string): ClassSession | undefined {
+  return callerClubOwnsTheWorld() ? findSession(id) : undefined;
+}
+
+/** A ring block of the caller's club (the JWT's tenant), for a read or a write. */
+function ownBlock(id: string): RingBlock | undefined {
+  return callerClubOwnsTheWorld()
+    ? planningState.blocks.find((block) => block.id === id)
+    : undefined;
+}
+
 function replaceSession(next: ClassSession): ClassSession {
   planningState.sessions = planningState.sessions.map((session) =>
     session.id === next.id ? next : session,
@@ -631,14 +651,13 @@ function dayGrid(date: string, view: "instructor" | "member", locale: "ca" | "en
 
 export const calendarHandlers = [
   http.get("*/api/v1/weeks/:id/calendar", ({ params, request }) => {
-    // The tenant comes from the JWT: another club's token finds none of this club's weeks.
-    const week = callerClubOwnsTheWorld() ? findWeek(String(params.id)) : undefined;
+    const week = ownWeek(String(params.id));
     if (week === undefined) return apiError("NOT_FOUND", "Week not found", 404);
     const filter = new URL(request.url).searchParams.get("filter") ?? "ACTIVE";
     return HttpResponse.json(calendarOf(week, filter));
   }),
   http.post("*/api/v1/weeks/:id/validation", ({ params }) => {
-    const week = findWeek(String(params.id));
+    const week = ownWeek(String(params.id));
     if (week === undefined) return apiError("NOT_FOUND", "Week not found", 404);
     const drafts = draftIds(week);
     if (drafts.size === 0) {
@@ -718,8 +737,7 @@ export const calendarHandlers = [
     return listResponse(request, classes, CLASS_LIST_SPEC);
   }),
   http.get("*/api/v1/class-sessions/:id", ({ params }) => {
-    // The tenant comes from the JWT: another club's token finds none of this club's classes.
-    const session = callerClubOwnsTheWorld() ? findSession(String(params.id)) : undefined;
+    const session = ownSession(String(params.id));
     if (session === undefined) return apiError("NOT_FOUND", "Class not found", 404);
     // Detail only (api E5-T15): the instructors' names in `instructorIds` order and the ring,
     // always sent (`null` for a class without a ring).
@@ -731,7 +749,7 @@ export const calendarHandlers = [
     });
   }),
   http.patch("*/api/v1/class-sessions/:id", async ({ params, request }) => {
-    const current = findSession(String(params.id));
+    const current = ownSession(String(params.id));
     if (current === undefined) return apiError("NOT_FOUND", "Class not found", 404);
     const body = (await request.json()) as ClassSessionPatchRequest & { date?: string };
     if (body.date !== undefined) return validationError("date");
@@ -795,13 +813,13 @@ export const calendarHandlers = [
     return HttpResponse.json(replaceSession(next));
   }),
   http.get("*/api/v1/class-sessions/:id/cancellation-preview", ({ params }) => {
-    const session = findSession(String(params.id));
+    const session = ownSession(String(params.id));
     return session === undefined
       ? apiError("NOT_FOUND", "Class not found", 404)
       : HttpResponse.json(cancellationPreviewFor(session));
   }),
   http.post("*/api/v1/class-sessions/:id/cancellation", async ({ params, request }) => {
-    const current = findSession(String(params.id));
+    const current = ownSession(String(params.id));
     if (current === undefined) return apiError("NOT_FOUND", "Class not found", 404);
     const body = (await request.json()) as ClassCancellationRequest;
     if (current.state !== "DRAFT" && current.state !== "ACTIVE") {
@@ -833,7 +851,7 @@ export const calendarHandlers = [
     );
   }),
   http.post("*/api/v1/class-sessions/:id/risk-exemption", async ({ params, request }) => {
-    const current = findSession(String(params.id));
+    const current = ownSession(String(params.id));
     if (current === undefined) return apiError("NOT_FOUND", "Class not found", 404);
     const body = (await request.json()) as RiskExemptionRequest;
     if (current.state !== "ACTIVE") {
@@ -882,13 +900,13 @@ export const calendarHandlers = [
     return HttpResponse.json(block, { status: 201 });
   }),
   http.get("*/api/v1/ring-blocks/:id", ({ params }) => {
-    const block = planningState.blocks.find((candidate) => candidate.id === String(params.id));
+    const block = ownBlock(String(params.id));
     return block === undefined
       ? apiError("NOT_FOUND", "Ring block not found", 404)
       : HttpResponse.json(block);
   }),
   http.patch("*/api/v1/ring-blocks/:id", async ({ params, request }) => {
-    const current = planningState.blocks.find((block) => block.id === String(params.id));
+    const current = ownBlock(String(params.id));
     if (current === undefined) return apiError("NOT_FOUND", "Ring block not found", 404);
     const body = (await request.json()) as RingBlockPatchRequest;
     if (current.activityId !== null && current.activityId !== undefined) {
@@ -932,7 +950,7 @@ export const calendarHandlers = [
     return HttpResponse.json(next);
   }),
   http.post("*/api/v1/ring-blocks/:id/cancellation", ({ params }) => {
-    const current = planningState.blocks.find((block) => block.id === String(params.id));
+    const current = ownBlock(String(params.id));
     if (current === undefined) return apiError("NOT_FOUND", "Ring block not found", 404);
     if (current.activityId !== null && current.activityId !== undefined) {
       return apiError("RING_BLOCK_MANAGED_BY_ACTIVITY", "Managed by an activity", 422);

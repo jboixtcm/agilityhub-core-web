@@ -1,0 +1,110 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/backoffice-handlers.test.ts (30 tests | 2 failed | 28 skipped) 87ms
+   ❯ E5-W05 round 2 · the staff registrants' level is the dog's own, and follows levels.enabled (S08 §6) (2)
+     × E5-W05 round 2 #3: GET /class-sessions/{id}/bookings sends each dog's own level (Duna «C», Chun-li «A», Nass «B», Fish «B», Thai «E»), and null in a club with levels.enabled = false 27ms
+     × E5-W05 round 3 #4: in every class of the calendar and day-grid worlds each registrant's level is one the class allows (S08 R-08-04), no dog is listed twice, and the rows match the class's counters 58ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 round 2 · the staff registrants' level is the dog's own, and follows levels.enabled (S08 §6) > E5-W05 round 2 #3: GET /class-sessions/{id}/bookings sends each dog's own level (Duna «C», Chun-li «A», Nass «B», Fish «B», Thai «E»), and null in a club with levels.enabled = false
+AssertionError: expected [ 'Duna:C', 'Chun-li:A', …(3) ] to deeply equal [ 'Duna:C', 'Nass:B', 'Fish:B', …(2) ]
+
+- Expected
++ Received
+
+  [
+    "Duna:C",
++   "Chun-li:A",
+    "Nass:B",
+    "Fish:B",
+-   "Blat:B",
+-   "Mixa:C",
++   "Thai:E",
+  ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:809:35
+    807|     };
+    808|     // E5-W05 round 3 #4: D4's «B+C» takes only B and C dogs (R-08-04)…
+    809|     expect(await levels("admin")).toEqual(["Duna:C", "Nass:B", "Fish:B…
+       |                                   ^
+    810|     expect(await levels("planningNoLevels")).toEqual([
+    811|       "Duna:—",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 round 2 · the staff registrants' level is the dog's own, and follows levels.enabled (S08 §6) > E5-W05 round 3 #4: in every class of the calendar and day-grid worlds each registrant's level is one the class allows (S08 R-08-04), no dog is listed twice, and the rows match the class's counters
+AssertionError: expected [ …(45) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "cls-2026-08-10-0830-0 (A+B): Mixa C",
++   "cls-2026-08-10-0830-0 (A+B): Bruc D",
++   "cls-2026-08-10-0830-1 (C+D+E+F+G): Chun-li A",
++   "cls-2026-08-10-1740-0 (T): Fish B",
++   "cls-2026-08-10-1850-0 (B+C): Chun-li A",
++   "cls-2026-08-10-1850-0 (B+C): Thai E",
++   "cls-2026-08-10-1850-1 (P): Trevi D",
++   "cls-2026-08-10-1850-1 (P): Mixa C",
++   "cls-2026-08-10-1850-1 (P): Thai E",
++   "cls-2026-08-11-1740-0 (D+E): Fish B",
++   "cls-2026-08-11-1740-0 (D+E): Blat B",
++   "cls-2026-08-11-1740-0 (D+E): Mixa C",
++   "cls-2026-08-11-1850-0 (A+B): Duna C",
++   "cls-2026-08-11-1850-0 (A+B): Thai E",
++   "cls-2026-08-12-0830-0 (A+B): Mixa C",
++   "cls-2026-08-12-0830-0 (A+B): Bruc D",
++   "cls-2026-08-12-0830-0 (A+B): Coco C",
++   "cls-2026-08-12-0830-1 (C+D+E+F+G): Chun-li A",
++   "cls-2026-08-12-0830-1 (C+D+E+F+G): Nass B",
++   "cls-2026-08-12-1850-0 (B+C): Chun-li A",
++   "cls-2026-08-12-1850-0 (B+C): Thai E",
++   "cls-2026-08-12-1850-1 (T): Trevi D",
++   "cls-2026-08-12-1850-1 (T): Thai E",
++   "cls-2026-08-13-1740-0 (D+E): Fish B",
++   "cls-2026-08-13-1740-0 (D+E): Blat B",
++   "cls-2026-08-13-1850-0 (P): Duna C",
++   "cls-2026-08-13-1850-0 (P): Chun-li A",
++   "cls-2026-08-13-1850-0 (P): Thai E",
++   "cls-2026-08-13-1850-1 (C): Trevi D",
++   "cls-2026-08-13-1850-1 (C): Thai E",
++   "cls-2026-08-14-0830-0 (P): Mixa C",
++   "cls-2026-08-14-0830-0 (P): Bruc D",
++   "cls-2026-08-14-0830-0 (P): Nala A",
++   "cls-2026-08-14-1740-0 (C): Fish B",
++   "cls-2026-08-14-1850-0 (A+B): Duna C",
++   "cls-2026-08-14-1850-0 (A+B): Thai E",
++   "cls-2026-08-15-0830-0 (A): Mixa C",
++   "cls-2026-08-15-0830-0 (A): Bruc D",
++   "cls-2026-08-15-0830-1 (B+C): Bitxo D",
++   "cls-2026-08-15-0830-1 (B+C): Chun-li A",
++   "cls-2026-08-15-0930-1 (P): Nass B",
++   "cls-2026-08-15-0930-1 (P): Fish B",
++   "cls-2026-08-15-0930-1 (P): Blat B",
++   "cls-2026-08-10-1740-9 (D): Duna C",
++   "cls-2026-08-11-2000-10 (F+G): Blat B",
++ ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:856:22
+    854|       }
+    855|     }
+    856|     expect(problems).toEqual([]);
+       |                      ^
+    857|   });
+    858| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 28 skipped (30)
+   Start at  05:34:51
+   Duration  714ms (transform 52%, import 34%, tests 14%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/backoffice-handlers.test.ts -t round 2 #3|round 3 #4

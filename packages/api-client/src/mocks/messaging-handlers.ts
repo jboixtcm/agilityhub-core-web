@@ -14,6 +14,7 @@ import {
   notificationListItem,
   notificationLog,
   resetMessagingState,
+  smsCheckedLength,
   type StoredNotification,
   type StoredTemplate,
   syntaxError,
@@ -128,12 +129,17 @@ function textRefusal(
   }
   if (smsActive(matrix)) {
     // The default language's SMS text is the required one (`smsBody.<default locale>`).
-    const defaultLocale = currentMockScenario().branding.defaultLocale;
+    const { branding } = currentMockScenario();
+    const defaultLocale = branding.defaultLocale;
     if ((texts.smsBody?.[defaultLocale] ?? "").trim() === "") {
       return failure(400, "SMS_BODY_REQUIRED", { field: `smsBody.${defaultLocale}` });
     }
     const sms = Object.entries(texts.smsBody ?? {}).filter(([, text]) => text.trim() !== "");
-    const long = sms.find(([, text]) => text.length > 160);
+    // As the api counts it (ruling E82): rendered with the preview data of its language, without
+    // `admin_text`, and transliterated to GSM-7 — never the text as typed.
+    const long = sms.find(
+      ([locale, text]) => smsCheckedLength(text, locale, branding.club.name) > 160,
+    );
     if (long !== undefined) {
       return failure(400, "SMS_BODY_TOO_LONG", { field: `smsBody.${long[0]}`, max: 160 });
     }

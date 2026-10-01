@@ -61,6 +61,9 @@ export function NoticesCard({ client }: { client: ApiClient }) {
           if (unsaved === undefined) kept.clear();
           else kept.write(unsaved);
         },
+        // After a failed save that followed overlapping PUTs of a departure, 12 shows what the api
+        // holds, not the last answer (E7-W06 step 4).
+        read: async () => (await client.GET("/me/notification-preferences")).data,
         save: async (body, keepalive) =>
           (
             await client.PUT("/me/notification-preferences", {
@@ -79,8 +82,9 @@ export function NoticesCard({ client }: { client: ApiClient }) {
     const leave = () => {
       saver.leave();
     };
-    // Back from the back-forward cache (`persisted`): 12 saves again, and what its departure kept
-    // and nothing confirmed since goes again as a normal change (E7-W05 step 2).
+    // Back from the back-forward cache (`persisted`): 12 saves again, and what the outbox hands
+    // over — its departure's change and nothing confirmed since, or a newer visit's — goes again
+    // as a normal change, also when this page left with nothing unsaved (E7-W05 step 2, E7-W06).
     const restore = (event: PageTransitionEvent) => {
       if (event.persisted) saver.restore(outbox.take());
     };

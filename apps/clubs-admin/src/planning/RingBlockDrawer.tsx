@@ -6,6 +6,7 @@ import {
   type RingBlockConflict,
   ringBlockCreateBody,
   ringBlockFailure,
+  useSubmissionKeys,
 } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Button, Drawer, FormField, Input, Select, Textarea } from "@agilityhub/ui";
@@ -76,6 +77,8 @@ export function RingBlockDrawer({
   const { t } = useTranslation(["admin-scheduling", "enums", "errors"]);
   const { formatTime } = useClubFormats();
   const errorMessage = useCalendarErrorMessage();
+  // One key per submission (CONVENCIONS_API §7, E74, E79): kept while the api has not answered.
+  const blockKeys = useSubmissionKeys();
   const block = mode.kind === "edit" ? mode.block : undefined;
   const managed = block?.activityId !== null && block?.activityId !== undefined;
   const activeRings = rings.filter((ring) => ring.active || ring.id === block?.ringId);
@@ -167,7 +170,11 @@ export function RingBlockDrawer({
       }
       return;
     }
-    setError({ field: failure.kind, message: errorMessage(cause) });
+    // IN_PROGRESS reads `common:inProgress` (`errorMessage`) where the form says its errors.
+    setError({
+      field: failure.kind === "inProgress" ? "general" : failure.kind,
+      message: errorMessage(cause),
+    });
   };
 
   const save = async (cancelBookings = false) => {
@@ -193,9 +200,10 @@ export function RingBlockDrawer({
     );
     try {
       if (block === undefined) {
-        // A key per attempt (the form is disabled while pending): a retry after fixing a field
-        // must not replay the first answer.
-        await createRingBlock(client, fields, crypto.randomUUID());
+        // One key per submission (its body): a retry of the same body while the api has not
+        // answered it (offline, IN_PROGRESS) sends the same key; an answer retires it, and a body
+        // with a field fixed is another submission with its own key.
+        await blockKeys.send(JSON.stringify(fields), (key) => createRingBlock(client, fields, key));
       } else {
         const patch: RingBlockPatch = { version: block.version };
         if (fields.ringId !== block.ringId) patch.ringId = fields.ringId;

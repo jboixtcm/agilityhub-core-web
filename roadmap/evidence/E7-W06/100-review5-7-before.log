@@ -1,0 +1,112 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/submission-key.test.ts (8 tests | 2 failed | 6 skipped) 7ms
+   ❯ E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission (7)
+     × E7-W06 review #7: a late answer of an earlier request (a double tap) never retires the key a newer submission of the same payload holds 6ms
+   ❯ E7-W06 review #5 (CONVENCIONS_API §7): a repeatable operation keeps an unanswered key for HELD_KEY_TTL_MS only (1)
+     × E7-W06 review #5: within the limit the retry reuses the key; after it, the same operation is a new submission with a new key 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/submission-key.test.ts > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission > E7-W06 review #7: a late answer of an earlier request (a double tap) never retires the key a newer submission of the same payload holds
+AssertionError: expected '185626e3-71f3-416f-b591-0ff991240e25' to be 'b2600acd-7933-4314-8b67-a3b449befbf2' // Object.is equality
+
+Expected: "b2600acd-7933-4314-8b67-a3b449befbf2"
+Received: "185626e3-71f3-416f-b591-0ff991240e25"
+
+ ❯ src/submission-key.test.ts:110:36
+    108|     releaseLate("B");
+    109|     await expect(second).resolves.toBe("B");
+    110|     expect(keys.keyFor("payload")).toBe(newer);
+       |                                    ^
+    111|   });
+    112| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/submission-key.test.ts > E7-W06 review #5 (CONVENCIONS_API §7): a repeatable operation keeps an unanswered key for HELD_KEY_TTL_MS only > E7-W06 review #5: within the limit the retry reuses the key; after it, the same operation is a new submission with a new key
+AssertionError: expected 'eee91ec8-5a74-45b8-8c03-3fcf14d2a65e' to be '047bfc3f-be1f-43d2-9ae3-f9cdcd1693c7' // Object.is equality
+
+Expected: "047bfc3f-be1f-43d2-9ae3-f9cdcd1693c7"
+Received: "eee91ec8-5a74-45b8-8c03-3fcf14d2a65e"
+
+ ❯ src/submission-key.test.ts:118:73
+    116|     const store = new Map<string, HeldKey>();
+    117|     const first = heldKeyFor(store, "job|false", 1_000);
+    118|     expect(heldKeyFor(store, "job|false", 1_000 + HELD_KEY_TTL_MS - 1)…
+       |                                                                         ^
+    119|     const later = heldKeyFor(store, "job|false", 1_000 + HELD_KEY_TTL_…
+    120|     expect(later).not.toBe(first);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 skipped (8)
+   Start at  07:13:25
+   Duration  130ms (transform 52%, import 26%, tests 17%, worker 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/submission-key.test.ts -t review
+exit 1
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/JobsCard.test.tsx (28 tests | 2 failed | 26 skipped) 237ms
+   ❯ E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS (4)
+     × E7-W06 review #5: closing [Executa ara]'s confirmation after an unanswered run gives it up — a run asked for later is a new one with a new key, never the replay of the old one 179ms
+     × E7-W06 review #5: an unanswered [Simula] keeps its key for 5 minutes only — a simulation asked for later is a new one 56ms
+ ❯ src/followup/followup.test.tsx (27 tests | 1 failed | 26 skipped) 185ms
+   ❯ E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS (3)
+     × E7-W06 review #5: an unanswered read-all keeps its key for 5 minutes only — a read-all asked for later is a new one, which moves readAllAt on instead of replaying the old answer 184ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS > E7-W06 review #5: closing [Executa ara]'s confirmation after an unanswered run gives it up — a run asked for later is a new one with a new key, never the replay of the old one
+AssertionError: expected 'e06066ab-e757-4f1e-abe1-882e27b95475' not to be 'e06066ab-e757-4f1e-abe1-882e27b95475' // Object.is equality
+ ❯ src/catalogs/JobsCard.test.tsx:890:25
+    888|       expect(keys).toHaveLength(2);
+    889|     });
+    890|     expect(keys[1]).not.toBe(keys[0]);
+       |                         ^
+    891|   });
+    892|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS > E7-W06 review #5: an unanswered [Simula] keeps its key for 5 minutes only — a simulation asked for later is a new one
+AssertionError: expected 'c9d24ba0-aacd-4aae-8391-2c1bfc4783e3' not to be 'c9d24ba0-aacd-4aae-8391-2c1bfc4783e3' // Object.is equality
+ ❯ src/catalogs/JobsCard.test.tsx:908:25
+    906|     await screen.findByRole("dialog", { name: /^Simulació: què faria a…
+    907|     expect(keys).toHaveLength(2);
+    908|     expect(keys[1]).not.toBe(keys[0]);
+       |                         ^
+    909|   });
+    910| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/followup/followup.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS > E7-W06 review #5: an unanswered read-all keeps its key for 5 minutes only — a read-all asked for later is a new one, which moves readAllAt on instead of replaying the old answer
+AssertionError: expected 'fd09843e-27a9-4a59-9da1-e989238b8182' not to be 'fd09843e-27a9-4a59-9da1-e989238b8182' // Object.is equality
+ ❯ src/followup/followup.test.tsx:942:25
+    940|     const keys = posts().map((request) => request.key);
+    941|     expect(keys).toHaveLength(2);
+    942|     expect(keys[1]).not.toBe(keys[0]);
+       |                         ^
+    943|   });
+    944|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 52 skipped (55)
+   Start at  07:13:25
+   Duration  1.76s (transform 40%, environment 24%, import 16%, tests 14%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/JobsCard.test.tsx src/followup/followup.test.tsx -t review #5
+exit 1

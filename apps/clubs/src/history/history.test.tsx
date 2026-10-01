@@ -346,6 +346,37 @@ describe("E6-W04 step 0b: screen 25's activity rows open their page (HistoryItem
     expect(screen.getByText("dg 12 de juliol · 9:00–13:00")).toBeVisible();
   });
 
+  it("E7-W06 step 2 (E6-W04 review #8): a plain click on the activity link moves in the app (no full page load): the activity's page shows in the same document", async () => {
+    await renderApp("/historic");
+    const link = await screen.findByRole("link", { name: "Seminari d'obstacles" });
+    fireEvent.click(link);
+    expect(window.location.pathname).toBe("/activitats/activity-seminari-obstacles");
+    expect(
+      await screen.findByRole("heading", { level: 2, name: "Seminari d'obstacles" }),
+    ).toBeVisible();
+  });
+
+  it("E7-W06 step 5 (E6-W04 question 6): each class row of 25 carries data-booking-id, the api's id; activity and training rows carry none", async () => {
+    let answered: { id: string; type: string }[] = [];
+    server.events.on("response:mocked", ({ request, response }) => {
+      if (new URL(request.url).pathname !== "/api/v1/me/history") return;
+      void response
+        .clone()
+        .json()
+        .then((body: { items?: { id: string; type: string }[] }) => {
+          answered = body.items ?? [];
+        });
+    });
+    window.history.replaceState(null, "", "/historic");
+    await renderHistory();
+    const rows = [...document.querySelectorAll<HTMLElement>(".history-screen__list > li")];
+    expect(answered.filter((item) => item.type === "CLASS").length).toBeGreaterThan(0);
+    expect(rows.map((row) => row.dataset.bookingId ?? null)).toEqual(
+      answered.map((item) => (item.type === "CLASS" ? item.id : null)),
+    );
+    server.events.removeAllListeners();
+  });
+
   it("E6-W04 step 0b: an ACTIVITY row whose activityId is null (a cancelled, draft or unpublished activity: its page is 404) has no link, and a published one does", async () => {
     server.use(
       http.get("*/api/v1/me/history", () =>

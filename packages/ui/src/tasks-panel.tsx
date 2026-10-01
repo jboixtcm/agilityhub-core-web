@@ -271,6 +271,8 @@ export interface TasksPanelProps<Task extends TaskPanelItem> {
   tasks: readonly Task[];
   /** Absent: the history's read-only list (no «＋ Afegir»). */
   onCreate?: ((text: string, files: readonly File[]) => Promise<boolean>) | undefined;
+  /** The new-task form was cancelled: a submission of it left without an answer is abandoned. */
+  onCancelCreate?: (() => void) | undefined;
   onAttach?: ((task: Task, files: readonly File[]) => Promise<boolean>) | undefined;
   onComplete?: ((task: Task) => Promise<boolean>) | undefined;
   onDelete?: ((task: Task) => Promise<boolean>) | undefined;
@@ -307,6 +309,7 @@ export function TasksPanel<Task extends TaskPanelItem>({
   loading = false,
   more,
   onAttach,
+  onCancelCreate,
   onComplete,
   onCreate,
   onDelete,
@@ -441,6 +444,7 @@ export function TasksPanel<Task extends TaskPanelItem>({
                 setAdding(false);
                 setNewText("");
                 setNewFiles([]);
+                onCancelCreate?.();
               }}
               variant="ghost"
             >
@@ -838,6 +842,8 @@ type FollowupEntity = "DOG_OBSERVATIONS" | "INSTRUCTOR_NOTE" | "TASK";
  * written structurally so this package stays free of the api client.
  */
 export interface FollowupEditorModel<Task extends TaskPanelItem> {
+  /** The new-task form closed: its submission left without an answer is abandoned. */
+  abandonCreate?: (() => void) | undefined;
   addAttachments: (
     entityType: "DOG_OBSERVATIONS" | "TASK",
     entityId: string,
@@ -1057,6 +1063,7 @@ export function DogFollowupEditor<Task extends TaskPanelItem>({
             : undefined,
         onAttach: (task, files) =>
           act("tasks", () => model.addAttachments("TASK", task.id, files), true),
+        onCancelCreate: model.abandonCreate,
         onComplete: (task) => act("tasks", () => model.completeTask(task)),
         onCreate: (text, files) => act("tasks", () => model.createTask(text, files)),
         onDelete: (task) => act("tasks", () => model.deleteTask(task)),

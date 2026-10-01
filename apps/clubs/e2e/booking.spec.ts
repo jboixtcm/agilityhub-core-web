@@ -129,15 +129,17 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
   test("29 limit done and «Properament»: the notes without a countdown (S08 §2 row 29 amended 26-09, B1)", async ({
     page,
   }) => {
-    await login(page);
+    // E5-W05 round 3 #2: the `bookingLimitDone` world on Monday 3 at 20:00 (`BOOKING_LIMIT_DONE_NOW`,
+    // still W0): Duna's classes of Sunday 2 and Monday 3 are both done, nothing can be swapped, and
+    // the api refuses the hold (R-08-09) — mockup 29's «Si aquesta setmana ja has fet les 2 classes».
+    await login(page, "bookingLimitDone", { clock: new Date("2026-08-03T20:00:00+02:00") });
     await openReserve(page);
     await tapRow(page, "ds 8 · 9:00");
     // This week's limit (CURRENT at the clock, R-08-01): the class is over by Sunday 9 at 20:00,
-    // the coming opening (`nextBookableAt`). E5-W05 round 2 #6: the refusal counts Duna's real
-    // bookings of the week (her Monday 3, as 03 counts it), so «una classe», not the mockup's «dues».
+    // the coming opening (`nextBookableAt`).
     await expect(
       page.getByText(
-        "Aquesta setmana ja has fet una classe amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
+        "Aquesta setmana ja has fet dues classes amb la Duna. Podràs reservar per a la setmana vinent a partir de diumenge 9 a les 20 h.",
       ),
     ).toBeVisible();
     await shot(page, "29-limit-375.png");

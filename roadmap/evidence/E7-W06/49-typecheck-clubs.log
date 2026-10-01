@@ -1,0 +1,12 @@
+
+> clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> tsc --noEmit
+
+../../packages/api-client/src/mocks/fixtures/census.ts(354,5): error TS2375: Type '{ accountId: null; address: { city: string; country: null; postalCode: string; province: null; street: string; }; birthDate: string; bookingBlock: { active: false; }; consents: { imageRights: components["schemas"]["ImageRights"]; privacyPolicy: components["schemas"]["PrivacyPolicyConsent"]; } | null | undefined; ......' is not assignable to type '{ accountId?: string | null; accountMissing?: boolean; address: { city: string; country?: string | null; postalCode: string; province?: string | null; street: string; }; billedViaMemberId?: string | null; ... 29 more ...; version: number; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'consents' are incompatible.
+    Type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null | undefined' is not assignable to type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null'.
+      Type 'undefined' is not assignable to type '{ imageRights: { at?: string | null; byAccountId?: string | null; granted: boolean; version?: string | null; }; privacyPolicy: { acceptedAt: string; version: string; }; } | null'.
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 typecheck: `tsc --noEmit`
+Exit status 2
+exit 2

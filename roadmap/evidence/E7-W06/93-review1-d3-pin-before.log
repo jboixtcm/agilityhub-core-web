@@ -1,0 +1,259 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/planning/TemplatesPage.test.tsx (31 tests | 1 failed | 30 skipped) 10265ms
+   ❯ E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D3's week generation keeps its key on IN_PROGRESS (2)
+     × E7-W06 step 1 (its review #1): the modal stays on the week the admin confirmed — when the first request did generate it meanwhile (the candidates reload no longer offers it), the modal closes and never sends the next week 10263ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D3's week generation keeps its key on IN_PROGRESS > E7-W06 step 1 (its review #1): the modal stays on the week the admin confirmed — when the first request did generate it meanwhile (the candidates reload no longer offers it), the modal closes and never sends the next week
+AssertionError: expected <section …(4)>…(2)</section> to be null
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"planning-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"planning-header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mPlantilles[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-tabs"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"planning-tab"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"menu"[39m
+                [33mclass[39m=[32m"planning-tab__toggle planning-tab__toggle--active"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mdl–dv: «Setmana A»[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"planning-tab"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-expanded[39m=[32m"false"[39m
+                [33maria-haspopup[39m=[32m"menu"[39m
+                [33mclass[39m=[32m"planning-tab__toggle"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mDissabtes[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"planning-header__actions"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mNova[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mDuplica[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFranja[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mCrear classe[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card planning-grid-card"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-schedule-grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-schedule-grid__scroll"[39m
+            [36m>[39m
+              [36m<table[39m
+                [33mclass[39m=[32m"ah-schedule-grid__table"[39m
+                [33mstyle[39m=[32m"--schedule-columns: 5;"[39m
+              [36m>[39m
+                [36m<caption[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mQuadre setmanal de la plantilla «Setmana A»[0m
+                [36m</caption>[39m
+                [36m<thead>[39m
+                  [36m<tr>[39m
+                    [36m<td[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__corner"[39m
+                    [36m/>[39m
+                    [36m<th[39m
+                      [33mclass[39m=[32m"ah-schedule-grid__column"[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33mclass[39m=[32m"ah-schedule-grid__column-button"[39m
+                        [33mtype[39m=[32m"button"[3...
+
+- Expected:
+null
+
++ Received:
+<section
+  aria-labelledby="_r_0_"
+  aria-modal="true"
+  class="ah-modal"
+  role="dialog"
+>
+  <div
+    class="ah-overlay__header"
+  >
+    <h2
+      id="_r_0_"
+    >
+      Generar classes — per setmanes
+    </h2>
+    <button
+      aria-label="Tanca"
+      class="ah-overlay__close"
+    >
+      <svg
+        aria-hidden="true"
+        class="ah-icon"
+      >
+        <use
+          href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"
+        />
+      </svg>
+    </button>
+  </div>
+  <div
+    class="ah-overlay__body"
+  >
+    <p>
+      Es generaran com a esborrany les classes de la setmana del 26/10/2026
+    </p>
+    <p
+      class="ah-form-field__error"
+      role="alert"
+    >
+      L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.
+    </p>
+    <div
+      class="planning-form__actions"
+    >
+      <button
+        class="ah-button ah-button--ghost"
+        type="button"
+      >
+        <span
+          class="ah-button__content"
+        >
+          Cancel·la
+        </span>
+      </button>
+      <button
+        class="ah-button ah-button--primary"
+        type="button"
+      >
+        <span
+          class="ah-button__content"
+        >
+          GENERAR CLASSES
+        </span>
+      </button>
+    </div>
+  </div>
+</section>
+
+ ❯ src/planning/TemplatesPage.test.tsx:1156:44
+    1154|     // The candidates read again after the answer no longer hold the c…
+    1155|     await waitFor(() => {
+    1156|       expect(screen.queryByRole("dialog")).toBeNull();
+       |                                            ^
+    1157|     });
+    1158|     expect(confirmedDate).toBeDefined();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 30 skipped (31)
+   Start at  07:08:18
+   Duration  11.15s (tests 93%, transform 3%, environment 2%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/planning/TemplatesPage.test.tsx -t review #1
+exit 1

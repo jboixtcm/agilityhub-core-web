@@ -1,0 +1,513 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx (19 tests | 1 failed | 18 skipped) 10068ms
+   ❯ T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) (19)
+     × E7-W06 review #4: a save answered 409 MEMBER_ERASED (the member erased while D10 is open) ends the block with errors:MEMBER_ERASED — no controls left to change again 10064ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W06 review #4: a save answered 409 MEMBER_ERASED (the member erased while D10 is open) ends the block with errors:MEMBER_ERASED — no controls left to change again
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card notification-preferences"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"census-record__section-title"[39m
+      [36m>[39m
+        [0mPreferències d'avisos (mantenibles aquí i al perfil)[0m
+      [36m</h2>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preferences-head"[39m
+      [36m>[39m
+        [36m<span />[39m
+        [36m<span>[39m
+          [0mApp[0m
+        [36m</span>[39m
+        [36m<span>[39m
+          [0mCorreu[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mOperativa (reserves i canvis fets per l'abonat)[0m
+        [36m</span>[39m
+        [36m<svg[39m
+          [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+          [33mrole[39m=[32m"img"[39m
+        [36m>[39m
+          [36m<title>[39m
+            [0mSempre actiu a l'app[0m
+          [36m</title>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"census-record__preference-control"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-checked[39m=[32m"false"[39m
+            [33maria-label[39m=[32m"Correu: Operativa (reserves i canvis fets per l'abonat)"[39m
+            [33mclass[39m=[32m"ah-switch"[39m
+            [33mrole[39m=[32m"switch"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-switch__thumb"[39m
+            [36m/>[39m
+          [36m</button>[39m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mComunicats personals[0m
+        [36m</span>[39m
+        [36m<svg[39m
+          [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+          [33mrole[39m=[32m"img"[39m
+        [36m>[39m
+          [36m<title>[39m
+            [0mSempre actiu a l'app[0m
+          [36m</title>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"census-record__preference-control"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-checked[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"Correu: Comunicats personals"[39m
+            [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+            [33mrole[39m=[32m"switch"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-switch__thumb"[39m
+            [36m/>[39m
+          [36m</button>[39m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mCanvis en reserves (fets pel club)[0m
+        [36m</span>[39m
+        [36m<svg[39m
+          [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+          [33mrole[39m=[32m"img"[39m
+        [36m>[39m
+          [36m<title>[39m
+            [0mSempre actiu a l'app[0m
+          [36m</title>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"census-record__preference-control"[39m
+        [36m>[39m
+          [36m<small>[39m
+            [0m+SMS[0m
+          [36m</small>[39m
+          [36m<button[39m
+            [33maria-checked[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"Correu: Canvis en reserves (fets pel club)"[39m
+            [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+            [33mrole[39m=[32m"switch"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-switch__thumb"[39m
+            [36m/>[39m
+          [36m</button>[39m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mComunicats del club[0m
+        [36m</span>[39m
+        [36m<svg[39m
+          [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+          [33mrole[39m=[32m"img"[39m
+        [36m>[39m
+          [36m<title>[39m
+            [0mSempre actiu a l'app[0m
+          [36m</title>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"census-record__preference-control"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-checked[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"Correu: Comunicats del club"[39m
+            [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+            [33mrole[39m=[32m"switch"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-switch__thumb"[39m
+            [36m/>[39m
+          [36m</button>[39m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mfor[39m=[32m"member-reminder-member-laura"[39m
+        [36m>[39m
+          [0mRecordatori de classe[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select notification-preferences__reminder"[39m
+          [33mid[39m=[32m"member-reminder-member-laura"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mMai[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"60"[39m
+          [36m>[39m
+            [0m1 h abans[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"120"[39m
+          [36m>[39m
+            [0m2 h abans[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"240"[39m
+          [36m>[39m
+            [0m4 h abans[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"360"[39m
+          [36m>[39m
+            [0m6 h abans[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"720"[39m
+          [36m>[39m
+            [0m12 h abans[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"1440"[39m
+          [36m>[39m
+            [0m24 h abans[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mNotificacions push de comunicats del club[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Notificacions push de comunicats del club"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<span />[39m
+      [36m</div>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"notification-preferences__log"[39m
+        [33mhref[39m=[32m"/notificacions?filter=memberId%3Aeq%3Amember-laura"[39m
+      [36m>[39m
+        [0mAvisos enviats ›[0m
+      [36m</a>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card notification-preferences"[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"census-record__section-title"[39m
+      [36m>[39m
+        [0mPreferències d'avisos (mantenibles aquí i al perfil)[0m
+      [36m</h2>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preferences-head"[39m
+      [36m>[39m
+        [36m<span />[39m
+        [36m<span>[39m
+          [0mApp[0m
+        [36m</span>[39m
+        [36m<span>[39m
+          [0mCorreu[0m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mOperativa (reserves i canvis fets per l'abonat)[0m
+        [36m</span>[39m
+        [36m<svg[39m
+          [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+          [33mrole[39m=[32m"img"[39m
+        [36m>[39m
+          [36m<title>[39m
+            [0mSempre actiu a l'app[0m
+          [36m</title>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"census-record__preference-control"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-checked[39m=[32m"false"[39m
+            [33maria-label[39m=[32m"Correu: Operativa (reserves i canvis fets per l'abonat)"[39m
+            [33mclass[39m=[32m"ah-switch"[39m
+            [33mrole[39m=[32m"switch"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-switch__thumb"[39m
+            [36m/>[39m
+          [36m</button>[39m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mComunicats personals[0m
+        [36m</span>[39m
+        [36m<svg[39m
+          [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+          [33mrole[39m=[32m"img"[39m
+        [36m>[39m
+          [36m<title>[39m
+            [0mSempre actiu a l'app[0m
+          [36m</title>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"census-record__preference-control"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-checked[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"Correu: Comunicats personals"[39m
+            [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+            [33mrole[39m=[32m"switch"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-switch__thumb"[39m
+            [36m/>[39m
+          [36m</button>[39m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mCanvis en reserves (fets pel club)[0m
+        [36m</span>[39m
+        [36m<svg[39m
+          [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+          [33mrole[39m=[32m"img"[39m
+        [36m>[39m
+          [36m<title>[39m
+            [0mSempre actiu a l'app[0m
+          [36m</title>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"census-record__preference-control"[39m
+        [36m>[39m
+          [36m<small>[39m
+            [0m+SMS[0m
+          [36m</small>[39m
+          [36m<button[39m
+            [33maria-checked[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"Correu: Canvis en reserves (fets pel club)"[39m
+            [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+            [33mrole[39m=[32m"switch"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-switch__thumb"[39m
+            [36m/>[39m
+          [36m</button>[39m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mComunicats del club[0m
+        [36m</span>[39m
+        [36m<svg[39m
+          [33mclass[39m=[32m"ah-icon notification-preferences__app"[39m
+          [33mrole[39m=[32m"img"[39m
+        [36m>[39m
+          [36m<title>[39m
+            [0mSempre actiu a l'app[0m
+          [36m</title>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"census-record__preference-control"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-checked[39m=[32m"true"[39m
+            [33maria-label[39m=[32m"Correu: Comunicats del club"[39m
+            [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+            [33mrole[39m=[32m"switch"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-switch__thumb"[39m
+            [36m/>[39m
+          [36m</button>[39m
+        [36m</span>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mfor[39m=[32m"member-reminder-member-laura"[39m
+        [36m>[39m
+          [0mRecordatori de classe[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select notification-preferences__reminder"[39m
+          [33mid[39m=[32m"member-reminder-member-laura"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mMai[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"60"[39m
+          [36m>[39m
+            [0m1 h abans[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"120"[39m
+          [36m>[39m
+            [0m2 h abans[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"240"[39m
+          [36m>[39m
+            [0m4 h abans[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"360"[39m
+          [36m>[39m
+            [0m6 h abans[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"720"[39m
+          [36m>[39m
+            [0m12 h abans[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"1440"[39m
+          [36m>[39m
+            [0m24 h abans[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__preference-row"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mNotificacions push de comunicats del club[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-checked[39m=[32m"true"[39m
+          [33maria-label[39m=[32m"Notificacions push de comunicats del club"[39m
+          [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+          [33mrole[39m=[32m"switch"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-switch__thumb"[39m
+          [36m/>[39m
+        [36m</button>[39m
+        [36m<span />[39m
+      [36m</div>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"notification-preferences__log"[39m
+        [33mhref[39m=[32m"/notificacions?filter=memberId%3Aeq%3Amember-laura"[39m
+      [36m>[39m
+        [0mAvisos enviats ›[0m
+      [36m</a>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:327:25
+    325|     const { onFeedback } = await renderBlock();
+    326|     fireEvent.change(screen.getByLabelText("Recordatori de classe"), {…
+    327|     expect(await screen.findByRole("alert")).toHaveTextContent(
+       |                         ^
+    328|       "Aquest abonat ha estat suprimit i ja no es pot modificar.",
+    329|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 skipped (19)
+   Start at  07:10:36
+   Duration  10.91s (tests 93%, transform 3%, environment 2%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/NotificationPreferencesBlock.test.tsx -t E7-W06 review #4
+exit 1

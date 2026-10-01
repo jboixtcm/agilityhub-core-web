@@ -1,0 +1,14 @@
+[
+  {
+    "type": "SEPA_DD",
+    "label": "Domiciliació",
+    "current": true,
+    "assignable": true
+  },
+  {
+    "type": "MANUAL",
+    "label": "Efectiu",
+    "current": false,
+    "assignable": true
+  }
+]

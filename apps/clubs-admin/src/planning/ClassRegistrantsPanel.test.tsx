@@ -82,13 +82,13 @@ describe("E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R
       .getAllByRole("listitem")
       .map((item) => item.textContent);
     // Each row: «{abonat} + {gos}», the level chip (E5-T29 `levelCode`, the dog's own level) and
-    // the displayState chip.
+    // the displayState chip. E5-W05 round 3 #4: the «B+C» class has only B and C dogs (R-08-04).
     expect(rows.slice(0, 5)).toEqual([
       "Laura + DunaCconfirmada",
-      "Marc + Chun-liAconfirmada",
       "Anna + NassBconfirmada",
       "Eva + FishBconfirmada",
-      "Sergio + ThaiEanul·lada tard",
+      "Pau + BlatBconfirmada",
+      "Jana + MixaCanul·lada tard",
     ]);
     // E5-W05 step 2: «{guia} + {gos}» (E5-T29 `memberFirstName`), mockup D12's line.
     expect(within(panel).getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
@@ -331,10 +331,10 @@ describe("E5-W05 round 2 · the mock's level chip is the dog's own level, and no
   const levelChips = (panel: HTMLElement) =>
     [...panel.querySelectorAll(".ah-registrants__level")].map((chip) => chip.textContent);
 
-  it("E5-W05 round 2 #3: with levels on each chip is the dog's level (Duna «C», her census level); in a club with levels.enabled = false (planningNoLevels) no row has a level chip", async () => {
+  it("E5-W05 round 2 #3: with levels on each chip is the dog's level (Duna «C», her census level), one the «B+C» class allows (round 3 #4); in a club with levels.enabled = false (planningNoLevels) no row has a level chip", async () => {
     const panel = await renderPanel();
     expect(within(panel).getAllByRole("listitem")[0]?.textContent).toBe("Laura + DunaCconfirmada");
-    expect(levelChips(panel)).toEqual(["C", "A", "B", "B", "E"]);
+    expect(levelChips(panel)).toEqual(["C", "B", "B", "B", "C"]);
     cleanup();
     mockScenario("planningNoLevels");
     const noLevels = await renderPanel();

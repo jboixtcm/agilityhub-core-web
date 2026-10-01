@@ -590,8 +590,8 @@ describe("E5-W05 round 2 #7 · a run's Week and Member effects link to D4 and D1
   /**
    * P1 of a club whose week opens on Friday (`bookings.weekOpensAt` FRIDAY 20:00), run on Friday 31
    * July at 20:00: it opens the booking week `2026-08-07` (`openedWeekKey` = the opening + 7 days,
-   * S15 R-15-11), from Friday 7 at 20:00 to Friday 14 at 20:00, whose classes are Saturday 8,
-   * Sunday 9 and the week of Monday 10.
+   * S15 R-15-11), from Friday 7 at 20:00 to Friday 14 at 20:00. R-15-11's `isoWeekStart` is the
+   * ISO week that holds `openedWeekKey` + 1 day: Saturday 8 → Monday 3.
    */
   function fridayOpeningRun(runId: string) {
     return {
@@ -631,12 +631,12 @@ describe("E5-W05 round 2 #7 · a run's Week and Member effects link to D4 and D1
     };
   }
 
-  async function openSheet() {
+  async function openSheet(run: (runId: string) => Record<string, unknown> = fridayOpeningRun) {
     resetPlanningState();
     mockScenario("jobsFullClub");
     server.use(
       http.get("*/api/v1/jobs/week-opening/runs/:runId", ({ params }) =>
-        HttpResponse.json(fridayOpeningRun(String(params.runId))),
+        HttpResponse.json(run(String(params.runId))),
       ),
     );
     const i18n = await createI18n({
@@ -670,16 +670,29 @@ describe("E5-W05 round 2 #7 · a run's Week and Member effects link to D4 and D1
     return { drawer, onNavigate, sheet };
   }
 
-  it("E5-W05 round 2 #7: with a Friday opening, the Week item opens D4 on the week it opens (Monday 10), and the Member item opens D10", async () => {
+  it("E5-W05 round 3 #5 (S15 R-15-11): with a Friday opening, the Week item opens D4 on the ISO week that holds `openedWeekKey` + 1 day (Saturday 8 → Monday 3), and the Member item opens D10", async () => {
     const { onNavigate, sheet } = await openSheet();
     const week = await within(sheet).findByRole("link", { name: "Week 2026-08-07 · OPEN" });
-    expect(week).toHaveAttribute("href", "/calendari?setmana=2026-08-10");
+    expect(week).toHaveAttribute("href", "/calendari?setmana=2026-08-03");
     fireEvent.click(week);
-    expect(onNavigate).toHaveBeenLastCalledWith("/calendari?setmana=2026-08-10");
+    expect(onNavigate).toHaveBeenLastCalledWith("/calendari?setmana=2026-08-03");
     const member = within(sheet).getByRole("link", { name: "Member member-laura · NOTIFY" });
     expect(member).toHaveAttribute("href", "/abonats/member-laura");
     fireEvent.click(member);
     expect(onNavigate).toHaveBeenLastCalledWith("/abonats/member-laura");
+  });
+
+  it("E5-W05 round 3 #5 (ruling E82, INC-53): when the api's Week item carries `isoWeekStart` in its detail, the link opens that week as it is", async () => {
+    const { sheet } = await openSheet((runId) => {
+      const run = fridayOpeningRun(runId);
+      const [opened, ...rest] = run.effects.items;
+      if (opened === undefined) throw new TypeError("No Week item");
+      // A made-up week, so the link can only come from the item.
+      const detail = { ...opened.detail, isoWeekStart: "2026-08-17" };
+      return { ...run, effects: { ...run.effects, items: [{ ...opened, detail }, ...rest] } };
+    });
+    const week = await within(sheet).findByRole("link", { name: "Week 2026-08-07 · OPEN" });
+    expect(week).toHaveAttribute("href", "/calendari?setmana=2026-08-17");
   });
 
   it("E5-W05 round 2 #7 (assumption A3): a class answer that arrives after the drawer closed navigates nowhere", async () => {
@@ -763,5 +776,139 @@ describe("E5-W05 step 17 · D11 after a schedule change (R-15-01)", () => {
     });
     expect(within(rowOf(card, "Neteja tècnica")).getByText("cada dia a les 6:30")).toBeVisible();
     expect(jobsReads()).toBeGreaterThan(before);
+  });
+});
+
+/** `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` as the api answers it (CONVENCIONS_API §6, §7). */
+const IN_PROGRESS_BODY = {
+  code: "IDEMPOTENCY_KEY_REUSED",
+  details: { reason: "IN_PROGRESS" },
+  message: "The first request with this Idempotency-Key is still in progress",
+  traceId: "t-in-progress",
+};
+/** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
+const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
+
+/** The trigger's keys; its first request is answered `IN_PROGRESS`, the rest by the mock world. */
+function triggerInProgressOnce(): string[] {
+  const keys: string[] = [];
+  server.use(
+    http.post("*/api/v1/jobs/:name/trigger", ({ request }) => {
+      keys.push(request.headers.get("Idempotency-Key") ?? "");
+      return keys.length === 1 ? HttpResponse.json(IN_PROGRESS_BODY, { status: 409 }) : undefined;
+    }),
+  );
+  return keys;
+}
+
+describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS", () => {
+  it("E7-W06 step 1: [Simula] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new [Simula] after the api's answer takes a new key", async () => {
+    const keys = triggerInProgressOnce();
+    const card = await renderCard();
+    const risk = await waitForRow(card, "Revisió de classes en risc");
+    const simulate = () =>
+      within(risk).getByRole("button", { name: "Simula Revisió de classes en risc" });
+    fireEvent.click(simulate());
+    expect(await within(card).findByText(IN_PROGRESS_TEXT)).toBeVisible();
+    expect(screen.queryByRole("dialog")).toBeNull();
+    fireEvent.click(simulate());
+    const plan = await screen.findByRole("dialog", {
+      name: "Simulació: què faria ara · Revisió de classes en risc",
+    });
+    fireEvent.click(within(plan).getByRole("button", { name: "Tanca" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).toBeNull();
+    });
+    // The api answered: the same payload again is a new submission.
+    fireEvent.click(simulate());
+    await screen.findByRole("dialog", { name: /^Simulació: què faria ara/u });
+    expect(keys).toHaveLength(3);
+    expect(keys[0]).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[0]);
+  });
+
+  it("E7-W06 step 1: [Executa ara] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» inside the confirmation, which stays open, the retry sends the same key, and a new run after the api's answer takes a new key", async () => {
+    const keys = triggerInProgressOnce();
+    const card = await renderCard();
+    const risk = await waitForRow(card, "Revisió de classes en risc");
+    const runNow = () =>
+      within(risk).getByRole("button", { name: "Executa ara Revisió de classes en risc" });
+    fireEvent.click(runNow());
+    const dialog = await screen.findByRole("dialog", {
+      name: "Executar «Revisió de classes en risc» ara",
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(IN_PROGRESS_TEXT);
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+    expect(
+      await within(card).findByText(
+        "Revisió de classes en risc: correcta · 1 en risc · 1 anul·lada · 3 classes revisades",
+      ),
+    ).toBeVisible();
+    // The api answered: running it again is a new submission.
+    fireEvent.click(runNow());
+    const again = await screen.findByRole("dialog", {
+      name: "Executar «Revisió de classes en risc» ara",
+    });
+    fireEvent.click(within(again).getByRole("button", { name: "Executa ara" }));
+    await waitFor(() => {
+      expect(keys).toHaveLength(3);
+    });
+    expect(keys[0]).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[0]);
+  });
+
+  it("E7-W06 review #5: closing [Executa ara]'s confirmation after an unanswered run gives it up — a run asked for later is a new one with a new key, never the replay of the old one", async () => {
+    const keys = triggerInProgressOnce();
+    const card = await renderCard();
+    const risk = await waitForRow(card, "Revisió de classes en risc");
+    const runNow = () =>
+      within(risk).getByRole("button", { name: "Executa ara Revisió de classes en risc" });
+    fireEvent.click(runNow());
+    const dialog = await screen.findByRole("dialog", {
+      name: "Executar «Revisió de classes en risc» ara",
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Executa ara" }));
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(IN_PROGRESS_TEXT);
+    await waitFor(() => {
+      expect(within(dialog).getByRole("button", { name: "Cancel·la" })).toBeEnabled();
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog")).toBeNull();
+    });
+    fireEvent.click(runNow());
+    const again = await screen.findByRole("dialog", {
+      name: "Executar «Revisió de classes en risc» ara",
+    });
+    fireEvent.click(within(again).getByRole("button", { name: "Executa ara" }));
+    await waitFor(() => {
+      expect(keys).toHaveLength(2);
+    });
+    expect(keys[1]).not.toBe(keys[0]);
+  });
+
+  it("E7-W06 review #5: an unanswered [Simula] keeps its key for 5 minutes only — a simulation asked for later is a new one", async () => {
+    const keys = triggerInProgressOnce();
+    const card = await renderCard();
+    const risk = await waitForRow(card, "Revisió de classes en risc");
+    fireEvent.click(
+      within(risk).getByRole("button", { name: "Simula Revisió de classes en risc" }),
+    );
+    expect(await within(card).findByText(IN_PROGRESS_TEXT)).toBeVisible();
+    vi.setSystemTime(Date.now() + 5 * 60_000 + 1_000);
+    await waitFor(() => {
+      expect(
+        within(risk).getByRole("button", { name: "Simula Revisió de classes en risc" }),
+      ).toBeEnabled();
+    });
+    fireEvent.click(
+      within(risk).getByRole("button", { name: "Simula Revisió de classes en risc" }),
+    );
+    await screen.findByRole("dialog", { name: /^Simulació: què faria ara/u });
+    expect(keys).toHaveLength(2);
+    expect(keys[1]).not.toBe(keys[0]);
   });
 });

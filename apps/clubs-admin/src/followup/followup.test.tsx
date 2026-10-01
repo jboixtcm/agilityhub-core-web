@@ -156,6 +156,27 @@ describe("T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13)", () => {
     ).toHaveClass("ah-tone--success");
   });
 
+  it("E7-W06 step 5 (E6-W04 question 6): each row carries data-followup-id and data-unread, the api's id and its unread mark", async () => {
+    let answered: { id: string; unread?: boolean }[] = [];
+    server.events.on("response:mocked", ({ request, response }) => {
+      if (new URL(request.url).pathname !== "/api/v1/followup") return;
+      void response
+        .clone()
+        .json()
+        .then((body: { items?: { id: string; unread?: boolean }[] }) => {
+          answered = body.items ?? [];
+        });
+    });
+    await renderFollowUp({ scenario: "instructor" });
+    await tableRows();
+    const rows = [...document.querySelectorAll<HTMLElement>(".ah-universal-list tbody tr")];
+    expect(answered.length).toBeGreaterThan(0);
+    expect(rows.map((row) => [row.dataset.followupId, row.dataset.unread])).toEqual(
+      answered.map((item) => [item.id, String(item.unread === true)]),
+    );
+    expect(rows.filter((row) => row.dataset.unread === "true")).toHaveLength(3);
+  });
+
   it("for the instructor the api's order puts the three unread rows first (her own tasks are not unread) and the counter reads 3", async () => {
     await renderFollowUp({ scenario: "instructor" });
     expect(await screen.findByText("3 pendents de llegir")).toBeVisible();
@@ -848,5 +869,117 @@ describe("T-10-32 (D14) the three locales, with no missing key", () => {
     expect(screen.getAllByText(laura).length).toBeGreaterThan(0);
     expect(screen.getByText(pau)).toBeVisible();
     expect(screen.getAllByText(estel).length).toBeGreaterThan(0);
+  });
+});
+
+/** `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` as the api answers it (CONVENCIONS_API §6, §7). */
+const IN_PROGRESS_BODY = {
+  code: "IDEMPOTENCY_KEY_REUSED",
+  details: { reason: "IN_PROGRESS" },
+  message: "The first request with this Idempotency-Key is still in progress",
+  traceId: "t-in-progress",
+};
+/** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
+const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
+const KEY_REUSED_TEXT = "La clau d'idempotència ja s'ha utilitzat per a una altra petició.";
+
+describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS", () => {
+  it("E7-W06 step 1: D14's read-all keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new read-all after the api's answer takes a new key", async () => {
+    const requests = recordRequests();
+    let answers = 0;
+    server.use(
+      http.post("*/api/v1/followup/read-all", () => {
+        answers += 1;
+        return answers === 1 ? HttpResponse.json(IN_PROGRESS_BODY, { status: 409 }) : undefined;
+      }),
+    );
+    await renderFollowUp();
+    await tableRows();
+    const readAll = () => screen.getByRole("button", { name: "Marcar-ho tot com a llegit" });
+    const posts = () => requests.filter((request) => request.line === "POST /followup/read-all");
+    fireEvent.click(readAll());
+    expect(await screen.findByText(IN_PROGRESS_TEXT)).toBeVisible();
+    expect(screen.queryByText(KEY_REUSED_TEXT)).toBeNull();
+    // Not the read-all's answer: nothing is marked read yet.
+    expect(screen.getByText("5 pendents de llegir")).toBeVisible();
+    fireEvent.click(readAll());
+    expect(await screen.findByText("0 pendents de llegir")).toBeVisible();
+    expect(screen.queryByText(IN_PROGRESS_TEXT)).toBeNull();
+    // The api answered it: the next read-all is a new submission.
+    fireEvent.click(readAll());
+    await waitFor(() => {
+      expect(posts()).toHaveLength(3);
+    });
+    const keys = posts().map((request) => request.key);
+    expect(keys[0]).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[0]);
+  });
+
+  it("E7-W06 review #5: an unanswered read-all keeps its key for 5 minutes only — a read-all asked for later is a new one, which moves readAllAt on instead of replaying the old answer", async () => {
+    const requests = recordRequests();
+    let answers = 0;
+    server.use(
+      http.post("*/api/v1/followup/read-all", () => {
+        answers += 1;
+        return answers === 1 ? HttpResponse.json(IN_PROGRESS_BODY, { status: 409 }) : undefined;
+      }),
+    );
+    await renderFollowUp();
+    await tableRows();
+    const readAll = () => screen.getByRole("button", { name: "Marcar-ho tot com a llegit" });
+    const posts = () => requests.filter((request) => request.line === "POST /followup/read-all");
+    fireEvent.click(readAll());
+    expect(await screen.findByText(IN_PROGRESS_TEXT)).toBeVisible();
+    vi.setSystemTime(Date.now() + 5 * 60_000 + 1_000);
+    await waitFor(() => {
+      expect(readAll()).toBeEnabled();
+    });
+    fireEvent.click(readAll());
+    expect(await screen.findByText("0 pendents de llegir")).toBeVisible();
+    const keys = posts().map((request) => request.key);
+    expect(keys).toHaveLength(2);
+    expect(keys[1]).not.toBe(keys[0]);
+  });
+
+  it("E7-W06 step 1: D14's row read keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» with its retry, the retry sends the same key, and the next read of that row after the api's answer takes a new key", async () => {
+    const requests = recordRequests();
+    let answers = 0;
+    server.use(
+      http.post("*/api/v1/followup/:id/read", () => {
+        answers += 1;
+        return answers === 1 ? HttpResponse.json(IN_PROGRESS_BODY, { status: 409 }) : undefined;
+      }),
+    );
+    await renderFollowUp();
+    await tableRows();
+    const blat = () => screen.getByRole("link", { name: "Aquesta setmana no podrem venir dijous" });
+    const reads = () =>
+      requests.filter((request) => request.line === "POST /followup/f-note-blat/read");
+    fireEvent.click(blat());
+    const alert = await screen.findByText(
+      `No s'ha pogut marcar com a llegit el seguiment de Blat. ${IN_PROGRESS_TEXT}`,
+    );
+    expect(screen.queryByText(new RegExp(KEY_REUSED_TEXT, "u"))).toBeNull();
+    fireEvent.click(
+      within(alert.closest<HTMLElement>(".ah-toast") ?? document.body).getByRole("button", {
+        name: "Torna-ho a provar",
+      }),
+    );
+    await waitFor(() => {
+      expect(screen.queryByText(/^No s'ha pogut marcar com a llegit/u)).toBeNull();
+    });
+    expect(reads()).toHaveLength(2);
+    // The api answered the retry: opening the row again (once the list is read again) is a new
+    // read, with a new key.
+    await tableRows();
+    fireEvent.click(blat());
+    await waitFor(() => {
+      expect(reads()).toHaveLength(3);
+    });
+    const keys = reads().map((request) => request.key);
+    expect(keys[0]).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[0]);
   });
 });

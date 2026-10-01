@@ -1,4 +1,12 @@
-import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  type components,
+  type HeldKey,
+  heldKeyFor,
+  isApiError,
+  isInProgress,
+  isUnanswered,
+} from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
@@ -70,7 +78,12 @@ export function counterTexts(t: Translate, counters: Readonly<Record<string, num
     );
 }
 
+/**
+ * A failure by its code; a trigger still in progress (it keeps its key) reads the shared
+ * `common:inProgress` (CONVENCIONS_API §7, E80).
+ */
 function errorText(t: Translate, cause: unknown): string {
+  if (isInProgress(cause)) return t("common:inProgress");
   return isApiError(cause)
     ? t(`errors:${cause.code}`, { defaultValue: t("errors:INTERNAL_ERROR") })
     : t("errors:INTERNAL_ERROR");
@@ -440,9 +453,14 @@ type JobEffectItem = JobRun["effects"]["items"][number];
  */
 function directPath(item: JobEffectItem): string | undefined {
   if (item.entityType === "Week" && isIsoDate(item.entityId)) {
-    // The booking week's key is the day it opens (S08 R-08-01), any day of the week before its
-    // classes (`bookings.weekOpensAt` is the club's): six days on is always in its classes' week.
-    return `/calendari?${new URLSearchParams({ setmana: mondayOf(addDays(item.entityId, 6)) }).toString()}`;
+    // S15 R-15-11: P1 opens the ISO week that holds `openedWeekKey` + 1 day. The api's own
+    // `isoWeekStart`, when the item carries it (ruling E82, INC-53), is taken as it is.
+    const isoWeekStart = item.detail?.isoWeekStart;
+    const week =
+      typeof isoWeekStart === "string" && isIsoDate(isoWeekStart)
+        ? isoWeekStart
+        : mondayOf(addDays(item.entityId, 1));
+    return `/calendari?${new URLSearchParams({ setmana: week }).toString()}`;
   }
   if (item.entityType === "Member") return `/abonats/${encodeURIComponent(item.entityId)}`;
   return undefined;
@@ -589,7 +607,7 @@ export function JobsCard({
   scheduleKey?: string;
 }) {
   const formats = useClubFormats();
-  const { t } = useTranslation(["admin-settings", "enums", "errors"]);
+  const { t } = useTranslation(["admin-settings", "enums", "errors", "common"]);
   const [impersonating, setImpersonating] = useState(false);
   const [jobs, setJobs] = useState<JobSummary[]>();
   // «fa 2 h» counts from the moment the list arrived (a render never reads the clock).
@@ -602,7 +620,13 @@ export function JobsCard({
   const [runsOf, setRunsOf] = useState<JobSummary>();
   const [feedback, setFeedback] = useState<{ message: string; tone: Tone }>();
   const [modalError, setModalError] = useState<string>();
-  const triggerKeys = useRef(new Map<string, string>());
+  const triggerKeys = useRef(new Map<string, HeldKey>());
+  // Closing [Executa ara]'s confirmation gives up its unanswered run: the next one is a new run
+  // with a new key (E7-W06 review #5).
+  const closeConfirm = () => {
+    if (confirm?.kind === "run") triggerKeys.current.delete(`${confirm.job.name}|false`);
+    setConfirm(undefined);
+  };
   const refetch = useCallback(() => {
     setReload((value) => value + 1);
   }, []);
@@ -716,18 +740,24 @@ export function JobsCard({
     setPending({ kind: dryRun ? "dryRun" : "run", name: job.name });
     setFeedback(undefined);
     setModalError(undefined);
-    // One Idempotency-Key per payload, kept only while its outcome is unknown (an answer lost to
-    // the network): a retry then replays that run instead of running the process twice.
+    // One Idempotency-Key per payload, kept only while the api has not answered (an answer lost
+    // to the network, or IN_PROGRESS: the first request still runs, E79): a retry then replays that
+    // run instead of running the process twice.
+    // A held key lasts `HELD_KEY_TTL_MS`: a run asked for later is a new one, never the replay of
+    // an old stored run (E7-W06 review #5).
     const payload = `${job.name}|${String(dryRun)}`;
-    const key = triggerKeys.current.get(payload) ?? crypto.randomUUID();
-    triggerKeys.current.set(payload, key);
+    const key = heldKeyFor(triggerKeys.current, payload);
+    // Only this request's own key is retired by its answer (a later submission may hold another).
+    const retire = () => {
+      if (triggerKeys.current.get(payload)?.key === key) triggerKeys.current.delete(payload);
+    };
     try {
       const result = await client.POST("/jobs/{name}/trigger", {
         body: { dryRun },
         headers: { "Idempotency-Key": key },
         params: { path: { name: job.name } },
       });
-      triggerKeys.current.delete(payload);
+      retire();
       const run = result.data;
       if (run === undefined) throw new TypeError("The run response did not contain data");
       if (dryRun) {
@@ -748,7 +778,7 @@ export function JobsCard({
         refetch();
       }
     } catch (cause) {
-      if (!isApiError(cause, "NETWORK")) triggerKeys.current.delete(payload);
+      if (!isUnanswered(cause)) retire();
       failed(cause, !dryRun);
     } finally {
       setPending(undefined);
@@ -869,7 +899,7 @@ export function JobsCard({
       <Modal
         closeLabel={t("admin-settings:common.close")}
         onClose={() => {
-          if (pending === undefined) setConfirm(undefined);
+          if (pending === undefined) closeConfirm();
         }}
         open={confirm !== undefined}
         title={
@@ -887,13 +917,7 @@ export function JobsCard({
         </p>
         {modalError === undefined ? null : <p role="alert">{modalError}</p>}
         <div className="jobs-card__modal-actions">
-          <Button
-            disabled={pending !== undefined}
-            onClick={() => {
-              setConfirm(undefined);
-            }}
-            variant="ghost"
-          >
+          <Button disabled={pending !== undefined} onClick={closeConfirm} variant="ghost">
             {t("admin-settings:jobs.cancel")}
           </Button>
           <Button

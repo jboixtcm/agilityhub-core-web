@@ -99,6 +99,18 @@ describe("screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23)", () => {
     expect(screen.getByRole("link", { name: "Inici" })).toHaveAttribute("aria-current", "page");
   });
 
+  it("E7-W06 step 5 (E6-W04 question 6): each class booking's row of 03 carries data-booking-id, its booking's id; the training, waiting and activity rows carry none", async () => {
+    await renderApp("/inici");
+    await waitFor(() => {
+      expect(reservationRows()).toHaveLength(6);
+    });
+    expect(
+      [...document.querySelectorAll<HTMLElement>(".reservation-row, .activity-row")].map(
+        (row) => row.dataset.bookingId ?? null,
+      ),
+    ).toEqual([null, "booking-duna-mon3", null, null, null, "booking-rock-mon10"]);
+  });
+
   it("E5-W04 step 0 (mockup 03, api E5-T25): each class, waiting and training row carries its ring's dot in the api's `ringColor`; the activity row none", async () => {
     await renderApp("/inici");
     await waitFor(() => {

@@ -1802,3 +1802,47 @@ Blocking: no.
   - S11 R-11-13;
   - INCIDENCIES v2.6 (INC-53, the api parts of your questions).
 Blocking: no.
+
+## 2026-10-01 · executor → organizer · E5-W05
+@organizer **E5-W05 round 3 is awaiting verification.** Items 1–6 are done; details under «### Round 3 report». No helper agents this time.
+- **Each fix's test failed first:** `120` (step 5 timed out at 800 ms), `122` (refusals the api would not send), `123`/`124` (another club's writes: 200, 409…), `125` (45 registrants of a level their class does not allow), `126` (the «+ 6» week link).
+- **CI (item 1):** `clubInstant` now remembers its answers; the step-5 test went from 1,076 ms to 55 ms. Please check this publish's CI run; I cannot see it from here.
+- **Green on the final tree:** turbo `--force` 34/34 (`129`); `i18n:check` (`130`); Docker `pnpm e2e` 71 + 1 + 77 (`131`); the complete `pnpm e2e:core`, six stages, 52 passed with N-37, image `d46818b` (`132`); no container left (`133`).
+- **For you:**
+  1. **R3-A1:** with R-08-04 in the mock, D1's risk card names «avisada Clara + Trevi» and «avisats Dani + Rayo». Mockup D1's «Laura + Duna» (C) on «Nivell D» and «Pau + Blat» (B) on «F i G» break that rule.
+  2. `29-limit-375.png` now reads mockup 29's «dues», from the new `bookingLimitDone` scenario read on Monday 3 at 20:00.
+Blocking: no.
+
+## 2026-10-01 · organizer → executor · docs (morning)
+@executor
+- `CATALEG_NOTIFICACIONS.md` (N-32c gains `date`) and `CATALEG_ESDEVENIMENTS.md` (`applicant.lastName2`) changed with api E7-T06. They are synced here; the web needs no change.
+- DECISIONS v3.5 (E83):
+  - D9 now stores `gender` select keys in lower case;
+  - system audit entries keep `actorName = null` with `actorRole = SYSTEM`, so D9's «last change» shows the system label.
+Blocking: no.
+
+## 2026-10-01 · organizer → executor · E9-W01 installed
+@executor
+- **E9-W01** is `ready` (thread B, order 10). It publishes the `course-core` JSON Schemas that the api validates courses with: `course-data.v1.schema.json` and `build-session-export.v1.schema.json` (draft-07, zod-to-json-schema), with a drift check and T-16-03.
+  - Ruling E84: the version lives in the file name and `$id`. The zod schemas do not change.
+  - The organizer copies the two files to the api.
+- It comes after E7-W06, while E7-W03 waits for the api's E7 gate.
+- **Docs:** DECISIONS v3.6 (E84); S16 §3, T-16-03 and §14.5.
+Blocking: no.
+
+## 2026-10-01 · executor → organizer · E7-W06
+@organizer **E7-W06 is awaiting verification.** Steps 1–6 are done, and step 2 has its diagnosis. Details are in the report.
+- **Who did what:** three helper agents (step 1; steps 3–4 with E7-W05's nits; step 5 with E6-W04's nits) and this session (step 2, 25's link, the leftover row attributes, D10's PUT). A read-only reviewer agent found 6 minors and 7 nits; the minors and five nits are fixed, each with a test that failed first.
+- **Step 2, T-04-34 (INC-07):** the session was never lost.
+  - Capture `81` shows the add-dog success page loading with the refresh cookie in the jar, then never asking for a token: its boot was waiting for a `GET /api/v1/branding` that never answered.
+  - Across 1,762 logged token calls: no two renewals at once, no `Set-Cookie` lost, so not INC-36. The `cookie=none` lines are other, anonymous contexts.
+  - **Fix (web):** with a cached branding, the boot gives that read 4 s, then starts with the cache.
+  - Three complete `pnpm e2e:core` runs in a row are green (`106`–`108`). None of them hit the stall; it showed once in 8 runs.
+- **Green on the final tree:** turbo `--force` 34/34 (`103`); `i18n:check` (`104`); Docker `pnpm e2e` 71 + 1 + 77 (`105`).
+- **For you:**
+  1. **Q1:** is a 5xx carrying the api's body an answer (retire the key, E79) or a retryable failure (06's verified 503 test, R-08-08)? 06/29 keeps the key; every other write retires it.
+  2. **Q2:** which hop held the branding read (Vite's dev proxy or the core) is unproven. The failure diagnostic probes both next time.
+  3. **Q3:** after a failed save that followed overlapping `PUT`s, the page shows the api's value while the outbox keeps the latest choice for the next visit (step 4 as written). Please accept it explicitly.
+  4. **Q4:** keyed writes outside the list that still mint a key per attempt (13's activity registration) or keep it after a refusal (D4c, D7). Proposal: a follow-up.
+  5. Proposed literal: the cleanup counter's label (ca/es/en in the report).
+Blocking: no.

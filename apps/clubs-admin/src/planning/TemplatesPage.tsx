@@ -1,10 +1,13 @@
 import {
   isApiError,
+  isInProgress,
+  isUnanswered,
   itemsWith,
   listFields,
   type ApiClient,
   type components,
   type ListItemWith,
+  useSubmissionKeys,
 } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
@@ -116,13 +119,19 @@ const coverageTones: Readonly<Record<CoverageLevel["status"], Tone>> = {
   TIGHT: "warning",
 };
 
+/**
+ * An api error's text by its `code`; a write still in progress (the week generation keeps its key)
+ * reads the shared `common:inProgress` (CONVENCIONS_API §7, E80).
+ */
 function useErrorMessage() {
-  const { t } = useTranslation(["admin-scheduling", "errors"]);
+  const { t } = useTranslation(["admin-scheduling", "errors", "common"]);
   return useCallback(
     (error: unknown) =>
-      isApiError(error)
-        ? t(`errors:${error.code}`, { defaultValue: t("admin-scheduling:common.error") })
-        : t("admin-scheduling:common.error"),
+      isInProgress(error)
+        ? t("common:inProgress")
+        : isApiError(error)
+          ? t(`errors:${error.code}`, { defaultValue: t("admin-scheduling:common.error") })
+          : t("admin-scheduling:common.error"),
     [t],
   );
 }
@@ -711,7 +720,13 @@ function GenerationCard({
 }: {
   blockedCount: number;
   candidates: readonly GenerationCandidate[];
-  onGenerate: (candidate: GenerationCandidate, idempotencyKey: string) => Promise<void>;
+  /**
+   * Generates `candidate`'s week with the page's key for that submission (R-06-07). Resolves to the
+   * text to say in the modal while the api has not answered it (offline, or `IN_PROGRESS`): the
+   * modal stays and its button sends the same submission with the same key; `undefined` once the
+   * api answered (the page says the outcome and the modal closes).
+   */
+  onGenerate: (candidate: GenerationCandidate) => Promise<string | undefined>;
   readOnly: boolean;
   weekdayTemplateId: string | undefined;
   weeks: readonly WeekRow[] | undefined;
@@ -723,11 +738,27 @@ function GenerationCard({
   const selected = candidates.some((candidate) => candidate.startDate === chosen)
     ? chosen
     : proposed?.startDate;
-  // One key per confirmation: a double click or a retry of the same confirmation is harmless (R-06-07).
+  // The week the admin confirmed, pinned while the modal is open: a reload of the candidates (the
+  // proposed week moving on) never changes the week a retry sends (E7-W06 review #1).
   const [confirming, setConfirming] = useState<string>();
   const [pending, setPending] = useState(false);
+  // What the modal says while the generation has no answer yet (E79, E80).
+  const [unanswered, setUnanswered] = useState<string>();
+  const closeConfirmation = () => {
+    setConfirming(undefined);
+    setUnanswered(undefined);
+  };
 
   const candidate = candidates.find((item) => item.startDate === selected);
+  // The confirmed week as the latest candidates describe it; gone once it is no longer pending.
+  const confirmed =
+    confirming === undefined ? undefined : candidates.find((item) => item.startDate === confirming);
+  // A confirmed week that is no longer a candidate (the first request did generate it meanwhile):
+  // the table shows it generated, and the modal closes instead of offering another week.
+  if (confirming !== undefined && confirmed === undefined && !pending) {
+    setConfirming(undefined);
+    setUnanswered(undefined);
+  }
   const stamp = (instant: string | null | undefined) =>
     instant === null || instant === undefined
       ? undefined
@@ -769,7 +800,8 @@ function GenerationCard({
                 blockedCount > 0 || candidate === undefined || weekdayTemplateId === undefined
               }
               onClick={() => {
-                setConfirming(crypto.randomUUID());
+                setUnanswered(undefined);
+                setConfirming(candidate?.startDate);
               }}
               variant="ghost"
             >
@@ -813,37 +845,40 @@ function GenerationCard({
       />
       <Modal
         closeLabel={t("admin-scheduling:common.close")}
-        onClose={() => {
-          setConfirming(undefined);
-        }}
-        open={confirming !== undefined && candidate !== undefined}
+        onClose={closeConfirmation}
+        open={confirmed !== undefined}
         title={t("admin-scheduling:templates.generation.title")}
       >
         <p>
           {t("admin-scheduling:templates.generation.confirm", {
-            date:
-              candidate === undefined ? "" : formatPlainDate(candidate.startDate, "short"),
+            date: confirmed === undefined ? "" : formatPlainDate(confirmed.startDate, "short"),
           })}
         </p>
+        {unanswered === undefined ? null : (
+          <p className="ah-form-field__error" role="alert">
+            {unanswered}
+          </p>
+        )}
         <div className="planning-form__actions">
-          <Button
-            onClick={() => {
-              setConfirming(undefined);
-            }}
-            variant="ghost"
-          >
+          <Button onClick={closeConfirmation} variant="ghost">
             {t("admin-scheduling:common.cancel")}
           </Button>
           <Button
             loading={pending}
             loadingLabel={t("admin-scheduling:common.saving")}
             onClick={() => {
-              if (candidate === undefined || confirming === undefined) return;
+              if (confirmed === undefined || pending) return;
               setPending(true);
-              void onGenerate(candidate, confirming).finally(() => {
-                setPending(false);
-                setConfirming(undefined);
-              });
+              setUnanswered(undefined);
+              void onGenerate(confirmed)
+                .then((message) => {
+                  // The api answered: the page says how; otherwise the modal keeps the submission.
+                  if (message === undefined) setConfirming(undefined);
+                  else setUnanswered(message);
+                })
+                .finally(() => {
+                  setPending(false);
+                });
             }}
           >
             {t("admin-scheduling:templates.generation.submit")}
@@ -955,6 +990,8 @@ export function TemplatesPage({
   const { t } = useTranslation(["admin-scheduling", "enums", "errors"]);
   const branding = useBranding();
   const errorMessage = useErrorMessage();
+  // [GENERAR CLASSES]'s keys, one per submission (CONVENCIONS_API §7, E74, E79).
+  const generationKeys = useSubmissionKeys();
   const [choice, setChoice] = useState(readTemplateChoice);
   const [visibleId, setVisibleId] = useState<string | undefined>(initialTemplateParam);
   const [feedback, setFeedback] = useState<Feedback>();
@@ -1348,17 +1385,29 @@ export function TemplatesPage({
     });
   };
 
-  const generate = async (candidate: GenerationCandidate, idempotencyKey: string) => {
-    if (weekdayId === undefined) return;
+  /**
+   * [GENERAR CLASSES] (R-06-07) with one `Idempotency-Key` per submission (the week and the
+   * templates): kept while the api has not answered it — offline, or `IN_PROGRESS` (the first
+   * request still runs, E79) — so the modal's retry sends the same key; any answer retires it, so
+   * the same week generated again later is a new submission. Resolves to the modal's text while
+   * unanswered, `undefined` once answered (CONVENCIONS_API §7, E74, E80).
+   */
+  const generate = async (candidate: GenerationCandidate): Promise<string | undefined> => {
+    if (weekdayId === undefined) return undefined;
+    const body = { saturdayTemplateId: saturdayId ?? null, weekdayTemplateId: weekdayId };
     try {
       const weekId =
         candidate.weekId ??
         (await client.POST("/weeks", { body: { startDate: candidate.startDate } })).data?.id;
-      if (weekId === undefined) return;
-      const result = await client.POST("/weeks/{id}/generation", {
-        body: { saturdayTemplateId: saturdayId ?? null, weekdayTemplateId: weekdayId },
-        params: { header: { "Idempotency-Key": idempotencyKey }, path: { id: weekId } },
-      });
+      if (weekId === undefined) return undefined;
+      const result = await generationKeys.send(
+        JSON.stringify({ body, startDate: candidate.startDate }),
+        (key) =>
+          client.POST("/weeks/{id}/generation", {
+            body,
+            params: { header: { "Idempotency-Key": key }, path: { id: weekId } },
+          }),
+      );
       const outcome = result.data;
       if (outcome !== undefined) {
         const skippedCount = outcome.skipped.reduce((total, item) => total + item.count, 0);
@@ -1376,8 +1425,11 @@ export function TemplatesPage({
           tone: "success",
         });
       }
+      return undefined;
     } catch (error) {
+      if (isUnanswered(error)) return errorMessage(error);
       setFeedback({ message: errorMessage(error), tone: "danger" });
+      return undefined;
     } finally {
       weeks.reload();
       candidates.reload();

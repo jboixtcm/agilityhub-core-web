@@ -1,0 +1,62 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/messaging-handlers.test.ts (19 tests | 1 failed) 431ms
+   ❯ E7-W06 step 5 (ruling E82, E6-W04 Q3) · an erased member on D10 (S14 §5, R-14-15) (1)
+     × E7-W06 step 5: the erased member's overview answers pseudonymised with its erasedAt; D10's preferences read and save answer 409 MEMBER_ERASED in the api's envelope 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/messaging-handlers.test.ts > E7-W06 step 5 (ruling E82, E6-W04 Q3) · an erased member on D10 (S14 §5, R-14-15) > E7-W06 step 5: the erased member's overview answers pseudonymised with its erasedAt; D10's preferences read and save answer 409 MEMBER_ERASED in the api's envelope
+AssertionError: [
+  {
+    "instancePath": "/member/erasureRequestId",
+    "schemaPath": "#/properties/erasureRequestId/format",
+    "keyword": "format",
+    "params": {
+      "format": "uuid"
+    },
+    "message": "must match format \"uuid\""
+  },
+  {
+    "instancePath": "/member/id",
+    "schemaPath": "#/properties/id/format",
+    "keyword": "format",
+    "params": {
+      "format": "uuid"
+    },
+    "message": "must match format \"uuid\""
+  }
+]: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ expectValid src/mocks/messaging-handlers.test.ts:20:69
+     18| function expectValid(name: string, value: unknown) {
+     19|   const validate = ajv.compile({ $ref: `${openapiSchemaId}#/components…
+     20|   expect(validate(value), JSON.stringify(validate.errors, null, 2)).to…
+       |                                                                     ^
+     21| }
+     22|
+ ❯ src/mocks/messaging-handlers.test.ts:597:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 24 passed (25)
+      Tests  1 failed | 420 passed (421)
+   Start at  06:18:44
+   Duration  2.24s (tests 38%, import 31%, transform 31%)
+
+  Transform  transforming modules took 6.38s · 31% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run
+exit 1

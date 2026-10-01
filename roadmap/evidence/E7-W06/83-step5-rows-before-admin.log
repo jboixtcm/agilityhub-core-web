@@ -1,0 +1,88 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx (18 tests | 1 failed | 17 skipped) 88ms
+   ❯ T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) (18)
+     × E7-W06 step 5 (E6-W04 question 3): a read answered 409 MEMBER_ERASED (the member erased after D10 was read) says errors:MEMBER_ERASED as final, with no retry 86ms
+ ❯ src/followup/followup.test.tsx (26 tests | 1 failed | 25 skipped) 122ms
+   ❯ T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) (8)
+     × E7-W06 step 5 (E6-W04 question 6): each row carries data-followup-id and data-unread, the api's id and its unread mark 120ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W06 step 5 (E6-W04 question 3): a read answered 409 MEMBER_ERASED (the member erased after D10 was read) says errors:MEMBER_ERASED as final, with no retry
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Aquest abonat ha estat suprimit i ja no es pot modificar.[39m
+Received:
+[31m  No s'han pogut carregar les preferències d'avisos.[39m
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:398:46
+    396|       </I18nextProvider>,
+    397|     );
+    398|     expect(await screen.findByRole("alert")).toHaveTextContent(i18n.t(…
+       |                                              ^
+    399|     expect(i18n.t("errors:MEMBER_ERASED")).not.toBe("MEMBER_ERASED");
+    400|     expect(screen.queryByRole("button", { name: "Torna-ho a provar" })…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > E7-W06 step 5 (E6-W04 question 6): each row carries data-followup-id and data-unread, the api's id and its unread mark
+AssertionError: expected [ [ undefined, undefined ], …(4) ] to deeply equal [ [ 'f-note-duna', 'true' ], …(4) ]
+
+- Expected
++ Received
+
+  [
+    [
+-     "f-note-duna",
+-     "true",
++     undefined,
++     undefined,
+    ],
+    [
+-     "f-note-blat",
+-     "true",
++     undefined,
++     undefined,
+    ],
+    [
+-     "f-task-contactes",
+-     "true",
++     undefined,
++     undefined,
+    ],
+    [
+-     "f-task-balanci",
+-     "false",
++     undefined,
++     undefined,
+    ],
+    [
+-     "f-task-espera",
+-     "false",
++     undefined,
++     undefined,
+    ],
+  ]
+
+ ❯ src/followup/followup.test.tsx:176:7
+    174|     expect(
+    175|       rows.map((row) => [row.dataset.followupId, row.dataset.unread]),
+    176|     ).toEqual(answered.map((item) => [item.id, String(item.unread === …
+       |       ^
+    177|     expect(rows.filter((row) => row.dataset.unread === "true")).toHave…
+    178|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 42 skipped (44)
+   Start at  06:29:30
+   Duration  1.64s (transform 51%, environment 21%, import 15%, tests 8%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/followup/followup.test.tsx src/census/NotificationPreferencesBlock.test.tsx -t E7-W06 step 5
+exit 1

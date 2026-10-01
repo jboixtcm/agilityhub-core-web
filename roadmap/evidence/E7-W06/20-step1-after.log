@@ -1,0 +1,168 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > saves every change of a full cell at once with the template version
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > queues two quick changes of a full cell and sends each PATCH with the latest version
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > reloads the template and remounts the card on STALE_VERSION
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > puts the form back to the saved class when a PATCH fails
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows a failed load of the weeks and the coverage with [Torna-ho a provar] instead of a loading table
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows each band error on the field that caused it
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > marks the inconsistency on the cells and in the footer note and blocks the generation
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > confirms «Es generaran com a esborrany les classes de la setmana del …» and generates the proposed week
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > hides every action from INSTRUCTOR and keeps the cells inert (A22 c)
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > shows the coverage table with the D3 vocabulary and one-decimal places
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 offers instructor chips with maxInstructorsPerClass = 2
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 D3 weekly templates > R-06-15 hides levels and coverage with levels.enabled = false and requires a manual description
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review > R-06-02 #3 «Treu de la plantilla» waits for the level PATCH queued before it: the DELETE never overtakes it
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review > S06 §3 #4 without the opening hours, OUTSIDE_OPENING_HOURS lands on the time the admin moved; a new band gets it without a field
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review > R-06-02 #7 a failed chip PATCH puts back only the chips: the text still being typed in «Descripció» and «Límit» stays
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 coverage of the progression levels (E4-W06 review #8) > R-06-06 the coverage table lists only the progression levels: Teràpia and Pendent never, Cadells not once it leaves the progression
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 coverage of the progression levels (E4-W06 review #8) > R-06-06 T-06-05 E4-W14 round 2 (review nit #8) a level put into the progression gets its row: no dogs yet, so «sense gossos» and no ratios
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) > R-06-02 «Esborra la franja» (removeBand) waits in the queue for the level PATCH before it; then the drawer closes
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) > R-06-02 a band removal never drops a class change queued after it: the PATCH is sent once the DELETE answers
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) > R-06-02 a failed «Treu de la plantilla» keeps the change queued after it: its PATCH is sent
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) > R-06-02 #7 a change dropped after a failed PATCH is never left on screen: its chip goes back and the first error stays
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) > R-06-02 class B's chip change, queued behind class A's removal, is saved with the template's new version
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) > R-06-02 class B's change queued behind class A's refused PATCH is sent; A's error goes to the page, since A's form is gone
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) > R-06-02 a change of class A queued after A's own removal is dropped with a message: the class no longer exists
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) > R-06-01 R-02-09 a template whose kind has a closed day takes no band: the drawer says which day and sends nothing; the Saturday template still takes one
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) > S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] instead of assuming 07:00–22:00; after the retry the closed Monday is named again
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W11 D3 follow-ups of the E4-W10 review > R-06-01 R-02-09 the closed days read as a label with the days joined as a list: «Dies de tancament: dilluns i dimarts. …»
+ ↓ src/planning/TemplatesPage.test.tsx > T-06-26 E4-W11 D3 follow-ups of the E4-W10 review > MATRIU_PERMISOS an INSTRUCTOR on D3 never calls GET /club/opening-hours (read-only)
+ ↓ src/planning/CalendarPage.test.tsx > E3-W07 step 9 a D1 risk row opens D4 on its class > selects the class of `?classe=` in the week of `?setmana=`
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > opens «Esborrany» on the first week with drafts, with the validation card and its count
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [VALIDAR LA SETMANA] turns every draft of the week active at once
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > [ELIMINA] of an active class goes through the same D4c modal
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps the INVALID_STATE message of the «Exempta…» toggle after the refetch
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-05 moving a class onto training bookings asks first and resends with cancelBookings
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-10 D4c with only a waitlist: no «0 alumnes», a waitlist intro and button
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer starts on the club-local today and a Saturday date offers Saturday's hours only
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe] clamps its start and end times to a Saturday's hours
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 a new ring after RING_HAS_BOOKINGS drops the confirmation: no cancelBookings for a ring not shown
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 the block drawer locks ring, date and times until a delayed RING_HAS_BOOKINGS arrives
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-09 keeps every editor disabled from [ACCEPTA] until the saved version is shown
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the value the class holds: inactive ring and instructor stay selected
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows a RESERVATION block as it is when FREE_TRAINING was turned off later
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without WAITLIST there is no «+e» in the cell nor in the card
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 without FREE_TRAINING [Bloqueja pista] offers only «Bloqueig»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 with levels.enabled=false the card has no «Nivells» chip
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-15 INSTRUCTOR (no /parameters) sees «Nivells» only on a class with levels
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > R-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > INSTRUCTOR reads the calendar without actions and with inert chips (A22 c)
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 D4 / D4b / D4c class calendar (front half, MSW) > shows the week warnings and selects the class of a warning; day headers open the day view
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > S06 §3 R-06-09 an opening at 07:05 with 10-minute slots: «Hora» and [Crear classe] offer 07:10 first, and the class is sent on slot boundaries
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-11 T-06-32 an opening at 07:05: [Bloqueja pista] offers 07:10–07:40 first and saves on slot boundaries
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 after STALE_VERSION every editor stays locked until the refetched version is shown, so no edit is lost
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 after INVALID_STATE on «Exempta…» every editor stays locked until the refetched class is shown
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-06-09 a conflict refetch that fails unlocks the card with the admin's edit kept
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-02-09 Sunday absent from club.openingHours is closed: the card and [Crear classe] offer no times there, say so and do not submit
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review > R-02-09 R-06-11 Sunday absent from club.openingHours: [Bloqueja pista] offers no times there, says so and does not submit
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W10 D4 follow-ups of the E4-W09 review > R-02-09 R-06-09 on a closed day [Crear classe] does not say «Els alumnes la veuran de seguida»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W10 D4 follow-ups of the E4-W09 review > S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] and offers no times until it loads
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W11 D4 follow-ups of the E4-W10 review > S06 §3 R-02-09 R-06-09 on a closed Sunday only «Notes» is editable: every chip editor is disabled, and [ACCEPTA] saves the notes alone
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W11 D4 follow-ups of the E4-W10 review > S06 §3 an open day keeps the chip editors enabled
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W11 D4 follow-ups of the E4-W10 review > MATRIU_PERMISOS an INSTRUCTOR on D4 never calls GET /club/opening-hours (read-only)
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W14 D4 follow-ups of the E4-W11 review > S06 §3 R-02-09 on a closed Sunday the disabled chip editors look disabled (muted, not-allowed); an open day's do not
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W14 D4 follow-ups of the E4-W11 review > S06 §3 R-06-09 on a closed Sunday the «Exempta de la revisió de les 7:30» chip stays enabled and is saved through its own action
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W12 D4 real-core follow-ups of E4-W05 > S06 §2 D4: an activity that blocks every ring of a band is one cell «Activitat · {title} · totes les pistes»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W12 D4 real-core follow-ups of E4-W05 > S06 §2 D4: an activity on some rings keeps one cell per ring
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is one ICU key > AGENTS rule 1: the accessible name follows calendar.cell.activityAllRings, whatever its word order
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is one ICU key > in es the all-rings cell reads «Actividad · Torneig d'Estiu 2026 · todas las pistas»
+ ↓ src/planning/CalendarPage.test.tsx > T-06-28 E4-W15 step 7 (E4-W12 review #7): the all-rings cell's name is one ICU key > in en the all-rings cell reads «Activity · Torneig d'Estiu 2026 · all rings»
+ ↓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > the mockup's controls: kinds, «motiu: …», day and times, ring, RESERVA
+ ↓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > offers only the free half hours of the ring and their runs, and posts the block
+ ↓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > an instructor with live bookings in the way is told to ask the administration
+ ↓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #2: after the refreshed grid the ADMIN still confirms 17:30–18:00 and resends it with cancelBookings (R-09-13)
+ ↓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #2: an ADMIN may pick a half hour held by a live training and force it (R-09-13)
+ ↓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > FREE_TRAINING off: «Bloqueig» only, and the times without a grid
+ ↓ src/training/RingBlockCard.test.tsx > D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) > E5-W02 round 2 · review #5: without a grid every half hour of the day can be taken, the last one included
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > paints a failed last run in the danger tone
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 dims a disabled process and keeps its [Executa ara] (and [Simula])
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > asks before disabling (S15 §2 literal) and writes PUT /jobs/{name}/switch {enabled: false} only after the confirmation
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-08 [Simula] shows the plan of the response (the WOULD_* items as delivered) and says nothing was applied
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 [Executa ara] asks, runs {dryRun: false} and shows the run's summary, then reads the list again
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > keeps one Idempotency-Key per payload while the outcome is unknown: a retry after a lost answer reuses it
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > 409 JOB_ALREADY_RUNNING shows its message inside the confirmation and reads the list again
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > JOB_UNKNOWN (404: S15 writes 404, rule 0 implies 422) shows its message and reads the list again
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > JOB_UNKNOWN (422: S15 writes 404, rule 0 implies 422) shows its message and reads the list again
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > opens a process's run history and a run's sheet (effects and errors)
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > E5-W03 round 2 · review #1: the run history pages through the api's list, and its filters narrow it
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > E5-W03 round 2 · E68: P1's and P8's counters read with their own labels
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) > R-15-09 an impersonation token cannot manage the processes: the card says why and lists none
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > has every admin-settings:jobs.* and admin-dashboard:risk.* key in the three locales, none empty and none forbidden
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > renders the card in es
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > renders the card in en
+ ↓ src/catalogs/JobsCard.test.tsx > T-15-34 (i18n) the processes' and the risk card's keys in ca, es and en > shows the cadence in club-local time whatever the device's time zone
+ ↓ src/catalogs/JobsCard.test.tsx > E5-W05 step 18 · the run drawer (S15 §2, R-15-21) > E5-W05 step 18: a failed history page keeps the pager and offers a retry, the drawer stays open, and the retry shows page 2
+ ↓ src/catalogs/JobsCard.test.tsx > E5-W05 step 18 · the run drawer (S15 §2, R-15-21) > E5-W05 step 18 (R-15-21, T-15-35): a risk-review run's cancelled class opens in D4 on its week with the class selected, as D1's rows do
+ ↓ src/catalogs/JobsCard.test.tsx > E5-W05 round 2 #7 · a run's Week and Member effects link to D4 and D10 (R-15-21) > E5-W05 round 3 #5 (S15 R-15-11): with a Friday opening, the Week item opens D4 on the ISO week that holds `openedWeekKey` + 1 day (Saturday 8 → Monday 3), and the Member item opens D10
+ ↓ src/catalogs/JobsCard.test.tsx > E5-W05 round 2 #7 · a run's Week and Member effects link to D4 and D10 (R-15-21) > E5-W05 round 3 #5 (ruling E82, INC-53): when the api's Week item carries `isoWeekStart` in its detail, the link opens that week as it is
+ ↓ src/catalogs/JobsCard.test.tsx > E5-W05 round 2 #7 · a run's Week and Member effects link to D4 and D10 (R-15-21) > E5-W05 round 2 #7 (assumption A3): a class answer that arrives after the drawer closed navigates nowhere
+ ↓ src/catalogs/JobsCard.test.tsx > E5-W05 step 17 · D11 after a schedule change (R-15-01) > E5-W05 step 17: saving jobs.dailyTime reads GET /jobs again, so «Caducitats» and «Neteja tècnica» show the new time at once
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > mockup D12: «‹ Setmana actual › del 10 al 15 d'agost», dl–ds, the rows at their hour lines, a training at half height, the block with its reason and note, the classes as delivered
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > the filters change the query without hiding trainings or blocks; the arrows move ±7 days through ?setmana=
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > a click on a class opens its list under the grid: the header, the names linked to D13, the level, the tasks, the status lines and the waiting list
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > the badge cycles «— → present → avisat → no presentat → —» and stops on a final row; [DESA LA LLISTA] sends only the changed rows with the current version and a new key
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > 409 STALE_VERSION: the toast, the other person's change kept, and only the caller's edit sent again with the new version
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > the PDF asks for the same query with format=pdf and Accept: application/pdf, downloads agenda-{startDate}.pdf, and is busy meanwhile
+ ↓ src/instructor/week-agenda.test.tsx > T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) > a failed PDF says why by its code, and the page stays as it was
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 step 11 on D12 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal > a PUT refused with 422 ATTENDANCE_WINDOW_CLOSED whose re-read is closed leaves no choice behind, the badges inert and [DESA LA LLISTA] disabled
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 step 4 the panel survives the way to D13 and back (?setmana= and the choices) > a name opens D13 with a normal navigation; back on /agenda the week, the class and the unsaved choice are there, rebased on the list read again
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 D12 after a write: what the grid shows and what the panel keeps > a save reads the week again: the class's «passar llista pendent» mark goes, and the panel stays with «Llista desada»
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 D12 after a write: what the grid shows and what the panel keeps > an unsaved choice survives opening another class and coming back
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 D12 after a write: what the grid shows and what the panel keeps > a reservation made with the ring card reads the week again and shows in the grid
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 step 7 modules and impersonation on D12 (S10 §9) > FREE_TRAINING off: no training cells and no «Reserva = …» in the legend; WAITLIST off: no «espera» and no «En espera:»
+ ↓ src/instructor/week-agenda.test.tsx > E6-W03 step 7 modules and impersonation on D12 (S10 §9) > an impersonated session reaching /agenda reads «No es permet la suplantació.»; an empty week reads its empty state
+ ↓ src/instructor/week-agenda.test.tsx > E6-W04 step 0c: D12's legend reads the half height's minutes from the api (InstructorWeek.trainingSlotMinutes, api E6-T06, ruling E75) > E6-W04 step 0c: the club's 30 minutes as the mock answers them, and 45 when the api says 45 — «(mitja alçada: 45 min)», never the mockup's literal
+ ↓ src/instructor/week-agenda.test.tsx > E6-W04 step 0c: D12's legend reads the half height's minutes from the api (InstructorWeek.trainingSlotMinutes, api E6-T06, ruling E75) > E6-W04 step 0c: trainingSlotMinutes null leaves the minutes out — «(mitja alçada)» — in ca, es and en
+ ↓ src/instructor/week-agenda.test.tsx > E6-W04 step 3e · D12 dims a FINISHED class (R-10-15: ACTIVE, FINISHED and CANCELLED, the last two dimmed) > E6-W04 step 3e: a class that P8 finished is drawn dimmed, never struck through as a cancelled one
+ ↓ src/instructor/week-agenda.test.tsx > T-10-32 (D12) the three locales, with no missing key > es
+ ↓ src/instructor/week-agenda.test.tsx > T-10-32 (D12) the three locales, with no missing key > en
+ ✓ src/training/RingBlockCard.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's ring card keeps its key on IN_PROGRESS > E7-W06 step 1: D12's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key 333ms
+ ✓ src/catalogs/JobsCard.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS > E7-W06 step 1: [Simula] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new [Simula] after the api's answer takes a new key 218ms
+ ✓ src/catalogs/JobsCard.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS > E7-W06 step 1: [Executa ara] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» inside the confirmation, which stays open, the retry sends the same key, and a new run after the api's answer takes a new key 116ms
+ ✓ src/planning/CalendarPage.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): the block drawer keeps one key per submission > E7-W06 step 1: the ring-block drawer keeps its Idempotency-Key on IN_PROGRESS (one key per submission, not per attempt), says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key 420ms
+ ✓ src/instructor/week-agenda.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's sheet keeps its key on IN_PROGRESS > E7-W06 step 1: D12's attendance save keeps its Idempotency-Key and the choice on IN_PROGRESS, says «L'operació encara està en curs…» without reading the list again, the retry sends the same key, and the same save after the api's answer takes a new key 482ms
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > mockup D14 for an ADMIN: «5 pendents de llegir», the columns, the five rows highlighted and in the api's order, the authors by gender and the completed task
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > for the instructor the api's order puts the three unread rows first (her own tasks are not unread) and the counter reads 3
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > the three chips map to filter=kind:eq:TASK, kind:eq:MEMBER_NOTE and no kind filter
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > «Marcar-ho tot com a llegit» calls read-all with its key, puts the counter at 0 and reads the list again
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > a row click calls read for that row, drops its highlight and the counter at once, and opens D13 (the dog's record)
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > 400 INVALID_FILTER shows the list's own message; levels.enabled off drops the «Nivell» column
+ ↓ src/followup/followup.test.tsx > T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) > the pages hold at most 50 rows: only 20 and 50 are offered, and a size of 200 in the address becomes 50
+ ↓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1 (review #2): a refused read puts the row back unread and the counter back, and says why with a retry that sends it again
+ ↓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1: the read belongs to the shell, so its failure is said on D13, where the user already is
+ ↓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #1: a read that got no answer says so, and its retry keeps the key
+ ↓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #3 (review #4): a note updated while D14 is open still shows «llegit»; a click on its row sends the read
+ ↓ src/followup/followup.test.tsx > E6-W03 round 2: D14's reads (R-10-13) and its filter values > #5 (review #1): «Tipus» and «Pendent de llegir» offer the contract's values with the api's counts, also when the first page holds only unread notes
+ ↓ src/followup/followup.test.tsx > E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75) > E6-W04 step 0c: «Abonat», «Gos» and «Creador» offer the api's values with their counts over the whole set — also the members, dogs and authors only rows beyond the first page have — and a creator picked is named in the chip
+ ↓ src/followup/followup.test.tsx > E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75) > E6-W04 step 0c (its review): a «Creador» filter that comes with the address is named from the api's labels, never shown as its account id
+ ↓ src/followup/followup.test.tsx > E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75) > E6-W04 step 0c: the search box sends q to GET /followup and the rows narrow to what the api finds in the member, the dog, the author and the task's whole text; the filter values follow the search
+ ↓ src/followup/followup.test.tsx > E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read > step 5 (R-10-13): offline, a failed read whose counter refresh fails too puts the counter back at its value, a failed retry does not lower it, and the api's count wins when it answers (E6-W04 step 0d: a count other than the restored one)
+ ↓ src/followup/followup.test.tsx > E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read > step 6 (R-10-13): a failed read, back to D14, a successful retry — the row loses its highlight and the counter drops
+ ↓ src/followup/followup.test.tsx > T-10-30 the menu counter (S10 §2 row D14, step 6) > reads unread-count on mount, every 60 s and on focus; never when disabled
+ ↓ src/followup/followup.test.tsx > T-10-30 the menu counter (S10 §2 row D14, step 6) > a local change wins over an answer requested before it (a row read while the count is in flight)
+ ↓ src/followup/followup.test.tsx > E6-W03 step 5 the D14 entry for instructors (S10 §2) and the D12 entry > an instructor sees «Persones» with «Seguiment alumnes» and its counter only, and «Agenda de la setmana» (current) once, on /agenda
+ ↓ src/followup/followup.test.tsx > E6-W03 step 5 the D14 entry for instructors (S10 §2) and the D12 entry > TASKS off: no «Seguiment alumnes» and no counter; an instructor then has no «Persones» group
+ ↓ src/followup/followup.test.tsx > T-10-32 (D14) the three locales, with no missing key > es
+ ↓ src/followup/followup.test.tsx > T-10-32 (D14) the three locales, with no missing key > en
+ ✓ src/planning/TemplatesPage.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D3's week generation keeps its key on IN_PROGRESS > E7-W06 step 1: D3's generation modal stays open with its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» in the modal, the retry sends the same key, and the same generation after the api's answer takes a new key 560ms
+ ✓ src/followup/followup.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS > E7-W06 step 1: D14's read-all keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new read-all after the api's answer takes a new key 253ms
+ ✓ src/followup/followup.test.tsx > E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS > E7-W06 step 1: D14's row read keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» with its retry, the retry sends the same key, and the next read of that row after the api's answer takes a new key 172ms
+
+ Test Files  6 passed (6)
+      Tests  8 passed | 146 skipped (154)
+   Start at  06:16:43
+   Duration  2.37s (transform 37%, environment 23%, tests 22%, import 13%, setup 5%)
+
+  Transform  transforming modules took 4.34s · 37% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit 0

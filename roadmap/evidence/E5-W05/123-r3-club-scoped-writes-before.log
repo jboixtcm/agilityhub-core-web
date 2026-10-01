@@ -1,0 +1,41 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/calendar-handlers.test.ts (14 tests | 1 failed | 13 skipped) 35ms
+   ❯ E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) (4)
+     × E5-W05 round 3 #3: an ADMIN of another club cannot write this club's weeks or classes either: validation, generation, PATCH, the cancellation preview, the cancellation and the risk exemption are 404 NOT_FOUND, and nothing changes 33ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/calendar-handlers.test.ts > E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) > E5-W05 round 3 #3: an ADMIN of another club cannot write this club's weeks or classes either: validation, generation, PATCH, the cancellation preview, the cancellation and the risk exemption are 404 NOT_FOUND, and nothing changes
+AssertionError: POST /weeks/week-2026-08-17/validation: expected [ 200, undefined ] to deeply equal [ 404, 'NOT_FOUND' ]
+
+- Expected
++ Received
+
+  [
+-   404,
+-   "NOT_FOUND",
++   200,
++   undefined,
+  ]
+
+ ❯ src/mocks/calendar-handlers.test.ts:437:67
+    435|       });
+    436|       const answer = (await response.json()) as { code?: string };
+    437|       expect([response.status, answer.code], `${method} ${path}`).toEq…
+       |                                                                   ^
+    438|     }
+    439|     expect((await read("admin", "/class-sessions/cls-2026-08-12-1850-0…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 skipped (14)
+   Start at  05:31:57
+   Duration  641ms (transform 56%, import 38%, tests 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/calendar-handlers.test.ts -t round 3 #3

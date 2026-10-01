@@ -179,6 +179,11 @@ export interface UniversalListProps<Row> {
   onStateChange: (state: UniversalListState) => void;
   /** A row's extra class (D14 highlights the unread rows). */
   rowClassName?: (row: Row) => string | undefined;
+  /**
+   * A row's stable data attributes, for the specs that read the rows (E6-W04 Q6; D14:
+   * `data-followup-id`, `data-unread`).
+   */
+  rowAttributes?: (row: Row) => Readonly<Record<`data-${string}`, string>>;
   /** Omitted: the rows are plain text (e.g. a role that cannot open the record). */
   rowHref?: (row: Row) => string;
   rowKey: (row: Row) => string;
@@ -320,6 +325,7 @@ export function UniversalList<Row>({
   onRowActivate,
   onStateChange,
   pageSizes = UNIVERSAL_LIST_PAGE_SIZES,
+  rowAttributes,
   rowClassName,
   rowHref,
   rowKey,
@@ -965,7 +971,7 @@ export function UniversalList<Row>({
                   const id = rowKey(row);
                   const href = rowHref?.(row);
                   return (
-                    <tr className={rowClassName?.(row)} key={id}>
+                    <tr {...rowAttributes?.(row)} className={rowClassName?.(row)} key={id}>
                       {selectable ? (
                         <td className="ah-universal-list__selection">
                           <Checkbox

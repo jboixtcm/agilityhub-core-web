@@ -272,8 +272,9 @@ function withTaskDone(block: DogTaskBlock, id: string, doneAt: string): DogTaskB
  * step 0b (S10 R-10-10, §6): a pending task's checkbox completes it (`POST /tasks/{id}/completion`,
  * MEMBER and impersonated; idempotent by state, no key), busy while it runs, and then shows the
  * task as the api returned it — «feta per {la Laura} el {dd-mm}», 26's line. `422
- * TASK_ALREADY_DONE` (someone else completed it) reads 13 again and shows it done, with no error;
- * any other failure is said by its code. A member never reopens a task.
+ * TASK_ALREADY_DONE` (someone else completed it) reads 13 again and shows it done, with no error
+ * (if that read fails, the page says the task is already done); any other failure is said by its
+ * code. A member never reopens a task.
  */
 function DogTasks({
   client,
@@ -333,15 +334,15 @@ function DogTasks({
             setTasks((current) =>
               (current?.items ?? []).reduce(
                 (merged, item) =>
-                  item.doneAt === undefined
-                    ? merged
-                    : withTaskDone(merged, item.id, item.doneAt),
+                  item.doneAt === undefined ? merged : withTaskDone(merged, item.id, item.doneAt),
                 fresh,
               ),
             );
           }
-        } catch (readError) {
-          onError(failure(readError));
+        } catch {
+          // The re-read failed: the page still says why the tap did nothing — the task is
+          // already done — never the re-read's generic failure (E6-W04's report nit).
+          onError(failure(error));
         }
       }
     } finally {

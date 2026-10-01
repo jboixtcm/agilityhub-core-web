@@ -1,0 +1,2 @@
+$ docker ps -a --filter label=com.docker.compose.project=agilityhub-e7-w06 --format '{{.Names}} {{.Status}}'   (after run 108; an empty listing = no container left)
+exit 0

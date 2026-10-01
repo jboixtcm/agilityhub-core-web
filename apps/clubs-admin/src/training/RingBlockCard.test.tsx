@@ -13,6 +13,7 @@ import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhu
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -314,5 +315,52 @@ describe("D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D1
       kind: "BLOCK",
       to: "2026-08-11T12:00:00.000Z",
     });
+  });
+});
+
+/** `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` as the api answers it (CONVENCIONS_API §6, §7). */
+const IN_PROGRESS_BODY = {
+  code: "IDEMPOTENCY_KEY_REUSED",
+  details: { reason: "IN_PROGRESS" },
+  message: "The first request with this Idempotency-Key is still in progress",
+  traceId: "t-in-progress",
+};
+/** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
+const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
+
+describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's ring card keeps its key on IN_PROGRESS", () => {
+  it("E7-W06 step 1: D12's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key", async () => {
+    const keys: string[] = [];
+    const bodies = recordBodies();
+    server.use(
+      http.post("*/api/v1/ring-blocks", ({ request }) => {
+        keys.push(request.headers.get("Idempotency-Key") ?? "");
+        if (keys.length === 1) return HttpResponse.json(IN_PROGRESS_BODY, { status: 409 });
+        if (keys.length === 2) {
+          return HttpResponse.json(
+            { code: "INVALID_TIME_RANGE", details: {}, message: "range", traceId: "trace-range" },
+            { status: 400 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await renderCard("instructor");
+    await choose("2026-08-06", "ring-petita", "18:00", "19:00");
+    fireEvent.click(screen.getByRole("button", { name: "Reserva" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent(IN_PROGRESS_TEXT);
+    fireEvent.click(screen.getByRole("button", { name: "Reserva" }));
+    expect(await screen.findByText("L'interval horari no és vàlid.")).toBeVisible();
+    // The api answered: the same block sent again is a new submission.
+    fireEvent.click(screen.getByRole("button", { name: "Reserva" }));
+    expect(await screen.findByText("Pista reservada")).toBeVisible();
+    await waitFor(() => {
+      expect(bodies).toHaveLength(3);
+    });
+    expect(bodies[1]).toEqual(bodies[0]);
+    expect(bodies[2]).toEqual(bodies[0]);
+    expect(keys[0]).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[0]);
   });
 });

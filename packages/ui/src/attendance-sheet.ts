@@ -29,7 +29,12 @@ export type AttendanceSaveOutcome<Sheet> =
   /** The api answered with an error (`code`): the list is read again. */
   | { code: string; kind: "refused" }
   /** No answer (status 0): the list stays, and a retry of the same payload keeps its key. */
-  | { code: string; kind: "unanswered" };
+  | { code: string; kind: "unanswered" }
+  /**
+   * `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}`: the first save of that key still runs, which
+   * is not its answer (CONVENCIONS_API §7, E79): as `unanswered`, said with `common:inProgress`.
+   */
+  | { code: string; kind: "inProgress" };
 
 /** One class's sheet on the wire; the app builds it from its api client (`attendanceSheetTransport`). */
 export interface AttendanceSheetTransport<Sheet extends AttendanceSheetData> {
@@ -37,9 +42,12 @@ export interface AttendanceSheetTransport<Sheet extends AttendanceSheetData> {
   save: (body: AttendanceSaveBody, idempotencyKey: string) => Promise<AttendanceSaveOutcome<Sheet>>;
 }
 
-/** What the screen tells the instructor after a save: a translation key or an api `code`. */
+/**
+ * What the screen tells the instructor after a save: a translation key or an api `code`;
+ * `inProgress` is the shared `common:inProgress` (E80).
+ */
 export type AttendanceSheetNotice =
-  { code: string; kind: "error" } | { kind: "saved" } | { kind: "stale" };
+  { code: string; kind: "error" } | { kind: "inProgress" } | { kind: "saved" } | { kind: "stale" };
 
 /** Choices made on an earlier visit (D12 before opening D13), rebased on the first read. */
 export interface AttendanceSheetStart {
@@ -52,15 +60,18 @@ type SheetState<Sheet> =
 
 /**
  * One `Idempotency-Key` per payload (CONVENCIONS_API §7), kept only while the api has not
- * answered: a retry after a network failure replays the same save, and once the api has answered
- * (a save, a 409 or any refusal) the next attempt is a new request with a new key.
+ * answered: a retry after a network failure or an `IN_PROGRESS` (E79) replays the same save, and
+ * once the api has answered (a save, a 409 or any refusal) the next attempt is a new request with
+ * a new key.
  */
 function useIdempotencyKeys() {
   const keys = useRef(new Map<string, string>());
   return useMemo(
     () => ({
-      forget(payload: unknown) {
-        keys.current.delete(JSON.stringify(payload));
+      /** Retires `key` only if the payload still holds it (E7-W06 review #7: a late answer). */
+      forget(payload: unknown, key: string) {
+        const signature = JSON.stringify(payload);
+        if (keys.current.get(signature) === key) keys.current.delete(signature);
       },
       keyFor(payload: unknown) {
         const signature = JSON.stringify(payload);
@@ -171,9 +182,11 @@ export function useAttendanceSheet<Sheet extends AttendanceSheetData>(
     order.current.requested += 1;
     const seq = order.current.requested;
     try {
-      const outcome = await transport.save(body, keys.keyFor(body));
-      // Answered: a later attempt, even with the same payload, is a new request (step 11).
-      if (outcome.kind !== "unanswered") keys.forget(body);
+      const key = keys.keyFor(body);
+      const outcome = await transport.save(body, key);
+      // Answered: a later attempt, even with the same payload, is a new request (step 11). No
+      // answer yet (offline, or IN_PROGRESS: the first save still runs, E79) keeps the key.
+      if (outcome.kind !== "unanswered" && outcome.kind !== "inProgress") keys.forget(body, key);
       if (outcome.kind === "saved") {
         if (accept(seq, outcome.sheet)) {
           base.current = outcome.sheet.rows;
@@ -198,6 +211,10 @@ export function useAttendanceSheet<Sheet extends AttendanceSheetData>(
           setDraft(merged);
           setNotice({ kind: "stale" });
         }
+      } else if (outcome.kind === "inProgress") {
+        // Not the save's answer: the list and the choices stay, and a retry resends the same key
+        // with the shared «L'operació encara està en curs…» (CONVENCIONS_API §7, E80).
+        if (mounted.current) setNotice({ kind: "inProgress" });
       } else if (mounted.current) {
         setNotice({ code: outcome.code, kind: "error" });
         // Nothing was applied, so the list is read again before the sheet is released; a network

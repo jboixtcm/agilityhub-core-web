@@ -72,6 +72,11 @@ export interface PreferencesSaverIo {
     body: PreferencesPatch,
     keepalive: boolean,
   ) => Promise<NotificationPreferences | undefined>;
+  /**
+   * The page's `GET`: after a failed save on a page whose departure sent overlapping `PUT`s, the
+   * last answer may not be what the api holds, so the page reads it again (E7-W06 step 4).
+   */
+  read?: () => Promise<NotificationPreferences | undefined>;
   changed: (state: PreferencesSaverState) => void;
   /** An answer became the api's state while the page is open. */
   saved?: () => void;
@@ -116,6 +121,12 @@ interface Latest {
  * that final request is answered with a 2xx; while the page is open the user sees every answer,
  * so nothing stays kept once nothing is unsaved.
  *
+ * Once a departure has sent a `PUT` while an older one was out (and the page came back from the
+ * back-forward cache), the newest answer is not necessarily what the api holds, until the latest
+ * choice's own request is answered with nothing else out. Until then a failed save reads the
+ * preferences again (`read`) instead of showing the last answer, and what is kept stays kept until
+ * the latest choice gets its 2xx (E7-W06 step 4).
+ *
  * `leave` hands over what is unsaved; `restore` (a page back from the back-forward cache) makes the
  * page save again, and `adopt` queues what an earlier departure kept as a normal change.
  */
@@ -139,6 +150,13 @@ export function createPreferencesSaver(
   let left = false;
   /** Something this visit wrote or took over is kept for the next visit. */
   let holding = false;
+  /**
+   * A `PUT` was sent while an older one was out (a departure): the order of the answers says
+   * nothing about what the api holds, until the latest choice's own request is answered alone.
+   */
+  let overlapped = false;
+  /** A save failed while `overlapped`: the api's state is read again once nothing is out. */
+  let unsure = false;
   /** Who hears the answers: `io`'s handlers, or the page's latest ones (`listen`). */
   let heard: Pick<PreferencesSaverIo, "failed" | "saved"> = io;
 
@@ -162,6 +180,19 @@ export function createPreferencesSaver(
       : bodies.reduce<PreferencesPatch>((merged, body) => mergePatches(merged, body), {});
   };
 
+  /** The api's state, read again (E7-W06 step 4); dropped when a `PUT` was sent meanwhile. */
+  const read = (): void => {
+    if (io.read === undefined) return;
+    const at = sequence;
+    io.read().then(
+      (data) => {
+        if (data !== undefined && sequence === at) set({ server: data });
+      },
+      // The failure was already said; the page keeps what it shows.
+      () => undefined,
+    );
+  };
+
   /** After every settled request: the resend that is due, what is kept, and what waits. */
   const settled = () => {
     const due = owed();
@@ -169,8 +200,9 @@ export function createPreferencesSaver(
       send(due.body, left, true);
     }
     if (holding && pending.length === 0 && isEmptyPatch(state.queued)) {
-      // Left: only the latest choice's 2xx frees it. Open: the user saw every answer.
-      if (!left || latest === undefined || latest.confirmed) {
+      // Left, or unsure what the api holds after overlapping PUTs: only the latest choice's 2xx
+      // frees it. Open: the user saw every answer.
+      if ((!left && !overlapped) || latest === undefined || latest.confirmed) {
         holding = false;
         io.kept?.(undefined);
       }
@@ -179,23 +211,43 @@ export function createPreferencesSaver(
     if (!left && timer === undefined && pending.length === 0 && !isEmptyPatch(state.queued)) {
       flush();
     }
+    // A failed save after overlapping PUTs: what the api holds, once nothing is out or waiting.
+    if (
+      unsure &&
+      !left &&
+      timer === undefined &&
+      pending.length === 0 &&
+      isEmptyPatch(state.queued)
+    ) {
+      unsure = false;
+      read();
+    }
   };
 
   const send = (body: PreferencesPatch, keepalive: boolean, resend = false): void => {
     sequence += 1;
     const seq = sequence;
+    // Every older request settled before this one left (none is out).
+    const alone = pending.length === 0;
+    if (!alone) overlapped = true;
     if (resend) {
       if (latest !== undefined) latest.final = seq;
     } else {
-      const older = pending.length > 0;
-      latest = { body, confirmed: false, final: older ? undefined : seq, resend: older, seq };
+      latest = { body, confirmed: false, final: alone ? seq : undefined, resend: !alone, seq };
     }
     const sent: Sent = {
       body,
       done: io.save(body, keepalive).then(
         (data) => {
           pending = pending.filter((item) => item !== sent);
-          if (latest?.final === seq) latest.confirmed = true;
+          if (latest?.final === seq) {
+            latest.confirmed = true;
+            // The latest choice answered alone, with nothing out since: its answer is the api's.
+            if (alone && pending.length === 0) {
+              overlapped = false;
+              unsure = false;
+            }
+          }
           if (seq > answered) {
             // The newest answer so far: the api's state after this and every older request.
             answered = seq;
@@ -210,7 +262,11 @@ export function createPreferencesSaver(
           pending = pending.filter((item) => item !== sent);
           set({ inFlight: inFlight() });
           // A departure's request is covered by its resend and by what it kept.
-          if (!left && !keepalive) heard.failed?.(cause);
+          if (!left && !keepalive) {
+            heard.failed?.(cause);
+            // After overlapping PUTs the last answer may not be the api's: read it again.
+            if (overlapped) unsure = true;
+          }
           settled();
         },
       ),
@@ -294,14 +350,16 @@ export function createPreferencesSaver(
     },
     /**
      * Back from the back-forward cache (`pageshow` with `persisted`): the page saves as before, and
-     * `kept` — what its departure kept and nothing confirmed since — goes again as a normal change
-     * (E7-W04 step 4, E7-W05 step 2).
+     * `kept` — what the outbox of this scope handed over: its departure's change and nothing
+     * confirmed since, or what a newer visit left — goes again as a normal change (E7-W04 step 4,
+     * E7-W05 step 2). A page that left with nothing unsaved adopts it too, never takes it over to
+     * ignore it (E7-W05 review #4).
      */
     restore(kept: PreferencesPatch | undefined): void {
-      if (!left) return;
+      const wasLeft = left;
       left = false;
-      if (kept === undefined) settled();
-      else adopt(kept);
+      if (kept !== undefined) adopt(kept);
+      else if (wasLeft) settled();
     },
     settle,
     state(): PreferencesSaverState {

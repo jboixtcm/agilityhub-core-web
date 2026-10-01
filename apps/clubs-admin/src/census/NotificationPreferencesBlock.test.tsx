@@ -311,6 +311,28 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     expect(screen.getByLabelText("Recordatori de classe")).toHaveValue("");
   });
 
+  it("E7-W06 review #4: a save answered 409 MEMBER_ERASED (the member erased while D10 is open) ends the block with errors:MEMBER_ERASED — no controls left to change again", async () => {
+    let puts = 0;
+    server.use(
+      http.put("*/api/v1/members/:id/notification-preferences", () => {
+        puts += 1;
+        return HttpResponse.json(
+          { code: "MEMBER_ERASED", details: {}, message: "Member erased", traceId: "t" },
+          { status: 409 },
+        );
+      }),
+    );
+    const { onFeedback } = await renderBlock();
+    fireEvent.change(screen.getByLabelText("Recordatori de classe"), { target: { value: "240" } });
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Aquest abonat ha estat suprimit i ja no es pot modificar.",
+    );
+    expect(screen.queryByLabelText("Recordatori de classe")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
+    expect(puts).toBe(1);
+    expect(onFeedback).not.toHaveBeenCalledWith(expect.objectContaining({ tone: "danger" }));
+  });
+
   it("E7-W01 round 2 #4: the block reads its own route, GET /members/{id}/notification-preferences", async () => {
     const lines: string[] = [];
     server.events.on("request:start", ({ request }) => {
@@ -364,6 +386,41 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
     expect(await screen.findByLabelText("Recordatori de classe")).toBeVisible();
     expect(calls).toBe(2);
+  });
+
+  it("E7-W06 step 5 (E6-W04 question 3): a read answered 409 MEMBER_ERASED (the member erased after D10 was read) says errors:MEMBER_ERASED as final, with no retry", async () => {
+    let calls = 0;
+    server.use(
+      http.get("*/api/v1/members/:id/notification-preferences", () => {
+        calls += 1;
+        return HttpResponse.json(
+          { code: "MEMBER_ERASED", details: {}, message: "Member erased", traceId: "t" },
+          { status: 409 },
+        );
+      }),
+    );
+    mockScenario("admin");
+    const i18n = await createI18n({
+      branding: canic,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-census", "errors"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={canic}>
+          <NotificationPreferencesBlock
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            memberId="member-laura"
+            onFeedback={() => undefined}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent(i18n.t("errors:MEMBER_ERASED"));
+    expect(i18n.t("errors:MEMBER_ERASED")).not.toBe("MEMBER_ERASED");
+    expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
+    expect(calls).toBe(1);
   });
 
   it("E7-W01 round 2 #5: leaving the page sends every unsaved change with keepalive — the one on its way too — and the next visit sends it again", async () => {
@@ -671,6 +728,86 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     });
     expect(operational()).toHaveAttribute("aria-checked", "true");
     expect((await stored())?.emailByCategory.OPERATIONAL).toBe(true);
+  });
+
+  it("E7-W06 (E7-W05 review #4): back from the back-forward cache with nothing unsaved, the record saves the change a newer visit left in the outbox instead of taking it over and ignoring it", async () => {
+    const puts = recordPutRequests();
+    await renderBlock();
+    const transition = (type: "pagehide" | "pageshow") => {
+      const event = new Event(type);
+      Object.defineProperty(event, "persisted", { value: true });
+      window.dispatchEvent(event);
+    };
+    transition("pagehide");
+    // Meanwhile a newer visit of this record in this tab left PERSONAL off unsaved.
+    sessionStorage.setItem(
+      PREFERENCES_OUTBOX_KEY,
+      JSON.stringify({
+        at: Date.now(),
+        memberId: "member-laura",
+        patch: { emailByCategory: { PERSONAL: false } },
+        visit: "a-newer-visit",
+      }),
+    );
+    transition("pageshow");
+    await waitFor(() => {
+      expect(puts).toEqual([{ body: { emailByCategory: { PERSONAL: false } }, keepalive: false }]);
+    });
+    expect(personal()).toHaveAttribute("aria-checked", "false");
+    await waitFor(() => {
+      expect(outbox()).toBeNull();
+    });
+    expect((await stored())?.emailByCategory.PERSONAL).toBe(false);
+  });
+
+  it("E7-W06 step 4 (E7-W05 review #1): restored while both PUTs of its departure were out, the older one landing last, and the resend and the adopted save failing — the record reads GET again and shows what the api holds (off), and the outbox keeps the latest choice (on)", async () => {
+    const older = gate();
+    const departure = gate();
+    const landed = planPuts([
+      // PERSONAL off: reaches the api only after the departure's PERSONAL on.
+      { landAfter: older.opened },
+      // PERSONAL on with keepalive: lands at once, answers when the test says.
+      { answerAfter: departure.opened },
+      // The resend and the adopted save never reach the api.
+      { lost: true, networkFailure: true },
+      { lost: true, networkFailure: true },
+    ]);
+    const puts = recordPutRequests();
+    let reads = 0;
+    server.events.on("request:start", ({ request }) => {
+      if (request.method === "GET" && request.url.includes("/notification-preferences")) {
+        reads += 1;
+      }
+    });
+    const { onFeedback } = await renderBlock();
+    await offThenOnAndLeave(puts);
+    await waitFor(() => {
+      expect(landed).toEqual([{ emailByCategory: { PERSONAL: true } }]);
+    });
+    const restored = new Event("pageshow");
+    Object.defineProperty(restored, "persisted", { value: true });
+    window.dispatchEvent(restored);
+    departure.open();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    older.open();
+    await waitFor(() => {
+      expect(puts).toHaveLength(4);
+    });
+    expect(puts.slice(2)).toEqual([
+      { body: { emailByCategory: { PERSONAL: true } }, keepalive: false },
+      { body: { emailByCategory: { PERSONAL: true } }, keepalive: false },
+    ]);
+    await waitFor(() => {
+      expect(personal()).toHaveAttribute("aria-checked", "false");
+    });
+    // The block's first read and the read after the failure.
+    expect(reads).toBe(2);
+    expect(onFeedback).toHaveBeenCalledWith(expect.objectContaining({ tone: "danger" }));
+    expect((await stored())?.emailByCategory.PERSONAL).toBe(false);
+    expect(outbox()).toMatchObject({
+      memberId: "member-laura",
+      patch: { emailByCategory: { PERSONAL: true } },
+    });
   });
 
   it("without SMS and PUSH (the api's `modules`): no «+SMS» and no push toggle", async () => {
