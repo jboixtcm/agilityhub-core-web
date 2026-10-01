@@ -1,4 +1,10 @@
-import { type ApiClient, isApiError, isInProgress, isUnanswered } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  HELD_KEY_TTL_MS,
+  isApiError,
+  isInProgress,
+  useSubmissionKeys,
+} from "@agilityhub/api-client";
 import { Button, Toast } from "@agilityhub/ui";
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -68,9 +74,10 @@ export function useUnreadFollowUp(client: ApiClient, enabled: boolean): UnreadFo
   const sequence = useRef(0);
   // The counter as shown, for the local changes that depend on it (a decrement given back).
   const shown = useRef<number | undefined>(undefined);
-  // CONVENCIONS_API §7 (E79): a read's key is kept, by row, only while the api has not answered
-  // it (a network failure, or IN_PROGRESS: its first request still runs).
-  const unansweredKeys = useRef(new Map<string, string>());
+  // CONVENCIONS_API §7 (E79, E85): a read's key is kept, by row, only while the api has not
+  // answered it (a network failure, a 5xx, or IN_PROGRESS: its first request still runs), by the
+  // shared rule, and for `HELD_KEY_TTL_MS` at most, like the read-all's (A3; E7-W07 step 4).
+  const readKeys = useSubmissionKeys({ ttlMs: HELD_KEY_TTL_MS });
   // The reads on their way, by row: the one running (a second read of the row joins it), and
   // whether it took one off the counter (given back if it fails).
   const inFlight = useRef(new Map<string, { decremented: boolean; done: Promise<boolean> }>());
@@ -135,12 +142,12 @@ export function useUnreadFollowUp(client: ApiClient, enabled: boolean): UnreadFo
         entry.decremented = true;
         markOneRead();
       }
-      const key = unansweredKeys.current.get(item.id) ?? crypto.randomUUID();
-      unansweredKeys.current.delete(item.id);
-      entry.done = client
-        .POST("/followup/{id}/read", {
-          params: { header: { "Idempotency-Key": key }, path: { id: item.id } },
-        })
+      entry.done = readKeys
+        .send(item.id, (key) =>
+          client.POST("/followup/{id}/read", {
+            params: { header: { "Idempotency-Key": key }, path: { id: item.id } },
+          }),
+        )
         .then(
           () => {
             inFlight.current.delete(item.id);
@@ -149,7 +156,6 @@ export function useUnreadFollowUp(client: ApiClient, enabled: boolean): UnreadFo
           },
           (error: unknown) => {
             inFlight.current.delete(item.id);
-            if (isUnanswered(error)) unansweredKeys.current.set(item.id, key);
             // The decrement is given back here, whatever the refresh below does (offline it
             // fails too); the api's count replaces it when it answers.
             if (entry.decremented) change((value) => (value === undefined ? value : value + 1));
@@ -161,7 +167,7 @@ export function useUnreadFollowUp(client: ApiClient, enabled: boolean): UnreadFo
       inFlight.current.set(item.id, entry);
       return entry.done;
     },
-    [change, client, markOneRead, refresh],
+    [change, client, markOneRead, readKeys, refresh],
   );
   const retry = useCallback(() => {
     if (failure === undefined) return;

@@ -66,8 +66,9 @@ export function NotificationPreferencesBlock({
           if (unsaved === undefined) kept.clear();
           else kept.write(unsaved);
         },
-        // After a failed save that followed overlapping PUTs of a departure, D10 shows what the
-        // api holds, not the last answer (E7-W06 step 4).
+        // After a failed save that followed overlapping PUTs of a departure, D10 reads what the api
+        // holds, not the last answer (E7-W06 step 4), and shows the admin's last choice on top of
+        // it as a pending change, sent again (E7-W07 step 2).
         read: async () =>
           (
             await client.GET("/members/{id}/notification-preferences", {
@@ -292,6 +293,13 @@ export function NotificationPreferencesBlock({
           />
           <span />
         </div>
+      ) : null}
+      {saverState !== undefined && (saverState.inFlight !== undefined || saverState.waiting) ? (
+        // A change not saved yet — the member's last choice shown again after a failure included —
+        // says so (E7-W07 step 2).
+        <p className="notification-preferences__saving" role="status">
+          {t("admin-census:common.saving")}
+        </p>
       ) : null}
       <a
         className="notification-preferences__log"

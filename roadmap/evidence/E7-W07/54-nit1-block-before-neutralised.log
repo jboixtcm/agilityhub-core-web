@@ -1,0 +1,41 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/backoffice-handlers.test.ts (36 tests | 1 failed | 35 skipped) 38ms
+   ❯ E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75) (7)
+     × E7-W07 step 8 (E5-W05 round 3 review #1, R-09-13): an ADMIN of another club cannot cancel a block of this club's register (404 NOT_FOUND, the activity's block too), and the block is still ACTIVE for this club's own ADMIN, who cancels it 35ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the lists' search (E75) > E7-W07 step 8 (E5-W05 round 3 review #1, R-09-13): an ADMIN of another club cannot cancel a block of this club's register (404 NOT_FOUND, the activity's block too), and the block is still ACTIVE for this club's own ADMIN, who cancels it
+AssertionError: rb-2026-08-03-1600-carretera: expected [ 200, undefined ] to deeply equal [ 404, 'NOT_FOUND' ]
+
+- Expected
++ Received
+
+  [
+-   404,
+-   "NOT_FOUND",
++   200,
++   undefined,
+  ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:813:51
+    811|     for (const id of [block, "rb-2026-08-06-1000-muntanya-activity"]) {
+    812|       const other = await as<ApiError>("adminOtherClub", "POST", `/rin…
+    813|       expect([other.status, other.body.code], id).toEqual([404, "NOT_F…
+       |                                                   ^
+    814|       valid("ApiError", other.body);
+    815|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 35 skipped (36)
+   Start at  10:33:27
+   Duration  765ms (transform 56%, import 39%, tests 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/backoffice-handlers.test.ts -t E7-W07 step 8

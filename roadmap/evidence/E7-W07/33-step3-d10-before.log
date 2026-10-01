@@ -1,0 +1,1126 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/CensusRecordPage.test.tsx (24 tests | 8 failed) 11913ms
+   ❯ E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final (8)
+     × E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 72ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{i… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 59ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 52ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 57ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /mem… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 10039ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/acc… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 84ms
+     × E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 95ms
+     × E7-W07 step 3 (S14 §5, R-14-15): an erased member's record offers none of the changes the api refuses with 409 MEMBER_ERASED, and sends none 37ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{i… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+AssertionError: expected <button …(2)>…(1)</button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="ah-button ah-button--primary"
+  type="submit"
+>
+  <span
+    class="ah-button__content"
+  >
+    Desa
+  </span>
+</button>
+
+ ❯ src/census/CensusRecordPage.test.tsx:475:83
+    473|           // Final: the dialog cannot send the same request again.
+    474|           if (action.submit !== undefined) {
+    475|             expect(within(dialog).queryByRole("button", { name: action…
+       |                                                                                   ^
+    476|           }
+    477|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+AssertionError: expected <button …(2)>…(1)</button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="ah-button ah-button--primary"
+  type="button"
+>
+  <span
+    class="ah-button__content"
+  >
+    Desa
+  </span>
+</button>
+
+ ❯ src/census/CensusRecordPage.test.tsx:475:83
+    473|           // Final: the dialog cannot send the same request again.
+    474|           if (action.submit !== undefined) {
+    475|             expect(within(dialog).queryByRole("button", { name: action…
+       |                                                                                   ^
+    476|           }
+    477|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+AssertionError: expected <button …(2)>…(1)</button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="ah-button ah-button--primary"
+  type="button"
+>
+  <span
+    class="ah-button__content"
+  >
+    Bloqueja les reserves
+  </span>
+</button>
+
+ ❯ src/census/CensusRecordPage.test.tsx:475:83
+    473|           // Final: the dialog cannot send the same request again.
+    474|           if (action.submit !== undefined) {
+    475|             expect(within(dialog).queryByRole("button", { name: action…
+       |                                                                                   ^
+    476|           }
+    477|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /mem… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+TestingLibraryElementError: Unable to find an element with the text: Aquest abonat ha estat suprimit i ja no es pot modificar., which matches selector '.census-record__feedback'. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+          [36m>[39m
+            [0mReserves bloquejades[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mReenvia accés[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEntra com l'abonat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEdita[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_7l_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_7l_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_7l_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_7l_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_7l_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_7l_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_7l_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_7l_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mContacte[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mlaura.serra@example.test · feina.laura@example.test · +34 655100101 (Laura) · +34 617100102 (Joan)[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+         ...
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"census-record"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"census-record__header"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__identity"[39m
+          [36m>[39m
+            [36m<h1>[39m
+              [0mLaura Serra Vidal[0m
+            [36m</h1>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mnúm. 87[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0malta des de 2023[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mtitular del grup familiar[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mReserves bloquejades[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__header-actions"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m"census-record__action-link"[39m
+              [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+              [33mrel[39m=[32m"noreferrer"[39m
+              [33mtarget[39m=[32m"_blank"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mWhatsApp[0m
+            [36m</a>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mReenvia accés[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mEntra com l'abonat[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mEdita[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-tabs"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+            [33mclass[39m=[32m"ah-tabs__list"[39m
+            [33mrole[39m=[32m"tablist"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_7l_-panel-summary"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_7l_-tab-summary"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mFitxa[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_7l_-panel-tasks"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_7l_-tab-tasks"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mTasques[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_7l_-panel-audit"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_7l_-tab-audit"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mAuditoria[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"_r_7l_-tab-summary"[39m
+            [33mclass[39m=[32m"ah-tabs__panel"[39m
+            [33mid[39m=[32m"_r_7l_-panel-summary"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__grid"[39m
+...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ src/census/CensusRecordPage.test.tsx:468:17
+    466|         const dialog = action.send();
+    467|         if (dialog === undefined) {
+    468|           await waitFor(() => {
+       |                 ^
+    469|             expect(screen.getByText(erased, { selector: ".census-recor…
+    470|           });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/acc… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+AssertionError: expected <button …(2)>…(1)</button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="ah-button ah-button--primary"
+  type="button"
+>
+  <span
+    class="ah-button__content"
+  >
+    Reenvia accés
+  </span>
+</button>
+
+ ❯ src/census/CensusRecordPage.test.tsx:475:83
+    473|           // Final: the dialog cannot send the same request again.
+    474|           if (action.submit !== undefined) {
+    475|             expect(within(dialog).queryByRole("button", { name: action…
+       |                                                                                   ^
+    476|           }
+    477|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+AssertionError: expected <button …(2)>…(1)</button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="ah-button ah-button--primary"
+  type="button"
+>
+  <span
+    class="ah-button__content"
+  >
+    Entra com l'abonat
+  </span>
+</button>
+
+ ❯ src/census/CensusRecordPage.test.tsx:475:83
+    473|           // Final: the dialog cannot send the same request again.
+    474|           if (action.submit !== undefined) {
+    475|             expect(within(dialog).queryByRole("button", { name: action…
+       |                                                                                   ^
+    476|           }
+    477|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, R-14-15): an erased member's record offers none of the changes the api refuses with 409 MEMBER_ERASED, and sends none
+TestingLibraryElementError: Found multiple elements with the role "button" and name "Edita"
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<button[39m
+  [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+  [33mtype[39m=[32m"button"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-button__content"[39m
+  [36m>[39m
+    [36m<svg[39m
+      [33maria-hidden[39m=[32m"true"[39m
+      [33mclass[39m=[32m"ah-icon"[39m
+    [36m>[39m
+      [36m<use[39m
+        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+      [36m/>[39m
+    [36m</svg>[39m
+    [0mEdita[0m
+  [36m</span>[39m
+[36m</button>[39m
+
+Ignored nodes: comments, script, style
+[36m<button[39m
+  [33mclass[39m=[32m"ah-button ah-button--ghost census-record__inline-action"[39m
+  [33mtype[39m=[32m"button"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-button__content"[39m
+  [36m>[39m
+    [0mEdita[0m
+  [36m</span>[39m
+[36m</button>[39m
+
+Ignored nodes: comments, script, style
+[36m<button[39m
+  [33mclass[39m=[32m"ah-button ah-button--ghost census-record__inline-action"[39m
+  [33mtype[39m=[32m"button"[39m
+[36m>[39m
+  [36m<span[39m
+    [33mclass[39m=[32m"ah-button__content"[39m
+  [36m>[39m
+    [0mEdita[0m
+  [36m</span>[39m
+[36m</button>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mAbonat suprimit #64[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 64[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2019[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mReenvia accés[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEntra com l'abonat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEdita[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_9k_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_9k_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_9k_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_9k_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_9k_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_9k_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_9k_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_9k_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mContacte[0m
+                  [36m</dt>[39m
+                  [36m<dd />[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mPagament[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mDomiciliació[0m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                    [36m>[39m
+                      [0mcanvi només admin[0m
+                    [36m</span>[39m
+                    [0m [0m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost census-record__inline-action"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mEdita[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mConsentiments[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--warning census-record__image-alert"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-warn"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                      [0mNo autoritza l'ús de la seva imatge: no publiqueu fotos on surti ell.[0m
+                    [36m</span>[39m
+                    [0m [0m
+                    [0midioma: CA[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mRols d'accés[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"census-record__badges"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0malumne[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0minstructor[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0madministrador[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [0m [0m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost census-record__inline-action"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mEdita[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</dd>[39m
+                [36m</div>[39m
+              [36m</dl>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mGossos[0m
+              [36m</h2>[39m
+              [36m<ul[39m
+                [33mclass[39m=[32m"census-record__dog-list"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card notification-preferences"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mPreferències d'avisos (mantenibles aquí i al perfil)[0m
+              [36m</h2>[39m
+              [36m<p[39m
+                [33mrole[39m=[32m"status"[39m
+              [36m>[39m
+                [0mAquest abonat ha estat suprimit i ja no es pot modificar.[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mRebuts recents i auditoria[0m
+              [36m</h2>[39m
+              [36m<ul[39m
+                [33mclass[39m=[32m"census-record__invoice-list"[39m
+              [36m>[39m
+                [36m<li>[39m
+                  [36m<span>[39m
+                    [0m01/07/2026[0m
+                  [36m</span>[39m
+                  [36m<span>[39m
+                    [0m60,00 €[0m
+                  [36m</span>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                  [36m>[39m
+                    [0mcobrat[0m
+                  [36m</span>[39m
+                [36m</li>[39m
+                [36m<li>[39m
+                  [36m<span>[39m
+                    [0m01/06/2026[0m
+                  [36m</span>[39m
+                  [36m<span>[39m
+                    [0m60,00 €[0m
+                  [36m</span>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                  [36m>[39m
+                    [0mcobrat[0m
+                  [36m</span>[39m
+                [36m</li>[39m
+              [36m</ul>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"census-record__links census-record__links--horizontal"[39m
+              [36m>[39m
+                [36m<a[39m
+                  [33mhref[39m=[32m"/facturacio"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mTots els rebuts (12) ›[0m
+                [36m</a>[39m
+                [36m<a[39m
+                  [33mhref[39m=[32m"/abonats/64000000-0000-4000-8000-000000000064/auditoria"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-lock"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mTota l'auditoria ›[0m
+                [36m</a>[39m
+              [36m</div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"census-record__muted"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-lock"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0m [0m
+                [0mDarrers canvis[0m
+                [0m:[0m
+                [0m [0m
+              [36m</p>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"census-record__footer-actions"[39m
+              [36m>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"census-record__action-link"[39m
+                  [33mhref[39m=[32m"/inactivitats"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-palm"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mInactivitat[0m
+                [36m</a>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-lock"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [0mBloqueja les reserves[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"census-record__action-link"[39m
+                  [33mhref[39m=[32m"/inactivitats"[39m
+                [36m>[39m
+                  [0mBaixa (amb data)[0m
+                [36m</a>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"member-bookings-title"[39m
+            [33mclass[39m=[32m"ah-card member-bookings"[39m
+            [33mrole[39m=[32m"region"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"census-record__section-title"[39m
+              [33mid[39m=[32m"member-bookings-title"[39m
+            [36m>[39m
+              [0mReserves[0m
+            [36m</h2>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"member-bookings__note"[39m
+            [36m>[39m
+              [0mPer reservar o anul·lar en nom seu, fes servir «Entra com l'abonat».[0m
+            [36m</p>[39m
+            [36m<h3>[39m
+              [0mClasses[0m
+            [36m</h3>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-data-table__scroll"[39m
+            [36m>[39m
+              [36m<table[39m
+                [33mclass[39m=[32m"ah-data-table"[39m
+              [36m>[39m
+                [36m<caption[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mClasses[0m
+                [36m</caption>[39m
+                [36m<thead>[39m
+                  [36m<tr>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mDia i hora[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mClasse[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mPista[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mGos[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mOrigen[0m
+                    [36m</th>[39m
+                  [36m</tr>[39m
+                [36m</thead>[39m
+                [36m<tbody>[39m
+                  [36m<tr>[39m
+                    [36m<td[39m
+                      [33mcolspan[39m=[32m"6"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33maria-label[39m=[32m"Carregant les reserves…"[39m
+                        [33mclass[39m=[32m"ah-skeleton"[39m
+                        [33mrole[39m=[32m"status"[39m
+                      [36m/>[39m
+                    [36m</td>[39m
+                  [36m</tr>[39m
+                [36m</tbody>[39m
+              [36m</table>[39m
+            [36m</div>[39m
+            [36m<h3>[39m
+              [0mEntrenaments[0m
+            [36m</h3>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-data-table__scroll"[39m
+            [36m>[39m
+              [36m<table[39m
+                [33mclass[39m=[32m"ah-data-table"[39m
+              [36m>[39m
+                [36m<caption[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mEntrenaments[0m
+                [36m</caption>[39m
+                [36m<thead>[39m
+                  [36m<tr>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mDia i hora[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mPista[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mGos[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mOrigen[0m
+                    [36m</th>[39m
+                  [36m</tr>[39m
+                [36m</thead>[39m
+                [36m<tbody>[39m
+                  [36m<tr>[39m
+                    [36m<td[39m
+                      [33mcolspan[39m=[32m"5"[39m
+                    [36m>[39m
+                      [36m<div[39m
+                        [33maria-label[39m=[32m"Carregant les reserves…"[39m
+                        [33mclass[39m=[32m"ah-skeleton"[39m
+                        [33mrole[39m=[32m"status"[39m
+                      [36m/>[39m
+                    [36m</td>[39m
+                  [36m</tr>[39m
+                [36m</tbody>[39m
+              [36m</table>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card census-record__notes"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mclass[39m=[32m"census-record__section-title"[39m
+            [36m>[39m
+              [0mNotes als instructors[0m
+            [36m</h2>[39m
+            [36m<dl[39m
+              [33mclass[39m=[32m"census-record__data-list"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ expectNoChangeOffered src/census/CensusRecordPage.test.tsx:273:21
+    271|   function expectNoChangeOffered() {
+    272|     for (const name of changeButtons) {
+    273|       expect(screen.queryByRole("button", { name }), name).toBeNull();
+       |                     ^
+    274|     }
+    275|     for (const name of changeLinks) {
+ ❯ src/census/CensusRecordPage.test.tsx:506:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed | 16 passed (24)
+   Start at  10:30:09
+   Duration  13.30s (tests 90%, transform 4%, environment 4%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/CensusRecordPage.test.tsx

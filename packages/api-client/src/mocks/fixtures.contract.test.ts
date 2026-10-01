@@ -434,13 +434,19 @@ describe("E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, Clas
   it("sends the «Sense» column last, translated, only when a class has no ring", () => {
     const columns = (locale: "ca" | "en" | "es") =>
       dayGridFixture(DAY_GRID_ACTIVITY_DATE, "member", { ...allModules, locale }).columns;
-    expect(columns("ca").at(-1)).toMatchObject({ name: "Sense pista", ringId: null, shortName: "Sense" });
+    expect(columns("ca").at(-1)).toMatchObject({
+      name: "Sense pista",
+      ringId: null,
+      shortName: "Sense",
+    });
     expect(columns("es").at(-1)).toMatchObject({ ringId: null, shortName: "Sin" });
     expect(columns("en").at(-1)).toMatchObject({ ringId: null, shortName: "None" });
     expect(columns("ca").filter((column) => column.ringId === null)).toHaveLength(1);
     for (const date of [DAY_GRID_INSTRUCTOR_DATE, DAY_GRID_MEMBER_DATE, DAY_GRID_EMPTY_DATE]) {
       expect(
-        dayGridFixture(date, "instructor", allModules).columns.some((column) => column.ringId === null),
+        dayGridFixture(date, "instructor", allModules).columns.some(
+          (column) => column.ringId === null,
+        ),
       ).toBe(false);
     }
   });
@@ -448,7 +454,9 @@ describe("E4-W03 day-grid fixtures follow the S06 contract (DayGrid form D, Clas
   it("validates the member projections of the class and the block (S06 §6 «Altres formes»)", () => {
     const session = schema("ClassSessionMemberView");
     const staffOnly = ["counters", "instructorIds", "atRisk", "notes", "cancellation", "version"];
-    for (const item of dayGridClassSessions().filter((candidate) => candidate.state !== "CANCELLED")) {
+    for (const item of dayGridClassSessions().filter(
+      (candidate) => candidate.state !== "CANCELLED",
+    )) {
       const view = dayGridMemberSession(item.id, allModules.modules);
       expect(session(view), JSON.stringify(session.errors, null, 2)).toBe(true);
       for (const hidden of staffOnly) expect(view).not.toHaveProperty(hidden);
@@ -487,28 +495,33 @@ describe("E3-W08 the computed signup configuration and results follow SignupConf
     ["2026-12-31", false],
     ["2026-08-17", true],
     ["2026-08-26", true],
-  ] as const)("validates GET /signup on %s (add-dog: %s) and each submission upfront", (today, member) => {
-    const config = signupConfig({
-      acceptLanguage: "ca",
-      billing: true,
-      enabled: true,
-      familyGroup: true,
-      packs: true,
-      privacyPolicyUrl: "https://canic.example.test/privacitat",
-      stripe: false,
-      today,
-      ...(member ? { member: signupMemberFixture } : {}),
-    });
-    const validateConfig = schema("SignupConfig");
-    expect(validateConfig(config), JSON.stringify(validateConfig.errors, null, 2)).toBe(true);
-    const validateUpfront = schema("SignupUpfront");
-    for (const quote of config.upfront?.planQuotes ?? []) {
-      for (const option of [undefined, "TODAY", "ALTERNATIVE"] as const) {
-        const upfront = signupResultUpfront(quote, option, { addDog: member });
-        expect(validateUpfront(upfront), JSON.stringify(validateUpfront.errors, null, 2)).toBe(true);
+  ] as const)(
+    "validates GET /signup on %s (add-dog: %s) and each submission upfront",
+    (today, member) => {
+      const config = signupConfig({
+        acceptLanguage: "ca",
+        billing: true,
+        enabled: true,
+        familyGroup: true,
+        packs: true,
+        privacyPolicyUrl: "https://canic.example.test/privacitat",
+        stripe: false,
+        today,
+        ...(member ? { member: signupMemberFixture } : {}),
+      });
+      const validateConfig = schema("SignupConfig");
+      expect(validateConfig(config), JSON.stringify(validateConfig.errors, null, 2)).toBe(true);
+      const validateUpfront = schema("SignupUpfront");
+      for (const quote of config.upfront?.planQuotes ?? []) {
+        for (const option of [undefined, "TODAY", "ALTERNATIVE"] as const) {
+          const upfront = signupResultUpfront(quote, option, { addDog: member });
+          expect(validateUpfront(upfront), JSON.stringify(validateUpfront.errors, null, 2)).toBe(
+            true,
+          );
+        }
       }
-    }
-  });
+    },
+  );
 });
 
 describe("E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignupView, ValidationDryRun)", () => {
@@ -560,9 +573,9 @@ describe("E3-W07 D2 signup review fixtures follow the S04 contract (MemberSignup
       planId: "10000000-0000-4000-8000-000000000002",
       version: manual.version,
     });
-    expect(pack.upfront?.lines.map((line) => [line.concept, line.amount.amountMinor, line.status])).toEqual([
-      ["PACK", 13500, "DUE"],
-    ]);
+    expect(
+      pack.upfront?.lines.map((line) => [line.concept, line.amount.amountMinor, line.status]),
+    ).toEqual([["PACK", 13500, "DUE"]]);
     expect(pack).not.toHaveProperty("nextInvoiceDate");
     const therapy = signupReviewDryRun(signupReviewBaseline, {
       dogs: [{ dogId: "44000000-0000-4000-8000-000000000001" }],
@@ -665,79 +678,77 @@ describe("E5-W01 step 10 · the booking world follows the S08 contract (MeHome, 
   const schema = (name: string) =>
     ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
   const canicModules = (brandingCanicFixture as { modules: string[] }).modules;
-  const bookingOptions = (
-    modules: readonly string[],
-    limit: boolean,
-    now = BOOKING_MOCK_NOW,
-  ): BookingOptions => ({
-    limit,
+  // E7-W07 step 6: the options no longer carry the `swap` world's switch; the world itself does.
+  const bookingOptions = (modules: readonly string[], now = BOOKING_MOCK_NOW): BookingOptions => ({
     locale: "ca",
     modules,
     now: Date.parse(now),
     thresholdMinutes: 240,
   });
   const variants: [string, BookingOptions, BookingLimitWorld | null][] = [
-    ["canic", bookingOptions(canicModules, false), null],
-    ["limit", bookingOptions(canicModules, true), "swap"],
+    ["canic", bookingOptions(canicModules), null],
+    ["limit", bookingOptions(canicModules), "swap"],
     // E5-W05 round 3 #2: the refused limit of mockup 29.
-    ["limit done", bookingOptions(canicModules, false, BOOKING_LIMIT_DONE_NOW), "done"],
-    [
-      "no waitlist",
-      bookingOptions(
-        canicModules.filter((module) => module !== "WAITLIST"),
-        false,
-      ),
-      null,
-    ],
-    ["single class", bookingOptions([...canicModules, "SINGLE_CLASS"], false), null],
-    ["no modules", bookingOptions([], false), null],
+    ["limit done", bookingOptions(canicModules, BOOKING_LIMIT_DONE_NOW), "done"],
+    ["no waitlist", bookingOptions(canicModules.filter((module) => module !== "WAITLIST")), null],
+    ["single class", bookingOptions([...canicModules, "SINGLE_CLASS"]), null],
+    ["no modules", bookingOptions([]), null],
   ];
 
   afterEach(() => {
     resetBookingState();
   });
 
-  it.each(variants)("validates the 03 and 04 aggregates of every dog (%s)", (_name, options, world) => {
-    resetBookingState(world);
-    const home = schema("MeHome");
-    const bookable = schema("BookableClasses");
-    for (const dogId of [null, ...Object.values(BOOKING_DOG_IDS)]) {
-      const view = meHome(dogId, options, []);
-      if (view !== undefined) expect(home(view), JSON.stringify(home.errors, null, 2)).toBe(true);
-      const classes = bookableClasses(dogId, options);
-      if (classes !== undefined) {
-        expect(bookable(classes), JSON.stringify(bookable.errors, null, 2)).toBe(true);
+  it.each(variants)(
+    "validates the 03 and 04 aggregates of every dog (%s)",
+    (_name, options, world) => {
+      resetBookingState(world);
+      const home = schema("MeHome");
+      const bookable = schema("BookableClasses");
+      for (const dogId of [null, ...Object.values(BOOKING_DOG_IDS)]) {
+        const view = meHome(dogId, options, []);
+        if (view !== undefined) expect(home(view), JSON.stringify(home.errors, null, 2)).toBe(true);
+        const classes = bookableClasses(dogId, options);
+        if (classes !== undefined) {
+          expect(bookable(classes), JSON.stringify(bookable.errors, null, 2)).toBe(true);
+        }
       }
-    }
-  });
+    },
+  );
 
-  it.each(variants)("validates the holds, bookings, waitlist entries and the limit details (%s)", (_name, options, world) => {
-    resetBookingState(world);
-    const hold = schema("SeatHoldResponse");
-    const booking = schema("Booking");
-    const entry = schema("WaitlistEntry");
-    const limit = schema("BookingLimitReachedDetails");
-    for (const [classId, dogId] of [
-      ["class-2026-08-05-1850", BOOKING_DOG_IDS.duna],
-      ["class-2026-08-08-0900", BOOKING_DOG_IDS.duna],
-      ["class-2026-08-12-1900", BOOKING_DOG_IDS.rock],
-    ] as const) {
-      const response = seatHoldResponse(createHold(classId, dogId, null, options), options);
-      expect(hold(response), JSON.stringify(hold.errors, null, 2)).toBe(true);
-    }
-    for (const item of bookingState.bookings) {
-      expect(booking(bookingResource(item, options)), JSON.stringify(booking.errors, null, 2)).toBe(
-        true,
-      );
-    }
-    for (const item of bookingState.entries) {
-      expect(entry(waitlistResource(item, options)), JSON.stringify(entry.errors, null, 2)).toBe(true);
-    }
-    expect(
-      limit(limitReachedDetails(BOOKING_DOG_IDS.duna, "CURRENT", options)),
-      JSON.stringify(limit.errors, null, 2),
-    ).toBe(true);
-  });
+  it.each(variants)(
+    "validates the holds, bookings, waitlist entries and the limit details (%s)",
+    (_name, options, world) => {
+      resetBookingState(world);
+      const hold = schema("SeatHoldResponse");
+      const booking = schema("Booking");
+      const entry = schema("WaitlistEntry");
+      const limit = schema("BookingLimitReachedDetails");
+      for (const [classId, dogId] of [
+        ["class-2026-08-05-1850", BOOKING_DOG_IDS.duna],
+        ["class-2026-08-08-0900", BOOKING_DOG_IDS.duna],
+        ["class-2026-08-12-1900", BOOKING_DOG_IDS.rock],
+      ] as const) {
+        const response = seatHoldResponse(createHold(classId, dogId, null, options), options);
+        expect(hold(response), JSON.stringify(hold.errors, null, 2)).toBe(true);
+      }
+      for (const item of bookingState.bookings) {
+        expect(
+          booking(bookingResource(item, options)),
+          JSON.stringify(booking.errors, null, 2),
+        ).toBe(true);
+      }
+      for (const item of bookingState.entries) {
+        expect(entry(waitlistResource(item, options)), JSON.stringify(entry.errors, null, 2)).toBe(
+          true,
+        );
+      }
+      expect(
+        limit(limitReachedDetails(BOOKING_DOG_IDS.duna, "CURRENT", options)),
+        JSON.stringify(limit.errors, null, 2),
+      ).toBe(true);
+    },
+  );
 });
 
 describe("E5-W02 step 9 · the training world follows the S09 contract (TrainingSlots, TrainingSummary, TrainingBooking)", () => {
@@ -754,46 +765,49 @@ describe("E5-W02 step 9 · the training world follows the S09 contract (Training
     resetTrainingState();
   });
 
-  it.each(variants)("validates the member and staff grids, the summaries and every booking (%s)", (variant) => {
-    resetTrainingState(variant);
-    const slots = schema("TrainingSlots");
-    const summary = schema("TrainingSummary");
-    const booking = schema("TrainingBooking");
-    const limit = schema("TrainingLimitReachedDetails");
-    for (const modules of [canicModules, canicModules.filter((module) => module !== "COURSES")]) {
-      for (const staff of [false, true]) {
-        for (const ringId of [null, "ring-petita"]) {
-          const grid = trainingSlots({
-            dogId: staff ? null : TRAINING_DOG_IDS.rock,
-            from: "2026-08-03",
-            levelsEnabled: true,
-            modules,
-            now,
-            ringId,
-            showSetup: modules.includes("COURSES"),
-            staff,
-            to: "2026-08-14",
-          });
-          expect(slots(grid), JSON.stringify(slots.errors, null, 2)).toBe(true);
+  it.each(variants)(
+    "validates the member and staff grids, the summaries and every booking (%s)",
+    (variant) => {
+      resetTrainingState(variant);
+      const slots = schema("TrainingSlots");
+      const summary = schema("TrainingSummary");
+      const booking = schema("TrainingBooking");
+      const limit = schema("TrainingLimitReachedDetails");
+      for (const modules of [canicModules, canicModules.filter((module) => module !== "COURSES")]) {
+        for (const staff of [false, true]) {
+          for (const ringId of [null, "ring-petita"]) {
+            const grid = trainingSlots({
+              dogId: staff ? null : TRAINING_DOG_IDS.rock,
+              from: "2026-08-03",
+              levelsEnabled: true,
+              modules,
+              now,
+              ringId,
+              showSetup: modules.includes("COURSES"),
+              staff,
+              to: "2026-08-14",
+            });
+            expect(slots(grid), JSON.stringify(slots.errors, null, 2)).toBe(true);
+          }
         }
-      }
-      for (const dogId of [null, TRAINING_DOG_IDS.rock, TRAINING_DOG_IDS.toby]) {
-        for (const levelsEnabled of [true, false]) {
-          const view = trainingSummary({ date: null, dogId, levelsEnabled, modules, now });
-          if (view !== undefined) {
-            expect(summary(view), JSON.stringify(summary.errors, null, 2)).toBe(true);
+        for (const dogId of [null, TRAINING_DOG_IDS.rock, TRAINING_DOG_IDS.toby]) {
+          for (const levelsEnabled of [true, false]) {
+            const view = trainingSummary({ date: null, dogId, levelsEnabled, modules, now });
+            if (view !== undefined) {
+              expect(summary(view), JSON.stringify(summary.errors, null, 2)).toBe(true);
+            }
           }
         }
       }
-    }
-    for (const item of trainingState.bookings) {
-      const resource = trainingBookingResource(item, now);
-      expect(booking(resource), JSON.stringify(booking.errors, null, 2)).toBe(true);
-    }
-    const week = trainingWeekOf(TRAINING_MOCK_NOW);
-    const details = trainingLimitDetails(TRAINING_DOG_IDS.rock, week, now);
-    expect(limit(details), JSON.stringify(limit.errors, null, 2)).toBe(true);
-  });
+      for (const item of trainingState.bookings) {
+        const resource = trainingBookingResource(item, now);
+        expect(booking(resource), JSON.stringify(booking.errors, null, 2)).toBe(true);
+      }
+      const week = trainingWeekOf(TRAINING_MOCK_NOW);
+      const details = trainingLimitDetails(TRAINING_DOG_IDS.rock, week, now);
+      expect(limit(details), JSON.stringify(limit.errors, null, 2)).toBe(true);
+    },
+  );
 
   it("R-09-03/R-09-05 derive the instants and the training week in the club zone across the DST change", () => {
     // Sunday 25-10-2026 changes to CET at 03:00: 20:00 local is 19:00Z, a week of 169 hours.

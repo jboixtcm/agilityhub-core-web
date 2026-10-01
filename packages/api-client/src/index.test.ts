@@ -224,7 +224,7 @@ describe("typed API client", () => {
     ]);
   });
 
-  it("E5-W01 step 0 (S08 §6) sends an Idempotency-Key on the seat hold, the booking, the waitlist entry and the claim", async () => {
+  it("E5-W01 step 0, E7-W07 step 4 (S08 §6, CONVENCIONS_API §7, E79): an Idempotency-Key on the booking and the claim, never on the seat hold nor the waitlist entry, whose contract declares none", async () => {
     const keys: string[] = [];
     const record =
       (name: string) =>
@@ -262,12 +262,34 @@ describe("typed API client", () => {
     });
 
     expect(keys).toEqual([
-      "seat-hold:123e4567-e89b-42d3-a456-426614174003",
+      "seat-hold:",
       "booking:123e4567-e89b-42d3-a456-426614174003",
-      "waitlist:123e4567-e89b-42d3-a456-426614174003",
+      "waitlist:",
       "claim:123e4567-e89b-42d3-a456-426614174003",
       "cancellation:",
     ]);
+  });
+
+  it("E7-W07 step 4 (S09 §6): the snapshot declares the key on a training booking's cancellation, so a caller that omits it still sends one", async () => {
+    const keys: string[] = [];
+    server.use(
+      http.post(
+        "https://core.example.test/api/v1/training-bookings/:id/cancellation",
+        ({ request }) => {
+          keys.push(request.headers.get("Idempotency-Key") ?? "");
+          return HttpResponse.json({});
+        },
+      ),
+    );
+    const client = createApiClient({
+      baseUrl: "https://core.example.test/api/v1",
+      createIdempotencyKey: () => "123e4567-e89b-42d3-a456-426614174005",
+    });
+    await client.POST("/training-bookings/{id}/cancellation", {
+      body: {},
+      params: { path: { id: "training-1" } },
+    });
+    expect(keys).toEqual(["123e4567-e89b-42d3-a456-426614174005"]);
   });
 
   it("E5-W03 step 0 (R-15-09) sends an Idempotency-Key on a job trigger, never on its switch", async () => {

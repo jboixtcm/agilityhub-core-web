@@ -212,7 +212,7 @@ describe("E7-W01 round 2 #4: D10's «Preferències d'avisos» reads its own rout
   });
 });
 
-describe("E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15)", () => {
+describe("T-14-19 E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15)", () => {
   const erased = "Aquest abonat ha estat suprimit i ja no es pot modificar.";
 
   it("E7-W06 step 5: an erased member's «Preferències d'avisos» say MEMBER_ERASED as final — its own message, no «Torna-ho a provar» — and ask nothing the api refuses with 409", async () => {
@@ -253,6 +253,265 @@ describe("E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §
     expect(await screen.findByRole("alert")).toHaveTextContent(erased);
     expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
     expect(screen.queryByText("No s'ha pogut carregar la fitxa.")).toBeNull();
+  });
+});
+
+describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final", () => {
+  const erased = "Aquest abonat ha estat suprimit i ja no es pot modificar.";
+  /** Every change D10 offers on a member; none of them is left once the member is erased. */
+  const changeButtons = [
+    "Edita",
+    "Reenvia accés",
+    "Entra com l'abonat",
+    "Bloqueja les reserves",
+    "Desbloqueja les reserves",
+  ];
+  const changeLinks = ["Inactivitat", "Baixa (amb data)"];
+
+  function expectNoChangeOffered() {
+    for (const name of changeButtons) {
+      expect(screen.queryAllByRole("button", { name }), name).toEqual([]);
+    }
+    for (const name of changeLinks) {
+      expect(screen.queryAllByRole("link", { name }), name).toEqual([]);
+    }
+  }
+
+  function headerAction(name: string) {
+    const actions = document.querySelector<HTMLElement>(".census-record__header-actions");
+    if (actions === null) throw new TypeError("D10 has no header actions");
+    fireEvent.click(within(actions).getByRole("button", { name }));
+  }
+
+  function rowEdit(label: string) {
+    const row = screen
+      .getByText(label, { selector: "dt" })
+      .closest<HTMLElement>(".census-record__data-row");
+    if (row === null) throw new TypeError(`D10 has no «${label}» row`);
+    fireEvent.click(within(row).getByRole("button", { name: "Edita" }));
+  }
+
+  /** Laura's record, read while her booking block was active (the unblock's case). */
+  async function serveBlockedLaura() {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const { data } = await client.GET("/members/{id}/overview", {
+      params: { path: { id: "member-laura" } },
+    });
+    if (data === undefined) throw new TypeError("The mock overview did not answer");
+    const overview = {
+      ...data,
+      member: {
+        ...data.member,
+        bookingBlock: {
+          active: true,
+          byAccountId: null,
+          reason: "Rebut pendent",
+          since: "2026-09-06T15:00:00Z",
+        },
+      },
+    };
+    server.use(http.get("*/api/v1/members/:id/overview", () => HttpResponse.json(overview)));
+  }
+
+  interface ErasedAction {
+    blocked?: boolean;
+    method: "delete" | "patch" | "post" | "put";
+    name: string;
+    path: string;
+    /** What a saved change would announce: it must never show. */
+    saved?: RegExp | string;
+    /** Opens the action and sends it; its dialog, or `undefined` when it has none. */
+    send: () => HTMLElement | undefined;
+    /** The dialog's button that would send the same request again. */
+    submit?: string;
+    /** What the record still shows: the change was not applied. */
+    unchanged: () => void;
+  }
+
+  const actions: ErasedAction[] = [
+    {
+      method: "patch",
+      name: "«Edita» the member (PATCH /members/{id})",
+      path: "/members/:id",
+      saved: "Les dades de l'abonat s'han desat.",
+      send: () => {
+        headerAction("Edita");
+        const drawer = screen.getByRole("dialog", { name: "Edita l'abonat" });
+        fireEvent.change(within(drawer).getByLabelText("Nom"), { target: { value: "Lara" } });
+        fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+        return drawer;
+      },
+      submit: "Desa",
+      unchanged: () => {
+        expect(screen.getByRole("heading", { name: "Laura Serra Vidal" })).toBeVisible();
+      },
+    },
+    {
+      method: "patch",
+      name: "«Pagament» › «Edita» (PATCH /members/{id}/payment-method)",
+      path: "/members/:id/payment-method",
+      saved: "El mètode de pagament s'ha actualitzat.",
+      send: () => {
+        rowEdit("Pagament");
+        const dialog = screen.getByRole("dialog", { name: "Mètode de pagament" });
+        fireEvent.change(within(dialog).getByLabelText("IBAN nou"), {
+          target: { value: "ES9121000418450200051332" },
+        });
+        fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+        return dialog;
+      },
+      submit: "Desa",
+      unchanged: () => {
+        expect(screen.getByText("···· ···· ···· ···· 2231", { exact: false })).toBeVisible();
+      },
+    },
+    {
+      method: "put",
+      name: "«Rols d'accés» › «Edita» (PUT /members/{id}/roles)",
+      path: "/members/:id/roles",
+      saved: "Els rols d'accés s'han actualitzat.",
+      send: () => {
+        rowEdit("Rols d'accés");
+        const dialog = screen.getByRole("dialog", { name: "Rols d'accés" });
+        fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+        return dialog;
+      },
+      submit: "Desa",
+      unchanged: () => undefined,
+    },
+    {
+      method: "post",
+      name: "«Bloqueja les reserves» (POST /members/{id}/booking-block)",
+      path: "/members/:id/booking-block",
+      saved: "Les reserves s'han bloquejat.",
+      send: () => {
+        fireEvent.click(screen.getByRole("button", { name: "Bloqueja les reserves" }));
+        const dialog = screen.getByRole("dialog", { name: "Bloqueja les reserves" });
+        fireEvent.change(within(dialog).getByLabelText("Motiu del bloqueig"), {
+          target: { value: "Rebut pendent" },
+        });
+        fireEvent.click(within(dialog).getByRole("button", { name: "Bloqueja les reserves" }));
+        return dialog;
+      },
+      submit: "Bloqueja les reserves",
+      unchanged: () => {
+        expect(screen.queryByText("Reserves bloquejades")).toBeNull();
+      },
+    },
+    {
+      blocked: true,
+      method: "delete",
+      name: "«Desbloqueja les reserves» (DELETE /members/{id}/booking-block)",
+      path: "/members/:id/booking-block",
+      saved: "Les reserves s'han desbloquejat.",
+      send: () => {
+        fireEvent.click(screen.getByRole("button", { name: "Desbloqueja les reserves" }));
+        return undefined;
+      },
+      unchanged: () => {
+        expect(screen.getByText("Reserves bloquejades")).toBeVisible();
+      },
+    },
+    {
+      method: "post",
+      name: "«Reenvia accés» (POST /members/{id}/access-resend)",
+      path: "/members/:id/access-resend",
+      saved: /Enllaç enviat a/u,
+      send: () => {
+        headerAction("Reenvia accés");
+        const dialog = screen.getByRole("dialog", { name: "Reenvia l'accés" });
+        fireEvent.click(within(dialog).getByRole("button", { name: "Reenvia accés" }));
+        return dialog;
+      },
+      submit: "Reenvia accés",
+      unchanged: () => undefined,
+    },
+    {
+      method: "post",
+      name: "«Entra com l'abonat» (POST /members/{id}/impersonation-token)",
+      path: "/members/:id/impersonation-token",
+      // A started impersonation would open the club app (`window.open`): it never does.
+      send: () => {
+        headerAction("Entra com l'abonat");
+        const dialog = screen.getByRole("dialog", { name: "Entra com l'abonat" });
+        fireEvent.click(within(dialog).getByRole("button", { name: "Entra com l'abonat" }));
+        return dialog;
+      },
+      submit: "Entra com l'abonat",
+      unchanged: () => undefined,
+    },
+  ];
+
+  // One test per action, named in full (`it.each`'s `$name` would cut the longer names).
+  for (const action of actions) {
+    it(`E7-W07 step 3 (S14 §5, T-14-19): ${action.name} on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved`, async () => {
+      mockScenario("admin");
+      const opened = vi.spyOn(window, "open").mockImplementation(() => null);
+      let calls = 0;
+      // The member was erased after D10 read the record: the api refuses the change (S14 §5).
+      server.use(
+        http[action.method](`*/api/v1${action.path}`, () => {
+          calls += 1;
+          return HttpResponse.json(
+            { code: "MEMBER_ERASED", details: {}, message: "Member erased", traceId: "t-d10" },
+            { status: 409 },
+          );
+        }),
+      );
+      if (action.blocked === true) await serveBlockedLaura();
+      try {
+        await renderRecord("member");
+        await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+
+        const dialog = action.send();
+        if (dialog === undefined) {
+          await waitFor(() => {
+            expect(
+              screen.getByText(erased, { selector: ".census-record__feedback" }),
+            ).toBeVisible();
+          });
+        } else {
+          expect(await within(dialog).findByRole("alert")).toHaveTextContent(erased);
+          // Final: the dialog cannot send the same request again.
+          if (action.submit !== undefined) {
+            expect(within(dialog).queryByRole("button", { name: action.submit })).toBeNull();
+          }
+        }
+        expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
+        if (action.saved !== undefined) expect(screen.queryByText(action.saved)).toBeNull();
+        action.unchanged();
+
+        // The record offers no other change either: the member is erased.
+        if (dialog !== undefined) {
+          fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+          expect(dialog).not.toBeInTheDocument();
+        }
+        expectNoChangeOffered();
+        expect(opened).not.toHaveBeenCalled();
+        expect(calls).toBe(1);
+      } finally {
+        opened.mockRestore();
+      }
+    });
+  }
+
+  it("E7-W07 step 3 (S14 §5, R-14-15): an erased member's record offers none of the changes the api refuses with 409 MEMBER_ERASED, and sends none", async () => {
+    mockScenario("admin");
+    const changes: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method !== "GET") changes.push(`${request.method} ${request.url}`);
+    };
+    server.events.on("request:start", listener);
+    try {
+      await renderRecord("member", branding, ERASED_MEMBER_ID);
+      expect(await screen.findByRole("heading", { name: "Abonat suprimit #64" })).toBeVisible();
+      expectNoChangeOffered();
+      // R-14-15 keeps the invoices: the record still lists the last two.
+      expect(screen.getAllByText("cobrat")).toHaveLength(2);
+      expect(changes).toEqual([]);
+    } finally {
+      server.events.removeListener("request:start", listener);
+    }
   });
 });
 

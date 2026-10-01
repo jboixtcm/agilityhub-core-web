@@ -119,6 +119,90 @@ describe("S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-1
   });
 });
 
+describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): the training cancellation follows the shared submission-key rule", () => {
+  it("T-09-25 E7-W07 step 4 (CONVENCIONS_API §7, E85): [ANUL·LA] sends an Idempotency-Key, keeps it through IN_PROGRESS («L'operació encara està en curs…») and a 503 with the api's body, and a 422 TRAINING_CANCEL_TOO_LATE retires it, so the same cancellation sent again takes a new key", async () => {
+    const sent: { body: unknown; key: string | null }[] = [];
+    server.use(
+      http.post("*/api/v1/training-bookings/:id/cancellation", async ({ request }) => {
+        sent.push({
+          body: await request.clone().json(),
+          key: request.headers.get("Idempotency-Key"),
+        });
+        if (sent.length === 1) {
+          return HttpResponse.json(
+            {
+              code: "IDEMPOTENCY_KEY_REUSED",
+              details: { reason: "IN_PROGRESS" },
+              message: "The first request with this Idempotency-Key is still in progress",
+              traceId: "t-in-progress",
+            },
+            { status: 409 },
+          );
+        }
+        if (sent.length === 2) {
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", details: {}, message: "Unexpected error", traceId: "t-503" },
+            { status: 503 },
+          );
+        }
+        if (sent.length === 3) {
+          return HttpResponse.json(
+            {
+              code: "TRAINING_CANCEL_TOO_LATE",
+              details: { minutesBefore: 95, thresholdMinutes: 120 },
+              message: "Too late to cancel",
+              traceId: "t-422",
+            },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await openDetail("training-rock-tue4");
+    fireEvent.click(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" }));
+    const dialog = await screen.findByRole("dialog", {
+      name: "Vols anul·lar la reserva d'aquest entrenament?",
+    });
+    const press = async () => {
+      const confirm = within(dialog).getByRole("button", { name: "ANUL·LA" });
+      await waitFor(() => {
+        expect(confirm).toBeEnabled();
+      });
+      fireEvent.click(confirm);
+    };
+    await press();
+    expect(
+      await within(dialog).findByText(
+        "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.",
+      ),
+    ).toBeVisible();
+    await press();
+    expect(
+      await within(dialog).findByText(
+        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+      ),
+    ).toBeVisible();
+    await press();
+    expect(
+      await within(dialog).findByText(
+        "Només es pot anul·lar fins a 2 hores abans de començar, i en falten 95 minuts.",
+      ),
+    ).toBeVisible();
+    // The api answered (a 4xx with its body): the same cancellation sent again is a new one.
+    await press();
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/inici");
+    });
+    expect(sent).toHaveLength(4);
+    expect(new Set(sent.map((request) => JSON.stringify(request.body))).size).toBe(1);
+    expect(sent[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(sent[1]?.key).toBe(sent[0]?.key);
+    expect(sent[2]?.key).toBe(sent[0]?.key);
+    expect(sent[3]?.key).not.toBe(sent[0]?.key);
+  });
+});
+
 describe("E5-W05 step 13: the detail reaches DONE (E5-W02 round-2 review #3, S09 §5)", () => {
   it("E5-W05 step 13: with a controlled clock the booking reads «fet» after its endsAt, without a remount", async () => {
     // A controlled clock: the page's timers fire exactly at the instant they were set for.

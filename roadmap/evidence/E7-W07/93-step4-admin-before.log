@@ -1,0 +1,70 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/JobsCard.test.tsx (29 tests | 1 failed | 28 skipped) 197ms
+   ❯ T-15-32 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS (5)
+     × T-15-32 E7-W07 step 4 (CONVENCIONS_API §7, E85): [Simula] keeps its key after a 503 with the api's body — the retry sends the same one — and a 409 JOB_ALREADY_RUNNING retires it — the next [Simula] is a new submission 194ms
+ ❯ src/followup/followup.test.tsx (29 tests | 2 failed | 27 skipped) 417ms
+   ❯ T-10-30 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS (5)
+     × T-10-30 E7-W07 step 4 (CONVENCIONS_API §7, E85): D14's read-all keeps its key after a 503 with the api's body — the retry sends the same one — and a 404 MODULE_DISABLED retires it — the next read-all is a new submission 250ms
+     × T-10-30 E7-W07 step 4 (CONVENCIONS_API §7, E85; A3): D14's row read keeps its key after a 503 with the api's body for 5 minutes at most, like the read-all — a later read of that row is a new one 165ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/JobsCard.test.tsx > T-15-32 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS > T-15-32 E7-W07 step 4 (CONVENCIONS_API §7, E85): [Simula] keeps its key after a 503 with the api's body — the retry sends the same one — and a 409 JOB_ALREADY_RUNNING retires it — the next [Simula] is a new submission
+AssertionError: expected '3bc3e3ec-16a9-43b5-85ad-dcbeb21b8575' to be 'afb4cd36-65fe-4cf9-b1bc-5759f30a029e' // Object.is equality
+
+Expected: "afb4cd36-65fe-4cf9-b1bc-5759f30a029e"
+Received: "3bc3e3ec-16a9-43b5-85ad-dcbeb21b8575"
+
+ ❯ src/catalogs/JobsCard.test.tsx:956:21
+    954|     await screen.findByRole("dialog", { name: /^Simulació: què faria a…
+    955|     expect(keys).toHaveLength(3);
+    956|     expect(keys[1]).toBe(keys[0]);
+       |                     ^
+    957|     expect(keys[2]).not.toBe(keys[1]);
+    958|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/followup/followup.test.tsx > T-10-30 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS > T-10-30 E7-W07 step 4 (CONVENCIONS_API §7, E85): D14's read-all keeps its key after a 503 with the api's body — the retry sends the same one — and a 404 MODULE_DISABLED retires it — the next read-all is a new submission
+AssertionError: expected '7cb492d3-099e-41f7-ab08-3d4c6ed1e443' to be 'af45c80f-1720-4444-a291-0027b63739fc' // Object.is equality
+
+Expected: "af45c80f-1720-4444-a291-0027b63739fc"
+Received: "7cb492d3-099e-41f7-ab08-3d4c6ed1e443"
+
+ ❯ src/followup/followup.test.tsx:1024:21
+    1022|     const keys = posts().map((request) => request.key);
+    1023|     expect(keys).toHaveLength(3);
+    1024|     expect(keys[1]).toBe(keys[0]);
+       |                     ^
+    1025|     expect(keys[2]).not.toBe(keys[1]);
+    1026|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/followup/followup.test.tsx > T-10-30 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS > T-10-30 E7-W07 step 4 (CONVENCIONS_API §7, E85; A3): D14's row read keeps its key after a 503 with the api's body for 5 minutes at most, like the read-all — a later read of that row is a new one
+AssertionError: expected '72616d86-ee2c-4470-8f10-ae4639374bb1' to be 'f0f63dfe-09cf-4aaf-87e9-0ae157469082' // Object.is equality
+
+Expected: "f0f63dfe-09cf-4aaf-87e9-0ae157469082"
+Received: "72616d86-ee2c-4470-8f10-ae4639374bb1"
+
+ ❯ src/followup/followup.test.tsx:1068:21
+    1066|     });
+    1067|     const keys = reads().map((request) => request.key);
+    1068|     expect(keys[1]).toBe(keys[0]);
+       |                     ^
+    1069|     expect(keys[2]).not.toBe(keys[1]);
+    1070|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 55 skipped (58)
+   Start at  10:54:23
+   Duration  2.20s (transform 47%, environment 18%, tests 17%, import 14%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/JobsCard.test.tsx src/followup/followup.test.tsx -t E7-W07

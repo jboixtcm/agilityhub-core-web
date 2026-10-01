@@ -1,4 +1,10 @@
-import { itemsWith, listFields, type ApiClient, type ListItemWith } from "@agilityhub/api-client";
+import {
+  itemsWith,
+  listFields,
+  type ApiClient,
+  type ListItemWith,
+  useSubmissionKeys,
+} from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
@@ -250,12 +256,18 @@ export function CalendarPage({
   const [feedback, setFeedback] = useState<Feedback>();
   const [confirmValidation, setConfirmValidation] = useState(false);
   const [validating, setValidating] = useState(false);
+  /** D4c open on `session`; `flow` names this opening of the dialog (its submissions' owner). */
   const [cancellation, setCancellation] = useState<{
-    key: string;
+    flow: string;
     preview: CancellationPreview;
     reason: CancellationReason;
     session: ClassSession;
   }>();
+  // One `Idempotency-Key` per D4c submission (its body, within one opening of the dialog): kept
+  // while the api has not answered it (offline, a 5xx, IN_PROGRESS) and retired by its answer, a
+  // refusal included; closing the dialog drops its keys (CONVENCIONS_API §7, E74, E85).
+  const cancellationKeys = useSubmissionKeys();
+  const cancellationFlows = useRef(0);
   const [createOpen, setCreateOpen] = useState(false);
   const [blockDrawer, setBlockDrawer] = useState<RingBlockDrawerMode>();
 
@@ -445,25 +457,40 @@ export function CalendarPage({
         params: { path: { id: session.id } },
       });
       if (result.data === undefined) return;
-      setCancellation({ key: crypto.randomUUID(), preview: result.data, reason, session });
+      cancellationFlows.current += 1;
+      setCancellation({
+        flow: `${session.id}#${String(cancellationFlows.current)}`,
+        preview: result.data,
+        reason,
+        session,
+      });
     } catch (error) {
       setFeedback({ message: errorMessage(error), tone: "danger" });
     }
   };
 
+  const closeCancellation = () => {
+    if (cancellation !== undefined) cancellationKeys.drop(cancellation.flow);
+    setCancellation(undefined);
+  };
+
   const confirmCancellation = async (adminText: string | undefined) => {
     if (cancellation === undefined) return;
+    const { flow, session } = cancellation;
+    const body = {
+      reason: cancellation.reason,
+      ...(adminText === undefined ? {} : { adminText }),
+    };
     try {
-      await client.POST("/class-sessions/{id}/cancellation", {
-        body: {
-          reason: cancellation.reason,
-          ...(adminText === undefined ? {} : { adminText }),
-        },
-        params: {
-          header: { "Idempotency-Key": cancellation.key },
-          path: { id: cancellation.session.id },
-        },
-      });
+      await cancellationKeys.send(
+        JSON.stringify({ body, flow }),
+        (key) =>
+          client.POST("/class-sessions/{id}/cancellation", {
+            body,
+            params: { header: { "Idempotency-Key": key }, path: { id: session.id } },
+          }),
+        flow,
+      );
     } catch (error) {
       if (errorCode(error) === "INVALID_STATE") calendar.reload();
       throw error;
@@ -475,6 +502,7 @@ export function CalendarPage({
           : t("admin-scheduling:calendar.cancelled"),
       tone: "success",
     });
+    cancellationKeys.drop(flow);
     setCancellation(undefined);
     reloadAll();
   };
@@ -986,9 +1014,7 @@ export function CalendarPage({
       {readOnly || cancellation === undefined ? null : (
         <CancelClassModal
           heading={headingOf(cancellation.session)}
-          onClose={() => {
-            setCancellation(undefined);
-          }}
+          onClose={closeCancellation}
           onConfirm={confirmCancellation}
           preview={cancellation.preview}
           reason={cancellation.reason}

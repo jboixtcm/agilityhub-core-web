@@ -1,4 +1,4 @@
-import type { ApiClient } from "@agilityhub/api-client";
+import { type ApiClient, useSubmissionKeys } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   Badge,
@@ -63,10 +63,15 @@ import {
   sentenceCase,
   uploadFile,
   useActivityErrorMessage,
-  usePayloadKeys,
 } from "./shared";
 
 type Localized = Record<string, string>;
+
+/**
+ * The owner of a dialog's submissions (`useSubmissionKeys`): opening the dialog again drops its
+ * keys, so it starts new submissions.
+ */
+const DIALOG = "dialog";
 
 interface FormState {
   address: string;
@@ -362,8 +367,11 @@ export function ActivityPage({
   const [confirmPublish, setConfirmPublish] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [publishError, setPublishError] = useState<string>();
-  const publicationKeys = usePayloadKeys();
-  const cancellationKeys = usePayloadKeys();
+  // One `Idempotency-Key` per submission (its body) of the publication and of the cancellation:
+  // kept while the api has not answered it (offline, a 5xx, IN_PROGRESS) and retired by its answer,
+  // a refusal included (CONVENCIONS_API §7, E74, E85).
+  const publicationKeys = useSubmissionKeys();
+  const cancellationKeys = useSubmissionKeys();
   const [notifyEmail, setNotifyEmail] = useState(false);
   const [conflictDialog, setConflictDialog] = useState<ConflictDialog>();
   const [cancelPreview, setCancelPreview] = useState<CancellationPreview>();
@@ -631,7 +639,7 @@ export function ActivityPage({
 
   /**
    * `POST …/publication` (R-07-05) from the plain confirm or from the conflict dialog; one
-   * `Idempotency-Key` per payload. `ACTIVITY_INCOMPLETE` closes both and marks the fields; new
+   * `Idempotency-Key` per submission. `ACTIVITY_INCOMPLETE` closes both and marks the fields; new
    * conflicts open (or refresh) the dialog; every other error rejects so the caller shows it
    * inside the modal the admin is looking at.
    */
@@ -640,13 +648,15 @@ export function ActivityPage({
     source: "confirm" | "dialog",
   ) => {
     try {
-      const result = await client.POST("/activities/{id}/publication", {
-        body: options,
-        params: {
-          header: { "Idempotency-Key": publicationKeys.keyFor(options) },
-          path: { id: activity.id },
-        },
-      });
+      const result = await publicationKeys.send(
+        JSON.stringify(options),
+        (key) =>
+          client.POST("/activities/{id}/publication", {
+            body: options,
+            params: { header: { "Idempotency-Key": key }, path: { id: activity.id } },
+          }),
+        DIALOG,
+      );
       if (result.data === undefined) throw new TypeError("Missing published activity");
       setConfirmPublish(false);
       setConflictDialog(undefined);
@@ -721,7 +731,7 @@ export function ActivityPage({
       // Sending the publication without its confirmation is safe here: R-07-04 and T-07-03 make
       // the api refuse an activity with rings but no date or hours (`422 ACTIVITY_INCOMPLETE`,
       // «pistes sense `endTime` → ACTIVITY_INCOMPLETE»), so this call can only mark the fields.
-      publicationKeys.reset();
+      publicationKeys.drop(DIALOG);
       try {
         await publishWith({ notifyEmail: false }, "confirm");
       } catch (cause) {
@@ -736,7 +746,7 @@ export function ActivityPage({
         params: { path: { id: activity.id } },
       });
       const preview = result.data ?? { conflicts: [], trainingBookings: [] };
-      publicationKeys.reset();
+      publicationKeys.drop(DIALOG);
       if (preview.conflicts.length === 0 && preview.trainingBookings.length === 0) {
         setNotifyEmail(false);
         setPublishError(undefined);
@@ -772,7 +782,7 @@ export function ActivityPage({
       const result = await client.GET("/activities/{id}/cancellation-preview", {
         params: { path: { id: activity.id } },
       });
-      cancellationKeys.reset();
+      cancellationKeys.drop(DIALOG);
       if (result.data !== undefined) setCancelPreview(result.data);
     } catch (cause) {
       setFeedback({ message: errorMessage(cause), tone: "danger" });
@@ -794,13 +804,15 @@ export function ActivityPage({
 
   const cancelActivity = async (reason: "CLUB_MANUAL" | "DELETED", adminText?: string) => {
     const body = { reason, ...(adminText === undefined ? {} : { adminText }) };
-    const result = await client.POST("/activities/{id}/cancellation", {
-      body,
-      params: {
-        header: { "Idempotency-Key": cancellationKeys.keyFor(body) },
-        path: { id: activity.id },
-      },
-    });
+    const result = await cancellationKeys.send(
+      JSON.stringify(body),
+      (key) =>
+        client.POST("/activities/{id}/cancellation", {
+          body,
+          params: { header: { "Idempotency-Key": key }, path: { id: activity.id } },
+        }),
+      DIALOG,
+    );
     if (result.data === undefined) throw new TypeError("Missing cancelled activity");
     setCancelPreview(undefined);
     setConfirmDelete(false);
@@ -1576,7 +1588,7 @@ export function ActivityPage({
               <Button
                 disabled={busy}
                 onClick={() => {
-                  cancellationKeys.reset();
+                  cancellationKeys.drop(DIALOG);
                   setConfirmDelete(true);
                 }}
                 variant="danger"

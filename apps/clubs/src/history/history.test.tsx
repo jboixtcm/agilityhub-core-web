@@ -321,7 +321,7 @@ describe("T-10-31 screen 25 «Històric» (S10 §2, R-10-14)", () => {
   });
 });
 
-describe("E6-W04 step 0b: screen 25's activity rows open their page (HistoryItem.activityId, S07 §6, rulings E74 and E75)", () => {
+describe("T-10-31 E6-W04 step 0b: screen 25's activity rows open their page (HistoryItem.activityId, S07 §6, rulings E74 and E75)", () => {
   it("E6-W04 step 0b: the mockup's done activity «Seminari d'obstacles» is a link to /activitats/{activityId}; the class and training rows are not links", async () => {
     window.history.replaceState(null, "", "/historic");
     await renderHistory();

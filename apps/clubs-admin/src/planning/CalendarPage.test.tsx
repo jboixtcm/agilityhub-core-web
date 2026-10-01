@@ -1753,7 +1753,7 @@ const IN_PROGRESS_BODY = {
 /** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
 const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
 
-describe("E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): the block drawer keeps one key per submission", () => {
+describe("T-06-32 E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): the block drawer keeps one key per submission", () => {
   it("E7-W06 step 1: the ring-block drawer keeps its Idempotency-Key on IN_PROGRESS (one key per submission, not per attempt), says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key", async () => {
     const keys: string[] = [];
     const bodies = captureBodies("POST", "/ring-blocks");
@@ -1783,6 +1783,124 @@ describe("E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): the block drawer k
     expect(await within(drawer).findByText(IN_PROGRESS_TEXT)).toBeVisible();
     fireEvent.click(save());
     expect(await within(drawer).findByText("L'interval horari no és vàlid.")).toBeVisible();
+    // The api answered: the same block sent again is a new submission.
+    fireEvent.click(save());
+    expect(await screen.findByText("Bloqueig desat")).toBeVisible();
+    await waitFor(() => {
+      expect(bodies).toHaveLength(3);
+    });
+    expect(bodies[1]).toEqual(bodies[0]);
+    expect(bodies[2]).toEqual(bodies[0]);
+    expect(keys[0]).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[0]);
+  });
+});
+
+/** A `503` with the api's error body (CONVENCIONS_API §6): the api undid the attempt (R-08-08). */
+const INTERNAL_ERROR_BODY = {
+  code: "INTERNAL_ERROR",
+  details: {},
+  message: "Unexpected error",
+  traceId: "t-503",
+};
+const INTERNAL_ERROR_TEXT =
+  "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.";
+
+describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D4's keyed writes follow the shared submission-key rule", () => {
+  it("T-06-28 E7-W07 step 4 (CONVENCIONS_API §7, E85): D4c's class cancellation keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ADMIN_TEXT_REQUIRED retires it, so the same notice sent again takes a new key", async () => {
+    const sent: { body: unknown; key: string | null }[] = [];
+    server.use(
+      http.post("*/api/v1/class-sessions/:id/cancellation", async ({ request }) => {
+        sent.push({
+          body: await request.clone().json(),
+          key: request.headers.get("Idempotency-Key"),
+        });
+        if (sent.length === 1) return HttpResponse.json(IN_PROGRESS_BODY, { status: 409 });
+        if (sent.length === 2) return HttpResponse.json(INTERNAL_ERROR_BODY, { status: 503 });
+        if (sent.length === 3) {
+          return HttpResponse.json(
+            { code: "ADMIN_TEXT_REQUIRED", details: {}, message: "text", traceId: "t-422" },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await renderCalendar();
+    const week = await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(within(week).getByRole("button", { name: /^dc 12 18:50 · B\+C · 4\/5 \+2/u }));
+    fireEvent.click(within(selectedCard()).getByRole("button", { name: "ANUL·LA LA CLASSE" }));
+    const dialog = await screen.findByRole("dialog", {
+      name: "Anul·lar la classe — dc 12 · 18:50 · B+C · Central · Marc",
+    });
+    fireEvent.change(within(dialog).getByLabelText("Text de l'avís"), {
+      target: { value: "La classe queda anul·lada per la pluja." },
+    });
+    const confirm = () =>
+      within(dialog).getByRole("button", { name: "ANUL·LA I AVISA ELS 4 ALUMNES" });
+    const press = async () => {
+      await waitFor(() => {
+        expect(confirm()).toBeEnabled();
+      });
+      fireEvent.click(confirm());
+    };
+    await press();
+    expect(await within(dialog).findByText(IN_PROGRESS_TEXT)).toBeVisible();
+    await press();
+    expect(await within(dialog).findByText(INTERNAL_ERROR_TEXT)).toBeVisible();
+    await press();
+    expect(
+      await within(dialog).findByText("Cal escriure el text de l'avís per als alumnes."),
+    ).toBeVisible();
+    // The api answered (a 4xx with its body): the same notice sent again is a new submission.
+    await press();
+    expect(await screen.findByText("Classe anul·lada")).toBeVisible();
+    expect(sent).toHaveLength(4);
+    expect(new Set(sent.map((request) => JSON.stringify(request.body))).size).toBe(1);
+    expect(sent[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(sent[1]?.key).toBe(sent[0]?.key);
+    expect(sent[2]?.key).toBe(sent[0]?.key);
+    expect(sent[3]?.key).not.toBe(sent[0]?.key);
+  });
+
+  it("T-06-28 T-06-16 E7-W07 step 4 (CONVENCIONS_API §7, E85): the ring-block drawer keeps its Idempotency-Key after a 503 with the api's body, and a 422 OUTSIDE_OPENING_HOURS retires it, so the same block sent again takes a new key", async () => {
+    const keys: string[] = [];
+    const bodies = captureBodies("POST", "/ring-blocks");
+    server.use(
+      http.post("*/api/v1/ring-blocks", ({ request }) => {
+        keys.push(request.headers.get("Idempotency-Key") ?? "");
+        if (keys.length === 1) return HttpResponse.json(INTERNAL_ERROR_BODY, { status: 503 });
+        if (keys.length === 2) {
+          return HttpResponse.json(
+            { code: "OUTSIDE_OPENING_HOURS", details: {}, message: "hours", traceId: "t-422" },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await renderCalendar();
+    await grid(/del 10 al 16 d.agost$/u);
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja pista" }));
+    const drawer = await screen.findByRole("dialog", { name: "Bloqueja pista" });
+    fireEvent.change(within(drawer).getByLabelText("Pista"), { target: { value: "ring-cadells" } });
+    fireEvent.change(within(drawer).getByLabelText("Data"), { target: { value: "13082026" } });
+    fireEvent.change(within(drawer).getByLabelText("De"), { target: { value: "16:00" } });
+    fireEvent.change(within(drawer).getByLabelText("A"), { target: { value: "17:00" } });
+    const save = () => within(drawer).getByRole("button", { name: "DESA EL BLOQUEIG" });
+    fireEvent.click(save());
+    expect(await within(drawer).findByText(INTERNAL_ERROR_TEXT)).toBeVisible();
+    await waitFor(() => {
+      expect(save()).toBeEnabled();
+    });
+    fireEvent.click(save());
+    expect(
+      await within(drawer).findByText("L'hora seleccionada és fora de l'horari d'obertura."),
+    ).toBeVisible();
+    await waitFor(() => {
+      expect(save()).toBeEnabled();
+    });
     // The api answered: the same block sent again is a new submission.
     fireEvent.click(save());
     expect(await screen.findByText("Bloqueig desat")).toBeVisible();

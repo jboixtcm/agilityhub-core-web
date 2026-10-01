@@ -847,3 +847,83 @@ describe("T-07-30 E4-W13 step 0 R-07-08 the app shows the live waitlist rank (ap
     expect(screen.getByRole("button", { name: "SURT DE LA LLISTA D'ESPERA" })).toBeVisible();
   });
 });
+
+describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): 13's registration keeps one key per submission", () => {
+  it("T-07-30 T-07-14 E7-W07 step 4 (CONVENCIONS_API §7, E85): [INSCRIU-M'HI] keeps its Idempotency-Key through a network failure, IN_PROGRESS («L'operació encara està en curs…») and a 503 with the api's body; a 422 BOOKING_BLOCKED retires it, so the same registration sent again takes a new key", async () => {
+    const sent: { body: unknown; key: string | null }[] = [];
+    server.use(
+      http.post("*/api/v1/activity-registrations", async ({ request }) => {
+        sent.push({
+          body: await request.clone().json(),
+          key: request.headers.get("Idempotency-Key"),
+        });
+        switch (sent.length) {
+          case 1:
+            return HttpResponse.error();
+          case 2:
+            return HttpResponse.json(
+              {
+                code: "IDEMPOTENCY_KEY_REUSED",
+                details: { reason: "IN_PROGRESS" },
+                message: "The first request with this Idempotency-Key is still in progress",
+                traceId: "t-in-progress",
+              },
+              { status: 409 },
+            );
+          case 3:
+            return HttpResponse.json(
+              { code: "INTERNAL_ERROR", details: {}, message: "Unexpected error", traceId: "t-503" },
+              { status: 503 },
+            );
+          case 4:
+            return HttpResponse.json(
+              { code: "BOOKING_BLOCKED", details: {}, message: "blocked", traceId: "t-422" },
+              { status: 422 },
+            );
+          default:
+            return undefined;
+        }
+      }),
+    );
+    await renderWith(<ActivityDetailPage activityId={SEMINAR} client={client()} />);
+    const register = async () => {
+      const button = await screen.findByRole("button", { name: "INSCRIU-M'HI" });
+      await waitFor(() => {
+        expect(button).toBeEnabled();
+      });
+      fireEvent.click(button);
+    };
+    await register();
+    expect(
+      await screen.findByText("No s'ha pogut completar l'acció. Torna-ho a provar."),
+    ).toBeVisible();
+    await register();
+    expect(
+      await screen.findByText(
+        "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.",
+      ),
+    ).toBeVisible();
+    await register();
+    expect(
+      await screen.findByText(
+        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+      ),
+    ).toBeVisible();
+    await register();
+    expect(
+      await screen.findByText("Les reserves estan bloquejades per a aquest abonament."),
+    ).toBeVisible();
+    // The api answered (a 4xx with its body): the same registration sent again is a new one.
+    await register();
+    expect(await screen.findByText("T'hi has inscrit")).toBeVisible();
+    expect(sent).toHaveLength(5);
+    expect(new Set(sent.map((request) => JSON.stringify(request.body))).size).toBe(1);
+    expect(sent[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(sent.slice(1, 4).map((request) => request.key)).toEqual([
+      sent[0]?.key,
+      sent[0]?.key,
+      sent[0]?.key,
+    ]);
+    expect(sent[4]?.key).not.toBe(sent[0]?.key);
+  });
+});

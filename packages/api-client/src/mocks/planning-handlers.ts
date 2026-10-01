@@ -78,6 +78,14 @@ function calendarSessions(today: string): ClassSession[] {
   ];
 }
 
+/**
+ * The weeks other clubs create (`POST /weeks` by `adminOtherClub`), by tenant and `startDate`. The
+ * tenant comes from the JWT, so such a write is answered from the caller's own club and never finds
+ * or changes this club's weeks (E7-W07 step 8, E5-W05 round 3 review #7). The mock models nothing
+ * else of another tenant's planning (R3-A2).
+ */
+const otherClubWeeks = new Map<string, MockWeek>();
+
 /** Rebuilds the planning state relative to the club-local date of now (tests may fake `Date`). */
 export function resetPlanningState(): void {
   const monday = mondayOf(clubLocalDate());
@@ -87,6 +95,7 @@ export function resetPlanningState(): void {
   planningState.templates = structuredClone([...initialWeekTemplates]);
   planningState.trainingBookings = initialTrainingBookings(monday);
   planningState.weeks = initialWeeks();
+  otherClubWeeks.clear();
   resetDayGridState();
 }
 
@@ -724,6 +733,16 @@ export const planningHandlers = [
       mondayOf(body.startDate) !== body.startDate
     ) {
       return validationError("startDate");
+    }
+    if (!callerClubOwnsTheWorld()) {
+      // Another club's ADMIN: its own tenant's week, created once (E7-W07 step 8).
+      const clubId = currentMockScenario().me.membership?.clubId ?? "";
+      const key = `${clubId} ${body.startDate}`;
+      const known = otherClubWeeks.get(key);
+      if (known !== undefined) return HttpResponse.json(weekResource(known), { status: 200 });
+      const created = mockWeek(body.startDate, { id: `week-${clubId}-${body.startDate}` });
+      otherClubWeeks.set(key, created);
+      return HttpResponse.json(weekResource(created), { status: 201 });
     }
     const existing = planningState.weeks.find((week) => week.startDate === body.startDate);
     if (existing !== undefined) {

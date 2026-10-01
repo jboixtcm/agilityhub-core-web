@@ -1,0 +1,66 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/index.test.ts (21 tests | 2 failed) 458ms
+   ❯ typed API client (15)
+     × E5-W01 step 0, E7-W07 step 4 (S08 §6, CONVENCIONS_API §7, E79): an Idempotency-Key on the booking and the claim, never on the seat hold nor the waitlist entry, whose contract declares none 8ms
+     × E7-W07 step 4 (S09 §6): the snapshot declares the key on a training booking's cancellation, so a caller that omits it still sends one 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/index.test.ts > typed API client > E5-W01 step 0, E7-W07 step 4 (S08 §6, CONVENCIONS_API §7, E79): an Idempotency-Key on the booking and the claim, never on the seat hold nor the waitlist entry, whose contract declares none
+AssertionError: expected [ …(5) ] to deeply equal [ 'seat-hold:', …(4) ]
+
+- Expected
++ Received
+
+  [
+-   "seat-hold:",
++   "seat-hold:123e4567-e89b-42d3-a456-426614174003",
+    "booking:123e4567-e89b-42d3-a456-426614174003",
+-   "waitlist:",
++   "waitlist:123e4567-e89b-42d3-a456-426614174003",
+    "claim:123e4567-e89b-42d3-a456-426614174003",
+    "cancellation:",
+  ]
+
+ ❯ src/index.test.ts:264:18
+    262|     });
+    263|
+    264|     expect(keys).toEqual([
+       |                  ^
+    265|       "seat-hold:",
+    266|       "booking:123e4567-e89b-42d3-a456-426614174003",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/index.test.ts > typed API client > E7-W07 step 4 (S09 §6): the snapshot declares the key on a training booking's cancellation, so a caller that omits it still sends one
+AssertionError: expected [ '' ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+-   "123e4567-e89b-42d3-a456-426614174005",
++   "",
+  ]
+
+ ❯ src/index.test.ts:292:18
+    290|       params: { path: { id: "training-1" } },
+    291|     });
+    292|     expect(keys).toEqual(["123e4567-e89b-42d3-a456-426614174005"]);
+       |                  ^
+    293|   });
+    294|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 19 passed (21)
+   Start at  10:47:54
+   Duration  1.19s (tests 42%, transform 37%, import 21%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/index.test.ts

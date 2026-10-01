@@ -43,6 +43,40 @@ afterAll(() => {
   server.close();
 });
 
+/** Every counter of P9 `cleanup` (S15 R-15-19; the names the core sent in E6-W04's run). */
+const CLEANUP_COUNTERS = [
+  "domainEventsDeleted",
+  "exportsPurged",
+  "jobRunsDeleted",
+  "orphanUploadsDeleted",
+  "stripeEventsDeleted",
+  "ttlPendingIdempotencyRecords",
+  "ttlPendingJobLocks",
+  "ttlPendingMagicLinkTokens",
+  "ttlPendingRingSlotLocks",
+  "ttlPendingSeatHolds",
+  "ttlPendingSignupNotificationAdmissions",
+] as const;
+
+/** `cleanup`'s last run with `counters`. */
+function serveCleanupRun(counters: Readonly<Record<string, number>>) {
+  server.use(
+    http.get("*/api/v1/jobs", async ({ request }) => {
+      const answer = await getResponse(handlers, request);
+      if (answer === undefined) throw new TypeError("The jobs mock did not answer");
+      const list = (await answer.json()) as JobList;
+      return HttpResponse.json({
+        ...list,
+        items: list.items.map((job) =>
+          job.name !== "cleanup" || job.lastRun == null
+            ? job
+            : { ...job, lastRun: { ...job.lastRun, counters } },
+        ),
+      });
+    }),
+  );
+}
+
 /**
  * `cleanup`'s last run with the counters the core sent in E6-W04's run (`e5-core-run.json`): only
  * `ttlPendingRingSlotLocks` is not zero, so it is the one the card says.
@@ -101,13 +135,92 @@ async function cleanupRow(language: "ca" | "en" | "es", name: string): Promise<H
   return row;
 }
 
-describe("E7-W06 step 5 (ruling E82, E6-W04 Q3): D11 names the cleanup's ring-slot counter (S15 R-15-19)", () => {
+describe("T-15-27 E7-W07 step 8 (E7-W06's report; S15 R-15-19): D11 names every counter of the cleanup", () => {
+  it.each([
+    [
+      "ca",
+      "Neteja tècnica",
+      [
+        "1 esdeveniment intern esborrat",
+        "2 exportacions caducades esborrades",
+        "1 execució antiga esborrada",
+        "3 fitxers d'alta orfes esborrats",
+        "1 esdeveniment de Stripe esborrat",
+        "2 registres de reintents caducats",
+        "1 bloqueig de procés caducat",
+        "2 enllaços d'accés caducats",
+        "1 bloqueig tècnic de pista caducat",
+        "2 bloquejos temporals de plaça caducats",
+        "1 control d'avís d'alta caducat",
+      ],
+    ],
+    [
+      "es",
+      "Limpieza técnica",
+      [
+        "1 evento interno eliminado",
+        "2 exportaciones caducadas eliminadas",
+        "1 ejecución antigua eliminada",
+        "3 archivos de alta huérfanos eliminados",
+        "1 evento de Stripe eliminado",
+        "2 registros de reintentos caducados",
+        "1 bloqueo de proceso caducado",
+        "2 enlaces de acceso caducados",
+        "1 bloqueo técnico de pista caducado",
+        "2 bloqueos temporales de plaza caducados",
+        "1 control de aviso de alta caducado",
+      ],
+    ],
+    [
+      "en",
+      "Technical cleanup",
+      [
+        "1 internal event deleted",
+        "2 expired exports deleted",
+        "1 old run deleted",
+        "3 orphan sign-up files deleted",
+        "1 Stripe event deleted",
+        "2 expired retry records",
+        "1 expired process lock",
+        "2 expired sign-in links",
+        "1 expired technical ring lock",
+        "2 expired seat holds",
+        "1 expired sign-up notice check",
+      ],
+    ],
+  ] as const)(
+    "T-15-27 E7-W07 step 8 (%s): the last run of «%s» says each cleanup counter by its label, never its raw key",
+    async (language, name, labels) => {
+      serveCleanupRun({
+        domainEventsDeleted: 1,
+        exportsPurged: 2,
+        jobRunsDeleted: 1,
+        orphanUploadsDeleted: 3,
+        stripeEventsDeleted: 1,
+        ttlPendingIdempotencyRecords: 2,
+        ttlPendingJobLocks: 1,
+        ttlPendingMagicLinkTokens: 2,
+        ttlPendingRingSlotLocks: 1,
+        ttlPendingSeatHolds: 2,
+        ttlPendingSignupNotificationAdmissions: 1,
+      });
+      const row = await cleanupRow(language, name);
+      const last = await within(row).findByRole("button", {
+        name: new RegExp(labels[0], "u"),
+      });
+      for (const label of labels) expect(last.textContent).toContain(label);
+      for (const key of CLEANUP_COUNTERS) expect(last.textContent).not.toContain(key);
+    },
+  );
+});
+
+describe("T-15-27 E7-W06 step 5 (ruling E82, E6-W04 Q3): D11 names the cleanup's ring-slot counter (S15 R-15-19)", () => {
   it.each([
     ["ca", "Neteja tècnica", "2 bloquejos tècnics de pista caducats"],
     ["es", "Limpieza técnica", "2 bloqueos técnicos de pista caducados"],
     ["en", "Technical cleanup", "2 expired technical ring locks"],
   ] as const)(
-    "E7-W06 step 5 (%s): the last run of «%s» reads «%s», never the raw ttlPendingRingSlotLocks",
+    "T-15-27 E7-W06 step 5 (%s): the last run of «%s» reads «%s», never the raw ttlPendingRingSlotLocks",
     async (language, name, label) => {
       serveCleanupCounters();
       const row = await cleanupRow(language, name);

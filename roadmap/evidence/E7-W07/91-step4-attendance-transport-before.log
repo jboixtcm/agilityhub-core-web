@@ -1,0 +1,87 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/attendance-sheet.test.ts (5 tests | 3 failed | 2 skipped) 13ms
+   ❯ T-10-12 E7-W06 review #3 · the attendance save keeps its key by the shared rule (isUnanswered, CONVENCIONS_API §7, E79) (3)
+     × E7-W07 step 4 (CONVENCIONS_API §7, E85): a 500 carrying the api's error body is not the save's answer — «unanswered», the list kept 8ms
+   ❯ E7-W07 step 4 (CONVENCIONS_API §7, E74, E85): the attendance save takes its key from the shared helper (screens 21 and D12) (2)
+     × T-10-12 E7-W07 step 4: a 503 with the api's body and IN_PROGRESS keep the key for the retry; a 422 ATTENDANCE_WINDOW_CLOSED retires it, so the same payload saved again is a new submission with a new key 2ms
+     × T-10-12 E7-W07 step 4: a 409 STALE_VERSION with the list as it is now is the answer — the key is retired — and another payload never shares a key 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/attendance-sheet.test.ts > T-10-12 E7-W06 review #3 · the attendance save keeps its key by the shared rule (isUnanswered, CONVENCIONS_API §7, E79) > E7-W07 step 4 (CONVENCIONS_API §7, E85): a 500 carrying the api's error body is not the save's answer — «unanswered», the list kept
+AssertionError: expected { code: 'INTERNAL_ERROR', …(1) } to deeply equal { code: 'INTERNAL_ERROR', …(1) }
+
+- Expected
++ Received
+
+  {
+    "code": "INTERNAL_ERROR",
+-   "kind": "unanswered",
++   "kind": "refused",
+  }
+
+ ❯ src/attendance-sheet.test.ts:37:40
+     35|       "cls-1",
+     36|     );
+     37|     expect(await transport.save(body)).toEqual({
+       |                                        ^
+     38|       code: "INTERNAL_ERROR",
+     39|       kind: "unanswered",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/attendance-sheet.test.ts > E7-W07 step 4 (CONVENCIONS_API §7, E74, E85): the attendance save takes its key from the shared helper (screens 21 and D12) > T-10-12 E7-W07 step 4: a 503 with the api's body and IN_PROGRESS keep the key for the retry; a 422 ATTENDANCE_WINDOW_CLOSED retires it, so the same payload saved again is a new submission with a new key
+AssertionError: expected { code: 'INTERNAL_ERROR', …(1) } to match object { kind: 'unanswered' }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "kind": "unanswered",
++   "kind": "refused",
+  }
+
+ ❯ src/attendance-sheet.test.ts:94:40
+     92|     ]);
+     93|     const transport = attendanceSheetTransport(client, "cls-1");
+     94|     expect(await transport.save(body)).toMatchObject({ kind: "unanswer…
+       |                                        ^
+     95|     expect(await transport.save(body)).toMatchObject({ kind: "inProgre…
+     96|     expect(await transport.save(body)).toEqual({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/attendance-sheet.test.ts > E7-W07 step 4 (CONVENCIONS_API §7, E74, E85): the attendance save takes its key from the shared helper (screens 21 and D12) > T-10-12 E7-W07 step 4: a 409 STALE_VERSION with the list as it is now is the answer — the key is retired — and another payload never shares a key
+AssertionError: expected { code: 'INTERNAL_ERROR', …(1) } to match object { kind: 'unanswered' }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "kind": "unanswered",
++   "kind": "refused",
+  }
+
+ ❯ src/attendance-sheet.test.ts:119:40
+    117|     const transport = attendanceSheetTransport(client, "cls-1");
+    118|     expect(await transport.save(body)).toEqual({ current, kind: "stale…
+    119|     expect(await transport.save(body)).toMatchObject({ kind: "unanswer…
+       |                                        ^
+    120|     const other = { ...body, version: 5 };
+    121|     expect(await transport.save(other)).toMatchObject({ kind: "unanswe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 skipped (5)
+   Start at  10:54:19
+   Duration  187ms (transform 42%, import 40%, tests 15%, worker 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/attendance-sheet.test.ts -t E7-W07

@@ -1,0 +1,15 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+ Test Files  26 passed (26)
+      Tests  517 passed (517)
+   Start at  10:48:18
+   Duration  15.25s (tests 54%, environment 19%, transform 15%, import 8%, setup 4%)
+

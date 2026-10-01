@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { isApiError } from "./api-error";
 import type { ApiClient } from "./client";
 import type { components } from "./generated/schema";
-import { isUnanswered } from "./submission-key";
+import { isUnanswered, useSubmissionKeys } from "./submission-key";
 import { type FileLimits, loadFileLimits, uploadSignedGrant } from "./uploads";
 
 export type FollowupCard = components["schemas"]["InstructorCard"];
@@ -59,16 +59,6 @@ export function attachmentName(fileName: string): string {
   const dot = fileName.lastIndexOf(".");
   const extension = dot > 0 && fileName.length - dot <= 10 ? fileName.slice(dot) : "";
   return `${fileName.slice(0, 80 - extension.length)}${extension}`;
-}
-
-/**
- * The api has not given this submission its answer yet: no answer at all (a network failure, or a
- * gateway's response without the api's body), or `409 IDEMPOTENCY_KEY_REUSED {reason:
- * IN_PROGRESS}` — its first request is still running, which is not its answer (CONVENCIONS_API §7,
- * E79). The rule every keyed write shares (`isUnanswered`, E7-W06 review #3).
- */
-function unanswered(cause: unknown): boolean {
-  return isUnanswered(cause);
 }
 
 /**
@@ -147,44 +137,6 @@ interface UploadedFile {
 const UPLOAD_GRANT_MARGIN_MS = 30_000;
 
 /**
- * One `Idempotency-Key` per submission (CONVENCIONS_API §7, ruling E74): the key is created when a
- * submission starts and reused by its retries — the same payload sent again after a request that
- * got no answer (a network failure, or `IN_PROGRESS`, E79) — so the api creates or deletes once; it
- * is retired as soon as the api answers, success or refusal, so the next submission of the same
- * payload is a new one with a new key. (A double tap while a write runs sends nothing: `run`
- * refuses it.) `drop` forgets the keys of a submission that was abandoned (`owner`: the submission
- * they belong to), since it will never be retried (E6-W04's report nit).
- */
-function useSubmissionKeys() {
-  const pending = useRef(new Map<string, { key: string; owner: string }>());
-  const send = useCallback(
-    async <Result>(
-      signature: string,
-      write: (key: string) => Promise<Result>,
-      owner: string = signature,
-    ): Promise<Result> => {
-      const key = pending.current.get(signature)?.key ?? crypto.randomUUID();
-      pending.current.set(signature, { key, owner });
-      try {
-        const result = await write(key);
-        pending.current.delete(signature);
-        return result;
-      } catch (cause) {
-        if (!unanswered(cause)) pending.current.delete(signature);
-        throw cause;
-      }
-    },
-    [],
-  );
-  const drop = useCallback((owner: string) => {
-    for (const [signature, entry] of pending.current) {
-      if (entry.owner === owner) pending.current.delete(signature);
-    }
-  }, []);
-  return { drop, send };
-}
-
-/**
  * The data and the writes of screen 26 and of D13's drawer (S10 R-10-10…R-10-12), one hook for
  * both shells: the dog's instructor card (observations, the member's note), its tasks as the api
  * orders them, and every write — tasks created with their signed uploads, edited, deleted,
@@ -230,6 +182,10 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
   // were, whatever their grant (E74); any other one uploads those files again, since the api may
   // have bound them to what it created (E6-W04 step 0d). An answer releases them.
   const held = useRef(new Map<string, ReadonlyMap<File, string>>());
+  // One `Idempotency-Key` per submission (CONVENCIONS_API §7, E74, E85): the shared helper keeps
+  // it while the api has not answered (a retry reuses it) and retires it on the answer; the keys
+  // of an abandoned submission (`owner`) are dropped, since it will never be retried (E7-W07
+  // step 4; E6-W04's report nit). A double tap while a write runs sends nothing: `run` refuses it.
   const { drop: dropKeys, send: submit } = useSubmissionKeys();
   // The submission each form holds now, by its slot (the new-task form, the observations, the
   // files of one entity). A submission with another payload in the same slot — the text edited,
@@ -479,13 +435,13 @@ export function useDogFollowup(client: ApiClient, dogId: string, options: { task
         // was on its way (the drawer closed) is never retried, so nothing is kept for it (E7-W06
         // review #6).
         const kept = [...slots.current.values()].includes(signature);
-        if (unanswered(cause) && kept) {
+        if (isUnanswered(cause) && kept) {
           held.current.set(signature, new Map(keys.map(({ file, fileKey }) => [file, fileKey])));
         } else {
           held.current.delete(signature);
           // Abandoned with no answer: the api may have bound its files to what it created, so
           // they are uploaded again by any later submission, as `abandon` does.
-          if (unanswered(cause)) for (const { file } of keys) uploaded.current.delete(file);
+          if (isUnanswered(cause)) for (const { file } of keys) uploaded.current.delete(file);
         }
         throw cause;
       }

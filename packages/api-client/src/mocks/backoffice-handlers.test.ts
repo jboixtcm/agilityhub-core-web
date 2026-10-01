@@ -5,6 +5,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import openapiDocument from "../../openapi/openapi.json";
 import type { components } from "../generated/schema";
 
+import { BOOKING_MOCK_NOW } from "./fixtures/bookings";
 import { dayGridClassSessions } from "./fixtures/day-grid";
 import { findParameter, settingsState } from "./fixtures/settings";
 import {
@@ -22,6 +23,7 @@ import { server } from "./server";
 
 type ApiError = components["schemas"]["ApiError"];
 type ClassBookings = components["schemas"]["ClassBookings"];
+type ClassSession = components["schemas"]["ClassSession"];
 type ClassWaitlist = components["schemas"]["ClassWaitlist"];
 type JobRun = components["schemas"]["JobRun"];
 type JobSummaries = components["schemas"]["JobSummaries"];
@@ -403,15 +405,17 @@ describe("E5-W03 step 8 · S08 staff reads (registrants, waiting list, GET /book
       `/class-sessions/${D4_CLASS}/bookings`,
     );
     valid("ClassBookings", bookings.body);
-    // E5-W05 round 3 #4: a «B+C» class takes only B and C dogs (R-08-04).
+    // E5-W05 round 3 #4: a «B+C» class takes only B and C dogs (R-08-04). E7-W07 step 5: Nass,
+    // Fish and Blat already hold their two classes of the week (Monday's «B+C» and Tuesday's
+    // «A+B», R-08-03), so the class takes the next B and C dogs; Duna's second class is this one.
     expect(
       bookings.body.items.map((item) => `${item.memberName} + ${item.dogName}:${item.state}`),
     ).toEqual([
       "Laura + Duna:ACTIVE",
-      "Anna + Nass:ACTIVE",
-      "Eva + Fish:ACTIVE",
-      "Pau + Blat:ACTIVE",
-      "Jana + Mixa:CANCELLED_LATE",
+      "Jana + Mixa:ACTIVE",
+      "Irene + Kai:ACTIVE",
+      "Nil + Coco:ACTIVE",
+      "Joel + Rumba:CANCELLED_LATE",
     ]);
     const waitlist = await as<components["schemas"]["ClassWaitlist"]>(
       "instructor",
@@ -794,10 +798,42 @@ describe("E5-W05 step 5 · complete filter values (CONVENCIONS_API §4) and the 
       valid("FilterValues", values.body);
     }
   });
+
+  it("E7-W07 step 8 (E5-W05 round 3 review #1, R-09-13): an ADMIN of another club cannot cancel a block of this club's register (404 NOT_FOUND, the activity's block too), and the block is still ACTIVE for this club's own ADMIN, who cancels it", async () => {
+    const block = "rb-2026-08-03-1600-carretera";
+    const state = async (id: string) =>
+      (
+        await as<Page<BlockRow>>(
+          "admin",
+          "GET",
+          `/ring-blocks?filter=${encodeURIComponent(`id:eq:${id}`)}&fields=id,state`,
+        )
+      ).body.items.map((row) => row.state);
+    expect(await state(block)).toEqual(["ACTIVE"]);
+    for (const id of [block, "rb-2026-08-06-1000-muntanya-activity"]) {
+      const other = await as<ApiError>(
+        "adminOtherClub",
+        "POST",
+        `/ring-blocks/${id}/cancellation`,
+        {},
+      );
+      expect([other.status, other.body.code], id).toEqual([404, "NOT_FOUND"]);
+      valid("ApiError", other.body);
+    }
+    // Nothing was written: the club's own ADMIN still finds the block live, and cancels it.
+    expect(await state(block)).toEqual(["ACTIVE"]);
+    const own = await as<components["schemas"]["RingBlock"]>(
+      "admin",
+      "POST",
+      `/ring-blocks/${block}/cancellation`,
+      {},
+    );
+    expect([own.status, own.body.state]).toEqual([200, "CANCELLED"]);
+  });
 });
 
 describe("E5-W05 round 2 · the staff registrants' level is the dog's own, and follows levels.enabled (S08 §6)", () => {
-  it("E5-W05 round 2 #3: GET /class-sessions/{id}/bookings sends each dog's own level (D4's «B+C»: Duna «C», Nass «B», Fish «B», Blat «B», Mixa «C»), and null in a club with levels.enabled = false", async () => {
+  it("E5-W05 round 2 #3: GET /class-sessions/{id}/bookings sends each dog's own level (D4's «B+C»: Duna «C», Mixa «C», Kai «B», Coco «C», Rumba «B»), and null in a club with levels.enabled = false", async () => {
     const levels = async (scenario: MockScenario) => {
       const answer = await as<ClassBookings>(
         scenario,
@@ -808,14 +844,17 @@ describe("E5-W05 round 2 · the staff registrants' level is the dog's own, and f
       valid("ClassBookings", answer.body);
       return answer.body.items.map((item) => `${item.dogName}:${item.levelCode ?? "—"}`);
     };
-    // E5-W05 round 3 #4: D4's «B+C» takes only B and C dogs (R-08-04), Duna «C» first.
-    expect(await levels("admin")).toEqual(["Duna:C", "Nass:B", "Fish:B", "Blat:B", "Mixa:C"]);
+    // E5-W05 round 3 #4: D4's «B+C» takes only B and C dogs (R-08-04), Duna «C» first; E7-W07
+    // step 5: none over its week's limit (R-08-03).
+    expect(await levels("admin")).toEqual(["Duna:C", "Mixa:C", "Kai:B", "Coco:C", "Rumba:B"]);
+    // Without levels every 18:50 class may take any dog: Monday's two and Tuesday's have taken the
+    // first ones' two classes of the week (E7-W07 step 5, R-08-03).
     expect(await levels("planningNoLevels")).toEqual([
-      "Duna:—",
-      "Chun-li:—",
-      "Nass:—",
-      "Fish:—",
-      "Thai:—",
+      "Blat:—",
+      "Trevi:—",
+      "Mixa:—",
+      "Bruc:—",
+      "Nala:—",
     ]);
   });
 
@@ -995,4 +1034,138 @@ describe("E5-W05 round 2 · the jobs mock reads its parameters (S15 R-15-01, R-1
       "AT_RISK 0",
     ]);
   });
+});
+
+describe("E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19)", () => {
+  /** A row of `GET /bookings` or of `GET /class-sessions/{id}/bookings`. */
+  interface Row {
+    bookingWeekKey?: string;
+    classSessionId?: string;
+    dogId?: string;
+    dogName?: string;
+    id: string;
+    state?: string;
+  }
+  const WEEK_MS = 7 * 86_400_000;
+
+  /** R-08-02: what counts towards a week's limit (never CANCELLED nor CANCELLED_BY_CLUB). */
+  const counts = (state: string | undefined) =>
+    state === "ACTIVE" || state === "PAYMENT_PENDING" || state === "CANCELLED_LATE";
+
+  function parameter(key: string, fallback: number): number {
+    const value = findParameter(key)?.value;
+    return typeof value === "number" ? value : fallback;
+  }
+
+  /**
+   * The most bookings a dog can hold in a booking week at the clock (R-08-03): while the week is W1
+   * it takes `bookings.maxNextWeek`, once it is W0 up to `bookings.maxCurrentWeek` (a past week was
+   * W0 when it was last booked), and a week after W1 has not opened yet (R-08-01).
+   */
+  function weekLimit(weekKey: string, currentKey: string): number {
+    const index = Math.round((Date.parse(weekKey) - Date.parse(currentKey)) / WEEK_MS);
+    const current = parameter("bookings.maxCurrentWeek", 2);
+    const next = parameter("bookings.maxNextWeek", 1);
+    return index >= 2 ? 0 : index === 1 ? next : Math.max(current, next);
+  }
+
+  afterEach(() => {
+    resetBookingMockState();
+  });
+
+  it.each([
+    ["dl 10 at 8:12 (D1 and D10, S15's example day)", JOBS_MOCK_NOW],
+    ["dc 12 at 10:00 (D4)", "2026-08-12T10:00:00+02:00"],
+    ["dl 3 at 7:10 (the ring-usage register)", "2026-08-03T07:10:00+02:00"],
+    ["dl 3 at 21:00 (screen 23's drawer)", "2026-08-03T21:00:00+02:00"],
+    ["dg 2 at 20:30 (the member world)", BOOKING_MOCK_NOW],
+  ])(
+    "T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at %s no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice",
+    async (_clock, now) => {
+      vi.setSystemTime(new Date(now));
+      resetPlanningState();
+      resetBookingMockState();
+      // The booking week of now, as the member's 03 counts it (R-08-01).
+      const home = await as<components["schemas"]["MeHome"]>("member", "GET", "/me/home");
+      expect(home.status).toBe(200);
+      const currentKey = home.body.limits.currentWeek.weekKey;
+      const calendarIds = new Set(planningState.sessions.map((session) => session.id));
+      // D10's list: the member world's own bookings (Duna's, Rock's) beside the calendar's
+      // registrants (R-08-19: the back office's bookings count as the member's).
+      const listed = await as<{ items: Row[] }>(
+        "admin",
+        "GET",
+        "/bookings?size=1000&fields=id,classSessionId,dogId,dogName,state,bookingWeekKey",
+      );
+      expect(listed.status).toBe(200);
+      const memberWorld = listed.body.items.filter(
+        (row) => !calendarIds.has(row.classSessionId ?? ""),
+      );
+      expect(memberWorld.some((row) => row.dogId === "dog-duna" && counts(row.state))).toBe(true);
+      const problems: string[] = [];
+      const worlds: [string, ClassSession[]][] = [
+        ["calendar", planningState.sessions],
+        ["day grid", dayGridClassSessions()],
+      ];
+      for (const [world, sessions] of worlds) {
+        const rows: Row[] = [...memberWorld];
+        const read = sessions.filter((session) => session.state !== "DRAFT");
+        expect(read.length, world).toBeGreaterThan(0);
+        for (const session of read) {
+          const answer = await as<ClassBookings>(
+            "admin",
+            "GET",
+            `/class-sessions/${session.id}/bookings`,
+          );
+          expect(answer.status, session.id).toBe(200);
+          const items = answer.body.items;
+          const cancelled = session.state === "CANCELLED";
+          const expected = cancelled
+            ? (session.cancellation?.affectedBookings ?? 0)
+            : session.counters.booked;
+          const live = items.filter(
+            (item) => item.state === (cancelled ? "CANCELLED_BY_CLUB" : "ACTIVE"),
+          ).length;
+          if (live !== expected) {
+            problems.push(`${world} ${session.id}: ${String(live)} rows for ${String(expected)}`);
+          }
+          if (new Set(items.map((item) => item.dogId)).size !== items.length) {
+            problems.push(`${world} ${session.id}: a dog twice`);
+          }
+          const allowed = session.levelIds.map((id) => id.replace(/^level-/u, "").toUpperCase());
+          for (const item of items) {
+            if (allowed.length > 0 && !allowed.includes(item.levelCode ?? "")) {
+              problems.push(`${world} ${session.id}: ${item.dogName} ${item.levelCode ?? "—"}`);
+            }
+          }
+          rows.push(...items);
+        }
+        if (world === "calendar") {
+          // D10 lists the very registrants D4 reads.
+          const ids = (items: readonly Row[]) =>
+            items
+              .filter((row) => calendarIds.has(row.classSessionId ?? ""))
+              .map((row) => row.id)
+              .sort();
+          expect(ids(listed.body.items)).toEqual(ids(rows));
+        }
+        const perWeek = new Map<string, { count: number; weekKey: string }>();
+        for (const row of rows.filter((item) => counts(item.state))) {
+          const key = `${row.dogName ?? ""} (${row.dogId ?? ""}) in the week of ${row.bookingWeekKey ?? ""}`;
+          const current = perWeek.get(key);
+          perWeek.set(key, {
+            count: (current?.count ?? 0) + 1,
+            weekKey: row.bookingWeekKey ?? "",
+          });
+        }
+        for (const [key, { count, weekKey }] of perWeek) {
+          const limit = weekLimit(weekKey, currentKey);
+          if (count > limit) {
+            problems.push(`${world}: ${key}: ${String(count)} > ${String(limit)}`);
+          }
+        }
+      }
+      expect(problems).toEqual([]);
+    },
+  );
 });

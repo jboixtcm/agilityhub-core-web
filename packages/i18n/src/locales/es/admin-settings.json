@@ -776,7 +776,17 @@
       "swept": "{count, plural, one {# entrada de espera cerrada} other {# entradas de espera cerradas}}",
       "finished": "{count, plural, one {# clase cerrada} other {# clases cerradas}}",
       "activitiesFinished": "{count, plural, one {# actividad cerrada} other {# actividades cerradas}}",
-      "ttlPendingRingSlotLocks": "{count, plural, one {# bloqueo técnico de pista caducado} other {# bloqueos técnicos de pista caducados}}"
+      "ttlPendingRingSlotLocks": "{count, plural, one {# bloqueo técnico de pista caducado} other {# bloqueos técnicos de pista caducados}}",
+      "ttlPendingSeatHolds": "{count, plural, one {# bloqueo temporal de plaza caducado} other {# bloqueos temporales de plaza caducados}}",
+      "ttlPendingMagicLinkTokens": "{count, plural, one {# enlace de acceso caducado} other {# enlaces de acceso caducados}}",
+      "ttlPendingIdempotencyRecords": "{count, plural, one {# registro de reintentos caducado} other {# registros de reintentos caducados}}",
+      "ttlPendingJobLocks": "{count, plural, one {# bloqueo de proceso caducado} other {# bloqueos de proceso caducados}}",
+      "ttlPendingSignupNotificationAdmissions": "{count, plural, one {# control de aviso de alta caducado} other {# controles de aviso de alta caducados}}",
+      "orphanUploadsDeleted": "{count, plural, one {# archivo de alta huérfano eliminado} other {# archivos de alta huérfanos eliminados}}",
+      "exportsPurged": "{count, plural, one {# exportación caducada eliminada} other {# exportaciones caducadas eliminadas}}",
+      "domainEventsDeleted": "{count, plural, one {# evento interno eliminado} other {# eventos internos eliminados}}",
+      "stripeEventsDeleted": "{count, plural, one {# evento de Stripe eliminado} other {# eventos de Stripe eliminados}}",
+      "jobRunsDeleted": "{count, plural, one {# ejecución antigua eliminada} other {# ejecuciones antiguas eliminadas}}"
     },
     "counterRaw": "{key}: {count}",
     "switchLabel": "{name} activado",

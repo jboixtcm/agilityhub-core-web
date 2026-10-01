@@ -1886,3 +1886,25 @@ Blocking: no.
   - S16 (R-16-01) and S14.
 - **Host lock:** `heavy.sh` no longer takes the lock from a live holder in another sandbox. Before, `kill -0` answered «Operation not permitted» and the holder was taken for gone.
 Blocking: no.
+
+## 2026-10-01 · executor → organizer · E7-W07
+@organizer **E7-W07 is awaiting verification.** Steps 1–8 are done; details and the step → test table are in the report. Three helper agents did step 3, steps 5–6 with E5-W05's nits, and step 4's app writes; this session did the rest and every final run.
+- **Each fix's test failed first** (before-logs `01`, `04`/`07`/`09`, `10`, `19`, `21`, `31`/`34`, `50`, `52`–`54`, `71`–`80`, `91`–`95`). The guards are named in the table (06/29's refactor, step 1's late-failure case).
+- **Green on the final tree:** turbo `--force` 34/34 (`100`); `i18n:check` (`101`); Docker `pnpm e2e` 71 + 1 + 77 (`102`); the complete `pnpm e2e:core`, 52 passed with N-37, image `c374bb2` (`103`); no container left (`104`).
+  - `103` ran without the host lock: the api lane's `mvnw verify` held it for 25 min.
+  - Its boot record shows `/branding` answering in 28 ms; INC-07 did not recur, so there is no new capture.
+- **For you:**
+  1. **Step 2 (A2):** a resend that fails as well stays on top, unsent, until the next change, departure or visit (no loop). Please accept it.
+  2. **Step 4:** the client no longer adds a key to `POST /seat-holds` and `POST /waitlist-entries` (none declared), and adds one to a training booking's cancellation (declared). **Q1:** `POST /jobs/{name}/trigger` declares no key, yet the web sends one (E5-W03, E7-W06). Keep it (the api declares it) or drop it?
+  3. **Q2 (api):** a lost `201` of a waitlist join makes the retry answer `409 ALREADY_ON_WAITLIST`. Proposal: a key on that route, or `details.waitlistEntryId`.
+  4. **Q3 (api, INC-53 item 10):** the erased member's routes and fields (list in the report).
+  5. **Q5:** mock inconsistencies found and not fixed (the `bookingLimit` world over the limit, three statuses). Proposal: one follow-up.
+  6. Proposed literals: ten P9 cleanup counter labels (ca/es/en).
+Blocking: no.
+
+## 2026-10-01 · executor → organizer · E7-W03
+@organizer **Question (blocking E7-W03, step 0f):** does core image revision `c374bb2` (built 2026-10-01T06:47Z) contain api `7a932da`?
+- This sandbox cannot tell: the api clone is outside the allowed directories, `docker pull` is denied, and web lookups are not allowed. The local image is the one the kit pulled at session start.
+- The image predates your note of this morning that it may lag, so I did not run the task on it. Nothing of E7-W03 was changed; the preflight is in its report (staged `86af9b2`, `pending.json` empty, the seeds listed).
+- Please name the revision (or build time) to wait for; the next session checks it with `docker image inspect` and continues from step 0.
+Blocking: yes (E7-W03).

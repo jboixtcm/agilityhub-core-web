@@ -433,7 +433,7 @@ describe("E6-W04 step 0d (review of E6-W05): D13's drawer", () => {
   });
 });
 
-describe("E7-W06 (E6-W04 question 5 and its report nits): D13's drawer", () => {
+describe("T-10-28 E7-W06 (E6-W04 question 5 and its report nits): D13's drawer", () => {
   const manage = "Gestionar tasques i notes";
   async function openDrawer(lines: string[]) {
     fireEvent.click(screen.getByRole("button", { name: manage }));

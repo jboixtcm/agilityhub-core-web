@@ -877,6 +877,136 @@ describe("T-07-29 D7 activities (list, maintenance, publication, cancellation)",
   });
 });
 
+/** `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}` as the api answers it (CONVENCIONS_API §6, §7). */
+const IN_PROGRESS_BODY = {
+  code: "IDEMPOTENCY_KEY_REUSED",
+  details: { reason: "IN_PROGRESS" },
+  message: "The first request with this Idempotency-Key is still in progress",
+  traceId: "t-in-progress",
+};
+/** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
+const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
+/** A `503` with the api's error body (CONVENCIONS_API §6): the api undid the attempt (R-08-08). */
+const INTERNAL_ERROR_BODY = {
+  code: "INTERNAL_ERROR",
+  details: {},
+  message: "Unexpected error",
+  traceId: "t-503",
+};
+const INTERNAL_ERROR_TEXT =
+  "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.";
+
+describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D7's publication and cancellation follow the shared submission-key rule", () => {
+  it("T-07-29 T-07-10 E7-W07 step 4 (CONVENCIONS_API §7, E85): [PUBLICA] keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ACTIVITY_IN_PAST retires it, so the same publication sent again takes a new key", async () => {
+    await client().PATCH("/activities/{id}", {
+      body: { registrationFrom: "2026-09-01", registrationTo: "2026-10-01", version: 1 },
+      params: { path: { id: DEMONSTRATION } },
+    });
+    const sent: { body: unknown; key: string | null }[] = [];
+    server.use(
+      http.post("*/api/v1/activities/:id/publication", async ({ request }) => {
+        sent.push({
+          body: await request.clone().json(),
+          key: request.headers.get("Idempotency-Key"),
+        });
+        if (sent.length === 1) return HttpResponse.json(IN_PROGRESS_BODY, { status: 409 });
+        if (sent.length === 2) return HttpResponse.json(INTERNAL_ERROR_BODY, { status: 503 });
+        if (sent.length === 3) {
+          return HttpResponse.json(
+            { code: "ACTIVITY_IN_PAST", details: {}, message: "past", traceId: "t-422" },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await renderPage({ selectedId: DEMONSTRATION });
+    const card = await maintenance("Demostració Festa Major");
+    fireEvent.click(within(card).getByRole("button", { name: "PUBLICA" }));
+    const confirm = await screen.findByRole("dialog", { name: "Publicar l'activitat" });
+    const press = async () => {
+      const publish = within(confirm).getByRole("button", { name: "PUBLICA" });
+      await waitFor(() => {
+        expect(publish).toBeEnabled();
+      });
+      fireEvent.click(publish);
+    };
+    await press();
+    expect(await within(confirm).findByText(IN_PROGRESS_TEXT)).toBeVisible();
+    await press();
+    expect(await within(confirm).findByText(INTERNAL_ERROR_TEXT)).toBeVisible();
+    await press();
+    expect(await within(confirm).findByText("Aquesta activitat ja ha passat.")).toBeVisible();
+    // The api answered (a 4xx with its body): the same publication sent again is a new one.
+    await press();
+    expect(await screen.findByText("Activitat publicada")).toBeVisible();
+    expect(sent).toHaveLength(4);
+    expect(new Set(sent.map((request) => JSON.stringify(request.body))).size).toBe(1);
+    expect(sent[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(sent[1]?.key).toBe(sent[0]?.key);
+    expect(sent[2]?.key).toBe(sent[0]?.key);
+    expect(sent[3]?.key).not.toBe(sent[0]?.key);
+  });
+
+  it("T-07-29 T-07-13 E7-W07 step 4 (CONVENCIONS_API §7, E85): [CANCEL·LA I AVISA…] keeps its Idempotency-Key through a network failure and a 503 with the api's body, and a 422 ADMIN_TEXT_REQUIRED retires it, so the same notice sent again takes a new key", async () => {
+    const sent: { body: unknown; key: string | null }[] = [];
+    server.use(
+      http.post("*/api/v1/activities/:id/cancellation", async ({ request }) => {
+        sent.push({
+          body: await request.clone().json(),
+          key: request.headers.get("Idempotency-Key"),
+        });
+        if (sent.length === 1) return HttpResponse.error();
+        if (sent.length === 2) return HttpResponse.json(INTERNAL_ERROR_BODY, { status: 503 });
+        if (sent.length === 3) {
+          return HttpResponse.json(
+            { code: "ADMIN_TEXT_REQUIRED", details: {}, message: "text", traceId: "t-422" },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await renderPage({ selectedId: TOURNAMENT });
+    const card = await maintenance("Torneig d'Estiu 2026");
+    fireEvent.click(within(card).getByRole("button", { name: "CANCEL·LA L'ACTIVITAT" }));
+    const modal = await screen.findByRole("dialog", {
+      name: "Cancel·lar l'activitat — Torneig d'Estiu 2026",
+    });
+    fireEvent.change(within(modal).getByLabelText("Text de l'avís"), {
+      target: { value: "Pluja forta: pistes tancades" },
+    });
+    const press = async () => {
+      const confirm = within(modal).getByRole("button", {
+        name: "CANCEL·LA I AVISA ELS 22 INSCRITS",
+      });
+      await waitFor(() => {
+        expect(confirm).toBeEnabled();
+      });
+      fireEvent.click(confirm);
+    };
+    await press();
+    expect(
+      await within(modal).findByText("No s'ha pogut completar l'acció. Torna-ho a provar."),
+    ).toBeVisible();
+    await press();
+    expect(await within(modal).findByText(INTERNAL_ERROR_TEXT)).toBeVisible();
+    await press();
+    expect(
+      await within(modal).findByText("Cal escriure el text de l'avís per als alumnes."),
+    ).toBeVisible();
+    // The api answered (a 4xx with its body): the same notice sent again is a new submission.
+    await press();
+    expect(await screen.findByText("Activitat cancel·lada")).toBeVisible();
+    expect(sent).toHaveLength(4);
+    expect(new Set(sent.map((request) => JSON.stringify(request.body))).size).toBe(1);
+    expect(sent[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(sent[1]?.key).toBe(sent[0]?.key);
+    expect(sent[2]?.key).toBe(sent[0]?.key);
+    expect(sent[3]?.key).not.toBe(sent[0]?.key);
+  });
+});
+
 /** Requests whose path ends with `suffix`: method, JSON body and `Idempotency-Key`. */
 function recordRequests(suffix: string) {
   const seen: { body: unknown; key: string | null; method: string; url: URL }[] = [];

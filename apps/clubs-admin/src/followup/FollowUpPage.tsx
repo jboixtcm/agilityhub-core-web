@@ -1,11 +1,10 @@
 import {
   type ApiClient,
   type components,
-  type HeldKey,
-  heldKeyFor,
+  HELD_KEY_TTL_MS,
   isApiError,
   isInProgress,
-  isUnanswered,
+  useSubmissionKeys,
 } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
@@ -25,7 +24,7 @@ import {
   readUniversalListState,
   universalListSearchParams,
 } from "@agilityhub/ui";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useSavedViews } from "../activities/shared";
@@ -263,8 +262,11 @@ export function FollowUpPage({
   const [readIds, setReadIds] = useState<ReadonlySet<string>>(new Set());
   const [readingAll, setReadingAll] = useState(false);
   const [feedback, setFeedback] = useState<string>();
-  // «Marcar-ho tot com a llegit»'s key: kept only while the api has not answered (CONVENCIONS_API §7).
-  const readAllKey = useRef(new Map<string, HeldKey>());
+  // «Marcar-ho tot com a llegit»'s key, by the shared rule (CONVENCIONS_API §7, E7-W07 step 4):
+  // kept only while the api has not answered, and for `HELD_KEY_TTL_MS` at most, so a read-all
+  // asked for later is a new one, which moves `readAllAt` on instead of replaying an old answer
+  // (E7-W06 review #5).
+  const readAllKey = useSubmissionKeys({ ttlMs: HELD_KEY_TTL_MS });
 
   useEffect(() => {
     let current = true;
@@ -607,24 +609,19 @@ export function FollowUpPage({
     if (readingAll) return;
     setReadingAll(true);
     setFeedback(undefined);
-    // Kept for `HELD_KEY_TTL_MS` at most: a read-all asked for later is a new one, which moves
-    // `readAllAt` on instead of replaying an old answer (E7-W06 review #5).
-    const key = heldKeyFor(readAllKey.current, "read-all");
-    const retire = () => {
-      if (readAllKey.current.get("read-all")?.key === key) readAllKey.current.delete("read-all");
-    };
     try {
-      await client.POST("/followup/read-all", {
-        params: { header: { "Idempotency-Key": key } },
-      });
-      retire();
+      await readAllKey.send("read-all", (key) =>
+        client.POST("/followup/read-all", {
+          params: { header: { "Idempotency-Key": key } },
+        }),
+      );
       unread.markAllRead();
       unread.refresh();
       retry();
     } catch (cause) {
-      // Answered: the next attempt is a new request; unanswered (offline, or IN_PROGRESS: the
-      // first request still runs, E79): the same one again, with «L'operació encara està en curs…».
-      if (!isUnanswered(cause)) retire();
+      // Answered: the next attempt is a new request; unanswered (offline, a 5xx, or IN_PROGRESS:
+      // the first request still runs, E79, E85): the same one again, with «L'operació encara està
+      // en curs…» for IN_PROGRESS.
       setFeedback(errorText(t, cause, t("errors:INTERNAL_ERROR")));
     } finally {
       setReadingAll(false);

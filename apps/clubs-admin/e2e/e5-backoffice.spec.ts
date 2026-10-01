@@ -77,9 +77,12 @@ test.describe("E5-W03 D4 · the registrants of the selected class (S08 §6, R-08
     const panel = card.getByRole("region", { name: "Inscrits (4/5)" });
     // E5-W05 steps 1 and 2: the level chip (levelCode, round 2 #3: Duna's own «C»), the
     // displayState chip and «{guia} + {gos}». Round 3 #4: «B+C» lists B and C dogs only (R-08-04).
+    // E7-W07 step 5: no dog over its week's limit (R-08-03): Duna, Mixa, Kai, Coco and Rumba's
+    // late cancellation, since Nass, Fish and Blat have had their two classes of the week.
     await expect(panel.getByRole("listitem").first()).toHaveText("Laura + DunaCconfirmada");
-    await expect(panel.locator(".ah-registrants__level")).toHaveText(["C", "B", "B", "B", "C"]);
+    await expect(panel.locator(".ah-registrants__level")).toHaveText(["C", "C", "B", "C", "B"]);
     await expect(panel.getByText("Jana + Mixa")).toBeVisible();
+    await expect(panel.getByText("Joel + Rumba")).toBeVisible();
     await expect(panel.getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
     await card.scrollIntoViewIfNeeded();
     await expectIconsPainted(card);
@@ -184,6 +187,15 @@ test.describe("E5-W03 D10 · «Reserves» of the member (S08 §2, R-08-19)", () 
     await expect(
       card.getByText("Per reservar o anul·lar en nom seu, fes servir «Entra com l'abonat»."),
     ).toBeVisible();
+    // E7-W07 step 5 (R-08-03, R-08-19): in the booking week of Sunday 9 at 20:00 Duna holds two
+    // classes, Monday's and Wednesday's 18:50 «B+C», never more than the week's limit.
+    await expect(
+      card
+        .getByRole("table", { name: "Classes" })
+        .getByRole("row")
+        .filter({ hasText: /^(dl 10|dt 11|dc 12|dj 13|dv 14|ds 15)\/08/u })
+        .filter({ hasText: "Duna" }),
+    ).toHaveCount(2);
     await card.scrollIntoViewIfNeeded();
     await card.screenshot({ path: resolve(evidenceDirectory, "D10-reserves-1280.png") });
   });

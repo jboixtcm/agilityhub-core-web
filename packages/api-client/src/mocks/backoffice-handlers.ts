@@ -6,6 +6,7 @@ import {
   bookingState,
   bookingWeekKeyOf,
   classBookingItems,
+  classBookingWorld,
   classWaitlistEntries,
   findClass,
   findDog,
@@ -318,6 +319,16 @@ function findSession(scenario: MockScenarioDefinition, id: string): ClassSession
   );
 }
 
+/**
+ * The world a class belongs to: the calendar's (D4, D10, D1) or the day grid's (screens 10 and 23).
+ * Each draws its registrants together, so no dog goes over its week's limit (E7-W07 step 5).
+ */
+function sessionWorld(session: ClassSession): readonly ClassSession[] {
+  return planningState.sessions.some((item) => item.id === session.id)
+    ? planningState.sessions
+    : dayGridClassSessions();
+}
+
 function fifo(): boolean {
   return findParameter("waitlist.mode")?.value === "FIFO";
 }
@@ -374,8 +385,11 @@ function bookingListItems(scenario: MockScenarioDefinition): Required<BookingLis
     ];
   });
   // The register's projection (x-fields): a registrant row without the class list's own fields.
+  // The calendar world's registrants, drawn together with the member world's bookings above, so a
+  // dog never holds more than its week's limit (R-08-03, R-08-19; E7-W07 step 5).
+  const registrants = classBookingWorld(planningState.sessions, levelsEnabled(), nowMs());
   const staffWorld = planningState.sessions.flatMap((session) =>
-    classBookingItems(session, levelsEnabled()).map((item) => ({
+    (registrants.get(session.id) ?? []).map((item) => ({
       bookedAt: item.bookedAt,
       bookingWeekKey: item.bookingWeekKey,
       classDescription: session.displayDescription,
@@ -693,7 +707,9 @@ export const backofficeHandlers = [
     if (refused !== undefined) return refused;
     const session = findSession(scenario, String(params.id));
     if (session === undefined) return apiError("NOT_FOUND", "Class not found", 404);
-    return HttpResponse.json({ items: classBookingItems(session, levelsEnabled()) });
+    return HttpResponse.json({
+      items: classBookingItems(session, sessionWorld(session), levelsEnabled(), nowMs()),
+    });
   }),
   // S08 §6: every waiting entry of the class, any state, in position order (requires WAITLIST).
   http.get("*/api/v1/class-sessions/:id/waitlist-entries", ({ params }) => {
@@ -961,6 +977,7 @@ export const backofficeHandlers = [
       callerClubOwnsTheWorld(scenario) && currentMockScenarioName() !== "riskReviewEmpty"
         ? planningState.sessions
         : [];
+    const registrants = classBookingWorld(planningState.sessions, levelsEnabled(), nowMs());
     return HttpResponse.json(
       riskReviewForm(date, {
         autoCancelSameDay: parameterValue(
@@ -975,7 +992,7 @@ export const backofficeHandlers = [
         // The club's minimum, as D4's risk mark reads it (`atRiskNow`).
         minDogs: minDogsParameter(),
         now: nowMs(),
-        registrants: (session) => classBookingItems(session, levelsEnabled()),
+        registrants: (session) => registrants.get(session.id) ?? [],
         reviewTime: parameterValue("classes.riskReviewTime", RISK_REVIEW_DEFAULTS.reviewTime),
         ringName: (session) => ringFields({ id: session.ringId }).ringName,
         sessions: classes,

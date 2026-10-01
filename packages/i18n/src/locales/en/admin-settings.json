@@ -776,7 +776,17 @@
       "swept": "{count, plural, one {# waiting entry closed} other {# waiting entries closed}}",
       "finished": "{count, plural, one {# class closed} other {# classes closed}}",
       "activitiesFinished": "{count, plural, one {# activity closed} other {# activities closed}}",
-      "ttlPendingRingSlotLocks": "{count, plural, one {# expired technical ring lock} other {# expired technical ring locks}}"
+      "ttlPendingRingSlotLocks": "{count, plural, one {# expired technical ring lock} other {# expired technical ring locks}}",
+      "ttlPendingSeatHolds": "{count, plural, one {# expired seat hold} other {# expired seat holds}}",
+      "ttlPendingMagicLinkTokens": "{count, plural, one {# expired sign-in link} other {# expired sign-in links}}",
+      "ttlPendingIdempotencyRecords": "{count, plural, one {# expired retry record} other {# expired retry records}}",
+      "ttlPendingJobLocks": "{count, plural, one {# expired process lock} other {# expired process locks}}",
+      "ttlPendingSignupNotificationAdmissions": "{count, plural, one {# expired sign-up notice check} other {# expired sign-up notice checks}}",
+      "orphanUploadsDeleted": "{count, plural, one {# orphan sign-up file deleted} other {# orphan sign-up files deleted}}",
+      "exportsPurged": "{count, plural, one {# expired export deleted} other {# expired exports deleted}}",
+      "domainEventsDeleted": "{count, plural, one {# internal event deleted} other {# internal events deleted}}",
+      "stripeEventsDeleted": "{count, plural, one {# Stripe event deleted} other {# Stripe events deleted}}",
+      "jobRunsDeleted": "{count, plural, one {# old run deleted} other {# old runs deleted}}"
     },
     "counterRaw": "{key}: {count}",
     "switchLabel": "{name} on",

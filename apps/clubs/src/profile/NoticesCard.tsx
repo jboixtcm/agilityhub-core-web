@@ -61,8 +61,9 @@ export function NoticesCard({ client }: { client: ApiClient }) {
           if (unsaved === undefined) kept.clear();
           else kept.write(unsaved);
         },
-        // After a failed save that followed overlapping PUTs of a departure, 12 shows what the api
-        // holds, not the last answer (E7-W06 step 4).
+        // After a failed save that followed overlapping PUTs of a departure, 12 reads what the api
+        // holds, not the last answer (E7-W06 step 4), and shows the member's last choice on top of
+        // it as a pending change, sent again (E7-W07 step 2).
         read: async () => (await client.GET("/me/notification-preferences")).data,
         save: async (body, keepalive) =>
           (

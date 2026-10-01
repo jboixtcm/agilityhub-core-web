@@ -1,0 +1,44 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+Not implemented: navigation to another Document
+ ❯ src/census/MemberBookingsCard.test.tsx (5 tests | 1 failed) 1196ms
+   ❯ E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) (4)
+     × shows the member's class bookings (newest first) and training bookings, read-only, with the «Entra com l'abonat» note 97ms
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/MemberBookingsCard.test.tsx > E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) > shows the member's class bookings (newest first) and training bookings, read-only, with the «Entra com l'abonat» note
+AssertionError: expected 'dc 12/08 · 18:50B+CCentralDunaconfirm…' to be 'ds 15/08 · 8:30B+CCentralDunaconfirma…' // Object.is equality
+
+Expected: "ds 15/08 · 8:30B+CCentralDunaconfirmadaapp"
+Received: "dc 12/08 · 18:50B+CCentralDunaconfirmadaapp"
+
+ ❯ src/census/MemberBookingsCard.test.tsx:124:35
+    122|     // Saturday 15 at 8:30 is the latest class of the current week the…
+    123|     // round 3 #4: B+C takes B and C dogs only, so Duna comes first, b…
+    124|     expect(firstRow?.textContent).toBe("ds 15/08 · 8:30B+CCentralDunac…
+       |                                   ^
+    125|     // A class the club booked for her reads «club» (`origin: BACKOFFI…
+    126|     expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 37 passed (38)
+      Tests  1 failed | 582 passed (583)
+   Start at  10:47:57
+   Duration  17.04s (tests 63%, environment 15%, transform 11%, import 7%, setup 3%)
+
+    Isolate  38 workers spawned · ~964ms startup each (spawn + environment, per file)
+             at least ~1.19s faster with isolate: false — reuses workers across files instead of one per file
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run`
+Exit status 1

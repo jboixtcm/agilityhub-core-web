@@ -116,8 +116,26 @@ export function writeCachedBranding(
 export const BRANDING_BOOT_TIMEOUT_MS = 4_000;
 
 export interface RefreshBrandingOptions {
-  /** With a cached branding, give up the live read after this long and use the cache. */
+  /**
+   * With a cached branding, boot with the cache once the live read has taken this long. The read
+   * goes on: its late answer is cached for the next load (E7-W07 step 1).
+   */
   cachedTimeoutMs?: number;
+}
+
+/** The live `/branding`, normalised and cached. */
+async function readLiveBranding(
+  client: ApiClient,
+  host: string,
+  storage: Pick<Storage, "setItem">,
+): Promise<NormalizedBranding> {
+  const result = await client.GET("/branding");
+  if (result.data === undefined) {
+    throw new TypeError("The branding response did not contain data", { cause: result.error });
+  }
+  const branding = normalizeBranding(result.data);
+  writeCachedBranding(branding, host, storage);
+  return branding;
 }
 
 export async function refreshBranding(
@@ -126,34 +144,33 @@ export async function refreshBranding(
   storage: Pick<Storage, "getItem" | "setItem"> = localStorage,
   options: RefreshBrandingOptions = {},
 ): Promise<NormalizedBranding> {
+  const cached = options.cachedTimeoutMs === undefined ? null : readCachedBranding(host, storage);
+  const live = readLiveBranding(client, host, storage);
   // Without a cache there is nothing to fall back on: the read is waited for as before.
-  const limit =
-    options.cachedTimeoutMs !== undefined && readCachedBranding(host, storage) !== null
-      ? new AbortController()
-      : undefined;
-  const timer =
-    limit === undefined
-      ? undefined
-      : setTimeout(() => {
-          limit.abort(new DOMException("The branding read took too long", "TimeoutError"));
-        }, options.cachedTimeoutMs);
+  if (cached === null) {
+    try {
+      return await live;
+    } catch (error) {
+      const fallback = readCachedBranding(host, storage);
+      if (fallback !== null) return fallback;
+      throw error;
+    }
+  }
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const limit = new Promise<"late">((resolve) => {
+    timer = setTimeout(() => {
+      resolve("late");
+    }, options.cachedTimeoutMs);
+  });
   try {
-    const result = await client.GET(
-      "/branding",
-      limit === undefined ? {} : { signal: limit.signal },
-    );
-    if (result.data === undefined) {
-      throw new TypeError("The branding response did not contain data", { cause: result.error });
-    }
-    const branding = normalizeBranding(result.data);
-    writeCachedBranding(branding, host, storage);
-    return branding;
-  } catch (error) {
-    const cached = readCachedBranding(host, storage);
-    if (cached !== null) {
-      return cached;
-    }
-    throw error;
+    const first = await Promise.race([live, limit]);
+    if (first !== "late") return first;
+    // Past the limit the page boots with the cache and keeps it (E7-W06 review #2). The read is not
+    // given up: its answer replaces the cache for the next load; a failure leaves the cache as is.
+    void live.catch(() => undefined);
+    return cached;
+  } catch {
+    return readCachedBranding(host, storage) ?? cached;
   } finally {
     clearTimeout(timer);
   }

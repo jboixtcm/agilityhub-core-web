@@ -45,10 +45,17 @@ afterAll(() => {
 });
 
 async function renderPanel({
+  firstRow = "Laura + Duna",
   modules = branding.modules,
   onChanged = vi.fn(),
   readOnly = false,
-}: { modules?: readonly string[]; onChanged?: () => void; readOnly?: boolean } = {}) {
+}: {
+  /** The first registrant the panel waits for. */
+  firstRow?: string;
+  modules?: readonly string[];
+  onChanged?: () => void;
+  readOnly?: boolean;
+} = {}) {
   const clubBranding: Branding = { ...branding, modules: [...modules] };
   const i18n = await createI18n({
     branding: clubBranding,
@@ -71,7 +78,7 @@ async function renderPanel({
     </I18nextProvider>,
   );
   const panel = await screen.findByRole("region", { name: "Inscrits (4/5)" });
-  await within(panel).findByText("Laura + Duna");
+  await within(panel).findByText(firstRow);
   return panel;
 }
 
@@ -83,12 +90,13 @@ describe("E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R
       .map((item) => item.textContent);
     // Each row: «{abonat} + {gos}», the level chip (E5-T29 `levelCode`, the dog's own level) and
     // the displayState chip. E5-W05 round 3 #4: the «B+C» class has only B and C dogs (R-08-04).
+    // E7-W07 step 5: none over its week's limit (R-08-03): Nass, Fish and Blat have had theirs.
     expect(rows.slice(0, 5)).toEqual([
       "Laura + DunaCconfirmada",
-      "Anna + NassBconfirmada",
-      "Eva + FishBconfirmada",
-      "Pau + BlatBconfirmada",
-      "Jana + MixaCanul·lada tard",
+      "Jana + MixaCconfirmada",
+      "Irene + KaiBconfirmada",
+      "Nil + CocoCconfirmada",
+      "Joel + RumbaBanul·lada tard",
     ]);
     // E5-W05 step 2: «{guia} + {gos}» (E5-T29 `memberFirstName`), mockup D12's line.
     expect(within(panel).getByText("En espera: Júlia + Kira · Roser + Lluna")).toBeVisible();
@@ -334,10 +342,12 @@ describe("E5-W05 round 2 · the mock's level chip is the dog's own level, and no
   it("E5-W05 round 2 #3: with levels on each chip is the dog's level (Duna «C», her census level), one the «B+C» class allows (round 3 #4); in a club with levels.enabled = false (planningNoLevels) no row has a level chip", async () => {
     const panel = await renderPanel();
     expect(within(panel).getAllByRole("listitem")[0]?.textContent).toBe("Laura + DunaCconfirmada");
-    expect(levelChips(panel)).toEqual(["C", "B", "B", "B", "C"]);
+    expect(levelChips(panel)).toEqual(["C", "C", "B", "C", "B"]);
     cleanup();
     mockScenario("planningNoLevels");
-    const noLevels = await renderPanel();
+    // Without levels any dog may come, and Monday's and Tuesday's 18:50 classes have taken the first
+    // ones' two classes of the week (E7-W07 step 5, R-08-03).
+    const noLevels = await renderPanel({ firstRow: "Pau + Blat" });
     expect(levelChips(noLevels)).toEqual([]);
     expect(
       within(noLevels)
@@ -345,11 +355,11 @@ describe("E5-W05 round 2 · the mock's level chip is the dog's own level, and no
         .slice(0, 5)
         .map((item) => item.textContent),
     ).toEqual([
-      "Laura + Dunaconfirmada",
-      "Marc + Chun-liconfirmada",
-      "Anna + Nassconfirmada",
-      "Eva + Fishconfirmada",
-      "Sergio + Thaianul·lada tard",
+      "Pau + Blatconfirmada",
+      "Clara + Treviconfirmada",
+      "Jana + Mixaconfirmada",
+      "Pol + Brucconfirmada",
+      "Carla + Nalaanul·lada tard",
     ]);
   });
 });

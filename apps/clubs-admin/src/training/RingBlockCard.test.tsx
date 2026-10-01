@@ -328,7 +328,7 @@ const IN_PROGRESS_BODY = {
 /** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
 const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
 
-describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's ring card keeps its key on IN_PROGRESS", () => {
+describe("T-09-20 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's ring card keeps its key on IN_PROGRESS", () => {
   it("E7-W06 step 1: D12's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key", async () => {
     const keys: string[] = [];
     const bodies = recordBodies();

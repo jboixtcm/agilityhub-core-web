@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { isApiError, isInProgress } from "./api-error";
 import type { ApiClient } from "./client";
 import type { components } from "./generated/schema";
-import { isUnanswered } from "./submission-key";
+import { useSubmissionKeys } from "./submission-key";
 
 export type RingBlockKind = components["schemas"]["RingBlockCreateRequest"]["kind"];
 export type RingBlockReason = components["schemas"]["RingBlockCreateRequest"]["reason"];
@@ -352,32 +352,30 @@ export type RingBlockSubmission =
 
 /**
  * `POST /ring-blocks` for screen 24 and the D12 card (R-09-11): one `Idempotency-Key` per payload,
- * kept only while the api has not answered it (an answer lost to the network, or IN_PROGRESS: its
- * first request still runs, E79), so a retry replays it instead of creating a second block; any
- * answer drops it, and a changed payload gets its own.
+ * by the shared rule (`useSubmissionKeys`, E7-W07 step 4): kept while the api has not answered it
+ * (an answer lost to the network, a `5xx`, or IN_PROGRESS: its first request still runs, E79,
+ * E85), so a retry replays it instead of creating a second block; an answer retires it, and a
+ * changed payload gets its own.
  */
 export function useRingBlockSubmit(client: ApiClient) {
-  const keys = useRef(new Map<string, string>());
+  const keys = useSubmissionKeys();
   const [pending, setPending] = useState(false);
   const submit = useCallback(
     async (fields: RingBlockFields, cancelBookings = false): Promise<RingBlockSubmission> => {
       const body = ringBlockCreateBody(fields, cancelBookings);
-      const fingerprint = JSON.stringify(body);
-      const key = keys.current.get(fingerprint) ?? crypto.randomUUID();
-      keys.current.set(fingerprint, key);
       setPending(true);
       try {
-        const block = await createRingBlock(client, body, key);
-        keys.current.delete(fingerprint);
+        const block = await keys.send(JSON.stringify(body), (key) =>
+          createRingBlock(client, body, key),
+        );
         return { block, status: "created" };
       } catch (cause) {
-        if (!isUnanswered(cause)) keys.current.delete(fingerprint);
         return { failure: ringBlockFailure(cause), status: "failed" };
       } finally {
         setPending(false);
       }
     },
-    [client],
+    [client, keys],
   );
   return { pending, submit };
 }

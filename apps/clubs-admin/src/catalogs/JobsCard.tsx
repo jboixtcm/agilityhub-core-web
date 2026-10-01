@@ -1,11 +1,10 @@
 import {
   type ApiClient,
   type components,
-  type HeldKey,
-  heldKeyFor,
+  HELD_KEY_TTL_MS,
   isApiError,
   isInProgress,
-  isUnanswered,
+  useSubmissionKeys,
 } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
@@ -620,11 +619,13 @@ export function JobsCard({
   const [runsOf, setRunsOf] = useState<JobSummary>();
   const [feedback, setFeedback] = useState<{ message: string; tone: Tone }>();
   const [modalError, setModalError] = useState<string>();
-  const triggerKeys = useRef(new Map<string, HeldKey>());
+  // One Idempotency-Key per payload by the shared rule (E7-W07 step 4), kept for
+  // `HELD_KEY_TTL_MS` at most: a run asked for later is a new one (E7-W06 review #5).
+  const triggerKeys = useSubmissionKeys({ ttlMs: HELD_KEY_TTL_MS });
   // Closing [Executa ara]'s confirmation gives up its unanswered run: the next one is a new run
   // with a new key (E7-W06 review #5).
   const closeConfirm = () => {
-    if (confirm?.kind === "run") triggerKeys.current.delete(`${confirm.job.name}|false`);
+    if (confirm?.kind === "run") triggerKeys.forget(`${confirm.job.name}|false`);
     setConfirm(undefined);
   };
   const refetch = useCallback(() => {
@@ -741,23 +742,18 @@ export function JobsCard({
     setFeedback(undefined);
     setModalError(undefined);
     // One Idempotency-Key per payload, kept only while the api has not answered (an answer lost
-    // to the network, or IN_PROGRESS: the first request still runs, E79): a retry then replays that
-    // run instead of running the process twice.
-    // A held key lasts `HELD_KEY_TTL_MS`: a run asked for later is a new one, never the replay of
-    // an old stored run (E7-W06 review #5).
+    // to the network, a 5xx, or IN_PROGRESS: the first request still runs, E79, E85): a retry then
+    // replays that run instead of running the process twice. Only this request's own key is
+    // retired by its answer (a later submission may hold another).
     const payload = `${job.name}|${String(dryRun)}`;
-    const key = heldKeyFor(triggerKeys.current, payload);
-    // Only this request's own key is retired by its answer (a later submission may hold another).
-    const retire = () => {
-      if (triggerKeys.current.get(payload)?.key === key) triggerKeys.current.delete(payload);
-    };
     try {
-      const result = await client.POST("/jobs/{name}/trigger", {
-        body: { dryRun },
-        headers: { "Idempotency-Key": key },
-        params: { path: { name: job.name } },
-      });
-      retire();
+      const result = await triggerKeys.send(payload, (key) =>
+        client.POST("/jobs/{name}/trigger", {
+          body: { dryRun },
+          headers: { "Idempotency-Key": key },
+          params: { path: { name: job.name } },
+        }),
+      );
       const run = result.data;
       if (run === undefined) throw new TypeError("The run response did not contain data");
       if (dryRun) {
@@ -778,7 +774,6 @@ export function JobsCard({
         refetch();
       }
     } catch (cause) {
-      if (!isUnanswered(cause)) retire();
       failed(cause, !dryRun);
     } finally {
       setPending(undefined);

@@ -1,0 +1,428 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/catalogs/JobsCardCounters.test.tsx (6 tests | 3 failed) 30319ms
+   ❯ T-15-27 E7-W07 step 8 (E7-W06's report; S15 R-15-19): D11 names every counter of the cleanup (3)
+     × T-15-27 E7-W07 step 8 (ca): the last run of «Neteja tècnica» says each cleanup counter by its label, never its raw key 10100ms
+     × T-15-27 E7-W07 step 8 (es): the last run of «Limpieza técnica» says each cleanup counter by its label, never its raw key 10054ms
+     × T-15-27 E7-W07 step 8 (en): the last run of «Technical cleanup» says each cleanup counter by its label, never its raw key 10039ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/catalogs/JobsCardCounters.test.tsx > T-15-27 E7-W07 step 8 (E7-W06's report; S15 R-15-19): D11 names every counter of the cleanup > T-15-27 E7-W07 step 8 (ca): the last run of «Neteja tècnica» says each cleanup counter by its label, never its raw key
+TestingLibraryElementError: Unable to find role="button" and name `/1 esdeveniment intern esborrat/u`
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mNeteja tècnica[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mcada dia a les 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mfa 2 h · correcta · domainEventsDeleted: 1 · exportsPurged: 2 · jobRunsDeleted: 1 · orphanUploadsDeleted: 3 · stripeEventsDeleted: 1 · ttlPendingIdempotencyRecords: 2 · ttlPendingJobLocks: 1 · ttlPendingMagicLinkTokens: 2 · 1 bloqueig tècnic de pista caducat · ttlPendingSeatHolds: 2 · ttlPendingSignupNotificationAdmissions: 1[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Neteja tècnica activat"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simula Neteja tècnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimula[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Executa ara Neteja tècnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mExecuta ara[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mNeteja tècnica[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mcada dia a les 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mfa 2 h · correcta · domainEventsDeleted: 1 · exportsPurged: 2 · jobRunsDeleted: 1 · orphanUploadsDeleted: 3 · stripeEventsDeleted: 1 · ttlPendingIdempotencyRecords: 2 · ttlPendingJobLocks: 1 · ttlPendingMagicLinkTokens: 2 · 1 bloqueig tècnic de pista caducat · ttlPendingSeatHolds: 2 · ttlPendingSignupNotificationAdmissions: 1[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Neteja tècnica activat"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simula Neteja tècnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimula[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Executa ara Neteja tècnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mExecuta ara[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/JobsCardCounters.test.tsx:208:38
+    206|       });
+    207|       const row = await cleanupRow(language, name);
+    208|       const last = await within(row).findByRole("button", {
+       |                                      ^
+    209|         name: new RegExp(labels[0], "u"),
+    210|       });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/catalogs/JobsCardCounters.test.tsx > T-15-27 E7-W07 step 8 (E7-W06's report; S15 R-15-19): D11 names every counter of the cleanup > T-15-27 E7-W07 step 8 (es): the last run of «Limpieza técnica» says each cleanup counter by its label, never its raw key
+TestingLibraryElementError: Unable to find role="button" and name `/1 evento interno eliminado/u`
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mLimpieza técnica[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mcada día a las 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mhace 2 h · correcta · domainEventsDeleted: 1 · exportsPurged: 2 · jobRunsDeleted: 1 · orphanUploadsDeleted: 3 · stripeEventsDeleted: 1 · ttlPendingIdempotencyRecords: 2 · ttlPendingJobLocks: 1 · ttlPendingMagicLinkTokens: 2 · 1 bloqueo técnico de pista caducado · ttlPendingSeatHolds: 2 · ttlPendingSignupNotificationAdmissions: 1[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Limpieza técnica activado"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simula Limpieza técnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimula[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Ejecuta ahora Limpieza técnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mEjecuta ahora[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mLimpieza técnica[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mcada día a las 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0mhace 2 h · correcta · domainEventsDeleted: 1 · exportsPurged: 2 · jobRunsDeleted: 1 · orphanUploadsDeleted: 3 · stripeEventsDeleted: 1 · ttlPendingIdempotencyRecords: 2 · ttlPendingJobLocks: 1 · ttlPendingMagicLinkTokens: 2 · 1 bloqueo técnico de pista caducado · ttlPendingSeatHolds: 2 · ttlPendingSignupNotificationAdmissions: 1[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Limpieza técnica activado"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simula Limpieza técnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimula[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Ejecuta ahora Limpieza técnica"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mEjecuta ahora[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/JobsCardCounters.test.tsx:208:38
+    206|       });
+    207|       const row = await cleanupRow(language, name);
+    208|       const last = await within(row).findByRole("button", {
+       |                                      ^
+    209|         name: new RegExp(labels[0], "u"),
+    210|       });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/catalogs/JobsCardCounters.test.tsx > T-15-27 E7-W07 step 8 (E7-W06's report; S15 R-15-19): D11 names every counter of the cleanup > T-15-27 E7-W07 step 8 (en): the last run of «Technical cleanup» says each cleanup counter by its label, never its raw key
+TestingLibraryElementError: Unable to find role="button" and name `/1 internal event deleted/u`
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mTechnical cleanup[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mevery day at 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m2 hr. ago · succeeded · domainEventsDeleted: 1 · exportsPurged: 2 · jobRunsDeleted: 1 · orphanUploadsDeleted: 3 · stripeEventsDeleted: 1 · ttlPendingIdempotencyRecords: 2 · ttlPendingJobLocks: 1 · ttlPendingMagicLinkTokens: 2 · 1 expired technical ring lock · ttlPendingSeatHolds: 2 · ttlPendingSignupNotificationAdmissions: 1[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Technical cleanup on"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simulate Technical cleanup"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimulate[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Run Technical cleanup now"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mRun now[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+
+Ignored nodes: comments, script, style
+[36m<li[39m
+  [33mclass[39m=[32m"jobs-card__row"[39m
+  [33mdata-job[39m=[32m"cleanup"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__main"[39m
+  [36m>[39m
+    [36m<strong>[39m
+      [0mTechnical cleanup[0m
+    [36m</strong>[39m
+    [36m<span>[39m
+      [0mevery day at 6:00[0m
+    [36m</span>[39m
+    [36m<button[39m
+      [33mclass[39m=[32m"jobs-card__last"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [0m2 hr. ago · succeeded · domainEventsDeleted: 1 · exportsPurged: 2 · jobRunsDeleted: 1 · orphanUploadsDeleted: 3 · stripeEventsDeleted: 1 · ttlPendingIdempotencyRecords: 2 · ttlPendingJobLocks: 1 · ttlPendingMagicLinkTokens: 2 · 1 expired technical ring lock · ttlPendingSeatHolds: 2 · ttlPendingSignupNotificationAdmissions: 1[0m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"jobs-card__actions"[39m
+  [36m>[39m
+    [36m<button[39m
+      [33maria-checked[39m=[32m"true"[39m
+      [33maria-label[39m=[32m"Technical cleanup on"[39m
+      [33mclass[39m=[32m"ah-switch ah-switch--checked"[39m
+      [33mrole[39m=[32m"switch"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-switch__thumb"[39m
+      [36m/>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Simulate Technical cleanup"[39m
+      [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mSimulate[0m
+      [36m</span>[39m
+    [36m</button>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Run Technical cleanup now"[39m
+      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+      [33mtype[39m=[32m"button"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-button__content"[39m
+      [36m>[39m
+        [0mRun now[0m
+      [36m</span>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+[36m</li>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/catalogs/JobsCardCounters.test.tsx:208:38
+    206|       });
+    207|       const row = await cleanupRow(language, name);
+    208|       const last = await within(row).findByRole("button", {
+       |                                      ^
+    209|         name: new RegExp(labels[0], "u"),
+    210|       });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 3 passed (6)
+   Start at  10:45:30
+   Duration  31.69s (tests 96%, transform 2%, environment 1%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/catalogs/JobsCardCounters.test.tsx

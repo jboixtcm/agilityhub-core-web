@@ -310,7 +310,7 @@ const IN_PROGRESS_BODY = {
 /** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
 const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
 
-describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 24's block keeps its key on IN_PROGRESS", () => {
+describe("T-09-40 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 24's block keeps its key on IN_PROGRESS", () => {
   it("E7-W06 step 1: 24's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key", async () => {
     const requests = recordRequests();
     let calls = 0;
@@ -347,5 +347,56 @@ describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 24's block keeps its ke
     expect(requests.keys).toHaveLength(3);
     expect(requests.keys[1]).toBe(requests.keys[0]);
     expect(requests.keys[2]).not.toBe(requests.keys[0]);
+  });
+
+  it("E7-W07 step 4 (CONVENCIONS_API §7, E85; R-09-11): a 503 with the api's body keeps 24's key — the retry sends the same one; a 422 RING_NOT_RESERVABLE retires it — the same block sent again takes a new key", async () => {
+    const requests = recordRequests();
+    let calls = 0;
+    server.use(
+      http.post("*/api/v1/ring-blocks", () => {
+        calls += 1;
+        if (calls === 1) {
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t-503" },
+            { status: 503 },
+          );
+        }
+        if (calls === 2) {
+          return HttpResponse.json(
+            {
+              code: "RING_NOT_RESERVABLE",
+              details: {},
+              message: "Ring not reservable",
+              traceId: "t-422",
+            },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await openRingBlock();
+    await pick("2026-08-06", "afternoon");
+    fireEvent.click(cell("18:00, lliure"));
+    const button = () => screen.getByRole("button", { name: "Reserva la pista" });
+    fireEvent.click(button());
+    await waitFor(() => {
+      expect(requests.keys).toHaveLength(1);
+    });
+    await waitFor(() => {
+      expect(button()).toBeEnabled();
+    });
+    fireEvent.click(button());
+    await waitFor(() => {
+      expect(requests.keys).toHaveLength(2);
+    });
+    await waitFor(() => {
+      expect(button()).toBeEnabled();
+    });
+    fireEvent.click(button());
+    expect(await screen.findByText("Pista reservada")).toBeVisible();
+    expect(requests.keys).toHaveLength(3);
+    expect(requests.keys[1]).toBe(requests.keys[0]);
+    expect(requests.keys[2]).not.toBe(requests.keys[1]);
   });
 });

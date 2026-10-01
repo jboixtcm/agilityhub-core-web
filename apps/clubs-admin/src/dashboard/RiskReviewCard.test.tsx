@@ -80,7 +80,7 @@ describe("T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A", () =>
     ).toBeVisible();
     expect(screen.getByText("4 avisos")).toHaveClass("ah-badge");
     // E5-W05 round 3 #4: the notified dogs have a level their class allows (S08 R-08-04): a D dog
-    // in «Nivell D» and an F one in «F i G», where mockup D1 names Clara + Trevi («C») and Pau +
+    // in «Nivell D» and an F one in «F i G», where mockup D1 names Laura + Duna («C») and Pau +
     // Blat («B»).
     expect(rowTexts()).toEqual([
       "Cadells · avui 9:30 · Cadells0 inscritsanul·lada",

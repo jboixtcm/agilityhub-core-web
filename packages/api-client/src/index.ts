@@ -114,10 +114,9 @@ export {
 export {
   createSubmissionKeys,
   HELD_KEY_TTL_MS,
-  type HeldKey,
-  heldKeyFor,
   isUnanswered,
   type SubmissionKeys,
+  type SubmissionKeysOptions,
   useSubmissionKeys,
 } from "./submission-key";
 export {

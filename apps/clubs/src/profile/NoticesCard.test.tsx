@@ -562,7 +562,12 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     expect(await storedReminder()).toBe(60);
   });
 
-  it("E7-W06 step 4 (E7-W05 review #1): restored while both PUTs of its departure were out, the older one landing last, and the resend and the adopted save failing — 12 reads GET again and shows what the api holds (1 h), and the outbox keeps the latest choice (2 h)", async () => {
+  /**
+   * E7-W06 step 4's scenario: 60, then 120 and the page left, restored while both PUTs were out,
+   * the older 60 landing last (the api holds 60), and the resend of 120 lost. `fourth` is the plan
+   * of the PUT after that failure.
+   */
+  async function overlappingDepartureThenResendLost(fourth: PutPlan) {
     const older = gate();
     const departure = gate();
     const landed = planPuts([
@@ -570,8 +575,10 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
       { landAfter: older.opened },
       // 120 with keepalive: lands at once, answers when the test says.
       { answerAfter: departure.opened },
-      // The resend of 120 and the adopted save of 120 never reach the api.
+      // The resend of 120 never reaches the api.
       { lost: true, networkFailure: true },
+      fourth,
+      // A departure after it (the page is gone before it lands), then the next visit's save.
       { lost: true, networkFailure: true },
     ]);
     await openProfile();
@@ -586,7 +593,8 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     });
     transition("pageshow", true);
     departure.open();
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    // The adopted 120 waits past its 300 ms pause for the older PUT, which lands only now.
+    await new Promise((resolve) => setTimeout(resolve, 400));
     older.open();
     await waitFor(() => {
       expect(puts()).toHaveLength(4);
@@ -597,15 +605,62 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
       { reminderMinutesBefore: 120 },
       { reminderMinutesBefore: 120 },
     ]);
-    await waitFor(() => {
-      expect(reminderSelect()).toHaveValue("60");
-    });
-    // The page's first read and the read after the failure.
+  }
+
+  const preferenceReads = () =>
+    requests.filter((item) => item.method === "GET" && item.path === PREFERENCES);
+
+  it("E7-W07 step 2 (E7-W06 review #3, ruling E85: option a; R-11-04): overlapping PUTs and the last one lost — 12 reads GET again (the api holds 1 h), shows the member's «2 h abans» as a pending change with «Desant…», sends it again, and its 2xx saves it and frees the outbox", async () => {
+    const retry = gate();
+    await overlappingDepartureThenResendLost({ answerAfter: retry.opened });
+    // The fourth PUT is the retry that follows the read, not a save sent before it.
+    expect(preferenceReads()).toHaveLength(2);
+    expect(reminderSelect()).toHaveValue("120");
     expect(
-      requests.filter((item) => item.method === "GET" && item.path === PREFERENCES),
-    ).toHaveLength(2);
-    expect(await storedReminder()).toBe(60);
+      within(present(document.querySelector<HTMLElement>("#avisos"))).getByRole("status"),
+    ).toHaveTextContent("Desant…");
     expect(noticesOutbox()).toMatchObject({ patch: { reminderMinutesBefore: 120 } });
+    retry.open();
+    await waitFor(() => {
+      expect(noticesOutbox()).toBeNull();
+    });
+    expect(reminderSelect()).toHaveValue("120");
+    expect(screen.queryByText("Desant…")).toBeNull();
+    expect(await storedReminder()).toBe(120);
+  });
+
+  it("E7-W07 step 2 (ruling E85: option a): the retry is lost too and the member leaves right after — the departure carries «2 h abans» and keeps it, so the next visit within 5 minutes of leaving shows it as a pending change before it is saved", async () => {
+    const firstDeparture = Date.now();
+    await overlappingDepartureThenResendLost({ lost: true, networkFailure: true });
+    // The retry failed four minutes after the first departure: 12 still shows the choice.
+    vi.setSystemTime(firstDeparture + 4 * 60_000);
+    await waitFor(() => {
+      expect(screen.queryByText("Desant…")).toBeNull();
+    });
+    expect(screen.getByRole("alert")).toHaveTextContent("S'ha produït un error inesperat.");
+    expect(reminderSelect()).toHaveValue("120");
+    expect(preferenceReads()).toHaveLength(2);
+    cleanup();
+    await waitFor(() => {
+      expect(puts()).toHaveLength(5);
+    });
+    expect(puts()[4]).toEqual({ reminderMinutesBefore: 120 });
+    // Two minutes later (six after the first departure), the member comes back to 12; its save
+    // answers only when the test says.
+    vi.setSystemTime(firstDeparture + 6 * 60_000);
+    const saved = gate();
+    planPuts([{ answerAfter: saved.opened }]);
+    await openProfile();
+    await waitFor(() => {
+      expect(reminderSelect()).toHaveValue("120");
+    });
+    expect(screen.getByText("Desant…")).toBeVisible();
+    expect(await storedReminder()).toBe(60);
+    saved.open();
+    await waitFor(() => {
+      expect(noticesOutbox()).toBeNull();
+    });
+    expect(await storedReminder()).toBe(120);
   });
 
   it("E7-W05 step 6 (E7-W02 review #5): an impersonated session never shows the browser-permission note (it never asks for push)", async () => {

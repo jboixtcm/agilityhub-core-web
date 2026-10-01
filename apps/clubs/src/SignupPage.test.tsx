@@ -1001,6 +1001,41 @@ describe("M1 stable retries (CONVENCIONS_API §7, R-04-26/27)", () => {
     expect(keys[1]).not.toBe(keys[0]);
   });
 
+  it("E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the signup's key — the retry sends the same one — and a 422 PAYMENT_PROVIDER_NOT_ENABLED retires it — the same payload sent again is a new submission", async () => {
+    let answers = 0;
+    server.use(
+      http.post("*/api/v1/signup", () => {
+        answers += 1;
+        if (answers === 1) return apiErrorResponse("INTERNAL_ERROR", 503);
+        if (answers === 2) return apiErrorResponse("PAYMENT_PROVIDER_NOT_ENABLED", 422);
+        return undefined;
+      }),
+    );
+    const navigate = vi.fn();
+    const recorded = recordRequests();
+    seedDraft();
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
+    acceptPrivacy();
+    const posts = () => requestsTo(recorded, "POST", "/signup");
+    for (const attempt of [1, 2]) {
+      submitSignup();
+      await waitFor(() => {
+        expect(posts()).toHaveLength(attempt);
+      });
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" })).toBeEnabled();
+      });
+    }
+    submitSignup();
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/apuntat-hi/enviada");
+    });
+    const keys = posts().map((entry) => entry.key);
+    expect(keys).toHaveLength(3);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[1]);
+  });
+
   it("add-dog: a lost 201 is replayed, never DOG_CHIP_ALREADY_REGISTERED for the member's own dog", async () => {
     let committedKey: string | null | undefined;
     server.use(

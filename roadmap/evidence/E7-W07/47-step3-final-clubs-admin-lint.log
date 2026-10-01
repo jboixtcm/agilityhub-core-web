@@ -1,0 +1,22 @@
+
+> clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> eslint . --max-warnings 0 --config ../../eslint.config.mjs
+
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/catalogs/JobsCard.tsx
+  749:11  error  Unsafe assignment of an error typed value                    @typescript-eslint/no-unsafe-assignment
+  749:17  error  Unsafe call of a type that could not be resolved             @typescript-eslint/no-unsafe-call
+  752:45  error  Unsafe member access .key on a type that cannot be resolved  @typescript-eslint/no-unsafe-member-access
+  757:20  error  Unsafe assignment of an error typed value                    @typescript-eslint/no-unsafe-assignment
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/followup/FollowUpPage.tsx
+  612:11  error  Unsafe assignment of an error typed value                    @typescript-eslint/no-unsafe-assignment
+  612:17  error  Unsafe call of a type that could not be resolved             @typescript-eslint/no-unsafe-call
+  614:47  error  Unsafe member access .key on a type that cannot be resolved  @typescript-eslint/no-unsafe-member-access
+  618:29  error  Unsafe assignment of an error typed value                    @typescript-eslint/no-unsafe-assignment
+
+✖ 8 problems (8 errors, 0 warnings)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 lint: `eslint . --max-warnings 0 --config ../../eslint.config.mjs`
+Exit status 1

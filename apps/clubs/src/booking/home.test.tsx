@@ -274,11 +274,13 @@ describe("E5-W01 i18n: the three locales, and the club's zone for a viewer elsew
     const badges = [...document.querySelectorAll(".class-row .ah-badge")].map((badge) =>
       clean((badge.querySelector(".class-row__badge-content") ?? badge).textContent),
     );
+    // E7-W07 step 6 (ruling E85): Saturday 8 is a normal row (Duna 1 of 2), not mockup 04's
+    // «Weekly limit», which `book.test.tsx` reads in the `bookingLimitDone` world.
     expect(badges).toEqual([
       "2 places",
       "Full · 1",
       "Full · 3/3",
-      "Weekly limit",
+      "3 places",
       "4 places",
       "Coming soon",
     ]);

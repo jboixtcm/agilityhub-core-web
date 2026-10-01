@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL 221ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > blocks and unblocks new bookings with the required reason 150ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > maps STALE_VERSION when another administrator edited the member 116ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the api's launchUrl > opens exactly the launchUrl with the one-time code, in a new tab, and never writes the token into a URL 97ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the api's launchUrl > a response without launchUrl is an error in the dialog and opens nothing (no same-origin guess) 73ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W01 round 2 #4: D10's «Preferències d'avisos» reads its own route > an overview without the preferences (the free-form field the api may shape otherwise) still shows the block, from GET /members/{id}/notification-preferences 59ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15) > E7-W06 step 5: an erased member's «Preferències d'avisos» say MEMBER_ERASED as final — its own message, no «Torna-ho a provar» — and ask nothing the api refuses with 409 36ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15) > E7-W06 step 5: a record read answered 409 MEMBER_ERASED is final — its own message, no «Torna-ho a provar» 7ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 106ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{i… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 84ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 75ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 98ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /mem… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 81ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/acc… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 112ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id… on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 85ms
+ ✓ src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, R-14-15): an erased member's record offers none of the changes the api refuses with 409 MEMBER_ERASED, and sends none 28ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W17 step 9 (AGENTS rule 1): D10's «Pagament» row names a cash member's method > reads «Efectiu» in ca, «Efectivo» in es and «Cash» in en, never the raw MANUAL 113ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-34 (front) E4-W16 step 7 (INC-27, R-03-30): D10 without BILLING keeps its actions > keeps «Bloqueja les reserves», «Inactivitat», «Baixa (amb data)», «Tota l'auditoria ›» and the recent changes; only the invoice rows and «Tots els rebuts» go 57ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-34 (front) E4-W16 step 7 (INC-27, R-03-30): D10 without BILLING keeps its actions > with BILLING the card keeps its invoice rows and «Tots els rebuts» 39ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > names a pending document by its type's label, as D2 does, and a type the club no longer lists as «Document pendent» 52ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > never shows the raw key while the labels load or when they cannot be read 38ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) > shows no «núm.» badge for a member without a number 28ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-38 dog record > shows the complete dog record and changes level without a booking warning 166ms
+ ✓ src/census/CensusRecordPage.test.tsx > T-03-38 dog record > deactivates and reactivates a dog without deleting its record 190ms
+
+ Test Files  1 passed (1)
+      Tests  24 passed (24)
+   Start at  10:34:21
+   Duration  3.25s (tests 67%, transform 17%, environment 8%, import 6%, setup 2%)
+

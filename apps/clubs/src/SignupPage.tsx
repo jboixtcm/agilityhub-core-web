@@ -2,6 +2,7 @@ import {
   apiFieldErrors,
   isApiError,
   isInProgress,
+  isUnanswered,
   type ApiClient,
   type components,
   putSignedFile,
@@ -2225,6 +2226,25 @@ function PaymentStep({
       onContinue(checkout.data.checkoutUrl);
     } catch (error) {
       setWorking(false);
+      // The api's answer — a 4xx with its body — retires the key it answered, so the same payload
+      // sent again is a new submission; no answer (offline, a gateway's, a 5xx, IN_PROGRESS) keeps
+      // it in the draft for the retry (`isUnanswered`, CONVENCIONS_API §7, E85; E7-W07 step 4). A
+      // created signup stays: only its checkout's key goes (R-04-26).
+      if (!isUnanswered(error)) {
+        onChange((current) => {
+          const held = current.submission;
+          if (held === undefined) return current;
+          if (held.memberId === undefined) {
+            const next = { ...current };
+            delete next.submission;
+            return next;
+          }
+          if (held.checkoutKey === undefined) return current;
+          const submission: SignupSubmission = { ...held };
+          delete submission.checkoutKey;
+          return { ...current, submission };
+        });
+      }
       if (isApiError(error, "CONSENT_VERSION_OUTDATED")) {
         onChange((current) => ({
           ...current,

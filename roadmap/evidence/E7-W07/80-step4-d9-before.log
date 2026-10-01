@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/messaging/AnnouncementsPage.test.tsx (15 tests | 1 failed | 14 skipped) 167ms
+   ❯ E7-W07 step 4 (CONVENCIONS_API §7, E74, E85): «Enviar comunicat» follows the shared submission-key rule (1)
+     × T-11-38 T-11-18 E7-W07 step 4 (CONVENCIONS_API §7, E85): [ENVIA] keeps its Idempotency-Key after a 503 with the api's body, so the retry sends the same key; a 422 NO_RECIPIENTS retires it, so the same send again takes a new key 164ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/messaging/AnnouncementsPage.test.tsx > E7-W07 step 4 (CONVENCIONS_API §7, E74, E85): «Enviar comunicat» follows the shared submission-key rule > T-11-38 T-11-18 E7-W07 step 4 (CONVENCIONS_API §7, E85): [ENVIA] keeps its Idempotency-Key after a 503 with the api's body, so the retry sends the same key; a 422 NO_RECIPIENTS retires it, so the same send again takes a new key
+AssertionError: expected 'ccf0ce0e-ecc9-475a-9981-01479e2e43fb' to be '6c645dcd-8fbc-41e3-a308-26e9160600de' // Object.is equality
+
+Expected: "6c645dcd-8fbc-41e3-a308-26e9160600de"
+Received: "ccf0ce0e-ecc9-475a-9981-01479e2e43fb"
+
+ ❯ src/messaging/AnnouncementsPage.test.tsx:803:26
+    801|     expect(real).toHaveLength(3);
+    802|     expect(real[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    803|     expect(real[1]?.key).toBe(real[0]?.key);
+       |                          ^
+    804|     expect(real[2]?.key).not.toBe(real[0]?.key);
+    805|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  10:48:57
+   Duration  1.85s (environment 38%, transform 32%, import 16%, tests 10%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/messaging/AnnouncementsPage.test.tsx -t E7-W07 step 4

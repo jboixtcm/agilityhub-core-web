@@ -1,0 +1,19 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+ Test Files  38 passed (38)
+      Tests  573 passed (573)
+   Start at  10:33:59
+   Duration  13.69s (tests 62%, environment 17%, transform 10%, import 7%, setup 4%)
+
+    Isolate  38 workers spawned · ~891ms startup each (spawn + environment, per file)
+             at least ~1.10s faster with isolate: false — reuses workers across files instead of one per file
+

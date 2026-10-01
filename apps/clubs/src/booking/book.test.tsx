@@ -1,7 +1,7 @@
 import { server } from "@agilityhub/api-client/mocks/server";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { BookPage } from "./BookPage";
 import { apiClient, canic, renderApp, renderPage, setupBookingWorld, without } from "./test-utils";
@@ -30,7 +30,7 @@ async function renderBook(options: Parameters<typeof renderPage>[1] = {}) {
 }
 
 describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03)", () => {
-  it("Duna: the chips without «Tots», the pack, the intro, the activities and the six mockup rows", async () => {
+  it("Duna: the chips without «Tots», the pack, the intro, the activities and the six rows (mockup 04's, with «ds 8» a normal row: E7-W07 step 6, ruling E85)", async () => {
     await renderBook();
     const chips = screen.getByRole("group", { name: "Gossos" });
     expect(within(chips).getByRole("button", { name: "Duna · C", pressed: true })).toBeVisible();
@@ -52,7 +52,9 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
       "dc 5 · 18:50 · B+C | 2 places",
       "dj 6 · 20:00 · C+D | Completa · 1 | Completa, 1 en llista d'espera",
       "dv 7 · 17:40 · Teràpia | Completa · 3/3 | Completa, llista d'espera plena (3/3)",
-      "ds 8 · 9:00 · C | Límit setmanal",
+      // Mockup 04 draws «Límit setmanal» here, but Duna is at 1 of 2 with Monday 3 swappable:
+      // the api sends a normal row (R-08-03). The badge is read in the next test's world.
+      "ds 8 · 9:00 · C | 3 places",
       "dl 10 · 18:50 · B+C | 4 places",
       "dl 17 · 9:30 · C | Properament",
     ]);
@@ -61,7 +63,7 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
       "BOOKABLE",
       "WAITLIST_OPEN",
       "WAITLIST_FULL",
-      "WEEKLY_LIMIT_DONE",
+      "BOOKABLE",
       "BOOKABLE",
       "NOT_YET_OPEN",
     ]);
@@ -72,7 +74,7 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
       "ah-tone--success",
       "ah-tone--danger",
       "ah-tone--danger",
-      "ah-tone--warning",
+      "ah-tone--success",
       "ah-tone--success",
       "ah-tone--neutral",
     ]);
@@ -91,6 +93,40 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
       [true, true],
       [true, true],
     ]);
+  });
+
+  it("T-08-05 E7-W07 step 6 (R-08-03, ruling E85): mockup 04's «Límit setmanal» where the api sends it, Duna's week done in the bookingLimitDone world (Monday 3 at 20:00): every row of the week reads it in the warning tone and still acts (29 informs), next week's row is bookable", async () => {
+    vi.setSystemTime(new Date("2026-08-03T20:00:00+02:00"));
+    await renderBook({ scenario: "bookingLimitDone" });
+    await waitFor(() => {
+      expect(rows().map(text)).toEqual([
+        "dc 5 · 18:50 · B+C | Límit setmanal",
+        "dj 6 · 20:00 · C+D | Límit setmanal",
+        "dv 7 · 17:40 · Teràpia | Límit setmanal",
+        "ds 8 · 9:00 · C | Límit setmanal",
+        "dl 10 · 18:50 · B+C | 4 places",
+        "dl 17 · 9:30 · C | Properament",
+      ]);
+    });
+    expect(
+      rows()
+        .slice(0, 4)
+        .map((row) => row.dataset.bookableState),
+    ).toEqual(Array.from({ length: 4 }, () => "WEEKLY_LIMIT_DONE"));
+    expect(
+      rows()
+        .slice(0, 4)
+        .map((row) => row.querySelector(".ah-badge")?.className.match(/ah-tone--\w+/u)?.[0]),
+    ).toEqual(Array.from({ length: 4 }, () => "ah-tone--warning"));
+    expect(
+      rows()
+        .slice(0, 4)
+        .every(
+          (row) =>
+            row.querySelector("button") !== null &&
+            row.querySelector(".class-row__chevron") !== null,
+        ),
+    ).toBe(true);
   });
 
   it("Rock: «Sense sessions» is inert with an expiring pack; Toby: the block banner and inert rows without a badge", async () => {

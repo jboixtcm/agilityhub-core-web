@@ -16,9 +16,10 @@ export type IdempotentMatcher = string | RegExp | IdempotentRoute;
 
 const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   "/bookings",
-  "/seat-holds",
-  "/waitlist-entries",
+  // Not `POST /seat-holds` nor `POST /waitlist-entries`: their contract declares no key (S08 §6,
+  // CONVENCIONS_API §7, E79; E7-W07 step 4).
   "/training-bookings",
+  /^\/training-bookings\/[^/]+\/cancellation$/,
   /^\/waitlist-entries\/[^/]+\/claim$/,
   /^\/weeks\/[^/]+\/generation$/,
   /^\/class-sessions\/[^/]+\/cancellation$/,

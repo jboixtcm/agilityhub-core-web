@@ -107,6 +107,12 @@ test.describe("E5-W01 S08 member flow against MSW (03, 04, 06/29, 07)", () => {
     await expect(page.getByText("Pack 10 — amb la Duna")).toBeVisible();
     await expect(page.locator(".class-row")).toHaveCount(6);
     await expect(page.locator(".class-row").nth(2).getByRole("button")).toHaveCount(0);
+    // E7-W07 step 6 (ruling E85): mockup 04 draws «ds 8» as «Límit setmanal», but Duna is at 1 of
+    // 2 with Monday 3 swappable, so the api sends a normal row (R-08-03); the done world shows it.
+    await expect(page.locator(".class-row").filter({ hasText: "ds 8 · 9:00" })).toContainText(
+      "3 places",
+    );
+    await expect(page.getByText("Límit setmanal")).toHaveCount(0);
     await shot(page, "04-reservar-375.png");
   });
 

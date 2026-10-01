@@ -1,0 +1,42 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/calendar-handlers.test.ts (15 tests | 1 failed | 14 skipped) 35ms
+   ❯ E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) (5)
+     × E7-W07 step 8 (E5-W05 round 3 review #7, R3-A2): POST /weeks by an ADMIN of another club is answered from its own club, never from this club's week: 201 with a new PENDING week of its own where this club's 2026-08-10 is VALIDATED, 200 with that same week on a repeat, and this club's weeks do not change 33ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/calendar-handlers.test.ts > E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) > E7-W07 step 8 (E5-W05 round 3 review #7, R3-A2): POST /weeks by an ADMIN of another club is answered from its own club, never from this club's week: 201 with a new PENDING week of its own where this club's 2026-08-10 is VALIDATED, 200 with that same week on a repeat, and this club's weeks do not change
+AssertionError: expected [ 200, '2026-08-10', 'VALIDATED' ] to deeply equal [ 201, '2026-08-10', 'PENDING' ]
+
+- Expected
++ Received
+
+  [
+-   201,
++   200,
+    "2026-08-10",
+-   "PENDING",
++   "VALIDATED",
+  ]
+
+ ❯ src/mocks/calendar-handlers.test.ts:468:68
+    466|     };
+    467|     const first = await create("2026-08-10");
+    468|     expect([first.status, first.body.startDate, first.body.state]).toE…
+       |                                                                    ^
+    469|       201,
+    470|       "2026-08-10",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+   Start at  10:32:57
+   Duration  738ms (transform 56%, import 39%, tests 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/calendar-handlers.test.ts -t E7-W07 step 8

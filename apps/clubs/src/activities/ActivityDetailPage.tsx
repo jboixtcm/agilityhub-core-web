@@ -1,4 +1,10 @@
-import { apiFieldErrors, isApiError, type ApiClient } from "@agilityhub/api-client";
+import {
+  apiFieldErrors,
+  isApiError,
+  isInProgress,
+  type ApiClient,
+  useSubmissionKeys,
+} from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   AppBar,
@@ -132,6 +138,10 @@ export function ActivityDetailPage({
   const [feedback, setFeedback] = useState<Feedback>();
   const [reason, setReason] = useState("");
   const [reasonError, setReasonError] = useState<string>();
+  // One `Idempotency-Key` per registration (its body): a retry while the api has not answered it
+  // (offline, a 5xx, IN_PROGRESS) sends the same key; its answer retires it (CONVENCIONS_API §7,
+  // E74, E85).
+  const registrations = useSubmissionKeys();
   // R-07-09: the api's deadline (never computed here), compared with the clock while open.
   const deadline = useBeforeDeadline(
     detail.status === "ready"
@@ -205,9 +215,12 @@ export function ActivityDetailPage({
       setFeedback({ message: t("errors:ACTIVITY_FULL"), tone: "danger" });
     } else {
       setFeedback({
-        message: isApiError(cause)
-          ? t(`errors:${cause.code}`, { defaultValue: t("activities:detail.error") })
-          : t("activities:detail.error"),
+        // A registration still in progress (its key kept) reads the shared text (E80).
+        message: isInProgress(cause)
+          ? t("common:inProgress")
+          : isApiError(cause)
+            ? t(`errors:${cause.code}`, { defaultValue: t("activities:detail.error") })
+            : t("activities:detail.error"),
         tone: "danger",
       });
     }
@@ -217,11 +230,14 @@ export function ActivityDetailPage({
   const register = async (joinWaitlist: boolean) => {
     setPending(true);
     setFeedback(undefined);
+    const body = { activityId: activity.id, ...(joinWaitlist ? { joinWaitlist: true } : {}) };
     try {
-      const result = await client.POST("/activity-registrations", {
-        body: { activityId: activity.id, ...(joinWaitlist ? { joinWaitlist: true } : {}) },
-        params: { header: { "Idempotency-Key": crypto.randomUUID() } },
-      });
+      const result = await registrations.send(JSON.stringify(body), (key) =>
+        client.POST("/activity-registrations", {
+          body,
+          params: { header: { "Idempotency-Key": key } },
+        }),
+      );
       setDialog(undefined);
       setFeedback({
         message:

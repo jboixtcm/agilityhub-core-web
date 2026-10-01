@@ -1,4 +1,10 @@
-import { type ApiClient, type components, isApiError, isInProgress } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  type components,
+  createSubmissionKeys,
+  isApiError,
+  isInProgress,
+} from "@agilityhub/api-client";
 import { Button, Checkbox, FormField, Modal, Select, Skeleton, Toast } from "@agilityhub/ui";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -61,10 +67,11 @@ export function AnnouncementSent({
 }
 
 /**
- * The keys of the sends that got no answer, by payload: a retry reuses its key even after the
- * dialog was closed and opened again, and an answer retires it (CONVENCIONS_API §7). In memory only.
+ * The keys of the real sends, by payload (the shared rule, CONVENCIONS_API §7, E74, E85): a send the
+ * api has not answered (offline, a 5xx, IN_PROGRESS) keeps its key for the retry, even after the
+ * dialog was closed and opened again; its answer retires it. In memory only.
  */
-const unansweredSends = new Map<string, string>();
+const sends = createSubmissionKeys();
 
 /**
  * «Enviar comunicat» (S11 §2 D9, R-11-13), from D9 or from a D5/D15 selection or filter set: the
@@ -145,6 +152,9 @@ export function SendAnnouncementDialog({
       .POST("/message-templates/{id}/send", {
         body: { dryRun: true, recipients: JSON.parse(recipientsKey) as Recipients },
         params: {
+          // The route requires a key, but a dry run only reads (T-11-18: it creates nothing): each
+          // one is a new question whose count may have changed, so it never replays an old stored
+          // count (E7-W06 Q4, accepted by ruling E85).
           header: { "Idempotency-Key": crypto.randomUUID() },
           path: { id: templateId },
         },
@@ -178,25 +188,20 @@ export function SendAnnouncementDialog({
   const send = async () => {
     if (count === undefined || "error" in count || !confirmed || sending) return;
     const body = { dryRun: false, recipients: JSON.parse(recipientsKey) as Recipients };
-    const signature = JSON.stringify({ body, templateId });
-    const key = unansweredSends.get(signature) ?? crypto.randomUUID();
-    unansweredSends.set(signature, key);
     setSending(true);
     setSendError(undefined);
     try {
-      const { data } = await client.POST("/message-templates/{id}/send", {
-        body,
-        params: { header: { "Idempotency-Key": key }, path: { id: templateId } },
-      });
-      unansweredSends.delete(signature);
+      const { data } = await sends.send(JSON.stringify({ body, templateId }), (key) =>
+        client.POST("/message-templates/{id}/send", {
+          body,
+          params: { header: { "Idempotency-Key": key }, path: { id: templateId } },
+        }),
+      );
       onSent(data?.recipientCount ?? count.count);
     } catch (cause) {
-      // An answer retires the key; a request that got none keeps it for the retry, and so does
-      // `IN_PROGRESS` (the first request is still running, E79): the next [ENVIA] sends the same
-      // key, and the admin reads the shared text of a write still in progress (E80).
-      if (isApiError(cause) && cause.status !== 0 && !isInProgress(cause)) {
-        unansweredSends.delete(signature);
-      }
+      // `sends.send` keeps the key of a send the api has not answered (the next [ENVIA] sends it
+      // again) and retires it on an answer. A send still running (IN_PROGRESS, E79) reads the
+      // shared text of a write in progress (E80).
       setSendError(
         isInProgress(cause)
           ? t("common:inProgress")

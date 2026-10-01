@@ -88,7 +88,7 @@ const attributes = () =>
     row.getAttribute("data-attendance-state"),
   ]);
 
-describe("E7-W06 step 5 (ruling E82, E6-W04 Q6): stable data attributes on D12's attendance rows", () => {
+describe("T-10-29 E7-W06 step 5 (ruling E82, E6-W04 Q6): stable data attributes on D12's attendance rows", () => {
   it("E7-W06 step 5: each row carries its booking's id and the state its badge shows (data-booking-id, data-attendance-state), the api's, and a cycled badge changes it", async () => {
     mockScenario("instructor");
     const { data } = await client().GET("/class-sessions/{id}/attendance", {

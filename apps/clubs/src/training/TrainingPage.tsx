@@ -1,4 +1,4 @@
-import { type ApiClient, isUnanswered } from "@agilityhub/api-client";
+import { type ApiClient, isUnanswered, useSubmissionKeys } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   AppBar,
@@ -12,14 +12,7 @@ import {
   Toast,
   useBranding,
 } from "@agilityhub/ui";
-import {
-  type CSSProperties,
-  type MouseEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type CSSProperties, type MouseEvent, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import "../booking/booking.css";
@@ -152,10 +145,11 @@ export function TrainingPage({ client }: { client: ApiClient }) {
   const [pending, setPending] = useState(false);
   const [booked, setBooked] = useState(false);
   /**
-   * One `Idempotency-Key` per payload, kept only while the api has not answered it (a lost answer,
-   * or IN_PROGRESS: CONVENCIONS_API §7, E79).
+   * One `Idempotency-Key` per submission (its payload), kept while the api has not answered it (a
+   * lost answer, a 5xx or IN_PROGRESS) and retired by its answer: the shared rule (CONVENCIONS_API
+   * §7, E74, E79, E85).
    */
-  const keys = useRef(new Map<string, string>());
+  const keys = useSubmissionKeys();
 
   const refetchAll = useCallback(() => {
     eligibility.refetch();
@@ -306,28 +300,25 @@ export function TrainingPage({ client }: { client: ApiClient }) {
   const confirm = async () => {
     if (choice === undefined || selectedDog === null) return;
     const body = { dogId: selectedDog, ringId: choice.ringId, startsAt: choice.startsAt };
-    const fingerprint = JSON.stringify(body);
-    const key = keys.current.get(fingerprint) ?? crypto.randomUUID();
-    keys.current.set(fingerprint, key);
     setPending(true);
     setFailure(undefined);
     setBooked(false);
     try {
-      await client.POST("/training-bookings", {
-        body,
-        params: { header: { "Idempotency-Key": key } },
-      });
-      keys.current.delete(fingerprint);
+      await keys.send(JSON.stringify(body), (key) =>
+        client.POST("/training-bookings", {
+          body,
+          params: { header: { "Idempotency-Key": key } },
+        }),
+      );
       setChoice(undefined);
       setChooser(undefined);
       setBooked(true);
       refetchAll();
     } catch (cause) {
       const code = codeOf(cause);
-      // A lost answer, or IN_PROGRESS (the first request still runs, E79), is not the booking's
-      // answer: it keeps its key and the choice, so a retry replays it instead of booking twice.
+      // No answer (a lost one, a 5xx, or IN_PROGRESS: the first request still runs) keeps the key
+      // (`keys.send`) and the choice, so a retry replays it instead of booking twice.
       const unanswered = isUnanswered(cause);
-      if (!unanswered) keys.current.delete(fingerprint);
       reportTrainingRefusal(cause);
       const details = detailsOf(cause);
       if (code === "MODULE_DISABLED") {

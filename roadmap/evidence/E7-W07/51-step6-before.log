@@ -1,0 +1,86 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/booking-handlers.test.ts (28 tests | 3 failed | 22 skipped) 179ms
+   ❯ E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) (6)
+     × T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at member (late window 2026 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: 240) 63ms
+     × T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at member (late window 2026 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: 240) 28ms
+     × E7-W07 step 6 (R-08-03, ruling E85): the default world's «ds 8» is a normal row at 1 of 2 (Duna's Monday 3 still swappable): BOOKABLE with its 3 seats, and its tap holds the seat with no limit reached 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at member (late window 2026 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: 240)
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "dog-duna 2026-08-08T09:00 CURRENT WEEKLY_LIMIT_DONE → HELD",
++ ]
+
+ ❯ src/mocks/booking-handlers.test.ts:883:9
+    881|           (line) => line.includes(" WEEKLY_LIMIT_DONE ") !== line.ends…
+    882|         ),
+    883|       ).toEqual([]);
+       |         ^
+    884|       expect(seen.some((line) => line.includes(" WEEKLY_LIMIT_DONE "))…
+    885|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at member (late window 2026 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: 240)
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "dog-duna 2026-08-08T09:00 NEXT WEEKLY_LIMIT_DONE → HELD",
++ ]
+
+ ❯ src/mocks/booking-handlers.test.ts:883:9
+    881|           (line) => line.includes(" WEEKLY_LIMIT_DONE ") !== line.ends…
+    882|         ),
+    883|       ).toEqual([]);
+       |         ^
+    884|       expect(seen.some((line) => line.includes(" WEEKLY_LIMIT_DONE "))…
+    885|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > E7-W07 step 6 (R-08-03, ruling E85): the default world's «ds 8» is a normal row at 1 of 2 (Duna's Monday 3 still swappable): BOOKABLE with its 3 seats, and its tap holds the seat with no limit reached
+AssertionError: expected { description: 'C', …(13) } to match object { freeSeats: 3, …(2) }
+(11 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "freeSeats": 3,
+-   "state": "BOOKABLE",
++   "state": "WEEKLY_LIMIT_DONE",
+    "week": "CURRENT",
+  }
+
+ ❯ src/mocks/booking-handlers.test.ts:892:22
+    890|       (row) => row.startsAtLocal === "2026-08-08T09:00",
+    891|     );
+    892|     expect(saturday).toMatchObject({ freeSeats: 3, state: "BOOKABLE", …
+       |                      ^
+    893|     const hold = await call("POST", "/seat-holds", {
+    894|       classSessionId: "class-2026-08-08-0900",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 3 passed | 22 skipped (28)
+   Start at  10:32:56
+   Duration  673ms (transform 42%, tests 30%, import 28%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/booking-handlers.test.ts -t E7-W07 step 6

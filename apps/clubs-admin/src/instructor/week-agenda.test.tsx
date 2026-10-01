@@ -799,7 +799,7 @@ const IN_PROGRESS_BODY = {
 /** `common:inProgress` in ca (E80); never `errors:IDEMPOTENCY_KEY_REUSED`'s text. */
 const IN_PROGRESS_TEXT = "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.";
 
-describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's sheet keeps its key on IN_PROGRESS", () => {
+describe("T-10-29 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's sheet keeps its key on IN_PROGRESS", () => {
   it("E7-W06 step 1: D12's attendance save keeps its Idempotency-Key and the choice on IN_PROGRESS, says «L'operació encara està en curs…» without reading the list again, the retry sends the same key, and the same save after the api's answer takes a new key", async () => {
     const requests = recordRequests();
     let calls = 0;

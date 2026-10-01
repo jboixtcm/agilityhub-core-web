@@ -536,7 +536,7 @@ describe("E7-W01 step 10 · D9's templates follow the S11 contract (R-11-12)", (
   });
 });
 
-describe("E7-W06 step 5 (ruling E82, E6-W04 Q3) · SMS_BODY_TOO_LONG counts the SMS as the api does (S11 R-11-06)", () => {
+describe("T-11-06 E7-W06 step 5 (ruling E82, E6-W04 Q3) · SMS_BODY_TOO_LONG counts the SMS as the api does (S11 R-11-06)", () => {
   /** N-08a's saved texts with `smsCa` as its Catalan SMS (its SMS cell is on). */
   async function n08aWithSms(smsCa: string) {
     const n08a = (await detail("tpl-n-08a")).data;
@@ -594,7 +594,7 @@ describe("E7-W06 step 5 (ruling E82, E6-W04 Q3) · SMS_BODY_TOO_LONG counts the 
   });
 });
 
-describe("E7-W06 step 5 (ruling E82, E6-W04 Q3) · an erased member on D10 (S14 §5, R-14-15)", () => {
+describe("T-14-19 E7-W06 step 5 (ruling E82, E6-W04 Q3) · an erased member on D10 (S14 §5, R-14-15)", () => {
   it("E7-W06 step 5: the erased member's overview answers pseudonymised with its erasedAt; D10's preferences read and save answer 409 MEMBER_ERASED in the api's envelope", async () => {
     const overview = await client.GET("/members/{id}/overview", {
       params: { path: { id: ERASED_MEMBER_ID } },

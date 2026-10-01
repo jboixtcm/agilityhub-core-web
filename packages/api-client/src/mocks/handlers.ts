@@ -1380,10 +1380,10 @@ function orderedIds<Item extends { id: string; order: number }>(
 }
 
 /**
- * D10's preferences routes (S11 §6, api e34bf04): ADMIN only (an impersonation token, a MEMBER or
- * an INSTRUCTOR → 403), and another club's member → 404.
+ * An ADMIN route's role refusals (S03 T-03-35): an impersonation token → 403 IMPERSONATION_DENIED,
+ * a MEMBER or an INSTRUCTOR → 403 FORBIDDEN.
  */
-function memberPreferencesRefusal(memberId: string) {
+function adminRouteRefusal() {
   const scenario = currentMockScenario();
   if (scenario.me.impersonation !== undefined) {
     return apiError("IMPERSONATION_DENIED", "Impersonation tokens cannot use this route", 403);
@@ -1391,11 +1391,27 @@ function memberPreferencesRefusal(memberId: string) {
   if (!(scenario.me.membership?.roles.includes("ADMIN") ?? false)) {
     return apiError("FORBIDDEN", "Forbidden", 403);
   }
-  // S14 §5 (E7-W06, ruling E82): an erased member's block is refused, its read too, as the
-  // snapshot declares (409 MEMBER_ERASED, CATALEG_ERRORS §2; no details).
-  if (memberId === ERASED_MEMBER_ID) {
-    return apiError("MEMBER_ERASED", "Member erased", 409);
-  }
+  return undefined;
+}
+
+/**
+ * S14 §5 (E7-W07 step 3, A8): an erased member takes no change, so every S03 mutation that names it
+ * answers `409 MEMBER_ERASED` (CATALEG_ERRORS §2; no details), never `404`. The role refusals come
+ * first, as the api orders them. `undefined` for any other member: its handler goes on as before.
+ */
+function erasedMemberRefusal(memberId: string) {
+  if (memberId !== ERASED_MEMBER_ID) return undefined;
+  return adminRouteRefusal() ?? apiError("MEMBER_ERASED", "Member erased", 409);
+}
+
+/**
+ * D10's preferences routes (S11 §6, api e34bf04): ADMIN only (an impersonation token, a MEMBER or
+ * an INSTRUCTOR → 403), an erased member → 409 MEMBER_ERASED (its read too, as the snapshot
+ * declares; E7-W06, ruling E82), and another club's member → 404.
+ */
+function memberPreferencesRefusal(memberId: string) {
+  const refused = adminRouteRefusal() ?? erasedMemberRefusal(memberId);
+  if (refused !== undefined) return refused;
   if (memberId !== censusRecordState.memberOverview.member.id) {
     return apiError("NOT_FOUND", "Member not found", 404);
   }
@@ -1616,6 +1632,8 @@ export const handlers = [
   }),
   http.post("*/api/v1/members/:id/validation", async ({ params, request }) => {
     const id = String(params.id);
+    const erased = erasedMemberRefusal(id);
+    if (erased !== undefined) return erased;
     const view = currentSignupReview();
     if (resolvedSignups.has(id)) return invalidState("NOT_PENDING");
     if (id !== view.member.id) return apiError("NOT_FOUND", "Signup not found", 404);
@@ -1683,6 +1701,8 @@ export const handlers = [
   }),
   http.post("*/api/v1/members/:id/rejection", async ({ params, request }) => {
     const id = String(params.id);
+    const erased = erasedMemberRefusal(id);
+    if (erased !== undefined) return erased;
     const view = currentSignupReview();
     if (resolvedSignups.has(id)) return invalidState("NOT_PENDING");
     if (id !== view.member.id) return apiError("NOT_FOUND", "Signup not found", 404);
@@ -2701,6 +2721,8 @@ export const handlers = [
       : apiError("NOT_FOUND", "Member not found", 404);
   }),
   http.patch("*/api/v1/members/:id", async ({ params, request }) => {
+    const erased = erasedMemberRefusal(String(params.id));
+    if (erased !== undefined) return erased;
     const signupView = currentSignupReview();
     if (String(params.id) === signupView.member.id) {
       const body = (await request.json()) as MemberPatchRequest;
@@ -2841,6 +2863,8 @@ export const handlers = [
     return HttpResponse.json(updated);
   }),
   http.patch("*/api/v1/members/:id/payment-method", async ({ params, request }) => {
+    const erased = erasedMemberRefusal(String(params.id));
+    if (erased !== undefined) return erased;
     if (String(params.id) !== censusRecordState.memberOverview.member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
     }
@@ -2861,6 +2885,8 @@ export const handlers = [
     return HttpResponse.json(paymentMethod);
   }),
   http.post("*/api/v1/members/:id/booking-block", async ({ params, request }) => {
+    const erased = erasedMemberRefusal(String(params.id));
+    if (erased !== undefined) return erased;
     if (String(params.id) !== censusRecordState.memberOverview.member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
     }
@@ -2882,6 +2908,8 @@ export const handlers = [
     return HttpResponse.json(bookingBlock, { status: 201 });
   }),
   http.delete("*/api/v1/members/:id/booking-block", ({ params }) => {
+    const erased = erasedMemberRefusal(String(params.id));
+    if (erased !== undefined) return erased;
     const member = censusRecordState.memberOverview.member;
     if (String(params.id) !== member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
@@ -2893,6 +2921,8 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 });
   }),
   http.post("*/api/v1/members/:id/access-resend", ({ params }) => {
+    const erased = erasedMemberRefusal(String(params.id));
+    if (erased !== undefined) return erased;
     const member = censusRecordState.memberOverview.member;
     if (String(params.id) !== member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
@@ -2903,6 +2933,9 @@ export const handlers = [
     return HttpResponse.json({ sentTo: member.contactEmails[0]?.email ?? "" }, { status: 202 });
   }),
   http.post("*/api/v1/members/:id/impersonation-token", async ({ params, request }) => {
+    // S01 R-01-09 and the snapshot: an impersonation token is 403, an erased member 409 MEMBER_ERASED.
+    const erased = erasedMemberRefusal(String(params.id));
+    if (erased !== undefined) return erased;
     if (String(params.id) !== censusRecordState.memberOverview.member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
     }
@@ -2917,6 +2950,8 @@ export const handlers = [
     );
   }),
   http.put("*/api/v1/members/:id/roles", async ({ params, request }) => {
+    const erased = erasedMemberRefusal(String(params.id));
+    if (erased !== undefined) return erased;
     const member = censusRecordState.memberOverview.member;
     if (String(params.id) !== member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);

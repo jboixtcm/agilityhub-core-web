@@ -1,0 +1,214 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/planning/CalendarPage.test.tsx (47 tests | 2 failed | 45 skipped) 733ms
+   ❯ E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D4's keyed writes follow the shared submission-key rule (2)
+     × T-06-28 E7-W07 step 4 (CONVENCIONS_API §7, E85): D4c's class cancellation keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ADMIN_TEXT_REQUIRED retires it, so the same notice sent again takes a new key 460ms
+     × T-06-28 T-06-16 E7-W07 step 4 (CONVENCIONS_API §7, E85): the ring-block drawer keeps its Idempotency-Key after a 503 with the api's body, and a 422 OUTSIDE_OPENING_HOURS retires it, so the same block sent again takes a new key 271ms
+ ❯ src/planning/TemplatesPage.test.tsx (32 tests | 1 failed | 31 skipped) 10356ms
+   ❯ E7-W07 step 4 (CONVENCIONS_API §7, E85): D3's week generation follows the shared submission-key rule (1)
+     × T-06-26 T-06-22 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the generation modal open with its Idempotency-Key, so the retry sends the same key; a 422 TEMPLATE_KIND_MISMATCH retires it, so the same generation sent again takes a new key 10353ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D4's keyed writes follow the shared submission-key rule > T-06-28 E7-W07 step 4 (CONVENCIONS_API §7, E85): D4c's class cancellation keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ADMIN_TEXT_REQUIRED retires it, so the same notice sent again takes a new key
+AssertionError: expected '33b0a36b-db5b-40cd-bc89-6accaa66fbc2' to be '8b62f85f-d427-4105-af23-fc54df32cfdd' // Object.is equality
+
+Expected: "8b62f85f-d427-4105-af23-fc54df32cfdd"
+Received: "33b0a36b-db5b-40cd-bc89-6accaa66fbc2"
+
+ ❯ src/planning/CalendarPage.test.tsx:1863:26
+    1861|     expect(sent[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    1862|     expect(sent[1]?.key).toBe(sent[0]?.key);
+    1863|     expect(sent[2]?.key).toBe(sent[0]?.key);
+       |                          ^
+    1864|     expect(sent[3]?.key).not.toBe(sent[0]?.key);
+    1865|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D4's keyed writes follow the shared submission-key rule > T-06-28 T-06-16 E7-W07 step 4 (CONVENCIONS_API §7, E85): the ring-block drawer keeps its Idempotency-Key after a 503 with the api's body, and a 422 OUTSIDE_OPENING_HOURS retires it, so the same block sent again takes a new key
+AssertionError: expected '2bcce0fd-8f7f-4210-a7d1-35e63ff2db7b' to be '55985f32-f21b-4d8a-971f-69b9c55a6cfd' // Object.is equality
+
+Expected: "55985f32-f21b-4d8a-971f-69b9c55a6cfd"
+Received: "2bcce0fd-8f7f-4210-a7d1-35e63ff2db7b"
+
+ ❯ src/planning/CalendarPage.test.tsx:1913:21
+    1911|     expect(bodies[2]).toEqual(bodies[0]);
+    1912|     expect(keys[0]).toMatch(/^[0-9a-f-]{36}$/u);
+    1913|     expect(keys[1]).toBe(keys[0]);
+       |                     ^
+    1914|     expect(keys[2]).not.toBe(keys[0]);
+    1915|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/planning/TemplatesPage.test.tsx > E7-W07 step 4 (CONVENCIONS_API §7, E85): D3's week generation follows the shared submission-key rule > T-06-26 T-06-22 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the generation modal open with its Idempotency-Key, so the retry sends the same key; a 422 TEMPLATE_KIND_MISMATCH retires it, so the same generation sent again takes a new key
+TestingLibraryElementError: Unable to find an element with the text: S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mGenerar classes — per setmanes[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p>[39m
+      [0mEs generaran com a esborrany les classes de la setmana del 19/10/2026[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"planning-form__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-busy[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-spinner"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+        [36m>[39m
+          [0mGENERAR CLASSES[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mDesant…[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mGenerar classes — per setmanes[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p>[39m
+      [0mEs generaran com a esborrany les classes de la setmana del 19/10/2026[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"planning-form__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-busy[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-spinner"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+        [36m>[39m
+          [0mGENERAR CLASSES[0m
+        [36m</span>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mDesant…[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/planning/TemplatesPage.test.tsx:1201:28
+    1199|     const dialog = await confirm();
+    1200|     expect(
+    1201|       await within(dialog).findByText(
+       |                            ^
+    1202|         "S'ha produït un error inesperat. Torneu-ho a provar; si persi…
+    1203|       ),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 76 skipped (79)
+   Start at  10:54:50
+   Duration  11.79s (tests 80%, transform 10%, environment 5%, import 3%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/planning/CalendarPage.test.tsx src/planning/TemplatesPage.test.tsx -t E7-W07

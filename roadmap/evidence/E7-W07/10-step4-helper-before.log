@@ -1,0 +1,101 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/submission-key.test.ts (15 tests | 6 failed) 11ms
+   ❯ E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission (12)
+     × isUnanswered: E7-W07 step 4 (E85): a 503 with the api's error body → unanswered: the key is kept 3ms
+     × isUnanswered: E7-W07 step 4 (E85): a 500 with the api's error body → unanswered: the key is kept 1ms
+     × E7-W07 step 4 (CONVENCIONS_API §7, E85): send keeps the key after a 503 with the api's body and retires it after a 422 4ms
+   ❯ E7-W06 review #5 (CONVENCIONS_API §7): a repeatable operation keeps an unanswered key for HELD_KEY_TTL_MS only (2)
+     × E7-W06 review #5, E7-W07 step 4: with ttlMs, within the limit the retry reuses the key; after it, the same operation is a new submission with a new key 1ms
+     × E7-W07 step 4: without ttlMs an unanswered key is kept however long the retry takes 0ms
+   ❯ E7-W07 step 4 (E7-W06 review #5): the keys of an abandoned submission (1)
+     × drop(owner) forgets every key of that owner's submissions (followup's abandoned form), and only those 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/submission-key.test.ts > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission > isUnanswered: E7-W07 step 4 (E85): a 503 with the api's error body → unanswered: the key is kept
+ FAIL  src/submission-key.test.ts > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission > isUnanswered: E7-W07 step 4 (E85): a 500 with the api's error body → unanswered: the key is kept
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/submission-key.test.ts:82:33
+     80|     ["404 NOT_FOUND", "answered: the key is retired", notFound],
+     81|   ] as const)("isUnanswered: %s → %s", (_, outcome, cause) => {
+     82|     expect(isUnanswered(cause)).toBe(outcome.startsWith("unanswered"));
+       |                                 ^
+     83|   });
+     84|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/submission-key.test.ts > E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission > E7-W07 step 4 (CONVENCIONS_API §7, E85): send keeps the key after a 503 with the api's body and retires it after a 422
+AssertionError: expected 'a1e4a8cb-5da4-4e8d-a583-6d5902a8fc43' to be '6416f2a3-976e-4600-837d-35905ee155db' // Object.is equality
+
+Expected: "6416f2a3-976e-4600-837d-35905ee155db"
+Received: "a1e4a8cb-5da4-4e8d-a583-6d5902a8fc43"
+
+ ❯ src/submission-key.test.ts:98:21
+     96|     await expect(submit()).rejects.toBeInstanceOf(TypeError);
+     97|     // The 503 kept it for the retry; the 422 retired it, so the third…
+     98|     expect(sent[1]).toBe(sent[0]);
+       |                     ^
+     99|     expect(sent[2]).not.toBe(sent[1]);
+    100|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/submission-key.test.ts > E7-W06 review #5 (CONVENCIONS_API §7): a repeatable operation keeps an unanswered key for HELD_KEY_TTL_MS only > E7-W06 review #5, E7-W07 step 4: with ttlMs, within the limit the retry reuses the key; after it, the same operation is a new submission with a new key
+AssertionError: expected '6c4f63f6-b787-4dd3-b193-b34bf9b660b5' not to be '6c4f63f6-b787-4dd3-b193-b34bf9b660b5' // Object.is equality
+ ❯ src/submission-key.test.ts:168:23
+    166|     now += 1;
+    167|     const later = keys.keyFor("job|false");
+    168|     expect(later).not.toBe(first);
+       |                       ^
+    169|     now += 1;
+    170|     expect(keys.keyFor("job|false")).toBe(later);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/submission-key.test.ts > E7-W06 review #5 (CONVENCIONS_API §7): a repeatable operation keeps an unanswered key for HELD_KEY_TTL_MS only > E7-W07 step 4: without ttlMs an unanswered key is kept however long the retry takes
+AssertionError: expected '5d20a055-66af-4eb7-8254-6bec821256fc' to be 'c3bdc1a9-cc44-49e4-bb44-50db5cc10306' // Object.is equality
+
+Expected: "c3bdc1a9-cc44-49e4-bb44-50db5cc10306"
+Received: "5d20a055-66af-4eb7-8254-6bec821256fc"
+
+ ❯ src/submission-key.test.ts:188:21
+    186|       return Promise.resolve();
+    187|     });
+    188|     expect(sent[1]).toBe(sent[0]);
+       |                     ^
+    189|   });
+    190| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/submission-key.test.ts > E7-W07 step 4 (E7-W06 review #5): the keys of an abandoned submission > drop(owner) forgets every key of that owner's submissions (followup's abandoned form), and only those
+TypeError: keys.drop is not a function
+ ❯ src/submission-key.test.ts:198:10
+    196|     const attached = keys.keyFor('attach:{"file":1}', "form-1");
+    197|     const other = keys.keyFor('create:{"text":"b"}', "form-2");
+    198|     keys.drop("form-1");
+       |          ^
+    199|     expect(keys.keyFor('create:{"text":"a"}', "form-1")).not.toBe(crea…
+    200|     expect(keys.keyFor('attach:{"file":1}', "form-1")).not.toBe(attach…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 9 passed (15)
+   Start at  10:37:01
+   Duration  160ms (transform 48%, tests 27%, import 22%, worker 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/submission-key.test.ts

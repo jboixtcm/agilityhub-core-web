@@ -133,7 +133,8 @@ describe("E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATA
       "2026-08-05T18:50 BOOKABLE 2/0",
       "2026-08-06T20:00 WAITLIST_OPEN 0/1",
       "2026-08-07T17:40 WAITLIST_FULL 0/3",
-      "2026-08-08T09:00 WEEKLY_LIMIT_DONE 3/0",
+      // E7-W07 step 6 (ruling E85): not mockup 04's «Límit setmanal»: Duna is at 1 of 2.
+      "2026-08-08T09:00 BOOKABLE 3/0",
       "2026-08-10T18:50 BOOKABLE 4/0",
       "2026-08-17T09:30 NOT_YET_OPEN 5/0",
     ]);
@@ -457,7 +458,7 @@ describe("E5-W05 step 7 · the booking world's clock sits after its club's week 
       "2026-08-05T18:50 CURRENT BOOKABLE",
       "2026-08-06T20:00 CURRENT WAITLIST_OPEN",
       "2026-08-07T17:40 CURRENT WAITLIST_FULL",
-      "2026-08-08T09:00 CURRENT WEEKLY_LIMIT_DONE",
+      "2026-08-08T09:00 CURRENT BOOKABLE",
       "2026-08-10T18:50 NEXT BOOKABLE",
       // W2 opens a week before its own start: Sunday 9 at 20:00 (R-08-01).
       "2026-08-17T09:30 LATER NOT_YET_OPEN 2026-08-09T18:00:00Z",
@@ -522,11 +523,12 @@ describe("E5-W05 step 7 · the booking world's clock sits after its club's week 
       "2026-08-05T18:50 NEXT BOOKABLE",
       "2026-08-06T20:00 NEXT WAITLIST_OPEN",
       "2026-08-07T17:40 NEXT WAITLIST_FULL",
-      "2026-08-08T09:00 NEXT WEEKLY_LIMIT_DONE",
+      // E7-W07 step 6 (ruling E85): a normal row, since Monday 3 can still be swapped (R-08-03).
+      "2026-08-08T09:00 NEXT BOOKABLE",
       "2026-08-10T18:50 LATER NOT_YET_OPEN 2026-08-02T18:00:00Z",
     ]);
     // Monday 3 fills next week's limit of 1 but is still cancellable in time: the api holds the
-    // seat and proposes the swap (R-08-09), whatever mockup 04's fixed row reads (A6).
+    // seat and proposes the swap (R-08-09).
     const saturday = await call("POST", "/seat-holds", {
       classSessionId: "class-2026-08-08-0900",
       dogId: "dog-duna",
@@ -564,7 +566,7 @@ describe("E5-W05 step 7 · the booking world's clock sits after its club's week 
       "2026-08-05T18:50 NEXT BOOKABLE",
       "2026-08-06T20:00 NEXT WAITLIST_OPEN",
       "2026-08-07T17:40 NEXT WAITLIST_FULL",
-      "2026-08-08T09:00 NEXT WEEKLY_LIMIT_DONE",
+      "2026-08-08T09:00 NEXT BOOKABLE",
       // Monday 3 at 00:00 local, summer time.
       "2026-08-10T18:50 LATER NOT_YET_OPEN 2026-08-02T22:00:00Z",
     ]);
@@ -607,7 +609,7 @@ describe("E5-W05 round 2 · the limits come from the world's bookings and the cl
       .map((item) => item.id);
   }
 
-  it("E5-W05 round 3 #2: the hold is refused only when the week's limit is reached and nothing can be swapped (R-08-09): mockup 04's fixed «Límit setmanal» in the member world (Duna 1 of 2, her Monday 3 cancellable) holds the seat", async () => {
+  it("E5-W05 round 3 #2: the hold is refused only when the week's limit is reached and nothing can be swapped (R-08-09): the member world's «ds 8» (Duna 1 of 2, her Monday 3 cancellable) holds the seat", async () => {
     const duna = await home("member", "?dogId=dog-duna");
     expect(duna.limits.currentWeek).toMatchObject({ count: 1, max: 2 });
     const saturday = await call("POST", "/seat-holds", {
@@ -832,6 +834,73 @@ describe("E5-W05 round 2 · the limits come from the world's bookings and the cl
       notSelectable: [{ bookingId: "booking-duna-mon3", reason: "LATE_WINDOW" }],
       swappable: [],
       week: "CURRENT",
+    });
+  });
+});
+
+describe("E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85)", () => {
+  afterEach(() => {
+    resetSettingsState();
+  });
+
+  /** Every 04 row of each dog of `scenario` at the clock, and what tapping it answers. */
+  async function rowsAndHolds(scenario: MockScenario): Promise<string[]> {
+    const seen: string[] = [];
+    for (const dogId of ["dog-duna", "dog-rock", "dog-toby"]) {
+      const view = await bookable(scenario, `?dogId=${dogId}`);
+      for (const row of view.classes) {
+        mockScenario(scenario);
+        const hold = await call("POST", "/seat-holds", { classSessionId: row.id, dogId });
+        if (hold.status === 201) {
+          // Released again, so the next row is read in the same world.
+          await call("DELETE", `/seat-holds/${(hold.body as SeatHoldResponse).id}`);
+        }
+        const answer = hold.status === 201 ? "HELD" : (hold.body as ApiError).code;
+        seen.push(`${dogId} ${row.startsAtLocal} ${row.week} ${row.state} → ${answer}`);
+      }
+    }
+    return seen;
+  }
+
+  it.each([
+    ["default", BOOKING_MOCK_NOW, 240, false, "member"],
+    ["default", "2026-08-02T19:59:00+02:00", 240, false, "member"],
+    // A 24 h late window: next week's Monday 3 can no longer be swapped, so W1's limit of 1 refuses.
+    ["default", "2026-08-02T19:59:00+02:00", 1440, true, "member"],
+    ["bookingLimit (mockup 06)", BOOKING_MOCK_NOW, 240, false, "bookingLimit"],
+    ["bookingLimitDone (mockup 29)", BOOKING_LIMIT_DONE_NOW, 240, true, "bookingLimitDone"],
+  ] as const)(
+    "T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the %s world at %s (late window %i min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: %s)",
+    async (_world, now, threshold, anyDone, scenario) => {
+      vi.setSystemTime(new Date(now));
+      const parameter = findParameter("bookings.lateCancelThresholdMinutes");
+      if (parameter === undefined) throw new TypeError("Missing the late window");
+      parameter.value = threshold;
+      const seen = await rowsAndHolds(scenario);
+      expect(seen.length).toBeGreaterThan(0);
+      expect(
+        seen.filter(
+          (line) => line.includes(" WEEKLY_LIMIT_DONE ") !== line.endsWith("BOOKING_LIMIT_REACHED"),
+        ),
+      ).toEqual([]);
+      expect(seen.some((line) => line.includes(" WEEKLY_LIMIT_DONE "))).toBe(anyDone);
+    },
+  );
+
+  it("E7-W07 step 6 (R-08-03, ruling E85): the default world's «ds 8» is a normal row at 1 of 2 (Duna's Monday 3 still swappable): BOOKABLE with its 3 seats, and its tap holds the seat with no limit reached", async () => {
+    const saturday = (await bookable()).classes.find(
+      (row) => row.startsAtLocal === "2026-08-08T09:00",
+    );
+    expect(saturday).toMatchObject({ freeSeats: 3, state: "BOOKABLE", week: "CURRENT" });
+    const hold = await call("POST", "/seat-holds", {
+      classSessionId: "class-2026-08-08-0900",
+      dogId: "dog-duna",
+    });
+    expect(hold.status).toBe(201);
+    expect((hold.body as SeatHoldResponse).limit).toMatchObject({
+      count: 1,
+      max: 2,
+      reached: false,
     });
   });
 });

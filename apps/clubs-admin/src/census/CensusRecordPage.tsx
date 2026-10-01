@@ -181,14 +181,19 @@ function DataRow({ label, children }: { children: ReactNode; label: string }) {
 
 function MemberEditDrawer({
   client,
+  erased,
   member,
   onClose,
+  onErased,
   onSaved,
   open,
 }: {
   client: ApiClient;
+  /** The member is erased (S14 §5): the drawer sends nothing more. */
+  erased: boolean;
   member: MemberDetail;
   onClose: () => void;
+  onErased: () => void;
   onSaved: (member: MemberDetail) => void;
   open: boolean;
 }) {
@@ -208,6 +213,7 @@ function MemberEditDrawer({
         className="census-record__form"
         onSubmit={(event) => {
           event.preventDefault();
+          if (erased) return;
           setPending(true);
           setFailure(undefined);
           const body: MemberPatchRequest = {
@@ -241,6 +247,8 @@ function MemberEditDrawer({
               onSaved(result.data);
             })
             .catch((error: unknown) => {
+              // S14 §5 (E7-W07 step 3): erased meanwhile — final, nothing to send again.
+              if (isApiError(error, "MEMBER_ERASED")) onErased();
               setFailure(errorText(error, t));
             })
             .finally(() => {
@@ -493,9 +501,11 @@ function MemberEditDrawer({
           <Button onClick={onClose} variant="ghost">
             {t("admin-census:common.cancel")}
           </Button>
-          <Button loading={pending} loadingLabel={t("admin-census:common.saving")} type="submit">
-            {t("admin-census:common.save")}
-          </Button>
+          {erased ? null : (
+            <Button loading={pending} loadingLabel={t("admin-census:common.saving")} type="submit">
+              {t("admin-census:common.save")}
+            </Button>
+          )}
         </div>
       </form>
     </Drawer>
@@ -505,14 +515,19 @@ function MemberEditDrawer({
 function MemberSummary({
   client,
   dialog,
+  erased,
   overview,
   onChange,
+  onErased,
   onFeedback,
   setDialog,
 }: {
   client: ApiClient;
   dialog: MemberDialog;
+  /** The member is erased (S14 §5): no change is offered, and an open dialog sends nothing more. */
+  erased: boolean;
   onChange: (overview: MemberOverview) => void;
+  onErased: () => void;
   onFeedback: (feedback: Feedback) => void;
   overview: MemberOverview;
   setDialog: (dialog: MemberDialog) => void;
@@ -576,14 +591,22 @@ function MemberSummary({
     };
   }, [client, member.planId, modules]);
 
-  const run = async (action: () => Promise<void>) => {
+  /**
+   * Sends one of the record's changes. Its failure shows in the open dialog or, for a change
+   * without one («Desbloqueja les reserves»), on the page. A `409 MEMBER_ERASED` (the member was
+   * erased after the record was read, S14 §5) is final: the record stops offering changes and the
+   * dialog cannot send the request again (E7-W07 step 3).
+   */
+  const run = async (action: () => Promise<void>, failureOn: "dialog" | "page" = "dialog") => {
     setPending(true);
     setFailure(undefined);
     try {
       await action();
       setDialog(null);
     } catch (error) {
-      setFailure(errorText(error, t));
+      if (isApiError(error, "MEMBER_ERASED")) onErased();
+      if (failureOn === "page") onFeedback({ message: errorText(error, t), tone: "danger" });
+      else setFailure(errorText(error, t));
     } finally {
       setPending(false);
     }
@@ -638,15 +661,17 @@ function MemberSummary({
                       : t("admin-census:values.empty")}
                 {maskedIban === null ? null : <strong> · {maskedIban}</strong>}{" "}
                 <Badge>{t("admin-census:member.payment.adminOnly")}</Badge>{" "}
-                <Button
-                  className="census-record__inline-action"
-                  onClick={() => {
-                    setDialog("payment");
-                  }}
-                  variant="ghost"
-                >
-                  {t("admin-census:common.edit")}
-                </Button>
+                {erased ? null : (
+                  <Button
+                    className="census-record__inline-action"
+                    onClick={() => {
+                      setDialog("payment");
+                    }}
+                    variant="ghost"
+                  >
+                    {t("admin-census:common.edit")}
+                  </Button>
+                )}
               </DataRow>
             ) : null}
             {modules.includes("BILLING") && overview.nextInvoice !== undefined ? (
@@ -681,15 +706,17 @@ function MemberSummary({
                   </Badge>
                 ))}
               </span>{" "}
-              <Button
-                className="census-record__inline-action"
-                onClick={() => {
-                  setDialog("roles");
-                }}
-                variant="ghost"
-              >
-                {t("admin-census:common.edit")}
-              </Button>
+              {erased ? null : (
+                <Button
+                  className="census-record__inline-action"
+                  onClick={() => {
+                    setDialog("roles");
+                  }}
+                  variant="ghost"
+                >
+                  {t("admin-census:common.edit")}
+                </Button>
+              )}
             </DataRow>
             {modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
               <DataRow label={t("admin-census:member.fields.familyGroup")}>
@@ -757,8 +784,14 @@ function MemberSummary({
         {/* E7-W01 round 2 #4: the block reads its own route, so it never depends on the free-form
             `MemberOverview.notificationPreferences` and never disappears. An erased member's
             preferences are refused (`409 MEMBER_ERASED`, S14 §5): the block says so as final,
-            with nothing to read, save or retry (E7-W06, ruling E82 on E6-W04 Q3). */}
-        {member.erasedAt == null ? (
+            with nothing to read, save or retry (E7-W06, ruling E82 on E6-W04 Q3), also when
+            another change found the member erased meanwhile (E7-W07 step 3). */}
+        {erased ? (
+          <Card className="notification-preferences">
+            <SectionTitle>{t("admin-census:member.sections.preferences")}</SectionTitle>
+            <p role="status">{t("errors:MEMBER_ERASED")}</p>
+          </Card>
+        ) : (
           <NotificationPreferencesBlock
             client={client}
             // One block per member: its saves on their way never mix with another member's.
@@ -766,11 +799,6 @@ function MemberSummary({
             memberId={member.id}
             onFeedback={onFeedback}
           />
-        ) : (
-          <Card className="notification-preferences">
-            <SectionTitle>{t("admin-census:member.sections.preferences")}</SectionTitle>
-            <p role="status">{t("errors:MEMBER_ERASED")}</p>
-          </Card>
         )}
 
         {/* R-03-30 (INC-27): only the invoice rows and «Tots els rebuts» belong to BILLING; the
@@ -819,44 +847,48 @@ function MemberSummary({
               )
               .join(" · ")}
           </p>
-          <div className="census-record__footer-actions">
-            {modules.includes("INACTIVITY") ? (
+          {/* S14 §5: an erased member takes no S03/S13 change (`409 MEMBER_ERASED`), so none is
+              offered (E7-W07 step 3). */}
+          {erased ? null : (
+            <div className="census-record__footer-actions">
+              {modules.includes("INACTIVITY") ? (
+                <a className="census-record__action-link" href="/inactivitats">
+                  <Icon aria-hidden="true" name="palm" />
+                  {t("admin-census:member.actions.inactivity")}
+                </a>
+              ) : null}
+              <Button
+                onClick={() => {
+                  if (member.bookingBlock.active) {
+                    void run(async () => {
+                      await client.DELETE("/members/{id}/booking-block", {
+                        params: { path: { id: member.id } },
+                      });
+                      onChange({
+                        ...overview,
+                        member: { ...member, bookingBlock: { active: false } },
+                      });
+                      onFeedback({
+                        message: t("admin-census:member.feedback.unblocked"),
+                        tone: "success",
+                      });
+                    }, "page");
+                  } else {
+                    setDialog("block");
+                  }
+                }}
+                variant="ghost"
+              >
+                <Icon aria-hidden="true" name={member.bookingBlock.active ? "unlock" : "lock"} />
+                {member.bookingBlock.active
+                  ? t("admin-census:member.actions.unblock")
+                  : t("admin-census:member.actions.block")}
+              </Button>
               <a className="census-record__action-link" href="/inactivitats">
-                <Icon aria-hidden="true" name="palm" />
-                {t("admin-census:member.actions.inactivity")}
+                {t("admin-census:member.actions.leave")}
               </a>
-            ) : null}
-            <Button
-              onClick={() => {
-                if (member.bookingBlock.active) {
-                  void run(async () => {
-                    await client.DELETE("/members/{id}/booking-block", {
-                      params: { path: { id: member.id } },
-                    });
-                    onChange({
-                      ...overview,
-                      member: { ...member, bookingBlock: { active: false } },
-                    });
-                    onFeedback({
-                      message: t("admin-census:member.feedback.unblocked"),
-                      tone: "success",
-                    });
-                  });
-                } else {
-                  setDialog("block");
-                }
-              }}
-              variant="ghost"
-            >
-              <Icon aria-hidden="true" name={member.bookingBlock.active ? "unlock" : "lock"} />
-              {member.bookingBlock.active
-                ? t("admin-census:member.actions.unblock")
-                : t("admin-census:member.actions.block")}
-            </Button>
-            <a className="census-record__action-link" href="/inactivitats">
-              {t("admin-census:member.actions.leave")}
-            </a>
-          </div>
+            </div>
+          )}
         </Card>
       </div>
 
@@ -895,27 +927,29 @@ function MemberSummary({
           >
             {t("admin-census:common.cancel")}
           </Button>
-          <Button
-            loading={pending}
-            onClick={() =>
-              void run(async () => {
-                const result = await client.POST("/members/{id}/access-resend", {
-                  params: { path: { id: member.id } },
-                });
-                if (result.data === undefined) {
-                  throw new TypeError("Access response did not contain data");
-                }
-                onFeedback({
-                  message: t("admin-census:member.feedback.accessSent", {
-                    email: result.data.sentTo,
-                  }),
-                  tone: "success",
-                });
-              })
-            }
-          >
-            {t("admin-census:member.actions.resend")}
-          </Button>
+          {erased ? null : (
+            <Button
+              loading={pending}
+              onClick={() =>
+                void run(async () => {
+                  const result = await client.POST("/members/{id}/access-resend", {
+                    params: { path: { id: member.id } },
+                  });
+                  if (result.data === undefined) {
+                    throw new TypeError("Access response did not contain data");
+                  }
+                  onFeedback({
+                    message: t("admin-census:member.feedback.accessSent", {
+                      email: result.data.sentTo,
+                    }),
+                    tone: "success",
+                  });
+                })
+              }
+            >
+              {t("admin-census:member.actions.resend")}
+            </Button>
+          )}
         </div>
       </Modal>
 
@@ -947,27 +981,29 @@ function MemberSummary({
           >
             {t("admin-census:common.cancel")}
           </Button>
-          <Button
-            loading={pending}
-            onClick={() =>
-              void run(async () => {
-                const result = await client.POST("/members/{id}/impersonation-token", {
-                  body: reason.trim() === "" ? {} : { reason },
-                  params: { path: { id: member.id } },
-                });
-                // S01 D10 (E47): only the api's `launchUrl` opens: the club app's host with a
-                // one-time code (`/entrar?handoff=`). The token never goes into a URL, and a
-                // missing `launchUrl` is an error in this dialog, never a guessed address.
-                const launchUrl = result.data?.launchUrl;
-                if (typeof launchUrl !== "string" || launchUrl === "") {
-                  throw new TypeError("Impersonation response did not contain launchUrl");
-                }
-                window.open(launchUrl, "_blank", "noopener,noreferrer");
-              })
-            }
-          >
-            {t("admin-census:member.actions.impersonate")}
-          </Button>
+          {erased ? null : (
+            <Button
+              loading={pending}
+              onClick={() =>
+                void run(async () => {
+                  const result = await client.POST("/members/{id}/impersonation-token", {
+                    body: reason.trim() === "" ? {} : { reason },
+                    params: { path: { id: member.id } },
+                  });
+                  // S01 D10 (E47): only the api's `launchUrl` opens: the club app's host with a
+                  // one-time code (`/entrar?handoff=`). The token never goes into a URL, and a
+                  // missing `launchUrl` is an error in this dialog, never a guessed address.
+                  const launchUrl = result.data?.launchUrl;
+                  if (typeof launchUrl !== "string" || launchUrl === "") {
+                    throw new TypeError("Impersonation response did not contain launchUrl");
+                  }
+                  window.open(launchUrl, "_blank", "noopener,noreferrer");
+                })
+              }
+            >
+              {t("admin-census:member.actions.impersonate")}
+            </Button>
+          )}
         </div>
       </Modal>
 
@@ -983,6 +1019,7 @@ function MemberSummary({
           className="census-record__form"
           onSubmit={(event) => {
             event.preventDefault();
+            if (erased) return;
             void run(async () => {
               const result = await client.PATCH("/members/{id}/payment-method", {
                 body: { sepa: { holderName, iban }, type: "SEPA_DD" },
@@ -1035,9 +1072,11 @@ function MemberSummary({
             >
               {t("admin-census:common.cancel")}
             </Button>
-            <Button loading={pending} type="submit">
-              {t("admin-census:common.save")}
-            </Button>
+            {erased ? null : (
+              <Button loading={pending} type="submit">
+                {t("admin-census:common.save")}
+              </Button>
+            )}
           </div>
         </form>
       </Modal>
@@ -1078,24 +1117,29 @@ function MemberSummary({
           >
             {t("admin-census:common.cancel")}
           </Button>
-          <Button
-            loading={pending}
-            onClick={() =>
-              void run(async () => {
-                const result = await client.PUT("/members/{id}/roles", {
-                  body: { roles },
-                  params: { path: { id: member.id } },
-                });
-                if (result.data === undefined) {
-                  throw new TypeError("Role response did not contain data");
-                }
-                onChange({ ...overview, member: { ...member, roles: result.data.roles } });
-                onFeedback({ message: t("admin-census:member.feedback.roles"), tone: "success" });
-              })
-            }
-          >
-            {t("admin-census:common.save")}
-          </Button>
+          {erased ? null : (
+            <Button
+              loading={pending}
+              onClick={() =>
+                void run(async () => {
+                  const result = await client.PUT("/members/{id}/roles", {
+                    body: { roles },
+                    params: { path: { id: member.id } },
+                  });
+                  if (result.data === undefined) {
+                    throw new TypeError("Role response did not contain data");
+                  }
+                  onChange({ ...overview, member: { ...member, roles: result.data.roles } });
+                  onFeedback({
+                    message: t("admin-census:member.feedback.roles"),
+                    tone: "success",
+                  });
+                })
+              }
+            >
+              {t("admin-census:common.save")}
+            </Button>
+          )}
         </div>
       </Modal>
 
@@ -1128,25 +1172,30 @@ function MemberSummary({
           >
             {t("admin-census:common.cancel")}
           </Button>
-          <Button
-            disabled={reason.trim() === ""}
-            loading={pending}
-            onClick={() =>
-              void run(async () => {
-                const result = await client.POST("/members/{id}/booking-block", {
-                  body: { reason },
-                  params: { path: { id: member.id } },
-                });
-                if (result.data === undefined) {
-                  throw new TypeError("Booking block response did not contain data");
-                }
-                onChange({ ...overview, member: { ...member, bookingBlock: result.data } });
-                onFeedback({ message: t("admin-census:member.feedback.blocked"), tone: "success" });
-              })
-            }
-          >
-            {t("admin-census:member.actions.block")}
-          </Button>
+          {erased ? null : (
+            <Button
+              disabled={reason.trim() === ""}
+              loading={pending}
+              onClick={() =>
+                void run(async () => {
+                  const result = await client.POST("/members/{id}/booking-block", {
+                    body: { reason },
+                    params: { path: { id: member.id } },
+                  });
+                  if (result.data === undefined) {
+                    throw new TypeError("Booking block response did not contain data");
+                  }
+                  onChange({ ...overview, member: { ...member, bookingBlock: result.data } });
+                  onFeedback({
+                    message: t("admin-census:member.feedback.blocked"),
+                    tone: "success",
+                  });
+                })
+              }
+            >
+              {t("admin-census:member.actions.block")}
+            </Button>
+          )}
         </div>
       </Modal>
     </>
@@ -1163,6 +1212,8 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
   const [editOpen, setEditOpen] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>();
   const [memberDialog, setMemberDialog] = useState<MemberDialog>(null);
+  // The member a change found erased after the record was read (`409 MEMBER_ERASED`, S14 §5).
+  const [erasedMeanwhile, setErasedMeanwhile] = useState<string>();
 
   useEffect(() => {
     let current = true;
@@ -1202,6 +1253,13 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
     member.joinedAt == null ? undefined : new Date(member.joinedAt).getUTCFullYear();
   const holder = overview.familyGroup?.holderMemberId === member.id;
   const primaryPhone = member.phones[0];
+  // S14 §5 (E7-W07 step 3): an erased member takes no S03/S13 change — the api answers
+  // `409 MEMBER_ERASED` to each — so the record offers none: read erased, or found erased by a
+  // change sent from a record read before the erasure.
+  const erased = member.erasedAt != null || erasedMeanwhile === member.id;
+  const onErased = () => {
+    setErasedMeanwhile(member.id);
+  };
 
   return (
     <section className="census-record">
@@ -1244,32 +1302,36 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
               {t("admin-census:member.actions.whatsapp")}
             </a>
           )}
-          <Button
-            onClick={() => {
-              setMemberDialog("resend");
-            }}
-            variant="ghost"
-          >
-            {t("admin-census:member.actions.resend")}
-          </Button>
-          <Button
-            onClick={() => {
-              setMemberDialog("impersonate");
-            }}
-            variant="ghost"
-          >
-            <Icon aria-hidden="true" name="user" />
-            {t("admin-census:member.actions.impersonate")}
-          </Button>
-          <Button
-            onClick={() => {
-              setEditOpen(true);
-            }}
-            variant="secondary"
-          >
-            <Icon aria-hidden="true" name="edit" />
-            {t("admin-census:common.edit")}
-          </Button>
+          {erased ? null : (
+            <>
+              <Button
+                onClick={() => {
+                  setMemberDialog("resend");
+                }}
+                variant="ghost"
+              >
+                {t("admin-census:member.actions.resend")}
+              </Button>
+              <Button
+                onClick={() => {
+                  setMemberDialog("impersonate");
+                }}
+                variant="ghost"
+              >
+                <Icon aria-hidden="true" name="user" />
+                {t("admin-census:member.actions.impersonate")}
+              </Button>
+              <Button
+                onClick={() => {
+                  setEditOpen(true);
+                }}
+                variant="secondary"
+              >
+                <Icon aria-hidden="true" name="edit" />
+                {t("admin-census:common.edit")}
+              </Button>
+            </>
+          )}
         </div>
       </header>
       <Tabs
@@ -1279,7 +1341,9 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
               <MemberSummary
                 client={client}
                 dialog={memberDialog}
+                erased={erased}
                 onChange={setOverview}
+                onErased={onErased}
                 onFeedback={setFeedback}
                 overview={overview}
                 setDialog={setMemberDialog}
@@ -1307,11 +1371,13 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
       />
       <MemberEditDrawer
         client={client}
+        erased={erased}
         key={member.version}
         member={member}
         onClose={() => {
           setEditOpen(false);
         }}
+        onErased={onErased}
         onSaved={(saved) => {
           setOverview({ ...overview, member: saved });
           setEditOpen(false);

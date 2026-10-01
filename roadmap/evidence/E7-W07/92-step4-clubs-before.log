@@ -1,0 +1,72 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/SignupPage.test.tsx (102 tests | 1 failed | 101 skipped) 227ms
+   ❯ M1 stable retries (CONVENCIONS_API §7, R-04-26/27) (5)
+     × E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the signup's key — the retry sends the same one — and a 422 PAYMENT_PROVIDER_NOT_ENABLED retires it — the same payload sent again is a new submission 224ms
+ ❯ src/instructor/tasks.test.tsx (34 tests | 1 failed | 33 skipped) 231ms
+   ❯ T-10-28 (26) E6-W05 (reviews of E6-W02's round 2): screen 26 (10)
+     × T-10-25 T-10-15 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the key — the retry sends the same key and files; a 422 DOG_NOT_ACTIVE retires it — the next submission of the same text is a new one with a new key, and one task is created 229ms
+ ❯ src/instructor/RingBlockPage.test.tsx (11 tests | 1 failed | 10 skipped) 346ms
+   ❯ T-09-40 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 24's block keeps its key on IN_PROGRESS (2)
+     × E7-W07 step 4 (CONVENCIONS_API §7, E85; R-09-11): a 503 with the api's body keeps 24's key — the retry sends the same one; a 422 RING_NOT_RESERVABLE retires it — the same block sent again takes a new key 344ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/SignupPage.test.tsx > M1 stable retries (CONVENCIONS_API §7, R-04-26/27) > E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the signup's key — the retry sends the same one — and a 422 PAYMENT_PROVIDER_NOT_ENABLED retires it — the same payload sent again is a new submission
+AssertionError: expected '2666d45b-51a7-4a2e-9529-2497c0b4e425' not to be '2666d45b-51a7-4a2e-9529-2497c0b4e425' // Object.is equality
+ ❯ src/SignupPage.test.tsx:1036:25
+    1034|     expect(keys).toHaveLength(3);
+    1035|     expect(keys[1]).toBe(keys[0]);
+    1036|     expect(keys[2]).not.toBe(keys[1]);
+       |                         ^
+    1037|   });
+    1038|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/instructor/RingBlockPage.test.tsx > T-09-40 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 24's block keeps its key on IN_PROGRESS > E7-W07 step 4 (CONVENCIONS_API §7, E85; R-09-11): a 503 with the api's body keeps 24's key — the retry sends the same one; a 422 RING_NOT_RESERVABLE retires it — the same block sent again takes a new key
+AssertionError: expected '631475fd-4adc-4e7a-9c95-86b77f038689' to be '5f3e5347-8111-4b08-b3db-bbe366ea3c77' // Object.is equality
+
+Expected: "5f3e5347-8111-4b08-b3db-bbe366ea3c77"
+Received: "631475fd-4adc-4e7a-9c95-86b77f038689"
+
+ ❯ src/instructor/RingBlockPage.test.tsx:399:30
+    397|     expect(await screen.findByText("Pista reservada")).toBeVisible();
+    398|     expect(requests.keys).toHaveLength(3);
+    399|     expect(requests.keys[1]).toBe(requests.keys[0]);
+       |                              ^
+    400|     expect(requests.keys[2]).not.toBe(requests.keys[1]);
+    401|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/instructor/tasks.test.tsx > T-10-28 (26) E6-W05 (reviews of E6-W02's round 2): screen 26 > T-10-25 T-10-15 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the key — the retry sends the same key and files; a 422 DOG_NOT_ACTIVE retires it — the next submission of the same text is a new one with a new key, and one task is created
+AssertionError: expected 'dd12ca3e-8884-4839-bfee-11d05b668d56' to be '82d990cb-71f3-4159-bb1b-de034109a340' // Object.is equality
+
+Expected: "82d990cb-71f3-4159-bb1b-de034109a340"
+Received: "dd12ca3e-8884-4839-bfee-11d05b668d56"
+
+ ❯ src/instructor/tasks.test.tsx:915:27
+    913|     const posts = requests.filter((request) => request.line === "POST …
+    914|     expect(posts).toHaveLength(3);
+    915|     expect(posts[1]?.key).toBe(posts[0]?.key);
+       |                           ^
+    916|     expect(posts[2]?.key).not.toBe(posts[1]?.key);
+    917|     expect(posts[2]?.body).toEqual(posts[0]?.body);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  3 failed | 144 skipped (147)
+   Start at  10:54:20
+   Duration  2.64s (environment 34%, transform 34%, import 13%, tests 11%, setup 8%)
+
+  Transform  transforming modules took 2.40s · 34% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/tasks.test.tsx src/instructor/RingBlockPage.test.tsx src/SignupPage.test.tsx -t E7-W07

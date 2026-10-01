@@ -30,19 +30,23 @@ function defaultRows(): Row[] {
   ];
 }
 
-/** A transport whose reads answer `reads` in turn (the last one again) and saves answer `saves`. */
+/**
+ * A transport whose reads answer `reads` in turn (the last one again) and saves answer `saves`. Its
+ * `Idempotency-Key`s are the real transport's (api-client's `attendanceSheetTransport`, tested
+ * there, E7-W07 step 4): this hook only says what to save.
+ */
 function fakeTransport(reads: Sheet[], saves: AttendanceSaveOutcome<Sheet>[]) {
   let read = 0;
   let saved = 0;
-  const calls: { body: unknown; key: string }[] = [];
+  const calls: { body: unknown }[] = [];
   const transport: AttendanceSheetTransport<Sheet> = {
     read: vi.fn(() => {
       const answer = reads[Math.min(read, reads.length - 1)];
       read += 1;
       return answer === undefined ? Promise.reject(new Error("no read")) : Promise.resolve(answer);
     }),
-    save: vi.fn((body: unknown, key: string) => {
-      calls.push({ body, key });
+    save: vi.fn((body: unknown) => {
+      calls.push({ body });
       const answer = saves[Math.min(saved, saves.length - 1)];
       saved += 1;
       return answer === undefined ? Promise.reject(new Error("no save")) : Promise.resolve(answer);
@@ -52,7 +56,7 @@ function fakeTransport(reads: Sheet[], saves: AttendanceSaveOutcome<Sheet>[]) {
 }
 
 describe("E6-W03 step 11 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal", () => {
-  it("a 422 ATTENDANCE_WINDOW_CLOSED whose re-read comes back closed empties the draft and disables the save; a later save sends a new key", async () => {
+  it("a 422 ATTENDANCE_WINDOW_CLOSED whose re-read comes back closed empties the draft and disables the save; a later save is sent again", async () => {
     const fake = fakeTransport(
       [sheet(4, true), sheet(4, false), sheet(4, true)],
       [
@@ -93,11 +97,10 @@ describe("E6-W03 step 11 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft
       { items: [{ bookingId: "b2", state: "PRESENT" }], version: 4 },
       { items: [{ bookingId: "b2", state: "PRESENT" }], version: 4 },
     ]);
-    expect(fake.calls[1]?.key).not.toBe(fake.calls[0]?.key);
     expect(result.current.notice).toEqual({ kind: "saved" });
   });
 
-  it("only a network failure (no answer) keeps the key: the retry of the same payload reuses it and nothing is read again", async () => {
+  it("an unanswered save (offline, a 5xx) keeps the list and the draft and reads nothing: the retry sends the same payload (the transport keeps its key, E7-W07 step 4)", async () => {
     const fake = fakeTransport(
       [sheet(4, true)],
       [
@@ -121,10 +124,10 @@ describe("E6-W03 step 11 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft
       await result.current.save();
     });
     expect(fake.calls).toHaveLength(2);
-    expect(fake.calls[1]?.key).toBe(fake.calls[0]?.key);
+    expect(fake.calls[1]?.body).toEqual(fake.calls[0]?.body);
   });
 
-  it("409 STALE_VERSION rebases on details.current with its permissions, and the next save gets a new key", async () => {
+  it("409 STALE_VERSION rebases on details.current with its permissions, and the next save sends the caller's rows with the new version", async () => {
     const current = sheet(5, true, [
       { bookingId: "b1", final: false, state: "NO_SHOW" },
       { bookingId: "b2", final: false, state: "PENDING" },
@@ -157,7 +160,6 @@ describe("E6-W03 step 11 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft
       items: [{ bookingId: "b2", state: "PRESENT" }],
       version: 5,
     });
-    expect(fake.calls[1]?.key).not.toBe(fake.calls[0]?.key);
   });
 
   it("choices made before leaving (D12 → D13 → back) are rebased on the first read like any other", async () => {

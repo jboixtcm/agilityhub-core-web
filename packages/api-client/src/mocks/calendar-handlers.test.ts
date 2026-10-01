@@ -451,6 +451,38 @@ describe("E5-W05 round 2 · the calendar world's reads are the caller's club's, 
     expect((await read("admin", block)).body).toEqual(before.block.body);
   });
 
+  it("E7-W07 step 8 (E5-W05 round 3 review #7, R3-A2): POST /weeks by an ADMIN of another club is answered from its own club, never from this club's week: 201 with a new PENDING week of its own where this club's 2026-08-10 is VALIDATED, 200 with that same week on a repeat, and this club's weeks do not change", async () => {
+    const weeks = async () => (await read("admin", "/weeks?size=50")).body;
+    const before = await weeks();
+    expect(before.totalItems).toBeGreaterThan(0);
+    const create = async (startDate: string) => {
+      mockScenario("adminOtherClub");
+      const response = await fetch("https://core.example.test/api/v1/weeks", {
+        body: JSON.stringify({ startDate }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      return {
+        body: (await response.json()) as { id: string; startDate: string; state: string },
+        status: response.status,
+      };
+    };
+    const first = await create("2026-08-10");
+    expect([first.status, first.body.startDate, first.body.state]).toEqual([
+      201,
+      "2026-08-10",
+      "PENDING",
+    ]);
+    expect(first.body.id).not.toBe("week-2026-08-10");
+    const week = schema("Week");
+    expect(week(first.body), JSON.stringify(week.errors, null, 2)).toBe(true);
+    const again = await create("2026-08-10");
+    expect([again.status, again.body.id]).toEqual([200, first.body.id]);
+    // A week this club has not created yet stays out of this club's world too.
+    expect((await create("2026-09-07")).status).toBe(201);
+    expect(await weeks()).toEqual(before);
+  });
+
   it("E5-W05 round 2 #11.e: GET /class-sessions is the staff's (a MEMBER is 403) and filters by the snapshot's x-filterable fields", async () => {
     const wednesday = await read(
       "instructor",

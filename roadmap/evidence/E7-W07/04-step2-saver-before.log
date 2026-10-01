@@ -1,0 +1,103 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/preferences-saver.test.ts (13 tests | 4 failed) 66ms
+   ❯ E7-W06 step 4 (E7-W05 review #1) and E7-W07 step 2 (E7-W06 review #3, ruling E85: option a): a failed save after a restore whose departure overlapped (5)
+     × E7-W07 step 2 (R-11-04): the last PUT of overlapping ones fails, the GET answers PERSONAL = false, the page shows PERSONAL = true as a pending change, sends it again, and only its 2xx frees the outbox entry 9ms
+     × E7-W07 step 2: when the retry fails too, the choice stays on top, unsent (no loop of resends) and kept; the member's next change of another preference sends it with that change 10ms
+     × E7-W07 step 2: the member changes the same preference again after the failure — the new choice wins: the kept entry goes and the old choice is never sent again 8ms
+     × E7-W07 step 2: the member leaves right after the failure — the departure carries the last choice with keepalive and keeps it fresh, so the next visit within 5 minutes shows it as a pending change before it is saved 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/preferences-saver.test.ts > E7-W06 step 4 (E7-W05 review #1) and E7-W07 step 2 (E7-W06 review #3, ruling E85: option a): a failed save after a restore whose departure overlapped > E7-W07 step 2 (R-11-04): the last PUT of overlapping ones fails, the GET answers PERSONAL = false, the page shows PERSONAL = true as a pending change, sends it again, and only its 2xx frees the outbox entry
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/preferences-saver.test.ts:256:27
+    254|     // What the api holds is read again (E7-W06 step 4); meanwhile not…
+    255|     // member's last choice shows as a pending change.
+    256|     expect(h.reads.count).toBe(1);
+       |                           ^
+    257|     expect(h.puts).toHaveLength(3);
+    258|     expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/preferences-saver.test.ts > E7-W06 step 4 (E7-W05 review #1) and E7-W07 step 2 (E7-W06 review #3, ruling E85: option a): a failed save after a restore whose departure overlapped > E7-W07 step 2: when the retry fails too, the choice stays on top, unsent (no loop of resends) and kept; the member's next change of another preference sends it with that change
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/preferences-saver.test.ts:293:73
+    291|     expect(h.puts).toHaveLength(4);
+    292|     expect(h.reads.count).toBe(1);
+    293|     expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL…
+       |                                                                         ^
+    294|     expect(h.saver.state().waiting).toBe(false);
+    295|     expect(h.kept).toEqual([{ emailByCategory: { PERSONAL: true } }]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/preferences-saver.test.ts > E7-W06 step 4 (E7-W05 review #1) and E7-W07 step 2 (E7-W06 review #3, ruling E85: option a): a failed save after a restore whose departure overlapped > E7-W07 step 2: the member changes the same preference again after the failure — the new choice wins: the kept entry goes and the old choice is never sent again
+AssertionError: expected [ { emailByCategory: { …(1) } } ] to deeply equal [ { emailByCategory: { …(1) } }, …(1) ]
+
+- Expected
++ Received
+
+@@ -2,7 +2,6 @@
+    {
+      "emailByCategory": {
+        "PERSONAL": true,
+      },
+    },
+-   undefined,
+  ]
+
+ ❯ src/preferences-saver.test.ts:310:20
+    308|     // While the GET is out, the member turns PERSONAL off.
+    309|     h.saver.edit({ emailByCategory: { PERSONAL: false } });
+    310|     expect(h.kept).toEqual([{ emailByCategory: { PERSONAL: true } }, u…
+       |                    ^
+    311|     h.answerRead();
+    312|     await tick();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/preferences-saver.test.ts > E7-W06 step 4 (E7-W05 review #1) and E7-W07 step 2 (E7-W06 review #3, ruling E85: option a): a failed save after a restore whose departure overlapped > E7-W07 step 2: the member leaves right after the failure — the departure carries the last choice with keepalive and keeps it fresh, so the next visit within 5 minutes shows it as a pending change before it is saved
+AssertionError: expected [ { body: { …(1) }, …(3) }, …(3) ] to have a length of 5 but got 4
+
+- Expected
++ Received
+
+- 5
++ 4
+
+ ❯ src/preferences-saver.test.ts:349:22
+    347|       expect(h.failed).toHaveLength(2);
+    348|       h.saver.leave();
+    349|       expect(h.puts).toHaveLength(5);
+       |                      ^
+    350|       expect(h.puts.at(-1)).toMatchObject({
+    351|         body: { emailByCategory: { PERSONAL: true } },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 9 passed (13)
+   Start at  10:30:14
+   Duration  202ms (tests 62%, transform 29%, import 7%, worker 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/preferences-saver.test.ts

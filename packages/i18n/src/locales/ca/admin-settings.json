@@ -776,7 +776,17 @@
       "swept": "{count, plural, one {# entrada d'espera tancada} other {# entrades d'espera tancades}}",
       "finished": "{count, plural, one {# classe tancada} other {# classes tancades}}",
       "activitiesFinished": "{count, plural, one {# activitat tancada} other {# activitats tancades}}",
-      "ttlPendingRingSlotLocks": "{count, plural, one {# bloqueig tècnic de pista caducat} other {# bloquejos tècnics de pista caducats}}"
+      "ttlPendingRingSlotLocks": "{count, plural, one {# bloqueig tècnic de pista caducat} other {# bloquejos tècnics de pista caducats}}",
+      "ttlPendingSeatHolds": "{count, plural, one {# bloqueig temporal de plaça caducat} other {# bloquejos temporals de plaça caducats}}",
+      "ttlPendingMagicLinkTokens": "{count, plural, one {# enllaç d'accés caducat} other {# enllaços d'accés caducats}}",
+      "ttlPendingIdempotencyRecords": "{count, plural, one {# registre de reintents caducat} other {# registres de reintents caducats}}",
+      "ttlPendingJobLocks": "{count, plural, one {# bloqueig de procés caducat} other {# bloquejos de procés caducats}}",
+      "ttlPendingSignupNotificationAdmissions": "{count, plural, one {# control d'avís d'alta caducat} other {# controls d'avís d'alta caducats}}",
+      "orphanUploadsDeleted": "{count, plural, one {# fitxer d'alta orfe esborrat} other {# fitxers d'alta orfes esborrats}}",
+      "exportsPurged": "{count, plural, one {# exportació caducada esborrada} other {# exportacions caducades esborrades}}",
+      "domainEventsDeleted": "{count, plural, one {# esdeveniment intern esborrat} other {# esdeveniments interns esborrats}}",
+      "stripeEventsDeleted": "{count, plural, one {# esdeveniment de Stripe esborrat} other {# esdeveniments de Stripe esborrats}}",
+      "jobRunsDeleted": "{count, plural, one {# execució antiga esborrada} other {# execucions antigues esborrades}}"
     },
     "counterRaw": "{key}: {count}",
     "switchLabel": "{name} activat",

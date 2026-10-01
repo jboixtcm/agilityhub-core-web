@@ -1,0 +1,43 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/activities/ActivitiesPage.test.tsx (50 tests | 2 failed | 48 skipped) 801ms
+   ❯ E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D7's publication and cancellation follow the shared submission-key rule (2)
+     × T-07-29 T-07-10 E7-W07 step 4 (CONVENCIONS_API §7, E85): [PUBLICA] keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ACTIVITY_IN_PAST retires it, so the same publication sent again takes a new key 518ms
+     × T-07-29 T-07-13 E7-W07 step 4 (CONVENCIONS_API §7, E85): [CANCEL·LA I AVISA…] keeps its Idempotency-Key through a network failure and a 503 with the api's body, and a 422 ADMIN_TEXT_REQUIRED retires it, so the same notice sent again takes a new key 279ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D7's publication and cancellation follow the shared submission-key rule > T-07-29 T-07-10 E7-W07 step 4 (CONVENCIONS_API §7, E85): [PUBLICA] keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ACTIVITY_IN_PAST retires it, so the same publication sent again takes a new key
+AssertionError: expected '021731b4-89d7-4bc3-895f-7ab3d73a62fe' not to be '021731b4-89d7-4bc3-895f-7ab3d73a62fe' // Object.is equality
+ ❯ src/activities/ActivitiesPage.test.tsx:948:30
+    946|     expect(sent[1]?.key).toBe(sent[0]?.key);
+    947|     expect(sent[2]?.key).toBe(sent[0]?.key);
+    948|     expect(sent[3]?.key).not.toBe(sent[0]?.key);
+       |                              ^
+    949|   });
+    950|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/activities/ActivitiesPage.test.tsx > E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D7's publication and cancellation follow the shared submission-key rule > T-07-29 T-07-13 E7-W07 step 4 (CONVENCIONS_API §7, E85): [CANCEL·LA I AVISA…] keeps its Idempotency-Key through a network failure and a 503 with the api's body, and a 422 ADMIN_TEXT_REQUIRED retires it, so the same notice sent again takes a new key
+AssertionError: expected '6285b386-89e5-4a65-9c13-b715263c619a' not to be '6285b386-89e5-4a65-9c13-b715263c619a' // Object.is equality
+ ❯ src/activities/ActivitiesPage.test.tsx:1006:30
+    1004|     expect(sent[1]?.key).toBe(sent[0]?.key);
+    1005|     expect(sent[2]?.key).toBe(sent[0]?.key);
+    1006|     expect(sent[3]?.key).not.toBe(sent[0]?.key);
+       |                              ^
+    1007|   });
+    1008| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 48 skipped (50)
+   Start at  10:46:22
+   Duration  2.78s (tests 30%, transform 28%, environment 27%, import 11%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities/ActivitiesPage.test.tsx -t E7-W07 step 4

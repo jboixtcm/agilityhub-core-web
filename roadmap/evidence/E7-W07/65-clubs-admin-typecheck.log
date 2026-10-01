@@ -1,0 +1,9 @@
+
+> clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> tsc --noEmit
+
+src/activities/ActivityPage.tsx(810,62): error TS2345: Argument of type '{ adminText?: string; reason: "CLUB_MANUAL" | "DELETED"; }' is not assignable to parameter of type 'string'.
+src/activities/ActivityPage.tsx(1589,36): error TS2339: Property 'reset' does not exist on type 'SubmissionKeys'.
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 typecheck: `tsc --noEmit`
+Exit status 2

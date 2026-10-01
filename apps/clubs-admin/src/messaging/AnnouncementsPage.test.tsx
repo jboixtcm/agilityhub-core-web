@@ -10,11 +10,12 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { getResponse, http } from "msw";
+import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AnnouncementsPage } from "./AnnouncementsPage";
+import { SendAnnouncementDialog } from "./SendAnnouncementDialog";
 
 const canic: Branding = {
   ...brandingCanicFixture,
@@ -722,5 +723,84 @@ describe("T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12)", () => {
       title: { ca: "Portes obertes" },
     });
     expect(new URLSearchParams(window.location.search).get("template")).toMatch(/^tpl-custom-/u);
+  });
+});
+
+describe("E7-W07 step 4 (CONVENCIONS_API §7, E74, E85): «Enviar comunicat» follows the shared submission-key rule", () => {
+  it("T-11-38 T-11-18 E7-W07 step 4 (CONVENCIONS_API §7, E85): [ENVIA] keeps its Idempotency-Key after a 503 with the api's body, so the retry sends the same key; a 422 NO_RECIPIENTS retires it, so the same send again takes a new key", async () => {
+    const sent: { dryRun: boolean; key: string | null }[] = [];
+    server.use(
+      http.post("*/api/v1/message-templates/:id/send", async ({ request }) => {
+        const payload = (await request.clone().json()) as { dryRun: boolean };
+        sent.push({ dryRun: payload.dryRun, key: request.headers.get("Idempotency-Key") });
+        if (payload.dryRun) return undefined;
+        const real = sent.filter((entry) => !entry.dryRun).length;
+        if (real === 1) {
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", details: {}, message: "Unexpected error", traceId: "t-503" },
+            { status: 503 },
+          );
+        }
+        if (real === 2) {
+          return HttpResponse.json(
+            { code: "NO_RECIPIENTS", details: {}, message: "No recipients", traceId: "t-422" },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    mockScenario("admin");
+    const i18n = await createI18n({
+      branding: canic,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-messaging", "errors", "common"],
+      storage: undefined,
+    });
+    const onSent = vi.fn();
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={canic}>
+          <SendAnnouncementDialog
+            audience={{ kind: "selection", memberIds: ["member-laura"] }}
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            initialTemplateId="tpl-n-24"
+            onClose={() => undefined}
+            onSent={onSent}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    const modal = await screen.findByRole("dialog", { name: "Enviar comunicat" });
+    fireEvent.click(
+      await within(modal).findByRole("checkbox", {
+        name: "Confirmo que vull enviar aquest comunicat a 1 abonat",
+      }),
+    );
+    const press = async () => {
+      const submit = within(modal).getByRole("button", { name: "ENVIA" });
+      await waitFor(() => {
+        expect(submit).toBeEnabled();
+      });
+      fireEvent.click(submit);
+    };
+    await press();
+    expect(
+      await within(modal).findByText(
+        "S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.",
+      ),
+    ).toBeVisible();
+    await press();
+    expect(await within(modal).findByText("No hi ha destinataris.")).toBeVisible();
+    // The api answered (a 4xx with its body): the same send again is a new submission.
+    await press();
+    await waitFor(() => {
+      expect(onSent).toHaveBeenCalledWith(1);
+    });
+    const real = sent.filter((entry) => !entry.dryRun);
+    expect(real).toHaveLength(3);
+    expect(real[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
+    expect(real[1]?.key).toBe(real[0]?.key);
+    expect(real[2]?.key).not.toBe(real[0]?.key);
   });
 });

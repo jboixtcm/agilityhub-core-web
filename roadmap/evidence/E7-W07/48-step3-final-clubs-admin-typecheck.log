@@ -1,0 +1,11 @@
+
+> clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> tsc --noEmit
+
+src/catalogs/JobsCard.tsx(4,8): error TS2305: Module '"@agilityhub/api-client"' has no exported member 'HeldKey'.
+src/catalogs/JobsCard.tsx(5,3): error TS2305: Module '"@agilityhub/api-client"' has no exported member 'heldKeyFor'.
+src/followup/FollowUpPage.tsx(4,8): error TS2305: Module '"@agilityhub/api-client"' has no exported member 'HeldKey'.
+src/followup/FollowUpPage.tsx(5,3): error TS2305: Module '"@agilityhub/api-client"' has no exported member 'heldKeyFor'.
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 typecheck: `tsc --noEmit`
+Exit status 2

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   type AttendanceDraft,
@@ -28,7 +28,7 @@ export type AttendanceSaveOutcome<Sheet> =
   | { current: Sheet; kind: "stale" }
   /** The api answered with an error (`code`): the list is read again. */
   | { code: string; kind: "refused" }
-  /** No answer (status 0): the list stays, and a retry of the same payload keeps its key. */
+  /** No answer (offline, a gateway's, a 5xx): the list stays, and a retry keeps the key. */
   | { code: string; kind: "unanswered" }
   /**
    * `409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}`: the first save of that key still runs, which
@@ -36,10 +36,14 @@ export type AttendanceSaveOutcome<Sheet> =
    */
   | { code: string; kind: "inProgress" };
 
-/** One class's sheet on the wire; the app builds it from its api client (`attendanceSheetTransport`). */
+/**
+ * One class's sheet on the wire; the app builds it from its api client (`attendanceSheetTransport`),
+ * which holds each submission's `Idempotency-Key` by the shared rule (`createSubmissionKeys`,
+ * CONVENCIONS_API §7, E7-W07 step 4): the same payload saved again while unanswered reuses it.
+ */
 export interface AttendanceSheetTransport<Sheet extends AttendanceSheetData> {
   read: () => Promise<Sheet>;
-  save: (body: AttendanceSaveBody, idempotencyKey: string) => Promise<AttendanceSaveOutcome<Sheet>>;
+  save: (body: AttendanceSaveBody) => Promise<AttendanceSaveOutcome<Sheet>>;
 }
 
 /**
@@ -57,34 +61,6 @@ export interface AttendanceSheetStart {
 
 type SheetState<Sheet> =
   { error: unknown; status: "error" } | { sheet: Sheet; status: "ready" } | { status: "loading" };
-
-/**
- * One `Idempotency-Key` per payload (CONVENCIONS_API §7), kept only while the api has not
- * answered: a retry after a network failure or an `IN_PROGRESS` (E79) replays the same save, and
- * once the api has answered (a save, a 409 or any refusal) the next attempt is a new request with
- * a new key.
- */
-function useIdempotencyKeys() {
-  const keys = useRef(new Map<string, string>());
-  return useMemo(
-    () => ({
-      /** Retires `key` only if the payload still holds it (E7-W06 review #7: a late answer). */
-      forget(payload: unknown, key: string) {
-        const signature = JSON.stringify(payload);
-        if (keys.current.get(signature) === key) keys.current.delete(signature);
-      },
-      keyFor(payload: unknown) {
-        const signature = JSON.stringify(payload);
-        const known = keys.current.get(signature);
-        if (known !== undefined) return known;
-        const key = crypto.randomUUID();
-        keys.current.set(signature, key);
-        return key;
-      },
-    }),
-    [],
-  );
-}
 
 /**
  * The attendance sheet of screen 21 and of D12's panel (S10 R-10-03, R-10-04): the api's list, the
@@ -108,7 +84,6 @@ export function useAttendanceSheet<Sheet extends AttendanceSheetData>(
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState<AttendanceSheetNotice>();
   const [reload, setReload] = useState(0);
-  const keys = useIdempotencyKeys();
   // The rows the draft was chosen on: a row whose state moved since then is someone else's now.
   const base = useRef<readonly AttendanceSheetRow[]>(start?.baseRows ?? []);
   // R-10-04: answers (reads and saves) are shown in request order and never below the version on
@@ -182,11 +157,9 @@ export function useAttendanceSheet<Sheet extends AttendanceSheetData>(
     order.current.requested += 1;
     const seq = order.current.requested;
     try {
-      const key = keys.keyFor(body);
-      const outcome = await transport.save(body, key);
-      // Answered: a later attempt, even with the same payload, is a new request (step 11). No
-      // answer yet (offline, or IN_PROGRESS: the first save still runs, E79) keeps the key.
-      if (outcome.kind !== "unanswered" && outcome.kind !== "inProgress") keys.forget(body, key);
+      // The transport keeps the submission's key while the api has not answered (offline, a 5xx,
+      // IN_PROGRESS) and retires it on the answer (E7-W07 step 4).
+      const outcome = await transport.save(body);
       if (outcome.kind === "saved") {
         if (accept(seq, outcome.sheet)) {
           base.current = outcome.sheet.rows;
@@ -225,7 +198,7 @@ export function useAttendanceSheet<Sheet extends AttendanceSheetData>(
       busy.current = false;
       if (mounted.current) setSaving(false);
     }
-  }, [accept, draft, keys, read, sheet, transport]);
+  }, [accept, draft, read, sheet, transport]);
 
   const dismissNotice = useCallback(() => {
     setNotice(undefined);

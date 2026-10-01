@@ -1,0 +1,310 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/activities/activities.test.tsx (30 tests | 1 failed | 29 skipped) 10214ms
+   ❯ E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): 13's registration keeps one key per submission (1)
+     × T-07-30 T-07-14 E7-W07 step 4 (CONVENCIONS_API §7, E85): [INSCRIU-M'HI] keeps its Idempotency-Key through a network failure, IN_PROGRESS («L'operació encara està en curs…») and a 503 with the api's body; a 422 BOOKING_BLOCKED retires it, so the same registration sent again takes a new key 10211ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/activities/activities.test.tsx > E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): 13's registration keeps one key per submission > T-07-30 T-07-14 E7-W07 step 4 (CONVENCIONS_API §7, E85): [INSCRIU-M'HI] keeps its Idempotency-Key through a network failure, IN_PROGRESS («L'operació encara està en curs…») and a 503 with the api's body; a 422 BOOKING_BLOCKED retires it, so the same registration sent again takes a new key
+TestingLibraryElementError: Unable to find an element with the text: L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mLa clau d'idempotència ja s'ha utilitzat per a una altra petició.[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Tanca"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mSeminari de handling[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mseminari[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mds 12 de setembre · 9:00–13:00[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mCentral[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 6 de setembre[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m6 places lliures de 12[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mMatí de treball de handling amb grups reduïts[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mINSCRIU-M'HI[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"activities-screen activity-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"ah-app-bar activities-screen__bar"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna enrere"[39m
+            [33mclass[39m=[32m"activities-screen__back"[39m
+            [33mhref[39m=[32m"/reservar"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m‹[0m
+            [36m</span>[39m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__title"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mActivitat[0m
+          [36m</h1>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+        [36m/>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<span>[39m
+          [0mLa clau d'idempotència ja s'ha utilitzat per a una altra petició.[0m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Tanca"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"activity-detail__header"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mSeminari de handling[0m
+        [36m</h2>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+        [36m>[39m
+          [0mseminari[0m
+        [36m</span>[39m
+      [36m</header>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"activity-detail__facts"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mds 12 de setembre · 9:00–13:00[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mCentral[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mInscripció fins el 6 de setembre[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0m6 places lliures de 12[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"activity-detail__short"[39m
+      [36m>[39m
+        [0mMatí de treball de handling amb grups reduïts[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"activity-detail__action"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mINSCRIU-M'HI[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/activities/activities.test.tsx:902:20
+    900|     await register();
+    901|     expect(
+    902|       await screen.findByText(
+       |                    ^
+    903|         "L'operació encara està en curs. Torna-ho a provar d'aquí a un…
+    904|       ),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 29 skipped (30)
+   Start at  10:43:39
+   Duration  12.39s (tests 84%, transform 8%, environment 5%, import 3%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/activities/activities.test.tsx -t E7-W07 step 4

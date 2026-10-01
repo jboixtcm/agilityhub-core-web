@@ -1,0 +1,301 @@
+
+> @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/calendar-handlers.test.ts (15 tests | 1 failed) 496ms
+   ❯ E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) (5)
+     × E7-W07 step 8 (E5-W05 round 3 review #7, R3-A2): POST /weeks by an ADMIN of another club is answered from its own club, never from this club's week: 201 with a new PENDING week of its own where this club's 2026-08-10 is VALIDATED, 200 with that same week on a repeat, and this club's weeks do not change 9ms
+ ❯ src/mocks/booking-handlers.test.ts (28 tests | 3 failed) 810ms
+   ❯ E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) (6)
+     × T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at 2026-08-02T20:30:00+02:00 (late window 240 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: false) 89ms
+     × T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at 2026-08-02T19:59:00+02:00 (late window 240 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: false) 54ms
+     × E7-W07 step 6 (R-08-03, ruling E85): the default world's «ds 8» is a normal row at 1 of 2 (Duna's Monday 3 still swappable): BOOKABLE with its 3 seats, and its tap holds the seat with no limit reached 6ms
+ ❯ src/mocks/backoffice-handlers.test.ts (36 tests | 5 failed) 1076ms
+   ❯ E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19) (5)
+     × T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 10 at 8:12 (D1 and D10, S15's example day) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 71ms
+     × T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dc 12 at 10:00 (D4) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 64ms
+     × T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 7:10 (the ring-usage register) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 68ms
+     × T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 21:00 (screen 23's drawer) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 60ms
+     × T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dg 2 at 20:30 (the member world) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 66ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19) > T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 10 at 8:12 (D1 and D10, S15's example day) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice
+AssertionError: expected [ …(24) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "calendar: Nala (dog-nala) in the week of 2026-08-09: 4 > 2",
++   "calendar: Kai (dog-kai) in the week of 2026-08-09: 5 > 2",
++   "calendar: Chun-li (dog-chun-li) in the week of 2026-08-09: 5 > 2",
++   "calendar: Nass (dog-nass) in the week of 2026-08-09: 7 > 2",
++   "calendar: Bitxo (dog-bitxo) in the week of 2026-08-09: 3 > 2",
++   "calendar: Duna (dog-duna) in the week of 2026-08-09: 5 > 2",
++   "calendar: Trevi (dog-trevi) in the week of 2026-08-09: 4 > 2",
++   "calendar: Fish (dog-fish) in the week of 2026-08-09: 6 > 2",
++   "calendar: Blat (dog-blat) in the week of 2026-08-09: 5 > 2",
++   "calendar: Mixa (dog-mixa) in the week of 2026-08-09: 5 > 2",
++   "calendar: Pipa (dog-pipa) in the week of 2026-08-09: 4 > 2",
++   "calendar: Mel (dog-mel) in the week of 2026-08-09: 4 > 2",
++   "calendar: Tofu (dog-tofu) in the week of 2026-08-09: 4 > 2",
++   "day grid: Duna (dog-duna) in the week of 2026-08-02: 5 > 2",
++   "day grid: Mixa (dog-mixa) in the week of 2026-08-02: 7 > 2",
++   "day grid: Bruc (dog-bruc) in the week of 2026-08-02: 5 > 2",
++   "day grid: Nala (dog-nala) in the week of 2026-08-02: 5 > 2",
++   "day grid: Kai (dog-kai) in the week of 2026-08-02: 5 > 2",
++   "day grid: Fish (dog-fish) in the week of 2026-08-02: 8 > 2",
++   "day grid: Blat (dog-blat) in the week of 2026-08-02: 5 > 2",
++   "day grid: Trevi (dog-trevi) in the week of 2026-08-02: 3 > 2",
++   "day grid: Chun-li (dog-chun-li) in the week of 2026-08-02: 4 > 2",
++   "day grid: Nass (dog-nass) in the week of 2026-08-02: 4 > 2",
++   "day grid: Thai (dog-thai) in the week of 2026-08-02: 4 > 2",
++ ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:1158:24
+    1156|         }
+    1157|       }
+    1158|       expect(problems).toEqual([]);
+       |                        ^
+    1159|     },
+    1160|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19) > T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dc 12 at 10:00 (D4) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice
+AssertionError: expected [ …(24) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "calendar: Nala (dog-nala) in the week of 2026-08-09: 4 > 2",
++   "calendar: Kai (dog-kai) in the week of 2026-08-09: 4 > 2",
++   "calendar: Chun-li (dog-chun-li) in the week of 2026-08-09: 5 > 2",
++   "calendar: Nass (dog-nass) in the week of 2026-08-09: 7 > 2",
++   "calendar: Bitxo (dog-bitxo) in the week of 2026-08-09: 3 > 2",
++   "calendar: Duna (dog-duna) in the week of 2026-08-09: 5 > 2",
++   "calendar: Trevi (dog-trevi) in the week of 2026-08-09: 4 > 2",
++   "calendar: Fish (dog-fish) in the week of 2026-08-09: 6 > 2",
++   "calendar: Blat (dog-blat) in the week of 2026-08-09: 5 > 2",
++   "calendar: Mixa (dog-mixa) in the week of 2026-08-09: 5 > 2",
++   "calendar: Pipa (dog-pipa) in the week of 2026-08-09: 4 > 2",
++   "calendar: Mel (dog-mel) in the week of 2026-08-09: 4 > 2",
++   "calendar: Tofu (dog-tofu) in the week of 2026-08-09: 4 > 2",
++   "day grid: Duna (dog-duna) in the week of 2026-08-02: 5 > 2",
++   "day grid: Mixa (dog-mixa) in the week of 2026-08-02: 7 > 2",
++   "day grid: Bruc (dog-bruc) in the week of 2026-08-02: 5 > 2",
++   "day grid: Nala (dog-nala) in the week of 2026-08-02: 5 > 2",
++   "day grid: Kai (dog-kai) in the week of 2026-08-02: 5 > 2",
++   "day grid: Fish (dog-fish) in the week of 2026-08-02: 8 > 2",
++   "day grid: Blat (dog-blat) in the week of 2026-08-02: 5 > 2",
++   "day grid: Trevi (dog-trevi) in the week of 2026-08-02: 3 > 2",
++   "day grid: Chun-li (dog-chun-li) in the week of 2026-08-02: 4 > 2",
++   "day grid: Nass (dog-nass) in the week of 2026-08-02: 4 > 2",
++   "day grid: Thai (dog-thai) in the week of 2026-08-02: 4 > 2",
++ ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:1158:24
+    1156|         }
+    1157|       }
+    1158|       expect(problems).toEqual([]);
+       |                        ^
+    1159|     },
+    1160|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19) > T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 7:10 (the ring-usage register) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice
+ FAIL  src/mocks/backoffice-handlers.test.ts > E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19) > T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 21:00 (screen 23's drawer) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice
+AssertionError: expected [ …(24) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "calendar: Duna (dog-duna) in the week of 2026-08-02: 6 > 2",
++   "calendar: Nala (dog-nala) in the week of 2026-08-02: 4 > 2",
++   "calendar: Kai (dog-kai) in the week of 2026-08-02: 4 > 2",
++   "calendar: Chun-li (dog-chun-li) in the week of 2026-08-02: 5 > 2",
++   "calendar: Nass (dog-nass) in the week of 2026-08-02: 7 > 2",
++   "calendar: Bitxo (dog-bitxo) in the week of 2026-08-02: 3 > 2",
++   "calendar: Trevi (dog-trevi) in the week of 2026-08-02: 4 > 2",
++   "calendar: Fish (dog-fish) in the week of 2026-08-02: 6 > 2",
++   "calendar: Blat (dog-blat) in the week of 2026-08-02: 5 > 2",
++   "calendar: Mixa (dog-mixa) in the week of 2026-08-02: 5 > 2",
++   "calendar: Pipa (dog-pipa) in the week of 2026-08-02: 4 > 2",
++   "calendar: Mel (dog-mel) in the week of 2026-08-02: 4 > 2",
++   "calendar: Tofu (dog-tofu) in the week of 2026-08-02: 4 > 2",
++   "day grid: Duna (dog-duna) in the week of 2026-08-02: 5 > 2",
++   "day grid: Mixa (dog-mixa) in the week of 2026-08-02: 7 > 2",
++   "day grid: Bruc (dog-bruc) in the week of 2026-08-02: 5 > 2",
++   "day grid: Nala (dog-nala) in the week of 2026-08-02: 5 > 2",
++   "day grid: Kai (dog-kai) in the week of 2026-08-02: 5 > 2",
++   "day grid: Fish (dog-fish) in the week of 2026-08-02: 8 > 2",
++   "day grid: Blat (dog-blat) in the week of 2026-08-02: 5 > 2",
++   "day grid: Trevi (dog-trevi) in the week of 2026-08-02: 3 > 2",
++   "day grid: Chun-li (dog-chun-li) in the week of 2026-08-02: 4 > 2",
++   "day grid: Nass (dog-nass) in the week of 2026-08-02: 4 > 2",
++   "day grid: Thai (dog-thai) in the week of 2026-08-02: 4 > 2",
++ ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:1158:24
+    1156|         }
+    1157|       }
+    1158|       expect(problems).toEqual([]);
+       |                        ^
+    1159|     },
+    1160|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19) > T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dg 2 at 20:30 (the member world) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice
+AssertionError: expected [ …(24) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "calendar: Nala (dog-nala) in the week of 2026-07-26: 4 > 2",
++   "calendar: Kai (dog-kai) in the week of 2026-07-26: 4 > 2",
++   "calendar: Chun-li (dog-chun-li) in the week of 2026-07-26: 5 > 2",
++   "calendar: Nass (dog-nass) in the week of 2026-07-26: 7 > 2",
++   "calendar: Bitxo (dog-bitxo) in the week of 2026-07-26: 3 > 2",
++   "calendar: Duna (dog-duna) in the week of 2026-07-26: 5 > 2",
++   "calendar: Trevi (dog-trevi) in the week of 2026-07-26: 4 > 2",
++   "calendar: Fish (dog-fish) in the week of 2026-07-26: 6 > 2",
++   "calendar: Blat (dog-blat) in the week of 2026-07-26: 5 > 2",
++   "calendar: Mixa (dog-mixa) in the week of 2026-07-26: 5 > 2",
++   "calendar: Pipa (dog-pipa) in the week of 2026-07-26: 4 > 2",
++   "calendar: Mel (dog-mel) in the week of 2026-07-26: 4 > 2",
++   "calendar: Tofu (dog-tofu) in the week of 2026-07-26: 4 > 2",
++   "day grid: Duna (dog-duna) in the week of 2026-08-02: 5 > 2",
++   "day grid: Mixa (dog-mixa) in the week of 2026-08-02: 7 > 2",
++   "day grid: Bruc (dog-bruc) in the week of 2026-08-02: 5 > 2",
++   "day grid: Nala (dog-nala) in the week of 2026-08-02: 5 > 2",
++   "day grid: Kai (dog-kai) in the week of 2026-08-02: 5 > 2",
++   "day grid: Fish (dog-fish) in the week of 2026-08-02: 8 > 2",
++   "day grid: Blat (dog-blat) in the week of 2026-08-02: 5 > 2",
++   "day grid: Trevi (dog-trevi) in the week of 2026-08-02: 3 > 2",
++   "day grid: Chun-li (dog-chun-li) in the week of 2026-08-02: 4 > 2",
++   "day grid: Nass (dog-nass) in the week of 2026-08-02: 4 > 2",
++   "day grid: Thai (dog-thai) in the week of 2026-08-02: 4 > 2",
++ ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:1158:24
+    1156|         }
+    1157|       }
+    1158|       expect(problems).toEqual([]);
+       |                        ^
+    1159|     },
+    1160|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at 2026-08-02T20:30:00+02:00 (late window 240 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: false)
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "dog-duna 2026-08-08T09:00 CURRENT WEEKLY_LIMIT_DONE → HELD",
++ ]
+
+ ❯ src/mocks/booking-handlers.test.ts:883:9
+    881|           (line) => line.includes(" WEEKLY_LIMIT_DONE ") !== line.ends…
+    882|         ),
+    883|       ).toEqual([]);
+       |         ^
+    884|       expect(seen.some((line) => line.includes(" WEEKLY_LIMIT_DONE "))…
+    885|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at 2026-08-02T19:59:00+02:00 (late window 240 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: false)
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "dog-duna 2026-08-08T09:00 NEXT WEEKLY_LIMIT_DONE → HELD",
++ ]
+
+ ❯ src/mocks/booking-handlers.test.ts:883:9
+    881|           (line) => line.includes(" WEEKLY_LIMIT_DONE ") !== line.ends…
+    882|         ),
+    883|       ).toEqual([]);
+       |         ^
+    884|       expect(seen.some((line) => line.includes(" WEEKLY_LIMIT_DONE "))…
+    885|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > E7-W07 step 6 (R-08-03, ruling E85): the default world's «ds 8» is a normal row at 1 of 2 (Duna's Monday 3 still swappable): BOOKABLE with its 3 seats, and its tap holds the seat with no limit reached
+AssertionError: expected { description: 'C', …(13) } to match object { freeSeats: 3, …(2) }
+(11 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "freeSeats": 3,
+-   "state": "BOOKABLE",
++   "state": "WEEKLY_LIMIT_DONE",
+    "week": "CURRENT",
+  }
+
+ ❯ src/mocks/booking-handlers.test.ts:892:22
+    890|       (row) => row.startsAtLocal === "2026-08-08T09:00",
+    891|     );
+    892|     expect(saturday).toMatchObject({ freeSeats: 3, state: "BOOKABLE", …
+       |                      ^
+    893|     const hold = await call("POST", "/seat-holds", {
+    894|       classSessionId: "class-2026-08-08-0900",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/mocks/calendar-handlers.test.ts > E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) > E7-W07 step 8 (E5-W05 round 3 review #7, R3-A2): POST /weeks by an ADMIN of another club is answered from its own club, never from this club's week: 201 with a new PENDING week of its own where this club's 2026-08-10 is VALIDATED, 200 with that same week on a repeat, and this club's weeks do not change
+AssertionError: expected [ 200, '2026-08-10', 'VALIDATED' ] to deeply equal [ 201, '2026-08-10', 'PENDING' ]
+
+- Expected
++ Received
+
+  [
+-   201,
++   200,
+    "2026-08-10",
+-   "PENDING",
++   "VALIDATED",
+  ]
+
+ ❯ src/mocks/calendar-handlers.test.ts:468:68
+    466|     };
+    467|     const first = await create("2026-08-10");
+    468|     expect([first.status, first.body.startDate, first.body.state]).toE…
+       |                                                                    ^
+    469|       201,
+    470|       "2026-08-10",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+
+ Test Files  3 failed | 25 passed (28)
+      Tests  9 failed | 483 passed (492)
+   Start at  10:33:15
+   Duration  2.65s (import 40%, tests 36%, transform 24%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/api-client@0.0.0 test: `vitest run`
+Exit status 1

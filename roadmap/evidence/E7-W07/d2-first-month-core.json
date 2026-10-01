@@ -1,0 +1,9 @@
+{
+  "option": "TODAY",
+  "portion": "FULL",
+  "startDate": "2026-10-01",
+  "amountDue": {
+    "amountMinor": 6000,
+    "currency": "EUR"
+  }
+}

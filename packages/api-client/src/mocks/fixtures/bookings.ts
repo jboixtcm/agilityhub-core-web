@@ -394,8 +394,6 @@ export function nextBookingId(prefix: string): string {
 }
 
 export interface BookingOptions {
-  /** `bookingLimit` scenario (the `swap` world): Duna has two cancellable bookings this week (R-08-09). */
-  limit: boolean;
   locale: string;
   modules: readonly string[];
   now: number;
@@ -630,14 +628,11 @@ function rowsFor(dogId: string, options: BookingOptions): MockRow[] {
     { classId: CLASSES.wed5.id, freeSeats: 2, state: "BOOKABLE" },
     { classId: CLASSES.thu6.id, freeSeats: 0, state: "WAITLIST_OPEN", waiting: 1 },
     { classId: CLASSES.fri7Therapy.id, freeSeats: 0, state: "WAITLIST_FULL", waiting: 3 },
-    // Mockup 04's «Límit setmanal» beside 03's cancellable Monday (assumption A6): a fixed row,
-    // whose hold the api's rule decides (`limitRefuses`, R-08-09). In the `swap` world it is the
-    // normal row that 06 swaps.
-    {
-      classId: CLASSES.sat8.id,
-      freeSeats: 3,
-      state: options.limit ? "BOOKABLE" : "WEEKLY_LIMIT_DONE",
-    },
+    // Mockup 04 draws this row «Límit setmanal» beside 03's cancellable Monday. The api never sends
+    // that state while the limit is not reached or a booking can be swapped (R-08-03, R-08-09), so
+    // it is a normal row whose state `rowState` decides like every other (ruling E85): «Límit
+    // setmanal» in the `done` world (mockup 29), the row 06 swaps in the `swap` one.
+    { classId: CLASSES.sat8.id, freeSeats: 3, state: "BOOKABLE" },
     { classId: CLASSES.mon10.id, freeSeats: 4, state: "BOOKABLE" },
     // In W2 at the clock: «Properament» until Sunday 9 at 20:00 (R-08-01, `listedRow`).
     { classId: CLASSES.mon17.id, freeSeats: 5, state: "BOOKABLE" },
@@ -1082,8 +1077,9 @@ const DOG_LEVELS: Readonly<Record<string, string>> = {
 };
 
 /**
- * More registrants (fictional), drawn only for classes whose levels the first pool cannot fill:
- * Cadells, A, B, C, D, E, F, G and Teràpia (E5-W05 round 3 #4).
+ * More registrants (fictional), drawn for classes whose levels the first pool cannot fill: Cadells,
+ * A, B, C, D, E, F, G and Teràpia (E5-W05 round 3 #4); the last twelve (A, B, C and Cadells) take
+ * the seats the weekly limit closes to the first ones (E7-W07 step 5).
  */
 const LEVEL_POOL: readonly (readonly [string, string, "FEMALE" | "MALE", string])[] = [
   ["Rita", "Pipa", "FEMALE", "P"],
@@ -1113,6 +1109,18 @@ const LEVEL_POOL: readonly (readonly [string, string, "FEMALE" | "MALE", string]
   ["Judit", "Lira", "FEMALE", "G"],
   ["Francesc", "Calma", "FEMALE", "T"],
   ["Glòria", "Dolça", "FEMALE", "T"],
+  ["Èlia", "Brisa", "FEMALE", "A"],
+  ["Gil", "Bombo", "MALE", "A"],
+  ["Abril", "Mora", "FEMALE", "A"],
+  ["Bruna", "Gala", "FEMALE", "B"],
+  ["Ferran", "Trufa", "FEMALE", "B"],
+  ["Iu", "Pebre", "MALE", "B"],
+  ["Lola", "Xic", "MALE", "B"],
+  ["Rosa", "Canela", "FEMALE", "C"],
+  ["Àngel", "Nap", "MALE", "C"],
+  ["Berta", "Fada", "FEMALE", "C"],
+  ["Ivet", "Cuqui", "FEMALE", "P"],
+  ["Martina", "Pinya", "FEMALE", "P"],
 ];
 
 /** A registrant's dog level: the first pool's own, or the extra pool's. */
@@ -1129,46 +1137,138 @@ function allowedLevels(session: ClassSession, levelsEnabled: boolean): Set<strin
   return new Set(session.levelIds.map((id) => id.replace(/^level-/u, "").toUpperCase()));
 }
 
+/** A registrant of the staff reads: [member's first name, dog, the dog's sex]. */
+type Registrant = readonly [string, string, "FEMALE" | "MALE"];
+
 /**
- * The class's registrants: the slice of the pool by its start time and its place among that time's
- * classes, keeping only the dogs whose level the class allows (then the extra pool's), so D4's
+ * A class's candidates in order: the slice of the pool by its start time and its place among that
+ * time's classes, then the extra pool, keeping only the dogs whose level the class allows, so D4's
  * «B+C» lists Duna «C» first and never an «A» or «E» dog (E5-W05 round 3 #4).
  */
-function registrantsOf(
-  session: ClassSession,
-  count: number,
-  allowed: Set<string> | undefined,
-): (readonly [string, string, "FEMALE" | "MALE"])[] {
+function candidatesOf(session: ClassSession, allowed: Set<string> | undefined): Registrant[] {
   const slot = Number(/-(\d+)$/u.exec(session.id)?.[1] ?? "0");
   const offset = (POOL_OFFSETS[session.startTime] ?? 8) + slot * 5;
   const rotated = REGISTRANT_POOL.map(
     (_, index) => REGISTRANT_POOL[(offset + index) % REGISTRANT_POOL.length] ?? LATE_CANCELLER,
   );
-  const extra = LEVEL_POOL.map(([member, dog, sex]) => [member, dog, sex] as const);
-  const candidates =
-    allowed === undefined
-      ? rotated
-      : [...rotated, ...extra].filter(([, dog]) => allowed.has(registrantLevel(dog) ?? ""));
-  return candidates.slice(0, count);
+  const extra = LEVEL_POOL.map(([member, dog, sex]): Registrant => [member, dog, sex]);
+  const candidates = [...rotated, ...extra];
+  return allowed === undefined
+    ? candidates
+    : candidates.filter(([, dog]) => allowed.has(registrantLevel(dog) ?? ""));
 }
 
 /**
  * The 18:50 classes' late cancellation (the api's «any state»): Sergio + Thai («E») where the class
- * allows him, else the next allowed dog of the pool that is not booked.
+ * allows him and he is still free, else the next candidate that is not booked and still free.
  */
 function lateCancellerOf(
-  session: ClassSession,
-  booked: readonly (readonly [string, string, string])[],
+  candidates: readonly Registrant[],
+  booked: readonly Registrant[],
   allowed: Set<string> | undefined,
-): readonly [string, string, string] | undefined {
-  if (allowed === undefined || allowed.has(DOG_LEVELS[LATE_CANCELLER[1]] ?? "")) {
+  free: (person: Registrant) => boolean,
+): Registrant | undefined {
+  const taken = new Set(booked.map(([, dog]) => dog));
+  const available = (person: Registrant) => !taken.has(person[1]) && free(person);
+  if (
+    (allowed === undefined || allowed.has(DOG_LEVELS[LATE_CANCELLER[1]] ?? "")) &&
+    available(LATE_CANCELLER)
+  ) {
     return LATE_CANCELLER;
   }
-  const taken = new Set(booked.map(([, dog]) => dog));
-  return registrantsOf(session, REGISTRANT_POOL.length + LEVEL_POOL.length, allowed).find(
-    ([, dog]) => !taken.has(dog),
+  return candidates.find(available);
+}
+
+/** The dog id the staff reads give a registrant (the member world's own dogs share it: Duna). */
+const registrantDogId = (dog: string) => `dog-${slug(dog)}`;
+
+/**
+ * R-08-03 at the clock: the most bookings that count (R-08-02) a dog can hold in the booking week
+ * `weekKey`, `nowKey` being the week of now. The api checks the limit of the week as it stands at
+ * each booking: while the week is W1 a dog books up to `bookings.maxNextWeek`, once it is W0 up to
+ * `bookings.maxCurrentWeek`, so W0 and every past week (W0 when it was last booked) hold at most the
+ * larger of the two; W1 holds `maxNextWeek`; a week after W1 has not opened yet (R-08-01): none.
+ */
+function weekCapacity(weekKey: string, nowKey: string): number {
+  const index = Math.round((Date.parse(weekKey) - Date.parse(nowKey)) / WEEK_MS);
+  if (index >= 2) return 0;
+  return index === 1 ? weekLimit("NEXT") : Math.max(weekLimit("CURRENT"), weekLimit("NEXT"));
+}
+
+/**
+ * The order a world's classes take their registrants in: the 18:50 classes first (their slice
+ * starts with the names mockups 21 and D12 show), then the rest by start; at the same start the
+ * fuller class first (the day grid's «B+C» on Central before «Cadells»), then by id.
+ */
+function drawOrder(left: ClassSession, right: ClassSession): number {
+  const evening = (session: ClassSession) => (session.startTime === "18:50" ? 0 : 1);
+  return (
+    evening(left) - evening(right) ||
+    Date.parse(left.startsAt) - Date.parse(right.startsAt) ||
+    right.counters.booked - left.counters.booked ||
+    left.id.localeCompare(right.id)
   );
 }
+
+interface DrawnRegistrants {
+  booked: Registrant[];
+  late: Registrant | undefined;
+  /** `bookingWeekKey` of the class (R-08-01), worked out once per class. */
+  weekKey: string;
+}
+
+/**
+ * The registrants of every class of one staff world (the calendar's, or the day grid's), drawn so
+ * no dog holds more bookings that count in a booking week than R-08-03 lets it (`weekCapacity`),
+ * counted together with the member world's own bookings (Duna's): a back-office booking is the
+ * member's booking (R-08-19) and counts the same (R-08-02). Each class still takes its counters'
+ * dogs, of a level it allows (R-08-04), none twice. A class cancelled by the club keeps the dogs it
+ * notified: `CANCELLED_BY_CLUB` never counts (R-08-02).
+ */
+function drawRegistrants(
+  world: readonly ClassSession[],
+  levelsEnabled: boolean,
+  now: number,
+): Map<string, DrawnRegistrants> {
+  const held = new Map<string, number>();
+  const hold = (dogId: string, weekKey: string) => {
+    const key = `${dogId} ${weekKey}`;
+    held.set(key, (held.get(key) ?? 0) + 1);
+  };
+  for (const booking of bookingState.bookings) {
+    const session = findClass(booking.classSessionId);
+    if (session !== undefined && counts(booking)) {
+      hold(booking.dogId, bookingWeekKeyOf(localInstant(session.startsAtLocal)));
+    }
+  }
+  const nowKey = bookingWeekOf(now).key;
+  const drawn = new Map<string, DrawnRegistrants>();
+  for (const session of world.filter((item) => item.state !== "DRAFT").sort(drawOrder)) {
+    const weekKey = bookingWeekKeyOf(session.startsAt);
+    const allowed = allowedLevels(session, levelsEnabled);
+    const candidates = candidatesOf(session, allowed);
+    if (session.state === "CANCELLED") {
+      const affected = session.cancellation?.affectedBookings ?? 0;
+      drawn.set(session.id, { booked: candidates.slice(0, affected), late: undefined, weekKey });
+      continue;
+    }
+    const capacity = weekCapacity(weekKey, nowKey);
+    const free = ([, dog]: Registrant) =>
+      (held.get(`${registrantDogId(dog)} ${weekKey}`) ?? 0) < capacity;
+    const booked = candidates.filter(free).slice(0, session.counters.booked);
+    const late =
+      booked.length === 0 || session.startTime !== "18:50"
+        ? undefined
+        : lateCancellerOf(candidates, booked, allowed, free);
+    // A late cancellation counts too (R-08-02).
+    for (const [, dog] of late === undefined ? booked : [...booked, late]) {
+      hold(registrantDogId(dog), weekKey);
+    }
+    drawn.set(session.id, { booked, late, weekKey });
+  }
+  return drawn;
+}
+
 /** [member's first name, dog, sex, the guide when it is not the member (`Dog.handlerName`)]. */
 const WAITING_POOL: readonly (readonly [string, string, "FEMALE" | "MALE", string | null])[] = [
   ["Júlia", "Kira", "FEMALE", null],
@@ -1184,30 +1284,61 @@ const slug = (value: string) =>
     .replaceAll(/[^a-z]+/gu, "-");
 
 /**
- * `GET /class-sessions/{id}/bookings` (S08 §6) of a class of the calendar or day-grid world: its
- * `counters.booked` live bookings, plus one late cancellation; a cancelled class has its
- * `affectedBookings` cancelled by the club; a draft has none. `displayState` as the api derives it
- * (a live booking of a class that has ended reads DONE), and `levelCode`, the dog's own level,
- * `null` in a club with `levels.enabled = false` (the caller passes the switch).
+ * `GET /class-sessions/{id}/bookings` (S08 §6) of every class of one staff world (the calendar
+ * world's, or the day grid's), by class id: its `counters.booked` live bookings, plus one late
+ * cancellation at 18:50; a cancelled class has its `affectedBookings` cancelled by the club; a draft
+ * has none. No dog over its week's limit (`drawRegistrants`, E7-W07 step 5). `displayState` as the
+ * api derives it (a live booking of a class that has ended reads DONE), and `levelCode`, the dog's
+ * own level, `null` in a club with `levels.enabled = false` (the caller passes the switch).
  */
+export function classBookingWorld(
+  world: readonly ClassSession[],
+  levelsEnabled: boolean,
+  now = Date.now(),
+): Map<string, ClassBookingItem[]> {
+  const drawn = drawRegistrants(world, levelsEnabled, now);
+  return new Map(
+    world.map((session) => [
+      session.id,
+      registrantItems(session, drawn.get(session.id), levelsEnabled, now),
+    ]),
+  );
+}
+
+/** The registrants of `session`, drawn with the rest of its world (`classBookingWorld`). */
 export function classBookingItems(
   session: ClassSession,
+  world: readonly ClassSession[],
   levelsEnabled: boolean,
   now = Date.now(),
 ): ClassBookingItem[] {
+  const all = world.some((item) => item.id === session.id) ? world : [...world, session];
+  const drawn = drawRegistrants(all, levelsEnabled, now);
+  return registrantItems(session, drawn.get(session.id), levelsEnabled, now);
+}
+
+function registrantItems(
+  session: ClassSession,
+  drawn: DrawnRegistrants | undefined,
+  levelsEnabled: boolean,
+  now: number,
+): ClassBookingItem[] {
+  // A draft has no registrants (`drawRegistrants` leaves it out).
+  if (drawn === undefined) return [];
+  const weekKey = drawn.weekKey;
   const item = (
-    [member, dog]: readonly [string, string, string],
+    [member, dog]: Registrant,
     index: number,
     state: ClassBookingItem["state"],
   ): ClassBookingItem => ({
     bookedAt: new Date(Date.parse(session.startsAt) - (72 + index * 5) * 3_600_000).toISOString(),
     // R-08-01: the week the class's start falls in, the opening's hour included.
-    bookingWeekKey: bookingWeekKeyOf(session.startsAt),
+    bookingWeekKey: weekKey,
     classSessionId: session.id,
     classStartsAt: session.startsAt,
     displayState:
       state === "ACTIVE" ? (Date.parse(session.endsAt) <= now ? "DONE" : "CONFIRMED") : state,
-    dogId: `dog-${slug(dog)}`,
+    dogId: registrantDogId(dog),
     dogName: dog,
     id: `cb-${session.id}-${String(index)}`,
     late: state === "CANCELLED_LATE" ? true : state === "ACTIVE" ? null : false,
@@ -1217,21 +1348,13 @@ export function classBookingItems(
     origin: index === 1 ? "BACKOFFICE" : "APP",
     state,
   });
-  if (session.state === "DRAFT") return [];
-  const allowed = allowedLevels(session, levelsEnabled);
   if (session.state === "CANCELLED") {
-    const affected = session.cancellation?.affectedBookings ?? 0;
-    return registrantsOf(session, affected, allowed).map((person, index) =>
-      item(person, index, "CANCELLED_BY_CLUB"),
-    );
+    return drawn.booked.map((person, index) => item(person, index, "CANCELLED_BY_CLUB"));
   }
-  const people = registrantsOf(session, session.counters.booked, allowed);
-  const booked = people.map((person, index) => item(person, index, "ACTIVE"));
-  const late =
-    booked.length === 0 || session.startTime !== "18:50"
-      ? undefined
-      : lateCancellerOf(session, people, allowed);
-  return late === undefined ? booked : [...booked, item(late, booked.length, "CANCELLED_LATE")];
+  const booked = drawn.booked.map((person, index) => item(person, index, "ACTIVE"));
+  return drawn.late === undefined
+    ? booked
+    : [...booked, item(drawn.late, booked.length, "CANCELLED_LATE")];
 }
 
 /** The staff-read waiting entries of each class, made on first read (removals change them). */

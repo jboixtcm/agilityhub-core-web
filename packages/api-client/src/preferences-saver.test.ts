@@ -30,22 +30,34 @@ interface Put {
 
 /**
  * A saver whose `PUT`s wait for the test, and an api that applies a body when the test says so;
- * its `GET` (`read`) answers at once with what the api holds.
+ * its `GET` (`read`) answers at once with what the api holds, or when the test says so
+ * (`deferRead`). `onKept` sees what the saver keeps (an outbox).
  */
-function harness() {
+function harness(
+  options: { deferRead?: boolean; onKept?: (unsaved: PreferencesPatch | undefined) => void } = {},
+) {
   const puts: Put[] = [];
   let api: NotificationPreferences = PREFERENCES;
   const kept: (PreferencesPatch | undefined)[] = [];
   const failed: unknown[] = [];
   const reads = { count: 0 };
+  const readers: (() => void)[] = [];
   const saver = createPreferencesSaver(
     {
       changed: () => undefined,
       failed: (cause) => failed.push(cause),
-      kept: (unsaved) => kept.push(unsaved),
+      kept: (unsaved) => {
+        kept.push(unsaved);
+        options.onKept?.(unsaved);
+      },
       read: () => {
         reads.count += 1;
-        return Promise.resolve(api);
+        if (options.deferRead !== true) return Promise.resolve(api);
+        return new Promise((resolve) => {
+          readers.push(() => {
+            resolve(api);
+          });
+        });
       },
       save: (body, keepalive) =>
         new Promise((resolve, reject) => {
@@ -78,7 +90,11 @@ function harness() {
     if (put === undefined) throw new TypeError(`No PUT ${String(index)} yet`);
     return put;
   };
-  return { api: () => api, at, failed, kept, land, puts, reads, saver };
+  /** The api answers the oldest `GET` still out. */
+  const answerRead = () => {
+    readers.shift()?.();
+  };
+  return { answerRead, api: () => api, at, failed, kept, land, puts, reads, saver };
 }
 
 /** A `sessionStorage` for the node environment. */
@@ -204,49 +220,151 @@ describe("E7-W05 step 1: the shared preference saver (R-11-04) — the latest ch
   });
 });
 
-describe("E7-W06 step 4 (E7-W05 review #1): a failed save after a restore whose departure overlapped", () => {
-  it("seq1 {false} out, seq2 {true} with keepalive, restored before either settles, seq1 lands after seq2, the resend seq3 and the adopted save seq4 fail — the page reads the api again (GET) and shows false, and the outbox keeps the latest choice", async () => {
-    const h = harness();
-    await offOnLeave(h);
-    // Back from the back-forward cache before either PUT settled: the departure's entry is adopted.
-    h.saver.restore({ emailByCategory: { PERSONAL: true } });
+/**
+ * E7-W06 step 4's scenario up to the last of the overlapping PUTs failing: seq1 {false} out, seq2
+ * {true} with keepalive, the page restored before either settles (the departure's entry adopted),
+ * seq2 lands and answers first, seq1 lands after it (so the api holds false), and the resend seq3
+ * of the latest choice fails (handled once this resolves).
+ */
+async function overlappedThenResendFails(h: ReturnType<typeof harness>) {
+  await offOnLeave(h);
+  h.saver.restore({ emailByCategory: { PERSONAL: true } });
+  await tick();
+  expect(h.puts).toHaveLength(2);
+  h.land(h.at(1).body);
+  h.at(1).ok();
+  await tick();
+  h.land(h.at(0).body);
+  h.at(0).ok();
+  await tick();
+  expect(h.api().emailByCategory.PERSONAL).toBe(false);
+  expect(h.puts[2]).toMatchObject({
+    body: { emailByCategory: { PERSONAL: true } },
+    keepalive: false,
+  });
+  h.at(2).fail();
+  await tick();
+}
+
+describe("E7-W06 step 4 (E7-W05 review #1) and E7-W07 step 2 (E7-W06 review #3, ruling E85: option a): a failed save after a restore whose departure overlapped", () => {
+  it("E7-W07 step 2 (R-11-04): the last PUT of overlapping ones fails, the GET answers PERSONAL = false, the page shows PERSONAL = true as a pending change, sends it again, and only its 2xx frees the outbox entry", async () => {
+    const h = harness({ deferRead: true });
+    await overlappedThenResendFails(h);
+    expect(h.failed).toHaveLength(1);
+    // What the api holds is read again (E7-W06 step 4); meanwhile nothing else is sent, and the
+    // member's last choice shows as a pending change.
+    expect(h.reads.count).toBe(1);
+    expect(h.puts).toHaveLength(3);
+    expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL).toBe(true);
+    expect(h.saver.state().waiting).toBe(true);
+    h.answerRead();
     await tick();
-    expect(h.puts).toHaveLength(2);
-    // seq2 lands and answers first; seq1 lands after it, so the api holds false.
-    h.land(h.at(1).body);
-    h.at(1).ok();
-    await tick();
-    h.land(h.at(0).body);
-    h.at(0).ok();
-    await tick();
-    expect(h.api().emailByCategory.PERSONAL).toBe(false);
-    expect(h.puts[2]).toMatchObject({
-      body: { emailByCategory: { PERSONAL: true } },
-      keepalive: false,
-    });
-    h.at(2).fail();
-    await tick();
+    expect(h.saver.state().server?.emailByCategory.PERSONAL).toBe(false);
+    // …and the kept choice goes back on top of it: shown, pending, and sent again.
+    expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL).toBe(true);
+    expect(h.saver.state().inFlight).toEqual({ emailByCategory: { PERSONAL: true } });
+    expect(h.puts).toHaveLength(4);
     expect(h.puts[3]).toMatchObject({
       body: { emailByCategory: { PERSONAL: true } },
       keepalive: false,
     });
+    // Not freed while the retry is out.
+    expect(h.kept).toEqual([{ emailByCategory: { PERSONAL: true } }]);
+    h.land(h.at(3).body);
+    h.at(3).ok();
+    await tick();
+    expect(h.api().emailByCategory.PERSONAL).toBe(true);
+    expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL).toBe(true);
+    expect(h.saver.state().inFlight).toBeUndefined();
+    expect(h.kept).toEqual([{ emailByCategory: { PERSONAL: true } }, undefined]);
+  });
+
+  it("E7-W07 step 2: when the retry fails too, the choice stays on top, unsent (no loop of resends) and kept; the member's next change of another preference sends it with that change", async () => {
+    const h = harness();
+    await overlappedThenResendFails(h);
+    expect(h.puts).toHaveLength(4);
     h.at(3).fail();
     await tick();
-    expect(h.failed).toHaveLength(2);
-    // Not the last answer (seq2's true): what the api holds, read again.
-    expect(h.reads.count).toBe(1);
-    expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL).toBe(false);
-    // The latest choice never got a 2xx: it stays kept for the next visit.
-    expect(h.kept).toEqual([{ emailByCategory: { PERSONAL: true } }]);
-    // The member chooses true again and that save gets its 2xx: only now is the entry freed.
-    h.saver.edit({ emailByCategory: { PERSONAL: true } });
     await tick();
-    expect(h.puts).toHaveLength(5);
+    expect(h.failed).toHaveLength(2);
+    // No third automatic PUT and no second read.
+    expect(h.puts).toHaveLength(4);
+    expect(h.reads.count).toBe(1);
+    expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL).toBe(true);
+    expect(h.saver.state().waiting).toBe(false);
+    expect(h.kept).toEqual([{ emailByCategory: { PERSONAL: true } }]);
+    h.saver.edit({ emailByCategory: { OPERATIONAL: true } });
+    await tick();
+    expect(h.puts[4]?.body).toEqual({ emailByCategory: { OPERATIONAL: true, PERSONAL: true } });
     h.land(h.at(4).body);
     h.at(4).ok();
     await tick();
-    expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL).toBe(true);
     expect(h.kept).toEqual([{ emailByCategory: { PERSONAL: true } }, undefined]);
+  });
+
+  it("E7-W07 step 2: the member changes the same preference again after the failure — the new choice wins: the kept entry goes and the old choice is never sent again", async () => {
+    const h = harness({ deferRead: true });
+    await overlappedThenResendFails(h);
+    // While the GET is out, the member turns PERSONAL off.
+    h.saver.edit({ emailByCategory: { PERSONAL: false } });
+    expect(h.kept).toEqual([{ emailByCategory: { PERSONAL: true } }, undefined]);
+    h.answerRead();
+    await tick();
+    await tick();
+    expect(h.puts.slice(3).map((put) => put.body)).toEqual([
+      { emailByCategory: { PERSONAL: false } },
+    ]);
+    expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL).toBe(false);
+    h.land(h.at(3).body);
+    h.at(3).ok();
+    await tick();
+    expect(h.api().emailByCategory.PERSONAL).toBe(false);
+    expect(h.kept).toEqual([{ emailByCategory: { PERSONAL: true } }, undefined]);
+  });
+
+  it("E7-W07 step 2: the member leaves right after the failure — the departure carries the last choice with keepalive and keeps it fresh, so the next visit within 5 minutes shows it as a pending change before it is saved", async () => {
+    vi.stubGlobal("sessionStorage", memoryStorage());
+    try {
+      let now = 1_000_000;
+      const clock = () => now;
+      const scope = { memberId: "member-laura" };
+      // The page's outbox: its first departure (seq2) writes the entry at `now`, and the restored
+      // page owns it (as 12 and D10 do on `pageshow`).
+      const outbox = createPreferencesOutbox("outbox", scope, clock);
+      const h = harness({
+        onKept: (unsaved) => {
+          if (unsaved === undefined) outbox.clear();
+          else outbox.write(unsaved);
+        },
+      });
+      await overlappedThenResendFails(h);
+      // The GET answered false and the choice went again (seq4). Four minutes after the first
+      // departure, that last PUT fails too, and the member leaves at once.
+      expect(h.puts).toHaveLength(4);
+      now += 4 * 60_000;
+      h.at(3).fail();
+      await tick();
+      expect(h.failed).toHaveLength(2);
+      h.saver.leave();
+      expect(h.puts).toHaveLength(5);
+      expect(h.puts.at(-1)).toMatchObject({
+        body: { emailByCategory: { PERSONAL: true } },
+        keepalive: true,
+      });
+      // The page is gone before that request is answered. Two minutes later, the next visit.
+      now += 2 * 60_000;
+      const next = harness();
+      const kept = createPreferencesOutbox("outbox", scope, clock).take();
+      expect(kept).toEqual({ emailByCategory: { PERSONAL: true } });
+      if (kept !== undefined) next.saver.adopt(kept);
+      // Shown at once as a pending change, before its PUT is even sent.
+      expect(shownPreferences(next.saver.state())?.emailByCategory.PERSONAL).toBe(true);
+      expect(next.saver.state().waiting).toBe(true);
+      await tick();
+      expect(next.puts.map((put) => put.body)).toEqual([{ emailByCategory: { PERSONAL: true } }]);
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 
   it("without overlapping PUTs a failed save shows the last answer, reads nothing and frees what it took over (unchanged)", async () => {

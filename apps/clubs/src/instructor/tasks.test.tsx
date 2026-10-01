@@ -628,7 +628,7 @@ describe("E6-W02 round 2 (review of 30-09): screen 26", () => {
   });
 });
 
-describe("E6-W05 (reviews of E6-W02's round 2): screen 26", () => {
+describe("T-10-28 (26) E6-W05 (reviews of E6-W02's round 2): screen 26", () => {
   const newTask = (text: string, files: File[] = []) => {
     fireEvent.click(screen.getByRole("button", { name: "Afegir" }));
     const form = screen.getByRole("form", { name: "Nova tasca" });
@@ -662,9 +662,11 @@ describe("E6-W05 (reviews of E6-W02's round 2): screen 26", () => {
       http.post("*/api/v1/tasks", () => {
         if (!refuse) return undefined;
         refuse = false;
+        // A refusal (a 4xx with the api's body) is the submission's answer; a 5xx would not be
+        // one (CONVENCIONS_API §7, E85; E7-W07 step 4).
         return HttpResponse.json(
-          { code: "INTERNAL_ERROR", details: {}, message: "Internal error", traceId: "t-500" },
-          { status: 500 },
+          { code: "DOG_NOT_ACTIVE", details: {}, message: "Dog not active", traceId: "t-422" },
+          { status: 422 },
         );
       }),
     );
@@ -672,7 +674,7 @@ describe("E6-W05 (reviews of E6-W02's round 2): screen 26", () => {
     await renderTasks();
     const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
     expect(await within(tasksBlock()).findByRole("alert")).toHaveTextContent(
-      "S'ha produït un error inesperat.",
+      "Aquest gos no està actiu.",
     );
     pastTheGrant();
     fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
@@ -701,8 +703,8 @@ describe("E6-W05 (reviews of E6-W02's round 2): screen 26", () => {
         if (!refuse) return undefined;
         refuse = false;
         return HttpResponse.json(
-          { code: "INTERNAL_ERROR", details: {}, message: "Internal error", traceId: "t-500" },
-          { status: 500 },
+          { code: "DOG_NOT_ACTIVE", details: {}, message: "Dog not active", traceId: "t-422" },
+          { status: 422 },
         );
       }),
     );
@@ -868,6 +870,51 @@ describe("E6-W05 (reviews of E6-W02's round 2): screen 26", () => {
     expect(posts[1]?.key).toBe(posts[0]?.key);
     expect(posts[1]?.body).toEqual(posts[0]?.body);
     expect(writes(requests).filter((line) => line.startsWith("POST /attachments"))).toHaveLength(1);
+  });
+
+  it("T-10-25 T-10-15 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the key — the retry sends the same key and files; a 422 DOG_NOT_ACTIVE retires it — the next submission of the same text is a new one with a new key, and one task is created", async () => {
+    let answers = 0;
+    server.use(
+      http.post("*/api/v1/tasks", () => {
+        answers += 1;
+        if (answers === 1) {
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t-503" },
+            { status: 503 },
+          );
+        }
+        if (answers === 2) {
+          return HttpResponse.json(
+            { code: "DOG_NOT_ACTIVE", details: {}, message: "Dog not active", traceId: "t-422" },
+            { status: 422 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    const requests = recordRequests();
+    await renderTasks();
+    const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
+    const send = async (attempt: number) => {
+      await waitFor(() => {
+        expect(requests.filter((request) => request.line === "POST /tasks")).toHaveLength(attempt);
+      });
+      await waitFor(() => {
+        expect(within(form).getByRole("button", { name: "Afegeix" })).toBeEnabled();
+      });
+    };
+    await send(1);
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await send(2);
+    fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
+    await waitFor(() => {
+      expect(cards()).toHaveLength(4);
+    });
+    const posts = requests.filter((request) => request.line === "POST /tasks");
+    expect(posts).toHaveLength(3);
+    expect(posts[1]?.key).toBe(posts[0]?.key);
+    expect(posts[2]?.key).not.toBe(posts[1]?.key);
+    expect(posts[2]?.body).toEqual(posts[0]?.body);
   });
 
   it("E7-W05 step 4 (CONVENCIONS_API §7, E80): a task whose first request is still running says so with the shared in-progress text, never the key's technical one, and its retry creates one task", async () => {
@@ -1057,17 +1104,31 @@ describe("E6-W04 step 0d (review of E6-W05): screen 26", () => {
   });
 
   it("E6-W04 step 0d: a reused file the api refuses as bound to another task (422 ATTACHMENT_ENTITY_MISMATCH) is uploaded again, once, and the submission sent again with a new key", async () => {
-    let created = false;
+    let answers = 0;
     server.use(
-      http.post("*/api/v1/tasks", async ({ request }) => {
-        if (created) return undefined;
-        created = true;
-        // The api created the task, and then answered with an error.
-        await getResponse(handlers, request.clone());
-        return HttpResponse.json(
-          { code: "INTERNAL_ERROR", details: {}, message: "Internal error", traceId: "t-500" },
-          { status: 500 },
-        );
+      http.post("*/api/v1/tasks", () => {
+        answers += 1;
+        // A refusal, the submission's answer: nothing created, the file stays uploaded…
+        if (answers === 1) {
+          return HttpResponse.json(
+            { code: "DOG_NOT_ACTIVE", details: {}, message: "Dog not active", traceId: "t-422" },
+            { status: 422 },
+          );
+        }
+        // …and meanwhile another submission (another tab) bound that file to its own task. (A 5xx
+        // after creating would not happen: a 5xx undoes the attempt, E85.)
+        if (answers === 2) {
+          return HttpResponse.json(
+            {
+              code: "ATTACHMENT_ENTITY_MISMATCH",
+              details: {},
+              message: "Attachment bound to another entity",
+              traceId: "t-mismatch",
+            },
+            { status: 422 },
+          );
+        }
+        return undefined;
       }),
     );
     const statuses = taskStatuses();
@@ -1075,13 +1136,13 @@ describe("E6-W04 step 0d (review of E6-W05): screen 26", () => {
     await renderTasks();
     const form = newTask("Salts amb calma", [file("vídeo_salt.mp4", "video/mp4")]);
     expect(await within(tasksBlock()).findByRole("alert")).toHaveTextContent(
-      "S'ha produït un error inesperat.",
+      "Aquest gos no està actiu.",
     );
     fireEvent.click(within(form).getByRole("button", { name: "Afegeix" }));
     await waitFor(() => {
       expect(screen.queryByRole("form", { name: "Nova tasca" })).toBeNull();
     });
-    expect(cards()).toHaveLength(5);
+    expect(cards()).toHaveLength(4);
     expect(within(tasksBlock()).queryByRole("alert")).toBeNull();
     expect(writes(requests)).toEqual([
       "POST /attachments/upload-url",
@@ -1092,7 +1153,7 @@ describe("E6-W04 step 0d (review of E6-W05): screen 26", () => {
       "PUT /mock-uploads/…",
       "POST /tasks",
     ]);
-    expect(statuses).toEqual([500, 422, 201]);
+    expect(statuses).toEqual([422, 422, 201]);
     const posts = requests.filter((request) => request.line === "POST /tasks");
     // Answered, the first submission is over: the press is a new one that reuses the live file…
     expect(posts[1]?.key).not.toBe(posts[0]?.key);
@@ -1180,7 +1241,7 @@ describe("E6-W04 step 0d (review of E6-W05): screen 26", () => {
   });
 });
 
-describe("E7-W06 (E6-W04 question 5 and its report nits): screen 26's new-task form", () => {
+describe("T-10-28 (26) E7-W06 (E6-W04 question 5 and its report nits): screen 26's new-task form", () => {
   const openForm = (text: string, files: File[] = []) => {
     fireEvent.click(screen.getByRole("button", { name: "Afegir" }));
     const form = screen.getByRole("form", { name: "Nova tasca" });

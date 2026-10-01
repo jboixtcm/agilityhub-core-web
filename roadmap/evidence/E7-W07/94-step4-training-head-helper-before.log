@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/training/TrainingPage.test.tsx (28 tests | 1 failed | 27 skipped) 292ms
+   ❯ E7-W07 step 4 (CONVENCIONS_API §7, E85): 08's booking follows the shared submission-key rule (1)
+     × T-09-38 T-09-16 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps 08's Idempotency-Key and its choice, so the retry sends the same key; a 422 DOG_ALREADY_BOOKED retires it, so the same booking sent again takes a new key 289ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/training/TrainingPage.test.tsx > E7-W07 step 4 (CONVENCIONS_API §7, E85): 08's booking follows the shared submission-key rule > T-09-38 T-09-16 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps 08's Idempotency-Key and its choice, so the retry sends the same key; a 422 DOG_ALREADY_BOOKED retires it, so the same booking sent again takes a new key
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Confirma Dilluns 3 · 7:30–8:00 · Muntanya[39m
+Received:
+[31m  Confirma[39m
+ ❯ src/training/TrainingPage.test.tsx:769:29
+    767|     ).toBeVisible();
+    768|     // Not the booking's answer: the choice stays, and the retry is th…
+    769|     expect(confirmButton()).toHaveTextContent("Confirma Dilluns 3 · 7:…
+       |                             ^
+    770|     expect(confirmButton()).toBeEnabled();
+    771|     fireEvent.click(confirmButton());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 27 skipped (28)
+   Start at  10:54:47
+   Duration  2.39s (transform 38%, environment 29%, import 15%, tests 13%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/training/TrainingPage.test.tsx -t E7-W07

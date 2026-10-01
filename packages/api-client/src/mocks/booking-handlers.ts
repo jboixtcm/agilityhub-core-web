@@ -12,7 +12,6 @@ import {
   findClass,
   findDog,
   limitReachedDetails,
-  limitRefuses,
   localInstant,
   meHome,
   nextBookingId,
@@ -89,7 +88,6 @@ function options(request: Request): BookingOptions {
   }
   const threshold = findParameter("bookings.lateCancelThresholdMinutes")?.value;
   return {
-    limit: scenario.bookingLimit === "swap",
     locale: readerLocale(request),
     modules: scenario.branding.modules,
     now: Date.now(),
@@ -189,20 +187,15 @@ function holdFailure(body: SeatHoldRequest, context: BookingOptions) {
         reason: "rebut de juliol pendent",
       });
     case "WEEKLY_LIMIT_DONE":
-      // The class's booking week at the clock (R-08-01), counted over the dog's bookings of it.
-      // Refused only as the api refuses (R-08-09): mockup 04's fixed «Límit setmanal» (A6) holds
-      // the seat while the limit is not reached or a booking can still be swapped.
-      if (limitRefuses(body.dogId, row.week, context)) {
-        return apiError(
-          "BOOKING_LIMIT_REACHED",
-          "Booking limit reached",
-          409,
-          limitReachedDetails(body.dogId, row.week, context),
-        );
-      }
-      return row.heldByOther === true
-        ? apiError("CLASS_FULL", "Class full", 409, { heldOnly: true })
-        : undefined;
+      // `rowState` reads «Límit setmanal» only where `limitRefuses` (R-08-03): the class's booking
+      // week at the clock (R-08-01) has reached its limit and nothing can be swapped (R-08-09), so
+      // the api refuses the hold (E7-W07 step 6, ruling E85).
+      return apiError(
+        "BOOKING_LIMIT_REACHED",
+        "Booking limit reached",
+        409,
+        limitReachedDetails(body.dogId, row.week, context),
+      );
     case "FULL":
     case "WAITLIST_FULL":
     case "WAITLIST_OPEN":

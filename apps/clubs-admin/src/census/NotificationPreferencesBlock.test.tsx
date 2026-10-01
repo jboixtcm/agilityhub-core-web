@@ -760,7 +760,12 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     expect((await stored())?.emailByCategory.PERSONAL).toBe(false);
   });
 
-  it("E7-W06 step 4 (E7-W05 review #1): restored while both PUTs of its departure were out, the older one landing last, and the resend and the adopted save failing — the record reads GET again and shows what the api holds (off), and the outbox keeps the latest choice (on)", async () => {
+  /**
+   * E7-W06 step 4's scenario: PERSONAL off, then on and the record left, restored while both PUTs
+   * were out, the older «off» landing last (the api holds off), and the resend of «on» lost.
+   * `fourth` is the plan of the PUT after that failure.
+   */
+  async function overlappingDepartureThenResendLost(fourth: PutPlan) {
     const older = gate();
     const departure = gate();
     const landed = planPuts([
@@ -768,18 +773,20 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
       { landAfter: older.opened },
       // PERSONAL on with keepalive: lands at once, answers when the test says.
       { answerAfter: departure.opened },
-      // The resend and the adopted save never reach the api.
+      // The resend never reaches the api.
       { lost: true, networkFailure: true },
+      fourth,
+      // A departure after it (the page is gone before it lands).
       { lost: true, networkFailure: true },
     ]);
     const puts = recordPutRequests();
-    let reads = 0;
+    const reads = { count: 0 };
     server.events.on("request:start", ({ request }) => {
       if (request.method === "GET" && request.url.includes("/notification-preferences")) {
-        reads += 1;
+        reads.count += 1;
       }
     });
-    const { onFeedback } = await renderBlock();
+    const rendered = await renderBlock();
     await offThenOnAndLeave(puts);
     await waitFor(() => {
       expect(landed).toEqual([{ emailByCategory: { PERSONAL: true } }]);
@@ -788,7 +795,8 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     Object.defineProperty(restored, "persisted", { value: true });
     window.dispatchEvent(restored);
     departure.open();
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    // The adopted «on» waits past its 300 ms pause for the older PUT, which lands only now.
+    await new Promise((resolve) => setTimeout(resolve, 400));
     older.open();
     await waitFor(() => {
       expect(puts).toHaveLength(4);
@@ -797,17 +805,67 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
       { body: { emailByCategory: { PERSONAL: true } }, keepalive: false },
       { body: { emailByCategory: { PERSONAL: true } }, keepalive: false },
     ]);
-    await waitFor(() => {
-      expect(personal()).toHaveAttribute("aria-checked", "false");
+    return { ...rendered, puts, reads };
+  }
+
+  it("E7-W07 step 2 (E7-W06 review #3, ruling E85: option a; R-11-04): overlapping PUTs and the last one lost — the record reads GET again (the api holds off), shows the member's «on» as a pending change with «Desant…», sends it again, and its 2xx saves it and frees the outbox", async () => {
+    const retry = gate();
+    const { onFeedback, reads } = await overlappingDepartureThenResendLost({
+      answerAfter: retry.opened,
     });
-    // The block's first read and the read after the failure.
-    expect(reads).toBe(2);
+    // The fourth PUT is the retry that follows the read (the block's first read and this one).
+    expect(reads.count).toBe(2);
     expect(onFeedback).toHaveBeenCalledWith(expect.objectContaining({ tone: "danger" }));
-    expect((await stored())?.emailByCategory.PERSONAL).toBe(false);
+    expect(personal()).toHaveAttribute("aria-checked", "true");
+    expect(screen.getByRole("status")).toHaveTextContent("Desant…");
     expect(outbox()).toMatchObject({
       memberId: "member-laura",
       patch: { emailByCategory: { PERSONAL: true } },
     });
+    retry.open();
+    await waitFor(() => {
+      expect(outbox()).toBeNull();
+    });
+    expect(personal()).toHaveAttribute("aria-checked", "true");
+    expect(screen.queryByRole("status")).toBeNull();
+    expect((await stored())?.emailByCategory.PERSONAL).toBe(true);
+  });
+
+  it("E7-W07 step 2 (ruling E85: option a): the retry is lost too and the admin leaves right after — the departure carries «on» with keepalive and keeps it, and the next visit within 5 minutes of leaving shows it as a pending change before it is saved", async () => {
+    const firstDeparture = Date.now();
+    vi.useFakeTimers({ now: firstDeparture, shouldAdvanceTime: true, toFake: ["Date"] });
+    const { puts, reads } = await overlappingDepartureThenResendLost({
+      lost: true,
+      networkFailure: true,
+    });
+    vi.setSystemTime(firstDeparture + 4 * 60_000);
+    await waitFor(() => {
+      expect(screen.queryByRole("status")).toBeNull();
+    });
+    // The retry failed: no loop of resends, and the block still shows the admin's last choice.
+    expect(reads.count).toBe(2);
+    expect(personal()).toHaveAttribute("aria-checked", "true");
+    cleanup();
+    await waitFor(() => {
+      expect(puts).toHaveLength(5);
+    });
+    expect(puts[4]).toEqual({ body: { emailByCategory: { PERSONAL: true } }, keepalive: true });
+    // Two minutes later (six after the first departure), the record is opened again; its save
+    // answers only when the test says.
+    vi.setSystemTime(firstDeparture + 6 * 60_000);
+    const saved = gate();
+    planPuts([{ answerAfter: saved.opened }]);
+    await renderBlock();
+    await waitFor(() => {
+      expect(personal()).toHaveAttribute("aria-checked", "true");
+    });
+    expect(screen.getByRole("status")).toHaveTextContent("Desant…");
+    expect((await stored())?.emailByCategory.PERSONAL).toBe(false);
+    saved.open();
+    await waitFor(() => {
+      expect(outbox()).toBeNull();
+    });
+    expect((await stored())?.emailByCategory.PERSONAL).toBe(true);
   });
 
   it("without SMS and PUSH (the api's `modules`): no «+SMS» and no push toggle", async () => {

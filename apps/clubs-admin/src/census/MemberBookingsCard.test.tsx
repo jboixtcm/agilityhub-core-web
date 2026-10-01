@@ -1,5 +1,6 @@
 import { createApiClient } from "@agilityhub/api-client";
 import {
+  handlers,
   JOBS_MOCK_NOW,
   mockScenario,
   resetBackofficeMockState,
@@ -11,7 +12,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { http, HttpResponse } from "msw";
+import { getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -119,16 +120,10 @@ describe("E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19)", () => 
     ).toBeVisible();
     const classes = within(card).getByRole("table", { name: "Classes" });
     const firstRow = within(classes).getAllByRole("row")[1];
-    // Saturday 15 at 8:30 is the latest class of the current week the api lists for Laura (E5-W05
-    // round 3 #4: B+C takes B and C dogs only, so Duna comes first, booked in the app).
-    expect(firstRow?.textContent).toBe("ds 15/08 · 8:30B+CCentralDunaconfirmadaapp");
-    // A class the club booked for her reads «club» (`origin: BACKOFFICE`).
-    expect(
-      within(classes)
-        .getAllByRole("row")
-        .slice(1)
-        .some((row) => row.textContent.endsWith("club")),
-    ).toBe(true);
+    // Wednesday 12 at 18:50 is the latest class the api lists for Laura: Duna holds two classes of
+    // that booking week, its limit (E7-W07 step 5, R-08-03 and R-08-19; B+C takes B and C dogs,
+    // E5-W05 round 3 #4), both booked in the app.
+    expect(firstRow?.textContent).toBe("dc 12/08 · 18:50B+CCentralDunaconfirmadaapp");
     const bookings = requests.find((url) => url.pathname.endsWith("/api/v1/bookings"));
     expect(bookings?.searchParams.getAll("filter")).toEqual(["memberId:eq:member-laura"]);
     expect(bookings?.searchParams.getAll("sort")).toEqual(["classStartsAt,desc"]);
@@ -150,6 +145,25 @@ describe("E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19)", () => 
     expect(training?.searchParams.getAll("filter")).toEqual(["memberId:eq:member-laura"]);
     // R-08-19: nothing to book or cancel from D10.
     expect(within(card).queryByRole("button", { name: /anul·la|reserva/iu })).toBeNull();
+  });
+
+  it("R-08-19: a class the club booked for her (`origin: BACKOFFICE`) reads «club»", async () => {
+    // At this clock none of Laura's mock bookings is the club's (E7-W07 step 5): the api's own
+    // list, with its first row booked by the club.
+    server.use(
+      http.get("*/api/v1/bookings", async ({ request }) => {
+        const answer = await getResponse(handlers, request);
+        if (answer === undefined) throw new TypeError("The bookings mock did not answer");
+        const page = (await answer.json()) as { items: { origin: string }[] };
+        const [first, ...rest] = page.items;
+        if (first === undefined) throw new TypeError("Laura has no class booking");
+        return HttpResponse.json({ ...page, items: [{ ...first, origin: "BACKOFFICE" }, ...rest] });
+      }),
+    );
+    const { card } = await renderCard();
+    const rows = within(within(card).getByRole("table", { name: "Classes" })).getAllByRole("row");
+    expect(rows[1]?.textContent).toBe("dc 12/08 · 18:50B+CCentralDunaconfirmadaclub");
+    expect(rows.slice(2).every((row) => row.textContent.endsWith("app"))).toBe(true);
   });
 
   it("E5-W03 round 2 · review #4: «Mostra'n més» pages through the member's class bookings, never asking for 1000", async () => {

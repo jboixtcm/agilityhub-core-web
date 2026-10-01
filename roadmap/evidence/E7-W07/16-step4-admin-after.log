@@ -1,0 +1,9 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  11 passed (11)
+      Tests  111 passed (111)
+   Start at  10:42:48
+   Duration  7.91s (tests 40%, transform 23%, environment 22%, import 8%, setup 6%)
+

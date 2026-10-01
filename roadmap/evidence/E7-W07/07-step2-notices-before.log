@@ -1,0 +1,55 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/profile/NoticesCard.test.tsx (27 tests | 2 failed | 25 skipped) 1774ms
+   ❯ T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) (27)
+     × E7-W07 step 2 (E7-W06 review #3, ruling E85: option a; R-11-04): overlapping PUTs and the last one lost — 12 reads GET again (the api holds 1 h), shows the member's «2 h abans» as a pending change with «Desant…», sends it again, and its 2xx saves it and frees the outbox 931ms
+     × E7-W07 step 2 (ruling E85: option a): the retry is lost too and the member leaves right after — the departure carries «2 h abans» and keeps it, so the next visit within 5 minutes of leaving shows it as a pending change before it is saved 840ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W07 step 2 (E7-W06 review #3, ruling E85: option a; R-11-04): overlapping PUTs and the last one lost — 12 reads GET again (the api holds 1 h), shows the member's «2 h abans» as a pending change with «Desant…», sends it again, and its 2xx saves it and frees the outbox
+AssertionError: expected [ { body: undefined, …(2) } ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/profile/NoticesCard.test.tsx:617:31
+    615|     await overlappingDepartureThenResendLost({ answerAfter: retry.open…
+    616|     // The fourth PUT is the retry that follows the read, not a save s…
+    617|     expect(preferenceReads()).toHaveLength(2);
+       |                               ^
+    618|     expect(reminderSelect()).toHaveValue("120");
+    619|     expect(within(present(document.querySelector<HTMLElement>("#avisos…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/profile/NoticesCard.test.tsx > T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) > E7-W07 step 2 (ruling E85: option a): the retry is lost too and the member leaves right after — the departure carries «2 h abans» and keeps it, so the next visit within 5 minutes of leaving shows it as a pending change before it is saved
+Error: [2mexpect([22m[31melement[39m[2m).toHaveValue([22m[32m120[39m[2m)[22m
+
+Expected the element to have value:
+[32m  120[39m
+Received:
+[31m  60[39m
+ ❯ src/profile/NoticesCard.test.tsx:640:30
+    638|     });
+    639|     expect(screen.getByRole("alert")).toHaveTextContent("S'ha produït …
+    640|     expect(reminderSelect()).toHaveValue("120");
+       |                              ^
+    641|     expect(preferenceReads()).toHaveLength(2);
+    642|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 25 skipped (27)
+   Start at  10:32:39
+   Duration  3.22s (tests 56%, transform 21%, environment 13%, import 7%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/profile/NoticesCard.test.tsx -t E7-W07

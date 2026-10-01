@@ -1,4 +1,4 @@
-import type { ApiClient } from "@agilityhub/api-client";
+import { type ApiClient, useSubmissionKeys } from "@agilityhub/api-client";
 import { dogArticle, useClubFormats } from "@agilityhub/i18n";
 import { Badge, Button, Card, EmptyState, Icon, Modal, Skeleton, type Tone } from "@agilityhub/ui";
 import { useState } from "react";
@@ -75,6 +75,10 @@ export function TrainingDetailPage({
   const [dialog, setDialog] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();
+  // One `Idempotency-Key` per cancellation (the booking and its body): a retry while the api has
+  // not answered it (offline, a 5xx, IN_PROGRESS) sends the same key; its answer retires it
+  // (CONVENCIONS_API §7, E74, E85).
+  const cancellations = useSubmissionKeys();
 
   if (booking.status === "loading") {
     return (
@@ -127,11 +131,14 @@ export function TrainingDetailPage({
   const cancel = async () => {
     setPending(true);
     setError(undefined);
+    const body = {};
     try {
-      await client.POST("/training-bookings/{id}/cancellation", {
-        body: {},
-        params: { path: { id: data.id } },
-      });
+      await cancellations.send(JSON.stringify({ body, id: data.id }), (key) =>
+        client.POST("/training-bookings/{id}/cancellation", {
+          body,
+          params: { header: { "Idempotency-Key": key }, path: { id: data.id } },
+        }),
+      );
       setDialog(false);
       navigateInApp("/inici", {
         notice: { messageKey: "training:detail.cancelled", tone: "success" },

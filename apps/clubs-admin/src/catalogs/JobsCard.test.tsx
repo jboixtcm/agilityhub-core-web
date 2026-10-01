@@ -801,7 +801,7 @@ function triggerInProgressOnce(): string[] {
   return keys;
 }
 
-describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS", () => {
+describe("T-15-32 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS", () => {
   it("E7-W06 step 1: [Simula] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new [Simula] after the api's answer takes a new key", async () => {
     const keys = triggerInProgressOnce();
     const card = await renderCard();
@@ -910,5 +910,50 @@ describe("E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep the
     await screen.findByRole("dialog", { name: /^Simulació: què faria ara/u });
     expect(keys).toHaveLength(2);
     expect(keys[1]).not.toBe(keys[0]);
+  });
+
+  it("T-15-32 E7-W07 step 4 (CONVENCIONS_API §7, E85): [Simula] keeps its key after a 503 with the api's body — the retry sends the same one — and a 409 JOB_ALREADY_RUNNING retires it — the next [Simula] is a new submission", async () => {
+    const keys: string[] = [];
+    server.use(
+      http.post("*/api/v1/jobs/:name/trigger", ({ request }) => {
+        keys.push(request.headers.get("Idempotency-Key") ?? "");
+        if (keys.length === 1) {
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t-503" },
+            { status: 503 },
+          );
+        }
+        if (keys.length === 2) {
+          return HttpResponse.json(
+            {
+              code: "JOB_ALREADY_RUNNING",
+              details: {},
+              message: "Job already running",
+              traceId: "t-409",
+            },
+            { status: 409 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    const card = await renderCard();
+    const risk = await waitForRow(card, "Revisió de classes en risc");
+    const simulate = () =>
+      within(risk).getByRole("button", { name: "Simula Revisió de classes en risc" });
+    for (const attempt of [1, 2]) {
+      fireEvent.click(simulate());
+      await waitFor(() => {
+        expect(keys).toHaveLength(attempt);
+      });
+      await waitFor(() => {
+        expect(simulate()).toBeEnabled();
+      });
+    }
+    fireEvent.click(simulate());
+    await screen.findByRole("dialog", { name: /^Simulació: què faria ara/u });
+    expect(keys).toHaveLength(3);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[1]);
   });
 });

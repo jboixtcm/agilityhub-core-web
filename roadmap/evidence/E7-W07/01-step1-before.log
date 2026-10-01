@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/branding-cache.test.ts (5 tests | 1 failed) 348ms
+   ❯ E7-W06 step 2 · the boot never waits forever for /branding (INC-07: the add-dog success page left blank) (5)
+     × E7-W07 step 1 (E7-W06 review #2): past the boot's limit the page boots with the cache, but the read is not given up: its late answer is cached, so the next load starts fresh 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/branding-cache.test.ts > E7-W06 step 2 · the boot never waits forever for /branding (INC-07: the add-dog success page left blank) > E7-W07 step 1 (E7-W06 review #2): past the boot's limit the page boots with the cache, but the read is not given up: its late answer is cached, so the next load starts fresh
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/branding-cache.test.ts:126:28
+    124|     // The running page keeps what it booted with.
+    125|     expect(branding.club.name).toBe("Club de la memòria cau");
+    126|     expect(late.aborted()).toBe(false);
+       |                            ^
+    127|     late.answer(Response.json(brandingCanic));
+    128|     await vi.waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  10:19:40
+   Duration  556ms (tests 77%, transform 13%, import 9%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/branding-cache.test.ts

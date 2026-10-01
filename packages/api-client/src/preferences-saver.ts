@@ -27,6 +27,33 @@ export function mergePatches(base: PreferencesPatch, next: PreferencesPatch): Pr
   };
 }
 
+/** `base` without the preferences `patch` changes (a `null` category or push value is no change). */
+function withoutPreferencesOf(base: PreferencesPatch, patch: PreferencesPatch): PreferencesPatch {
+  const emailByCategory = Object.fromEntries(
+    Object.entries(base.emailByCategory ?? {}).filter(
+      ([category, value]) => value != null && patch.emailByCategory?.[category as Category] == null,
+    ),
+  );
+  return {
+    ...(Object.keys(emailByCategory).length === 0 ? {} : { emailByCategory }),
+    ...(base.pushClubNews == null || patch.pushClubNews != null
+      ? {}
+      : { pushClubNews: base.pushClubNews }),
+    ...(base.reminderMinutesBefore === undefined || patch.reminderMinutesBefore !== undefined
+      ? {}
+      : { reminderMinutesBefore: base.reminderMinutesBefore }),
+  };
+}
+
+/** How many preferences a patch changes. */
+function changedPreferences(patch: PreferencesPatch): number {
+  return (
+    Object.values(patch.emailByCategory ?? {}).filter((value) => value != null).length +
+    (patch.pushClubNews == null ? 0 : 1) +
+    (patch.reminderMinutesBefore === undefined ? 0 : 1)
+  );
+}
+
 /** The api's state with the user's changes on top (her own changes always win). */
 export function patchedPreferences(
   base: NotificationPreferences,
@@ -127,6 +154,13 @@ interface Latest {
  * preferences again (`read`) instead of showing the last answer, and what is kept stays kept until
  * the latest choice gets its 2xx (E7-W06 step 4).
  *
+ * Such a failure never hides the member's last choice (E7-W07 step 2; ruling E85, option a): what
+ * is kept goes back on top at once as a pending change, waits for that read, and is sent again on
+ * top of what the api holds. The kept entry goes only when a 2xx confirms the choice, or when the
+ * member changes the same preference again (the new choice wins). If that resend fails as well,
+ * the choice stays on top, unsent, until the next change, the departure or the next visit sends it
+ * (never a loop of resends).
+ *
  * `leave` hands over what is unsaved; `restore` (a page back from the back-forward cache) makes the
  * page save again, and `adopt` queues what an earlier departure kept as a normal change.
  */
@@ -148,8 +182,12 @@ export function createPreferencesSaver(
   let latest: Latest | undefined;
   /** The page was left (`pagehide`, unmount): the departure's request and `kept` own the changes. */
   let left = false;
-  /** Something this visit wrote or took over is kept for the next visit. */
-  let holding = false;
+  /**
+   * What this visit keeps for the next one (what it last handed to `kept`, or took over from an
+   * earlier departure): the member's last choice, until a 2xx confirms it or she changes the same
+   * preference again.
+   */
+  let held: PreferencesPatch | undefined;
   /**
    * A `PUT` was sent while an older one was out (a departure): the order of the answers says
    * nothing about what the api holds, until the latest choice's own request is answered alone.
@@ -157,6 +195,12 @@ export function createPreferencesSaver(
   let overlapped = false;
   /** A save failed while `overlapped`: the api's state is read again once nothing is out. */
   let unsure = false;
+  /** That read is out: the held choice waits on top for it before it is sent again. */
+  let rereading = false;
+  /** The request that sent the held choice again after that read: its failure is not retried. */
+  let resent: number | undefined;
+  /** The held choice is on top, unsent, after its resend failed: the next save or departure sends it. */
+  let parked = false;
   /** Who hears the answers: `io`'s handlers, or the page's latest ones (`listen`). */
   let heard: Pick<PreferencesSaverIo, "failed" | "saved"> = io;
 
@@ -180,16 +224,41 @@ export function createPreferencesSaver(
       : bodies.reduce<PreferencesPatch>((merged, body) => mergePatches(merged, body), {});
   };
 
-  /** The api's state, read again (E7-W06 step 4); dropped when a `PUT` was sent meanwhile. */
+  /**
+   * The api's state, read again (E7-W06 step 4); dropped when a `PUT` was sent meanwhile. Then the
+   * held choice, waiting on top, is sent again over it (E7-W07 step 2), unless the member's own
+   * change sent it meanwhile or its pause is running (that pause sends it).
+   */
   const read = (): void => {
-    if (io.read === undefined) return;
     const at = sequence;
+    const resume = () => {
+      rereading = false;
+      if (left || sequence !== at || timer !== undefined || pending.length > 0) {
+        settled();
+        return;
+      }
+      if (isEmptyPatch(state.queued)) {
+        if (state.waiting) set({ waiting: false });
+        settled();
+        return;
+      }
+      resent = sequence + 1;
+      flush();
+    };
+    if (io.read === undefined) {
+      resume();
+      return;
+    }
+    rereading = true;
     io.read().then(
       (data) => {
         if (data !== undefined && sequence === at) set({ server: data });
+        resume();
       },
-      // The failure was already said; the page keeps what it shows.
-      () => undefined,
+      // The failure was already said: the choice goes again on top of what the page shows.
+      () => {
+        resume();
+      },
     );
   };
 
@@ -199,28 +268,30 @@ export function createPreferencesSaver(
     if (due !== undefined && !pending.some((sent) => sent.seq < due.seq)) {
       send(due.body, left, true);
     }
-    if (holding && pending.length === 0 && isEmptyPatch(state.queued)) {
+    if (held !== undefined && pending.length === 0 && isEmptyPatch(state.queued)) {
       // Left, or unsure what the api holds after overlapping PUTs: only the latest choice's 2xx
       // frees it. Open: the user saw every answer.
       if ((!left && !overlapped) || latest === undefined || latest.confirmed) {
-        holding = false;
+        held = undefined;
         io.kept?.(undefined);
       }
     }
-    // Changes made meanwhile whose pause is over go now; a running pause sends them itself.
-    if (!left && timer === undefined && pending.length === 0 && !isEmptyPatch(state.queued)) {
-      flush();
-    }
-    // A failed save after overlapping PUTs: what the api holds, once nothing is out or waiting.
-    if (
-      unsure &&
-      !left &&
-      timer === undefined &&
-      pending.length === 0 &&
-      isEmptyPatch(state.queued)
-    ) {
+    // A failed save after overlapping PUTs: what the api holds, once nothing is out or pausing.
+    if (unsure && !left && timer === undefined && pending.length === 0) {
       unsure = false;
       read();
+      return;
+    }
+    // Changes made meanwhile whose pause is over go now; a running pause sends them itself.
+    if (
+      !left &&
+      !rereading &&
+      !parked &&
+      timer === undefined &&
+      pending.length === 0 &&
+      !isEmptyPatch(state.queued)
+    ) {
+      flush();
     }
   };
 
@@ -264,8 +335,20 @@ export function createPreferencesSaver(
           // A departure's request is covered by its resend and by what it kept.
           if (!left && !keepalive) {
             heard.failed?.(cause);
-            // After overlapping PUTs the last answer may not be the api's: read it again.
-            if (overlapped) unsure = true;
+            if (overlapped) {
+              // The member's last choice never disappears: it goes back on top as a pending change
+              // (E7-W07 step 2; ruling E85, option a), the changes made since still on top of it.
+              if (held !== undefined) {
+                set({
+                  queued: mergePatches(held, state.queued),
+                  waiting: seq === resent ? state.waiting : true,
+                });
+              }
+              // After overlapping PUTs the last answer may not be the api's: read it again, then
+              // send the choice again. Its resend failing as well stays on top, unsent: no loop.
+              if (seq === resent) parked = true;
+              else unsure = true;
+            }
           }
           settled();
         },
@@ -283,25 +366,46 @@ export function createPreferencesSaver(
       if (state.waiting) set({ waiting: false });
       return;
     }
+    parked = false;
     const body = state.queued;
     set({ queued: {}, waiting: false });
     send(body, false);
   };
 
-  const edit = (patch: PreferencesPatch): void => {
+  /** A change shows at once and waits for its pause. */
+  const queue = (patch: PreferencesPatch): void => {
     clearTimeout(timer);
+    parked = false;
     set({ queued: mergePatches(state.queued, patch), waiting: true });
     timer = setTimeout(flush, debounceMs);
+  };
+
+  /**
+   * The member's change. It replaces what is kept for the same preference (the new choice wins,
+   * E7-W07 step 2): the kept entry keeps only the other preferences, or goes.
+   */
+  const edit = (patch: PreferencesPatch): void => {
+    if (held !== undefined) {
+      const rest = withoutPreferencesOf(held, patch);
+      if (changedPreferences(rest) !== changedPreferences(held)) {
+        held = isEmptyPatch(rest) ? undefined : rest;
+        io.kept?.(held);
+      }
+    }
+    queue(patch);
   };
 
   /** What an earlier departure kept (taken over by this visit): sent again as a normal change. */
   const adopt = (patch: PreferencesPatch): void => {
     if (isEmptyPatch(patch)) return;
-    holding = true;
-    edit(patch);
+    held = held === undefined ? patch : mergePatches(held, patch);
+    queue(patch);
   };
 
-  /** Sends at once what waits for its pause; resolves when nothing is unsaved any more. */
+  /**
+   * Sends at once what waits for its pause; resolves when nothing is unsaved any more, or when what
+   * is left waits for a read or for the member (a failed resend, E7-W07 step 2).
+   */
   const settle = async (): Promise<void> => {
     clearTimeout(timer);
     timer = undefined;
@@ -309,6 +413,7 @@ export function createPreferencesSaver(
       if (state.waiting) set({ waiting: false });
       return;
     }
+    if (pending.length === 0 && (rereading || unsure || parked)) return;
     flush();
     await Promise.all(pending.map((sent) => sent.done));
     await settle();
@@ -332,7 +437,8 @@ export function createPreferencesSaver(
         return;
       }
       left = true;
-      holding = true;
+      parked = false;
+      held = unsaved;
       set({ queued: {}, waiting: false });
       io.kept?.(unsaved);
       send(unsaved, true);

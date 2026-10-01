@@ -1,7 +1,6 @@
 import {
   type ApiClient,
   isApiError,
-  isInProgress,
   isUnanswered,
   useSubmissionKeys,
 } from "@agilityhub/api-client";
@@ -147,19 +146,21 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
       seatHoldId: hold.id,
       ...(swap && swapId !== undefined ? { swapBookingId: swapId } : {}),
     };
-    const signature = JSON.stringify(body);
-    const header = { "Idempotency-Key": submissions.keyFor(signature) };
     setPending(true);
     setError(undefined);
     try {
-      const response =
-        seat.waitlistEntryId === null
-          ? await client.POST("/bookings", { body, params: { header } })
-          : await client.POST("/waitlist-entries/{id}/claim", {
+      // The shared rule (`isUnanswered`, E7-W07 step 4): no answer — offline, a 5xx (whose retry
+      // R-08-08 sends with the same key, E85), IN_PROGRESS (the first request still runs, E79) —
+      // keeps the key; an answer retires it, so the same confirmation sent again is a new one.
+      const response = await submissions.send(JSON.stringify(body), (key) => {
+        const header = { "Idempotency-Key": key };
+        return seat.waitlistEntryId === null
+          ? client.POST("/bookings", { body, params: { header } })
+          : client.POST("/waitlist-entries/{id}/claim", {
               body,
               params: { header, path: { id: seat.waitlistEntryId } },
             });
-      submissions.forget(signature);
+      });
       const booking = response.data;
       if (booking === undefined) throw new TypeError("The booking response did not contain data");
       kept.current = true;
@@ -170,21 +171,9 @@ function HeldSeatView({ client, seat }: { client: ApiClient; seat: HeldSeat }) {
       }
       setBooked(booking);
     } catch (cause) {
-      // An answer retires the key: the same confirmation sent again is a new submission. No answer
-      // (offline, or IN_PROGRESS: the first request still runs, E79) keeps it, and so does a 5xx,
-      // whose retry R-08-08 sends with the same key.
-      if (!isUnanswered(cause) && !(isApiError(cause) && cause.status >= 500)) {
-        submissions.forget(signature);
-      }
       if (isApiError(cause, "SEAT_HOLD_EXPIRED")) {
         setExpiredByApi(true);
-      } else if (
-        isInProgress(cause) ||
-        isApiError(cause, "SWAP_NOT_ALLOWED") ||
-        !isApiError(cause) ||
-        cause.code === "NETWORK" ||
-        cause.status >= 500
-      ) {
+      } else if (isUnanswered(cause) || isApiError(cause, "SWAP_NOT_ALLOWED")) {
         // The member stays with the hold: a retry sends the same payload (with the same key while
         // unanswered); IN_PROGRESS reads the shared «L'operació encara està en curs…» (E80).
         setError(errorText(t, cause));

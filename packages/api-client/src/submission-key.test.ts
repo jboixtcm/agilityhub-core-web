@@ -1,13 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { ApiError } from "./api-error";
-import {
-  createSubmissionKeys,
-  HELD_KEY_TTL_MS,
-  type HeldKey,
-  heldKeyFor,
-  isUnanswered,
-} from "./submission-key";
+import { createSubmissionKeys, HELD_KEY_TTL_MS, isUnanswered } from "./submission-key";
 
 const inProgress = new ApiError({
   code: "IDEMPOTENCY_KEY_REUSED",
@@ -30,6 +24,28 @@ const refused = new ApiError({
   status: 422,
   traceId: "t-past",
 });
+/** A `503` carrying the api's own error body (CONVENCIONS_API §6): still no answer (E85). */
+const unavailable = new ApiError({
+  code: "INTERNAL_ERROR",
+  details: {},
+  message: "The service is temporarily unavailable",
+  status: 503,
+  traceId: "t-unavailable",
+});
+const internal = new ApiError({
+  code: "INTERNAL_ERROR",
+  details: {},
+  message: "boom",
+  status: 500,
+  traceId: "t-internal",
+});
+const notFound = new ApiError({
+  code: "NOT_FOUND",
+  details: {},
+  message: "Not found",
+  status: 404,
+  traceId: "t-not-found",
+});
 
 describe("E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per submission", () => {
   it.each([
@@ -45,13 +61,46 @@ describe("E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per
     ],
     ["409 IDEMPOTENCY_KEY_REUSED {reason: IN_PROGRESS}", "unanswered: the key is kept", inProgress],
     [
+      "E7-W07 step 4 (E85): a 503 with the api's error body",
+      "unanswered: the key is kept",
+      unavailable,
+    ],
+    [
+      "E7-W07 step 4 (E85): a 500 with the api's error body",
+      "unanswered: the key is kept",
+      internal,
+    ],
+    [
+      "something thrown that is not an ApiError (a bug, an abort)",
+      "unanswered: the key is kept",
+      new TypeError("Failed to fetch"),
+    ],
+    [
       "409 IDEMPOTENCY_KEY_REUSED {reason: DIFFERENT_REQUEST}",
       "answered: the key is retired",
       differentRequest,
     ],
     ["422 WEEK_IN_PAST", "answered: the key is retired", refused],
+    ["404 NOT_FOUND", "answered: the key is retired", notFound],
   ] as const)("isUnanswered: %s → %s", (_, outcome, cause) => {
     expect(isUnanswered(cause)).toBe(outcome.startsWith("unanswered"));
+  });
+
+  it("E7-W07 step 4 (CONVENCIONS_API §7, E85): send keeps the key after a 503 with the api's body and retires it after a 422", async () => {
+    const keys = createSubmissionKeys();
+    const sent: string[] = [];
+    const answers = [unavailable, refused];
+    const submit = () =>
+      keys.send("payload", (key) => {
+        sent.push(key);
+        return Promise.reject(answers[sent.length - 1] ?? new TypeError("No answer left"));
+      });
+    await expect(submit()).rejects.toBe(unavailable);
+    await expect(submit()).rejects.toBe(refused);
+    await expect(submit()).rejects.toBeInstanceOf(TypeError);
+    // The 503 kept it for the retry; the 422 retired it, so the third send is a new submission.
+    expect(sent[1]).toBe(sent[0]);
+    expect(sent[2]).not.toBe(sent[1]);
   });
 
   it("send keeps the key while the api has not answered (IN_PROGRESS, offline), retires it on an answer, and a new submission of the same payload takes a new key", async () => {
@@ -112,12 +161,47 @@ describe("E7-W06 step 1 (CONVENCIONS_API §7, E74, E79): one Idempotency-Key per
 });
 
 describe("E7-W06 review #5 (CONVENCIONS_API §7): a repeatable operation keeps an unanswered key for HELD_KEY_TTL_MS only", () => {
-  it("E7-W06 review #5: within the limit the retry reuses the key; after it, the same operation is a new submission with a new key", () => {
-    const store = new Map<string, HeldKey>();
-    const first = heldKeyFor(store, "job|false", 1_000);
-    expect(heldKeyFor(store, "job|false", 1_000 + HELD_KEY_TTL_MS - 1)).toBe(first);
-    const later = heldKeyFor(store, "job|false", 1_000 + HELD_KEY_TTL_MS);
+  it("E7-W06 review #5, E7-W07 step 4: with ttlMs, within the limit the retry reuses the key; after it, the same operation is a new submission with a new key", () => {
+    let now = 1_000;
+    const keys = createSubmissionKeys({ now: () => now, ttlMs: HELD_KEY_TTL_MS });
+    const first = keys.keyFor("job|false");
+    now += HELD_KEY_TTL_MS - 1;
+    expect(keys.keyFor("job|false")).toBe(first);
+    now += 1;
+    const later = keys.keyFor("job|false");
     expect(later).not.toBe(first);
-    expect(heldKeyFor(store, "job|false", 1_000 + HELD_KEY_TTL_MS + 1)).toBe(later);
+    now += 1;
+    expect(keys.keyFor("job|false")).toBe(later);
+  });
+
+  it("E7-W07 step 4: without ttlMs an unanswered key is kept however long the retry takes", async () => {
+    let now = 1_000;
+    const keys = createSubmissionKeys({ now: () => now });
+    const sent: string[] = [];
+    await expect(
+      keys.send("payload", (key) => {
+        sent.push(key);
+        return Promise.reject(unavailable);
+      }),
+    ).rejects.toBe(unavailable);
+    now += 24 * 60 * 60_000;
+    await keys.send("payload", (key) => {
+      sent.push(key);
+      return Promise.resolve();
+    });
+    expect(sent[1]).toBe(sent[0]);
+  });
+});
+
+describe("E7-W07 step 4 (E7-W06 review #5): the keys of an abandoned submission", () => {
+  it("drop(owner) forgets every key of that owner's submissions (followup's abandoned form), and only those", () => {
+    const keys = createSubmissionKeys();
+    const created = keys.keyFor('create:{"text":"a"}', "form-1");
+    const attached = keys.keyFor('attach:{"file":1}', "form-1");
+    const other = keys.keyFor('create:{"text":"b"}', "form-2");
+    keys.drop("form-1");
+    expect(keys.keyFor('create:{"text":"a"}', "form-1")).not.toBe(created);
+    expect(keys.keyFor('attach:{"file":1}', "form-1")).not.toBe(attached);
+    expect(keys.keyFor('create:{"text":"b"}', "form-2")).toBe(other);
   });
 });

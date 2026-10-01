@@ -1,0 +1,30 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/planning/CalendarPage.test.tsx (47 tests | 1 failed | 45 skipped) 701ms
+   ❯ E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D4's keyed writes follow the shared submission-key rule (2)
+     × T-06-28 E7-W07 step 4 (CONVENCIONS_API §7, E85): D4c's class cancellation keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ADMIN_TEXT_REQUIRED retires it, so the same notice sent again takes a new key 432ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/planning/CalendarPage.test.tsx > E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D4's keyed writes follow the shared submission-key rule > T-06-28 E7-W07 step 4 (CONVENCIONS_API §7, E85): D4c's class cancellation keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ADMIN_TEXT_REQUIRED retires it, so the same notice sent again takes a new key
+AssertionError: expected '125b5a6a-caee-4cdf-8b11-91d123227dba' not to be '125b5a6a-caee-4cdf-8b11-91d123227dba' // Object.is equality
+ ❯ src/planning/CalendarPage.test.tsx:1864:30
+    1862|     expect(sent[1]?.key).toBe(sent[0]?.key);
+    1863|     expect(sent[2]?.key).toBe(sent[0]?.key);
+    1864|     expect(sent[3]?.key).not.toBe(sent[0]?.key);
+       |                              ^
+    1865|   });
+    1866|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed | 45 skipped (47)
+   Start at  10:45:05
+   Duration  2.72s (environment 29%, tests 27%, transform 26%, import 11%, setup 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/planning/CalendarPage.test.tsx -t E7-W07 step 4
