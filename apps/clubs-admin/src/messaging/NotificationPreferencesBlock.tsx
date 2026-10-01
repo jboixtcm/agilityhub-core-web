@@ -92,7 +92,8 @@ export function NotificationPreferencesBlock({
     saver.listen({
       failed: (error) => {
         // The member was erased while D10 was open: final, the block stops offering changes (no
-        // retry, E7-W06 review #4); the message is the block's own.
+        // retry, E7-W06 review #4); the message is the block's own. The saver has stopped too: no
+        // other PUT, read or departure resend, and the outbox entry goes (E7-W07 round 2 #2).
         if (isApiError(error, "MEMBER_ERASED")) {
           setStatus("erased");
           return;
@@ -133,7 +134,15 @@ export function NotificationPreferencesBlock({
           if (kept !== undefined) saver.adopt(kept);
         },
         (error: unknown) => {
-          if (current) setStatus(isApiError(error, "MEMBER_ERASED") ? "erased" : "error");
+          if (!current) return;
+          if (isApiError(error, "MEMBER_ERASED")) {
+            // Final: what an earlier visit kept for this member is never sent (E7-W07 round 2).
+            outbox.take();
+            outbox.clear();
+            setStatus("erased");
+            return;
+          }
+          setStatus("error");
         },
       );
     return () => {

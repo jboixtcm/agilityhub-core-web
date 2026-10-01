@@ -1,0 +1,927 @@
+{
+  "created": {
+    "localeEs": "b7b9bc…",
+    "templateEdited": "6abe72…",
+    "bookingCca": "817643…",
+    "bookingCes": "0606aa…",
+    "templateReset": "6abe72…",
+    "clubChangesOff": "dd34ff…",
+    "bookingD": "26884e…",
+    "clubChangesOn": "dd34ff…",
+    "pushSubscription": "d8dc8c…",
+    "pushDeleted": "204",
+    "bookingH": "bbc942…",
+    "reminderSet": "dd34ff…"
+  },
+  "runId": "pnfh43",
+  "steps": {
+    "instants": {
+      "coreUrl": "http://core:8080",
+      "demoNow": "2026-10-05T05:00:00.000Z",
+      "weekStart": "2026-10-05"
+    },
+    "preflight": {
+      "meNotifications": 200,
+      "messageTemplates": 200,
+      "notifications": 200
+    },
+    "branding": {
+      "locales": [
+        "ca",
+        "es"
+      ],
+      "modules": [
+        "ACTIVITIES",
+        "BILLING",
+        "COURSES",
+        "FAMILY_GROUP",
+        "FAQ",
+        "FREE_TRAINING",
+        "INACTIVITY",
+        "LEARN_LINK",
+        "PACKS",
+        "PUSH",
+        "SMS",
+        "TASKS",
+        "WAITLIST"
+      ],
+      "pushPublicKey": null
+    },
+    "jobs-switched-off": [
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "reminders",
+      "expirations",
+      "class-finishing",
+      "cleanup"
+    ],
+    "clock-2026-10-05T05:00:00.000Z": {
+      "status": 200
+    },
+    "clock": {
+      "instant": "2026-10-05T05:00:00.000Z",
+      "status": 200
+    },
+    "parameters": {
+      "bookings.lateCancelThresholdMinutes": 240,
+      "waitlist.notifyThresholdMinutes": 30,
+      "messaging.reminderOptionsMinutes": [
+        60,
+        120,
+        240,
+        360,
+        720,
+        1440
+      ],
+      "messaging.sms.monthlyCap": 1000
+    },
+    "scene-templates": {
+      "countsByCategory": {
+        "OPERATIONAL": 24,
+        "PERSONAL": 17,
+        "CLUB_CHANGES": 8,
+        "CLUB_NEWS": 3
+      },
+      "custom": {
+        "name": "Comunicat del club",
+        "push": [
+          "MEMBER"
+        ]
+      },
+      "items": 52,
+      "n08a": {
+        "caps": {
+          "MEMBER": [
+            "APP",
+            "EMAIL",
+            "SMS"
+          ],
+          "INSTRUCTORS": [
+            "APP",
+            "EMAIL"
+          ],
+          "ADMINS": [
+            "APP",
+            "EMAIL"
+          ]
+        },
+        "customized": false,
+        "matrix": {
+          "MEMBER": {
+            "APP": true,
+            "EMAIL": true,
+            "SMS": true
+          },
+          "INSTRUCTORS": {
+            "APP": true,
+            "EMAIL": true,
+            "SMS": false
+          },
+          "ADMINS": {
+            "APP": true,
+            "EMAIL": false,
+            "SMS": false
+          }
+        },
+        "push": []
+      }
+    },
+    "scene-bookings": {
+      "ca": [
+        "2026-10-05T08:30"
+      ],
+      "es": [
+        "2026-10-05T08:30",
+        "2026-10-07T08:30"
+      ],
+      "seededA": true
+    },
+    "scene-contacts": {
+      "#5": {
+        "emails": 1,
+        "phones": 1
+      },
+      "#6": {
+        "emails": 1,
+        "phones": 1
+      },
+      "#7": {
+        "emails": 1,
+        "phones": 1
+      },
+      "#8": {
+        "emails": 1,
+        "phones": 1
+      },
+      "#9": {
+        "emails": 1,
+        "phones": 1
+      },
+      "#10": {
+        "emails": 1,
+        "phones": 1
+      },
+      "#11": {
+        "emails": 1,
+        "phones": 1
+      },
+      "#12": {
+        "emails": 1,
+        "phones": 1
+      },
+      "#13": {
+        "emails": 1,
+        "phones": 1
+      },
+      "#14": {
+        "emails": 1,
+        "phones": 1
+      }
+    },
+    "scene": {
+      "ca": {
+        "bookingA": "c23f81…",
+        "dogId": "05d41c…",
+        "dogName": "Suro 190",
+        "email": "#5",
+        "firstName": "Laia",
+        "memberId": "dd34ff…"
+      },
+      "classA": {
+        "date": "2026-10-05",
+        "description": "C+D+E",
+        "id": "5186f7…",
+        "ringName": "Muntanya",
+        "time": "08:30"
+      },
+      "customTemplateId": "a7e93f…",
+      "es": {
+        "bookingA": "4e17c3…",
+        "dogId": "1e643e…",
+        "dogName": "Neu 192",
+        "email": "#7",
+        "firstName": "Ona",
+        "memberId": "b7b9bc…"
+      },
+      "n08aTemplateId": "6abe72…",
+      "n08aTexts": {
+        "locales": [
+          "ca",
+          "es"
+        ]
+      },
+      "pushPublicKey": null,
+      "seededA": true,
+      "ten": [
+        {
+          "email": "#5",
+          "fullName": "Laia Fictici006",
+          "id": "dd34ff…"
+        },
+        {
+          "email": "#6",
+          "fullName": "Aina Fictici007",
+          "id": "6949c4…"
+        },
+        {
+          "email": "#7",
+          "fullName": "Ona Fictici008",
+          "id": "b7b9bc…"
+        },
+        {
+          "email": "#8",
+          "fullName": "Aleix Fictici009",
+          "id": "46f4ff…"
+        },
+        {
+          "email": "#9",
+          "fullName": "Guillem Fictici010",
+          "id": "03f841…"
+        },
+        {
+          "email": "#10",
+          "fullName": "Pol Fictici011",
+          "id": "5f3336…"
+        },
+        {
+          "email": "#11",
+          "fullName": "Ona Fictici012",
+          "id": "43ce37…"
+        },
+        {
+          "email": "#12",
+          "fullName": "Rita Fictici013",
+          "id": "800468…"
+        },
+        {
+          "email": "#13",
+          "fullName": "Pol Fictici014",
+          "id": "b88e67…"
+        },
+        {
+          "email": "#14",
+          "fullName": "Jana Fictici015",
+          "id": "1e5c07…"
+        }
+      ]
+    },
+    "b-locale": {
+      "patch": 200,
+      "preferencesLocale": "es"
+    },
+    "a-cancellation": {
+      "affectedBookings": 2,
+      "affectedWaitlist": 0,
+      "previewBookings": 2,
+      "reason": "CLUB_MANUAL",
+      "waitlistCount": 0
+    },
+    "a-b-g": {
+      "bell": {
+        "after": {
+          "dot": 0,
+          "ringing": 0,
+          "unread": 0
+        },
+        "before": {
+          "dot": 1,
+          "ringing": 1,
+          "unread": 8
+        }
+      },
+      "card": {
+        "body": "(asserted)",
+        "borderLeft": "solid 3px",
+        "button": "CANVIA DE CLASSE",
+        "buttonDisabled": false,
+        "code": "N-08a",
+        "icon": "x",
+        "meta": "fa 0 min · i per SMS",
+        "tone": "error",
+        "title": "Classe anul·lada pel club"
+      },
+      "esCard": {
+        "body": "(asserted)",
+        "borderLeft": "solid 3px",
+        "button": "CAMBIA DE CLASE",
+        "buttonDisabled": false,
+        "code": "N-08a",
+        "icon": "x",
+        "meta": "hace 0 min · y por SMS",
+        "tone": "error",
+        "title": "Clase cancelada por el club"
+      },
+      "esOlder": {
+        "code": "N-05",
+        "locale": "ca",
+        "title": "Reserva anul·lada"
+      },
+      "locales": {
+        "ca": "ca",
+        "es": "es"
+      },
+      "mailbox": {
+        "ca": [
+          {
+            "marker": true,
+            "subject": "Classe anul·lada pel club",
+            "to": "#5"
+          }
+        ],
+        "es": [
+          {
+            "marker": true,
+            "subject": "Clase cancelada por el club",
+            "to": "#7"
+          }
+        ]
+      },
+      "r1102": [
+        {
+          "audience": "MEMBER",
+          "deliveries": [
+            {
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
+            },
+            {
+              "attempts": 1,
+              "channel": "EMAIL",
+              "providerRef": "local-…",
+              "status": "SENT"
+            },
+            {
+              "attempts": 1,
+              "channel": "SMS",
+              "providerRef": "log-da…",
+              "status": "SENT"
+            }
+          ],
+          "locale": "ca"
+        },
+        {
+          "audience": "MEMBER",
+          "deliveries": [
+            {
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
+            },
+            {
+              "attempts": 1,
+              "channel": "EMAIL",
+              "providerRef": "local-…",
+              "status": "SENT"
+            },
+            {
+              "attempts": 1,
+              "channel": "SMS",
+              "providerRef": "log-24…",
+              "status": "SENT"
+            }
+          ],
+          "locale": "es"
+        },
+        {
+          "audience": "INSTRUCTORS",
+          "deliveries": [
+            {
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
+            },
+            {
+              "attempts": 1,
+              "channel": "EMAIL",
+              "providerRef": "local-…",
+              "status": "SENT"
+            }
+          ],
+          "locale": "ca"
+        },
+        {
+          "audience": "ADMINS",
+          "deliveries": [
+            {
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
+            }
+          ],
+          "locale": "ca"
+        },
+        {
+          "audience": "ADMINS",
+          "deliveries": [
+            {
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
+            }
+          ],
+          "locale": "ca"
+        }
+      ],
+      "readAll": {
+        "status": 200,
+        "unreadCount": 0
+      },
+      "ringInBody": false,
+      "smsDeliveries": [
+        {
+          "attempts": 1,
+          "channel": "SMS",
+          "providerRef": "log-da…",
+          "status": "SENT"
+        }
+      ],
+      "titles": {
+        "ca": "Classe anul·lada pel club",
+        "es": "Clase cancelada por el club"
+      }
+    },
+    "c-template": {
+      "class": {
+        "description": "C+D+E",
+        "startsAtLocal": "2026-10-07T08:30"
+      },
+      "marker": " (pnfh43)",
+      "put": 200,
+      "reset": 200,
+      "templateVersions": {
+        "aNotice": 0,
+        "afterReset": 2,
+        "cNotice": 1,
+        "edited": 1,
+        "read": 0
+      },
+      "titles": {
+        "ca": "Classe anul·lada pel club",
+        "es": "Clase cancelada por el club"
+      }
+    },
+    "d-matrix": {
+      "class": {
+        "description": "C+D+E",
+        "startsAtLocal": "2026-10-08T08:30"
+      },
+      "d10Put": 200,
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 0,
+          "channel": "EMAIL",
+          "providerRef": null,
+          "status": "SKIPPED_BY_PREFERENCE"
+        },
+        {
+          "attempts": 1,
+          "channel": "SMS",
+          "providerRef": "log-20…",
+          "status": "SENT"
+        }
+      ],
+      "mailboxForHer": 0,
+      "meta": "fa 0 min · i per SMS",
+      "put12": 200
+    },
+    "f-push": {
+      "deviceLabel": "Linux · Chrome",
+      "injectedKey": true,
+      "permissionRequests": [
+        "/perfil"
+      ],
+      "post": 201,
+      "upsert": {
+        "sameId": true,
+        "status": 201
+      }
+    },
+    "e-announcement": {
+      "batch": {
+        "batchId": "664239…",
+        "code": "N-24",
+        "createdAt": [
+          "2026-10-05T05:00:15.602Z"
+        ],
+        "eventType": "AnnouncementSent",
+        "rows": 10
+      },
+      "filterShape": {
+        "d5RenderedRows": 10,
+        "d5TotalItems": 10,
+        "dryRunCount": 10,
+        "filters": [
+          "status:eq:ACTIVE"
+        ],
+        "sent": 202,
+        "sentCount": 10
+      },
+      "listedBySearch": 10,
+      "outsideFeed": 0,
+      "pushDelete": 204,
+      "pushDelivery": "SENT",
+      "rows": [
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#12"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#7"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#11"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#10"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SENT"
+            }
+          ],
+          "member": "#8"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SENT"
+            }
+          ],
+          "member": "#14"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#5"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#6"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#9"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#13"
+        }
+      ],
+      "selection": {
+        "dryRun": 10,
+        "status": 202
+      },
+      "titles": {
+        "ca": "Comunicat del club",
+        "es": "Comunicado del club"
+      }
+    },
+    "step5-statuses": {
+      "channelNotAllowed": {
+        "code": "CHANNEL_NOT_ALLOWED",
+        "contract": 422,
+        "s11": 400,
+        "matchesContract": true,
+        "observed": {
+          "code": "CHANNEL_NOT_ALLOWED",
+          "status": 422
+        }
+      },
+      "invalidReminderOption": {
+        "code": "INVALID_REMINDER_OPTION",
+        "contract": 422,
+        "s11": 400,
+        "matchesContract": true,
+        "observed": {
+          "code": "INVALID_REMINDER_OPTION",
+          "status": 422
+        }
+      },
+      "noRecipients": {
+        "code": "NO_RECIPIENTS",
+        "contract": 422,
+        "s11": 422,
+        "matchesContract": true,
+        "observed": {
+          "code": "NO_RECIPIENTS",
+          "status": 422
+        }
+      },
+      "pushSubscriptionInvalid": {
+        "code": "PUSH_SUBSCRIPTION_INVALID",
+        "contract": 422,
+        "s11": 400,
+        "matchesContract": true,
+        "observed": {
+          "code": "PUSH_SUBSCRIPTION_INVALID",
+          "status": 422
+        }
+      },
+      "staleVersion": {
+        "code": "STALE_VERSION",
+        "contract": 409,
+        "s11": 409,
+        "matchesContract": true,
+        "observed": {
+          "code": "STALE_VERSION",
+          "status": 409
+        }
+      },
+      "templateMandatory": {
+        "code": "TEMPLATE_MANDATORY",
+        "contract": 422,
+        "s11": 409,
+        "matchesContract": true,
+        "observed": {
+          "code": "TEMPLATE_MANDATORY",
+          "status": 422
+        }
+      },
+      "templateNotCatalog": {
+        "code": "TEMPLATE_NOT_CATALOG",
+        "contract": 422,
+        "s11": 409,
+        "matchesContract": true,
+        "observed": {
+          "code": "TEMPLATE_NOT_CATALOG",
+          "status": 422
+        }
+      },
+      "templateNotSendable": {
+        "code": "TEMPLATE_NOT_SENDABLE",
+        "contract": 422,
+        "s11": 409,
+        "matchesContract": true,
+        "observed": {
+          "code": "TEMPLATE_NOT_SENDABLE",
+          "status": 422
+        }
+      }
+    },
+    "step5-undone": {},
+    "i-info-es": {
+      "faqGroups": [
+        "Convivència al club",
+        "Reserves de classe",
+        "Competicions"
+      ],
+      "faqItems": 7,
+      "rulesTitle": "Normes del club"
+    },
+    "clock-2026-10-10T12:30:00.000Z": {
+      "status": 200
+    },
+    "h-reminder": {
+      "class": {
+        "description": "D+E",
+        "startsAtLocal": "2026-10-10T16:30"
+      },
+      "clock": "2026-10-10T12:30:00.000Z",
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 0,
+          "channel": "EMAIL",
+          "providerRef": null,
+          "status": "SKIPPED_BY_PREFERENCE"
+        },
+        {
+          "attempts": 0,
+          "channel": "PUSH",
+          "providerRef": null,
+          "status": "SKIPPED_NO_CONTACT"
+        }
+      ],
+      "plan": {
+        "counters": {
+          "WOULD_REMIND": 1
+        },
+        "dialogRow": "Booking bbc942… · WOULD_REMIND",
+        "items": 1,
+        "status": "SUCCEEDED"
+      },
+      "run": {
+        "counters": {
+          "classReminders": 1
+        },
+        "items": 1,
+        "status": "SUCCEEDED"
+      },
+      "second": {
+        "counters": {},
+        "items": 0,
+        "status": "SUCCEEDED"
+      },
+      "title": "Recordatori de classe",
+      "view": {
+        "body": "(asserted)",
+        "borderLeft": "solid 1px",
+        "button": null,
+        "buttonDisabled": null,
+        "code": "N-13",
+        "icon": "clock",
+        "meta": "fa 0 min",
+        "tone": "neutral",
+        "title": "Recordatori de classe"
+      }
+    },
+    "j-cleanup": {
+      "booking": {
+        "state": "CANCELLED_LATE",
+        "status": 200
+      },
+      "clubChanges": true,
+      "locale": {
+        "locale": "ca",
+        "status": 200
+      },
+      "pushDeleted": "204",
+      "reminder": {
+        "minutes": null,
+        "status": 200
+      },
+      "templateCustomized": false
+    },
+    "clock-2026-10-01T14:48:35.644Z": {
+      "status": 200
+    },
+    "j-clock-restored": {
+      "status": 200
+    },
+    "afterAll-safety-net": {},
+    "jobs-switched-on": {
+      "week-opening": {
+        "enabled": true,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": true,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": true,
+        "status": 200
+      },
+      "reminders": {
+        "enabled": true,
+        "status": 200
+      },
+      "expirations": {
+        "enabled": true,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": true,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": true,
+        "status": 200
+      }
+    }
+  },
+  "weekStart": "2026-10-05"
+}

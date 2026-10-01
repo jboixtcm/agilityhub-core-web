@@ -1,0 +1,4 @@
+$ pnpm -C /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client exec tsc --noEmit -p .
+(no output)
+exit 0
+(tsc prints nothing when clean; this file was empty until the round-2 self-review asked for the command. The final-tree typecheck is turbo's, logs 200 and 210.)

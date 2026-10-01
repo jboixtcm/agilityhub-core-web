@@ -629,7 +629,7 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     expect(await storedReminder()).toBe(120);
   });
 
-  it("E7-W07 step 2 (ruling E85: option a): the retry is lost too and the member leaves right after — the departure carries «2 h abans» and keeps it, so the next visit within 5 minutes of leaving shows it as a pending change before it is saved", async () => {
+  it("E7-W07 step 2 (ruling E85: option a): the retry is lost too and the member leaves right after — the departure carries «2 h abans» and keeps it, so the next visit within 5 minutes of leaving shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too — «2 h abans» stays shown and kept, and the member's next change sends it", async () => {
     const firstDeparture = Date.now();
     await overlappingDepartureThenResendLost({ lost: true, networkFailure: true });
     // The retry failed four minutes after the first departure: 12 still shows the choice.
@@ -648,17 +648,41 @@ describe("T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07
     // Two minutes later (six after the first departure), the member comes back to 12; its save
     // answers only when the test says.
     vi.setSystemTime(firstDeparture + 6 * 60_000);
-    const saved = gate();
-    planPuts([{ answerAfter: saved.opened }]);
-    await openProfile();
+    const failNow = gate();
+    planPuts([{ answerAfter: failNow.opened, lost: true, networkFailure: true }]);
+    const card = await openProfile();
     await waitFor(() => {
       expect(reminderSelect()).toHaveValue("120");
     });
     expect(screen.getByText("Desant…")).toBeVisible();
     expect(await storedReminder()).toBe(60);
-    saved.open();
+    await waitFor(() => {
+      expect(puts()).toHaveLength(6);
+    });
+    // E7-W07 round 2 #1 (review #1, ruling E86): that visit's PUT fails as well. The failure is
+    // said, and «2 h abans» stays shown and kept, unsent (no loop of resends).
+    failNow.open();
+    expect(await within(card).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat.",
+    );
+    await waitFor(() => {
+      expect(screen.queryByText("Desant…")).toBeNull();
+    });
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    expect(reminderSelect()).toHaveValue("120");
+    expect(noticesOutbox()).toMatchObject({ patch: { reminderMinutesBefore: 120 } });
+    expect(puts()).toHaveLength(6);
+    expect(await storedReminder()).toBe(60);
+    // The member's next change sends it with that change, and only its 2xx frees the outbox.
+    const operational = emailSwitch("Operativa (reserves i canvis que has fet tu)");
+    const turnedOn = operational.getAttribute("aria-checked") !== "true";
+    fireEvent.click(operational);
     await waitFor(() => {
       expect(noticesOutbox()).toBeNull();
+    });
+    expect(puts().at(-1)).toEqual({
+      emailByCategory: { OPERATIONAL: turnedOn },
+      reminderMinutesBefore: 120,
     });
     expect(await storedReminder()).toBe(120);
   });

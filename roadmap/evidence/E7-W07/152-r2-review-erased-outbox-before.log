@@ -1,0 +1,73 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx (22 tests | 1 failed) 19453ms
+   ❯ T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) (22)
+     × E7-W07 round 2 (self-review #6; S14 §5): a read answered 409 MEMBER_ERASED drops what an earlier visit of that member kept in the outbox, so nothing is sent for the erased member again 10014ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W07 round 2 (self-review #6; S14 §5): a read answered 409 MEMBER_ERASED drops what an earlier visit of that member kept in the outbox, so nothing is sent for the erased member again
+AssertionError: expected { at: 1790859281394, …(3) } to be null
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card notification-preferences"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"census-record__section-title"[39m
+        [36m>[39m
+          [0mPreferències d'avisos (mantenibles aquí i al perfil)[0m
+        [36m</h2>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"messaging-editor__error"[39m
+          [33mrole[39m=[32m"alert"[39m
+        [36m>[39m
+          [0mAquest abonat ha estat suprimit i ja no es pot modificar.[0m
+        [36m</p>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+- Expected:
+null
+
++ Received:
+{
+  "at": 1790859281394,
+  "memberId": "member-laura",
+  "patch": {
+    "emailByCategory": {
+      "PERSONAL": false,
+    },
+  },
+  "visit": "an-earlier-visit",
+}
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:474:24
+    472|     expect(await screen.findByRole("alert")).toHaveTextContent(i18n.t(…
+    473|     await waitFor(() => {
+    474|       expect(outbox()).toBeNull();
+       |                        ^
+    475|     });
+    476|     cleanup();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 21 passed (22)
+   Start at  14:54:38
+   Duration  21.07s (tests 93%, transform 3%, environment 2%, import 1%, setup 1%)
+

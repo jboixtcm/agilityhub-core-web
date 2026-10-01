@@ -226,7 +226,9 @@ test("T-03-42 real census flow, booking block and member profile", async ({ brow
   await navigateSpa(admin, "/abonats");
   const defaultListResponse = await defaultList;
   expect(defaultListResponse.status()).toBe(200);
-  expect(new URL(defaultListResponse.url()).searchParams.getAll("filter")).toEqual(["status:eq:ACTIVE"]);
+  expect(new URL(defaultListResponse.url()).searchParams.getAll("filter")).toEqual([
+    "status:eq:ACTIVE",
+  ]);
   expect(((await defaultListResponse.json()) as { totalItems: number }).totalItems).toBe(184);
 
   await expect(admin.getByRole("heading", { name: /Abonats/u })).toBeVisible();
@@ -314,7 +316,10 @@ test("T-03-42 real census flow, booking block and member profile", async ({ brow
     `${JSON.stringify(
       pendingDogs.map((dog) => ({
         dog: dog.name,
-        pendingDocuments: dog.pendingDocuments.map((key) => ({ key, label: typeLabel(key) ?? null })),
+        pendingDocuments: dog.pendingDocuments.map((key) => ({
+          key,
+          label: typeLabel(key) ?? null,
+        })),
       })),
       null,
       2,
@@ -619,10 +624,12 @@ test("T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's doc
   await loginMember(member);
   const parameterReads: string[] = [];
   member.on("request", (request) => {
-    if (new URL(request.url()).pathname.startsWith("/api/v1/parameters")) parameterReads.push(request.url());
+    if (new URL(request.url()).pathname.startsWith("/api/v1/parameters"))
+      parameterReads.push(request.url());
   });
   const meDogsResponse = member.waitForResponse(
-    (response) => response.url().endsWith("/api/v1/me/dogs") && response.request().method() === "GET",
+    (response) =>
+      response.url().endsWith("/api/v1/me/dogs") && response.request().method() === "GET",
   );
   await navigateClubRoute(member, "/gossos");
   const meDogsAnswer = await meDogsResponse;
@@ -637,14 +644,18 @@ test("T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's doc
   expect.soft(seedDocumentTypes.length, "the seed's census.dogDocumentTypes").toBeGreaterThan(0);
   await expect(member.getByRole("heading", { name: "Els meus gossos" })).toBeVisible();
   // R-03-30: «Nivell {codi}» for exactly the dogs that carry their level.
-  await expect(member.locator(".dog-card__level")).toHaveCount(meDogs.dogs.filter((dog) => dog.level != null).length);
+  await expect(member.locator(".dog-card__level")).toHaveCount(
+    meDogs.dogs.filter((dog) => dog.level != null).length,
+  );
   // R-03-15, R-03-32: «＋ DOC.» offers the seed's types, in the api's order and with its labels.
   await member.getByRole("button", { name: "＋ DOC." }).first().click();
   const documentDialog = member.getByRole("dialog", { name: /^Afegeix un document de / });
   const documentTypes = await documentDialog
     .getByLabel("Tipus")
     .locator("option")
-    .evaluateAll((options) => options.map((option) => [option.getAttribute("value"), option.textContent]));
+    .evaluateAll((options) =>
+      options.map((option) => [option.getAttribute("value"), option.textContent]),
+    );
   expect(documentTypes).toEqual(seedDocumentTypes.map((type) => [type.key, type.label]));
   await screenshot(member, "13-document-types-core-375.png");
   await documentDialog.getByRole("button", { name: "Tanca" }).click();

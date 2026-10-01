@@ -131,6 +131,15 @@ describe("T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12)", () => {
       "Tasca nova (N-20)",
       "Nou gos afegit (N-37)",
     ]);
+    // E7-W03: each row carries the api's template id (the real-core spec selects by it).
+    expect(list.getAllByRole("button").map((button) => button.dataset.templateId)).toEqual([
+      "tpl-n-02",
+      "tpl-n-09",
+      "tpl-n-28",
+      "tpl-n-19",
+      "tpl-n-20",
+      "tpl-n-37",
+    ]);
     expect(title().value).toBe("Comunicació de baixa com a associat");
     expect(screen.getByText("Comunicats individuals", { selector: ".ah-chip" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Document" })).toHaveAttribute(

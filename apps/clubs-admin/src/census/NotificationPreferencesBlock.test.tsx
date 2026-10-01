@@ -119,6 +119,8 @@ interface PutPlan {
   landAfter?: Promise<void>;
   lost?: boolean;
   networkFailure?: boolean;
+  /** The api refuses it with this code and status (nothing lands). */
+  refused?: { code: string; status: number };
 }
 
 /**
@@ -134,6 +136,13 @@ function planPuts(plans: PutPlan[]) {
       index += 1;
       const body: unknown = await request.clone().json();
       await plan.landAfter;
+      if (plan.refused !== undefined) {
+        await plan.answerAfter;
+        return HttpResponse.json(
+          { code: plan.refused.code, details: {}, message: "Refused", traceId: "t-refused" },
+          { status: plan.refused.status },
+        );
+      }
       const response =
         plan.lost === true ? undefined : await getResponse(handlers, request.clone());
       if (plan.lost !== true) landed.push(body);
@@ -421,6 +430,52 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     expect(i18n.t("errors:MEMBER_ERASED")).not.toBe("MEMBER_ERASED");
     expect(screen.queryByRole("button", { name: "Torna-ho a provar" })).toBeNull();
     expect(calls).toBe(1);
+  });
+
+  it("E7-W07 round 2 (self-review #6; S14 §5): a read answered 409 MEMBER_ERASED drops what an earlier visit of that member kept in the outbox, so nothing is sent for the erased member again", async () => {
+    const puts = recordPutRequests();
+    sessionStorage.setItem(
+      PREFERENCES_OUTBOX_KEY,
+      JSON.stringify({
+        at: Date.now(),
+        memberId: "member-laura",
+        patch: { emailByCategory: { PERSONAL: false } },
+        visit: "an-earlier-visit",
+      }),
+    );
+    server.use(
+      http.get("*/api/v1/members/:id/notification-preferences", () =>
+        HttpResponse.json(
+          { code: "MEMBER_ERASED", details: {}, message: "Member erased", traceId: "t" },
+          { status: 409 },
+        ),
+      ),
+    );
+    mockScenario("admin");
+    const i18n = await createI18n({
+      branding: canic,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["admin-census", "errors"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={canic}>
+          <NotificationPreferencesBlock
+            client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+            memberId="member-laura"
+            onFeedback={() => undefined}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    expect(await screen.findByRole("alert")).toHaveTextContent(i18n.t("errors:MEMBER_ERASED"));
+    await waitFor(() => {
+      expect(outbox()).toBeNull();
+    });
+    cleanup();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(puts).toEqual([]);
   });
 
   it("E7-W01 round 2 #5: leaving the page sends every unsaved change with keepalive — the one on its way too — and the next visit sends it again", async () => {
@@ -831,7 +886,7 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     expect((await stored())?.emailByCategory.PERSONAL).toBe(true);
   });
 
-  it("E7-W07 step 2 (ruling E85: option a): the retry is lost too and the admin leaves right after — the departure carries «on» with keepalive and keeps it, and the next visit within 5 minutes of leaving shows it as a pending change before it is saved", async () => {
+  it("E7-W07 step 2 (ruling E85: option a): the retry is lost too and the admin leaves right after — the departure carries «on» with keepalive and keeps it, and the next visit within 5 minutes of leaving shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too — «on» stays shown and kept, and the admin's next change sends it", async () => {
     const firstDeparture = Date.now();
     vi.useFakeTimers({ now: firstDeparture, shouldAdvanceTime: true, toFake: ["Date"] });
     const { puts, reads } = await overlappingDepartureThenResendLost({
@@ -853,19 +908,97 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     // Two minutes later (six after the first departure), the record is opened again; its save
     // answers only when the test says.
     vi.setSystemTime(firstDeparture + 6 * 60_000);
-    const saved = gate();
-    planPuts([{ answerAfter: saved.opened }]);
-    await renderBlock();
+    const failNow = gate();
+    planPuts([{ answerAfter: failNow.opened, lost: true, networkFailure: true }]);
+    const next = await renderBlock();
     await waitFor(() => {
       expect(personal()).toHaveAttribute("aria-checked", "true");
     });
     expect(screen.getByRole("status")).toHaveTextContent("Desant…");
     expect((await stored())?.emailByCategory.PERSONAL).toBe(false);
-    saved.open();
+    await waitFor(() => {
+      expect(puts).toHaveLength(6);
+    });
+    // E7-W07 round 2 #1 (review #1, ruling E86): that visit's PUT fails as well. The failure is
+    // said, and «on» stays shown and kept, unsent (no loop of resends): a failure never drops it.
+    failNow.open();
+    await waitFor(() => {
+      expect(next.onFeedback).toHaveBeenCalledWith(expect.objectContaining({ tone: "danger" }));
+    });
+    await waitFor(() => {
+      expect(screen.queryByRole("status")).toBeNull();
+    });
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    expect(personal()).toHaveAttribute("aria-checked", "true");
+    expect(outbox()).toMatchObject({
+      memberId: "member-laura",
+      patch: { emailByCategory: { PERSONAL: true } },
+    });
+    expect(puts).toHaveLength(6);
+    expect((await stored())?.emailByCategory.PERSONAL).toBe(false);
+    // The admin's next change sends it with that change, and only its 2xx frees the outbox.
+    fireEvent.click(
+      screen.getByRole("switch", {
+        name: "Correu: Operativa (reserves i canvis fets per l'abonat)",
+      }),
+    );
     await waitFor(() => {
       expect(outbox()).toBeNull();
     });
-    expect((await stored())?.emailByCategory.PERSONAL).toBe(true);
+    expect(puts.at(-1)).toEqual({
+      body: { emailByCategory: { OPERATIONAL: true, PERSONAL: true } },
+      keepalive: false,
+    });
+    expect((await stored())?.emailByCategory).toMatchObject({ OPERATIONAL: true, PERSONAL: true });
+  });
+
+  it("E7-W07 round 2 #2 (review #2; S14 §5, T-14-19): with the overlapping-save sequence, the resend answered 409 MEMBER_ERASED is final — the block says so, and no other PUT or GET follows, nothing is sent on departure, and the outbox entry goes", async () => {
+    const older = gate();
+    const departure = gate();
+    const landed = planPuts([
+      // PERSONAL off: reaches the api only after the departure's PERSONAL on.
+      { landAfter: older.opened },
+      // PERSONAL on with keepalive: lands at once, answers when the test says.
+      { answerAfter: departure.opened },
+      // The member is erased meanwhile: the resend of «on» is refused.
+      { refused: { code: "MEMBER_ERASED", status: 409 } },
+    ]);
+    const puts = recordPutRequests();
+    const reads = { count: 0 };
+    server.events.on("request:start", ({ request }) => {
+      if (request.method === "GET" && request.url.includes("/notification-preferences")) {
+        reads.count += 1;
+      }
+    });
+    const { onFeedback } = await renderBlock();
+    await offThenOnAndLeave(puts);
+    await waitFor(() => {
+      expect(landed).toEqual([{ emailByCategory: { PERSONAL: true } }]);
+    });
+    const restored = new Event("pageshow");
+    Object.defineProperty(restored, "persisted", { value: true });
+    window.dispatchEvent(restored);
+    departure.open();
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    older.open();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Aquest abonat ha estat suprimit i ja no es pot modificar.",
+    );
+    expect(puts.slice(2)).toEqual([
+      { body: { emailByCategory: { PERSONAL: true } }, keepalive: false },
+    ]);
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    // No re-read and no other PUT after the 409.
+    expect(reads.count).toBe(1);
+    expect(puts).toHaveLength(3);
+    expect(outbox()).toBeNull();
+    expect(onFeedback).not.toHaveBeenCalledWith(expect.objectContaining({ tone: "danger" }));
+    // Leaving the record sends nothing.
+    window.dispatchEvent(new Event("pagehide"));
+    cleanup();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    expect(puts).toHaveLength(3);
+    expect(outbox()).toBeNull();
   });
 
   it("without SMS and PUSH (the api's `modules`): no «+SMS» and no push toggle", async () => {

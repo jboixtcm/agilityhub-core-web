@@ -1,0 +1,224 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/census-handlers.test.ts (104 tests | 30 failed) 180ms
+   ❯ E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club (45)
+     × E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id} of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route) 6ms
+     × E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id} of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route) 4ms
+     × E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id} of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id}/payment-method of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id}/payment-method of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id}/payment-method of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route) 3ms
+     × E7-W07 round 2 (re-review #5; T-03-35): PUT /members/{id}/roles of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): PUT /members/{id}/roles of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): PUT /members/{id}/roles of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/booking-block of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/booking-block of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/booking-block of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): DELETE /members/{id}/booking-block of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): DELETE /members/{id}/booking-block of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): DELETE /members/{id}/booking-block of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/access-resend of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/access-resend of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/access-resend of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/impersonation-token of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/impersonation-token of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/impersonation-token of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation?dryRun=true of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation?dryRun=true of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation?dryRun=true of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route) 2ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/rejection of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/rejection of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route) 1ms
+     × E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/rejection of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route) 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 30 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id} of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route)
+AssertionError: expected { code: 'STALE_VERSION', …(2) } to deeply equal { code: 'IMPERSONATION_DENIED', …(2) }
+
+- Expected
++ Received
+
+  {
+-   "code": "IMPERSONATION_DENIED",
++   "code": "STALE_VERSION",
+    "details": {},
+-   "status": 403,
++   "status": 409,
+  }
+
+ ❯ src/mocks/census-handlers.test.ts:168:37
+    166|     async (_route, scenario, code, call) => {
+    167|       mockScenario(scenario);
+    168|       expect(await failure(call())).toEqual({ code, details: {}, statu…
+       |                                     ^
+    169|     },
+    170|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/30]⎯
+
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id} of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id} of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route)
+AssertionError: expected { code: 'STALE_VERSION', …(2) } to deeply equal { Object (code, details, ...) }
+
+- Expected
++ Received
+
+  {
+-   "code": "FORBIDDEN",
++   "code": "STALE_VERSION",
+    "details": {},
+-   "status": 403,
++   "status": 409,
+  }
+
+ ❯ src/mocks/census-handlers.test.ts:168:37
+    166|     async (_route, scenario, code, call) => {
+    167|       mockScenario(scenario);
+    168|       expect(await failure(call())).toEqual({ code, details: {}, statu…
+       |                                     ^
+    169|     },
+    170|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/30]⎯
+
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id}/payment-method of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id}/payment-method of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): PATCH /members/{id}/payment-method of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): PUT /members/{id}/roles of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): PUT /members/{id}/roles of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): PUT /members/{id}/roles of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/booking-block of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/booking-block of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/booking-block of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/access-resend of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/access-resend of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/access-resend of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/impersonation-token of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/impersonation-token of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/impersonation-token of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route)
+Error: Expected an ApiError
+ ❯ failure src/mocks/census-handlers.test.ts:42:9
+     40|     throw error;
+     41|   }
+     42|   throw new Error("Expected an ApiError");
+       |         ^
+     43| }
+     44|
+ ❯ src/mocks/census-handlers.test.ts:168:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/30]⎯
+
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): DELETE /members/{id}/booking-block of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route)
+AssertionError: expected { …(3) } to deeply equal { code: 'IMPERSONATION_DENIED', …(2) }
+
+- Expected
++ Received
+
+  {
+-   "code": "IMPERSONATION_DENIED",
++   "code": "BOOKING_BLOCK_NOT_ACTIVE",
+    "details": {},
+-   "status": 403,
++   "status": 422,
+  }
+
+ ❯ src/mocks/census-handlers.test.ts:168:37
+    166|     async (_route, scenario, code, call) => {
+    167|       mockScenario(scenario);
+    168|       expect(await failure(call())).toEqual({ code, details: {}, statu…
+       |                                     ^
+    169|     },
+    170|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/30]⎯
+
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): DELETE /members/{id}/booking-block of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): DELETE /members/{id}/booking-block of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route)
+AssertionError: expected { …(3) } to deeply equal { Object (code, details, ...) }
+
+- Expected
++ Received
+
+  {
+-   "code": "FORBIDDEN",
++   "code": "BOOKING_BLOCK_NOT_ACTIVE",
+    "details": {},
+-   "status": 403,
++   "status": 422,
+  }
+
+ ❯ src/mocks/census-handlers.test.ts:168:37
+    166|     async (_route, scenario, code, call) => {
+    167|       mockScenario(scenario);
+    168|       expect(await failure(call())).toEqual({ code, details: {}, statu…
+       |                                     ^
+    169|     },
+    170|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/30]⎯
+
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation?dryRun=true of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/rejection of this club's live member by the impersonated scenario is 403 IMPERSONATION_DENIED (an ADMIN route)
+AssertionError: expected { Object (code, details, ...) } to deeply equal { code: 'IMPERSONATION_DENIED', …(2) }
+
+- Expected
++ Received
+
+  {
+-   "code": "IMPERSONATION_DENIED",
++   "code": "NOT_FOUND",
+    "details": {},
+-   "status": 403,
++   "status": 404,
+  }
+
+ ❯ src/mocks/census-handlers.test.ts:168:37
+    166|     async (_route, scenario, code, call) => {
+    167|       mockScenario(scenario);
+    168|       expect(await failure(call())).toEqual({ code, details: {}, statu…
+       |                                     ^
+    169|     },
+    170|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/30]⎯
+
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation?dryRun=true of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/validation?dryRun=true of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/rejection of this club's live member by the instructor scenario is 403 FORBIDDEN (an ADMIN route)
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 round 2 (self-review #3; T-03-35, CONVENCIONS_API §10) · an ADMIN of another club finds no member of this club > E7-W07 round 2 (re-review #5; T-03-35): POST /members/{id}/rejection of this club's live member by the member scenario is 403 FORBIDDEN (an ADMIN route)
+AssertionError: expected { Object (code, details, ...) } to deeply equal { Object (code, details, ...) }
+
+- Expected
++ Received
+
+  {
+-   "code": "FORBIDDEN",
++   "code": "NOT_FOUND",
+    "details": {},
+-   "status": 403,
++   "status": 404,
+  }
+
+ ❯ src/mocks/census-handlers.test.ts:168:37
+    166|     async (_route, scenario, code, call) => {
+    167|       mockScenario(scenario);
+    168|       expect(await failure(call())).toEqual({ code, details: {}, statu…
+       |                                     ^
+    169|     },
+    170|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/30]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  30 failed | 74 passed (104)
+   Start at  16:00:50
+   Duration  1.06s (transform 47%, import 34%, tests 19%)
+

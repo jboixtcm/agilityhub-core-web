@@ -1,0 +1,181 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E7-W03 e7-core.spec.ts
+
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision=c374bb2a7480b84892d27baf0bfab84cc5861234 created=2026-10-01T06:48:26.383621806Z
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+E4_WEEK_START=2026-09-28 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-05 (the club-local Monday after today, Europe/Madrid)
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E7-W03/demo-canic.yaml (296 lines)
+ Network agilityhub-e7-w03_default Creating 
+ Volume agilityhub-e7-w03_mongo-data Creating 
+ Volume agilityhub-e7-w03_export-files Creating 
+ Volume agilityhub-e7-w03_export-files Creating 
+ Network agilityhub-e7-w03_default Creating 
+ Volume agilityhub-e7-w03_mongo-data Creating 
+ Volume agilityhub-e7-w03_mailbox Creating 
+ Volume agilityhub-e7-w03_mailbox Creating 
+ Volume agilityhub-e7-w03_mongo-data Created 
+ Volume agilityhub-e7-w03_mongo-data Created 
+ Volume agilityhub-e7-w03_export-files Created 
+ Volume agilityhub-e7-w03_export-files Created 
+ Volume agilityhub-e7-w03_mailbox Created 
+ Volume agilityhub-e7-w03_mailbox Created 
+ Network agilityhub-e7-w03_default Created 
+ Network agilityhub-e7-w03_default Created 
+ Container agilityhub-e7-w03-mongo-1 Creating 
+ Container agilityhub-e7-w03-mongo-1 Created 
+ Container agilityhub-e7-w03-seed-1 Creating 
+ Container agilityhub-e7-w03-seed-1 Created 
+ Container agilityhub-e7-w03-activate-demo-club-1 Creating 
+ Container agilityhub-e7-w03-activate-demo-club-1 Created 
+ Container agilityhub-e7-w03-core-1 Creating 
+ Container agilityhub-e7-w03-core-1 Created 
+ Container agilityhub-e7-w03-mongo-1 Starting 
+ Container agilityhub-e7-w03-mongo-1 Started 
+ Container agilityhub-e7-w03-mongo-1 Waiting 
+ Container agilityhub-e7-w03-mongo-1 Healthy 
+ Container agilityhub-e7-w03-seed-1 Starting 
+ Container agilityhub-e7-w03-seed-1 Started 
+ Container agilityhub-e7-w03-seed-1 Waiting 
+ Container agilityhub-e7-w03-seed-1 Exited 
+ Container agilityhub-e7-w03-activate-demo-club-1 Starting 
+ Container agilityhub-e7-w03-activate-demo-club-1 Started 
+ Container agilityhub-e7-w03-mongo-1 Waiting 
+ Container agilityhub-e7-w03-activate-demo-club-1 Waiting 
+ Container agilityhub-e7-w03-activate-demo-club-1 Exited 
+ Container agilityhub-e7-w03-mongo-1 Healthy 
+ Container agilityhub-e7-w03-core-1 Starting 
+ Container agilityhub-e7-w03-core-1 Started 
+ Container agilityhub-e7-w03-core-1 Waiting 
+ Container agilityhub-e7-w03-mongo-1 Waiting 
+ Container agilityhub-e7-w03-seed-1 Waiting 
+ Container agilityhub-e7-w03-activate-demo-club-1 Waiting 
+ Container agilityhub-e7-w03-activate-demo-club-1 Exited 
+ Container agilityhub-e7-w03-seed-1 Exited 
+ Container agilityhub-e7-w03-mongo-1 Healthy 
+ Container agilityhub-e7-w03-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E7-W03/seed-files.log (155 lines)
+ Container agilityhub-e7-w03-playwright-run-881af676d15c Creating 
+ Container agilityhub-e7-w03-playwright-run-881af676d15c Created 
+tar: .: file changed as we read it
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:21) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +852
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 852, reused 0, downloaded 44, added 0
+Progress: resolved 852, reused 0, downloaded 85, added 85
+Progress: resolved 852, reused 0, downloaded 135, added 135
+Progress: resolved 852, reused 0, downloaded 172, added 172
+Progress: resolved 852, reused 0, downloaded 205, added 205
+Progress: resolved 852, reused 0, downloaded 279, added 279
+Progress: resolved 852, reused 0, downloaded 310, added 310
+Progress: resolved 852, reused 0, downloaded 330, added 330
+Progress: resolved 852, reused 0, downloaded 351, added 351
+Progress: resolved 852, reused 0, downloaded 415, added 415
+Progress: resolved 852, reused 0, downloaded 466, added 464
+Progress: resolved 852, reused 0, downloaded 500, added 498
+Progress: resolved 852, reused 0, downloaded 520, added 519
+Progress: resolved 852, reused 0, downloaded 529, added 528
+Progress: resolved 852, reused 0, downloaded 537, added 537
+Progress: resolved 852, reused 0, downloaded 539, added 539
+Progress: resolved 852, reused 0, downloaded 542, added 542
+Progress: resolved 852, reused 0, downloaded 543, added 542
+Progress: resolved 852, reused 0, downloaded 546, added 546
+Progress: resolved 852, reused 0, downloaded 553, added 553
+Progress: resolved 852, reused 0, downloaded 569, added 569
+Progress: resolved 852, reused 0, downloaded 583, added 583
+Progress: resolved 852, reused 0, downloaded 590, added 590
+Progress: resolved 852, reused 0, downloaded 595, added 595
+Progress: resolved 852, reused 0, downloaded 602, added 602
+Progress: resolved 852, reused 0, downloaded 616, added 616
+Progress: resolved 852, reused 0, downloaded 631, added 631
+Progress: resolved 852, reused 0, downloaded 674, added 674
+Progress: resolved 852, reused 0, downloaded 724, added 724
+Progress: resolved 852, reused 0, downloaded 732, added 732
+Progress: resolved 852, reused 0, downloaded 752, added 752
+Progress: resolved 852, reused 0, downloaded 766, added 765
+Progress: resolved 852, reused 0, downloaded 775, added 775
+Progress: resolved 852, reused 0, downloaded 785, added 785
+Progress: resolved 852, reused 0, downloaded 798, added 798
+Progress: resolved 852, reused 0, downloaded 819, added 819
+Progress: resolved 852, reused 0, downloaded 839, added 839
+Progress: resolved 852, reused 0, downloaded 846, added 846
+Progress: resolved 852, reused 0, downloaded 848, added 848
+Progress: resolved 852, reused 0, downloaded 849, added 848
+Progress: resolved 852, reused 0, downloaded 849, added 849
+Progress: resolved 852, reused 0, downloaded 850, added 849
+Progress: resolved 852, reused 0, downloaded 850, added 850
+Progress: resolved 852, reused 0, downloaded 851, added 850
+Progress: resolved 852, reused 0, downloaded 851, added 851
+Progress: resolved 852, reused 0, downloaded 852, added 851
+Progress: resolved 852, reused 0, downloaded 852, added 852, done
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+.../node_modules/unrs-resolver postinstall: Done
+.../node_modules/msw postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 56s using pnpm v9.15.9
+[WebServer] (node:135) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:215) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:313) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 11 tests using 1 worker
+
+[1/11] e2e/core/e7-core.spec.ts:1259:5 › E7-W03 steps 1–2 · preflight (the S11 answers, the VAPID key, the jobs), the processes off, POST /test/clock to demoNow (Monday 07:00), the parameters and the scene read from the core
+[2/11] e2e/core/e7-core.spec.ts:1329:5 › T-11-35 (b) R-11-15 · screen 12: the second registrant picks «Castellano» (PATCH /me {locale: es} → 200) before the cancellation — the seed has no es account
+[3/11] e2e/core/e7-core.spec.ts:1357:5 › T-11-39 (a)(b)(g) R-11-01 R-11-02 R-11-10 R-11-11 · D4c cancels the seeded class → N-08a on 11 first with the x icon, ERROR tone, its border and « · i per SMS», the bell quiet after read-all, [CANVIA DE CLASSE] → 04 with her dog; the mailbox message per registrant; the es registrant in Spanish; the SMS delivery
+e2e/core/e7-core.spec.ts:1357:5 › T-11-39 (a)(b)(g) R-11-01 R-11-02 R-11-10 R-11-11 · D4c cancels the seeded class → N-08a on 11 first with the x icon, ERROR tone, its border and « · i per SMS», the bell quiet after read-all, [CANVIA DE CLASSE] → 04 with her dog; the mailbox message per registrant; the es registrant in Spanish; the SMS delivery
+real SMS skipped: no Twilio credentials
+
+[4/11] e2e/core/e7-core.spec.ts:1553:5 › T-11-37 (c) R-11-12 · D9 edits N-08a's ca and es bodies with the run's marker, [DESA] → 200; the next cancellation carries it in each registrant's language while the cards of (a)/(b) stay as they were; «Restaura el text per defecte» → not customized
+[5/11] e2e/core/e7-core.spec.ts:1695:5 › T-11-35 T-11-38 (d) R-11-03 R-11-04 · screen 12 turns «Canvis en reserves…» off under «Correu»: the next N-08a reaches the feed with « · i per SMS» and no e-mail, the log shows EMAIL «omès per preferència» and APP «lliurat»; D10 turns it back on and 12 shows it
+[6/11] e2e/core/e7-core.spec.ts:1844:5 › T-11-35 (f) R-11-07 · web push in context: no permission prompt at boot nor on 12; turning the push switch on asks once and POST /push-subscriptions → 201 with the stubbed PushManager.subscribe
+[7/11] e2e/core/e7-core.spec.ts:1973:5 › T-11-38 T-11-18 (e) R-11-13 · D5 selects the ten fictional members, «Enviar comunicat» with the seeded CUSTOM template, «S'enviarà a 10 abonats», [ENVIA] → 202; the log lists ten rows of one batch; one of them sees it in her feed, a member outside it does not; the filter shape counts what D5 lists; the push subscription is deleted at logout
+[8/11] e2e/core/e7-core.spec.ts:2265:5 › T-11-12 T-11-16 T-11-18 T-11-20 T-11-21 E7-W03 step 5 · the core's codes and statuses for STALE_VERSION, TEMPLATE_MANDATORY, CHANNEL_NOT_ALLOWED, TEMPLATE_NOT_CATALOG, TEMPLATE_NOT_SENDABLE, NO_RECIPIENTS, INVALID_REMINDER_OPTION and PUSH_SUBSCRIPTION_INVALID
+[9/11] e2e/core/e7-core.spec.ts:2388:5 › T-11-36 T-11-34 T-11-35 (i) R-11-14 · screen 30: the FAQ groups in R-05-22's order, the exclusive accordion and «Normes»; the es pass of 11 and 12: « · y por SMS», [CAMBIA DE CLASE] and the preference rows in Spanish
+[10/11] e2e/core/e7-core.spec.ts:2454:5 › T-11-35 (h) R-11-16 R-15-14 · «Recordatori de classe: 2 h abans» on 12, the clock two hours before her class, D11's [Simula] lists her booking and changes nothing, [Executa ara] gives one N-13 with the clock icon and no e-mail, a second run gives none
+[11/11] e2e/core/e7-core.spec.ts:2568:5 › (j) cleanup for idempotence · the reminder back to «Mai», the run's booking cancelled, the es member back to Catalan; the template is the seed's, the matrix restored and the push subscription deleted
+  11 passed (54.1s)
+e7 notifications: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E7-W03/e7-notifications.json

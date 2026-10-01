@@ -1,0 +1,54 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ↓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/home: the mockup rows in order, «amb {dog}» only with «Tots», counters from what counts (R-08-02)
+ ↓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/home?dogId= keeps the member's activity rows under every dog, as the api's MemberHomeQuery (E5-W01 round 2, review #3)
+ ↓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /me/bookable-classes reproduces 04: pack, the six rows, and the Rock and Toby variants
+ ↓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > module variants: WAITLIST off reads FULL without counts; SINGLE_CLASS prices every row and drops the pack
+ ↓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > POST /seat-holds: a plain hold of 30 s from the api clock; each refused row with its code, status and details
+ ↓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > POST /bookings confirms the hold (pack −1, calendar links); an expired hold is 409 SEAT_HOLD_EXPIRED
+ ↓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > bookingLimit (mockup 06): the hold proposes two swappable bookings and a done one; the swap cancels the old one
+ ↓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > bookingSingleClass: PAY_TO_BOOK answers PAYMENT_PENDING with a same-origin checkoutUrl; Rock is charged on the receipt
+ ↓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > GET /bookings/{id} and the cancellation: late by R-08-10 (4 h, the edge in time), displayState, then 409
+ ↓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > the waitlist: join a WAITLIST_OPEN row (it leaves 04), refusals, the detail, leaving it, and the claim of a NOTIFIED entry
+ ↓ src/mocks/booking-handlers.test.ts > E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATALEG_ERRORS §3 rule 0) > WAITLIST off: every waitlist route is 404 MODULE_DISABLED
+ ↓ src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: at Sunday 2 at 20:30 (weekOpensAt SUNDAY 20:00) W0 is 2026-08-02 and W1 2026-08-09: Monday 3 counts in the current week, Monday 10 is next, Monday 17 opens with W1, and the limit refusal (Monday 3 at 20:00, the same W0) names the coming opening
+ ↓ src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: 06's done class belongs to W0 at the clock (it began at the week's opening, Sunday 2 at 20:00): the hold lists it as DONE beside the two cancellable ones
+ ↓ src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: one minute before the opening (Sunday 2 at 19:59) the weeks are one earlier: Wednesday 5 to Saturday 8 are next week's, Monday 10 opens at 20:00, Monday 17 is not listed yet, and Saturday 8 swaps next week's Monday 3
+ ↓ src/mocks/booking-handlers.test.ts > E5-W05 step 7 · the booking world's clock sits after its club's week opening, and its weeks follow R-08-01 as the api computes them > E5-W05 step 7: the weeks come from `bookings.weekOpensAt` (T-08-44, a club whose week opens on Monday at 00:00)
+ ↓ src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 3 #2: the hold is refused only when the week's limit is reached and nothing can be swapped (R-08-09): the member world's «ds 8» (Duna 1 of 2, her Monday 3 cancellable) holds the seat
+ ↓ src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 3 #2: bookingLimitDone at Monday 3 at 20:00 (mockup 29): every row of Duna's week reads «Límit setmanal» (R-08-03), and the refusal has current = limit = 2 = /me/home's count, the two done classes as notSelectable (real ids), no swap and the coming opening
+ ↓ src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 #6: Monday 3 cancelled late (at 16:00, within the 4 h) still counts: the refusal lists it as DONE (R-08-09) and counts it as /me/home does
+ ↓ src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 #6: one minute before the opening the NEXT refusal counts next week's bookings as /me/home does, and no class of a NEXT week is DONE
+ ↓ src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 #11.b: a PAYMENT_PENDING booking the hold cannot swap is LATE_WINDOW (the api's), a begun class DONE
+ ↓ src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 #11.b: the hold lists Duna's PAYMENT_PENDING class of the week as LATE_WINDOW and counts it (bookingSingleClass, PAY_TO_BOOK); Monday 3 is still the swap
+ ↓ src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > E5-W05 round 2 #11.c: the limits are the club's bookings.maxCurrentWeek and bookings.maxNextWeek: /me/home, the hold and the refusal follow a saved change
+ × src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > T-08-03 E7-W07 round 2 #5a (R-08-02, R-08-03; ruling E86): in the bookingLimit world at its clock (mockup 06) Duna's bookings that count in W0 are within the week's limit: /me/home, D10's list and the hold all count 2 of 2, Monday 3 and Friday 7, both swappable 26ms
+   → expected 3 to be less than or equal to 2
+ ↓ src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at 2026-08-02T20:30:00+02:00 (late window 240 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: false)
+ ↓ src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at 2026-08-02T19:59:00+02:00 (late window 240 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: false)
+ ↓ src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the default world at 2026-08-02T19:59:00+02:00 (late window 1440 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: true)
+ ↓ src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the bookingLimit (mockup 06) world at 2026-08-02T20:30:00+02:00 (late window 240 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: false)
+ ↓ src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the bookingLimitDone (mockup 29) world at 2026-08-03T20:00:00+02:00 (late window 240 min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: true)
+ ↓ src/mocks/booking-handlers.test.ts > E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85) > E7-W07 step 6 (R-08-03, ruling E85): the default world's «ds 8» is a normal row at 1 of 2 (Duna's Monday 3 still swappable): BOOKABLE with its 3 seats, and its tap holds the seat with no limit reached
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/booking-handlers.test.ts > E5-W05 round 2 · the limits come from the world's bookings and the club's parameters (R-08-02, R-08-03, R-08-09) > T-08-03 E7-W07 round 2 #5a (R-08-02, R-08-03; ruling E86): in the bookingLimit world at its clock (mockup 06) Duna's bookings that count in W0 are within the week's limit: /me/home, D10's list and the hold all count 2 of 2, Monday 3 and Friday 7, both swappable
+AssertionError: expected 3 to be less than or equal to 2
+ ❯ src/mocks/booking-handlers.test.ts:844:19
+    842|     const { count, max, weekKey } = duna.limits.currentWeek;
+    843|     const booked = await dunaWeekBookings(weekKey, "bookingLimit");
+    844|     expect(count).toBeLessThanOrEqual(max);
+       |                   ^
+    845|     expect(booked.length).toBeLessThanOrEqual(max);
+    846|     expect({ booked: [...booked].sort(), count, max }).toEqual({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 skipped (29)
+   Start at  13:49:05
+   Duration  529ms (transform 57%, import 36%, tests 6%)
+

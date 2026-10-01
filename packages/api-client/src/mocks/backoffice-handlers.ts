@@ -718,7 +718,7 @@ export const backofficeHandlers = [
     if (refused !== undefined) return refused;
     const session = findSession(scenario, String(params.id));
     if (session === undefined) return apiError("NOT_FOUND", "Class not found", 404);
-    return HttpResponse.json({ items: classWaitlistEntries(session, fifo()) });
+    return HttpResponse.json({ items: classWaitlistEntries(session, fifo(), nowMs()) });
   }),
   // R-08-16 for the staff-read entries (the member world's are answered by `bookingHandlers`).
   // S08 §6: MEMBER (own entry) · ADMIN, with WAITLIST; the club's own classes only (the tenant

@@ -1,0 +1,181 @@
+heavy.sh: 15:11 waiting for the host lock, held by: 14:58 agilityhub-core-api: ./mvnw -q clean verify
+heavy.sh: 15:22 got the host lock after 11 min 1 s
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E7-W03 e7-core.spec.ts
+
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision=c374bb2a7480b84892d27baf0bfab84cc5861234 created=2026-10-01T06:48:26.383621806Z
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+E4_WEEK_START=2026-09-28 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-05 (the club-local Monday after today, Europe/Madrid)
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E7-W03/demo-canic.yaml (296 lines)
+ Volume agilityhub-e7-w03_mongo-data Creating 
+ Network agilityhub-e7-w03_default Creating 
+ Volume agilityhub-e7-w03_mailbox Creating 
+ Volume agilityhub-e7-w03_export-files Creating 
+ Volume agilityhub-e7-w03_mongo-data Creating 
+ Volume agilityhub-e7-w03_export-files Creating 
+ Network agilityhub-e7-w03_default Creating 
+ Volume agilityhub-e7-w03_mailbox Creating 
+ Volume agilityhub-e7-w03_export-files Created 
+ Volume agilityhub-e7-w03_export-files Created 
+ Volume agilityhub-e7-w03_mongo-data Created 
+ Volume agilityhub-e7-w03_mongo-data Created 
+ Volume agilityhub-e7-w03_mailbox Created 
+ Volume agilityhub-e7-w03_mailbox Created 
+ Network agilityhub-e7-w03_default Created 
+ Network agilityhub-e7-w03_default Created 
+ Container agilityhub-e7-w03-mongo-1 Creating 
+ Container agilityhub-e7-w03-mongo-1 Created 
+ Container agilityhub-e7-w03-seed-1 Creating 
+ Container agilityhub-e7-w03-seed-1 Created 
+ Container agilityhub-e7-w03-activate-demo-club-1 Creating 
+ Container agilityhub-e7-w03-activate-demo-club-1 Created 
+ Container agilityhub-e7-w03-core-1 Creating 
+ Container agilityhub-e7-w03-core-1 Created 
+ Container agilityhub-e7-w03-mongo-1 Starting 
+ Container agilityhub-e7-w03-mongo-1 Started 
+ Container agilityhub-e7-w03-mongo-1 Waiting 
+ Container agilityhub-e7-w03-mongo-1 Healthy 
+ Container agilityhub-e7-w03-seed-1 Starting 
+ Container agilityhub-e7-w03-seed-1 Started 
+ Container agilityhub-e7-w03-seed-1 Waiting 
+ Container agilityhub-e7-w03-seed-1 Exited 
+ Container agilityhub-e7-w03-activate-demo-club-1 Starting 
+ Container agilityhub-e7-w03-activate-demo-club-1 Started 
+ Container agilityhub-e7-w03-mongo-1 Waiting 
+ Container agilityhub-e7-w03-activate-demo-club-1 Waiting 
+ Container agilityhub-e7-w03-activate-demo-club-1 Exited 
+ Container agilityhub-e7-w03-mongo-1 Healthy 
+ Container agilityhub-e7-w03-core-1 Starting 
+ Container agilityhub-e7-w03-core-1 Started 
+ Container agilityhub-e7-w03-mongo-1 Waiting 
+ Container agilityhub-e7-w03-seed-1 Waiting 
+ Container agilityhub-e7-w03-activate-demo-club-1 Waiting 
+ Container agilityhub-e7-w03-core-1 Waiting 
+ Container agilityhub-e7-w03-seed-1 Exited 
+ Container agilityhub-e7-w03-activate-demo-club-1 Exited 
+ Container agilityhub-e7-w03-mongo-1 Healthy 
+ Container agilityhub-e7-w03-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E7-W03/seed-files.log (155 lines)
+ Container agilityhub-e7-w03-playwright-run-3d3c66504fca Creating 
+ Container agilityhub-e7-w03-playwright-run-3d3c66504fca Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:21) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +852
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 852, reused 0, downloaded 228, added 0
+Progress: resolved 852, reused 0, downloaded 545, added 545
+Progress: resolved 852, reused 0, downloaded 731, added 731
+Progress: resolved 852, reused 0, downloaded 852, added 852, done
+.../node_modules/unrs-resolver postinstall$ node postinstall.js
+.../node_modules/msw postinstall$ node -e "import('./config/scripts/postinstall.js').catch(() => void 0)"
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../node_modules/unrs-resolver postinstall: Done
+.../node_modules/msw postinstall: Done
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 4.5s using pnpm v9.15.9
+[WebServer] (node:135) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:215) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:313) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 10 tests using 1 worker
+
+[1/10] e2e/core/e7-core.spec.ts:1166:5 › E7-W03 steps 1–2 · preflight (the S11 answers, the VAPID key, the jobs), the processes off, POST /test/clock to demoNow (Monday 07:00), the parameters and the scene read from the core
+[2/10] e2e/core/e7-core.spec.ts:1235:5 › T-11-35 (b) R-11-15 · screen 12: the second registrant picks «Castellano» (PATCH /me {locale: es} → 200) before the cancellation — the seed has no es account
+  1) e2e/core/e7-core.spec.ts:1235:5 › T-11-35 (b) R-11-15 · screen 12: the second registrant picks «Castellano» (PATCH /me {locale: es} → 200) before the cancellation — the seed has no es account 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByRole('combobox', { name: 'Idioma', exact: true })
+    Expected: "ca"
+    Error: strict mode violation: getByRole('combobox', { name: 'Idioma', exact: true }) resolved to 2 elements:
+        1) <select aria-label="Idioma">…</select> aka getByRole('banner').getByLabel('Idioma')
+        2) <select aria-label="Idioma" class="ah-input ah-select">…</select> aka getByRole('main').getByLabel('Idioma')
+
+    Call log:
+      - Expect "toHaveValue" getByRole('combobox', { name: 'Idioma', exact: true }) with timeout 15000ms
+      - waiting for getByRole('combobox', { name: 'Idioma', exact: true })
+
+
+      1245 |   expect(preferences.modules).toEqual({ push: true, sms: true });
+      1246 |   const language = es.page.getByRole("combobox", { exact: true, name: ui.es.language });
+    > 1247 |   await expect(language).toHaveValue("ca");
+           |                          ^
+      1248 |   const patching = es.page.waitForResponse(isCall("PATCH", /\/api\/v1\/me$/u));
+      1249 |   await language.selectOption("es");
+      1250 |   const patched = await patching;
+        at /work/e2e/core/e7-core.spec.ts:1247:26
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    (no POST /oauth2/token in this test)
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e7-core-T-11-35-b-R-11-15--d8e30--the-seed-has-no-es-account/error-context.md
+
+    Error Context: test-results/core-e1/e7-core-T-11-35-b-R-11-15--d8e30--the-seed-has-no-es-account/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e7-core-T-11-35-b-R-11-15--d8e30--the-seed-has-no-es-account/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e7-core-T-11-35-b-R-11-15--d8e30--the-seed-has-no-es-account/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/10] e2e/core/e7-core.spec.ts:1260:5 › T-11-39 (a)(b)(g) R-11-01 R-11-02 R-11-10 R-11-11 · D4c cancels the seeded class → N-08a on 11 first with the x icon, ERROR tone, its border and « · i per SMS», the bell quiet after read-all, [CANVIA DE CLASSE] → 04 with her dog; the mailbox message per registrant; the es registrant in Spanish; the SMS delivery
+[4/10] e2e/core/e7-core.spec.ts:1450:5 › T-11-37 (c) R-11-12 · D9 edits N-08a's ca and es bodies with the run's marker, [DESA] → 200; the next cancellation carries it in each registrant's language while the cards of (a)/(b) stay as they were; «Restaura el text per defecte» → not customized
+[5/10] e2e/core/e7-core.spec.ts:1583:5 › T-11-35 T-11-38 (d) R-11-03 R-11-04 · screen 12 turns «Canvis en reserves…» off under «Correu»: the next N-08a reaches the feed with « · i per SMS» and no e-mail, the log shows EMAIL «omès per preferència» and APP «lliurat»; D10 turns it back on and 12 shows it
+[6/10] e2e/core/e7-core.spec.ts:1726:5 › T-11-35 (f) R-11-07 · web push in context: no permission prompt at boot nor on 12; turning the push switch on asks once and POST /push-subscriptions → 201 with the stubbed PushManager.subscribe
+[7/10] e2e/core/e7-core.spec.ts:1855:5 › T-11-38 T-11-18 (e) R-11-13 · D5 selects the ten fictional members, «Enviar comunicat» with the seeded CUSTOM template, «S'enviarà a 10 abonats», [ENVIA] → 202; the log lists ten rows of one batch; one of them sees it in her feed, a member outside it does not; the filter shape counts what D5 lists; the push subscription is deleted at logout
+[8/10] e2e/core/e7-core.spec.ts:2117:5 › T-11-36 T-11-34 T-11-35 (i) R-11-14 · screen 30: the FAQ groups in R-05-22's order, the exclusive accordion and «Normes»; the es pass of 11 and 12: « · y por SMS», [CAMBIA DE CLASE] and the preference rows in Spanish
+[9/10] e2e/core/e7-core.spec.ts:2180:5 › T-11-35 (h) R-11-16 R-15-14 · «Recordatori de classe: 2 h abans» on 12, the clock two hours before her class, D11's [Simula] lists her booking and changes nothing, [Executa ara] gives one N-13 with the clock icon and no e-mail, a second run gives none
+[10/10] e2e/core/e7-core.spec.ts:2275:5 › (j) cleanup for idempotence · the reminder back to «Mai», the run's booking cancelled, the es member back to Catalan; the template is the seed's, the matrix restored and the push subscription deleted
+  1 failed
+    e2e/core/e7-core.spec.ts:1235:5 › T-11-35 (b) R-11-15 · screen 12: the second registrant picks «Castellano» (PATCH /me {locale: es} → 200) before the cancellation — the seed has no es account 
+  8 did not run
+  1 passed (11.1s)
+
+e7 notifications: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E7-W03/e7-notifications.json
+ ELIFECYCLE  Command failed with exit code 1.

@@ -195,6 +195,32 @@ describe("E5-W03 step 8 · S15 processes (GET /jobs, trigger, switch, runs) answ
     const run = await as<JobRun>("admin", "POST", "/jobs/reminders/trigger", { dryRun: false });
     expect(run.status).toBe(200);
   });
+
+  it("E7-W03 step 0e · R-15-14 [Simula] on reminders plans WOULD_REMIND {bookingId, memberId, startsAt, lead} for a booking due now, and [Executa ara] the same item as REMIND", async () => {
+    const plan = await as<JobRun>("admin", "POST", "/jobs/reminders/trigger", { dryRun: true });
+    expect(plan.status).toBe(200);
+    valid("JobRun", plan.body);
+    const [item] = plan.body.effects.items;
+    expect(plan.body.effects.items).toHaveLength(1);
+    expect(item).toMatchObject({ action: "WOULD_REMIND", entityType: "Booking" });
+    expect(Object.keys(item?.detail ?? {}).sort()).toEqual([
+      "bookingId",
+      "lead",
+      "memberId",
+      "startsAt",
+    ]);
+    const detail = (item?.detail ?? {}) as { bookingId?: string; lead?: number; startsAt?: string };
+    expect(detail.bookingId).toBe(item?.entityId);
+    // Due now (R-15-14): startsAt − lead ≤ now < startsAt.
+    const startsAt = Date.parse(detail.startsAt ?? "");
+    const now = Date.parse(JOBS_MOCK_NOW);
+    expect(startsAt - (detail.lead ?? 0) * 60_000).toBeLessThanOrEqual(now);
+    expect(now).toBeLessThan(startsAt);
+
+    const run = await as<JobRun>("admin", "POST", "/jobs/reminders/trigger", { dryRun: false });
+    valid("JobRun", run.body);
+    expect(run.body.effects.items).toEqual([{ ...item, action: "REMIND" }]);
+  });
 });
 
 describe("E5-W03 step 8 · S15 §6 form A (GET /risk-review)", () => {
@@ -577,8 +603,9 @@ describe("E5-W05 step 7 · the staff lists' bookingWeekKey follows R-08-01 (the 
   });
 
   it("E5-W05 step 7: Duna's class of Sunday 2 at 20:00 (mockup 06's done class) belongs to the week that opens then, 2026-08-02, as Monday 3's does", async () => {
-    // Mockup 06's member world (`bookingLimit`) holds the booking of Sunday 2 at 20:00.
-    expect((await as<unknown>("bookingLimit", "GET", "/me/home")).status).toBe(200);
+    // The `bookingLimitDone` member world holds the booking of Sunday 2 at 20:00 (E7-W07 round 2
+    // #5a: mockup 06's done row; the `bookingLimit` world keeps Duna's week at 2 of 2 without it).
+    expect((await as<unknown>("bookingLimitDone", "GET", "/me/home")).status).toBe(200);
     const list = await as<{
       items: { bookingWeekKey?: string; classSessionId?: string; classStartsAt?: string }[];
     }>(
@@ -1073,6 +1100,95 @@ describe("E7-W07 step 5 · the staff reads never book a dog over its week's limi
     resetBookingMockState();
   });
 
+  /**
+   * Reads every class of the calendar and day-grid worlds (and D10's list) at the clock and lists
+   * what breaks R-08-02/R-08-03/R-08-04: a dog over its week's limit, counted with the member's own
+   * bookings; a class whose rows miss its counters; a dog twice; a level the class does not allow.
+   */
+  async function weekLimitProblems(): Promise<string[]> {
+    // The booking week of now, as the member's 03 counts it (R-08-01).
+    const home = await as<components["schemas"]["MeHome"]>("member", "GET", "/me/home");
+    expect(home.status).toBe(200);
+    const currentKey = home.body.limits.currentWeek.weekKey;
+    const calendarIds = new Set(planningState.sessions.map((session) => session.id));
+    // D10's list: the member world's own bookings (Duna's, Rock's) beside the calendar's
+    // registrants (R-08-19: the back office's bookings count as the member's).
+    const listed = await as<{ items: Row[] }>(
+      "admin",
+      "GET",
+      "/bookings?size=1000&fields=id,classSessionId,dogId,dogName,state,bookingWeekKey",
+    );
+    expect(listed.status).toBe(200);
+    const memberWorld = listed.body.items.filter(
+      (row) => !calendarIds.has(row.classSessionId ?? ""),
+    );
+    expect(memberWorld.some((row) => row.dogId === "dog-duna" && counts(row.state))).toBe(true);
+    const problems: string[] = [];
+    const worlds: [string, ClassSession[]][] = [
+      ["calendar", planningState.sessions],
+      ["day grid", dayGridClassSessions()],
+    ];
+    for (const [world, sessions] of worlds) {
+      const rows: Row[] = [...memberWorld];
+      const read = sessions.filter((session) => session.state !== "DRAFT");
+      expect(read.length, world).toBeGreaterThan(0);
+      for (const session of read) {
+        const answer = await as<ClassBookings>(
+          "admin",
+          "GET",
+          `/class-sessions/${session.id}/bookings`,
+        );
+        expect(answer.status, session.id).toBe(200);
+        const items = answer.body.items;
+        const cancelled = session.state === "CANCELLED";
+        const expected = cancelled
+          ? (session.cancellation?.affectedBookings ?? 0)
+          : session.counters.booked;
+        const live = items.filter(
+          (item) => item.state === (cancelled ? "CANCELLED_BY_CLUB" : "ACTIVE"),
+        ).length;
+        if (live !== expected) {
+          problems.push(`${world} ${session.id}: ${String(live)} rows for ${String(expected)}`);
+        }
+        if (new Set(items.map((item) => item.dogId)).size !== items.length) {
+          problems.push(`${world} ${session.id}: a dog twice`);
+        }
+        const allowed = session.levelIds.map((id) => id.replace(/^level-/u, "").toUpperCase());
+        for (const item of items) {
+          if (allowed.length > 0 && !allowed.includes(item.levelCode ?? "")) {
+            problems.push(`${world} ${session.id}: ${item.dogName} ${item.levelCode ?? "—"}`);
+          }
+        }
+        rows.push(...items);
+      }
+      if (world === "calendar") {
+        // D10 lists the very registrants D4 reads.
+        const ids = (items: readonly Row[]) =>
+          items
+            .filter((row) => calendarIds.has(row.classSessionId ?? ""))
+            .map((row) => row.id)
+            .sort();
+        expect(ids(listed.body.items)).toEqual(ids(rows));
+      }
+      const perWeek = new Map<string, { count: number; weekKey: string }>();
+      for (const row of rows.filter((item) => counts(item.state))) {
+        const key = `${row.dogName ?? ""} (${row.dogId ?? ""}) in the week of ${row.bookingWeekKey ?? ""}`;
+        const current = perWeek.get(key);
+        perWeek.set(key, {
+          count: (current?.count ?? 0) + 1,
+          weekKey: row.bookingWeekKey ?? "",
+        });
+      }
+      for (const [key, { count, weekKey }] of perWeek) {
+        const limit = weekLimit(weekKey, currentKey);
+        if (count > limit) {
+          problems.push(`${world}: ${key}: ${String(count)} > ${String(limit)}`);
+        }
+      }
+    }
+    return problems;
+  }
+
   it.each([
     ["dl 10 at 8:12 (D1 and D10, S15's example day)", JOBS_MOCK_NOW],
     ["dc 12 at 10:00 (D4)", "2026-08-12T10:00:00+02:00"],
@@ -1085,86 +1201,157 @@ describe("E7-W07 step 5 · the staff reads never book a dog over its week's limi
       vi.setSystemTime(new Date(now));
       resetPlanningState();
       resetBookingMockState();
-      // The booking week of now, as the member's 03 counts it (R-08-01).
-      const home = await as<components["schemas"]["MeHome"]>("member", "GET", "/me/home");
-      expect(home.status).toBe(200);
-      const currentKey = home.body.limits.currentWeek.weekKey;
-      const calendarIds = new Set(planningState.sessions.map((session) => session.id));
-      // D10's list: the member world's own bookings (Duna's, Rock's) beside the calendar's
-      // registrants (R-08-19: the back office's bookings count as the member's).
-      const listed = await as<{ items: Row[] }>(
-        "admin",
-        "GET",
-        "/bookings?size=1000&fields=id,classSessionId,dogId,dogName,state,bookingWeekKey",
-      );
-      expect(listed.status).toBe(200);
-      const memberWorld = listed.body.items.filter(
-        (row) => !calendarIds.has(row.classSessionId ?? ""),
-      );
-      expect(memberWorld.some((row) => row.dogId === "dog-duna" && counts(row.state))).toBe(true);
+      expect(await weekLimitProblems()).toEqual([]);
+    },
+  );
+
+  /** Tuesday 11's 18:50 class (D4's week): it has registrants, a late cancellation among them. */
+  const TUESDAY_CLASS = "cls-2026-08-11-1850-0";
+
+  async function registrants(id: string): Promise<ClassBookings["items"]> {
+    const answer = await as<ClassBookings>("admin", "GET", `/class-sessions/${id}/bookings`);
+    expect(answer.status, id).toBe(200);
+    return answer.body.items;
+  }
+
+  /** D10's rows of Tuesday's and Wednesday's 18:50 classes. */
+  async function registerRows(): Promise<Row[]> {
+    const filter = encodeURIComponent(`classSessionId:in:${TUESDAY_CLASS},${D4_CLASS}`);
+    const answer = await as<{ items: (Row & { bookedAt?: string })[] }>(
+      "admin",
+      "GET",
+      `/bookings?size=1000&filter=${filter}&fields=id,classSessionId,dogId,dogName,state,bookedAt`,
+    );
+    expect(answer.status).toBe(200);
+    return answer.body.items;
+  }
+
+  /** Cancels Tuesday's class as the club (ADMIN, with the notice its registrants need, R-06-10). */
+  async function cancelTuesday(): Promise<void> {
+    const cancelled = await as<ClassSession>(
+      "admin",
+      "POST",
+      `/class-sessions/${TUESDAY_CLASS}/cancellation`,
+      { adminText: "Pista inundada", reason: "CLUB_MANUAL" },
+    );
+    expect([cancelled.status, cancelled.body.state]).toEqual([200, "CANCELLED"]);
+    expect(cancelled.body.cancellation?.affectedBookings).toBeGreaterThan(0);
+  }
+
+  it("T-08-03 E7-W07 round 2 #3 (R-08-02, R-08-19): at dl 10 at 8:12, cancelling Tuesday's 18:50 class leaves Wednesday's registrants as they were (ids, dogs, states, bookedAt), in D4 and in D10's list; Tuesday's are the same dogs under the same ids, now CANCELLED_BY_CLUB, and its late cancellation stays CANCELLED_LATE", async () => {
+    vi.setSystemTime(new Date(JOBS_MOCK_NOW));
+    resetPlanningState();
+    resetBookingMockState();
+    const wednesday = await registrants(D4_CLASS);
+    const tuesday = await registrants(TUESDAY_CLASS);
+    const listed = await registerRows();
+    // The review's reproduction: Wednesday's live dogs before the cancellation.
+    expect(wednesday.filter((item) => item.state === "ACTIVE").map((item) => item.dogName)).toEqual(
+      ["Duna", "Mixa", "Kai", "Coco"],
+    );
+    expect(tuesday.some((item) => item.state === "ACTIVE")).toBe(true);
+    expect(tuesday.some((item) => item.state === "CANCELLED_LATE")).toBe(true);
+    await cancelTuesday();
+    expect(await registrants(D4_CLASS)).toEqual(wednesday);
+    // R-06-10: each ACTIVE booking turns CANCELLED_BY_CLUB, the same booking, and no longer counts
+    // (R-08-02); the late cancellation stays as it was.
+    const byClub = <Item extends { state?: string }>(item: Item): Item =>
+      item.state === "ACTIVE" ? { ...item, state: "CANCELLED_BY_CLUB" } : item;
+    expect(await registrants(TUESDAY_CLASS)).toEqual(
+      tuesday.map((item) =>
+        item.state === "ACTIVE"
+          ? { ...byClub(item), displayState: "CANCELLED_BY_CLUB", late: false }
+          : item,
+      ),
+    );
+    expect(await registerRows()).toEqual(
+      listed.map((row) => (row.classSessionId === TUESDAY_CLASS ? byClub(row) : row)),
+    );
+  });
+
+  it("T-08-03 E7-W07 round 2 #3 (R-08-02, R-08-03): after Tuesday's 18:50 class is cancelled, still no dog of the calendar or the day grid is booked over its week's limit, and every class lists its counters' registrants", async () => {
+    vi.setSystemTime(new Date(JOBS_MOCK_NOW));
+    resetPlanningState();
+    resetBookingMockState();
+    expect(await weekLimitProblems()).toEqual([]);
+    await cancelTuesday();
+    expect(await weekLimitProblems()).toEqual([]);
+  });
+});
+
+describe("E7-W07 round 2 #5b · the staff rows were booked, and the waiting entries joined, before now (S08 R-08-01)", () => {
+  afterEach(() => {
+    resetBookingMockState();
+  });
+
+  /**
+   * When a class of the booking week `weekKey` could first be booked (R-08-01): the opening of the
+   * week before its own, at `bookings.weekOpensAt`. The worlds read here are on summer time (+02:00).
+   */
+  function firstBookableAt(weekKey: string): number {
+    const opening = findParameter("bookings.weekOpensAt")?.value as { time?: string } | undefined;
+    const previous = new Date(Date.parse(`${weekKey}T12:00:00Z`) - 7 * 86_400_000);
+    return Date.parse(
+      `${previous.toISOString().slice(0, 10)}T${opening?.time ?? "20:00"}:00+02:00`,
+    );
+  }
+
+  it.each([
+    ["dl 10 at 8:12 (D1 and D10, S15's example day)", JOBS_MOCK_NOW],
+    ["dc 12 at 10:00 (D4)", "2026-08-12T10:00:00+02:00"],
+    ["dl 3 at 7:10 (the ring-usage register)", "2026-08-03T07:10:00+02:00"],
+    ["dg 2 at 20:30 (the member world)", BOOKING_MOCK_NOW],
+  ])(
+    "T-08-03 E7-W07 round 2 #5b (R-08-01): at %s every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened",
+    async (_clock, now) => {
+      vi.setSystemTime(new Date(now));
+      resetPlanningState();
+      resetBookingMockState();
       const problems: string[] = [];
-      const worlds: [string, ClassSession[]][] = [
-        ["calendar", planningState.sessions],
-        ["day grid", dayGridClassSessions()],
-      ];
-      for (const [world, sessions] of worlds) {
-        const rows: Row[] = [...memberWorld];
-        const read = sessions.filter((session) => session.state !== "DRAFT");
-        expect(read.length, world).toBeGreaterThan(0);
-        for (const session of read) {
-          const answer = await as<ClassBookings>(
-            "admin",
-            "GET",
-            `/class-sessions/${session.id}/bookings`,
-          );
-          expect(answer.status, session.id).toBe(200);
-          const items = answer.body.items;
-          const cancelled = session.state === "CANCELLED";
-          const expected = cancelled
-            ? (session.cancellation?.affectedBookings ?? 0)
-            : session.counters.booked;
-          const live = items.filter(
-            (item) => item.state === (cancelled ? "CANCELLED_BY_CLUB" : "ACTIVE"),
-          ).length;
-          if (live !== expected) {
-            problems.push(`${world} ${session.id}: ${String(live)} rows for ${String(expected)}`);
-          }
-          if (new Set(items.map((item) => item.dogId)).size !== items.length) {
-            problems.push(`${world} ${session.id}: a dog twice`);
-          }
-          const allowed = session.levelIds.map((id) => id.replace(/^level-/u, "").toUpperCase());
-          for (const item of items) {
-            if (allowed.length > 0 && !allowed.includes(item.levelCode ?? "")) {
-              problems.push(`${world} ${session.id}: ${item.dogName} ${item.levelCode ?? "—"}`);
-            }
-          }
-          rows.push(...items);
+      const check = (label: string, instant: string, weekKey: string | undefined) => {
+        if (Date.parse(instant) > Date.now()) problems.push(`${label}: ${instant} is after now`);
+        if (weekKey !== undefined && Date.parse(instant) < firstBookableAt(weekKey)) {
+          problems.push(`${label}: ${instant} is before the week of ${weekKey} opened`);
         }
-        if (world === "calendar") {
-          // D10 lists the very registrants D4 reads.
-          const ids = (items: readonly Row[]) =>
-            items
-              .filter((row) => calendarIds.has(row.classSessionId ?? ""))
-              .map((row) => row.id)
-              .sort();
-          expect(ids(listed.body.items)).toEqual(ids(rows));
+      };
+      const sessions = [...planningState.sessions, ...dayGridClassSessions()].filter(
+        (session) => session.state !== "DRAFT",
+      );
+      let rows = 0;
+      for (const session of sessions) {
+        const answer = await as<ClassBookings>(
+          "admin",
+          "GET",
+          `/class-sessions/${session.id}/bookings`,
+        );
+        expect(answer.status, session.id).toBe(200);
+        rows += answer.body.items.length;
+        for (const item of answer.body.items) {
+          check(`${item.id} (${item.dogName})`, item.bookedAt, item.bookingWeekKey);
         }
-        const perWeek = new Map<string, { count: number; weekKey: string }>();
-        for (const row of rows.filter((item) => counts(item.state))) {
-          const key = `${row.dogName ?? ""} (${row.dogId ?? ""}) in the week of ${row.bookingWeekKey ?? ""}`;
-          const current = perWeek.get(key);
-          perWeek.set(key, {
-            count: (current?.count ?? 0) + 1,
-            weekKey: row.bookingWeekKey ?? "",
-          });
-        }
-        for (const [key, { count, weekKey }] of perWeek) {
-          const limit = weekLimit(weekKey, currentKey);
-          if (count > limit) {
-            problems.push(`${world}: ${key}: ${String(count)} > ${String(limit)}`);
-          }
+        if (session.counters.waiting === 0) continue;
+        const waiting = await as<ClassWaitlist>(
+          "admin",
+          "GET",
+          `/class-sessions/${session.id}/waitlist-entries`,
+        );
+        expect(waiting.status, session.id).toBe(200);
+        // A full class: its rows carry the class's week.
+        const weekKey = answer.body.items[0]?.bookingWeekKey;
+        for (const entry of waiting.body.items) {
+          check(`${entry.id} (${entry.dogName ?? ""})`, entry.joinedAt, weekKey);
         }
       }
+      // `every` holds on nothing: the worlds must have registrants at the clock.
+      expect(rows).toBeGreaterThan(0);
+      // D10's list: the member world's rows too (fixed in July, before every clock here).
+      const listed = await as<{
+        items: { bookedAt?: string; id: string }[];
+        totalItems: number;
+      }>("admin", "GET", "/bookings?size=1000&fields=id,bookedAt");
+      expect(listed.status).toBe(200);
+      expect(listed.body.totalItems).toBeLessThanOrEqual(1000);
+      for (const item of listed.body.items) check(item.id, item.bookedAt ?? "", undefined);
       expect(problems).toEqual([]);
     },
   );

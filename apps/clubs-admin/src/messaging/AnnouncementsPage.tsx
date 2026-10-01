@@ -243,6 +243,8 @@ export function AnnouncementsPage({
                       <button
                         aria-current={item.id === selectedId || undefined}
                         className="messaging-list__row"
+                        // Stable selector of the real-core e2e (E7-W03): the api's template id.
+                        data-template-id={item.id}
                         onClick={() => {
                           select(item.id);
                         }}

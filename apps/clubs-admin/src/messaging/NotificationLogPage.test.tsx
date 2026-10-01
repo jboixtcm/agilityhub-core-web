@@ -84,8 +84,19 @@ describe("E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10)", () => {
     expect(first).toHaveTextContent("Correu · lliurat");
     expect(first).toHaveTextContent("SMS · enviat");
     expect(first).toHaveTextContent("10/08/2026 17:58");
+    // E7-W03: the row and each chip carry the api's values (the real-core spec selects by them).
+    expect(first?.dataset.code).toBe("N-08a");
+    expect(first?.dataset.notificationId).toBe("notification-1");
+    expect(first?.dataset.memberId).toBe("member-laura");
+    expect(
+      [...(first?.querySelectorAll<HTMLElement>("[data-delivery-status]") ?? [])].map(
+        (chip) => `${chip.dataset.channel ?? ""}:${chip.dataset.deliveryStatus ?? ""}`,
+      ),
+    ).toEqual(["APP:DELIVERED", "EMAIL:DELIVERED", "SMS:SENT"]);
     const applicant = rows().find((row) => row.textContent.includes("Clara Font"));
     expect(applicant).toHaveTextContent("Sol·licitant");
+    // An applicant has no member: the row carries no `data-member-id` at all.
+    expect(applicant).not.toHaveAttribute("data-member-id");
   });
 
   it("?filter=memberId:eq:… (D10's link) reads only that member's notifications, and a row opens its detail with every delivery and the destinations masked", async () => {
@@ -120,6 +131,11 @@ describe("E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10)", () => {
       "Correu | l···a@example.test | lliurat | 1 | prov-n-08a-email | —",
       "SMS | ··· 101 | enviat | 1 | prov-n-08a-sms | —",
     ]);
+    expect(
+      [...drawer.querySelectorAll<HTMLElement>("[data-delivery-status]")].map(
+        (chip) => `${chip.dataset.channel ?? ""}:${chip.dataset.deliveryStatus ?? ""}`,
+      ),
+    ).toEqual(["APP:DELIVERED", "EMAIL:DELIVERED", "SMS:SENT"]);
     expect(drawer.textContent).not.toContain("laura@example.test");
     expect(drawer.textContent).not.toContain("655100101");
   });

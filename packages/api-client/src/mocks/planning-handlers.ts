@@ -31,6 +31,7 @@ import {
   type WeekListItem,
   type WeekTemplate,
 } from "./fixtures/planning";
+import { resetRegistrantAllocations } from "./fixtures/registrant-allocations";
 import { findParameter } from "./fixtures/settings";
 import { fieldsProjection, WEEK_LIST_FIELDS } from "./list-fields";
 import { callerClubOwnsTheWorld, currentMockScenario } from "./scenarios";
@@ -97,6 +98,8 @@ export function resetPlanningState(): void {
   planningState.weeks = initialWeeks();
   otherClubWeeks.clear();
   resetDayGridState();
+  // The staff registrants were allocated to the classes rebuilt above (E7-W07 round 2 #3).
+  resetRegistrantAllocations();
 }
 
 export function nextId(prefix: string): string {

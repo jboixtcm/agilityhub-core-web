@@ -339,7 +339,10 @@ test("T-02-07 E3-W12 step 5 · the public footer of 01 shows /branding's identit
   await page.goto(`${clubsUrl}/entrar`);
   await expect(page.getByPlaceholder("correu@exemple.cat")).toBeVisible();
   const club = await brandingClub(page);
-  writeFileSync(join(evidenceDirectory, "branding-club-core.json"), `${JSON.stringify(club, null, 2)}\n`);
+  writeFileSync(
+    join(evidenceDirectory, "branding-club-core.json"),
+    `${JSON.stringify(club, null, 2)}\n`,
+  );
   await expectPublicFooter(page.locator(".auth-footer"), club);
   await screenshot(page, "01-footer-core-375.png");
   await context.close();

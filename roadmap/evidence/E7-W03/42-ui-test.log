@@ -1,0 +1,13 @@
+
+> @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+
+ Test Files  15 passed (15)
+      Tests  153 passed (153)
+   Start at  15:32:13
+   Duration  3.06s (environment 69%, setup 13%, tests 10%, transform 6%, import 1%, worker 1%)
+

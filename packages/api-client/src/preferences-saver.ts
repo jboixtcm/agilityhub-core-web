@@ -1,4 +1,6 @@
+import { isApiError } from "./api-error";
 import type { components } from "./generated/schema";
+import { isUnanswered } from "./submission-key";
 
 export type NotificationPreferences = components["schemas"]["NotificationPreferences"];
 export type PreferencesPatch = components["schemas"]["NotificationPreferencesRequest"];
@@ -40,6 +42,45 @@ function withoutPreferencesOf(base: PreferencesPatch, patch: PreferencesPatch): 
       ? {}
       : { pushClubNews: base.pushClubNews }),
     ...(base.reminderMinutesBefore === undefined || patch.reminderMinutesBefore !== undefined
+      ? {}
+      : { reminderMinutesBefore: base.reminderMinutesBefore }),
+  };
+}
+
+/**
+ * An answer that ends every save of the page: the member was erased (`409 MEMBER_ERASED`, S14 §5).
+ * Nothing is sent, read or kept again (E7-W07 round 2 #2).
+ */
+function isFinalRefusal(cause: unknown): boolean {
+  return isApiError(cause, "MEMBER_ERASED");
+}
+
+/**
+ * The api refused the save with its body (a 4xx, CONVENCIONS_API §7, E85): an answer, so what it
+ * refused is not kept to be sent again. A 429 (busy) or a 401 (the token, not the choice) saved
+ * nothing and refused nothing: like a lost answer, they keep the choice (E7-W07 round 2).
+ */
+function isRefusal(cause: unknown): boolean {
+  return (
+    !isUnanswered(cause) && !(isApiError(cause) && (cause.status === 429 || cause.status === 401))
+  );
+}
+
+/** `base` without the preferences `refused` set to the same value: the api refused those. */
+function withoutRefusedValues(base: PreferencesPatch, refused: PreferencesPatch): PreferencesPatch {
+  const emailByCategory = Object.fromEntries(
+    Object.entries(base.emailByCategory ?? {}).filter(
+      ([category, value]) =>
+        value != null && refused.emailByCategory?.[category as Category] !== value,
+    ),
+  );
+  return {
+    ...(Object.keys(emailByCategory).length === 0 ? {} : { emailByCategory }),
+    ...(base.pushClubNews == null || refused.pushClubNews === base.pushClubNews
+      ? {}
+      : { pushClubNews: base.pushClubNews }),
+    ...(base.reminderMinutesBefore === undefined ||
+    refused.reminderMinutesBefore === base.reminderMinutesBefore
       ? {}
       : { reminderMinutesBefore: base.reminderMinutesBefore }),
   };
@@ -107,11 +148,15 @@ export interface PreferencesSaverIo {
   changed: (state: PreferencesSaverState) => void;
   /** An answer became the api's state while the page is open. */
   saved?: () => void;
-  /** A save failed while the page is open: its changes show the api's values again. */
+  /**
+   * A save failed while the page is open: its changes show the api's values again, what is kept
+   * excepted. Also `409 MEMBER_ERASED`, once, whenever it comes: the saver has stopped.
+   */
   failed?: (cause: unknown) => void;
   /**
    * The page is left with `unsaved` changes: keep them for the next visit. `undefined`: what this
-   * visit kept is not needed any more (the latest choice is saved, or the page saw every answer).
+   * visit kept is not needed any more (a 2xx confirmed the latest choice, or the member was erased);
+   * never after a failure (E7-W07 round 2 #1).
    */
   kept?: (unsaved: PreferencesPatch | undefined) => void;
 }
@@ -145,8 +190,7 @@ interface Latest {
  * was still out — leaving the page sends everything unsaved at once, with `keepalive` — is sent
  * again, once, after every older `PUT` has settled, however it settled (an answer or a network
  * failure). It then lands after all of them. What the page left with stays kept (`kept`) until
- * that final request is answered with a 2xx; while the page is open the user sees every answer,
- * so nothing stays kept once nothing is unsaved.
+ * that final request is answered with a 2xx.
  *
  * Once a departure has sent a `PUT` while an older one was out (and the page came back from the
  * back-forward cache), the newest answer is not necessarily what the api holds, until the latest
@@ -156,10 +200,18 @@ interface Latest {
  *
  * Such a failure never hides the member's last choice (E7-W07 step 2; ruling E85, option a): what
  * is kept goes back on top at once as a pending change, waits for that read, and is sent again on
- * top of what the api holds. The kept entry goes only when a 2xx confirms the choice, or when the
- * member changes the same preference again (the new choice wins). If that resend fails as well,
- * the choice stays on top, unsent, until the next change, the departure or the next visit sends it
- * (never a loop of resends).
+ * top of what the api holds. If that resend fails as well, the choice stays on top, unsent, until
+ * the next change, the departure or the next visit sends it (never a loop of resends).
+ *
+ * A failure never drops what is kept (E7-W07 round 2 #1, ruling E86): without overlapping `PUT`s
+ * too — the next visit's resend of what a departure kept, say — the choice stays on top, unsent,
+ * and kept. The kept entry goes only when a 2xx confirms the choice, or when the member changes
+ * the same preference again (the new choice wins). A change of the member's own that fails, with
+ * nothing kept, still shows the api's values again. A refusal with the api's body (a 4xx other
+ * than 429) is the api's answer, not a failure: the preferences it refused leave what is kept.
+ *
+ * `409 MEMBER_ERASED` is final (E7-W07 round 2 #2; S14 §5): the saver stops — the changes waiting,
+ * the re-read and the departure's resend are dropped, and so is what is kept.
  *
  * `leave` hands over what is unsaved; `restore` (a page back from the back-forward cache) makes the
  * page save again, and `adopt` queues what an earlier departure kept as a normal change.
@@ -201,6 +253,8 @@ export function createPreferencesSaver(
   let resent: number | undefined;
   /** The held choice is on top, unsent, after its resend failed: the next save or departure sends it. */
   let parked = false;
+  /** The api answered `MEMBER_ERASED`: nothing is sent, read or kept any more. */
+  let stopped = false;
   /** Who hears the answers: `io`'s handlers, or the page's latest ones (`listen`). */
   let heard: Pick<PreferencesSaverIo, "failed" | "saved"> = io;
 
@@ -225,6 +279,27 @@ export function createPreferencesSaver(
   };
 
   /**
+   * `MEMBER_ERASED` (E7-W07 round 2 #2): the changes waiting and the resend still owed are dropped,
+   * nothing is read or sent again (the departure included), and what is kept goes. The page hears
+   * it once, also when it was left, so a page restored later shows the final state.
+   */
+  const stop = (cause: unknown): void => {
+    if (stopped) return;
+    stopped = true;
+    clearTimeout(timer);
+    timer = undefined;
+    latest = undefined;
+    unsure = false;
+    parked = false;
+    set({ inFlight: undefined, queued: {}, waiting: false });
+    if (held !== undefined) {
+      held = undefined;
+      io.kept?.(undefined);
+    }
+    heard.failed?.(cause);
+  };
+
+  /**
    * The api's state, read again (E7-W06 step 4); dropped when a `PUT` was sent meanwhile. Then the
    * held choice, waiting on top, is sent again over it (E7-W07 step 2), unless the member's own
    * change sent it meanwhile or its pause is running (that pause sends it).
@@ -233,6 +308,7 @@ export function createPreferencesSaver(
     const at = sequence;
     const resume = () => {
       rereading = false;
+      if (stopped) return;
       if (left || sequence !== at || timer !== undefined || pending.length > 0) {
         settled();
         return;
@@ -252,11 +328,14 @@ export function createPreferencesSaver(
     rereading = true;
     io.read().then(
       (data) => {
+        if (stopped) return;
         if (data !== undefined && sequence === at) set({ server: data });
         resume();
       },
-      // The failure was already said: the choice goes again on top of what the page shows.
-      () => {
+      // The failure was already said: the choice goes again on top of what the page shows. An
+      // erased member's read ends every save (E7-W07 round 2 #2).
+      (cause: unknown) => {
+        if (isFinalRefusal(cause)) stop(cause);
         resume();
       },
     );
@@ -264,17 +343,21 @@ export function createPreferencesSaver(
 
   /** After every settled request: the resend that is due, what is kept, and what waits. */
   const settled = () => {
+    if (stopped) return;
     const due = owed();
     if (due !== undefined && !pending.some((sent) => sent.seq < due.seq)) {
       send(due.body, left, true);
     }
-    if (held !== undefined && pending.length === 0 && isEmptyPatch(state.queued)) {
-      // Left, or unsure what the api holds after overlapping PUTs: only the latest choice's 2xx
-      // frees it. Open: the user saw every answer.
-      if ((!left && !overlapped) || latest === undefined || latest.confirmed) {
-        held = undefined;
-        io.kept?.(undefined);
-      }
+    // Only the latest choice's 2xx frees what is kept, never a failure (E7-W07 round 2 #1): a
+    // failure of the latest request leaves it unconfirmed, and what is kept back on top.
+    if (
+      held !== undefined &&
+      pending.length === 0 &&
+      isEmptyPatch(state.queued) &&
+      latest?.confirmed === true
+    ) {
+      held = undefined;
+      io.kept?.(undefined);
     }
     // A failed save after overlapping PUTs: what the api holds, once nothing is out or pausing.
     if (unsure && !left && timer === undefined && pending.length === 0) {
@@ -311,6 +394,7 @@ export function createPreferencesSaver(
       done: io.save(body, keepalive).then(
         (data) => {
           pending = pending.filter((item) => item !== sent);
+          if (stopped) return;
           if (latest?.final === seq) {
             latest.confirmed = true;
             // The latest choice answered alone, with nothing out since: its answer is the api's.
@@ -331,24 +415,55 @@ export function createPreferencesSaver(
         },
         (cause: unknown) => {
           pending = pending.filter((item) => item !== sent);
+          if (stopped) return;
+          // An erased member: final, whoever sent it (E7-W07 round 2 #2).
+          if (isFinalRefusal(cause)) {
+            stop(cause);
+            return;
+          }
           set({ inFlight: inFlight() });
           // A departure's request is covered by its resend and by what it kept.
           if (!left && !keepalive) {
             heard.failed?.(cause);
-            if (overlapped) {
-              // The member's last choice never disappears: it goes back on top as a pending change
-              // (E7-W07 step 2; ruling E85, option a), the changes made since still on top of it.
+            // The api refused this body: what is kept, and a copy of it waiting to go again (an
+            // adopted resend), lose the values it refused — they would be refused again, with
+            // every change sent on top of them — and the api's values show.
+            if (isRefusal(cause)) {
               if (held !== undefined) {
+                const rest = withoutRefusedValues(held, body);
+                if (changedPreferences(rest) !== changedPreferences(held)) {
+                  held = isEmptyPatch(rest) ? undefined : rest;
+                  io.kept?.(held);
+                }
+              }
+              const waiting = withoutRefusedValues(state.queued, body);
+              if (changedPreferences(waiting) !== changedPreferences(state.queued)) {
                 set({
-                  queued: mergePatches(held, state.queued),
-                  waiting: seq === resent ? state.waiting : true,
+                  queued: waiting,
+                  ...(isEmptyPatch(waiting) && timer === undefined ? { waiting: false } : {}),
                 });
               }
-              // After overlapping PUTs the last answer may not be the api's: read it again, then
-              // send the choice again. Its resend failing as well stays on top, unsent: no loop.
-              if (seq === resent) parked = true;
-              else unsure = true;
+              if (overlapped) unsure = true;
+              settled();
+              return;
             }
+            // After overlapping PUTs the last answer may not be the api's: read it again, then
+            // send the choice again (E7-W06 step 4, E7-W07 step 2).
+            const reread = overlapped && seq !== resent;
+            // The changes the member made since: they still go, the kept choice with them.
+            const since = state.queued;
+            // The member's last choice never disappears (E7-W07 step 2, round 2 #1; rulings E85
+            // and E86): it goes back on top as a pending change, the changes made since on top of
+            // it, and stays kept. Without that read, or when its resend fails as well, it stays
+            // there unsent until the next change, the departure or the next visit: no loop.
+            if (held !== undefined) {
+              set({
+                queued: mergePatches(held, since),
+                waiting: reread ? true : state.waiting,
+              });
+            }
+            if (reread) unsure = true;
+            else if (held !== undefined || overlapped) parked = isEmptyPatch(since);
           }
           settled();
         },
@@ -362,6 +477,7 @@ export function createPreferencesSaver(
   const flush = (): void => {
     clearTimeout(timer);
     timer = undefined;
+    if (stopped) return;
     if (pending.length > 0 || isEmptyPatch(state.queued)) {
       if (state.waiting) set({ waiting: false });
       return;
@@ -374,6 +490,7 @@ export function createPreferencesSaver(
 
   /** A change shows at once and waits for its pause. */
   const queue = (patch: PreferencesPatch): void => {
+    if (stopped) return;
     clearTimeout(timer);
     parked = false;
     set({ queued: mergePatches(state.queued, patch), waiting: true });
@@ -385,6 +502,7 @@ export function createPreferencesSaver(
    * E7-W07 step 2): the kept entry keeps only the other preferences, or goes.
    */
   const edit = (patch: PreferencesPatch): void => {
+    if (stopped) return;
     if (held !== undefined) {
       const rest = withoutPreferencesOf(held, patch);
       if (changedPreferences(rest) !== changedPreferences(held)) {
@@ -397,7 +515,7 @@ export function createPreferencesSaver(
 
   /** What an earlier departure kept (taken over by this visit): sent again as a normal change. */
   const adopt = (patch: PreferencesPatch): void => {
-    if (isEmptyPatch(patch)) return;
+    if (stopped || isEmptyPatch(patch)) return;
     held = held === undefined ? patch : mergePatches(held, patch);
     queue(patch);
   };
@@ -409,6 +527,7 @@ export function createPreferencesSaver(
   const settle = async (): Promise<void> => {
     clearTimeout(timer);
     timer = undefined;
+    if (stopped) return;
     if (pending.length === 0 && isEmptyPatch(state.queued)) {
       if (state.waiting) set({ waiting: false });
       return;
@@ -426,11 +545,13 @@ export function createPreferencesSaver(
      * The page is being left (another route, `pagehide`): every unsaved change — the waiting ones,
      * the ones on their way and a resend still owed — goes at once in one `PUT` with `keepalive`,
      * and `kept` holds it for the next visit in case this page is gone before the latest choice is
-     * saved. A second call sends only the changes made after the first (E7-W02 review #1).
+     * saved. A second call sends only the changes made after the first (E7-W02 review #1). After
+     * `MEMBER_ERASED` nothing is sent (E7-W07 round 2 #2).
      */
     leave(): void {
       clearTimeout(timer);
       timer = undefined;
+      if (stopped) return;
       const unsaved = mergePatches(inFlight() ?? {}, state.queued);
       if (isEmptyPatch(unsaved) || (left && isEmptyPatch(state.queued))) {
         if (state.waiting) set({ waiting: false });
@@ -462,6 +583,7 @@ export function createPreferencesSaver(
      * ignore it (E7-W05 review #4).
      */
     restore(kept: PreferencesPatch | undefined): void {
+      if (stopped) return;
       const wasLeft = left;
       left = false;
       if (kept !== undefined) adopt(kept);

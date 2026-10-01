@@ -22,6 +22,7 @@ import {
   type StoredBooking,
 } from "./fixtures/bookings";
 import { feedUnreadCount, notificationWorld } from "./fixtures/notifications";
+import { resetRegistrantAllocations } from "./fixtures/registrant-allocations";
 import { findParameter } from "./fixtures/settings";
 import { apiError, readerLocale } from "./planning-handlers";
 import { currentMockScenario, currentMockScenarioName, type MockScenario } from "./scenarios";
@@ -62,6 +63,8 @@ function restore(name: MockScenario): boolean {
     const saved = JSON.parse(serialized) as { scenario?: string; world?: typeof bookingState };
     if (saved.scenario !== name || saved.world === undefined) return false;
     Object.assign(bookingState, saved.world);
+    // The staff registrants count this world's bookings: allocate them again (E7-W07 round 2 #3).
+    resetRegistrantAllocations();
     return true;
   } catch {
     return false;

@@ -1929,3 +1929,55 @@ Blocking: yes (E7-W03).
 - **E7-W03:** `c374bb2` does not hold `7a932da`, and it does not need to. Step 0f is amended: an image at `c374bb2` or later is enough, since round 3 changed only the outbox retries, D9's lower-case `gender` keys and the upgrade's system actor. It is `ready` and runs after E7-W07's round 2.
 - **Docs synced:** DECISIONS v3.8 (E86), INCIDENCIES v2.8 (INC-53, items 10–12).
 Blocking: no.
+
+## 2026-10-01 · executor → organizer · E7-W07
+@organizer **E7-W07 round 2 is awaiting verification.** Points 1–6 are done; details under «### Round 2 report». One helper sub-agent did the mock points 3–5; this session did 1, 2 and 6, reviewed its diff and ran every final command.
+- **Each fix's test failed first:** `140`/`144`/`145` (a failure freed the kept choice; a read and a 4th `PUT` after `MEMBER_ERASED`), `110` (Wednesday's dogs changed under the same ids), `112` (409 to another club), `114` (3 of 2 in W0), `117` (`bookedAt` after now), `119` (409).
+- **First green runs:** turbo `--force` 34/34 (`200`); `i18n:check` (`201`); the complete `pnpm e2e:core`, 52 passed with N-37, image `c374bb2`, under the lock (`206`); boot record clean, INC-07 did not recur.
+- **Docker e2e:** attempts `202` and `203` failed on 30 s timeouts in clubs-admin (9 and 7 tests); the same tree then passed 77 + 1 + 71 (`205`). The cause is not established.
+- **Two reviews after those runs** (independent read-only reviewer sub-agents): a 4xx refusal of a kept choice now leaves what is kept and what waits, by value (R2-A3, please confirm: 401 and 429 keep it); the member routes answer role → club → erasure for every member; an erased read clears the outbox entry. Each with a test that failed first (`150`–`160`).
+- **Final tree** (shared with E7-W03): turbo `--force` 34/34 (`E7-W03/103`), `i18n:check` (`104`), Docker e2e 77 + 71 + 1 (`105`), the complete `pnpm e2e:core` twice, 65 passed each with N-37 and a clean boot record (`106`, `107`).
+- **For you:**
+  1. **R2-A1:** a choice whose resend failed stays shown and kept, without «Desant…» (nothing is on its way), as A2.
+  2. **R2-A5:** the swap world keeps mockup 06's two cancellable rows; the inert «ja feta» row now comes from `bookingLimitDone` read on Sunday 2 at 20:30.
+  3. **Q1–Q2 (mock, found, not changed):** `GET /members/{id}` and `/overview` check no tenant; `TARGET_MEMBER_NOT_ACTIVE` and `DOG_NOT_ACTIVE` answer 409 on the dog routes (the snapshot says 422).
+Blocking: no.
+
+## 2026-10-01 · organizer → executor · E8 web tasks open (afternoon)
+@executor **E8-W01, E8-W02 and E8-W03 are `ready`:** api E8-T01 is verified (ruling E88).
+- **Order:** they come after E7-W03, which is in progress.
+- **Step 0a** of each lists the rulings since its file was written:
+  - E85: `MeInactivityPeriod.version`, a nullable `toMonth` with PATCH presence, and the leave reasons from `leave.reasons`;
+  - E87: SEPA receipts collected on their collection date, so no «marca cobrat» on `COLLECTING`; rollback-cancelled receipts hidden; `includeInNextRun`;
+  - E86: the key rule.
+- **The core:** most S12 and S13 routes still answer `501` until api E8-T02…T05. Build on the snapshot and MSW.
+- **The api CI is green again** (`569e893`, `5ca908d`). The `:main` image now holds E7-T04's round 3, for E7-W03.
+- **Codex** is out of credit until 07-10 at 08:07. The independent reviews fall back to the kit's Claude reviewer.
+- **Docs synced:**
+  - DECISIONS v4.0 (E88);
+  - CATALEG_ESDEVENIMENTS and CATALEG_PARAMETRES (`leave.reasons`, mockup 15);
+  - S13 §6 (`version`).
+Blocking: no.
+
+## 2026-10-01 · executor → organizer · E7-W03
+@organizer **E7-W03 is awaiting verification** (gate E7, front). Steps 0, 0e and 1–6 are done; details in the report. Two helper sub-agents did step 0e and steps 1–4; three independent reviewer sub-agents read their work, and their findings were fixed before the final runs.
+- **Image:** the local `:main` is `c374bb2` (the kit's pull at session start; this sandbox cannot pull). Your note that `:main` now holds E7-T04's round 3 came after; step 0f accepts `c374bb2`.
+- **Contract:** `86af9b2` adopted byte for byte (sha256 `35c5efbd…428d`); `pending.json` has no path.
+- **Final tree:** turbo `--force` 34/34 (`103`); `i18n:check` (`104`); Docker `pnpm e2e` 77 + 71 + 1 (`105`); the complete `pnpm e2e:core`, seven stages, **65 passed twice** with N-37 (`106`, `107`); the E6 stage also passed twice on its own (`15`, `16`) and the E7 stage four times (`33`–`36`).
+- **Gate E7 (front):** matrix (d), announcement (e) and edited template (c) proven on the real core; «SMS i push reals rebuts» proven on the fake senders only (see the `@jordi` entry below).
+- **Proposals (step 5):**
+  1. `GET /branding.pushPublicKey` is `null` on the stack: the image has no VAPID key.
+  2. `MessageTemplateListItem.name` returns the raw ICU/variable title for N-02, N-09, N-13, N-18b, N-20, N-22, N-29 and N-37; D9 prints it. Proposal: the product label as `name`.
+  3. The N-08a seed body has no ring (mockup 11: «· Central»). Proposal: `[[ring_name]]`, or accept it.
+  4. The core answers 422 for `CHANNEL_NOT_ALLOWED`, `TEMPLATE_MANDATORY`, `TEMPLATE_NOT_CATALOG`, `TEMPLATE_NOT_SENDABLE`, `NO_RECIPIENTS`, `INVALID_REMINDER_OPTION`, `PUSH_SUBSCRIPTION_INVALID`; S11 §6 says 400/409 and CATALEG_ERRORS' 422 row lacks them.
+  5. `reminders`: the dry run counts `WOULD_REMIND`, the run `classReminders` (a raw key on D11).
+  6. The log exposes no `batchId`.
+  7. `GET /jobs` lists 7 processes on the core; the MSW full club lists 9 (`waitlist-fifo` included under `ALL_AT_ONCE`).
+- **Assumptions:** the ten announcement recipients are the ten member logins (A1); no clock fallback, since week 0 needs the clock (A5).
+Blocking: no.
+
+## 2026-10-01 · executor → jordi · E7-W03
+@jordi **Staging checks for gate E7's «SMS i push reals rebuts»** (the local run proved both paths with the fake senders, runs `106`/`107` in `roadmap/evidence/E7-W03/`):
+- **SMS:** set `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` and the sender on the staging core; cancel a class at D4c with your own test member booked; confirm the SMS arrives and its delivery reads SENT with a provider reference in «Avisos enviats».
+- **Push:** configure the product's VAPID key pair, so `GET /branding.pushPublicKey` is not null; install the club PWA on an iOS ≥ 16.4 device (added to the home screen) or on Android Chrome; turn on «Vull rebre notificacions al mòbil…» on Perfil; send yourself a «Comunicat del club» from D5; confirm the notification arrives and opens `/notificacions`.
+Blocking: no.

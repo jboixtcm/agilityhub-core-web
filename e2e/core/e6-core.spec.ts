@@ -12,12 +12,14 @@ import { expect, test } from "./oauth-token-log";
 // `scenario.attendance` of the image's `seeds/demo-canic.yaml`, dumped by the wrapper next to this
 // run's evidence). The seed anchors week 0 on `E5_WEEK_START` (the club-local Monday after the
 // run's day, `scripts/e2e-core.sh`); the scenario's sheet is that Monday's 08:30 class on Central
-// (4 booked + 1 waiting on 5 seats). The core's test clock (`POST /test/clock`) moves through three
+// (4 booked + 1 waiting on 5 seats). The core's test clock (`POST /test/clock`) moves through four
 // instants, each after the sessions issued before it are closed (a move expires them):
 //   1. Monday 04:00 — inside the sheet's window (R-10-03) and more than 4 h before 08:30, so an
 //      instructor's «ha avisat» is in time (R-10-05) and frees the seat more than 30 min ahead;
 //   2. Monday 09:46 — past `endsAt` 09:30 + `classes.finishGraceMinutes` 15 (P8, R-15-18);
-//   3. Tuesday 08:00 — `messaging.noShowNoticeTime` of the next day (P3, R-10-06, R-15-13).
+//   3. Tuesday 08:00 — `messaging.noShowNoticeTime` of the next day (P3, R-10-06, R-15-13);
+//   4. Wednesday 00:00 — the sheet's window closed (E7-W03 step 0e, E6-W04 review #3).
+// The test titles carry S10's test ids (§11; E6-W04 review #5).
 // The browsers keep their own clock (never faked); jobs run only from D11's [Simula]/[Executa ara].
 // The seed's cast plays the task's people (ruling E65: invented names, never the mockups'):
 // «Estel» = demo instructor 0, renamed Berta («instructor A»: the login whose own day selects the
@@ -54,6 +56,10 @@ const INSTRUCTOR_LOGINS = [
 ] as const;
 /** Census ordinal 12, renamed Rita, with Mel (her CAD dog moved up to A by the seed). */
 const RITA = "member.8@example.test";
+/** Census ordinal 5: `scenario.activityRegistrations` of `demo-canic.yaml` (the Torneig d'Estiu). */
+const ACTIVITY_REGISTRANT = "member@example.test";
+/** `activities[0].title.ca` of `demo-canic.yaml`, the activity that registration is for. */
+const SEEDED_ACTIVITY = "Torneig d'Estiu 2026";
 
 /** `scenario.attendance.cast` of `demo-canic.yaml` (fictional people and dogs). */
 const cast = {
@@ -133,6 +139,7 @@ const historyText = {
     all: "Tots",
     byClub: (message: string) => `«${message}»`,
     byMemberLate: /^Per tu, el \d{1,2}\/\d{1,2} a les \d{1,2}:\d{2} · compta com a feta$/u,
+    cancelled: "anul·lada",
     cancelledByClub: "cancel·lada pel club",
     cancelledLate: "anul·lada tard",
     done: "feta",
@@ -145,6 +152,7 @@ const historyText = {
     all: "Todos",
     byClub: (message: string) => `«${message}»`,
     byMemberLate: /^Por ti, el \d{1,2}\/\d{1,2} a las \d{1,2}:\d{2} · cuenta como hecha$/u,
+    cancelled: "anulada",
     cancelledByClub: "cancelada por el club",
     cancelledLate: "anulada tarde",
     done: "hecha",
@@ -198,6 +206,7 @@ type HistoryItem = Schemas["HistoryItem"];
 type FollowupPage = Pick<Schemas["FollowupPage"], "items" | "totalItems">;
 type FollowupItem = Schemas["FollowupItem"];
 type UnreadCount = Schemas["FollowupUnreadCount"];
+type FilterValues = Schemas["FilterValues"];
 type JobRunAnswer = Pick<Schemas["JobRun"], "dryRun" | "effects" | "errors" | "runId" | "status">;
 type JobEffectItem = Schemas["JobEffectItem"];
 type JobSummaries = Pick<Schemas["JobSummaries"], "items">;
@@ -281,11 +290,15 @@ function studentName(
   return `${row.handlerName ?? row.memberFirstName} + ${row.dogName}`;
 }
 
-/** The three instants of the run (club-local, Europe/Madrid). */
+/**
+ * The instants of the run (club-local, Europe/Madrid); the last one, Wednesday 00:00, is past the
+ * Monday sheet's `T1` (Tuesday 23:59:59 with `attendance.editDays` 1, R-10-03).
+ */
 const instants = {
   finished: clubInstant(weekStart, "09:46"),
   monday: clubInstant(weekStart, "04:00"),
   nextMorning: clubInstant(addDays(weekStart, 1), "08:00"),
+  windowClosed: clubInstant(addDays(weekStart, 2), "00:00"),
 };
 const registryPath = join(evidenceDirectory, "e6-core-run.json");
 
@@ -1060,20 +1073,76 @@ async function findScene(admin: Session): Promise<Scene> {
   };
 }
 
+/** A refusal for the registry: its status, code and the names of its details (never values). */
+function refusal(answer: CoreAnswer<ApiProblem>) {
+  return {
+    code: answer.body.code ?? null,
+    detailKeys: Object.keys(answer.body.details ?? {}).sort(),
+    status: answer.status,
+  };
+}
+
+/**
+ * A class of `date` with a live `PENDING` row, never the scenario's: each instructor's day as the
+ * admin reads it, then the sheet as `reader` reads it (the probes of E6-W04 review #3).
+ */
+async function classWithPendingRow(
+  admin: Session,
+  reader: Session,
+  date: string,
+): Promise<
+  | {
+      canMarkNotice: boolean;
+      canMarkPresence: boolean;
+      classId: string;
+      row: AttendanceRow;
+      version: number;
+    }
+  | undefined
+> {
+  const adminDay = await call<Pick<Schemas["InstructorDay"], "instructors">>(
+    admin,
+    `/instructor/day?date=${date}`,
+  );
+  expect(adminDay.status).toBe(200);
+  for (const instructor of adminDay.body.instructors) {
+    const day = await call<InstructorDay>(
+      admin,
+      `/instructor/day?date=${date}&instructorId=${instructor.id}`,
+    );
+    for (const item of day.body.classes) {
+      if (item.id === theScene().classId || item.state !== "ACTIVE" || item.booked === 0) continue;
+      const sheet = await readSheet(reader, item.id);
+      const row = sheet.rows.find((entry) => entry.state === "PENDING" && !entry.final);
+      if (row !== undefined) {
+        return {
+          canMarkNotice: sheet.sheet.canMarkNotice,
+          canMarkPresence: sheet.sheet.canMarkPresence,
+          classId: item.id,
+          row,
+          version: sheet.sheet.version,
+        };
+      }
+    }
+  }
+  return undefined;
+}
+
 test.describe.configure({ mode: "serial" });
 
-// The processes go back on and the core's clock back to the real instant, even after a failure.
+// The core's clock goes back to the real instant and then the processes back on, even after a
+// failure: switched on first, they would catch up at the run's last test instant (E6-W04 review).
 test.afterAll(async ({ browser }) => {
   test.setTimeout(300_000);
   await closeSessions();
+  const restored = await setCoreClock(browser, new Date().toISOString());
+  note("j-clock-restored", { status: restored.status });
   const switchedOff = (readRecord().steps[JOBS_SWITCHED_OFF] as string[] | undefined) ?? [];
   let switchedOn: Record<string, { enabled: boolean | null; status: number }> = {};
   if (switchedOff.length > 0) {
     switchedOn = await switchJobs(await adminSession(browser), switchedOff, true);
     note("jobs-switched-on", switchedOn);
   }
-  const restored = await setCoreClock(browser, new Date().toISOString());
-  note("j-clock-restored", { status: restored.status });
   expect(restored.status).toBe(200);
   for (const answer of Object.values(switchedOn)) {
     expect(answer).toEqual({ enabled: true, status: 200 });
@@ -1098,6 +1167,29 @@ test("E6-W04 step 2 · preflight (S10 answers), the processes off, POST /test/cl
   expect(preflight.followup).not.toBe(501);
   const listed = await call<JobSummaries>(before, "/jobs");
   expect(listed.status).toBe(200);
+  // Since api E7-T04 the core lists P4 `reminders` (S15 R-15-01, R-15-14): its row as the core
+  // sends it, next to the MSW catalog's (`fixtures/jobs.ts`: `REMINDERS`, no module, continuous).
+  const reminders = listed.body.items.find((job) => job.name === "reminders");
+  note("jobs-listed", {
+    names: listed.body.items.map((job) => job.name),
+    reminders:
+      reminders === undefined
+        ? null
+        : {
+            counters: Object.keys(reminders.lastRun?.counters ?? {}).sort(),
+            enabled: reminders.enabled,
+            jobName: reminders.jobName,
+            lastRun: reminders.lastRun?.status ?? null,
+            module: reminders.module ?? null,
+            nextScheduledForLocal: reminders.nextScheduledForLocal ?? null,
+            schedule: reminders.schedule,
+          },
+  });
+  expect(reminders).toMatchObject({
+    jobName: "REMINDERS",
+    module: null,
+    schedule: { kind: "CONTINUOUS" },
+  });
   const enabledJobs = listed.body.items.filter((job) => job.enabled).map((job) => job.name);
   note(JOBS_SWITCHED_OFF, enabledJobs);
   const switchedOff = await switchJobs(before, enabledJobs, false);
@@ -1168,7 +1260,7 @@ test.describe("Monday 04:00", () => {
     }
   });
 
-  test("(f) 22 · the seeded month gives the card's metrics (86%, 7 classes, 2,3 a week) and its three blocks, before anything is marked", async ({
+  test("T-10-28 (f) 22 · the seeded month gives the card's metrics (86%, 7 classes, 2,3 a week) and its three blocks, before anything is marked", async ({
     browser,
   }) => {
     test.setTimeout(300_000);
@@ -1227,7 +1319,7 @@ test.describe("Monday 04:00", () => {
     await shot(berta.page, "22-fitxa-core-375.png");
   });
 
-  test("(a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves", async ({
+  test("T-10-27 T-10-23 (a)(c) 20 → 21 · the seeded class, Rita present and Nil «no presentat» against the second instructor's save: 409 STALE_VERSION, the merge keeps them, the second [DESA] saves", async ({
     browser,
   }) => {
     test.setTimeout(420_000);
@@ -1361,7 +1453,7 @@ test.describe("Monday 04:00", () => {
     });
   });
 
-  test("(b) R-10-05 · «ha avisat» more than 4 h ahead: CANCELLED, the seat released, the waitlist notified; the row stays, final and inert", async ({
+  test("T-10-11 T-10-27 (b) R-10-05 · «ha avisat» more than 4 h ahead: CANCELLED, the seat released, the waitlist notified; the row stays, final and inert", async ({
     browser,
   }) => {
     test.setTimeout(300_000);
@@ -1447,7 +1539,7 @@ test.describe("Monday 04:00", () => {
     });
   });
 
-  test("(d) D12 · the week with the class, a training at half height and a block; the panel cycles Martí to «present» through the same contract; the week PDF", async ({
+  test("T-10-29 (d) D12 · the week with the class, a training at half height and a block; the panel cycles Martí to «present» through the same contract; the week PDF", async ({
     browser,
   }) => {
     test.setTimeout(420_000);
@@ -1572,7 +1664,7 @@ test.describe("Monday 04:00", () => {
     });
   });
 
-  test("(f) 26 → D13 → 13 · a task with a real signed upload, edited, done and reopened; D13 shows it with the counters; Rita sees it on her screens and no /me answer carries DOG_OBSERVATIONS", async ({
+  test("T-10-28 T-10-15 (f) 26 → D13 → 13 · a task with a real signed upload, edited, done and reopened; D13 shows it with the counters; Rita sees it on her screens, completes it as a member, and no /me answer carries DOG_OBSERVATIONS", async ({
     browser,
   }) => {
     test.setTimeout(420_000);
@@ -1842,7 +1934,7 @@ test.describe("Monday 04:00", () => {
     });
   });
 
-  test("(h) D14 · per-account unread marks: instructor A reads a row and then everything; instructor B still has them unread, and not the task she wrote", async ({
+  test("T-10-30 T-10-18 (h) D14 · per-account unread marks: instructor A reads the member's note, unread for instructor B too, and then everything; B still has them unread (the note after A's read as well), never the task she wrote; D14's filter values and search on the core", async ({
     browser,
   }) => {
     test.setTimeout(420_000);
@@ -1856,6 +1948,22 @@ test.describe("Monday 04:00", () => {
     expect(created.status).toBe(201);
     remember("taskB", created.body.id);
     const bBefore = await call<UnreadCount>(otherMobile, "/followup/unread-count");
+    // B's own marks, read with her bearer (R-10-13: `readItemIds` and `readAllAt` are per account).
+    const bUnread = async (id: string): Promise<boolean | null> => {
+      const answer = await call<FollowupPage>(otherMobile, "/followup?page=0&size=50");
+      expect(answer.status).toBe(200);
+      return answer.body.items.find((row) => row.id === id)?.unread ?? null;
+    };
+    // E6-W04 review #2: A reads a row B has unread too — the member's note on Mel (written by Rita,
+    // so `author ≠ me` for both) —, never B's own task, which is never unread for B.
+    const bList = await call<FollowupPage>(otherMobile, "/followup?page=0&size=50");
+    expect(bList.status).toBe(200);
+    const noteForB = bList.body.items.find(
+      (row) => row.dogId === melId && row.kind === "MEMBER_NOTE",
+    );
+    if (noteForB === undefined) throw new Error("B's follow-up has no member note on Mel");
+    const bNoteBefore = noteForB.unread ?? null;
+    expect(bNoteBefore).toBe(true);
 
     const desk = await adminSession(browser, theScene().instructorA);
     const { page } = desk;
@@ -1872,10 +1980,14 @@ test.describe("Monday 04:00", () => {
       })),
       totalItems: list.totalItems,
     });
-    expect(melRows.some((row) => row.kind === "MEMBER_NOTE")).toBe(true);
+    const noteRow = melRows.find((row) => row.kind === "MEMBER_NOTE");
+    if (noteRow === undefined) throw new Error("D14 does not list the member's note on Mel");
+    expect(noteRow.id).toBe(noteForB.id);
+    expect(noteRow.unread).toBe(true);
     expect(melRows.filter((row) => row.kind === "TASK").length).toBeGreaterThanOrEqual(2);
     const taskBRow = list.items.find((row) => row.taskId === created.body.id);
-    expect(taskBRow?.unread).toBe(true);
+    if (taskBRow === undefined) throw new Error("D14 does not list instructor B's task");
+    expect(taskBRow.unread).toBe(true);
     expect(aBefore).toBeGreaterThan(0);
     await expect(page.locator(".followup__title .ah-badge")).toHaveText(
       aBefore === 1 ? "1 pendent de llegir" : `${String(aBefore)} pendents de llegir`,
@@ -1888,26 +2000,28 @@ test.describe("Monday 04:00", () => {
     await expect(page.getByText(MEMBER_NOTE_TEXT.slice(0, 40))).toBeVisible();
     await shot(page, "D14-seguiment-core-1280.png");
 
-    // A row: its read goes to the api, the counter drops and D13 opens.
-    if (taskBRow === undefined) throw new Error("D14 does not list instructor B's task");
-    const rowLink = page
-      .locator("tbody tr")
-      .filter({ hasText: taskBRow.textExcerpt ?? "" })
-      .getByRole("link")
-      .first();
-    const reading = page.waitForResponse(isCall("POST", /\/api\/v1\/followup\/[^/]+\/read$/u));
-    await rowLink.click();
+    // A reads the note's row: its read goes to the api, the counter drops and D13 opens.
+    const noteLine = page.locator(`tbody tr[data-followup-id="${noteRow.id}"]`);
+    await expect(noteLine).toHaveAttribute("data-unread", "true");
+    const reading = page.waitForResponse(
+      isCall("POST", new RegExp(`/api/v1/followup/${escapeRegExp(noteRow.id)}/read$`, "u")),
+    );
+    await noteLine.getByRole("link").first().click();
     expect((await reading).status()).toBeLessThan(300);
     await page.waitForURL(`**/alumnes/${melId}`);
     await expect
       .poll(async () => (await call<UnreadCount>(desk, "/followup/unread-count")).body.count)
       .toBe(aBefore - 1);
     const back = await openAndRead<FollowupPage>(page, "/seguiment", "/agenda", isFollowupList);
-    expect(back.items.find((row) => row.id === taskBRow.id)?.unread).toBe(false);
-    await expect(
-      page.locator("tbody tr").filter({ hasText: taskBRow.textExcerpt ?? "" }),
-    ).not.toHaveClass(/followup__row--unread/u);
+    expect(back.items.find((row) => row.id === noteRow.id)?.unread).toBe(false);
+    // Only that row: B's task is still unread for A until the read-all.
+    expect(back.items.find((row) => row.id === taskBRow.id)?.unread).toBe(true);
+    await expect(noteLine).toHaveAttribute("data-unread", "false");
+    await expect(noteLine).not.toHaveClass(/followup__row--unread/u);
     await expect(page.locator(".followup__title .ah-badge")).toContainText(String(aBefore - 1));
+    // A's read is A's: the same row is still unread for B, before A's read-all.
+    const bNoteAfterRead = await bUnread(noteRow.id);
+    expect(bNoteAfterRead).toBe(true);
 
     // «Marcar-ho tot com a llegit» → 0.
     const readingAll = page.waitForResponse(isCall("POST", /\/api\/v1\/followup\/read-all$/u));
@@ -1931,19 +2045,105 @@ test.describe("Monday 04:00", () => {
     expect(bAfter).toBeGreaterThan(0);
     const ownRow = otherList.items.find((row) => row.taskId === created.body.id);
     expect(ownRow?.unread).toBe(false);
+    const bNoteAfterReadAll = otherList.items.find((row) => row.id === noteRow.id)?.unread ?? null;
+    expect(bNoteAfterReadAll).toBe(true);
     const stillUnread = otherList.items.filter(
       (row) => row.dogId === melId && row.id !== ownRow?.id,
     );
     for (const row of stillUnread) expect(row.unread, row.id).toBe(true);
+    await expect(other.page.locator(`tbody tr[data-followup-id="${noteRow.id}"]`)).toHaveAttribute(
+      "data-unread",
+      "true",
+    );
     await expect(other.page.locator(".followup__title .ah-badge")).toContainText(String(bAfter));
     note("h-unread", {
-      a: { after: aAfter, afterOneRead: aBefore - 1, before: aBefore },
-      b: { after: bAfter, before: bBefore.body.count, ownTaskUnread: ownRow?.unread ?? null },
+      a: {
+        after: aAfter,
+        afterOneRead: aBefore - 1,
+        before: aBefore,
+        readRow: noteRow.kind ?? null,
+      },
+      b: {
+        after: bAfter,
+        before: bBefore.body.count,
+        note: { afterARead: bNoteAfterRead, afterAReadAll: bNoteAfterReadAll, before: bNoteBefore },
+        ownTaskUnread: ownRow?.unread ?? null,
+      },
       rows: list.items.map((row: FollowupItem) => ({
         author: row.authorName ?? null,
         kind: row.kind ?? null,
         unread: row.unread ?? null,
       })),
+    });
+
+    // E6-W04 review #7, on B's D14: the filter menu's «Creador» values come from
+    // `GET /followup/filter-values` (E75), each counted over the whole set; the search box sends
+    // `q`, which reaches the tasks' text (the run's two tasks carry its id).
+    const otherPage = other.page;
+    const valuesOf = (field: string, q: null | string) => (response: Response) => {
+      const params = new URL(response.url()).searchParams;
+      return (
+        isCall("GET", /\/api\/v1\/followup\/filter-values$/u)(response) &&
+        params.get("field") === field &&
+        params.get("q") === q
+      );
+    };
+    // The menu's selects are named by their wrapping label plus the option they show («Columna
+    // Tipus»), hence the names' starts.
+    await otherPage.locator(".ah-universal-list__filter-menu > summary").click();
+    const valuesRead = otherPage.waitForResponse(valuesOf("authorAccountId", null));
+    await otherPage.getByRole("combobox", { name: /^Columna\b/u }).selectOption("authorAccountId");
+    const valuesAnswer = await valuesRead;
+    expect(valuesAnswer.status()).toBe(200);
+    const authorValues = (await valuesAnswer.json()) as FilterValues;
+    const countOf = (values: FilterValues) =>
+      values.values.reduce((sum, value) => sum + value.count, 0);
+    expect(authorValues.field).toBe("authorAccountId");
+    expect(authorValues.values.map((value) => value.label)).toEqual(
+      expect.arrayContaining([...new Set(otherList.items.map((row) => row.authorName ?? ""))]),
+    );
+    expect(countOf(authorValues)).toBe(otherList.totalItems);
+    const valueSelect = otherPage.getByRole("combobox", { name: /^Valor\b/u });
+    for (const value of authorValues.values) {
+      const option = `${value.label} (${String(value.count)})`;
+      await expect(
+        valueSelect.locator("option", { hasText: new RegExp(`^${escapeRegExp(option)}$`, "u") }),
+      ).toHaveCount(1);
+    }
+    const searching = otherPage.waitForResponse(
+      (response) =>
+        isFollowupList(response) && new URL(response.url()).searchParams.get("q") === runId,
+    );
+    const narrowing = otherPage.waitForResponse(valuesOf("authorAccountId", runId));
+    await otherPage.getByRole("searchbox", { name: "Cerca al seguiment" }).fill(runId);
+    const searchAnswer = await searching;
+    expect(searchAnswer.status()).toBe(200);
+    const searched = (await searchAnswer.json()) as FollowupPage;
+    expect(searched.items.map((row) => row.taskId ?? row.id).sort()).toEqual(
+      [readRecord().created.taskA ?? "(f) created no task", created.body.id].sort(),
+    );
+    await expect(otherPage.locator("tbody tr[data-followup-id]")).toHaveCount(2);
+    const narrowedAnswer = await narrowing;
+    expect(narrowedAnswer.status()).toBe(200);
+    const narrowed = (await narrowedAnswer.json()) as FilterValues;
+    expect(countOf(narrowed)).toBe(2);
+    note("h-d14-reads", {
+      filterValues: {
+        field: authorValues.field,
+        status: valuesAnswer.status(),
+        sumOfCounts: countOf(authorValues),
+        totalItems: otherList.totalItems,
+        values: authorValues.values.map((value) => ({ count: value.count, label: value.label })),
+      },
+      search: {
+        narrowedValues: narrowed.values.map((value) => ({
+          count: value.count,
+          label: value.label,
+        })),
+        rows: searched.items.map((row) => row.kind ?? null),
+        status: searchAnswer.status(),
+        totalItems: searched.totalItems,
+      },
     });
   });
 
@@ -1952,7 +2152,7 @@ test.describe("Monday 04:00", () => {
    * code with the status S10 §2 documents (422 for the rules; `MEMBER → 403` on the card). None of
    * them changes anything.
    */
-  test("E6-W04 step 5 · the core's statuses for ATTENDANCE_NOTIFIED_FINAL, TASK_ALREADY_DONE, TASK_NOT_DONE and a member's read of the instructor card", async ({
+  test("T-10-02 T-10-15 T-10-22 E6-W04 step 5 · the core's statuses for ATTENDANCE_NOTIFIED_FINAL, TASK_ALREADY_DONE (a second completion), TASK_NOT_DONE and a member's read of the instructor card", async ({
     browser,
   }) => {
     test.setTimeout(300_000);
@@ -1990,6 +2190,156 @@ test.describe("Monday 04:00", () => {
       notifiedFinal: { code: "ATTENDANCE_NOTIFIED_FINAL", status: 422 },
       taskAlreadyDone: { code: "TASK_ALREADY_DONE", status: 422 },
       taskNotDone: { code: "TASK_NOT_DONE", status: 422 },
+    });
+  });
+
+  /**
+   * E6-W04 review #3 (E7-W03 step 0e): the other S10 codes that moved to 422 and one call reaches,
+   * and `IMPERSONATION_DENIED`. Every probe is refused, so nothing changes; the one parameter a
+   * probe needs (`bookings.instructorLastMinuteNotice`) goes back to its value, even on a failure.
+   * `ATTENDANCE_WINDOW_CLOSED` needs Wednesday's clock: the last test.
+   */
+  test("T-10-01 T-10-11 T-10-22 E6-W04 review #3 · the core's statuses for ATTENDANCE_NOT_OPEN (Tuesday's class), ATTENDANCE_BOOKING_NOT_ACTIVE (a late-cancelled booking, as ADMIN), INSTRUCTOR_NOTICE_DISABLED (the parameter off) and IMPERSONATION_DENIED (an impersonated GET /instructor/day and GET /followup)", async ({
+    browser,
+  }) => {
+    test.setTimeout(420_000);
+    const { classId, melId } = theScene();
+    const admin = await adminSession(browser);
+    const berta = await clubsSession(browser, theScene().instructorA, "/instructor/dia");
+    const rita = await clubsSession(browser, RITA, "/inici");
+    const observed: Record<string, unknown> = {};
+    // Each answer goes to the registry at once: a later failure keeps the earlier ones.
+    const record = (key: string, value: unknown) => {
+      observed[key] = value;
+      note("review3-statuses", observed);
+    };
+
+    // R-10-03: before `T0` (00:00 of the class's day) an instructor cannot mark: Tuesday's class
+    // at Monday 04:00.
+    const tuesday = await classWithPendingRow(admin, berta, addDays(weekStart, 1));
+    if (tuesday === undefined) throw new Error("No Tuesday class of week 0 has a pending row");
+    const notOpen = await call(berta, `/class-sessions/${tuesday.classId}/attendance`, "PUT", {
+      items: [{ bookingId: tuesday.row.bookingId, state: "PRESENT" }],
+      version: tuesday.version,
+    } satisfies Schemas["AttendanceSaveRequest"]);
+    record("notOpen", { ...refusal(notOpen), canMarkPresence: tuesday.canMarkPresence });
+    expect((await readSheet(berta, tuesday.classId)).sheet.version).toBe(tuesday.version);
+
+    // R-10-04 (3): a booking neither live nor NOTIFIED — the seed's late cancellation of Mel
+    // (`CANCELLED_LATE` on 25) — on its own class, as ADMIN (never outside the window).
+    const history = await call<MemberHistory>(rita, `/me/history?dogId=${melId}`);
+    expect(history.status).toBe(200);
+    const late = history.body.items.find(
+      (item) => item.type === "CLASS" && item.state === "CANCELLED_LATE",
+    );
+    if (late === undefined) throw new Error("Rita's history has no late cancellation of Mel");
+    const booking = await call<Partial<Pick<Schemas["Booking"], "classSessionId" | "state">>>(
+      admin,
+      `/bookings/${late.id}`,
+    );
+    expect(booking.status).toBe(200);
+    const lateClassId = booking.body.classSessionId ?? "";
+    const lateSheet = await readSheet(admin, lateClassId);
+    const notActive = await call(admin, `/class-sessions/${lateClassId}/attendance`, "PUT", {
+      items: [{ bookingId: late.id, state: "PRESENT" }],
+      version: lateSheet.sheet.version,
+    } satisfies Schemas["AttendanceSaveRequest"]);
+    record("bookingNotActive", {
+      ...refusal(notActive),
+      bookingState: booking.body.state ?? null,
+      detailIsTheBooking: notActive.body.details?.bookingId === late.id,
+      inSheet: lateSheet.rows.some((row) => row.bookingId === late.id),
+    });
+    expect((await readSheet(admin, lateClassId)).sheet.version).toBe(lateSheet.sheet.version);
+
+    // R-10-03: «ha avisat» with `bookings.instructorLastMinuteNotice = false`, on another Monday
+    // class (never the scenario's). The sheet must say so first (`canMarkNotice` reads the
+    // parameter through the api's cache): a «ha avisat» the core still took would cancel a booking.
+    const monday = await classWithPendingRow(admin, berta, weekStart);
+    if (monday === undefined) throw new Error("No other Monday class of week 0 has a pending row");
+    // With the parameter on, «ha avisat» is allowed on that sheet: the 422 is the parameter's.
+    expect(monday.canMarkNotice).toBe(true);
+    const key = "bookings.instructorLastMinuteNotice";
+    const parameter = await call<Partial<Schemas["Parameter"]>>(admin, `/parameters/${key}`);
+    expect(parameter.status).toBe(200);
+    expect(parameter.body.value).toBe(true);
+    const reason = `E7-W03 ${runId}: INSTRUCTOR_NOTICE_DISABLED probe (text fictici)`;
+    const noticeAllowed = async () => (await readSheet(berta, monday.classId)).sheet.canMarkNotice;
+    const switched: Record<string, unknown> = { isOverride: parameter.body.isOverride ?? null };
+    try {
+      const off = await call<Partial<Schemas["Parameter"]>>(admin, `/parameters/${key}`, "PUT", {
+        reason,
+        value: false,
+        version: parameter.body.version ?? 0,
+      } satisfies Schemas["ParameterUpdate"]);
+      switched.off = off.status;
+      expect(off.status).toBe(200);
+      await expect.poll(noticeAllowed, { timeout: 90_000 }).toBe(false);
+      const sheet = await readSheet(berta, monday.classId);
+      const disabled = await call(berta, `/class-sessions/${monday.classId}/attendance`, "PUT", {
+        items: [{ bookingId: monday.row.bookingId, state: "NOTIFIED" }],
+        version: sheet.sheet.version,
+      } satisfies Schemas["AttendanceSaveRequest"]);
+      record("noticeDisabled", refusal(disabled));
+      expect((await readSheet(berta, monday.classId)).sheet.version).toBe(sheet.sheet.version);
+    } finally {
+      const latest = await call<Partial<Schemas["Parameter"]>>(admin, `/parameters/${key}`);
+      if (latest.body.value !== parameter.body.value) {
+        // Back to the club's own value: the override removed when there was none before.
+        const restored =
+          parameter.body.isOverride === true
+            ? await call(admin, `/parameters/${key}`, "PUT", {
+                reason,
+                value: parameter.body.value,
+                version: latest.body.version ?? 0,
+              } satisfies Schemas["ParameterUpdate"])
+            : await call(admin, `/parameters/${key}`, "DELETE");
+        switched.restored = restored.status;
+      }
+      note("review3-parameter", switched);
+    }
+    await expect.poll(noticeAllowed, { timeout: 90_000 }).toBe(true);
+    expect(
+      (await call<Partial<Schemas["Parameter"]>>(admin, `/parameters/${key}`)).body.value,
+    ).toBe(true);
+
+    // T-10-22: a token of «Entra com l'abonat» (S01 R-01-09) for Rita on the instructor endpoints,
+    // sent from the club app as the handoff's session would; `/me` answers it (the token works).
+    // The token stays in memory, never in the evidence.
+    const memberId = rowOf(await readSheet(admin, classId), cast.rita.dog).memberId;
+    const grant = await call<Partial<Schemas["ImpersonationTokenResponse"]>>(
+      admin,
+      `/members/${memberId}/impersonation-token`,
+      "POST",
+      {
+        reason: `E7-W03 ${runId}: IMPERSONATION_DENIED probe (text fictici)`,
+      } satisfies Schemas["ImpersonationRequest"],
+    );
+    expect(grant.status).toBe(201);
+    const token = grant.body.token ?? "";
+    const impersonated: Session = {
+      bearer: () => `Bearer ${token}`,
+      context: rita.context,
+      page: rita.page,
+    };
+    record("impersonationGrant", grant.status);
+    record("impersonatedMe", (await call(impersonated, "/me")).status);
+    record(
+      "impersonatedDay",
+      refusal(await call(impersonated, `/instructor/day?date=${weekStart}`)),
+    );
+    record("impersonatedFollowup", refusal(await call(impersonated, "/followup?page=0&size=20")));
+    expect(observed).toMatchObject({
+      bookingNotActive: {
+        code: "ATTENDANCE_BOOKING_NOT_ACTIVE",
+        detailIsTheBooking: true,
+        status: 422,
+      },
+      impersonatedDay: { code: "IMPERSONATION_DENIED", status: 403 },
+      impersonatedFollowup: { code: "IMPERSONATION_DENIED", status: 403 },
+      impersonatedMe: 200,
+      noticeDisabled: { code: "INSTRUCTOR_NOTICE_DISABLED", status: 422 },
+      notOpen: { canMarkPresence: false, code: "ATTENDANCE_NOT_OPEN", status: 422 },
     });
   });
 });
@@ -2063,7 +2413,6 @@ test("(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entr
   );
   const cell = week.cells.find((item) => item.classId === classId);
   expect(cell?.state).toBe("FINISHED");
-  const dimmed = await desk.page.locator(".ah-schedule-cell--muted").count();
   const finishedCell = desk.page
     .getByRole("table", { name: /^Agenda de la setmana del /u })
     .locator("tbody tr")
@@ -2081,6 +2430,9 @@ test("(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entr
   // R-10-15 dims FINISHED and CANCELLED classes (D12 dims a FINISHED one since E6-W04).
   expect(finishedClasses).toContain("ah-schedule-cell--muted");
   expect(finishedClasses).not.toContain("ah-schedule-cell--struck");
+  // Counted once D12 has drawn the week (E6-W04 review #4): the finished cell is one of them.
+  const dimmed = await desk.page.locator(".ah-schedule-cell--muted").count();
+  expect(dimmed).toBeGreaterThanOrEqual(1);
   note("e-p8", {
     d12FinishedCellMuted: finishedClasses.includes("ah-schedule-cell--muted"),
     dimmedCellsOnD12: dimmed,
@@ -2108,7 +2460,7 @@ test("(e) P8 at 09:46 from D11: the dry run plans the class and the waiting entr
   });
 });
 
-test("(e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new", async ({
+test("T-10-26 (e) P3 at Tuesday 08:00 from D11: Nil's row says «avís ja enviat», one N-19, and a second run sends nothing new", async ({
   browser,
 }) => {
   test.setTimeout(420_000);
@@ -2243,6 +2595,20 @@ async function checkHistory(
     ),
   ).toEqual([]);
   expect(history.items.some((item) => item.dogName === cast.alba.dog)).toBe(false);
+  // E6-W04 review #7: the ACTIVITY rows. One whose activity has a page (`activityId`, E74/E75)
+  // links `/activitats/{activityId}`; the others are plain text.
+  const activities = history.items.filter((item) => item.type === "ACTIVITY");
+  for (const item of activities) {
+    const link = rowAt(item).locator("a.history-row__link");
+    if (item.activityId == null) {
+      await expect(link).toHaveCount(0);
+    } else {
+      await expect(link).toHaveAttribute(
+        "href",
+        `/activitats/${encodeURIComponent(item.activityId)}`,
+      );
+    }
+  }
   // «Tots» is the default and the chips are the api's dogs (a family-group dog with its owner):
   // Rita's family group has dogs that are not hers, so the chips are always there.
   expect(history.showDog).toBe(true);
@@ -2261,6 +2627,11 @@ async function checkHistory(
     }
   }
   return {
+    activityRows: activities.map((item) => ({
+      activityId: item.activityId ?? null,
+      date: item.date,
+      state: item.state,
+    })),
     dogs: history.dogs.map((dog) => ({ name: dog.name, own: dog.own })),
     melRows: mel.map((item) => ({
       date: item.date,
@@ -2274,14 +2645,73 @@ async function checkHistory(
   };
 }
 
-test("(g) 25 · Rita's history: the Monday class «feta», the seeded no-show, the club's cancellation with its message, the late cancellation; Alba's notice never on her account", async ({
+test("T-10-31 (g) 25 · Rita's history: the Monday class «feta», the seeded no-show, the club's cancellation with its message, the late cancellation; Alba's notice never on her account; an activity row with its activityId links the activity's page", async ({
   browser,
 }) => {
   test.setTimeout(300_000);
   const rita = await clubsSession(browser, RITA, "/inici");
   const shown = await checkHistory(rita.page, "ca", theScene().melId);
   await shot(rita.page, "25-historic-core-375.png");
-  note("g-history", shown);
+  // E6-W04 review #7: `HistoryItem.activityId` on the core (E74/E75). Rita has no activity row and
+  // the seed's only activity registration of a login (`scenario.activityRegistrations`: member 5,
+  // the Torneig d'Estiu of week 2) is live and future, so not on 25 (R-10-14). That member cancels
+  // it: a cancelled registration is on 25 («anul·lada»), and while the activity stays PUBLISHED its
+  // row carries `activityId`, links `/activitats/{activityId}`, and that page answers her.
+  const registrant = await clubsSession(browser, ACTIVITY_REGISTRANT, "/inici");
+  const before = await call<MemberHistory>(registrant, "/me/history");
+  expect(before.status).toBe(200);
+  const activities = await call<Pick<Schemas["MeActivities"], "mine">>(
+    registrant,
+    "/me/activities",
+  );
+  expect(activities.status).toBe(200);
+  const registration = activities.body.mine.find(
+    (item) => item.state === "ACTIVE" && item.activity.title === SEEDED_ACTIVITY,
+  );
+  if (registration === undefined) throw new Error("member 5 has no live Torneig registration");
+  const cancelled = await call<Partial<Pick<Schemas["ActivityRegistration"], "state">>>(
+    registrant,
+    `/activity-registrations/${registration.id}/cancellation`,
+    "POST",
+    {} satisfies Schemas["RegistrationCancellationRequest"],
+  );
+  expect({ state: cancelled.body.state, status: cancelled.status }).toEqual({
+    state: "CANCELLED",
+    status: 200,
+  });
+  const history = await openAndRead<MemberHistory>(
+    registrant.page,
+    "/historic",
+    "/inici",
+    isCall("GET", /\/api\/v1\/me\/history$/u),
+  );
+  const row = history.items.find((item) => item.type === "ACTIVITY" && item.id === registration.id);
+  const activityRow = {
+    activityId: row?.activityId ?? null,
+    isTheActivity: row?.activityId === registration.activityId,
+    rowsBefore: before.body.items.filter((item) => item.type === "ACTIVITY").length,
+    state: row?.state ?? null,
+  };
+  note("g-history", { ...shown, activityRow });
+  expect(activityRow).toMatchObject({ isTheActivity: true, state: "CANCELLED" });
+  if (row === undefined) throw new Error("25 has no row for the cancelled registration");
+  const line = registrant.page
+    .locator(".history-screen__list > li")
+    .nth(history.items.indexOf(row));
+  await expect(line.locator(".history-row__badge")).toHaveText(historyText.ca.cancelled);
+  await expect(line.locator("a.history-row__link")).toHaveAttribute(
+    "href",
+    `/activitats/${encodeURIComponent(registration.activityId)}`,
+  );
+  const detail = await call<Partial<Pick<Schemas["MemberActivityDetail"], "id">>>(
+    registrant,
+    `/me/activities/${registration.activityId}`,
+  );
+  note("g-history", { ...shown, activityRow: { ...activityRow, page: detail.status } });
+  expect({ id: detail.body.id, status: detail.status }).toEqual({
+    id: registration.activityId,
+    status: 200,
+  });
 });
 
 test("(i) es · T-10-32 on real data: 20 and 21 in Spanish (a save round trip that leaves the states), and 25's badges and detail lines", async ({
@@ -2329,4 +2759,54 @@ test("(i) es · T-10-32 on real data: 20 and 21 in Spanish (a save round trip th
     roundTrip: [away.status, back.status],
     states: castStates(back.body),
   });
+});
+
+// E6-W04 review #3: the last instant. At Wednesday 00:00 the Monday sheet is past `T1` (Tuesday
+// 23:59:59, `attendance.editDays` 1): 21 shows its circles inert and the core refuses a save.
+test("T-10-01 T-10-27 E6-W04 review #3 · at Wednesday 00:00 the Monday sheet is closed to an instructor: 21's circles inert, and a PUT answers 422 ATTENDANCE_WINDOW_CLOSED with its editableUntil; nothing changes", async ({
+  browser,
+}) => {
+  test.setTimeout(300_000);
+  const { classId, names } = theScene();
+  expect((await setCoreClock(browser, instants.windowClosed)).status).toBe(200);
+  const berta = await clubsSession(browser, theScene().instructorA, "/instructor/dia");
+  const sheet = await open21(berta.page, classId);
+  expect(sheet.sheet).toMatchObject({ canMarkNotice: false, canMarkPresence: false });
+  for (const name of [names.rita, names.marti, names.nil]) {
+    await expect(
+      berta.page.getByRole("radiogroup", { exact: true, name: sheetText.ca.circles(name) }),
+    ).toHaveAttribute("aria-disabled", "true");
+  }
+  // A forced tap on Rita's «pendent» changes nothing: her circle stays «present», nothing is sent.
+  let puts = 0;
+  berta.page.on("request", (request) => {
+    if (request.method() === "PUT" && SHEET_PATH.test(apiPath(request))) puts += 1;
+  });
+  const pending = circle(berta.page, "ca", names.rita, sheetText.ca.pending);
+  await expect(pending).toBeDisabled();
+  await pending.click({ force: true });
+  await expectCircles(berta.page, "ca", { [names.rita]: "PRESENT" });
+  await expect(pending).toHaveAttribute("aria-checked", "false");
+  expect(puts).toBe(0);
+  const closed = await call(berta, `/class-sessions/${classId}/attendance`, "PUT", {
+    items: [{ bookingId: rowOf(sheet, cast.rita.dog).bookingId, state: "PENDING" }],
+    version: sheet.sheet.version,
+  } satisfies Schemas["AttendanceSaveRequest"]);
+  const after = await readSheet(berta, classId);
+  // The same instant as the sheet's `editableUntil` (`details.editableUntil`, the snapshot's PUT).
+  const detailUntil = Date.parse(String(closed.body.details?.editableUntil));
+  note("window-closed", {
+    ...refusal(closed),
+    editableUntil: sheet.sheet.editableUntil,
+    editableUntilInDetails: detailUntil === Date.parse(sheet.sheet.editableUntil),
+    sheet: {
+      canMarkNotice: sheet.sheet.canMarkNotice,
+      canMarkPresence: sheet.sheet.canMarkPresence,
+    },
+    versionKept: after.sheet.version === sheet.sheet.version,
+  });
+  expect(refusal(closed)).toMatchObject({ code: "ATTENDANCE_WINDOW_CLOSED", status: 422 });
+  expect(detailUntil).toBe(Date.parse(sheet.sheet.editableUntil));
+  expect(after.sheet.version).toBe(sheet.sheet.version);
+  expect(castStates(after)).toEqual(castStates(sheet));
 });

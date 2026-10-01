@@ -1,0 +1,436 @@
+{
+  "created": {
+    "taskA": "11eeb24a-fd5c-466a-a121-0ca0c784c91b",
+    "taskB": "68537995-1428-4f8e-928e-756355fd8db2"
+  },
+  "runId": "pj9fig",
+  "steps": {
+    "instants": {
+      "finished": "2026-10-05T07:46:00.000Z",
+      "monday": "2026-10-05T02:00:00.000Z",
+      "nextMorning": "2026-10-06T06:00:00.000Z",
+      "windowClosed": "2026-10-06T22:00:00.000Z"
+    },
+    "preflight": {
+      "followup": 200,
+      "instructorDay": 200
+    },
+    "jobs-listed": {
+      "names": [
+        "week-opening",
+        "risk-review",
+        "no-show-notices",
+        "reminders",
+        "expirations",
+        "class-finishing",
+        "cleanup"
+      ],
+      "reminders": {
+        "counters": [],
+        "enabled": true,
+        "jobName": "REMINDERS",
+        "lastRun": null,
+        "module": null,
+        "nextScheduledForLocal": null,
+        "schedule": {
+          "kind": "CONTINUOUS",
+          "localTime": null,
+          "dayOfWeek": null,
+          "dayOfMonth": null
+        }
+      }
+    },
+    "jobs-switched-off": [
+      "week-opening",
+      "risk-review",
+      "no-show-notices",
+      "reminders",
+      "expirations",
+      "class-finishing",
+      "cleanup"
+    ],
+    "jobs-switch-off-answers": {
+      "week-opening": {
+        "enabled": false,
+        "status": 200
+      },
+      "risk-review": {
+        "enabled": false,
+        "status": 200
+      },
+      "no-show-notices": {
+        "enabled": false,
+        "status": 200
+      },
+      "reminders": {
+        "enabled": false,
+        "status": 200
+      },
+      "expirations": {
+        "enabled": false,
+        "status": 200
+      },
+      "class-finishing": {
+        "enabled": false,
+        "status": 200
+      },
+      "cleanup": {
+        "enabled": false,
+        "status": 200
+      }
+    },
+    "clock-2026-10-05T02:00:00.000Z": {
+      "body": {
+        "now": "2026-10-05T02:00:00.000030667Z"
+      },
+      "status": 200
+    },
+    "clock": {
+      "coreUrl": "http://core:8080",
+      "instant": "2026-10-05T02:00:00.000Z",
+      "status": 200
+    },
+    "parameters": {
+      "bookings.lateCancelThresholdMinutes": 240,
+      "waitlist.mode": "ALL_AT_ONCE",
+      "waitlist.notifyThresholdMinutes": 30,
+      "attendance.editDays": 1,
+      "messaging.noShowNoticeTime": "08:00",
+      "classes.finishGraceMinutes": 15,
+      "bookings.instructorLastMinuteNotice": true
+    },
+    "scene-discovery": {
+      "classInstructor": "Berta",
+      "entry": {
+        "name": "Iu + Gira",
+        "state": "ACTIVE"
+      },
+      "logins": {
+        "instructor@example.test": "other",
+        "instructor.2@example.test": "teacher",
+        "instructor.3@example.test": "other"
+      },
+      "rows": [
+        "Mel",
+        "Sorra",
+        "Pinya",
+        "Trufa"
+      ]
+    },
+    "scene": {
+      "bertaId": "43ed81f8-4445-490d-9ea1-543448abce95",
+      "classId": "1efda975-f3ff-41b1-b4f9-ad1e672c7129",
+      "entryId": "2e17c640-67c0-4b17-bcce-735e4fd3ef82",
+      "instructorA": "instructor.2@example.test",
+      "instructorB": "instructor@example.test",
+      "melId": "6e9ea18d-380e-32bc-a436-bacf88aaeca2",
+      "names": {
+        "alba": "Alba + Pinya",
+        "iu": "Iu + Gira",
+        "marti": "Martí + Sorra",
+        "nil": "Nil + Trufa",
+        "rita": "Rita + Mel"
+      }
+    },
+    "f-22-card": {
+      "lastClasses": [
+        {
+          "date": "2026-09-30",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-28",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-23",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-21",
+          "state": "PRESENT"
+        },
+        {
+          "date": "2026-09-16",
+          "state": "NOTIFIED"
+        }
+      ],
+      "metrics": {
+        "windowDays": 30,
+        "attendancePct": 86,
+        "present": 6,
+        "noShow": 1,
+        "notified": 1,
+        "cancelledLate": 0,
+        "classesCounted": 7,
+        "trainingsCount": 10,
+        "trainingsPerWeek": 2.3
+      },
+      "noteText": "La Mel s'espanta amb el túnel llarg: si us plau, comenceu amb el túnel recollit (text fictici).",
+      "observations": "Bona progressió en contactes; cal reforçar la sortida del túnel (observació fictícia).",
+      "tasks": {
+        "pendingCount": 1,
+        "doneCount": 1,
+        "latest": {
+          "id": "93ec5b95-d4ae-4920-81d7-707214cd4d74",
+          "text": "Tres sessions de quiets d'un minut abans de la classe de dilluns.",
+          "createdAt": "2026-10-01T12:50:53.153Z",
+          "createdByName": "Berta"
+        }
+      }
+    },
+    "a-c-sheet": {
+      "a": {
+        "afterReload": {
+          "Mel": "PRESENT",
+          "Sorra": "NO_SHOW",
+          "Pinya": "PENDING",
+          "Trufa": "NO_SHOW"
+        },
+        "savedAt": "2026-10-05T02:00:03.923Z",
+        "savedByName": "Berta",
+        "status": 200,
+        "version": 2
+      },
+      "c": {
+        "otherSave": {
+          "status": 200,
+          "version": 1
+        },
+        "stale": {
+          "code": "STALE_VERSION",
+          "status": 409
+        },
+        "versionRead": 0
+      },
+      "order": [
+        "Rita + Mel",
+        "Martí + Sorra",
+        "Alba + Pinya",
+        "Nil + Trufa"
+      ],
+      "twentyCard": {
+        "booked": 4,
+        "capacity": 5,
+        "waiting": 1
+      }
+    },
+    "b-notice": {
+      "booked": 3,
+      "entry": {
+        "adminRead": 200,
+        "state": "NOTIFIED"
+      },
+      "forcedPuts": 0,
+      "mailboxAfterNotice": [],
+      "notice": {
+        "atLocal": "04:00",
+        "at": "2026-10-05T02:00:04.532Z",
+        "late": false,
+        "minutesBefore": 269,
+        "seatReleased": true,
+        "waitlistNotified": true,
+        "afterClassEnd": false,
+        "bookingState": "CANCELLED"
+      },
+      "status": 200
+    },
+    "d-pdf": {
+      "boxes": [
+        {
+          "height": 595.27563,
+          "width": 841.8898
+        }
+      ],
+      "rotate": [],
+      "contentType": "application/pdf",
+      "firstBytes": "%PDF-1.6",
+      "size": 13598,
+      "status": 200,
+      "suggestedFilename": "agenda-2026-10-05.pdf"
+    },
+    "d-agenda": {
+      "blocks": 1,
+      "cell": {
+        "booked": 3,
+        "capacity": 5,
+        "state": "ACTIVE",
+        "waiting": 1
+      },
+      "saved": {
+        "items": 1,
+        "status": 200,
+        "version": 4
+      },
+      "trainingSlotMinutes": 30,
+      "trainings": 3
+    },
+    "f-upload": {
+      "grant": {
+        "absolute": false,
+        "host": "127.0.0.1:4173",
+        "path": "/api/v1/attachments"
+      },
+      "puts": [
+        {
+          "host": "127.0.0.1:4173",
+          "path": "/api/v1/attachments",
+          "status": 204
+        }
+      ]
+    },
+    "f-tasks": {
+      "attachmentGrantMinutes": 5,
+      "d13": {
+        "tasks": {
+          "pendingCount": 2,
+          "doneCount": 1,
+          "latest": {
+            "id": "11eeb24a-fd5c-466a-a121-0ca0c784c91b",
+            "text": "Salts curts amb recompensa al final, tres cops al dia (E6 pj9fig, text fictici).",
+            "createdAt": "2026-10-05T02:00:08.338Z",
+            "createdByName": "Berta"
+          }
+        }
+      },
+      "member": {
+        "attachments": {
+          "code": null,
+          "count": 1,
+          "status": 200
+        },
+        "file": {
+          "size": 32,
+          "status": 200
+        },
+        "meDogTask": {
+          "id": "11eeb24a-fd5c-466a-a121-0ca0c784c91b",
+          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 pj9fig, text fictici).",
+          "createdAt": "2026-10-05T02:00:08.338Z",
+          "instructorName": "Berta",
+          "attachmentsCount": 1
+        },
+        "meResponses": [
+          "/api/v1/me/activities",
+          "/api/v1/me/training-summary",
+          "/api/v1/me/home",
+          "/api/v1/me/dogs",
+          "/api/v1/me/history"
+        ],
+        "observationLeaks": []
+      },
+      "popup": {
+        "host": "127.0.0.1:4173",
+        "path": "/api/v1"
+      },
+      "task": {
+        "attachments": 1,
+        "created": 201,
+        "id": "11eeb24a-fd5c-466a-a121-0ca0c784c91b"
+      }
+    },
+    "f-member-completion": {
+      "d13": {
+        "pendingCount": 1,
+        "doneCount": 2,
+        "latest": {
+          "id": "11eeb24a-fd5c-466a-a121-0ca0c784c91b",
+          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 pj9fig, text fictici).",
+          "createdAt": "2026-10-05T02:00:08.338Z",
+          "createdByName": "Berta"
+        }
+      },
+      "doneBy": {
+        "displayName": "Rita",
+        "role": "MEMBER"
+      },
+      "status": 200
+    },
+    "h-list-a": {
+      "rows": [
+        {
+          "kind": "TASK",
+          "mel": true,
+          "unread": true
+        },
+        {
+          "kind": "MEMBER_NOTE",
+          "mel": true,
+          "unread": true
+        },
+        {
+          "kind": "TASK",
+          "mel": true,
+          "unread": false
+        },
+        {
+          "kind": "TASK",
+          "mel": true,
+          "unread": false
+        },
+        {
+          "kind": "TASK",
+          "mel": true,
+          "unread": false
+        }
+      ],
+      "totalItems": 5
+    },
+    "h-unread": {
+      "a": {
+        "after": 0,
+        "afterOneRead": 1,
+        "before": 2,
+        "readRow": "MEMBER_NOTE"
+      },
+      "b": {
+        "after": 4,
+        "before": 4,
+        "note": {
+          "afterARead": true,
+          "afterAReadAll": true,
+          "before": true
+        },
+        "ownTaskUnread": false
+      },
+      "rows": [
+        {
+          "author": "Aina",
+          "kind": "TASK",
+          "unread": true
+        },
+        {
+          "author": "Rita",
+          "kind": "MEMBER_NOTE",
+          "unread": true
+        },
+        {
+          "author": "Berta",
+          "kind": "TASK",
+          "unread": false
+        },
+        {
+          "author": "Berta",
+          "kind": "TASK",
+          "unread": false
+        },
+        {
+          "author": "Berta",
+          "kind": "TASK",
+          "unread": false
+        }
+      ]
+    },
+    "j-tasks-deleted": {
+      "taskA": {
+        "delete": 204,
+        "listed": false
+      },
+      "taskB": {
+        "delete": 204,
+        "listed": false
+      }
+    }
+  },
+  "weekStart": "2026-10-05"
+}

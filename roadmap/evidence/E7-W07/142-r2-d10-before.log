@@ -1,0 +1,67 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx (21 tests | 2 failed) 7744ms
+   ❯ T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) (21)
+     × E7-W07 step 2 (ruling E85: option a): the retry is lost too and the admin leaves right after — the departure carries «on» with keepalive and keeps it, and the next visit within 5 minutes of leaving shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too — «on» stays shown and kept, and the admin's next change sends it 916ms
+     × E7-W07 round 2 #2 (review #2; S14 §5, T-14-19): with the overlapping-save sequence, the resend answered 409 MEMBER_ERASED is final — the block says so, and no other PUT or GET follows, nothing is sent on departure, and the outbox entry goes 819ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W07 step 2 (ruling E85: option a): the retry is lost too and the admin leaves right after — the departure carries «on» with keepalive and keeps it, and the next visit within 5 minutes of leaving shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too — «on» stays shown and kept, and the admin's next change sends it
+AssertionError: expected [ { body: { …(1) }, …(1) }, …(4) ] to have a length of 6 but got 5
+
+- Expected
++ Received
+
+- 6
++ 5
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:873:18
+    871|     expect(screen.getByRole("status")).toHaveTextContent("Desant…");
+    872|     expect((await stored())?.emailByCategory.PERSONAL).toBe(false);
+    873|     expect(puts).toHaveLength(6);
+       |                  ^
+    874|     // E7-W07 round 2 #1 (review #1, ruling E86): that visit's PUT fai…
+    875|     // said, and «on» stays shown and kept, unsent (no loop of resends…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W07 round 2 #2 (review #2; S14 §5, T-14-19): with the overlapping-save sequence, the resend answered 409 MEMBER_ERASED is final — the block says so, and no other PUT or GET follows, nothing is sent on departure, and the outbox entry goes
+AssertionError: expected [ { body: { …(1) }, …(1) }, …(1) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+@@ -5,6 +5,14 @@
+          "PERSONAL": true,
+        },
+      },
+      "keepalive": false,
+    },
++   {
++     "body": {
++       "emailByCategory": {
++         "PERSONAL": true,
++       },
++     },
++     "keepalive": false,
++   },
+  ]
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:939:27
+    937|       "Aquest abonat ha estat suprimit i ja no es pot modificar.",
+    938|     );
+    939|     expect(puts.slice(2)).toEqual([
+       |                           ^
+    940|       { body: { emailByCategory: { PERSONAL: true } }, keepalive: fals…
+    941|     ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 19 passed (21)
+   Start at  13:44:15
+   Duration  8.89s (tests 88%, environment 5%, transform 4%, import 2%, setup 1%)
+

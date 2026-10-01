@@ -88,4 +88,25 @@ describe("ScheduleGrid", () => {
       "/activitats/a1",
     );
   });
+
+  it("E7-W03: a class cell carries its id as data-class-id in its three forms; a cell without one carries none", () => {
+    render(
+      <>
+        <ScheduleCell classId="class-1" onClick={() => undefined} title="B+C" />
+        <ScheduleCell classId="class-2" href="/classes/class-2" label="Link" title="A" />
+        <ScheduleCell classId="class-3" label="Static" title="C" />
+        <ScheduleCell title="Cadells" />
+      </>,
+    );
+
+    expect(screen.getByRole("button", { name: "B+C" })).toHaveAttribute("data-class-id", "class-1");
+    expect(screen.getByRole("link", { name: "Link" })).toHaveAttribute("data-class-id", "class-2");
+    expect(screen.getByRole("group", { name: "Static" })).toHaveAttribute(
+      "data-class-id",
+      "class-3",
+    );
+    expect(screen.getByText("Cadells").closest(".ah-schedule-cell")).not.toHaveAttribute(
+      "data-class-id",
+    );
+  });
 });

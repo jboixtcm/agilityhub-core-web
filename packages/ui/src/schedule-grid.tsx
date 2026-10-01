@@ -150,6 +150,8 @@ export function ScheduleGrid<Cell extends ScheduleGridCell>({
 
 export interface ScheduleCellProps {
   title: string;
+  /** A class cell's id, as `data-class-id` (the real-core e2e selects the api's class by it). */
+  classId?: string | undefined;
   color?: string | null | undefined;
   /** D4b draft: dashed outline. */
   dashed?: boolean;
@@ -181,6 +183,7 @@ export interface ScheduleCellProps {
  * inconsistency outline; `dashed` = draft; `muted` + `struck` = cancelled.
  */
 export function ScheduleCell({
+  classId,
   color,
   dashed = false,
   href,
@@ -228,7 +231,13 @@ export function ScheduleCell({
   );
   if (href !== undefined) {
     return (
-      <a aria-label={label} className={className} href={href} style={scheduleColorStyle(color)}>
+      <a
+        aria-label={label}
+        className={className}
+        data-class-id={classId}
+        href={href}
+        style={scheduleColorStyle(color)}
+      >
         {content}
       </a>
     );
@@ -237,6 +246,7 @@ export function ScheduleCell({
     <div
       aria-label={label}
       className={className}
+      data-class-id={classId}
       role={label === undefined ? undefined : "group"}
       style={scheduleColorStyle(color)}
     >
@@ -247,6 +257,7 @@ export function ScheduleCell({
       aria-label={label}
       aria-pressed={selected}
       className={className}
+      data-class-id={classId}
       onClick={onClick}
       style={scheduleColorStyle(color)}
       type="button"

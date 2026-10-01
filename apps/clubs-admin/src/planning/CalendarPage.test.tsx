@@ -267,10 +267,13 @@ async function createSundayClass() {
 describe("E3-W07 step 9 a D1 risk row opens D4 on its class", () => {
   it("selects the class of `?classe=` in the week of `?setmana=`", async () => {
     await renderCalendar({ search: `?classe=${WEDNESDAY_1850}&estat=actives&setmana=2026-08-10` });
-    await grid(/del 10 al 16 d.agost$/u);
+    const week = await grid(/del 10 al 16 d.agost$/u);
     expect(selectedCard()).toHaveTextContent(
       "Classe seleccionada — dc 12 · 18:50 · B+C · Central · Marc",
     );
+    // E7-W03: the class cell carries the api's id (the real-core spec selects by it).
+    const cell = week.querySelector(`[data-class-id="${WEDNESDAY_1850}"]`);
+    expect(cell).toHaveAttribute("aria-pressed", "true");
   });
 });
 

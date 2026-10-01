@@ -1,0 +1,141 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 §5, T-14-19): PATCH /members/{id} of the erased member answers 409 MEMBER_ERASED in the api's envelope (details {}), not 404 12ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 §5, T-14-19): PATCH /members/{id}/payment-method of the erased member answers 409 MEMBER_ERASED in the api's envelope (details {}), not 404 3ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 §5, T-14-19): PUT /members/{id}/roles of the erased member answers 409 MEMBER_ERASED in the api's envelope (details {}), not 404 2ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 §5, T-14-19): POST /members/{id}/booking-block of the erased member answers 409 MEMBER_ERASED in the api's envelope (details {}), not 404 2ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 §5, T-14-19): DELETE /members/{id}/booking-block of the erased member answers 409 MEMBER_ERASED in the api's envelope (details {}), not 404 2ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 §5, T-14-19): POST /members/{id}/access-resend of the erased member answers 409 MEMBER_ERASED in the api's envelope (details {}), not 404 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 §5, T-14-19): POST /members/{id}/impersonation-token of the erased member answers 409 MEMBER_ERASED in the api's envelope (details {}), not 404 2ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 §5, T-14-19): POST /members/{id}/validation of the erased member answers 409 MEMBER_ERASED in the api's envelope (details {}), not 404 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 §5, T-14-19): POST /members/{id}/validation?dryRun=true of the erased member answers 409 MEMBER_ERASED in the api's envelope (details {}), not 404 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 §5, T-14-19): POST /members/{id}/rejection of the erased member answers 409 MEMBER_ERASED in the api's envelope (details {}), not 404 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 §5, T-14-19): PUT /members/{id}/notification-preferences of the erased member answers 409 MEMBER_ERASED in the api's envelope (details {}), not 404 2ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PATCH /members/{id} by the impersonated scenario is 403 IMPERSONATION_DENIED, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PATCH /members/{id} by the instructor scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PATCH /members/{id} by the member scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PATCH /members/{id}/payment-method by the impersonated scenario is 403 IMPERSONATION_DENIED, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PATCH /members/{id}/payment-method by the instructor scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PATCH /members/{id}/payment-method by the member scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PUT /members/{id}/roles by the impersonated scenario is 403 IMPERSONATION_DENIED, as the api orders them 2ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PUT /members/{id}/roles by the instructor scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PUT /members/{id}/roles by the member scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/booking-block by the impersonated scenario is 403 IMPERSONATION_DENIED, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/booking-block by the instructor scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/booking-block by the member scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — DELETE /members/{id}/booking-block by the impersonated scenario is 403 IMPERSONATION_DENIED, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — DELETE /members/{id}/booking-block by the instructor scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — DELETE /members/{id}/booking-block by the member scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/access-resend by the impersonated scenario is 403 IMPERSONATION_DENIED, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/access-resend by the instructor scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/access-resend by the member scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/impersonation-token by the impersonated scenario is 403 IMPERSONATION_DENIED, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/impersonation-token by the instructor scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/impersonation-token by the member scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/validation by the impersonated scenario is 403 IMPERSONATION_DENIED, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/validation by the instructor scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/validation by the member scenario is 403 FORBIDDEN, as the api orders them 0ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/validation?dryRun=true by the impersonated scenario is 403 IMPERSONATION_DENIED, as the api orders them 0ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/validation?dryRun=true by the instructor scenario is 403 FORBIDDEN, as the api orders them 0ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/validation?dryRun=true by the member scenario is 403 FORBIDDEN, as the api orders them 0ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/rejection by the impersonated scenario is 403 IMPERSONATION_DENIED, as the api orders them 0ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/rejection by the instructor scenario is 403 FORBIDDEN, as the api orders them 0ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — POST /members/{id}/rejection by the member scenario is 403 FORBIDDEN, as the api orders them 0ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PUT /members/{id}/notification-preferences by the impersonated scenario is 403 IMPERSONATION_DENIED, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PUT /members/{id}/notification-preferences by the instructor scenario is 403 FORBIDDEN, as the api orders them 1ms
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (T-03-35): the role refusal comes before the erasure — PUT /members/{id}/notification-preferences by the member scenario is 403 FORBIDDEN, as the api orders them 1ms
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): PATCH /members/{id} of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed 3ms
+   → expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): PATCH /members/{id}/payment-method of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed 1ms
+   → expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): PUT /members/{id}/roles of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed 1ms
+   → expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/booking-block of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed 1ms
+   → expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): DELETE /members/{id}/booking-block of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed 1ms
+   → expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/access-resend of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed 1ms
+   → expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/impersonation-token of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed 1ms
+   → expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/validation of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed 1ms
+   → expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/validation?dryRun=true of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed 1ms
+   → expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/rejection of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed 1ms
+   → expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): PUT /members/{id}/notification-preferences of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed 1ms
+   → expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+ × src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35): D10's preferences read of this club's erased member by an ADMIN of another club is 404 NOT_FOUND too; this club's ADMIN still gets 409 MEMBER_ERASED 2ms
+   → expected { code: 'MEMBER_ERASED', …(2) } to deeply equal { Object (code, details, ...) }
+ ✓ src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 step 3 (S14 R-14-15, INC-53 item 10): the erased member's overview nulls every field R-14-15 nulls, keeps what it keeps, and still sends the snapshot's required address and birthDate 12ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): PATCH /members/{id} of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): PATCH /members/{id}/payment-method of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): PUT /members/{id}/roles of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/booking-block of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): DELETE /members/{id}/booking-block of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/access-resend of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/impersonation-token of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/validation of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/validation?dryRun=true of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): POST /members/{id}/rejection of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35, CONVENCIONS_API §10): PUT /members/{id}/notification-preferences of this club's erased member by an ADMIN of another club is 404 NOT_FOUND «Member not found», before the erasure is revealed
+AssertionError: expected { code: 'MEMBER_ERASED', …(3) } to deeply equal { Object (code, details, ...) }
+
+- Expected
++ Received
+
+  {
+-   "code": "NOT_FOUND",
++   "code": "MEMBER_ERASED",
+    "details": {},
+-   "message": "Member not found",
+-   "status": 404,
++   "message": "Member erased",
++   "status": 409,
+  }
+
+ ❯ src/mocks/census-handlers.test.ts:179:10
+    177|         message: refused.message,
+    178|         status: refused.status,
+    179|       }).toEqual({ code: "NOT_FOUND", details: {}, message: "Member no…
+       |          ^
+    180|     },
+    181|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/mocks/census-handlers.test.ts > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19) · every S03 mutation of an erased member is refused with 409 MEMBER_ERASED > E7-W07 round 2 #4 (T-03-35): D10's preferences read of this club's erased member by an ADMIN of another club is 404 NOT_FOUND too; this club's ADMIN still gets 409 MEMBER_ERASED
+AssertionError: expected { code: 'MEMBER_ERASED', …(2) } to deeply equal { Object (code, details, ...) }
+
+- Expected
++ Received
+
+  {
+-   "code": "NOT_FOUND",
++   "code": "MEMBER_ERASED",
+    "details": {},
+-   "status": 404,
++   "status": 409,
+  }
+
+ ❯ src/mocks/census-handlers.test.ts:186:35
+    184|     const read = () => client.GET("/members/{id}/notification-preferen…
+    185|     mockScenario("adminOtherClub");
+    186|     expect(await failure(read())).toEqual({ code: "NOT_FOUND", details…
+       |                                   ^
+    187|     mockScenario("admin");
+    188|     expect(await failure(read())).toEqual({ code: "MEMBER_ERASED", det…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed | 45 passed (57)
+   Start at  13:47:18
+   Duration  781ms (transform 52%, import 35%, tests 13%)
+

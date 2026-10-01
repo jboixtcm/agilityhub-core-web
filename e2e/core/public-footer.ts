@@ -33,7 +33,10 @@ export function publicFooterLines(club: BrandingClub): string[] {
   const office = club.legalAddress;
   if (office == null) return [identity];
   const officeCity = office.city?.trim() ?? "";
-  return [identity, `${office.street} · ${office.postalCode}${officeCity === "" ? "" : ` ${officeCity}`}`];
+  return [
+    identity,
+    `${office.street} · ${office.postalCode}${officeCity === "" ? "" : ` ${officeCity}`}`,
+  ];
 }
 
 export async function expectPublicFooter(footer: Locator, club: BrandingClub): Promise<void> {

@@ -1,0 +1,10 @@
+$ pnpm -C /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client exec eslint src/preferences-saver.ts src/preferences-saver.test.ts
+(no output)
+exit 0
+$ pnpm -C /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin exec eslint src/messaging/NotificationPreferencesBlock.tsx src/census/NotificationPreferencesBlock.test.tsx
+(no output)
+exit 0
+$ pnpm -C /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs exec eslint src/profile/NoticesCard.test.tsx
+(no output)
+exit 0
+(ESLint prints nothing when clean; the session redirected each command here and printed «exit 0» three times. This file was empty until the round-2 self-review asked for the commands.)

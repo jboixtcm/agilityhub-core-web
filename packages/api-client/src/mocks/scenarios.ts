@@ -24,9 +24,10 @@ export interface MockScenarioDefinition {
   attendance?: AttendanceVariant;
   branding: Branding;
   /**
-   * S08 R-08-09, the limit worlds (`fixtures/bookings.ts`): `swap` (mockup 06), Duna has two
-   * cancellable bookings this week, so a hold proposes the swap; `done` (mockup 29), her week holds
-   * two classes, both done at `BOOKING_LIMIT_DONE_NOW`, so the hold is refused.
+   * S08 R-08-09, the limit worlds (`fixtures/bookings.ts`), both at 2 of 2 (R-08-03): `swap`
+   * (mockup 06), Duna has two cancellable bookings this week, so a hold proposes the swap; `done`
+   * (mockup 29), her week holds two classes, both done at `BOOKING_LIMIT_DONE_NOW`, so the hold is
+   * refused (at `BOOKING_MOCK_NOW` only Sunday 2's has begun: 06 with its inert row).
    */
   bookingLimit?: "done" | "swap";
   dashboardNulls?: boolean;
@@ -177,7 +178,9 @@ const scenarios = {
   /**
    * S08 R-08-09 (mockup 29, «Si aquesta setmana ja has fet les 2 classes»): Duna's week holds Sunday
    * 2's class and Monday 3's; read at `BOOKING_LIMIT_DONE_NOW` both are done, nothing can be swapped
-   * and the hold answers `409 BOOKING_LIMIT_REACHED` (E5-W05 round 3 #2).
+   * and the hold answers `409 BOOKING_LIMIT_REACHED` (E5-W05 round 3 #2). Read at `BOOKING_MOCK_NOW`
+   * it is 06's inert row: Sunday 2's class has begun (DONE), Monday 3 is still swappable (E7-W07
+   * round 2 #5a).
    */
   bookingLimitDone: {
     bookingLimit: "done",

@@ -194,6 +194,65 @@ save_e6_notifications() {
   echo "e6 notifications: $evidence_directory/e6-notifications.json"
 }
 
+# E7-W03: what the core stored for the E7 stage's notices (N-08a of the classes cancelled at D4c,
+# N-13 of the reminders process, the announcements of «Enviar comunicat»), the N-08a template's
+# state and the push subscriptions. Evidence only, the spec asserts the screens: codes, audiences,
+# locales, delivery channels and statuses, action types, variable NAMES, the recipient's field
+# names — never an address, a phone, a delivery target, a provider reference, a token, an endpoint
+# or a body. It never fails the run.
+save_e7_notifications() {
+  docker compose -f "$compose_file" exec -T mongo mongosh --quiet \
+    mongodb://localhost:27017/agilityhub_e1_web --eval '
+      const pick = (item) => ({
+        action: item.action?.type ?? null,
+        audience: item.audience ?? null,
+        category: item.category ?? null,
+        code: item.code ?? null,
+        createdAt: item.createdAt ?? null,
+        deliveries: (item.deliveries ?? []).map((delivery) => ({
+          attempts: delivery.attempts ?? null,
+          channel: delivery.channel ?? null,
+          providerRef: delivery.providerRef == null ? null : "present",
+          status: delivery.status ?? null
+        })),
+        locale: item.locale ?? null,
+        readAt: item.readAt == null ? null : "set",
+        recipient: Object.keys(item.recipient ?? {}).sort(),
+        templateVersion: item.templateVersion ?? null,
+        variables: Object.keys(item.variables ?? {}).sort()
+      });
+      const notices = db.notifications
+        .find({$or: [{code: {$in: ["N-08a", "N-13", "N-24"]}}, {code: null}]})
+        .sort({createdAt: 1})
+        .toArray()
+        .map(pick);
+      const byCode = db.notifications.aggregate([{$group: {_id: "$code", count: {$sum: 1}}}, {$sort: {_id: 1}}]).toArray();
+      const statuses = db.notifications.aggregate([
+        {$unwind: "$deliveries"},
+        {$group: {_id: {code: "$code", channel: "$deliveries.channel", status: "$deliveries.status"}, count: {$sum: 1}}},
+        {$sort: {"_id.code": 1, "_id.channel": 1, "_id.status": 1}}
+      ]).toArray();
+      const templates = db.message_templates
+        .find({$or: [{code: "N-08a"}, {kind: "CUSTOM"}]})
+        .toArray()
+        .map((item) => ({
+          category: item.category ?? null,
+          code: item.code ?? null,
+          customized: item.customized ?? null,
+          kind: item.kind ?? null,
+          status: item.status ?? null,
+          version: item.version ?? null
+        }));
+      const pushSubscriptions = db.push_subscriptions.aggregate([
+        {$group: {_id: "$status", count: {$sum: 1}}},
+        {$sort: {_id: 1}}
+      ]).toArray();
+      print(EJSON.stringify({byCode, notices, pushSubscriptions, statuses, templates}, null, 2));
+    ' >"$evidence_directory/e7-notifications.json" 2>&1 \
+    || echo "could not read the E7 notifications" >&2
+  echo "e7 notifications: $evidence_directory/e7-notifications.json"
+}
+
 # E1/E2 stage, then the E3 signup stage and the E4 planning/activities stage, each on a fresh seed,
 # whatever the task id (E3-W11 step 0, E4-W05 steps 1 and 7): run after another stage on the same
 # seed, the E3 stage fails its refresh (E4-W07 report), and E2 blocks the bookings of the member
@@ -239,14 +298,27 @@ if [[ "$staged" == true ]]; then
   export SEED_WEEK_START="$E5_WEEK_START"
   run_stage e6
   save_e6_notifications
+  cleanup
+  # E7-W03: the notification flows (D4c cancellations → N-08a, D9's edited template, the matrix
+  # from 12 and D10, the announcement, the push subscription and P4's N-13) on their own fresh
+  # seed, from the same Monday as E5/E6: the E5 scenario's week-0 bookings give two login members
+  # a shared class to cancel, and its spec sets the core's test clock to `demoNow` (Monday 07:00)
+  # so week 0 is open for the bookings it adds, then to two hours before the reminder's class.
+  export CORE_TEST_FILES="e7-core.spec.ts"
+  export SEED_WEEK_START="$E5_WEEK_START"
+  run_stage e7
+  save_e7_notifications
 else
   export CORE_TEST_FILES="$2"
-  if [[ "$2" == *e5-core* || "$2" == *e6-core* ]]; then
+  if [[ "$2" == *e5-core* || "$2" == *e6-core* || "$2" == *e7-core* ]]; then
     export SEED_WEEK_START="$E5_WEEK_START"
   fi
   run_stage files
   if [[ "$2" == *e6-core* ]]; then
     save_e6_notifications
+  fi
+  if [[ "$2" == *e7-core* ]]; then
+    save_e7_notifications
   fi
 fi
 

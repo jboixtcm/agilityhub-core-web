@@ -1,0 +1,6 @@
+Checking formatting...
+[warn] e2e/core/e1-core.spec.ts
+[warn] e2e/core/e2-core.spec.ts
+[warn] e2e/core/public-footer.ts
+[warn] Code style issues found in 3 files. Run Prettier with --write to fix.
+exit 1

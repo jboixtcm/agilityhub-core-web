@@ -308,6 +308,9 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
                 ]
                   .filter(Boolean)
                   .join(" ")}
+                // Stable selectors of the real-core e2e (E7-W03): the api's id and code.
+                data-code={item.code}
+                data-notification-id={item.id}
               >
                 <div className="notification-card__head">
                   <Icon aria-hidden="true" className="notification-card__icon" name={item.icon} />

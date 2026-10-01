@@ -253,7 +253,7 @@ describe("E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATA
     });
   });
 
-  it("bookingLimit (mockup 06): the hold proposes two swappable bookings and a done one; the swap cancels the old one", async () => {
+  it("bookingLimit (mockup 06): the hold proposes Duna's two swappable bookings (2 of 2); the swap cancels the old one", async () => {
     mockScenario("bookingLimit");
     const hold = (
       await call("POST", "/seat-holds", {
@@ -272,10 +272,8 @@ describe("E5-W01 step 10 · the S08 mock world answers as the api (S08 §6, CATA
       "2026-08-03T18:50",
       "2026-08-07T20:00",
     ]);
-    // The week's first class, Sunday 2 at 20:00, has begun (E5-W05 step 7).
-    expect(hold.limit.notSelectable).toMatchObject([
-      { reason: "DONE", startsAtLocal: "2026-08-02T20:00" },
-    ]);
+    // E7-W07 round 2 #5a: nothing inert in this world (the `done` world has 06's done row).
+    expect(hold.limit.notSelectable).toEqual([]);
     expect(await call("POST", "/bookings", { seatHoldId: hold.id })).toMatchObject({
       body: { code: "SWAP_NOT_ALLOWED" },
       status: 422,
@@ -489,8 +487,8 @@ describe("E5-W05 step 7 · the booking world's clock sits after its club's week 
     });
   });
 
-  it("E5-W05 step 7: 06's done class belongs to W0 at the clock (it began at the week's opening, Sunday 2 at 20:00): the hold lists it as DONE beside the two cancellable ones", async () => {
-    mockScenario("bookingLimit");
+  it("E5-W05 step 7: 06's done class belongs to W0 at the clock (it began at the week's opening, Sunday 2 at 20:00): in the bookingLimitDone world the hold lists it as DONE beside the cancellable Monday 3 (E7-W07 round 2 #5a)", async () => {
+    mockScenario("bookingLimitDone");
     const hold = (
       await call("POST", "/seat-holds", {
         classSessionId: "class-2026-08-08-0900",
@@ -500,7 +498,6 @@ describe("E5-W05 step 7 · the booking world's clock sits after its club's week 
     expect(hold.limit).toMatchObject({ count: 2, max: 2, reached: true, week: "CURRENT" });
     expect(hold.limit.swappable.map((option) => option.startsAtLocal)).toEqual([
       "2026-08-03T18:50",
-      "2026-08-07T20:00",
     ]);
     expect(hold.limit.notSelectable).toEqual([
       {
@@ -736,7 +733,7 @@ describe("E5-W05 round 2 · the limits come from the world's bookings and the cl
     expect(details.notSelectable.map((item) => item.reason)).toEqual(["LATE_WINDOW"]);
   });
 
-  it("E5-W05 round 2 #11.b: a PAYMENT_PENDING booking the hold cannot swap is LATE_WINDOW (the api's), a begun class DONE", async () => {
+  it("E5-W05 round 2 #11.b: a PAYMENT_PENDING booking the hold cannot swap is LATE_WINDOW (the api's), beside the swappable Friday 7; a begun class DONE (bookingLimitDone: the refusal)", async () => {
     await home("bookingLimit");
     const monday = bookingState.bookings.find((item) => item.id === "booking-duna-mon3");
     if (monday === undefined) throw new TypeError("Missing Monday 3's booking");
@@ -749,6 +746,20 @@ describe("E5-W05 round 2 · the limits come from the world's bookings and the cl
     ).body as SeatHoldResponse;
     expect(hold.limit.swappable.map((option) => option.bookingId)).toEqual(["booking-duna-fri7"]);
     expect(hold.limit.notSelectable).toEqual([
+      {
+        bookingId: "booking-duna-mon3",
+        description: "B+C",
+        reason: "LATE_WINDOW",
+        startsAtLocal: "2026-08-03T18:50",
+      },
+    ]);
+    // E7-W07 round 2 #5a: the begun class is the `done` world's; with Monday 3 waiting for its
+    // payment nothing can be swapped there, so the api refuses the hold and lists both.
+    await home("bookingLimitDone");
+    const pending = bookingState.bookings.find((item) => item.id === "booking-duna-mon3");
+    if (pending === undefined) throw new TypeError("Missing Monday 3's booking");
+    pending.state = "PAYMENT_PENDING";
+    expect((await saturdayRefusal("bookingLimitDone")).notSelectable).toEqual([
       {
         bookingId: "booking-duna-mon3",
         description: "B+C",
@@ -836,6 +847,30 @@ describe("E5-W05 round 2 · the limits come from the world's bookings and the cl
       week: "CURRENT",
     });
   });
+
+  it("T-08-03 E7-W07 round 2 #5a (R-08-02, R-08-03; ruling E86): in the bookingLimit world at its clock (mockup 06) Duna's bookings that count in W0 are within the week's limit: /me/home, D10's list and the hold all count 2 of 2, Monday 3 and Friday 7, both swappable", async () => {
+    const duna = await home("bookingLimit", "?dogId=dog-duna");
+    const { count, max, weekKey } = duna.limits.currentWeek;
+    const booked = await dunaWeekBookings(weekKey, "bookingLimit");
+    expect(count).toBeLessThanOrEqual(max);
+    expect(booked.length).toBeLessThanOrEqual(max);
+    expect({ booked: [...booked].sort(), count, max }).toEqual({
+      booked: ["booking-duna-fri7", "booking-duna-mon3"],
+      count: 2,
+      max: 2,
+    });
+    const hold = await call("POST", "/seat-holds", {
+      classSessionId: "class-2026-08-08-0900",
+      dogId: "dog-duna",
+    });
+    expect(hold.status).toBe(201);
+    const limit = (hold.body as SeatHoldResponse).limit;
+    expect(limit).toMatchObject({ count, max, notSelectable: [], reached: true });
+    expect(limit.swappable.map((option) => option.bookingId)).toEqual([
+      "booking-duna-mon3",
+      "booking-duna-fri7",
+    ]);
+  });
 });
 
 describe("E7-W07 step 6 · «Límit setmanal» only where the api refuses the hold (S08 R-08-03, R-08-09; ruling E85)", () => {
@@ -868,6 +903,8 @@ describe("E7-W07 step 6 · «Límit setmanal» only where the api refuses the ho
     // A 24 h late window: next week's Monday 3 can no longer be swapped, so W1's limit of 1 refuses.
     ["default", "2026-08-02T19:59:00+02:00", 1440, true, "member"],
     ["bookingLimit (mockup 06)", BOOKING_MOCK_NOW, 240, false, "bookingLimit"],
+    // E7-W07 round 2 #5a: 06's inert row (Sunday 2 begun) beside the swappable Monday 3.
+    ["bookingLimitDone (06's done row)", BOOKING_MOCK_NOW, 240, false, "bookingLimitDone"],
     ["bookingLimitDone (mockup 29)", BOOKING_LIMIT_DONE_NOW, 240, true, "bookingLimitDone"],
   ] as const)(
     "T-08-05 E7-W07 step 6 (R-08-03, R-08-09, ruling E85): in the %s world at %s (late window %i min) a row reads WEEKLY_LIMIT_DONE exactly when its hold answers 409 BOOKING_LIMIT_REACHED (any such row: %s)",

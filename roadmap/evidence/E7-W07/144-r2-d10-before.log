@@ -1,0 +1,65 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx (21 tests | 2 failed) 8537ms
+   ❯ T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) (21)
+     × E7-W07 step 2 (ruling E85: option a): the retry is lost too and the admin leaves right after — the departure carries «on» with keepalive and keeps it, and the next visit within 5 minutes of leaving shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too — «on» stays shown and kept, and the admin's next change sends it 1602ms
+     × E7-W07 round 2 #2 (review #2; S14 §5, T-14-19): with the overlapping-save sequence, the resend answered 409 MEMBER_ERASED is final — the block says so, and no other PUT or GET follows, nothing is sent on departure, and the outbox entry goes 828ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W07 step 2 (ruling E85: option a): the retry is lost too and the admin leaves right after — the departure carries «on» with keepalive and keeps it, and the next visit within 5 minutes of leaving shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too — «on» stays shown and kept, and the admin's next change sends it
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"aria-checked"[32m[39m[2m, [22m[32m[32m"true"[32m[39m[2m) // element.getAttribute("aria-checked") === "true"[22m
+
+Expected the element to have attribute:
+[32m  aria-checked="true"[39m
+Received:
+[31m  aria-checked="false"[39m
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:886:24
+    884|     });
+    885|     await new Promise((resolve) => setTimeout(resolve, 400));
+    886|     expect(personal()).toHaveAttribute("aria-checked", "true");
+       |                        ^
+    887|     expect(outbox()).toMatchObject({
+    888|       memberId: "member-laura",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/census/NotificationPreferencesBlock.test.tsx > T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) > E7-W07 round 2 #2 (review #2; S14 §5, T-14-19): with the overlapping-save sequence, the resend answered 409 MEMBER_ERASED is final — the block says so, and no other PUT or GET follows, nothing is sent on departure, and the outbox entry goes
+AssertionError: expected [ { body: { …(1) }, …(1) }, …(1) ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+@@ -5,6 +5,14 @@
+          "PERSONAL": true,
+        },
+      },
+      "keepalive": false,
+    },
++   {
++     "body": {
++       "emailByCategory": {
++         "PERSONAL": true,
++       },
++     },
++     "keepalive": false,
++   },
+  ]
+
+ ❯ src/census/NotificationPreferencesBlock.test.tsx:941:27
+    939|       "Aquest abonat ha estat suprimit i ja no es pot modificar.",
+    940|     );
+    941|     expect(puts.slice(2)).toEqual([
+       |                           ^
+    942|       { body: { emailByCategory: { PERSONAL: true } }, keepalive: fals…
+    943|     ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 19 passed (21)
+   Start at  13:44:58
+   Duration  10.94s (tests 80%, environment 8%, transform 8%, import 3%, setup 1%)
+

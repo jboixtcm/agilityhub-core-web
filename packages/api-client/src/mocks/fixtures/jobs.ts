@@ -449,12 +449,20 @@ export function jobEffects(name: string, dryRun: boolean): JobRun["effects"] {
         ],
       };
     case "reminders":
+      // R-15-14: `WOULD_REMIND {bookingId, memberId, startsAt, lead}` for a booking due now
+      // (`startsAt − lead ≤ now < startsAt`): the 8:30 class of the example day (06:30Z in CEST)
+      // with a 2 h reminder, at 8:12.
       return {
         counters: { classReminders: 1, trainingReminders: 0 },
         items: [
           {
             action: action("REMIND"),
-            detail: { lead: 120, startsAt: "2026-08-10T08:30:00Z" },
+            detail: {
+              bookingId: "booking-anna-nass",
+              lead: 120,
+              memberId: "member-anna",
+              startsAt: "2026-08-10T06:30:00Z",
+            },
             entityId: "booking-anna-nass",
             entityType: "Booking",
           },

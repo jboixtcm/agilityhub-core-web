@@ -161,6 +161,24 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
       "up | ok | En Rock puja de nivell! | ahir 19:12 | —",
       "check | ok | Reserva confirmada | ahir 18:40 | —",
     ]);
+    // E7-W03: each card carries the api's code and id (the real-core spec selects by them).
+    const shown = [...document.querySelectorAll<HTMLElement>(".notification-card")].slice(0, 6);
+    expect(shown.map((card) => card.dataset.code)).toEqual([
+      "N-08a",
+      "N-15",
+      "N-19",
+      "N-16",
+      "N-09",
+      "N-06",
+    ]);
+    expect(shown.map((card) => card.dataset.notificationId)).toEqual([
+      "notification-n08a",
+      "notification-n15",
+      "notification-n19",
+      "notification-n16",
+      "notification-n09",
+      "notification-n06",
+    ]);
     // The rendered, frozen bodies are printed verbatim (never re-cased nor re-formatted).
     expect(
       screen.getByText(

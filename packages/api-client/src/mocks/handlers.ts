@@ -129,6 +129,7 @@ import {
 } from "./notification-handlers";
 import { planningHandlers, planningState, resetPlanningState } from "./planning-handlers";
 import {
+  callerClubOwnsTheWorld,
   currentMockScenario,
   currentMockScenarioName,
   mockScenario,
@@ -1396,18 +1397,28 @@ function adminRouteRefusal() {
 
 /**
  * S14 §5 (E7-W07 step 3, A8): an erased member takes no change, so every S03 mutation that names it
- * answers `409 MEMBER_ERASED` (CATALEG_ERRORS §2; no details), never `404`. The role refusals come
- * first, as the api orders them. `undefined` for any other member: its handler goes on as before.
+ * answers `409 MEMBER_ERASED` (CATALEG_ERRORS §2; no details), never `404`. The api orders the
+ * refusals: the role first (403), then the tenant, which comes from the JWT, so an ADMIN of another
+ * club finds no member of this one (`404 NOT_FOUND`, T-03-35, CONVENCIONS_API §10) before the
+ * erasure is revealed (E7-W07 round 2 #4). The same order holds for every member of these ADMIN
+ * routes: a non-ADMIN caller gets its 403 and an ADMIN of another club its 404 for a live member
+ * too (E7-W07 round 2, reviews of the round). `undefined` for this club's ADMIN on a live member:
+ * its handler goes on.
  */
 function erasedMemberRefusal(memberId: string) {
-  if (memberId !== ERASED_MEMBER_ID) return undefined;
-  return adminRouteRefusal() ?? apiError("MEMBER_ERASED", "Member erased", 409);
+  const refused = adminRouteRefusal();
+  if (refused !== undefined) return refused;
+  if (!callerClubOwnsTheWorld()) return apiError("NOT_FOUND", "Member not found", 404);
+  return memberId === ERASED_MEMBER_ID
+    ? apiError("MEMBER_ERASED", "Member erased", 409)
+    : undefined;
 }
 
 /**
  * D10's preferences routes (S11 §6, api e34bf04): ADMIN only (an impersonation token, a MEMBER or
- * an INSTRUCTOR → 403), an erased member → 409 MEMBER_ERASED (its read too, as the snapshot
- * declares; E7-W06, ruling E82), and another club's member → 404.
+ * an INSTRUCTOR → 403), another club's caller → 404 (the erased member's too, before its erasure),
+ * an erased member → 409 MEMBER_ERASED (its read too, as the snapshot declares; E7-W06, ruling
+ * E82), and another club's member → 404.
  */
 function memberPreferencesRefusal(memberId: string) {
   const refused = adminRouteRefusal() ?? erasedMemberRefusal(memberId);
@@ -2914,8 +2925,9 @@ export const handlers = [
     if (String(params.id) !== member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
     }
+    // A business rule on valid data: 422, as the snapshot declares it (CATALEG_ERRORS rule 0).
     if (!member.bookingBlock.active) {
-      return apiError("BOOKING_BLOCK_NOT_ACTIVE", "Booking block not active", 409);
+      return apiError("BOOKING_BLOCK_NOT_ACTIVE", "Booking block not active", 422);
     }
     member.bookingBlock = { active: false };
     return new HttpResponse(null, { status: 204 });
@@ -2927,8 +2939,9 @@ export const handlers = [
     if (String(params.id) !== member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
     }
+    // MEMBER_NOT_ACTIVE is 422 everywhere (CATALEG_ERRORS §1, the snapshot's access-resend).
     if (member.status !== "ACTIVE" || member.accountId === undefined) {
-      return apiError("MEMBER_NOT_ACTIVE", "Member not active", 409);
+      return apiError("MEMBER_NOT_ACTIVE", "Member not active", 422);
     }
     return HttpResponse.json({ sentTo: member.contactEmails[0]?.email ?? "" }, { status: 202 });
   }),

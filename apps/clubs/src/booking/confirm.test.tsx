@@ -139,7 +139,7 @@ describe("T-08-36 the 30 s hold counts on the api clock, not the device's (R-08-
 });
 
 describe("T-08-38 screen 06: the swap when the week's limit is reached (R-08-09)", () => {
-  it("single selection among the swappable bookings, the done one inert, the button names both days, then the swap is confirmed", async () => {
+  it("single selection among the swappable bookings, the button names both days, then the swap is confirmed", async () => {
     const writes = recordWrites();
     await tapRow(3, { scenario: "bookingLimit" });
     expect(screen.getByText("Nova reserva")).toBeVisible();
@@ -161,11 +161,8 @@ describe("T-08-38 screen 06: the swap when the week's limit is reached (R-08-09)
       "Divendres 7 · 20:00Classe C · Carretera · anul·lable dins termini",
     ]);
     expect(options.map((option) => option.getAttribute("aria-checked"))).toEqual(["true", "false"]);
-    const done = within(group)
-      .getByText("Classe B+C · ja feta — no es pot seleccionar")
-      .closest(".confirm-option");
-    expect(done).toHaveAttribute("aria-disabled", "true");
-    expect(done?.tagName).toBe("DIV");
+    // E7-W07 round 2 #5a: Duna's week is 2 of 2, both swappable; the done row is the next test's.
+    expect(within(group).queryByText(/ja feta/u)).toBeNull();
     expect(
       screen.getByRole("button", { name: "ANUL·LA DILLUNS 3 I CONFIRMA DISSABTE 8" }),
     ).toBeEnabled();
@@ -192,6 +189,27 @@ describe("T-08-38 screen 06: the swap when the week's limit is reached (R-08-09)
     );
     // A consumed hold is never released.
     expect(writes.filter((write) => write.method === "DELETE")).toEqual([]);
+  });
+
+  it("E7-W07 round 2 #5a: the done one inert — the bookingLimitDone world at the clock (Sunday 2 at 20:30): Sunday 2's class has begun, so it is listed but cannot be chosen, and Monday 3 is the swap (2 of 2)", async () => {
+    await tapRow(3, { scenario: "bookingLimitDone" });
+    expect(
+      screen.getByText("Ja tens 2 classes aquesta setmana amb la Duna (límit per gos)."),
+    ).toBeVisible();
+    const group = screen.getByRole("radiogroup", { name: "Tria quina anul·les per fer-li lloc" });
+    const options = within(group).getAllByRole("radio");
+    expect(options.map((option) => option.textContent)).toEqual([
+      "Dilluns 3 · 18:50Classe B+C · Central · anul·lable dins termini",
+    ]);
+    expect(options.map((option) => option.getAttribute("aria-checked"))).toEqual(["true"]);
+    const done = within(group)
+      .getByText("Classe B+C · ja feta — no es pot seleccionar")
+      .closest(".confirm-option");
+    expect(done).toHaveAttribute("aria-disabled", "true");
+    expect(done?.tagName).toBe("DIV");
+    expect(
+      screen.getByRole("button", { name: "ANUL·LA DILLUNS 3 I CONFIRMA DISSABTE 8" }),
+    ).toBeEnabled();
   });
 
   it("«CANCEL·LAR LA NOVA RESERVA» releases the hold (DELETE) and goes back to 04", async () => {

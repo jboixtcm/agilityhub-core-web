@@ -233,7 +233,13 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
       render: (row) => (
         <span className="messaging-log__channels">
           {(row.channels ?? []).map((item, index) => (
-            <Badge key={`${item.channel}-${String(index)}`} tone={STATUS_TONES[item.status]}>
+            <Badge
+              // Stable selectors of the real-core e2e (E7-W03): the delivery's channel and status.
+              data-channel={item.channel}
+              data-delivery-status={item.status}
+              key={`${item.channel}-${String(index)}`}
+              tone={STATUS_TONES[item.status]}
+            >
               {t("admin-messaging:log.channelState", {
                 channel: t(`enums:notificationChannel.${item.channel}`),
                 status: t(`enums:deliveryStatus.${item.status}`, { defaultValue: item.status }),
@@ -339,6 +345,12 @@ export function NotificationLogPage({ client }: { client: ApiClient }) {
           setOpenId(row.id);
         }}
         onStateChange={setState}
+        // E7-W03: stable hooks for the real-core spec (the api's id, code and member).
+        rowAttributes={(row) => ({
+          ...(row.code === undefined ? {} : { "data-code": row.code }),
+          ...(row.recipient?.memberId == null ? {} : { "data-member-id": row.recipient.memberId }),
+          "data-notification-id": row.id,
+        })}
         rowHref={(row) => `/notificacions?avis=${encodeURIComponent(row.id)}`}
         rowKey={(row) => row.id}
         rows={data?.items ?? []}
@@ -468,7 +480,11 @@ function NotificationDrawer({
                 header: t("admin-messaging:log.detail.status"),
                 key: "status",
                 render: (row) => (
-                  <Badge tone={STATUS_TONES[row.status]}>
+                  <Badge
+                    data-channel={row.channel}
+                    data-delivery-status={row.status}
+                    tone={STATUS_TONES[row.status]}
+                  >
                     {t(`enums:deliveryStatus.${row.status}`, { defaultValue: row.status })}
                   </Badge>
                 ),

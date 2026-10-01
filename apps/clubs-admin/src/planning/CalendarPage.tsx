@@ -673,6 +673,7 @@ export function CalendarPage({
     ].filter((value): value is string => value !== undefined && value !== "");
     return (
       <ScheduleCell
+        classId={session.id}
         color={ring?.color ?? null}
         dashed={session.state === "DRAFT"}
         label={t("admin-scheduling:calendar.cell.label", {

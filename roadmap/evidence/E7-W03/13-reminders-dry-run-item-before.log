@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/backoffice-handlers.test.ts (43 tests | 1 failed | 42 skipped) 48ms
+   ❯ E5-W03 step 8 · S15 processes (GET /jobs, trigger, switch, runs) answer like the api (5)
+     × E7-W03 step 0e · R-15-14 [Simula] on reminders plans WOULD_REMIND {bookingId, memberId, startsAt, lead} for a booking due now, and [Executa ara] the same item as REMIND 45ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/backoffice-handlers.test.ts > E5-W03 step 8 · S15 processes (GET /jobs, trigger, switch, runs) answer like the api > E7-W03 step 0e · R-15-14 [Simula] on reminders plans WOULD_REMIND {bookingId, memberId, startsAt, lead} for a booking due now, and [Executa ara] the same item as REMIND
+AssertionError: expected [ 'lead', 'startsAt' ] to deeply equal [ 'bookingId', 'lead', …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "bookingId",
+    "lead",
+-   "memberId",
+    "startsAt",
+  ]
+
+ ❯ src/mocks/backoffice-handlers.test.ts:206:52
+    204|     expect(plan.body.effects.items).toHaveLength(1);
+    205|     expect(item).toMatchObject({ action: "WOULD_REMIND", entityType: "…
+    206|     expect(Object.keys(item?.detail ?? {}).sort()).toEqual([
+       |                                                    ^
+    207|       "bookingId",
+    208|       "lead",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 42 skipped (43)
+   Start at  15:27:22
+   Duration  1.11s (transform 56%, import 39%, tests 5%)
+

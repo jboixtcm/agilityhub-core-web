@@ -1,0 +1,31 @@
+$ docker image inspect ghcr.io/jboixtcm/agilityhub-core-api:main --format '{{.Architecture}} {{index .Config.Labels "org.opencontainers.image.revision"}} {{index .Config.Labels "org.opencontainers.image.created"}}'
+arm64 c374bb2a7480b84892d27baf0bfab84cc5861234 2026-10-01T06:47:17.451Z
+exit 0
+
+$ shasum -a 256 packages/api-client/openapi/openapi.json packages/api-client/openapi/openapi.next.json && cat packages/api-client/openapi/openapi.next.sha
+65c25628cc2e60f6edb407f059a426b9ef56fbd95fc36bdfa0c70366fad4d121  packages/api-client/openapi/openapi.json
+35c5efbdf295f557adfeb2c68af58526637e73d5765f7eece71fc47837b7428d  packages/api-client/openapi/openapi.next.json
+86af9b2
+exit 0
+
+$ cp packages/api-client/openapi/openapi.next.json packages/api-client/openapi/openapi.json && cmp packages/api-client/openapi/openapi.next.json packages/api-client/openapi/openapi.json && echo "cmp: identical" && shasum -a 256 packages/api-client/openapi/openapi.json
+cmp: identical
+35c5efbdf295f557adfeb2c68af58526637e73d5765f7eece71fc47837b7428d  packages/api-client/openapi/openapi.json
+exit 0
+
+$ rm packages/api-client/openapi/openapi.next.json packages/api-client/openapi/openapi.next.sha
+exit 0
+
+$ jq -r '.paths | keys[]' packages/api-client/openapi/pending.json   (04-pending-paths.log: empty, no path)
+exit 0
+$ jq -r '.components.schemas | keys[]' packages/api-client/openapi/pending.json
+DogPatchPendingFields
+DogPendingFields
+LicensePendingFields
+LicenseWithPendingFields
+PlanBillingMode
+exit 0
+
+What the adopted snapshot changes against the previous one (node over both files, before the copy):
+paths: 50 added, none removed; changed: /api/v1/checkout-sessions (POST description), /api/v1/members (GET description; x-filterable gains leaveSource, inactivityUntil, hasPendingRequest), /api/v1/message-templates (POST description), /api/v1/message-templates/{id} (PUT description), /api/v1/message-templates/{id}/preview and /send (POST descriptions)
+schemas: 135 added, none removed; changed: AuditAction (gains PACK_ADJUSTED, INVOICE_CREATED_MANUAL, REMITTANCE_SUBMITTED, CARD_CHARGES_STARTED), CheckoutSessionRequest (gains optional bookingId, upfrontPaymentIds)

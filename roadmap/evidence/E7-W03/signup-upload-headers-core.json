@@ -1,0 +1,16 @@
+{
+  "sentOnPut": [
+    [
+      "Content-Type",
+      "image/jpeg"
+    ],
+    [
+      "If-None-Match",
+      "*"
+    ]
+  ],
+  "signed": {
+    "Content-Type": "image/jpeg",
+    "If-None-Match": "*"
+  }
+}

@@ -1,0 +1,122 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/preferences-saver.test.ts (16 tests | 5 failed) 138ms
+   ❯ E7-W05 step 1: the shared preference saver (R-11-04) — the latest choice wins whatever fails (5)
+     × E7-W07 round 2 #1 (ruling E86): an open page shows a failure of what it took over, and keeps it — shown on top, unsent and kept — until a change sends it and its 2xx frees it 14ms
+   ❯ E7-W06 step 4 (E7-W05 review #1) and E7-W07 step 2 (E7-W06 review #3, ruling E85: option a): a failed save after a restore whose departure overlapped (6)
+     × E7-W07 step 2: the member leaves right after the failure — the departure carries the last choice with keepalive and keeps it fresh, so the next visit within 5 minutes shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too, and the choice stays shown and kept until the next change sends it 19ms
+     × E7-W07 round 2 #1 (review #1): without overlapping PUTs, the adopted PERSONAL = false fails with a network error — the page still shows false, unsent, reads nothing, sends nothing more and never frees what it took over 6ms
+   ❯ E7-W07 round 2 #2 (review #2; S14 §5, T-14-19): 409 MEMBER_ERASED is final for the saver too (2)
+     × after overlapping PUTs, the resend answered 409 MEMBER_ERASED stops everything: no read, no other PUT, nothing on departure, the kept entry dropped, later changes ignored 8ms
+     × a read that answers 409 MEMBER_ERASED (after a failed save following overlapping PUTs) stops the resend too 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/preferences-saver.test.ts > E7-W05 step 1: the shared preference saver (R-11-04) — the latest choice wins whatever fails > E7-W07 round 2 #1 (ruling E86): an open page shows a failure of what it took over, and keeps it — shown on top, unsent and kept — until a change sends it and its 2xx frees it
+AssertionError: expected [ undefined ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   undefined,
++ ]
+
+ ❯ src/preferences-saver.test.ts:237:20
+    235|     expect(h.failed).toHaveLength(1);
+    236|     // Never `kept(undefined)` after a failure, and no automatic resen…
+    237|     expect(h.kept).toEqual([]);
+       |                    ^
+    238|     expect(h.puts).toHaveLength(1);
+    239|     expect(shownPreferences(h.saver.state())?.reminderMinutesBefore).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/preferences-saver.test.ts > E7-W06 step 4 (E7-W05 review #1) and E7-W07 step 2 (E7-W06 review #3, ruling E85: option a): a failed save after a restore whose departure overlapped > E7-W07 step 2: the member leaves right after the failure — the departure carries the last choice with keepalive and keeps it fresh, so the next visit within 5 minutes shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too, and the choice stays shown and kept until the next change sends it
+AssertionError: expected [ undefined ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   undefined,
++ ]
+
+ ❯ src/preferences-saver.test.ts:405:25
+    403|       expect(next.failed).toHaveLength(1);
+    404|       expect(next.puts).toHaveLength(1);
+    405|       expect(next.kept).toEqual([]);
+       |                         ^
+    406|       expect(shownPreferences(next.saver.state())?.emailByCategory.PER…
+    407|       expect(next.saver.state().queued).toEqual({ emailByCategory: { P…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/preferences-saver.test.ts > E7-W06 step 4 (E7-W05 review #1) and E7-W07 step 2 (E7-W06 review #3, ruling E85: option a): a failed save after a restore whose departure overlapped > E7-W07 round 2 #1 (review #1): without overlapping PUTs, the adopted PERSONAL = false fails with a network error — the page still shows false, unsent, reads nothing, sends nothing more and never frees what it took over
+AssertionError: expected [ undefined ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   undefined,
++ ]
+
+ ❯ src/preferences-saver.test.ts:438:20
+    436|     expect(h.reads.count).toBe(0);
+    437|     expect(h.puts).toHaveLength(1);
+    438|     expect(h.kept).toEqual([]);
+       |                    ^
+    439|     expect(shownPreferences(h.saver.state())?.emailByCategory.PERSONAL…
+    440|     expect(h.saver.state().queued).toEqual({ emailByCategory: { PERSON…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/preferences-saver.test.ts > E7-W07 round 2 #2 (review #2; S14 §5, T-14-19): 409 MEMBER_ERASED is final for the saver too > after overlapping PUTs, the resend answered 409 MEMBER_ERASED stops everything: no read, no other PUT, nothing on departure, the kept entry dropped, later changes ignored
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/preferences-saver.test.ts:481:27
+    479|     await tick();
+    480|     expect(h.failed).toEqual([MEMBER_ERASED]);
+    481|     expect(h.reads.count).toBe(0);
+       |                           ^
+    482|     expect(h.puts).toHaveLength(3);
+    483|     // The kept entry goes: nothing is sent again on the next visit.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/preferences-saver.test.ts > E7-W07 round 2 #2 (review #2; S14 §5, T-14-19): 409 MEMBER_ERASED is final for the saver too > a read that answers 409 MEMBER_ERASED (after a failed save following overlapping PUTs) stops the resend too
+AssertionError: expected [ { body: { …(1) }, …(4) }, …(3) ] to have a length of 3 but got 4
+
+- Expected
++ Received
+
+- 3
++ 4
+
+ ❯ src/preferences-saver.test.ts:547:18
+    545|     await tick();
+    546|     await tick();
+    547|     expect(puts).toHaveLength(3);
+       |                  ^
+    548|     expect(failed.at(-1)).toBe(MEMBER_ERASED);
+    549|     expect(kept.at(-1)).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 11 passed (16)
+   Start at  12:39:41
+   Duration  543ms (tests 48%, transform 41%, import 8%, worker 2%)
+

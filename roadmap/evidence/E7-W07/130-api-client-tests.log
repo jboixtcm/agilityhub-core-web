@@ -1,0 +1,9 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+
+ Test Files  28 passed (28)
+      Tests  527 passed (527)
+   Start at  13:55:17
+   Duration  4.24s (tests 41%, import 36%, transform 23%)
+
