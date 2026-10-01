@@ -1,0 +1,352 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+
+ ❯ tests/json-schemas.test.ts (17 tests | 5 failed) 52ms
+   ❯ JSON Schema drift check — the committed files are what schema:export writes (5)
+     × packages/course-core/schema/course-data.v1.schema.json regenerates byte for byte 14ms
+     × packages/shared-types/schema/build-session-export.v1.schema.json regenerates byte for byte 3ms
+     × packages/course-core/schema/course-data.v1.schema.json is deterministic 2-space JSON with a final newline, draft-07, and has no $ref 2ms
+     × packages/shared-types/schema/build-session-export.v1.schema.json is deterministic 2-space JSON with a final newline, draft-07, and has no $ref 2ms
+   ❯ T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json (12)
+     × schemaVersion: 2 → invalid (and zod refuses it too) 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/json-schemas.test.ts > JSON Schema drift check — the committed files are what schema:export writes > packages/course-core/schema/course-data.v1.schema.json regenerates byte for byte
+AssertionError: expected '{\n  "$schema": "http://json-schema.o…' to be '{\n  "$schema": "http://json-schema.o…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -32,11 +32,12 @@
+          "M",
+          "FT"
+        ]
+      },
+      "designLengthMeters": {
+-       "type": "number"
++       "type": "number",
++       "exclusiveMinimum": 0
+      },
+      "designWidthMeters": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      },
+@@ -135,11 +136,27 @@
+            },
+            "sourceCode": {
+              "type": "string"
+            },
+            "obstacleType": {
+-             "type": "string"
++             "type": "string",
++             "enum": [
++               "Jump",
++               "DoubleJump",
++               "Tunnel3m",
++               "Tunnel4m",
++               "Tunnel5m",
++               "Tunnel6m",
++               "DogWalk",
++               "AFrame",
++               "Seesaw",
++               "Weave",
++               "LongJump",
++               "Wall",
++               "Tire",
++               "Unknown"
++             ]
+            },
+            "xMeters": {
+              "type": [
+                "number",
+                "null"
+@@ -305,24 +322,11 @@
+              "type": "string"
+            },
+            "polygonPointsMeters": {
+              "type": "array",
+              "items": {
+-               "type": "object",
+-               "properties": {
+-                 "x": {
+-                   "type": "number"
+-                 },
+-                 "y": {
+-                   "type": "number"
+-                 }
+-               },
+-               "required": [
+-                 "x",
+-                 "y"
+-               ],
+-               "additionalProperties": false
++               "$ref": "#/properties/obstacles/items/properties/controlPointsMeters/anyOf/0/items"
+              },
+              "minItems": 3
+            },
+            "warningMarginMeters": {
+              "type": "number",
+@@ -388,13 +392,14 @@
+      "designWidthMeters",
+      "canvasWidth",
+      "canvasHeight",
+      "origin",
+      "metadata",
++     "obstacles",
+      "numbers",
+      "noGoZones",
+      "ignoredLogos",
+      "rawMetadata"
+    ],
+-   "additionalProperties": true
++   "additionalProperties": false
+  }
+
+
+ ❯ tests/json-schemas.test.ts:74:40
+     72|       const committed = readFileSync(target.path, 'utf-8');
+     73|       // On failure: pnpm --filter @agilityhub/shared-types schema:exp…
+     74|       expect(renderJsonSchema(target)).toBe(committed);
+       |                                        ^
+     75|     },
+     76|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/json-schemas.test.ts > JSON Schema drift check — the committed files are what schema:export writes > packages/shared-types/schema/build-session-export.v1.schema.json regenerates byte for byte
+AssertionError: expected '{\n  "$schema": "http://json-schema.o…' to be '{\n  "$schema": "http://json-schema.o…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -3,11 +3,12 @@
+    "$id": "https://schemas.agilitydoghub.com/build-session-export/v1.json",
+    "title": "BuildSessionExportV1",
+    "type": "object",
+    "properties": {
+      "schemaVersion": {
+-       "type": "number"
++       "type": "number",
++       "const": 1
+      },
+      "exportedAt": {
+        "type": "string",
+        "minLength": 1
+      },
+@@ -53,23 +54,21 @@
+            ]
+          },
+          "started_at": {
+            "anyOf": [
+              {
+-               "type": "string",
+-               "minLength": 1
++               "$ref": "#/properties/exportedAt"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+-               "type": "string",
+-               "minLength": 1
++               "$ref": "#/properties/exportedAt"
+              },
+              {
+                "type": "null"
+              }
+            ]
+@@ -97,12 +96,11 @@
+                  ]
+                },
+                "updated_at": {
+                  "anyOf": [
+                    {
+-                     "type": "string",
+-                     "minLength": 1
++                     "$ref": "#/properties/exportedAt"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+@@ -279,12 +277,11 @@
+            ]
+          },
+          "scheduled_at": {
+            "anyOf": [
+              {
+-               "type": "string",
+-               "minLength": 1
++               "$ref": "#/properties/exportedAt"
+              },
+              {
+                "type": "null"
+              }
+            ],
+@@ -718,24 +715,11 @@
+                      "type": "string"
+                    },
+                    "polygonPointsMeters": {
+                      "type": "array",
+                      "items": {
+-                       "type": "object",
+-                       "properties": {
+-                         "x": {
+-                           "type": "number"
+-                         },
+-                         "y": {
+-                           "type": "number"
+-                         }
+-                       },
+-                       "required": [
+-                         "x",
+-                         "y"
+-                       ],
+-                       "additionalProperties": false
++                       "$ref": "#/properties/course/properties/normalized_json/properties/obstacles/items/properties/controlPointsMeters/anyOf/0/items"
+                      },
+                      "minItems": 3
+                    },
+                    "warningMarginMeters": {
+                      "type": "number",
+@@ -955,24 +939,11 @@
+                  "default": "other"
+                },
+                "polygon_points_m": {
+                  "type": "array",
+                  "items": {
+-                   "type": "object",
+-                   "properties": {
+-                     "x": {
+-                       "type": "number"
+-                     },
+-                     "y": {
+-                       "type": "number"
+-                     }
+-                   },
+-                   "required": [
+-                     "x",
+-                     "y"
+-                   ],
+-                   "additionalProperties": false
++                   "$ref": "#/properties/course/properties/normalized_json/properties/obstacles/items/properties/controlPointsMeters/anyOf/0/items"
+                  }
+                },
+                "clearance_m": {
+                  "type": "number"
+                },
+@@ -1054,24 +1025,11 @@
+                  "default": "other"
+                },
+                "polygon_points_m": {
+                  "type": "array",
+                  "items": {
+-                   "type": "object",
+-                   "properties": {
+-                     "x": {
+-                       "type": "number"
+-                     },
+-                     "y": {
+-                       "type": "number"
+-                     }
+-                   },
+-                   "required": [
+-                     "x",
+-                     "y"
+-                   ],
+-                   "additionalProperties": false
++                   "$ref": "#/properties/course/properties/normalized_json/properties/obstacles/items/properties/controlPointsMeters/anyOf/0/items"
+                  }
+                },
+                "warning_margin_m": {
+                  "type": "number"
+                }
+
+ ❯ tests/json-schemas.test.ts:74:40
+     72|       const committed = readFileSync(target.path, 'utf-8');
+     73|       // On failure: pnpm --filter @agilityhub/shared-types schema:exp…
+     74|       expect(renderJsonSchema(target)).toBe(committed);
+       |                                        ^
+     75|     },
+     76|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/json-schemas.test.ts > JSON Schema drift check — the committed files are what schema:export writes > packages/course-core/schema/course-data.v1.schema.json is deterministic 2-space JSON with a final newline, draft-07, and has no $ref
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "#/properties/obstacles/items/properties/controlPointsMeters/anyOf/0/items",
++ ]
+
+ ❯ tests/json-schemas.test.ts:87:37
+     85|       expect(document.$schema).toBe('http://json-schema.org/draft-07/s…
+     86|       expect(document.$id).toBe(target.id);
+     87|       expect(collectRefs(document)).toEqual([]);
+       |                                     ^
+     88|     },
+     89|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/json-schemas.test.ts > JSON Schema drift check — the committed files are what schema:export writes > packages/shared-types/schema/build-session-export.v1.schema.json is deterministic 2-space JSON with a final newline, draft-07, and has no $ref
+AssertionError: expected [ '#/properties/exportedAt', …(6) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "#/properties/exportedAt",
++   "#/properties/exportedAt",
++   "#/properties/exportedAt",
++   "#/properties/exportedAt",
++   "#/properties/course/properties/normalized_json/properties/obstacles/items/properties/controlPointsMeters/anyOf/0/items",
++   "#/properties/course/properties/normalized_json/properties/obstacles/items/properties/controlPointsMeters/anyOf/0/items",
++   "#/properties/course/properties/normalized_json/properties/obstacles/items/properties/controlPointsMeters/anyOf/0/items",
++ ]
+
+ ❯ tests/json-schemas.test.ts:87:37
+     85|       expect(document.$schema).toBe('http://json-schema.org/draft-07/s…
+     86|       expect(document.$id).toBe(target.id);
+     87|       expect(collectRefs(document)).toEqual([]);
+       |                                     ^
+     88|     },
+     89|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > schemaVersion: 2 → invalid (and zod refuses it too)
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/json-schemas.test.ts:283:32
+    281|       schemaVersion: 2,
+    282|     };
+    283|     expect(validate(document)).toBe(false);
+       |                                ^
+    284|     expect(validate.errors).toContainEqual(
+    285|       expect.objectContaining({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 12 passed (17)
+   Start at  08:10:24
+   Duration  403ms (transform 50%, import 32%, tests 18%, worker 1%)
+

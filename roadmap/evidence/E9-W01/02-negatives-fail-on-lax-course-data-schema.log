@@ -1,0 +1,120 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+
+ ❯ tests/course-data-json-schema.test.ts (22 tests | 5 failed) 62ms
+   ❯ T-16-03 invalid CourseData → invalid against the schema (and against zod) (6)
+     × a CourseData without a required field (obstacles) → invalid 4ms
+     × each top-level field zod requires is required by the schema too (and only those) 16ms
+     × an obstacle with an unknown obstacle type → invalid 1ms
+     × a negative designLengthMeters → invalid (zero too: zod says positive) 1ms
+     × an unknown key → invalid; zod strips it instead (zod-to-json-schema renders strip as additionalProperties: false) 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/course-data-json-schema.test.ts > T-16-03 invalid CourseData → invalid against the schema (and against zod) > a CourseData without a required field (obstacles) → invalid
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ errorsOf tests/course-data-json-schema.test.ts:120:32
+    118|
+    119|   function errorsOf(document: JsonObject): ErrorObject[] {
+    120|     expect(validate(document)).toBe(false);
+       |                                ^
+    121|     expect(courseDataSchema.safeParse(document).success).toBe(false);
+    122|     return validate.errors ?? [];
+ ❯ tests/course-data-json-schema.test.ts:133:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/course-data-json-schema.test.ts > T-16-03 invalid CourseData → invalid against the schema (and against zod) > each top-level field zod requires is required by the schema too (and only those)
+AssertionError: expected { key: 'obstacles', schema: true } to deeply equal { key: 'obstacles', schema: false }
+
+- Expected
++ Received
+
+  {
+    "key": "obstacles",
+-   "schema": false,
++   "schema": true,
+  }
+
+ ❯ tests/course-data-json-schema.test.ts:146:51
+    144|       const document = base();
+    145|       delete document[key];
+    146|       expect({ key, schema: validate(document) }).toEqual({
+       |                                                   ^
+    147|         key,
+    148|         schema: courseDataSchema.safeParse(document).success,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/course-data-json-schema.test.ts > T-16-03 invalid CourseData → invalid against the schema (and against zod) > an obstacle with an unknown obstacle type → invalid
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ errorsOf tests/course-data-json-schema.test.ts:120:32
+    118|
+    119|   function errorsOf(document: JsonObject): ErrorObject[] {
+    120|     expect(validate(document)).toBe(false);
+       |                                ^
+    121|     expect(courseDataSchema.safeParse(document).success).toBe(false);
+    122|     return validate.errors ?? [];
+ ❯ tests/course-data-json-schema.test.ts:158:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/course-data-json-schema.test.ts > T-16-03 invalid CourseData → invalid against the schema (and against zod) > a negative designLengthMeters → invalid (zero too: zod says positive)
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ errorsOf tests/course-data-json-schema.test.ts:120:32
+    118|
+    119|   function errorsOf(document: JsonObject): ErrorObject[] {
+    120|     expect(validate(document)).toBe(false);
+       |                                ^
+    121|     expect(courseDataSchema.safeParse(document).success).toBe(false);
+    122|     return validate.errors ?? [];
+ ❯ tests/course-data-json-schema.test.ts:164:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/course-data-json-schema.test.ts > T-16-03 invalid CourseData → invalid against the schema (and against zod) > an unknown key → invalid; zod strips it instead (zod-to-json-schema renders strip as additionalProperties: false)
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/course-data-json-schema.test.ts:174:32
+    172|   it('an unknown key → invalid; zod strips it instead (zod-to-json-sch…
+    173|     const document = { ...base(), unexpected: true };
+    174|     expect(validate(document)).toBe(false);
+       |                                ^
+    175|     expect(validate.errors).toContainEqual(
+    176|       expect.objectContaining({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 17 passed (22)
+   Start at  08:10:08
+   Duration  544ms (transform 52%, import 32%, tests 15%, worker 1%)
+

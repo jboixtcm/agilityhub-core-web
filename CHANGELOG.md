@@ -128,6 +128,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - screen 30: the FAQ in S05 R-05-22 order, plain-text answers with their line breaks, «El club encara no ha publicat preguntes»;
   - the CLUB_NEWS unsubscribe page `/comunicats/baixa?t=` (anonymous; done, invalid link, retry);
   - `packages/i18n` gains the `notifications` namespace; `packages/api-client` sends `Idempotency-Key` on the reads and the subscription, and gains a stateful MSW world for the feed (the bell of 03 counts it), the preferences, push subscriptions and unsubscribe tokens, with the scenarios `memberNoSms`, `memberNoPush`, `faqOff`, `learnLinkOff`, `notificationsEmpty` and `notificationsSeatTaken`; members read `FaqReaderView`.
+- Publish the `course-core` JSON Schemas the core validates courses with (E9-W01, S16 WP-16-A′, ruling E84): `packages/course-core/schema/course-data.v1.schema.json` from `courseDataSchema` and `packages/shared-types/schema/build-session-export.v1.schema.json` from `buildSessionExportV1Schema`, draft-07 by `zod-to-json-schema` with every sub-schema inlined (no `$ref`), the version in the file name and `$id`; `pnpm --filter @agilityhub/shared-types schema:export` (run with `jiti`) regenerates them, a drift test fails when a committed file differs from the generator by one byte, and T-16-03 validates every Smarter fixture's `CourseData` and an export built from fixture rows (with the negative cases) through Ajv. The zod schemas are unchanged.
 
 ### Changed
 

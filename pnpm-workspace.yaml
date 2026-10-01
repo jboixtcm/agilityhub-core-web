@@ -29,6 +29,7 @@ catalog:
   i18next: ^26.4.2
   i18next-icu: ^2.4.4
   i18next-parser: ^9.3.0
+  jiti: ^2.7.0
   jsdom: ^30.0.1
   lint-staged: ^17.5.0
   msw: ^2.15.0
@@ -48,3 +49,4 @@ catalog:
   workbox-precaching: ^7.4.1
   workbox-routing: ^7.4.1
   workbox-window: ^7.4.1
+  zod-to-json-schema: ^3.25.2

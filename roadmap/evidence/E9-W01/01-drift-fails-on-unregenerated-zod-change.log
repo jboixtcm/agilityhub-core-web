@@ -1,0 +1,78 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+
+ ❯ tests/json-schemas.test.ts (17 tests | 2 failed) 33ms
+   ❯ JSON Schema drift check — the committed files are what schema:export writes (5)
+     × packages/course-core/schema/course-data.v1.schema.json regenerates byte for byte 5ms
+     × packages/shared-types/schema/build-session-export.v1.schema.json regenerates byte for byte 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/json-schemas.test.ts > JSON Schema drift check — the committed files are what schema:export writes > packages/course-core/schema/course-data.v1.schema.json regenerates byte for byte
+AssertionError: expected '{\n  "$schema": "http://json-schema.o…' to be '{\n  "$schema": "http://json-schema.o…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -387,10 +387,13 @@
+      },
+      "themeId": {
+        "type": "string",
+        "default": "agilityhub"
+      },
++     "driftProbe": {
++       "type": "string"
++     },
+      "rawMetadata": {
+        "type": "object",
+        "additionalProperties": {}
+      }
+    },
+
+ ❯ tests/json-schemas.test.ts:74:40
+     72|       const committed = readFileSync(target.path, 'utf-8');
+     73|       // On failure: pnpm --filter @agilityhub/shared-types schema:exp…
+     74|       expect(renderJsonSchema(target)).toBe(committed);
+       |                                        ^
+     75|     },
+     76|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/json-schemas.test.ts > JSON Schema drift check — the committed files are what schema:export writes > packages/shared-types/schema/build-session-export.v1.schema.json regenerates byte for byte
+AssertionError: expected '{\n  "$schema": "http://json-schema.o…' to be '{\n  "$schema": "http://json-schema.o…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -784,10 +784,13 @@
+              },
+              "themeId": {
+                "type": "string",
+                "default": "agilityhub"
+              },
++             "driftProbe": {
++               "type": "string"
++             },
+              "rawMetadata": {
+                "type": "object",
+                "additionalProperties": {}
+              }
+            },
+
+ ❯ tests/json-schemas.test.ts:74:40
+     72|       const committed = readFileSync(target.path, 'utf-8');
+     73|       // On failure: pnpm --filter @agilityhub/shared-types schema:exp…
+     74|       expect(renderJsonSchema(target)).toBe(committed);
+       |                                        ^
+     75|     },
+     76|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 15 passed (17)
+   Start at  08:09:43
+   Duration  299ms (transform 48%, import 37%, tests 15%, worker 1%)
+

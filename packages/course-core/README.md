@@ -38,6 +38,8 @@ S16 §14.5) with its tests and **unchanged behaviour**.
 - `tests/smarter-fixtures.test.ts` is new (T-16-01): the 4 route-validation files through
   `parseSmarterTxt` (S16 §14.3 header, zero warnings, units, dimensions, obstacle counts by type,
   number labels, raw ↔ parsed obstacle groups, anchors inside the field).
+- `tests/course-data-json-schema.test.ts` is new (T-16-03, E9-W01): see «JSON Schemas for the
+  core» below.
 
 To keep the files diffable against the origin, they are excluded from Prettier
 (`.prettierignore`), and a scoped block in `packages/config/eslint.config.mjs` switches off the
@@ -51,7 +53,8 @@ is a standalone SVG file.
 src/        schema · parser (parseSmarterTxt, parseSmarterColorsTxt, summarizeCourse)
             writer (Smarter 10.1.2) · geometry · warnings (runWarnings + rules) · markers
             cli/importer-summary.ts (exported as ./cli/importer-summary)
-tests/      Vitest (node), 18 files
+schema/     course-data.v1.schema.json (generated, see below)
+tests/      Vitest (node), 19 files
 fixtures/   smarter/ (8 real exports, used by the origin tests)
             colors/ (Smarter colour scheme)
             route-validation/ (the 4 verified route files + their README)
@@ -61,6 +64,43 @@ fixtures/   smarter/ (8 real exports, used by the origin tests)
 
 `pnpm --filter @agilityhub/course-core test | typecheck | lint | build` (`build` emits `dist/`
 with declarations; consumers import the TypeScript sources through `exports`).
+
+## JSON Schemas for the core
+
+The core checks a course only against a JSON Schema (S16 R-16-01): the geometry stays here, on
+the client. Two files are generated from the zod schemas (E9-W01) and never edited by hand:
+
+| File                                                               | Generated from               | `$id`                                                            |
+| ------------------------------------------------------------------ | ---------------------------- | ---------------------------------------------------------------- |
+| `schema/course-data.v1.schema.json` (this package)                 | `courseDataSchema`           | `https://schemas.agilitydoghub.com/course-data/v1.json`          |
+| `packages/shared-types/schema/build-session-export.v1.schema.json` | `buildSessionExportV1Schema` | `https://schemas.agilitydoghub.com/build-session-export/v1.json` |
+
+- **Format.** JSON Schema draft-07, written by `zod-to-json-schema` with `$refStrategy: "none"`:
+  every sub-schema is inlined and there is no `$ref`, so a validator (the core's, in Java) loads
+  each file on its own. 2-space JSON with a final newline.
+- **Versioning (ruling E84).** `CourseData` has no version field, and adding one would change
+  `BuildSessionExportV1`, which embeds it and stays byte for byte (A9). So the version lives in
+  the file name and the `$id`, and the core stores it next to the course (`schemaVersion = 1`
+  beside `normalizedJson`). A breaking change publishes a `v2` file, with its own `$id`, next to
+  the `v1`.
+- **Regenerating.** `pnpm --filter @agilityhub/shared-types schema:export` (the generator is
+  `packages/shared-types/scripts/`, since shared-types already depends on this package). Run it
+  after any change to either zod schema: the drift test
+  (`packages/shared-types/tests/json-schemas.test.ts`) compares the committed files with the
+  generator's output byte for byte and fails CI until they match. For the same reason both
+  `schema/` folders are excluded from Prettier.
+- **The api's copy.** The organizer copies both files into the api byte for byte (E9-T01).
+- **Two things JSON Schema cannot say.** zod strips unknown keys, while the schema rejects them
+  (`additionalProperties: false`, zod-to-json-schema's rendering of zod's default). A
+  `.default(…)` field is optional in the schema and carries a `default` annotation, which
+  validators do not apply. The web sends zod-parsed values, which have every default and no
+  unknown key.
+- **Tests (T-16-03).** `tests/course-data-json-schema.test.ts`: every Smarter fixture (the 8 of
+  `fixtures/smarter/` and the 4 of `fixtures/route-validation/`) through `parseSmarterTxt` is
+  valid; a CourseData without a required field, with an unknown obstacle type or with a negative
+  `designLengthMeters` is not, and zod agrees on every case.
+  `packages/shared-types/tests/json-schemas.test.ts`: an export built from fixture rows is valid,
+  `schemaVersion: 2` is not, plus the drift check.
 
 ## Licence
 
@@ -72,9 +112,8 @@ The notice is in `LICENSE-apriltag`, next to this README. The file header still 
 ## Pending (not in E0-W08)
 
 - The origin's `importer:summary` script ran with `tsx`, which this monorepo does not ship. The
-  module is kept and exported. Running it needs a TS runner (proposal: add one when a task needs it).
-- JSON Schema publication of `CourseData` / `BuildSessionExportV1` for core validation
-  (S16 §14.5 WP-16-A′). `zod-to-json-schema` is not a dependency yet.
+  module is kept and exported. E9-W01 added the `jiti` runner to shared-types for
+  `schema:export`; the summary script could run the same way if a task needs it.
 - `COURSE_CORE_VERSION` still reads `0.3.0-phase6` (origin value).
 - T-16-01's «unknown obstacle → `OTHER`» and «corrupt file → `errors[]`» come from the S16 v0.1
   hypothesis. The real parser throws `SmarterParseError` on a corrupt file (tested in

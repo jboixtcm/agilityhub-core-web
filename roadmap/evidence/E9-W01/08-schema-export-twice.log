@@ -1,0 +1,23 @@
+50ceb48e2dfb9be21bdfe0878978bde1a6f23167369c9f603f5e5faf1e2b3628  packages/course-core/schema/course-data.v1.schema.json
+900c696fb1963939c47a90bb55b239aad636aabbf12811fab7849d0e4d23577e  packages/shared-types/schema/build-session-export.v1.schema.json
+
+> @agilityhub/shared-types@0.0.1 schema:export /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+> jiti scripts/export-json-schemas.ts
+
+wrote ../course-core/schema/course-data.v1.schema.json
+wrote schema/build-session-export.v1.schema.json
+run 1 exit 0
+50ceb48e2dfb9be21bdfe0878978bde1a6f23167369c9f603f5e5faf1e2b3628  packages/course-core/schema/course-data.v1.schema.json
+900c696fb1963939c47a90bb55b239aad636aabbf12811fab7849d0e4d23577e  packages/shared-types/schema/build-session-export.v1.schema.json
+
+> @agilityhub/shared-types@0.0.1 schema:export /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+> jiti scripts/export-json-schemas.ts
+
+wrote ../course-core/schema/course-data.v1.schema.json
+wrote schema/build-session-export.v1.schema.json
+run 2 exit 0
+50ceb48e2dfb9be21bdfe0878978bde1a6f23167369c9f603f5e5faf1e2b3628  packages/course-core/schema/course-data.v1.schema.json
+900c696fb1963939c47a90bb55b239aad636aabbf12811fab7849d0e4d23577e  packages/shared-types/schema/build-session-export.v1.schema.json
+git diff --exit-code exit 0
+?? packages/course-core/schema/course-data.v1.schema.json
+?? packages/shared-types/schema/build-session-export.v1.schema.json

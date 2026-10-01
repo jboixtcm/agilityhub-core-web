@@ -84,6 +84,9 @@ catalogs:
     i18next-parser:
       specifier: ^9.3.0
       version: 9.4.0
+    jiti:
+      specifier: ^2.7.0
+      version: 2.7.0
     jsdom:
       specifier: ^30.0.1
       version: 30.0.1
@@ -141,6 +144,9 @@ catalogs:
     workbox-window:
       specifier: ^7.4.1
       version: 7.4.1
+    zod-to-json-schema:
+      specifier: ^3.25.2
+      version: 3.25.2
 
 importers:
 
@@ -502,6 +508,12 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.13.3
+      ajv:
+        specifier: 'catalog:'
+        version: 8.20.0
+      ajv-formats:
+        specifier: 'catalog:'
+        version: 3.0.1(ajv@8.20.0)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -549,12 +561,24 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 24.13.3
+      ajv:
+        specifier: 'catalog:'
+        version: 8.20.0
+      ajv-formats:
+        specifier: 'catalog:'
+        version: 3.0.1(ajv@8.20.0)
+      jiti:
+        specifier: 'catalog:'
+        version: 2.7.0
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
       vitest:
         specifier: 'catalog:'
         version: 5.0.0(@types/node@24.13.3)(jsdom@30.0.1)(msw@2.15.0(@types/node@24.13.3)(typescript@5.9.3))(vite@8.2.2(@types/node@24.13.3)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))
+      zod-to-json-schema:
+        specifier: 'catalog:'
+        version: 3.25.2(zod@3.25.76)
 
   packages/ui:
     dependencies:
@@ -4976,6 +5000,11 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zod-to-json-schema@3.25.2:
+    resolution: {integrity: sha512-O/PgfnpT1xKSDeQYSCfRI5Gy3hPf91mKVDuYLUHZJMiDFptvP41MSnWofm8dnCm0256ZNfZIM7DSzuSMAFnjHA==}
+    peerDependencies:
+      zod: ^3.25.28 || ^4
 
   zod-validation-error@4.0.2:
     resolution: {integrity: sha512-Q6/nZLe6jxuU80qb/4uJ4t5v2VEZ44lzQjPDhYJNztRQ4wyWc6VF3D3Kb/fAuPetZQnhS3hnajCf9CsWesghLQ==}
@@ -9705,6 +9734,10 @@ snapshots:
       yargs-parser: 22.0.0
 
   yocto-queue@0.1.0: {}
+
+  zod-to-json-schema@3.25.2(zod@3.25.76):
+    dependencies:
+      zod: 3.25.76
 
   zod-validation-error@4.0.2(zod@4.5.4):
     dependencies:

@@ -1,0 +1,26 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+
+ ✓ tests/json-schemas.test.ts > JSON Schema drift check — the committed files are what schema:export writes > publishes exactly the two versioned files at their paths (ruling E84) 1ms
+ ✓ tests/json-schemas.test.ts > JSON Schema drift check — the committed files are what schema:export writes > packages/course-core/schema/course-data.v1.schema.json regenerates byte for byte 2ms
+ ✓ tests/json-schemas.test.ts > JSON Schema drift check — the committed files are what schema:export writes > packages/shared-types/schema/build-session-export.v1.schema.json regenerates byte for byte 1ms
+ ✓ tests/json-schemas.test.ts > JSON Schema drift check — the committed files are what schema:export writes > packages/course-core/schema/course-data.v1.schema.json is deterministic 2-space JSON with a final newline, draft-07, and has no $ref 1ms
+ ✓ tests/json-schemas.test.ts > JSON Schema drift check — the committed files are what schema:export writes > packages/shared-types/schema/build-session-export.v1.schema.json is deterministic 2-space JSON with a final newline, draft-07, and has no $ref 1ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > is a valid draft-07 schema with its version in the file name and $id (ruling E84) 0ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > the export of ag-au-tryout-i-copy-with-logo_998859_sadesign.txt is valid (after a JSON round trip) 7ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > the export of ag-au-tryout-i-copy_998859_sadesign.txt is valid (after a JSON round trip) 2ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > the export of j3-i-tryouts-switz_994910_sadesign.txt is valid (after a JSON round trip) 2ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > the export of j3-l-tryouts-switz_993423_sadesign.txt is valid (after a JSON round trip) 1ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > the export of j3-m-tryouts-de-ideaa_972402_sadesign.txt is valid (after a JSON round trip) 3ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > the export of jp-3-l_953911_sadesign.txt is valid (after a JSON round trip) 1ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > the export of jp-s-sw_993483_sadesign.txt is valid (after a JSON round trip) 1ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > the export of ru-cup-ag-teams_965996_sadesign.txt is valid (after a JSON round trip) 1ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > the export carries the branches the schema checks (door edge, ring zone, AprilTag ids, warnings) 5ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > schemaVersion: 2 → invalid (and zod refuses it too) 1ms
+ ✓ tests/json-schemas.test.ts > T-16-03 BuildSessionExportV1 from fixture rows → valid against build-session-export.v1.schema.json > a CourseData embedded in the export is checked too (unknown obstacle type → invalid) 2ms
+
+ Test Files  1 passed (1)
+      Tests  17 passed (17)
+   Start at  08:13:44
+   Duration  367ms (transform 56%, import 32%, tests 11%, worker 1%)
+

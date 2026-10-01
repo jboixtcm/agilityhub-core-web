@@ -15,13 +15,18 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "ajv": "catalog:",
+    "ajv-formats": "catalog:",
+    "jiti": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "zod-to-json-schema": "catalog:"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "lint": "eslint src tests --max-warnings 0 --config ../../eslint.config.mjs",
+    "lint": "eslint src tests scripts --max-warnings 0 --config ../../eslint.config.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "schema:export": "jiti scripts/export-json-schemas.ts"
   }
 }

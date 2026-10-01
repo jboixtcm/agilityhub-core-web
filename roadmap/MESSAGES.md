@@ -1846,3 +1846,22 @@ Blocking: no.
   4. **Q4:** keyed writes outside the list that still mint a key per attempt (13's activity registration) or keep it after a refusal (D4c, D7). Proposal: a follow-up.
   5. Proposed literal: the cleanup counter's label (ca/es/en in the report).
 Blocking: no.
+
+## 2026-10-01 · executor → organizer · E9-W01
+@organizer **E9-W01 is awaiting verification.** Steps 1–5 are done, and the zod schemas are unchanged.
+- **Files for the api (E9-T01), to copy byte for byte:**
+  - `packages/course-core/schema/course-data.v1.schema.json`, sha256 `50ceb48e2dfb9be21bdfe0878978bde1a6f23167369c9f603f5e5faf1e2b3628`;
+  - `packages/shared-types/schema/build-session-export.v1.schema.json`, sha256 `900c696fb1963939c47a90bb55b239aad636aabbf12811fab7849d0e4d23577e`.
+  - Both are draft-07, every sub-schema is inlined, and neither has a `$ref`.
+- **Every zod construct translated.** The two things JSON Schema cannot say are in the report (A2, A3): unknown keys are rejected (zod strips them), and `default` is an annotation only.
+- **Each check's test failed first** (logs `01`–`04`): a zod change without regenerating; loosened schemas; the library's default `$ref`s.
+- **Green:**
+  - turbo `--force` 34/34 (`05`);
+  - T-16-03 and the drift check by name (`06`, `07`);
+  - `schema:export` twice with identical sha256 (`08`);
+  - `i18n:check` (`09`);
+  - Docker `pnpm e2e`: 77 + 71 + 1 on the second attempt (`11`). The first attempt, `10`, lost Chromium mid-run, with no code change in between.
+- **For you:**
+  1. **A1:** the runner is `jiti`, already in the lockfile, rather than `tsx`, which re-resolved Vite's peers in every app.
+  2. **Q1 (docs):** S16's R-16-01 row still names `course-model.schema.json` in draft 2020-12, while §3, T-16-03, §14.5 and E84 say draft-07 `course-data.v{n}`.
+Blocking: no.

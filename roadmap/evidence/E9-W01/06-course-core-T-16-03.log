@@ -1,0 +1,31 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 course-data.v1.schema.json — the file the core loads > is draft-07 and carries its version in the file name and $id (ruling E84) 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 course-data.v1.schema.json — the file the core loads > is a valid draft-07 schema that compiles on its own, with no $ref at all 10ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > covers the 12 Smarter fixtures of the package 0ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > smarter/ag-au-tryout-i-copy-with-logo_998859_sadesign.txt 5ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > smarter/ag-au-tryout-i-copy_998859_sadesign.txt 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > smarter/j3-i-tryouts-switz_994910_sadesign.txt 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > smarter/j3-l-tryouts-switz_993423_sadesign.txt 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > smarter/j3-m-tryouts-de-ideaa_972402_sadesign.txt 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > smarter/jp-3-l_953911_sadesign.txt 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > smarter/jp-s-sw_993483_sadesign.txt 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > smarter/ru-cup-ag-teams_965996_sadesign.txt 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > route-validation/burning_dogs_fallback_v2_aframe_tangent_sadesign.txt 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > route-validation/jg3_1029362_plus_3-4_sadesign.txt 0ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > route-validation/switz-a3-m-def_999795_plus_13-14_sadesign.txt 0ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > route-validation/wald_1046378_v3_smarter_verified_sadesign.txt 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 every Smarter fixture → parseSmarterTxt → CourseData is valid > includes fixtures with no-go zones and ignored logos, so those branches are validated too 4ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 invalid CourseData → invalid against the schema (and against zod) > the base document is valid in both, so each case below fails only for its own change 3ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 invalid CourseData → invalid against the schema (and against zod) > a CourseData without a required field (obstacles) → invalid 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 invalid CourseData → invalid against the schema (and against zod) > each top-level field zod requires is required by the schema too (and only those) 14ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 invalid CourseData → invalid against the schema (and against zod) > an obstacle with an unknown obstacle type → invalid 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 invalid CourseData → invalid against the schema (and against zod) > a negative designLengthMeters → invalid (zero too: zod says positive) 1ms
+ ✓ tests/course-data-json-schema.test.ts > T-16-03 invalid CourseData → invalid against the schema (and against zod) > an unknown key → invalid; zod strips it instead (zod-to-json-schema renders strip as additionalProperties: false) 1ms
+
+ Test Files  1 passed (1)
+      Tests  22 passed (22)
+   Start at  08:13:39
+   Duration  389ms (transform 49%, import 32%, tests 18%, worker 1%)
+

@@ -36,9 +36,18 @@ per-obstacle build status. The core will serve it from `GET /build-sessions/{id}
 (S16 §14.1). Any breaking change needs a `schemaVersion: 2` schema next to it, as the origin
 header says.
 
+## JSON Schemas (E9-W01)
+
+`scripts/export-json-schemas.ts` (`pnpm --filter @agilityhub/shared-types schema:export`, run
+with `jiti`) writes `schema/build-session-export.v1.schema.json` and course-core's
+`schema/course-data.v1.schema.json` from the zod schemas, draft-07, with no `$ref`. The generator
+itself is `scripts/json-schemas.ts`; `tests/json-schemas.test.ts` runs it in memory and fails when
+a committed file differs by one byte, and checks T-16-03's export half (an export from fixture
+rows is valid, `schemaVersion: 2` is not). Versioning and the regeneration rule are in
+`packages/course-core/README.md` («JSON Schemas for the core»).
+
 ## Pending
 
-- JSON Schema publication of `BuildSessionExportV1` for core-side validation (S16 §14.5).
 - `producer` is a free string passed by the caller. The schema comment still documents the
   web-planner form (`"agilityhub-web-planner@<version>"`). The core picks its own value when it
   produces the export (WP-16-C′).
