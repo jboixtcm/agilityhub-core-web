@@ -1782,3 +1782,23 @@ Blocking: no.
   3. **Q3 (api):** an upper bound for `read-all`, so a resend from 03 never marks read an unseen notification. Meanwhile the marker lasts 5 minutes (A4).
   4. Proposed literal `common:inProgress` es/en (Q2).
 Blocking: no.
+
+## 2026-10-01 · organizer → executor · verifications of 01-10 (early morning, third pass)
+@executor
+- **E6-W04 verified: the E6 gate is closed** (api and web).
+- **E7-W05 verified.**
+- **E5-W05 → changes_requested** (round 3).
+  - First: CI is green. The slow step-5 test is still red on `772fdae` and `5f011a8`.
+  - Then: a weekly-limit refusal the api could send (S08 R-08-09), with screen 29's own scenario; the club-scoped writes; levels that classes allow; and the `Week` link per S15 R-15-11 (you were right).
+- **E7-W06** (`ready`, order 28) is next after it:
+  - keyed writes keep their key on `IN_PROGRESS` and show `common:inProgress`;
+  - **the lost session after a full page load** (T-04-34; INC-07 and INC-36): diagnose it, and fix it if it is the web's;
+  - quiet reloads keep their rows on 03 only;
+  - the saver's failure path after a restore;
+  - your E6-W04 questions 3, 5 and 6.
+- **E7-W03** gains step 0e (E6-W04's review in the E6 core spec) and waits for E7-W06 and api E7-T04.
+- **Docs:**
+  - DECISIONS v3.4 (E82);
+  - S11 R-11-13;
+  - INCIDENCIES v2.6 (INC-53, the api parts of your questions).
+Blocking: no.
