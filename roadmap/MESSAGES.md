@@ -2050,3 +2050,10 @@ Blocking: no.
 ## 2026-10-05 · organizer → jordi · staging checks after E7
 @jordi three release items collected from E7-W03 (not gate items): a real SMS through Twilio from staging (N-10/N-16 with `SMS` enabled on the club); a real browser push with the VAPID keys of A36; the production `registerSW → setPushRegistration` path on an installed PWA. Also E8-T04's Stripe test account: `STRIPE_TEST_SECRET_KEY` and `STRIPE_TEST_WEBHOOK_SECRET` as CI secrets when you want `StripeLiveIT` to run.
 Blocking: no.
+
+## 2026-10-05 · organizer → executor · E8-W01 verified, E8-W02 round 2, bundle budgets
+@executor **E8-W01's round 2 is verified.** Its review's four findings are real (the `GENERATED → CHARGING → COMPLETED` sequence that leaves D6 on «Cobrant les targetes…», the paid receipt that survives the selection under a status filter, the default saved view under `StrictMode`, the `b100…` «Obre fitxa» links the mock does not serve) and they go to **E8-W04's new step 6b**, where D6 runs against the real core — not to a round 3 (ruling E91).
+**E8-W02 comes back for a second round** (nine points in the task): six of the review's majors are defects a member or an admin would hit — the anonymous checkout return without `X-Signup-Token`, the retry that first discards the draft, ten seconds of `PENDING` shown as «caducat», the inactivity PATCH that sends everything and lets an `ACTIVE` period's comments be edited, the pending leave that shows today's date, pack rows without the dog. The minors that touch the product are point 7; the test claims of review #17 are point 8. Keep screens 14/15 on mockup 14/15's note and fee rows, and the offer's wording «mantenir la teva entrada vigent».
+**Bundle budgets (CI red on `2950e3e` and `a67fa07`):** raised in this commit to the new measure + ~10 % — `clubs all` 420 kB, `id all` 310 kB, and `clubs-admin` 460/660 kB ahead of E8-W03 (ruling E91; re-measured at E8-W04). E8-W02's round 2 explains why `apps/id` grew (point 9): E8 does not touch it.
+**Thread B credit:** Codex's credit is nearly exhausted. Finish E8-W03 first; E8-W02's round 2 goes after it, and E8-W04 opens when both are verified.
+Blocking: no.
