@@ -4,6 +4,7 @@ import {
   mockScenario,
   resetActivityState,
   resetAuthMockState,
+  resetMemberBillingState,
   resetMemberSelfServiceState,
   resetOnboardingMockState,
 } from "@agilityhub/api-client/mocks";
@@ -46,12 +47,14 @@ beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
 });
 beforeEach(() => {
+  resetMemberBillingState();
   resetOnboardingMockState();
 });
 afterEach(() => {
   cleanup();
   server.resetHandlers();
   mockScenario("member");
+  resetMemberBillingState();
   resetMemberSelfServiceState();
   resetOnboardingMockState();
 });
@@ -81,10 +84,13 @@ async function renderApplication(
     initialNamespaces: [
       "activities",
       "auth",
+      "billing",
       "census",
       "common",
       "enums",
       "errors",
+      "inactivity",
+      "leave",
       "shell",
       "signup",
     ],
@@ -487,7 +493,11 @@ describe("T-01-21 profile access rows and impersonation", () => {
     if (language === null) {
       throw new TypeError("Expected the profile language row");
     }
-    const inactivity = screen.getByRole("link", { name: "Sol·licitar període d'inactivitat" });
+    const receipts = screen.getByRole("link", { name: "Rebuts" });
+    expect(receipts).toHaveAttribute("href", "/rebuts");
+    const inactivity = screen.getByRole("link", {
+      name: /^Sol·licitar període d'inactivitat/u,
+    });
     expect(inactivity).toHaveAttribute("href", "/inactivitat");
     const leave = screen.getByRole("link", { name: "Sol·licitar la baixa" });
     expect(leave).toHaveAttribute("href", "/baixa");
@@ -499,6 +509,7 @@ describe("T-01-21 profile access rows and impersonation", () => {
       profile,
       notices,
       language,
+      receipts,
       inactivity,
       leave,
       logout,
@@ -1510,7 +1521,7 @@ describe("T-03-40 mobile own dogs", () => {
     await waitFor(() => {
       expect(uploads).toEqual([
         "/api/v1/me/dogs/dog-duna/documents",
-        "/api/v1/me/dogs/dog-rock/documents",
+        "/api/v1/me/dogs/31000000-0000-4000-8000-000000000002/documents",
       ]);
     });
     server.events.removeListener("request:start", listener);

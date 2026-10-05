@@ -125,6 +125,7 @@ import {
   fieldsProjection,
   MEMBER_LIST_FIELDS,
 } from "./list-fields";
+import { memberBillingHandlers, resetMemberBillingState } from "./member-billing-handlers";
 import {
   messagingHandlers,
   notificationExportRows,
@@ -4199,6 +4200,7 @@ export const handlers = [
     return listExport(request, "invoices", rows, "00000000-0000-4000-8000-000000000e82");
   }),
   // S12 (E8-W01): D6, the receipt drawer and the remittances page.
+  ...memberBillingHandlers,
   ...billingHandlers,
   // E5-W03 (S08/S09/S15 back office) first: a waiting entry or a ring block of another world falls
   // through to its own handlers.
@@ -4252,6 +4254,7 @@ export {
   resetFollowupMockState,
   resetMemberSelfServiceState,
   resetMessagingMockState,
+  resetMemberBillingState,
   resetNotificationMockState,
   resetOnboardingMockState,
   resetPlanningState,

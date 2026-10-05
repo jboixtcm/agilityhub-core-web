@@ -250,6 +250,28 @@
     "FAILED": "impagat",
     "CANCELLED": "anul·lat"
   },
+  "inactivityState": {
+    "REQUESTED": "sol·licitat",
+    "APPROVED": "aprovat",
+    "ACTIVE": "actiu",
+    "FINISHED": "finalitzat",
+    "DENIED": "denegat",
+    "CANCELLED": "anul·lat"
+  },
+  "leaveRequestState": {
+    "PENDING": "pendent",
+    "APPROVED": "aprovada",
+    "DENIED": "denegada",
+    "CANCELLED": "anul·lada"
+  },
+  "upfrontStatus": {
+    "DUE": "pendent",
+    "CHECKOUT_PENDING": "pendent de pagament",
+    "PARTIAL": "parcial",
+    "PAID": "cobrat",
+    "CANCELLED": "anul·lat",
+    "REFUNDED": "reemborsat"
+  },
   "invoiceKind": {
     "PERIODIC": "Mensual",
     "MANUAL": "Manual",

@@ -190,10 +190,30 @@
       "reason": "Motivo (opcional)",
       "title": "Entrar como el abonado"
     },
-    "invoice": {
-      "all": "Todos los recibos ({count}) ›",
-      "paid": "cobrado",
-      "remitted": "remesado"
+    "billing": {
+      "title": "Facturación",
+      "receipts": "Recibos recientes",
+      "allReceipts": "Todos los recibos ›",
+      "upfront": "Pagos al momento",
+      "recordPayment": "Registrar un pago",
+      "packs": "Packs",
+      "packLine": "{consumed} consumidas · {remaining} disponibles · caduca el {date}",
+      "adjust": "Ajustar",
+      "dog": "Perro",
+      "concept": "Concepto",
+      "amountDue": "Importe debido",
+      "amountPaid": "Importe pagado",
+      "channel": "Canal",
+      "paidAt": "Fecha de pago",
+      "reference": "Referencia (opcional)",
+      "note": "Nota (opcional)",
+      "delta": "Variación de sesiones",
+      "reason": "Motivo",
+      "expiresOn": "Nueva caducidad",
+      "amountExceeds": "El importe pagado no puede superar el importe debido.",
+      "planNotPack": "Este concepto necesita una modalidad de pack.",
+      "packNegative": "El ajuste no puede dejar el pack con sesiones negativas.",
+      "invalidCard": "Tarjeta no válida"
     },
     "language": "idioma: {locale}",
     "number": "n.º {number}",
@@ -236,7 +256,6 @@
       "dataPayment": "Datos y pago",
       "dogs": "Perros",
       "instructorNotes": "Notas para los instructores",
-      "invoicesAudit": "Recibos recientes y auditoría",
       "preferences": "Preferencias de avisos (mantenibles aquí y en el perfil)"
     },
     "tabs": {

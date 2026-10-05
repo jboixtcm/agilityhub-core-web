@@ -196,10 +196,30 @@
       "reason": "Motiu (opcional)",
       "title": "Entra com l'abonat"
     },
-    "invoice": {
-      "all": "Tots els rebuts ({count}) ›",
-      "paid": "cobrat",
-      "remitted": "remesat"
+    "billing": {
+      "title": "Facturació",
+      "receipts": "Rebuts recents",
+      "allReceipts": "Tots els rebuts ›",
+      "upfront": "Pagaments a l'acte",
+      "recordPayment": "Registra un pagament",
+      "packs": "Packs",
+      "packLine": "{consumed} consumides · {remaining} disponibles · caduca el {date}",
+      "adjust": "Ajusta",
+      "dog": "Gos",
+      "concept": "Concepte",
+      "amountDue": "Import degut",
+      "amountPaid": "Import pagat",
+      "channel": "Canal",
+      "paidAt": "Data de pagament",
+      "reference": "Referència (opcional)",
+      "note": "Nota (opcional)",
+      "delta": "Variació de sessions",
+      "reason": "Motiu",
+      "expiresOn": "Nova caducitat",
+      "amountExceeds": "L'import pagat no pot superar l'import degut.",
+      "planNotPack": "Aquest concepte necessita una modalitat de pack.",
+      "packNegative": "L'ajust no pot deixar el pack amb sessions negatives.",
+      "invalidCard": "Targeta no vàlida"
     },
     "language": "idioma: {locale}",
     "number": "núm. {number}",
@@ -244,7 +264,6 @@
       "dataPayment": "Dades i pagament",
       "dogs": "Gossos",
       "instructorNotes": "Notes als instructors",
-      "invoicesAudit": "Rebuts recents i auditoria",
       "preferences": "Preferències d'avisos (mantenibles aquí i al perfil)"
     },
     "tabs": {

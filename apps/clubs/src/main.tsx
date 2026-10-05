@@ -66,7 +66,7 @@ async function bootstrap(root: HTMLElement) {
   document.title = branding.club.name;
   const i18n = await createI18n({
     branding,
-    initialNamespaces: ["common", "auth", "shell", "signup"],
+    initialNamespaces: ["common", "auth", "billing", "inactivity", "leave", "shell", "signup"],
   });
   const authClient = new AuthClient({
     apiBaseUrl,

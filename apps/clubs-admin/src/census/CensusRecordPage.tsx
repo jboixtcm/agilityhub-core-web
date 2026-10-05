@@ -30,6 +30,7 @@ import { AuditTrail, auditActionLabel, auditRoleLabel } from "../audit/AuditPage
 import { loadDogDocumentTypes } from "../dashboard/readmission";
 import { NotificationPreferencesBlock } from "../messaging/NotificationPreferencesBlock";
 
+import { MemberBillingBlock } from "./MemberBillingBlock";
 import { MemberBookingsCard } from "./MemberBookingsCard";
 type MemberOverview = components["schemas"]["MemberOverview"];
 type MemberDetail = components["schemas"]["Member"];
@@ -802,38 +803,19 @@ function MemberSummary({
           />
         )}
 
-        {/* R-03-30 (INC-27): only the invoice rows and «Tots els rebuts» belong to BILLING; the
-            audit, the booking block, «Inactivitat» (INACTIVITY) and «Baixa» stay without it. */}
+        {modules.includes("BILLING") ? (
+          <MemberBillingBlock
+            client={client}
+            dogs={overview.dogs}
+            memberId={member.id}
+            readOnly={erased}
+          />
+        ) : null}
+
+        {/* Audit and lifecycle actions stay available without BILLING (R-03-30). */}
         <Card>
-          <SectionTitle>
-            {modules.includes("BILLING")
-              ? t("admin-census:member.sections.invoicesAudit")
-              : t("admin-census:member.tabs.audit")}
-          </SectionTitle>
-          {modules.includes("BILLING") ? (
-            <ul className="census-record__invoice-list">
-              {(overview.recentInvoices ?? []).map((invoice) => (
-                <li key={invoice.id}>
-                  <span>{formatDate(invoice.date, locale)}</span>
-                  <span>
-                    {formatMoney(invoice.amount.amountMinor / 100, locale, invoice.amount.currency)}
-                  </span>
-                  <Badge tone={invoice.status === "PAID" ? "success" : "neutral"}>
-                    {invoice.status === "PAID"
-                      ? t("admin-census:member.invoice.paid")
-                      : t("admin-census:member.invoice.remitted")}
-                  </Badge>
-                </li>
-              ))}
-            </ul>
-          ) : null}
+          <SectionTitle>{t("admin-census:member.tabs.audit")}</SectionTitle>
           <div className="census-record__links census-record__links--horizontal">
-            {modules.includes("BILLING") ? (
-              <a href="/facturacio">
-                <Icon aria-hidden="true" name="doc" />
-                {t("admin-census:member.invoice.all", { count: overview.invoicesCount })}
-              </a>
-            ) : null}
             <a href={`/abonats/${member.id}/auditoria`}>
               <Icon aria-hidden="true" name="lock" />
               {t("admin-census:member.audit.all")}
@@ -1297,6 +1279,11 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
           ) : null}
           {branding.modules.includes("BILLING") && member.accountMissing ? (
             <Badge tone="danger">{t("admin-census:member.accountMissing")}</Badge>
+          ) : null}
+          {branding.modules.includes("BILLING") &&
+          member.paymentMethod?.type === "CARD" &&
+          (overview.recentInvoices ?? []).some((invoice) => invoice.status === "FAILED") ? (
+            <Badge tone="danger">{t("admin-census:member.billing.invalidCard")}</Badge>
           ) : null}
         </div>
         <div className="census-record__header-actions">

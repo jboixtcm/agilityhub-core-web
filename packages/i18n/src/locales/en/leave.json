@@ -1,0 +1,37 @@
+{
+  "title": "Request leave",
+  "back": "Back to profile",
+  "loading": "Loading leave request",
+  "loadError": "The leave request could not be loaded.",
+  "offer": {
+    "title": "Before leaving…",
+    "text": "You can request an inactivity period and keep your place.",
+    "fee": "The fee is {first} for the first month and {following} thereafter.",
+    "action": "REQUEST INACTIVITY"
+  },
+  "form": {
+    "date": "Date you want to leave",
+    "today": "Today, {date}",
+    "fullMonth": "If you choose a day in a later month, that month will be charged in full.",
+    "reason": "Reason",
+    "reasonPlaceholder": "Choose a reason",
+    "nps": "From 0 to 10, how likely are you to recommend us?",
+    "comment": "What could we improve so the club better suits your needs?",
+    "submit": "SEND REQUEST",
+    "withdraw": "WITHDRAW REQUEST",
+    "confirmWithdraw": "Do you want to withdraw this request?",
+    "footer": "The club will review it and confirm the effective date.",
+    "saved": "The request has been sent.",
+    "withdrawn": "The request has been withdrawn."
+  },
+  "profileRow": { "requested": "leave requested for {date}", "planned": "leaving on {date}" },
+  "plannedLeave": "Your leave is scheduled for {date}. Contact the club to change it.",
+  "errors": {
+    "alreadyRequested": "You already have a pending leave request.",
+    "alreadyScheduled": "You already have a scheduled leave.",
+    "memberNotActive": "Only active members can request leave.",
+    "dateInvalid": "The leave date is not valid.",
+    "reasonUnknown": "Choose a valid reason.",
+    "generic": "The request could not be sent."
+  }
+}

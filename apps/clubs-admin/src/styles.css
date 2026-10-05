@@ -393,6 +393,34 @@ select {
   gap: var(--ah-space-4);
 }
 
+.member-billing {
+  display: grid;
+  gap: var(--ah-space-5);
+}
+
+.member-billing h2,
+.member-billing h3 {
+  margin: 0;
+}
+
+.member-billing > section {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.member-billing__heading,
+.member-billing__pack {
+  align-items: center;
+  display: flex;
+  gap: var(--ah-space-3);
+  justify-content: space-between;
+}
+
+.member-billing small {
+  color: var(--ah-color-text-muted);
+  display: block;
+}
+
 .census-record__section-title {
   margin: 0;
   color: var(--ah-color-text-muted);

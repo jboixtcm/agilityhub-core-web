@@ -1,0 +1,37 @@
+{
+  "title": "Inactivity period",
+  "back": "Back to profile",
+  "loading": "Loading inactivity period",
+  "loadError": "The inactivity period could not be loaded.",
+  "intro": "You can request an inactivity period for full months. Do so before day {deadlineDay} of the previous month.",
+  "endNote": "The end date can be changed during the inactivity period (also until day {deadlineDay}).",
+  "form": {
+    "fromMonth": "Start month (required)",
+    "toMonth": "End month (if known)",
+    "openEnd": "— I don't know yet",
+    "comments": "Comments",
+    "firstMonth": "First month fee · {amount}",
+    "followingMonths": "Following months · {amount}/month",
+    "bookingsInside": "{count, plural, one {You currently have # booking in the period: it will be cancelled if the club approves the request.} other {You currently have # bookings in the period: they will be cancelled if the club approves the request.}}",
+    "submit": "SEND REQUEST",
+    "modify": "UPDATE",
+    "withdraw": "WITHDRAW REQUEST",
+    "confirmWithdraw": "Do you want to withdraw this request?",
+    "saved": "The request has been saved.",
+    "withdrawn": "The request has been withdrawn."
+  },
+  "profileRow": {
+    "requested": "pending approval · {month}",
+    "range": "inactive {from}–{to}",
+    "open": "inactive from {from}"
+  },
+  "errors": {
+    "deadlinePassed": "Day {deadlineDay} has passed: the first month you can request is {month}.",
+    "overlap": "You already have a requested period: update it",
+    "invalidRange": "The period is not valid.",
+    "memberNotActive": "Only active members can request an inactivity period.",
+    "leaveScheduled": "You cannot request inactivity when a leave is already scheduled.",
+    "stale": "The period has changed.",
+    "generic": "The request could not be saved."
+  }
+}

@@ -169,6 +169,8 @@
     "available": "{count} available",
     "changePhoto": "Change {dog}'s photo",
     "consumed": "{count} used",
+    "packExpired": "expired",
+    "packMore": "+{count} pack",
     "documentDialog": "Add a document",
     "documentDialogFor": "Add a document for {dog}",
     "documentFile": "File",

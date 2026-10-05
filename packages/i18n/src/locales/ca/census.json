@@ -169,6 +169,8 @@
     "available": "{count} disponibles",
     "changePhoto": "Canvia la foto de {dog}",
     "consumed": "{count} consumides",
+    "packExpired": "caducat",
+    "packMore": "+{count} pack",
     "documentDialog": "Afegeix un document",
     "documentDialogFor": "Afegeix un document de {dog}",
     "documentFile": "Fitxer",

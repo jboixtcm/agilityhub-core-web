@@ -266,6 +266,8 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
     "Entra com l'abonat",
     "Bloqueja les reserves",
     "Desbloqueja les reserves",
+    "Registra un pagament",
+    "Ajusta",
   ];
   const changeLinks = ["Inactivitat", "Baixa (amb data)"];
 
@@ -508,7 +510,7 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
       expect(await screen.findByRole("heading", { name: "Abonat suprimit #64" })).toBeVisible();
       expectNoChangeOffered();
       // R-14-15 keeps the invoices: the record still lists the last two.
-      expect(screen.getAllByText("cobrat")).toHaveLength(2);
+      expect(await screen.findAllByText("cobrat")).toHaveLength(2);
       expect(changes).toEqual([]);
     } finally {
       server.events.removeListener("request:start", listener);
@@ -616,10 +618,10 @@ describe("T-03-34 (front) E4-W16 step 7 (INC-27, R-03-30): D10 without BILLING k
     await renderRecord("member");
     await screen.findByRole("heading", { name: "Laura Serra Vidal" });
 
-    expect(screen.getByRole("heading", { name: "Rebuts recents i auditoria" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Facturació" })).toBeVisible();
     expect(screen.getByRole("link", { name: /Tots els rebuts/u })).toHaveAttribute(
       "href",
-      "/facturacio",
+      "/facturacio?filter=memberId%3Aeq%3Amember-laura",
     );
     expect(screen.getByRole("button", { name: "Bloqueja les reserves" })).toBeVisible();
   });

@@ -5,7 +5,7 @@ import {
   type components,
   uploadSigned,
 } from "@agilityhub/api-client";
-import { fmtMaskedIban, fmtPlainDate, normalizeLocale, personArticle } from "@agilityhub/i18n";
+import { fmtMaskedIban, normalizeLocale, personArticle, useClubFormats } from "@agilityhub/i18n";
 import {
   Button,
   Card,
@@ -41,6 +41,7 @@ type PostalTown = components["schemas"]["PostalTown"];
 type CountryProfile = components["schemas"]["Country"];
 // R-03-15, R-03-32: the club's document types, with the reader's labels (`GET /me/dogs`).
 type DogDocumentType = components["schemas"]["DogDocumentType"];
+type PackBalance = components["schemas"]["PackBalanceDetail"];
 
 interface DocumentUpload {
   dogId: string;
@@ -121,11 +122,6 @@ export function isCountryFieldValid(
     return /^\d{9}$/u.test(normalized.replaceAll(/\D/gu, ""));
   }
   return /^\d{5}$/u.test(normalized);
-}
-
-/** «dd/mm/aaaa» of a business date: the calendar day it names in every zone (R-06-14). */
-function fullDate(value: string, locale: string): string {
-  return fmtPlainDate(value, normalizeLocale(locale), "short");
 }
 
 function formFieldName(field: string): string {
@@ -547,6 +543,7 @@ function DogCard({
   client,
   dog: initialDog,
   modules,
+  packs,
   onClearMessage,
   onDocument,
   onMessage,
@@ -554,17 +551,27 @@ function DogCard({
   client: ApiClient;
   dog: MeDog;
   modules: readonly string[];
+  packs: readonly PackBalance[];
   onClearMessage: () => void;
   onDocument: (upload: DocumentUpload) => void;
   onMessage: (message: string, error?: boolean) => void;
 }) {
-  const { i18n, t } = useTranslation("census");
+  const { t } = useTranslation("census");
+  const formats = useClubFormats();
   const [dog, setDog] = useState(initialDog);
   const tasksEnabled = modules.includes("TASKS");
   const packsEnabled = modules.includes("PACKS");
   const freeTrainingEnabled = modules.includes("FREE_TRAINING");
-  const consumed = dog.pack === undefined ? 0 : Math.max(0, dog.pack.total - dog.pack.remaining);
-  const progress = dog.pack === undefined || dog.pack.total === 0 ? 0 : consumed / dog.pack.total;
+  const dogPacks = packs
+    .filter((pack) => pack.dogId === dog.id)
+    .sort((left, right) => {
+      if (left.state === "ACTIVE" && right.state !== "ACTIVE") return -1;
+      if (left.state !== "ACTIVE" && right.state === "ACTIVE") return 1;
+      return left.expiresOn.localeCompare(right.expiresOn);
+    });
+  const pack = dogPacks[0];
+  const progress =
+    pack === undefined || pack.sessionsTotal === 0 ? 0 : pack.consumed / pack.sessionsTotal;
 
   return (
     <Card className="dog-card">
@@ -636,24 +643,28 @@ function DogCard({
             .map((value) => ` · ${value}`)}
         </p>
       ))}
-      {packsEnabled && dog.pack !== undefined ? (
+      {packsEnabled && pack !== undefined ? (
         <section className="dog-pack">
           <div>
-            <h3>{t("census:myDogs.pack", { count: dog.pack.total })}</h3>
-            {dog.pack.expiresOn === undefined ? null : (
-              <span>
-                {t("census:myDogs.expires", {
-                  date: fullDate(dog.pack.expiresOn, i18n.resolvedLanguage ?? "ca"),
-                })}
-              </span>
-            )}
+            <h3>{t("census:myDogs.pack", { count: pack.sessionsTotal })}</h3>
+            <span>
+              {t("census:myDogs.expires", {
+                date: formats.formatPlainDate(pack.expiresOn, "short"),
+              })}
+            </span>
+            {pack.state === "EXPIRED" ? (
+              <span className="dog-pack__expired">{t("census:myDogs.packExpired")}</span>
+            ) : null}
+            {dogPacks.length > 1 ? (
+              <span>{t("census:myDogs.packMore", { count: dogPacks.length - 1 })}</span>
+            ) : null}
           </div>
           <div aria-hidden="true" className="dog-pack__track">
             <span style={{ inlineSize: `${String(progress * 100)}%` }} />
           </div>
           <p>
-            <strong>{t("census:myDogs.consumed", { count: consumed })}</strong> ·{" "}
-            <b>{t("census:myDogs.available", { count: dog.pack.remaining })}</b>
+            <strong>{t("census:myDogs.consumed", { count: pack.consumed })}</strong> ·{" "}
+            <b>{t("census:myDogs.available", { count: pack.remaining })}</b>
           </p>
         </section>
       ) : null}
@@ -787,6 +798,7 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
   const { t } = useTranslation("census");
   const [data, setData] = useState<MeDogs>();
+  const [packs, setPacks] = useState<PackBalance[]>([]);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState<{ error?: boolean; text: string }>();
   const [documentUpload, setDocumentUpload] = useState<DocumentUpload | null>(null);
@@ -823,6 +835,26 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
       active = false;
     };
   }, [client, reload]);
+
+  useEffect(() => {
+    let active = true;
+    if (!branding.modules.includes("PACKS") || !branding.modules.includes("BILLING")) {
+      return () => {
+        active = false;
+      };
+    }
+    void client.GET("/me/pack-balances").then(
+      ({ data: balances }) => {
+        if (active && balances !== undefined) setPacks(balances);
+      },
+      () => {
+        if (active) setPacks([]);
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, [branding.modules, client, reload]);
 
   return (
     <div className="self-page my-dogs-page">
@@ -877,6 +909,11 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
                   dog={dog}
                   key={dog.id}
                   modules={branding.modules}
+                  packs={
+                    branding.modules.includes("PACKS") && branding.modules.includes("BILLING")
+                      ? packs
+                      : []
+                  }
                   onClearMessage={() => {
                     setMessage(undefined);
                   }}

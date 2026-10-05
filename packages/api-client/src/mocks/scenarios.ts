@@ -49,6 +49,8 @@ export interface MockScenarioDefinition {
   /** The D14 variant (`fixtures/followup.ts`): the caller has read every row already. */
   inbox?: InboxVariant;
   me: Me;
+  /** S12/S13 member/D10 variants added by E8-W02. */
+  memberBilling?: "cardInvalid" | "deadlinePassed" | "packPlan" | "plannedLeave";
   /** The S11 feed variant of screen 11 (`fixtures/notifications.ts`, E7-W02). */
   notifications?: NotificationsVariant;
   sessions: SessionList;
@@ -225,6 +227,39 @@ const scenarios = {
   },
   member: {
     branding: canic,
+    me: member,
+    sessions: accountSessions,
+  },
+  memberCardInvalid: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    memberBilling: "cardInvalid",
+    sessions: accountSessions,
+  },
+  memberPackPlan: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    memberBilling: "packPlan",
+    sessions: accountSessions,
+  },
+  memberPlannedLeave: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    memberBilling: "plannedLeave",
+    sessions: accountSessions,
+  },
+  memberDeadlinePassed: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    memberBilling: "deadlinePassed",
+    sessions: accountSessions,
+  },
+  billingOff: {
+    branding: {
+      ...canic,
+      locales: ["ca", "es", "en"],
+      modules: canic.modules.filter((module) => module !== "BILLING"),
+    },
     me: member,
     sessions: accountSessions,
   },

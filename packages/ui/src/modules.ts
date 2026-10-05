@@ -43,7 +43,7 @@ export const moduleUi = {
   },
   BILLING: {
     menuEntries: ["billing"],
-    routes: ["/facturacio", "/facturacio/remeses"],
+    routes: ["/facturacio", "/facturacio/remeses", "/rebuts", "/rebuts/:id"],
     tabs: [],
   },
   PACKS: { menuEntries: [], routes: [], tabs: [] },
@@ -67,7 +67,7 @@ export const moduleUi = {
   PUSH: { menuEntries: [], routes: [], tabs: [] },
   INACTIVITY: {
     menuEntries: ["inactivity"],
-    routes: ["/inactivitat", "/baixa", "/inactivitats"],
+    routes: ["/inactivitat", "/inactivitats"],
     tabs: [],
   },
   COURSES: {

@@ -250,6 +250,28 @@
     "FAILED": "impagado",
     "CANCELLED": "anulado"
   },
+  "inactivityState": {
+    "REQUESTED": "solicitado",
+    "APPROVED": "aprobado",
+    "ACTIVE": "activo",
+    "FINISHED": "finalizado",
+    "DENIED": "denegado",
+    "CANCELLED": "anulado"
+  },
+  "leaveRequestState": {
+    "PENDING": "pendiente",
+    "APPROVED": "aprobada",
+    "DENIED": "denegada",
+    "CANCELLED": "anulada"
+  },
+  "upfrontStatus": {
+    "DUE": "pendiente",
+    "CHECKOUT_PENDING": "pendiente de pago",
+    "PARTIAL": "parcial",
+    "PAID": "cobrado",
+    "CANCELLED": "anulado",
+    "REFUNDED": "reembolsado"
+  },
   "invoiceKind": {
     "PERIODIC": "Mensual",
     "MANUAL": "Manual",

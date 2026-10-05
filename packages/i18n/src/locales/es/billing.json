@@ -1,0 +1,33 @@
+{
+  "title": "Recibos",
+  "back": "Volver al perfil",
+  "loading": "Cargando los recibos",
+  "loadError": "No se han podido cargar los recibos.",
+  "retry": "Volver a intentarlo",
+  "empty": "Todavía no tienes ningún recibo.",
+  "familyGroup": "Grupo familiar",
+  "list": { "more": "Cargar más", "receipt": "Recibo {number}", "refunded": "reembolsado" },
+  "detail": {
+    "title": "Detalle del recibo",
+    "lines": "Conceptos",
+    "description": "Concepto",
+    "amount": "Importe",
+    "total": "Total",
+    "paymentMethod": "Método de pago",
+    "download": "Descargar el justificante",
+    "downloading": "Preparando el justificante",
+    "downloadError": "No se ha podido descargar el justificante."
+  },
+  "cardBanner": {
+    "title": "No hemos podido cobrar el recibo de {month}",
+    "action": "Actualiza la tarjeta",
+    "working": "Abriendo la actualización de tarjeta",
+    "error": "Ahora mismo no se puede actualizar la tarjeta."
+  },
+  "checkout": {
+    "pending": "Estamos confirmando el pago…",
+    "paid": "Pago recibido",
+    "expired": "La sesión de pago ha caducado.",
+    "retry": "Volver a intentarlo"
+  }
+}

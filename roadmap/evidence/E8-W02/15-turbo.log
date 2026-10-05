@@ -1,0 +1,484 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 10 packages
+   • Remote caching disabled
+
+@agilityhub/api-client:lint: cache miss, executing 8a2bc45dc866ef23
+@agilityhub/api-client:typecheck: cache miss, executing 9627916fa4885167
+@agilityhub/auth:lint: cache hit, replaying logs 2925197e67cefb4b
+@agilityhub/ui:typecheck: cache hit, replaying logs 55659aad2776abc8
+@agilityhub/ui:lint: cache hit, replaying logs cb26e0277fb80598
+@agilityhub/i18n:lint: cache hit, replaying logs 761345d518a07630
+clubs:lint: cache miss, executing 4c6776988849e324
+@agilityhub/shared-types:lint: cache hit, replaying logs a946566fb9efb741
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+id:lint: cache hit, replaying logs 22651cf71461790e
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/auth:lint: 
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:lint: > eslint src tests scripts --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+clubs-admin:lint: cache miss, executing 4cfbc3db8dbef40e
+@agilityhub/ui:test: cache hit, replaying logs daec43b93763c204
+@agilityhub/config:typecheck: cache hit, replaying logs 6860c83ceac65ae7
+@agilityhub/course-core:typecheck: cache hit, replaying logs 61edc282ad1bbb2a
+@agilityhub/config:lint: cache hit, replaying logs 42ac5d636417f38d
+@agilityhub/course-core:build: cache hit, replaying logs e18b31668a225399
+@agilityhub/course-core:lint: cache hit, replaying logs e1967c3b8013c83f
+@agilityhub/ui:test: 
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/course-core:typecheck: 
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  ✓ src/on-primary.test.ts (3 tests) 46ms
+@agilityhub/ui:test:  ✓ src/limited-markdown.test.tsx (1 test) 133ms
+@agilityhub/ui:test:  ✓ src/attendance-contrast.test.ts (34 tests) 8ms
+@agilityhub/ui:test:  ✓ src/branding.test.tsx (5 tests) 22ms
+@agilityhub/ui:test:  ✓ src/icons/Icon.test.tsx (1 test) 65ms
+@agilityhub/ui:test: stderr | src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > renders the api's «Sense» column as delivered and never adds one of its own
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/ui:test: [DayGrid] cells without a matching column are not drawn: cls-1 (ringId null)
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  ✓ src/index.test.ts (2 tests) 2ms
+@agilityhub/ui:test:  ✓ src/schedule-grid.test.tsx (3 tests) 250ms
+@agilityhub/ui:test:  ✓ src/attendance-sheet.test.tsx (4 tests) 243ms
+@agilityhub/ui:test:  ✓ src/day-grid.test.tsx (10 tests) 268ms
+@agilityhub/ui:test:  ✓ src/rich-text.test.tsx (13 tests) 322ms
+@agilityhub/ui:test:  ✓ src/slot-grid.test.tsx (9 tests) 426ms
+@agilityhub/ui:test:  ✓ src/attendance.test.tsx (16 tests) 221ms
+@agilityhub/ui:test:  ✓ src/universal-list.test.tsx (10 tests) 510ms
+@agilityhub/ui:test:    ✓ E5-W05 round 2 #2 · a range filter with no suggested values (ruling E80) (1)
+@agilityhub/ui:test:      ✓ offers two dates instead of the value list, never asks for the field's values, and adds the range's own value 313ms
+@agilityhub/ui:test:  ✓ src/components.test.tsx (31 tests) 538ms
+@agilityhub/ui:test:  ✓ src/tasks-panel.test.tsx (14 tests) 599ms
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  Test Files  15 passed (15)
+@agilityhub/ui:test:       Tests  156 passed (156)
+@agilityhub/ui:test:    Start at  09:06:22
+@agilityhub/ui:test:    Duration  3.70s (environment 62%, setup 19%, transform 9%, tests 8%, import 1%, worker 1%)
+@agilityhub/ui:test: 
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:lint: > @agilityhub/course-core@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/course-core:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:lint: 
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/course-core:test: cache hit, replaying logs 34116acf0470d929
+@agilityhub/api-client:test: cache miss, executing 63a381ae5fa52d41
+@agilityhub/i18n:test: cache hit, replaying logs e14a60433e6604e3
+@agilityhub/i18n:typecheck: cache hit, replaying logs 826e54df470caf9b
+@agilityhub/shared-types:test: cache hit, replaying logs 0d5094aa59df2bb0
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  [32m✓[39m tests/coords.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-primitives.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-id.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/wrapper.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/calibration.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-colors-txt.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/shared-types:build: cache hit, replaying logs a211f3de2fb8a1b3
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: > @agilityhub/shared-types@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: > vitest run
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types[39m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test:  [32m✓[39m tests/build-session-export.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+@agilityhub/shared-types:test:  [32m✓[39m tests/json-schemas.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+@agilityhub/i18n:test: > vitest run
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  ✓ src/masking.test.ts (9 tests) 5ms
+@agilityhub/i18n:test:  ✓ src/locale.test.ts (3 tests) 2ms
+@agilityhub/i18n:test:  ✓ src/activities.test.ts (5 tests) 21ms
+@agilityhub/i18n:test:  ✓ src/index.test.ts (4 tests) 29ms
+@agilityhub/i18n:test:  ✓ src/format.test.ts (99 tests) 43ms
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  Test Files  5 passed (5)
+@agilityhub/i18n:test:       Tests  120 passed (120)
+@agilityhub/i18n:test:    Start at  09:06:30
+@agilityhub/shared-types:test: [2m      Tests [22m [1m[32m38 passed[39m[22m[90m (38)[39m
+@agilityhub/shared-types:test: [2m   Start at [22m 16:01:24
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/course-core:test:  [32m✓[39m tests/apriltag-36h11.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/ring.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-svg.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-transform.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-core:test:  [32m✓[39m tests/placement.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/units.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/shared-types:test: [2m   Duration [22m 740ms[2m (transform 70%, import 21%, tests 8%, worker 1%)[22m
+@agilityhub/shared-types:test: 
+@agilityhub/course-core:test:  [32m✓[39m tests/summarize-course.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-txt.test.ts [2m([22m[2m113 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-writer.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-rules.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-fixtures.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/course-data-json-schema.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m Test Files [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+@agilityhub/course-core:test: [2m      Tests [22m [1m[32m364 passed[39m[22m[90m (364)[39m
+@agilityhub/shared-types:typecheck: cache hit, replaying logs c4cd70d7e3ccd8fa
+@agilityhub/i18n:test:    Duration  408ms (transform 70%, import 17%, tests 12%, worker 1%)
+@agilityhub/i18n:test: 
+@agilityhub/course-core:test: [2m   Start at [22m 16:01:14
+@agilityhub/course-core:test: [2m   Duration [22m 1.25s[2m (transform 79%, import 15%, tests 4%, worker 2%)[22m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m  Transform [22m [33mtransforming modules took 5.41s[39m[2m · 79% of tracked time, re-done on every run[22m
+@agilityhub/course-core:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/course-core:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/course-core:test: 
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+clubs:build: cache miss, executing 8bfbb7c1cb47e9e7
+id:build: cache miss, executing 6b122c60342020bb
+clubs-admin:build: cache miss, executing 4fbf1e55a8f3935c
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+id:build: 
+id:build: > id@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  ✓ src/branding-cache.test.ts (5 tests) 404ms
+@agilityhub/api-client:test:  ✓ src/mocks/auth-handoff.test.ts (2 tests) 1025ms
+@agilityhub/api-client:test:    ✓ T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads (2)
+@agilityhub/api-client:test:      ✓ redeem code 1, reload, redeem code 2, then code 1 again → refused (the whole redemption history stays spent) 917ms
+@agilityhub/api-client:test:  ✓ src/mocks/followup-handlers.test.ts (21 tests) 306ms
+@agilityhub/api-client:test:  ✓ src/mocks/agenda-handlers.test.ts (16 tests) 314ms
+@agilityhub/api-client:test:  ✓ src/mocks/census-handlers.test.ts (104 tests) 367ms
+@agilityhub/api-client:test:  ✓ src/mocks/notification-handlers.test.ts (11 tests) 381ms
+@agilityhub/api-client:test:  ✓ src/mocks/messaging-handlers.test.ts (19 tests) 416ms
+@agilityhub/api-client:test:  ✓ src/index.test.ts (21 tests) 458ms
+@agilityhub/api-client:test:  ✓ src/mocks/training-handlers.test.ts (11 tests) 594ms
+@agilityhub/api-client:test:  ✓ src/mocks/attendance-handlers.test.ts (18 tests) 549ms
+@agilityhub/api-client:test:  ✓ src/preferences-saver.test.ts (20 tests) 168ms
+@agilityhub/api-client:test:  ✓ src/submission-key.test.ts (15 tests) 7ms
+@agilityhub/api-client:test:  ✓ src/mocks/calendar-handlers.test.ts (15 tests) 688ms
+@agilityhub/api-client:test:  ✓ src/attendance-sheet.test.ts (5 tests) 14ms
+@agilityhub/api-client:test:  ✓ src/mocks/signup-handlers.test.ts (32 tests) 420ms
+@agilityhub/api-client:test:  ✓ src/mocks/day-grid-handlers.test.ts (16 tests) 308ms
+@agilityhub/api-client:test:  ✓ src/api-error.test.ts (5 tests) 3ms
+@agilityhub/api-client:test:  ✓ src/mocks/list-fields.test.ts (8 tests) 4ms
+@agilityhub/api-client:test:  ✓ src/exports.test.ts (16 tests) 46ms
+@agilityhub/api-client:test:  ✓ src/uploads.test.ts (4 tests) 63ms
+@agilityhub/api-client:test:  ✓ src/club-pages.test.ts (1 test) 22ms
+@agilityhub/api-client:test:  ✓ src/mocks/activity-handlers.test.ts (27 tests) 1070ms
+@agilityhub/api-client:test:  ✓ src/mocks/list-exports.test.ts (19 tests) 226ms
+@agilityhub/api-client:test:  ✓ src/mocks/booking-handlers.test.ts (30 tests) 1247ms
+@agilityhub/api-client:test:  ✓ src/mocks/club-settings-handlers.test.ts (1 test) 32ms
+@agilityhub/api-client:test:  ❯ src/mocks/billing-handlers.test.ts (53 tests | 1 failed) 1471ms
+@agilityhub/api-client:test:    ✓ S12 R-12-07 · D6's month (GET /billing/periods/{period}) (3)
+@agilityhub/api-client:test:      ✓ T-12-25 reads September as the mockup: the 25/08 simulation, the generated run (rollbackable, no blockers), its GENERATED remittance and the chips 68ms
+@agilityhub/api-client:test:      ✓ reads August as collected (COMPLETED, its remittance SUBMITTED) and a month without anything (2026-11) with null parts and zero chips 26ms
+@agilityhub/api-client:test:      ✓ refuses a period that is not YYYY-MM with 400 VALIDATION_ERROR on period 16ms
+@agilityhub/api-client:test:    ✓ T-12-21 / T-12-22 · S12 §6 guards: ADMIN only, no impersonation, BILLING on, the caller's club (4)
+@agilityhub/api-client:test:      ✓ T-12-21 an INSTRUCTOR and a MEMBER get 403 FORBIDDEN and an impersonation token 403 IMPERSONATION_DENIED on /billing/*, /invoices and /remittances 133ms
+@agilityhub/api-client:test:      ✓ T-12-22 BILLING off → 404 MODULE_DISABLED on the month, the run, the receipts, the remittances and both exports 31ms
+@agilityhub/api-client:test:      ✓ T-12-21 the admin of another club (adminOtherClub: the club mínim, without BILLING) gets 404 before any of the Cànic's records is read 23ms
+@agilityhub/api-client:test:      ✓ T-12-21 the admin of another club with BILLING (billingOtherClub) finds none of the Cànic's records: 404 by id, an empty month and an empty list 29ms
+@agilityhub/api-client:test:    ✓ S12 R-12-07 · POST /billing/simulations («1 · SIMULA EL MES») (2)
+@agilityhub/api-client:test:      ✓ simulates a month: 201 BillingSimulation with the 168 previews, kept as the month's only simulation 36ms
+@agilityhub/api-client:test:      ✓ refuses a month more than three months ahead of the club's current month (2026-12 on 26/08) with 400 VALIDATION_ERROR on period 23ms
+@agilityhub/api-client:test:    ✓ S12 R-12-11 / R-12-12 · POST /billing/runs («2 · GENERA REMESA SEPA (XML)», T-12-09, T-12-10, T-12-29b, T-12-32) (7)
+@agilityhub/api-client:test:      ✓ T-12-10 one live run per month: September's simulation answers 409 RUN_EXISTS 6ms
+@agilityhub/api-client:test:      ✓ T-12-09 / T-12-13 after a rollback the old simulation is stale (409 SIMULATION_STALE); a new one generates the same numbers 2026-0912…2026-1079 (R-12-14) 65ms
+@agilityhub/api-client:test:      ✓ an unknown simulation (or none for the month) → 404 NOT_FOUND 4ms
+@agilityhub/api-client:test:      ✓ T-12-10 the same Idempotency-Key and body replay the same run; the same key with another body is 409 IDEMPOTENCY_KEY_REUSED 35ms
+@agilityhub/api-client:test:      ✓ T-12-09 billingStale: the simulation older than the last change → 409 SIMULATION_STALE; simulating again lets the run through 35ms
+@agilityhub/api-client:test:      ✓ T-12-29b on Monday 31/08 the 01/09 collection leaves less than two business days → 422 COLLECTION_DATE_TOO_SOON {requested, earliest} 35ms
+@agilityhub/api-client:test:      ✓ T-12-32 billingManualOnly: the run issues every receipt PENDING by hand and no remittance 35ms
+@agilityhub/api-client:test:    ❯ S12 R-12-14 · GET /billing/runs/{id} and POST /billing/runs/{id}/rollback (T-12-13, T-12-25) (8)
+@agilityhub/api-client:test:      ✓ reads September's run with rollbackable computed now, August's COMPLETED one not rollbackable, an unknown id 404 63ms
+@agilityhub/api-client:test:      ✓ T-12-25 the typed confirmation must be exactly RETROCEDIR (400 VALIDATION_ERROR on confirmation) 18ms
+@agilityhub/api-client:test:      ✓ T-12-13 RETROCEDIR cancels the 168 receipts {ROLLBACK}: the month reads zero chips, they list only under CANCELLED with rolledBack, a second rollback is 409 {reasons: []} 52ms
+@agilityhub/api-client:test:      × T-12-13 E89 (R-12-14): the rollback takes the whole run, also a receipt the admin cancelled meanwhile: it leaves «Tots», lists under CANCELLED as rolled back and keeps its own reason 57ms
+@agilityhub/api-client:test:      ✓ T-12-13 E87 (R-12-19): a manual SEPA receipt with includeInNextRun goes into the next run's remittance (COLLECTING); the run's rollback returns it to PENDING, still waiting 127ms
+@agilityhub/api-client:test:      ✓ T-12-13 billingRollbackBlocked: another admin submits the remittance just before → 409 RUN_NOT_ROLLBACKABLE {REMITTANCE_SUBMITTED}, and the month reads it 11ms
+@agilityhub/api-client:test:      ✓ T-12-13 a manual receipt numbered after the run → rollbackable false {MANUAL_INVOICE_AFTER} 10ms
+@agilityhub/api-client:test:      ✓ T-12-13 a cash receipt already PAID → rollbackable false {INVOICE_PAID} 13ms
+@agilityhub/api-client:test:    ✓ S12 D6's receipts · GET /invoices (CONVENCIONS_API §4, T-12-25) (5)
+@agilityhub/api-client:test:      ✓ lists the newest number first, 50 a page, a receipt cancelled by a rollback left out of «Tots» 17ms
+@agilityhub/api-client:test:      ✓ sorts by number ascending within September (2026-0912 first) and the month adds up to the simulation 10ms
+@agilityhub/api-client:test:      ✓ T-12-25 the chips are status filters: 4 pending, 162 remitted, 2 failed, 0 paid in September 16ms
+@agilityhub/api-client:test:      ✓ q searches the number and the member's name; total filters on amountMinor 10ms
+@agilityhub/api-client:test:      ✓ an undeclared filter, sort or fields key → 400 INVALID_FILTER; fields= sends the row id and the requested keys only 13ms
+@agilityhub/api-client:test:    ✓ S12 R-12-16 · POST /invoices/{id}/payment and POST /invoices/payments (T-12-14, T-12-32) (5)
+@agilityhub/api-client:test:      ✓ marks Joan Vila's cash receipt 2026-0915 paid: 200 PAID with a MANUAL SUCCEEDED collection 25ms
+@agilityhub/api-client:test:      ✓ a FAILED direct debit (Pere Soler's bank return, 2026-1039) can be paid by transfer 12ms
+@agilityhub/api-client:test:      ✓ an old version → 409 STALE_VERSION; a COLLECTING receipt → 409 INVALID_STATE {status}; paidAt after today → 400 on paidAt 25ms
+@agilityhub/api-client:test:      ✓ T-12-32 two payments with the same key → one PAID (the second replays the first answer) 22ms
+@agilityhub/api-client:test:      ✓ T-12-14 [Marcar cobrat (selecció)] is all or none: one COLLECTING among them → 409 INVALID_STATE and nothing changes; the 4 pending → 200 {paid: 4} 29ms
+@agilityhub/api-client:test:    ✓ S12 R-12-17 · POST /invoices/{id}/failure «impagat (manual)» (T-12-14, T-12-30) (3)
+@agilityhub/api-client:test:      ✓ a COLLECTING direct debit → 200 FAILED with a SEPA FAILED{BANK_RETURN} collection appended 15ms
+@agilityhub/api-client:test:      ✓ a PAID direct debit (a later bank return, August's 2026-0744) → 200 FAILED, paidAt cleared 13ms
+@agilityhub/api-client:test:      ✓ a cash receipt → 409 INVALID_STATE {status}; at after today → 400 on at 18ms
+@agilityhub/api-client:test:    ✓ S12 R-12-19 · POST /invoices/{id}/cancellation and the manual receipt POST /invoices (T-12-05, T-12-18) (4)
+@agilityhub/api-client:test:      ✓ cancels a PENDING receipt with the admin's reason; COLLECTING → 409 INVALID_STATE; the reason ROLLBACK → 400 23ms
+@agilityhub/api-client:test:      ✓ T-12-18 an adjustment of −30 € for Laura (census member) is the next number 2026-1080, MANUAL, PENDING, its line ADJUSTMENT 4ms
+@agilityhub/api-client:test:      ✓ T-12-05 taxes round half-even per line (4959 × 21 % → 1041, 50 × 21 % → 10) and the receipt validates as Invoice 15ms
+@agilityhub/api-client:test:      ✓ T-12-05 a line in another currency → 422 CURRENCY_MISMATCH; an erased member → 409 MEMBER_ERASED; an unknown one → 404; includeInNextRun for a MANUAL member → 400 14ms
+@agilityhub/api-client:test:    ✓ S12 R-12-13 / R-12-18 / R-12-20 · cards (billingStripe: T-12-15, T-12-17, T-12-30) (4)
+@agilityhub/api-client:test:      ✓ T-12-15 [COBRA LES TARGETES] → 202 {submitted, skipped: Marc's withdrawn card}; the run reads CHARGING, then COMPLETED with STRIPE charged/failed 27ms
+@agilityhub/api-client:test:      ✓ T-12-30 retry: Laura's declined card → 202 COLLECTING with a new STRIPE attempt; Marc's withdrawn card → 422 NO_PAYMENT_METHOD 28ms
+@agilityhub/api-client:test:      ✓ T-12-17 refund of a PAID card receipt → 202 RefundAccepted and refundedTotal = total; partial refunds add up; more than paid → 422 33ms
+@agilityhub/api-client:test:      ✓ T-12-17 without Stripe: refund of a SEPA PAID receipt → 422 PAYMENT_PROVIDER_NOT_ENABLED, of a COLLECTING one → 409; card charges → 422 27ms
+@agilityhub/api-client:test:    ✓ S12 R-12-15 · the remittances page (GET /remittances, file, submission; T-12-30) (4)
+@agilityhub/api-client:test:      ✓ lists the newest creationAt first (September GENERATED, August SUBMITTED, August's first try ROLLED_BACK) and filters by status 7ms
+@agilityhub/api-client:test:      ✓ has no free-text search: a q → 400 INVALID_FILTER 5ms
+@agilityhub/api-client:test:      ✓ reads a remittance with its masked creditor and a signed link to its XML (also of a ROLLED_BACK one) 31ms
+@agilityhub/api-client:test:      ✓ T-12-30 [Marca com a enviada al banc] → 200 SUBMITTED; again → 409 INVALID_STATE; the run is no longer rollbackable {REMITTANCE_SUBMITTED} 22ms
+@agilityhub/api-client:test:    ✓ S12 the receipt PDF and the accounting export (T-12-19, T-12-20) (4)
+@agilityhub/api-client:test:      ✓ T-12-20 GET /invoices/{id}/document → 200 application/pdf, attachment «2026-0912.pdf» 31ms
+@agilityhub/api-client:test:      ✓ T-12-19 «Exporta per a comptabilitat» → 200 text/csv with a BOM, «facturacio-2026-09.csv» 11ms
+@agilityhub/api-client:test:      ✓ T-12-19 adminExportsQueued: the XLSX export is queued → 202 {jobId, statusUrl}; an INSTRUCTOR → 403 8ms
+@agilityhub/api-client:test:      ✓ S14 R-14-12 the receipts' list export (GET /invoices/export) answers the XLSX file inline 5ms
+@agilityhub/api-client:test:  ✓ src/mocks/fixtures.contract.test.ts (83 tests) 1435ms
+@agilityhub/api-client:test:  ✓ src/mocks/mock-worlds.budget.test.ts (24 tests) 2355ms
+@agilityhub/api-client:test:    ✓ E3-W10 build-time budget of the MSW mock worlds (24)
+@agilityhub/api-client:test:      ✓ imports the mock modules afresh within the start-up budget 1064ms
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 239 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-CIhKnQD-.css                           52.05 kB │ gzip:   9.48 kB
+id:build: dist/assets/notifications-ChKXsAvB.js                     0.75 kB │ gzip:   0.47 kB
+id:build: dist/assets/notifications-dxKZmlHL.js                     0.75 kB │ gzip:   0.43 kB
+id:build: dist/assets/notifications-BP8GtpgC.js                     0.75 kB │ gzip:   0.47 kB
+id:build: dist/assets/billing-vTwJ3UIa.js                           1.02 kB │ gzip:   0.53 kB
+id:build: dist/assets/billing-aS1gI5cj.js                           1.10 kB │ gzip:   0.59 kB
+id:build: dist/assets/billing-BT9jkwCT.js                           1.12 kB │ gzip:   0.61 kB
+id:build: dist/assets/history-B1Xz7N4l.js                           1.27 kB │ gzip:   0.65 kB
+id:build: dist/assets/history-D5FndTjo.js                           1.32 kB │ gzip:   0.68 kB
+id:build: dist/assets/admin-training-DDv2dFuD.js                    1.35 kB │ gzip:   0.63 kB
+id:build: dist/assets/history-Bs5JKpAd.js                           1.35 kB │ gzip:   0.69 kB
+id:build: dist/assets/shell-C8-jwyq4.js                             1.41 kB │ gzip:   0.74 kB
+id:build: dist/assets/admin-training-Du9KAoeO.js                    1.42 kB │ gzip:   0.68 kB
+id:build: dist/assets/admin-training-CtWdBvS6.js                    1.44 kB │ gzip:   0.69 kB
+id:build: dist/assets/shell-BbrVQiYO.js                             1.47 kB │ gzip:   0.83 kB
+id:build: dist/assets/shell-CxXcYDDQ.js                             1.50 kB │ gzip:   0.83 kB
+id:build: dist/assets/leave-BI6MTRbl.js                             1.54 kB │ gzip:   0.79 kB
+id:build: dist/assets/training-CYuCURIa.js                          1.57 kB │ gzip:   0.80 kB
+id:build: dist/assets/home-CLVBc5a3.js                              1.59 kB │ gzip:   0.79 kB
+id:build: dist/assets/training-DhvOYmdN.js                          1.62 kB │ gzip:   0.85 kB
+id:build: dist/assets/training-B5riWOVN.js                          1.63 kB │ gzip:   0.86 kB
+id:build: dist/assets/leave-qGZMIDQq.js                             1.65 kB │ gzip:   0.89 kB
+id:build: dist/assets/home-DIaHUeYG.js                              1.65 kB │ gzip:   0.84 kB
+id:build: dist/assets/leave-DOtZZbHW.js                             1.67 kB │ gzip:   0.90 kB
+id:build: dist/assets/home-vQT0WHAi.js                              1.67 kB │ gzip:   0.84 kB
+id:build: dist/assets/inactivity-CKwtK0cj.js                        1.73 kB │ gzip:   0.83 kB
+id:build: dist/assets/activities-_j5UPNJ2.js                        1.79 kB │ gzip:   0.83 kB
+id:build: dist/assets/inactivity-DApU4VLg.js                        1.81 kB │ gzip:   0.91 kB
+id:build: dist/assets/inactivity-BRzVYXEA.js                        1.84 kB │ gzip:   0.92 kB
+id:build: dist/assets/activities-D_fvQi10.js                        1.86 kB │ gzip:   0.91 kB
+id:build: dist/assets/activities-BKuUowmB.js                        1.88 kB │ gzip:   0.91 kB
+id:build: dist/assets/admin-dashboard-VZhOZ68T.js                   2.07 kB │ gzip:   1.02 kB
+id:build: dist/assets/admin-dashboard-MI69Hia9.js                   2.13 kB │ gzip:   1.10 kB
+id:build: dist/assets/admin-dashboard-DNVY2TkD.js                   2.18 kB │ gzip:   1.11 kB
+id:build: dist/assets/common-BpH9cuss.js                            2.30 kB │ gzip:   1.09 kB
+id:build: dist/assets/common-D5M4a98u.js                            2.39 kB │ gzip:   1.18 kB
+id:build: dist/assets/common-DLazKDt-.js                            2.45 kB │ gzip:   1.20 kB
+id:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+id:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+id:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+id:build: dist/assets/admin-messaging-Deb_qeG3.js                   4.53 kB │ gzip:   1.87 kB
+id:build: dist/assets/admin-messaging-BzpSHSUj.js                   4.70 kB │ gzip:   2.01 kB
+id:build: dist/assets/admin-messaging-dXGlHtst.js                   4.79 kB │ gzip:   2.03 kB
+id:build: dist/assets/booking-C2JFywZY.js                           4.84 kB │ gzip:   1.84 kB
+id:build: dist/assets/auth-C10lCXDJ.js                              5.05 kB │ gzip:   2.14 kB
+id:build: dist/assets/booking-BnHoP-fw.js                           5.18 kB │ gzip:   2.03 kB
+id:build: dist/assets/booking-oFemWAlT.js                           5.19 kB │ gzip:   2.03 kB
+id:build: dist/assets/admin-catalogs-p29fM8xq.js                    5.41 kB │ gzip:   2.01 kB
+id:build: dist/assets/auth-Uy3Y-og8.js                              5.63 kB │ gzip:   2.37 kB
+id:build: dist/assets/signup-BkgU37Eh.js                            5.63 kB │ gzip:   2.54 kB
+id:build: dist/assets/admin-catalogs-dZtpqy8S.js                    5.67 kB │ gzip:   2.23 kB
+id:build: dist/assets/admin-audit-DY0X8EOb.js                       5.68 kB │ gzip:   2.37 kB
+id:build: dist/assets/auth-DU3LoyRH.js                              5.70 kB │ gzip:   2.38 kB
+id:build: dist/assets/admin-catalogs-D4wG5vIy.js                    5.87 kB │ gzip:   2.26 kB
+id:build: dist/assets/signup-Bi4UbtBk.js                            5.88 kB │ gzip:   2.80 kB
+id:build: dist/assets/signup-DQ9RZKro.js                            5.97 kB │ gzip:   2.82 kB
+id:build: dist/assets/admin-activities-Cmq1QEmn.js                  6.01 kB │ gzip:   2.42 kB
+id:build: dist/assets/admin-activities-p-Yew4Zm.js                  6.17 kB │ gzip:   2.62 kB
+id:build: dist/assets/admin-audit-BH-XD2BI.js                       6.19 kB │ gzip:   2.60 kB
+id:build: dist/assets/admin-audit-CaX7fz6F.js                       6.30 kB │ gzip:   2.62 kB
+id:build: dist/assets/admin-activities-7OuSwNid.js                  6.38 kB │ gzip:   2.68 kB
+id:build: dist/assets/census-B6Uk25WX.js                            6.50 kB │ gzip:   2.54 kB
+id:build: dist/assets/census-BrGKNC-v.js                            6.85 kB │ gzip:   2.79 kB
+id:build: dist/assets/census-Dx6KXQKx.js                            7.05 kB │ gzip:   2.84 kB
+id:build: dist/assets/enums-DzQrghxX.js                             7.68 kB │ gzip:   3.19 kB
+id:build: dist/assets/enums-4BJpRFUj.js                             7.91 kB │ gzip:   3.31 kB
+id:build: dist/assets/enums-DTlOh2Bw.js                             7.94 kB │ gzip:   3.30 kB
+id:build: dist/assets/admin-scheduling-nhXWwjRG.js                  8.23 kB │ gzip:   3.04 kB
+id:build: dist/assets/admin-scheduling-DeLeUPtJ.js                  8.64 kB │ gzip:   3.30 kB
+id:build: dist/assets/admin-scheduling-BhSriSnV.js                  8.64 kB │ gzip:   3.31 kB
+id:build: dist/assets/instructor-Drv5FS73.js                        8.95 kB │ gzip:   3.24 kB
+id:build: dist/assets/instructor-C9Nzp3I-.js                        9.33 kB │ gzip:   3.45 kB
+id:build: dist/assets/instructor-DOywIQyk.js                        9.43 kB │ gzip:   3.47 kB
+id:build: dist/assets/admin-billing-CKR3l-0j.js                     9.75 kB │ gzip:   3.44 kB
+id:build: dist/assets/admin-billing-BVs2da4o.js                     9.95 kB │ gzip:   3.75 kB
+id:build: dist/assets/admin-billing-B9Brj-Vj.js                    10.16 kB │ gzip:   3.78 kB
+id:build: dist/assets/admin-census-DbSPcs69.js                     12.73 kB │ gzip:   4.95 kB
+id:build: dist/assets/admin-census-RTYTjdnQ.js                     13.56 kB │ gzip:   5.33 kB
+id:build: dist/assets/admin-census-JRkX2nVt.js                     13.95 kB │ gzip:   5.43 kB
+id:build: dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+id:build: dist/assets/admin-settings-BlVOTC-v.js                   22.92 kB │ gzip:   7.95 kB
+id:build: dist/assets/errors-Bvp7svDM.js                           23.31 kB │ gzip:   7.57 kB
+id:build: dist/assets/errors-QdWmQXin.js                           23.32 kB │ gzip:   7.54 kB
+id:build: dist/assets/admin-settings-Cq0ZFrDH.js                   24.62 kB │ gzip:   8.62 kB
+id:build: dist/assets/admin-settings-wvO4u_TR.js                   25.08 kB │ gzip:   8.63 kB
+id:build: dist/assets/index-CLBj5Cyo.js                           332.09 kB │ gzip: 102.03 kB
+id:build: 
+id:build: ✓ built in 242ms
+@agilityhub/auth:typecheck: cache miss, executing 927f59a5221cafbb
+@agilityhub/auth:test: cache miss, executing ce0ac4def00284fe
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test: > @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: > vitest run
+@agilityhub/auth:test: 
+@agilityhub/api-client:test:  ✓ src/mocks/backoffice-handlers.test.ts (47 tests) 4486ms
+@agilityhub/api-client:test:    ✓ E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19) (7)
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 round 2 #3 (R-08-02, R-08-03): after Tuesday's 18:50 class is cancelled, still no dog of the calendar or the day grid is booked over its week's limit, and every class lists its counters' registrants 520ms
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  FAIL  src/mocks/billing-handlers.test.ts > S12 R-12-14 · GET /billing/runs/{id} and POST /billing/runs/{id}/rollback (T-12-13, T-12-25) > T-12-13 E89 (R-12-14): the rollback takes the whole run, also a receipt the admin cancelled meanwhile: it leaves «Tots», lists under CANCELLED as rolled back and keeps its own reason
+@agilityhub/api-client:test: AssertionError: expected undefined to match object { rolledBack: true, …(1) }
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: - Expected:
+@agilityhub/api-client:test: {
+@agilityhub/api-client:test:   "rolledBack": true,
+@agilityhub/api-client:test:   "status": "CANCELLED",
+@agilityhub/api-client:test: }
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: + Received:
+@agilityhub/api-client:test: undefined
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  ❯ src/mocks/billing-handlers.test.ts:609:61
+@agilityhub/api-client:test:     607|     ).data;
+@agilityhub/api-client:test:     608|     expectValid("InvoicePage", rows);
+@agilityhub/api-client:test:     609|     expect(rows?.items.find((item) => item.id === joan.id)).toMatchObj…
+@agilityhub/api-client:test:        |                                                             ^
+@agilityhub/api-client:test:     610|       rolledBack: true,
+@agilityhub/api-client:test:     611|       status: "CANCELLED",
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  Test Files  1 failed | 28 passed (29)
+@agilityhub/api-client:test:       Tests  1 failed | 648 passed (649)
+@agilityhub/api-client:test:    Start at  09:20:06
+@agilityhub/api-client:test:    Duration  5.77s (tests 48%, import 30%, transform 22%)
+@agilityhub/api-client:test: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: 
+@agilityhub/api-client:test:  ELIFECYCLE  Test failed. See above for more details.
+@agilityhub/auth:test:  ELIFECYCLE  Test failed. See above for more details.
+@agilityhub/api-client#test:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run test exited (1)
+
+ Tasks:    20 successful, 28 total
+Cached:    18 cached, 28 total
+  Time:    6.511s 
+Failed:    @agilityhub/api-client#test
+
+ ERROR  run failed: command  exited (1)
+
+exit 1

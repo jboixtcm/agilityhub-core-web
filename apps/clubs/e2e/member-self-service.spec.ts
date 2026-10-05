@@ -88,10 +88,17 @@ test.describe("T-03-40 mobile own dogs", () => {
     await page.getByRole("button", { name: "＋ DOC." }).first().click();
     await expect(page.getByRole("dialog", { name: "Afegeix un document de Duna" })).toBeVisible();
     // E3-W12 step 1 (R-03-15): the club's types of GET /me/dogs, in their order.
-    await expect(page.getByLabel("Tipus").locator("option")).toHaveText(["Cartilla de vacunes", "Assegurança", "Altres"]);
+    await expect(page.getByLabel("Tipus").locator("option")).toHaveText([
+      "Cartilla de vacunes",
+      "Assegurança",
+      "Altres",
+    ]);
     await page.getByLabel("Tipus").selectOption("INSURANCE");
     await page.screenshot({
-      path: resolve(import.meta.dirname, "../../../roadmap/evidence/E3-W12/13-document-dialog-375.png"),
+      path: resolve(
+        import.meta.dirname,
+        "../../../roadmap/evidence/E3-W12/13-document-dialog-375.png",
+      ),
     });
     await page.getByLabel("Tipus").selectOption("VACCINATION_CARD");
     await page.getByLabel("Nom del document").fill("cartilla_Duna_3.jpg");
@@ -127,7 +134,9 @@ test.describe("T-03-40 mobile own dogs", () => {
   }) => {
     await login(page);
     await page.goto(`${baseUrl}/gossos`);
-    const duna = page.locator(".dog-card").filter({ has: page.getByRole("heading", { name: "Duna" }) });
+    const duna = page
+      .locator(".dog-card")
+      .filter({ has: page.getByRole("heading", { name: "Duna" }) });
     const tasks = duna.getByRole("region", { name: "Tasques" });
     await expect(tasks.getByText("2 pendents · 1 feta")).toBeVisible();
     await expect(tasks.getByRole("listitem")).toHaveText([
@@ -135,8 +144,12 @@ test.describe("T-03-40 mobile own dogs", () => {
       "Revisar l'entrada a l'eslàlom12-08 · Marc · 1 adjunt",
       "Consolidar la sortida quieta20-07 · Laura · feta el 01-08",
     ]);
-    await expect(tasks.getByRole("checkbox", { name: "Treballar l'entrada al balancí" })).not.toBeChecked();
-    await expect(tasks.getByRole("checkbox", { name: "Consolidar la sortida quieta" })).toBeChecked();
+    await expect(
+      tasks.getByRole("checkbox", { name: "Treballar l'entrada al balancí" }),
+    ).not.toBeChecked();
+    await expect(
+      tasks.getByRole("checkbox", { name: "Consolidar la sortida quieta" }),
+    ).toBeChecked();
     await expect(tasks.getByText("Consolidar la sortida quieta")).toHaveCSS(
       "text-decoration-line",
       "line-through",
@@ -189,12 +202,15 @@ test.describe("T-03-40 mobile own dogs", () => {
     expect(readability.meta.ratio).toBeGreaterThanOrEqual(4.5);
     await page.screenshot({
       fullPage: true,
-      path: resolve(import.meta.dirname, "../../../roadmap/evidence/E4-W16/13-els-meus-gossos-375.png"),
+      path: resolve(
+        import.meta.dirname,
+        "../../../roadmap/evidence/E4-W16/13-els-meus-gossos-375.png",
+      ),
     });
 
-    for (const [index, dog, name] of [
-      [0, "Duna", "cartilla_Duna_3.jpg"],
-      [1, "Rock", "asseguranca_Rock.pdf"],
+    for (const [index, dog, dogId, name] of [
+      [0, "Duna", "dog-duna", "cartilla_Duna_3.jpg"],
+      [1, "Rock", "31000000-0000-4000-8000-000000000002", "asseguranca_Rock.pdf"],
     ] as const) {
       await page.getByRole("button", { name: "＋ DOC." }).nth(index).click();
       const dialog = page.getByRole("dialog", { name: `Afegeix un document de ${dog}` });
@@ -207,7 +223,7 @@ test.describe("T-03-40 mobile own dogs", () => {
       });
       const upload = page.waitForRequest(
         (request) =>
-          request.url().includes(`/api/v1/me/dogs/dog-${dog.toLowerCase()}/documents`) &&
+          request.url().includes(`/api/v1/me/dogs/${dogId}/documents`) &&
           request.method() === "POST",
       );
       await dialog.getByRole("button", { name: "PUJA EL DOCUMENT" }).click();

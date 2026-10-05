@@ -10,7 +10,10 @@ export type MeDog = Omit<components["schemas"]["MeDog"], "documents" | "licenses
   status: "ACTIVE";
 };
 /** A dog added from the app that waits for the club (R-04-25, E36): no documents or licences. */
-export type MePendingDog = Omit<components["schemas"]["MeDog"], "documents" | "licenses" | "status"> & {
+export type MePendingDog = Omit<
+  components["schemas"]["MeDog"],
+  "documents" | "licenses" | "status"
+> & {
   status: "PENDING";
 };
 export type MeDogs = Omit<components["schemas"]["MeDogs"], "dogs"> & {
@@ -20,6 +23,131 @@ export type MeProfile = components["schemas"]["MeProfile"];
 type PostalTown = components["schemas"]["PostalTown"];
 type DogDocumentType = components["schemas"]["DogDocumentType"];
 
+export const meInvoiceFixtures: components["schemas"]["MeInvoice"][] = [
+  {
+    displayNumber: "2026-0912",
+    familyGroup: false,
+    id: "51000000-0000-4000-8000-000000000001",
+    issueDate: "2026-09-01",
+    lines: [
+      {
+        description: "Quota setembre 2026",
+        origin: "MONTHLY_FEE",
+        total: { amountMinor: 6000, currency: "EUR" },
+      },
+    ],
+    paidAt: null,
+    paymentMethod: {
+      channel: null,
+      holderName: "Laura Serra Vidal",
+      last4: null,
+      mandateRef: null,
+      maskedAccount: "···· 2231",
+      type: "SEPA_DD",
+    },
+    period: "2026-09",
+    refundedTotal: { amountMinor: 0, currency: "EUR" },
+    status: "FAILED",
+    total: { amountMinor: 6000, currency: "EUR" },
+  },
+  {
+    displayNumber: "2026-0812",
+    familyGroup: false,
+    id: "51000000-0000-4000-8000-000000000002",
+    issueDate: "2026-08-01",
+    lines: [
+      {
+        description: "Quota agost 2026",
+        origin: "MONTHLY_FEE",
+        total: { amountMinor: 6000, currency: "EUR" },
+      },
+    ],
+    paidAt: "2026-08-05T09:00:00Z",
+    paymentMethod: {
+      channel: null,
+      holderName: "Laura Serra Vidal",
+      last4: null,
+      mandateRef: null,
+      maskedAccount: "···· 2231",
+      type: "SEPA_DD",
+    },
+    period: "2026-08",
+    refundedTotal: { amountMinor: 0, currency: "EUR" },
+    status: "PAID",
+    total: { amountMinor: 6000, currency: "EUR" },
+  },
+  {
+    displayNumber: "2026-0712",
+    familyGroup: false,
+    id: "51000000-0000-4000-8000-000000000003",
+    issueDate: "2026-07-01",
+    lines: [
+      {
+        description: "Quota juliol 2026",
+        origin: "MONTHLY_FEE",
+        total: { amountMinor: 6000, currency: "EUR" },
+      },
+    ],
+    paidAt: null,
+    paymentMethod: {
+      channel: null,
+      holderName: "Laura Serra Vidal",
+      last4: null,
+      mandateRef: null,
+      maskedAccount: "···· 2231",
+      type: "SEPA_DD",
+    },
+    period: "2026-07",
+    refundedTotal: { amountMinor: 0, currency: "EUR" },
+    status: "COLLECTING",
+    total: { amountMinor: 6000, currency: "EUR" },
+  },
+  {
+    displayNumber: "2026-0610",
+    familyGroup: true,
+    id: "51000000-0000-4000-8000-000000000004",
+    issueDate: "2026-06-01",
+    lines: [
+      {
+        description: "Quota familiar juny 2026",
+        origin: "MONTHLY_FEE",
+        total: { amountMinor: 9500, currency: "EUR" },
+      },
+    ],
+    paidAt: "2026-06-04T09:00:00Z",
+    paymentMethod: {
+      channel: null,
+      holderName: "Laura Serra Vidal",
+      last4: null,
+      mandateRef: null,
+      maskedAccount: "···· 2231",
+      type: "SEPA_DD",
+    },
+    period: "2026-06",
+    refundedTotal: { amountMinor: 0, currency: "EUR" },
+    status: "PAID",
+    total: { amountMinor: 9500, currency: "EUR" },
+  },
+];
+
+export const packBalanceFixtures: components["schemas"]["PackBalanceDetail"][] = [
+  {
+    consumed: 6,
+    dogId: "31000000-0000-4000-8000-000000000002",
+    expiresOn: "2026-11-12",
+    id: "53000000-0000-4000-8000-000000000001",
+    memberId: "20000000-0000-4000-8000-000000000002",
+    movements: [],
+    openedOn: "2026-05-13",
+    planId: "33000000-0000-4000-8000-000000000010",
+    planName: "Pack 10",
+    remaining: 4,
+    sessionsTotal: 10,
+    state: "ACTIVE",
+    upfrontPaymentId: null,
+  },
+];
+
 /** `census.dogDocumentTypes` of the mock club: the product default of CATALEG_PARAMETRES (R-03-15). */
 export const dogDocumentTypesCatalog = [
   {
@@ -27,7 +155,11 @@ export const dogDocumentTypesCatalog = [
     label: { ca: "Cartilla de vacunes", en: "Vaccination card", es: "Cartilla de vacunas" },
     required: true,
   },
-  { key: "INSURANCE", label: { ca: "Assegurança", en: "Insurance", es: "Seguro" }, required: false },
+  {
+    key: "INSURANCE",
+    label: { ca: "Assegurança", en: "Insurance", es: "Seguro" },
+    required: false,
+  },
   { key: "OTHER", label: { ca: "Altres", en: "Other", es: "Otros" }, required: false },
 ];
 
@@ -38,7 +170,10 @@ export const dogDocumentTypesCatalog = [
  */
 export function meDogDocumentTypes(
   acceptLanguage: string | null,
-  club: { defaultLocale: string; locales: readonly string[] } = { defaultLocale: "ca", locales: ["ca", "es", "en"] },
+  club: { defaultLocale: string; locales: readonly string[] } = {
+    defaultLocale: "ca",
+    locales: ["ca", "es", "en"],
+  },
 ): DogDocumentType[] {
   const requested = acceptLanguage?.toLocaleLowerCase().split(/[-,]/u)[0] ?? club.defaultLocale;
   const locale = club.locales.includes(requested) ? requested : club.defaultLocale;
@@ -144,7 +279,7 @@ export const meDogsFixture: MeDogs = {
       breed: "Mestís",
       documents: [],
       freeTrainingAllowed: true,
-      id: "dog-rock",
+      id: "31000000-0000-4000-8000-000000000002",
       level: level(3),
       licenses: [
         {

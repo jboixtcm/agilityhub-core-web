@@ -1,0 +1,37 @@
+{
+  "title": "Sol·licitar la baixa",
+  "back": "Torna al perfil",
+  "loading": "Carregant la sol·licitud de baixa",
+  "loadError": "No s'ha pogut carregar la sol·licitud de baixa.",
+  "offer": {
+    "title": "Abans de donar-te de baixa…",
+    "text": "Pots demanar un període d'inactivitat i mantenir la teva plaça.",
+    "fee": "La quota és de {first} el primer mes i {following} els següents.",
+    "action": "VULL DEMANAR INACTIVITAT"
+  },
+  "form": {
+    "date": "Data en què vols la baixa",
+    "today": "Avui, {date}",
+    "fullMonth": "Si tries un dia d'un mes posterior a l'actual, aquell mes es cobrarà íntegrament.",
+    "reason": "Motiu",
+    "reasonPlaceholder": "Tria un motiu",
+    "nps": "De 0 a 10, amb quina probabilitat ens recomanaries?",
+    "comment": "Què podríem millorar perquè el club s'adaptés més a les teves necessitats?",
+    "submit": "ENVIA LA SOL·LICITUD",
+    "withdraw": "RETIRA LA SOL·LICITUD",
+    "confirmWithdraw": "Vols retirar aquesta sol·licitud?",
+    "footer": "El club la revisarà i et confirmarà la data d'efecte.",
+    "saved": "La sol·licitud s'ha enviat.",
+    "withdrawn": "La sol·licitud s'ha retirat."
+  },
+  "profileRow": { "requested": "baixa sol·licitada el {date}", "planned": "baixa el {date}" },
+  "plannedLeave": "Tens la baixa prevista el {date}. Per canviar-la, contacta amb el club.",
+  "errors": {
+    "alreadyRequested": "Ja tens una sol·licitud de baixa pendent.",
+    "alreadyScheduled": "Ja tens una baixa prevista.",
+    "memberNotActive": "Només els abonats actius poden demanar la baixa.",
+    "dateInvalid": "La data de baixa no és vàlida.",
+    "reasonUnknown": "Tria un motiu vàlid.",
+    "generic": "No s'ha pogut enviar la sol·licitud."
+  }
+}

@@ -53,6 +53,15 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   /^\/invoices\/payments$/,
   /^\/invoices\/[^/]+\/(payment|failure|retry|refund|cancellation)$/,
   /^\/remittances\/[^/]+\/submission$/,
+  // S12/S13 member lifecycle and D10 writes (E8-W02). These callers still use
+  // createSubmissionKeys so a retry after a 5xx keeps the payload's key.
+  /^\/me\/inactivity-periods$/,
+  /^\/me\/inactivity-periods\/[^/]+\/cancellation$/,
+  /^\/me\/leave-requests$/,
+  /^\/me\/leave-requests\/[^/]+\/cancellation$/,
+  /^\/me\/card-setup$/,
+  /^\/upfront-payments$/,
+  /^\/pack-balances\/[^/]+\/adjustments$/,
   // Not S11's member writes (screen 11's read and read-all, 12's push subscription): their
   // contract declares no Idempotency-Key, and a key goes only where it is declared (CONVENCIONS_API
   // §7, E79; E7-W02 round 2 #8).

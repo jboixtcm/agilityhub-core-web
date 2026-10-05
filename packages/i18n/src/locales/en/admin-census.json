@@ -190,10 +190,30 @@
       "reason": "Reason (optional)",
       "title": "Enter as member"
     },
-    "invoice": {
-      "all": "All invoices ({count}) ›",
-      "paid": "paid",
-      "remitted": "submitted"
+    "billing": {
+      "title": "Billing",
+      "receipts": "Recent receipts",
+      "allReceipts": "All receipts ›",
+      "upfront": "Upfront payments",
+      "recordPayment": "Record a payment",
+      "packs": "Packs",
+      "packLine": "{consumed} used · {remaining} available · expires {date}",
+      "adjust": "Adjust",
+      "dog": "Dog",
+      "concept": "Concept",
+      "amountDue": "Amount due",
+      "amountPaid": "Amount paid",
+      "channel": "Channel",
+      "paidAt": "Payment date",
+      "reference": "Reference (optional)",
+      "note": "Note (optional)",
+      "delta": "Session adjustment",
+      "reason": "Reason",
+      "expiresOn": "New expiry date",
+      "amountExceeds": "The paid amount cannot exceed the amount due.",
+      "planNotPack": "This concept requires a pack plan.",
+      "packNegative": "The adjustment cannot leave the pack with negative sessions.",
+      "invalidCard": "Invalid card"
     },
     "language": "language: {locale}",
     "number": "no. {number}",
@@ -236,7 +256,6 @@
       "dataPayment": "Details and payment",
       "dogs": "Dogs",
       "instructorNotes": "Notes for instructors",
-      "invoicesAudit": "Recent invoices and audit",
       "preferences": "Notification preferences (maintained here and in the profile)"
     },
     "tabs": {

@@ -25,6 +25,7 @@ import {
   resolveBrandingLogo,
   Select,
   TabBar,
+  ToastProvider,
   type TabBarItem,
   useBranding,
 } from "@agilityhub/ui";
@@ -41,6 +42,7 @@ import { useTranslation } from "react-i18next";
 import { ActivityDetailPage } from "./activities/ActivityDetailPage";
 import { HistoryRowsPreview } from "./activities/HistoryRowsPreview";
 import { safeDecode } from "./activities/shared";
+import { InvoicesPage } from "./billing/InvoicesPage";
 import { BookingDetailPage } from "./booking/BookingDetailPage";
 import { BookPage } from "./booking/BookPage";
 import { ConfirmPage } from "./booking/ConfirmPage";
@@ -48,6 +50,7 @@ import { HomePage } from "./booking/HomePage";
 import { navigateInApp } from "./booking/shared";
 import { WaitlistDetailPage } from "./booking/WaitlistDetailPage";
 import { HistoryPage } from "./history/HistoryPage";
+import { InactivityPage } from "./inactivity/InactivityPage";
 import { InfoPage } from "./InfoPage";
 import { AttendancePage } from "./instructor/AttendancePage";
 import { DayPage } from "./instructor/DayPage";
@@ -55,9 +58,11 @@ import { RingBlockPage } from "./instructor/RingBlockPage";
 import { StudentCardPage } from "./instructor/StudentCardPage";
 import { StudentSearchPage } from "./instructor/StudentSearchPage";
 import { TasksPage } from "./instructor/TasksPage";
+import { LeavePage } from "./leave/LeavePage";
 import { logoutWithPush } from "./notifications/push";
 import { NotificationsPage } from "./NotificationsPage";
 import { NoticesCard } from "./profile/NoticesCard";
+import { ProfileLifecycleSection } from "./profile/ProfileLifecycleSection";
 import { PublicFooter } from "./PublicFooter";
 import { MyDataPage, MyDogsPage } from "./SelfServicePages";
 import { SignupPage } from "./SignupPage";
@@ -102,6 +107,8 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/perfil" },
   { path: "/gossos" },
   { path: "/dades" },
+  { path: "/rebuts" },
+  { path: "/rebuts/:id" },
   // Screens 14 and 15.
   { path: "/inactivitat" },
   { path: "/baixa" },
@@ -1296,38 +1303,21 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
         {/* R-11-15: only the notifications created from now on come in the new language. */}
         <small className="profile-language__help">{t("auth:profile.languageHelp")}</small>
       </Card>
-      <Card className="profile-list profile-list--final">
-        <a href="/inactivitat">
-          <Icon aria-hidden="true" name="palm" />
-          <span>{t("auth:profile.inactivity")}</span>
-          <Icon aria-hidden="true" name="chev" />
-        </a>
-        <a className="profile-list__muted" href="/baixa">
-          <Icon aria-hidden="true" name="ban" />
-          <span>{t("auth:profile.leave")}</span>
-          <Icon aria-hidden="true" name="chev" />
-        </a>
-        <button
-          className="profile-list__logout"
-          disabled={working}
-          onClick={() => {
-            setWorking(true);
-            // R-11-07: this device's push subscription goes first, never blocking the logout. An
-            // impersonated session never subscribed (IMPERSONATION_DENIED): the stored id is the
-            // admin's own device's and stays.
-            void (
-              me.impersonation === undefined
-                ? logoutWithPush(client, () => authClient.logout())
-                : authClient.logout()
-            ).catch(() => undefined);
-          }}
-          type="button"
-        >
-          <Icon aria-hidden="true" name="unlock" />
-          <span>{t("auth:profile.logout")}</span>
-          <Icon aria-hidden="true" name="chev" />
-        </button>
-      </Card>
+      <ProfileLifecycleSection
+        client={client}
+        logoutDisabled={working}
+        onLogout={() => {
+          setWorking(true);
+          // R-11-07: this device's push subscription goes first, never blocking the logout. An
+          // impersonated session never subscribed (IMPERSONATION_DENIED): the stored id is the
+          // admin's own device's and stays.
+          void (
+            me.impersonation === undefined
+              ? logoutWithPush(client, () => authClient.logout())
+              : authClient.logout()
+          ).catch(() => undefined);
+        }}
+      />
       {working ? <p role="status">{t("auth:profile.working")}</p> : null}
       <PasswordModal
         authClient={authClient}
@@ -1427,7 +1417,23 @@ function LegacyAccessRedirect() {
   return null;
 }
 
-export function App({
+type AppProps = {
+  apiClient?: ApiClient;
+  authClient: AuthClient;
+  navigate?: (path: string, replace: boolean) => void;
+  publicApiClient?: ApiClient;
+};
+
+export function App(props: AppProps) {
+  const { t } = useTranslation("common");
+  return (
+    <ToastProvider dismissLabel={t("gallery.close")}>
+      <AppContent {...props} />
+    </ToastProvider>
+  );
+}
+
+function AppContent({
   apiClient = defaultApiClient,
   authClient,
   navigate = (path, replace) => {
@@ -1438,12 +1444,7 @@ export function App({
     }
   },
   publicApiClient = defaultApiClient,
-}: {
-  apiClient?: ApiClient;
-  authClient: AuthClient;
-  navigate?: (path: string, replace: boolean) => void;
-  publicApiClient?: ApiClient;
-}) {
+}: AppProps) {
   const [location, setLocation] = useState(
     () => `${window.location.pathname}${window.location.search}`,
   );
@@ -1577,6 +1578,28 @@ export function App({
     ) : pathname === "/dades" ? (
       <RequireAuth>
         <MyDataPage client={apiClient} />
+      </RequireAuth>
+    ) : pathname === "/rebuts" ? (
+      <RequireAuth>
+        <RequireModule module="BILLING">
+          <InvoicesPage client={apiClient} />
+        </RequireModule>
+      </RequireAuth>
+    ) : route.path === "/rebuts/:id" ? (
+      <RequireAuth>
+        <RequireModule module="BILLING">
+          <InvoicesPage client={apiClient} invoiceId={safeDecode(pathname.split("/")[2] ?? "")} />
+        </RequireModule>
+      </RequireAuth>
+    ) : pathname === "/inactivitat" ? (
+      <RequireAuth>
+        <RequireModule module="INACTIVITY">
+          <InactivityPage client={apiClient} />
+        </RequireModule>
+      </RequireAuth>
+    ) : pathname === "/baixa" ? (
+      <RequireAuth>
+        <LeavePage client={apiClient} />
       </RequireAuth>
     ) : pathname === "/info" ? (
       <RequireAuth>
@@ -1720,6 +1743,9 @@ export function App({
           [
             "/gossos",
             "/dades",
+            "/rebuts",
+            "/inactivitat",
+            "/baixa",
             "/info",
             "/avui",
             "/instructor/avui",
@@ -1734,6 +1760,7 @@ export function App({
           ].includes(pathname) ||
           [
             "/activitats/:id",
+            "/rebuts/:id",
             "/reserves/:id",
             "/espera/:id",
             "/entrenaments/:id",

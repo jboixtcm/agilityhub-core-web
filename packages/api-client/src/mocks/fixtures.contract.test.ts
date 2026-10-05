@@ -57,6 +57,12 @@ import {
   memberBlockView,
 } from "./fixtures/day-grid";
 import {
+  inactivityContextFixture,
+  inactivityPreviewFixture,
+  leaveContextFixture,
+} from "./fixtures/inactivity";
+import { meInvoiceFixtures, packBalanceFixtures } from "./fixtures/member-self-service";
+import {
   coverageFixture,
   initialWeeks,
   initialWeekTemplates,
@@ -175,6 +181,34 @@ describe("T-01-25 OpenAPI mock fixture contract", () => {
       readFileSync(new URL(`./fixtures/${fixtureFile}`, import.meta.url), "utf8"),
     );
 
+    expect(validate(fixture), JSON.stringify(validate.errors, null, 2)).toBe(true);
+  });
+});
+
+describe("E8-W02 member billing and lifecycle fixtures follow the published contract", () => {
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  addFormats(ajv);
+  ajv.addSchema(mergedDocument, openapiSchemaId);
+  const schema = (name: string) =>
+    ajv.compile({ $ref: `${openapiSchemaId}#/components/schemas/${name}` });
+
+  it("validates every member receipt and pack balance", () => {
+    const invoice = schema("MeInvoice");
+    for (const item of meInvoiceFixtures) {
+      expect(invoice(item), JSON.stringify(invoice.errors, null, 2)).toBe(true);
+    }
+    const pack = schema("PackBalanceDetail");
+    for (const item of packBalanceFixtures) {
+      expect(pack(item), JSON.stringify(pack.errors, null, 2)).toBe(true);
+    }
+  });
+
+  it.each([
+    ["MeInactivityContext", inactivityContextFixture],
+    ["InactivityPreview", inactivityPreviewFixture],
+    ["MeLeaveContext", leaveContextFixture],
+  ] as const)("validates %s", (name, fixture) => {
+    const validate = schema(name);
     expect(validate(fixture), JSON.stringify(validate.errors, null, 2)).toBe(true);
   });
 });

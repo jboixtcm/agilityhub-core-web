@@ -7,7 +7,12 @@ import {
   type components,
   putSignedFile,
 } from "@agilityhub/api-client";
-import { fmtMaskedIban, LOCALE_STORAGE_KEY, productLocales, useClubFormats } from "@agilityhub/i18n";
+import {
+  fmtMaskedIban,
+  LOCALE_STORAGE_KEY,
+  productLocales,
+  useClubFormats,
+} from "@agilityhub/i18n";
 import {
   Button,
   Card,
@@ -34,6 +39,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { CHECKOUT_RETURN_KEY, CheckoutReturn } from "./payments/CheckoutReturn";
 import { PublicFooter } from "./PublicFooter";
 import { clubToday } from "./today/useDayGrid";
 
@@ -63,7 +69,8 @@ type Money = components["schemas"]["Money"];
 type Translate = ReturnType<typeof useTranslation>["t"];
 
 /** The start option as 19 showed it: what labels a first month (`SignupUpfront` has no first-month block). */
-type StartChoice = Pick<QuoteOption, "option" | "startDate"> & Partial<Pick<QuoteOption, "portion">>;
+type StartChoice = Pick<QuoteOption, "option" | "startDate"> &
+  Partial<Pick<QuoteOption, "portion">>;
 
 type DraftPerson = Omit<SignupPerson, "gender"> & {
   gender: SignupPerson["gender"] | "";
@@ -136,7 +143,15 @@ const CHECKOUT_KEY = "signup.checkout.v1";
 const DRAFT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const STEP_ORDER: readonly SignupStep[] = ["person", "dog", "family", "payment"];
 const PERSON_FIELDS = new Set(["birthDate", "firstName", "gender", "lastName1", "lastName2"]);
-const DOG_FIELDS = new Set(["birthMonth", "breed", "chip", "documents", "name", "notesToInstructors", "sex"]);
+const DOG_FIELDS = new Set([
+  "birthMonth",
+  "breed",
+  "chip",
+  "documents",
+  "name",
+  "notesToInstructors",
+  "sex",
+]);
 
 const CODE_ROUTES: Readonly<Record<string, { field?: string; step: SignupStep }>> = {
   CONSENT_VERSION_OUTDATED: { field: "privacy", step: "payment" },
@@ -238,7 +253,10 @@ function normaliseDocument(value: string): string {
 
 /** R-04-07 / S04 §3: the chip is stored without separators, in upper case. */
 function normaliseChip(value: string): string {
-  return value.trim().toUpperCase().replaceAll(/[-\s.]/gu, "");
+  return value
+    .trim()
+    .toUpperCase()
+    .replaceAll(/[-\s.]/gu, "");
 }
 
 function validChip(value: string, profileCode: string): boolean {
@@ -273,7 +291,10 @@ function canonicalJson(value: unknown): string {
 
 /** The payload fingerprint: a SHA-256 digest (Web Crypto), so no personal data is kept. */
 async function payloadDigest(body: unknown): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(canonicalJson(body)));
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(canonicalJson(body)),
+  );
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
@@ -387,11 +408,7 @@ function identityDocument(draft: SignupDraft, spanishProfile: boolean): SignupId
   }
   const value = normaliseDocument(draft.person.idDocument.value);
   return {
-    type: spanishProfile
-      ? /^[XYZ]/u.test(value)
-        ? "NIE"
-        : "DNI"
-      : draft.person.idDocument.type,
+    type: spanishProfile ? (/^[XYZ]/u.test(value) ? "NIE" : "DNI") : draft.person.idDocument.type,
     value,
   };
 }
@@ -575,7 +592,10 @@ function pendingErrorMessages(
   const generic = t("signup:common.genericError");
   if (pending.inProgress === true) return { fields: {}, message: t("common:inProgress") };
   if (pending.code === "RATE_LIMITED") {
-    return { fields: {}, message: t("signup:common.rateLimited", { seconds: pending.retryAfter ?? 60 }) };
+    return {
+      fields: {},
+      message: t("signup:common.rateLimited", { seconds: pending.retryAfter ?? 60 }),
+    };
   }
   if (pending.fields !== undefined) {
     const fieldFallback = t("errors:VALIDATION_ERROR");
@@ -612,13 +632,15 @@ function routeApiError(error: unknown, currentStep: SignupStep): PendingError {
     return target === undefined ? [] : [{ ...target, code: entry.code }];
   });
   if (fieldErrors.length > 0) {
-    const step = STEP_ORDER.find((candidate) =>
-      fieldErrors.some((entry) => entry.step === candidate),
-    ) ?? currentStep;
+    const step =
+      STEP_ORDER.find((candidate) => fieldErrors.some((entry) => entry.step === candidate)) ??
+      currentStep;
     return {
       code: error.code,
       fields: Object.fromEntries(
-        fieldErrors.filter((entry) => entry.step === step).map((entry) => [entry.field, entry.code]),
+        fieldErrors
+          .filter((entry) => entry.step === step)
+          .map((entry) => [entry.field, entry.code]),
       ),
       step,
     };
@@ -753,9 +775,7 @@ function PersonStep({
   const documentTypes = genericDocumentTypes(profile);
   // A passport-only applicant (R-04-01): the document errors belong to the passport field.
   const passportOnly =
-    isSpanishProfile &&
-    draft.person.idDocument.value.trim() === "" &&
-    draft.passport.trim() !== "";
+    isSpanishProfile && draft.person.idDocument.value.trim() === "" && draft.passport.trim() !== "";
   const dniError = passportOnly ? undefined : errors.idDocument;
   const passportError = passportOnly ? errors.idDocument : undefined;
 
@@ -2003,19 +2023,30 @@ function PaymentStep({
   const shownLines: readonly QuoteLine[] =
     frozen === undefined
       ? (quote?.lines ?? [])
-      : frozen.upfront.lines.filter((line) => line.status !== "CANCELLED" && line.status !== "REFUNDED");
+      : frozen.upfront.lines.filter(
+          (line) => line.status !== "CANCELLED" && line.status !== "REFUNDED",
+        );
   for (const [index, line] of shownLines.entries()) {
     const label = line.amount.amountMinor > 0 ? conceptLabel(line.concept) : undefined;
-    if (label !== undefined) upfrontRows.push({ amount: line.amount, key: `${line.concept}-${String(index)}`, label });
+    if (label !== undefined)
+      upfrontRows.push({ amount: line.amount, key: `${line.concept}-${String(index)}`, label });
   }
   if (frozen !== undefined) {
     // A public signup has no `additionalDog` (the core sends `null`).
     const additional = frozen.upfront.additionalDog ?? undefined;
     const firstMonth = shownLines.find((line) => line.concept === "FIRST_MONTH");
     if (additional !== undefined) {
-      upfrontRows.push({ amount: additional.amountDue, key: "start", label: optionLabel(additional) });
+      upfrontRows.push({
+        amount: additional.amountDue,
+        key: "start",
+        label: optionLabel(additional),
+      });
     } else if (firstMonth !== undefined && frozen.start !== undefined) {
-      upfrontRows.push({ amount: firstMonth.amount, key: "start", label: optionLabel(frozen.start) });
+      upfrontRows.push({
+        amount: firstMonth.amount,
+        key: "start",
+        label: optionLabel(frozen.start),
+      });
     }
   }
   const startOptions = frozen === undefined ? (quote?.options ?? []) : [];
@@ -2123,7 +2154,9 @@ function PaymentStep({
           : {
               consents,
               dog,
-              ...(draft.familyClaim.holderName === "" ? {} : { familyGroupClaim: draft.familyClaim }),
+              ...(draft.familyClaim.holderName === ""
+                ? {}
+                : { familyGroupClaim: draft.familyClaim }),
               locale: i18n.resolvedLanguage ?? branding.defaultLocale,
               ...(billing
                 ? {
@@ -2149,14 +2182,14 @@ function PaymentStep({
         // replays the first 201; any change to the payload gets a new key.
         const fingerprint = await payloadDigest(body);
         const idempotencyKey =
-          submission?.fingerprint === fingerprint
-            ? submission.idempotencyKey
-            : crypto.randomUUID();
+          submission?.fingerprint === fingerprint ? submission.idempotencyKey : crypto.randomUUID();
         const pending: SignupSubmission = { fingerprint, idempotencyKey };
         onChange((current) => ({ ...current, submission: pending }));
         const header = { "Idempotency-Key": idempotencyKey };
         // The core writes an absent block as `null` (no BILLING: no `upfront`).
-        const freeze = (upfront: SignupUpfront | null | undefined): Pick<SignupSubmission, "frozen"> =>
+        const freeze = (
+          upfront: SignupUpfront | null | undefined,
+        ): Pick<SignupSubmission, "frozen"> =>
           upfront == null
             ? {}
             : {
@@ -2223,6 +2256,7 @@ function PaymentStep({
         params: { header: { "Idempotency-Key": checkoutKey } },
       });
       if (checkout.data === undefined) throw new TypeError("Missing checkout response");
+      safeSessionSet(CHECKOUT_RETURN_KEY, checkout.data.checkoutSessionId);
       onContinue(checkout.data.checkoutUrl);
     } catch (error) {
       setWorking(false);
@@ -2519,7 +2553,7 @@ function PaymentStep({
   );
 }
 
-function SuccessStep({ addDog }: { addDog: boolean }) {
+function SuccessStep({ addDog, client }: { addDog: boolean; client: ApiClient }) {
   const { t } = useTranslation("signup");
   const [checkout] = useState(
     () =>
@@ -2535,6 +2569,14 @@ function SuccessStep({ addDog }: { addDog: boolean }) {
       <h2>{t("signup:success.title")}</h2>
       <p>{addDog ? t("signup:payment.addDogReviewFooter") : t("signup:payment.reviewFooter")}</p>
       {checkout ? <p>{t("signup:success.checkout")}</p> : null}
+      {checkout ? (
+        <CheckoutReturn
+          client={client}
+          onRetry={() => {
+            window.location.assign(addDog ? "/gossos/nou/pagament" : "/apuntat-hi/pagament");
+          }}
+        />
+      ) : null}
       {/* A member who added a dog goes back to 13, where it waits «pendent de validació». */}
       {addDog ? (
         <a className="signup-success__action" href="/gossos">
@@ -2586,7 +2628,11 @@ export function SignupPage({
 
   useEffect(() => {
     if (!cancelled) return;
-    window.history.replaceState(window.history.state, "", paths.payment ?? window.location.pathname);
+    window.history.replaceState(
+      window.history.state,
+      "",
+      paths.payment ?? window.location.pathname,
+    );
   }, [cancelled, paths.payment]);
   // The latest draft, updated synchronously: the production navigator is a full page load, so
   // the draft is written to the session before leaving, with every update of the same tick.
@@ -2656,9 +2702,7 @@ export function SignupPage({
               ? current.planId
               : (plans[0]?.id ?? "");
           const paymentMethods = data.paymentMethods ?? [];
-          const method = paymentMethods.some(
-            (candidate) => candidate.type === current.payment.type,
-          )
+          const method = paymentMethods.some((candidate) => candidate.type === current.payment.type)
             ? current.payment.type
             : paymentMethods[0]?.type;
           // R-04-17: an acceptance of other legal texts is cleared and asked again.
@@ -2746,7 +2790,7 @@ export function SignupPage({
   if (sent) {
     return (
       <Layout {...(addDog ? { title: t("signup:success.addDogTitle") } : {})}>
-        <SuccessStep addDog={addDog} />
+        <SuccessStep addDog={addDog} client={client} />
       </Layout>
     );
   }

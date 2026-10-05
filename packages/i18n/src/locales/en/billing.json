@@ -1,0 +1,33 @@
+{
+  "title": "Receipts",
+  "back": "Back to profile",
+  "loading": "Loading receipts",
+  "loadError": "Receipts could not be loaded.",
+  "retry": "Try again",
+  "empty": "You do not have any receipts yet.",
+  "familyGroup": "Family group",
+  "list": { "more": "Load more", "receipt": "Receipt {number}", "refunded": "refunded" },
+  "detail": {
+    "title": "Receipt details",
+    "lines": "Items",
+    "description": "Item",
+    "amount": "Amount",
+    "total": "Total",
+    "paymentMethod": "Payment method",
+    "download": "Download receipt",
+    "downloading": "Preparing receipt",
+    "downloadError": "The receipt could not be downloaded."
+  },
+  "cardBanner": {
+    "title": "We could not collect the receipt for {month}",
+    "action": "Update card",
+    "working": "Opening card update",
+    "error": "The card cannot be updated right now."
+  },
+  "checkout": {
+    "pending": "We are confirming the payment…",
+    "paid": "Payment received",
+    "expired": "The payment session has expired.",
+    "retry": "Try again"
+  }
+}

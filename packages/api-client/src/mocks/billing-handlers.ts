@@ -882,6 +882,7 @@ export const billingHandlers = [
                   maskedAccount: null,
                   type: "MANUAL",
                 },
+        rolledBack: false,
         period: issueDate.slice(0, 7),
         refundedTotal: eur(0),
         remittanceId: null,

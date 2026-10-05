@@ -250,6 +250,28 @@
     "FAILED": "unpaid",
     "CANCELLED": "cancelled"
   },
+  "inactivityState": {
+    "REQUESTED": "requested",
+    "APPROVED": "approved",
+    "ACTIVE": "active",
+    "FINISHED": "finished",
+    "DENIED": "denied",
+    "CANCELLED": "cancelled"
+  },
+  "leaveRequestState": {
+    "PENDING": "pending",
+    "APPROVED": "approved",
+    "DENIED": "denied",
+    "CANCELLED": "cancelled"
+  },
+  "upfrontStatus": {
+    "DUE": "due",
+    "CHECKOUT_PENDING": "payment pending",
+    "PARTIAL": "partial",
+    "PAID": "paid",
+    "CANCELLED": "cancelled",
+    "REFUNDED": "refunded"
+  },
   "invoiceKind": {
     "PERIODIC": "Monthly",
     "MANUAL": "Manual",

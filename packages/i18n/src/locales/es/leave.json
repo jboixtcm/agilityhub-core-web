@@ -1,0 +1,37 @@
+{
+  "title": "Solicitar la baja",
+  "back": "Volver al perfil",
+  "loading": "Cargando la solicitud de baja",
+  "loadError": "No se ha podido cargar la solicitud de baja.",
+  "offer": {
+    "title": "Antes de darte de baja…",
+    "text": "Puedes pedir un período de inactividad y mantener tu plaza.",
+    "fee": "La cuota es de {first} el primer mes y {following} los siguientes.",
+    "action": "QUIERO PEDIR INACTIVIDAD"
+  },
+  "form": {
+    "date": "Fecha en la que quieres la baja",
+    "today": "Hoy, {date}",
+    "fullMonth": "Si eliges un día de un mes posterior al actual, ese mes se cobrará íntegramente.",
+    "reason": "Motivo",
+    "reasonPlaceholder": "Elige un motivo",
+    "nps": "De 0 a 10, ¿con qué probabilidad nos recomendarías?",
+    "comment": "¿Qué podríamos mejorar para que el club se adaptara mejor a tus necesidades?",
+    "submit": "ENVÍA LA SOLICITUD",
+    "withdraw": "RETIRA LA SOLICITUD",
+    "confirmWithdraw": "¿Quieres retirar esta solicitud?",
+    "footer": "El club la revisará y te confirmará la fecha de efecto.",
+    "saved": "La solicitud se ha enviado.",
+    "withdrawn": "La solicitud se ha retirado."
+  },
+  "profileRow": { "requested": "baja solicitada el {date}", "planned": "baja el {date}" },
+  "plannedLeave": "Tienes la baja prevista el {date}. Para cambiarla, contacta con el club.",
+  "errors": {
+    "alreadyRequested": "Ya tienes una solicitud de baja pendiente.",
+    "alreadyScheduled": "Ya tienes una baja prevista.",
+    "memberNotActive": "Solo los abonados activos pueden solicitar la baja.",
+    "dateInvalid": "La fecha de baja no es válida.",
+    "reasonUnknown": "Elige un motivo válido.",
+    "generic": "No se ha podido enviar la solicitud."
+  }
+}

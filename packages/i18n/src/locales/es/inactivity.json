@@ -1,0 +1,37 @@
+{
+  "title": "Período de inactividad",
+  "back": "Volver al perfil",
+  "loading": "Cargando el período de inactividad",
+  "loadError": "No se ha podido cargar el período de inactividad.",
+  "intro": "Puedes pedir un período de inactividad por meses completos. Hazlo antes del día {deadlineDay} del mes anterior.",
+  "endNote": "La fecha final se puede modificar durante el período de inactividad (también hasta el día {deadlineDay}).",
+  "form": {
+    "fromMonth": "Mes de inicio (obligatorio)",
+    "toMonth": "Mes de finalización (si lo sabes)",
+    "openEnd": "— todavía no lo sé",
+    "comments": "Comentarios",
+    "firstMonth": "Cuota del 1.er mes · {amount}",
+    "followingMonths": "Meses siguientes · {amount}/mes",
+    "bookingsInside": "{count, plural, one {Ahora tienes # reserva dentro del período: se anulará si el club aprueba la solicitud.} other {Ahora tienes # reservas dentro del período: se anularán si el club aprueba la solicitud.}}",
+    "submit": "ENVÍA LA SOLICITUD",
+    "modify": "MODIFICA",
+    "withdraw": "RETIRA LA SOLICITUD",
+    "confirmWithdraw": "¿Quieres retirar esta solicitud?",
+    "saved": "La solicitud se ha guardado.",
+    "withdrawn": "La solicitud se ha retirado."
+  },
+  "profileRow": {
+    "requested": "pendiente de aprobación · {month}",
+    "range": "inactividad {from}–{to}",
+    "open": "inactividad desde {from}"
+  },
+  "errors": {
+    "deadlinePassed": "Ya ha pasado el día {deadlineDay}: el primer mes que puedes pedir es {month}.",
+    "overlap": "Ya tienes un período solicitado: modifícalo",
+    "invalidRange": "El período indicado no es válido.",
+    "memberNotActive": "Solo los abonados activos pueden pedir un período de inactividad.",
+    "leaveScheduled": "No puedes pedir una inactividad si ya tienes una baja prevista.",
+    "stale": "El período ha cambiado.",
+    "generic": "No se ha podido guardar la solicitud."
+  }
+}

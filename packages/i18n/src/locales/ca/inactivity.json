@@ -1,0 +1,37 @@
+{
+  "title": "Període d'inactivitat",
+  "back": "Torna al perfil",
+  "loading": "Carregant el període d'inactivitat",
+  "loadError": "No s'ha pogut carregar el període d'inactivitat.",
+  "intro": "Pots demanar un període d'inactivitat per mesos complets. Fes-ho abans del dia {deadlineDay} del mes anterior.",
+  "endNote": "La data de final es pot modificar durant el període d'inactivitat (també fins al dia {deadlineDay}).",
+  "form": {
+    "fromMonth": "Mes d'inici (obligatori)",
+    "toMonth": "Mes de finalització (si el saps)",
+    "openEnd": "— encara no ho sé",
+    "comments": "Comentaris",
+    "firstMonth": "Quota del 1r mes · {amount}",
+    "followingMonths": "Mesos següents · {amount}/mes",
+    "bookingsInside": "{count, plural, one {Ara tens # reserva dins del període: s'anul·larà si el club aprova la sol·licitud.} other {Ara tens # reserves dins del període: s'anul·laran si el club aprova la sol·licitud.}}",
+    "submit": "ENVIA LA SOL·LICITUD",
+    "modify": "MODIFICA",
+    "withdraw": "RETIRA LA SOL·LICITUD",
+    "confirmWithdraw": "Vols retirar aquesta sol·licitud?",
+    "saved": "La sol·licitud s'ha desat.",
+    "withdrawn": "La sol·licitud s'ha retirat."
+  },
+  "profileRow": {
+    "requested": "pendent d'aprovació · {month}",
+    "range": "inactivitat {from}–{to}",
+    "open": "inactivitat des de {from}"
+  },
+  "errors": {
+    "deadlinePassed": "Ja ha passat el dia {deadlineDay}: el primer mes que pots demanar és {month}.",
+    "overlap": "Ja tens un període demanat: modifica'l",
+    "invalidRange": "El període indicat no és vàlid.",
+    "memberNotActive": "Només els abonats actius poden demanar un període d'inactivitat.",
+    "leaveScheduled": "No pots demanar una inactivitat si ja tens una baixa prevista.",
+    "stale": "El període ha canviat.",
+    "generic": "No s'ha pogut desar la sol·licitud."
+  }
+}

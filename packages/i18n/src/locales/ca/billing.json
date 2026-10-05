@@ -1,0 +1,37 @@
+{
+  "title": "Rebuts",
+  "back": "Torna al perfil",
+  "loading": "Carregant els rebuts",
+  "loadError": "No s'han pogut carregar els rebuts.",
+  "retry": "Torna-ho a provar",
+  "empty": "Encara no tens cap rebut.",
+  "familyGroup": "Grup familiar",
+  "list": {
+    "more": "Carrega'n més",
+    "receipt": "Rebut {number}",
+    "refunded": "reemborsat"
+  },
+  "detail": {
+    "title": "Detall del rebut",
+    "lines": "Conceptes",
+    "description": "Concepte",
+    "amount": "Import",
+    "total": "Total",
+    "paymentMethod": "Mètode de pagament",
+    "download": "Descarrega el justificant",
+    "downloading": "Preparant el justificant",
+    "downloadError": "No s'ha pogut descarregar el justificant."
+  },
+  "cardBanner": {
+    "title": "No hem pogut cobrar el rebut de {month}",
+    "action": "Actualitza la targeta",
+    "working": "Obrint l'actualització de targeta",
+    "error": "Ara mateix no es pot actualitzar la targeta."
+  },
+  "checkout": {
+    "pending": "Estem confirmant el pagament…",
+    "paid": "Pagament rebut",
+    "expired": "La sessió de pagament ha caducat.",
+    "retry": "Torna-ho a provar"
+  }
+}

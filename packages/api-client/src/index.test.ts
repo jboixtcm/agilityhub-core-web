@@ -648,7 +648,7 @@ describe("MSW bootstrap handlers", () => {
     // and D14's `GET /followup/filter-values` (`followup-handlers.ts`).
     // E8-W01: + the 20 S12 handlers of billing-handlers.ts (D6, the receipt drawer, the remittances
     // page) and GET /billing/exports and GET /invoices/export (handlers.ts).
-    expect(handlers).toHaveLength(287);
+    expect(handlers).toHaveLength(306);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

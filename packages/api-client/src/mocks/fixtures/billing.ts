@@ -511,6 +511,7 @@ function issueInvoice(world: BillingWorld, options: IssueOptions): StoredInvoice
     paidAt: null,
     paymentMethod,
     period: options.period,
+    rolledBack: false,
     refundedTotal: eur(0),
     remittanceId: paymentMethod.type === "SEPA_DD" ? options.remittanceId : null,
     runId: options.runId,
