@@ -5,7 +5,7 @@
   "loadError": "The leave request could not be loaded.",
   "offer": {
     "title": "Before leaving…",
-    "text": "You can request an inactivity period and keep your place.",
+    "text": "If you plan to return later, remember that you can request a fixed or open-ended inactivity period and keep your place and current fee for when you return.",
     "fee": "The fee is {first} for the first month and {following} thereafter.",
     "action": "REQUEST INACTIVITY"
   },

@@ -5,7 +5,7 @@
   "loadError": "No se ha podido cargar la solicitud de baja.",
   "offer": {
     "title": "Antes de darte de baja…",
-    "text": "Puedes pedir un período de inactividad y mantener tu plaza.",
+    "text": "Si tienes previsto volver más adelante, recuerda que puedes pedir un período de inactividad (predefinido o abierto) y mantener tu plaza y la cuota actual para cuando vuelvas.",
     "fee": "La cuota es de {first} el primer mes y {following} los siguientes.",
     "action": "QUIERO PEDIR INACTIVIDAD"
   },

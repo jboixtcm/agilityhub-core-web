@@ -221,6 +221,8 @@ export const memberBillingHandlers = [
     return HttpResponse.json({
       ...inactivity,
       fee: currentMockScenario().branding.modules.includes("BILLING") ? inactivity.fee : null,
+      periods:
+        currentMockScenario().memberBilling === "noInactivity" ? [] : inactivity.periods,
     });
   }),
   http.get("*/api/v1/me/inactivity-periods/preview", () => {

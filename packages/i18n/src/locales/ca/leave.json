@@ -5,7 +5,7 @@
   "loadError": "No s'ha pogut carregar la sol·licitud de baixa.",
   "offer": {
     "title": "Abans de donar-te de baixa…",
-    "text": "Pots demanar un període d'inactivitat i mantenir la teva plaça.",
+    "text": "Si tens previst tornar més endavant, recorda que pots demanar un període d'inactivitat (predefinit o obert) i mantenir la teva plaça i la quota actual per quan tornis.",
     "fee": "La quota és de {first} el primer mes i {following} els següents.",
     "action": "VULL DEMANAR INACTIVITAT"
   },

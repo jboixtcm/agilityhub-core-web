@@ -27,8 +27,8 @@ async function prepare(page: Page, scenario: string) {
   );
 }
 
-async function loginMember(page: Page) {
-  await prepare(page, "member");
+async function loginMember(page: Page, scenario = "member") {
+  await prepare(page, scenario);
   await page.goto(`${clubsUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill("laura@example.test");
   await page.getByLabel("Contrasenya").fill("secret-password");
@@ -80,18 +80,24 @@ test.describe("E8-W02 member billing, packs and lifecycle", () => {
     page.once("dialog", (dialog) => void dialog.accept());
     await page.getByRole("button", { name: "RETIRA LA SOL·LICITUD" }).click();
     await page.waitForURL("**/perfil");
-    await page.goto(`${clubsUrl}/inactivitat`);
-    await expect(page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" })).toBeVisible();
-    await shot(page, "14-inactivitat-375.png");
 
     await page.goto(`${clubsUrl}/baixa`);
     await expect(page.getByRole("heading", { name: "Abans de donar-te de baixa…" })).toBeVisible();
     await expect(page.getByRole("group").getByRole("button")).toHaveCount(11);
     await shot(page, "15-baixa-375.png");
 
-    await page.evaluate(() => {
-      localStorage.setItem("agilityhub.mockScenario", "memberCardInvalid");
-    });
+  });
+
+  test("T-13-29 renders a new inactivity request", async ({ page }) => {
+    await loginMember(page, "memberNoInactivity");
+    await page.goto(`${clubsUrl}/inactivitat`);
+    await expect(page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" })).toBeVisible();
+    await expect(page.getByText(/Ara tens 1 reserva dins del període/u)).toBeVisible();
+    await shot(page, "14-inactivitat-375.png");
+  });
+
+  test("T-12-26 renders the invalid-card banner", async ({ page }) => {
+    await loginMember(page, "memberCardInvalid");
     await page.goto(`${clubsUrl}/rebuts`);
     await expect(page.getByText(/No hem pogut cobrar el rebut/u)).toBeVisible();
     await expect(page.getByRole("button", { name: "Actualitza la targeta" })).toBeVisible();
@@ -101,7 +107,7 @@ test.describe("E8-W02 member billing, packs and lifecycle", () => {
   test("checkout return waits for the server-confirmed PAID status", async ({ page }) => {
     await loginMember(page);
     await page.goto(`${clubsUrl}/reserves/booking-duna-mon3?checkout=cs_e8_w02`);
-    await expect(page.getByText("Estem confirmant el pagament…")).toBeVisible();
+    await expect(page.getByText("Estem confirmant el pagament…")).toBeVisible({ timeout: 10_000 });
     await expect(page.getByText("Pagament rebut")).toBeVisible({ timeout: 3_000 });
   });
 

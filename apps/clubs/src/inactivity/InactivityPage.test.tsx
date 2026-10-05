@@ -62,6 +62,7 @@ describe("T-13-29 member inactivity", () => {
     for (const locale of ["ca", "es", "en"] as const) {
       const view = await renderE8(<InactivityPage client={e8Client(locale)} />, { locale });
       await waitFor(() => {
+        expect(view.container.querySelector("form")).not.toBeNull();
         expect(view.container.textContent).not.toContain("inactivity:");
       });
       expect(view.container.textContent).toMatchSnapshot(locale);

@@ -14,7 +14,6 @@ import {
 import { type CSSProperties, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CheckoutReturn } from "../payments/CheckoutReturn";
 
 import "./booking.css";
 import { type Booking, errorText, localParts, type Translate, useBooking } from "./shared";
@@ -197,12 +196,6 @@ export function BookingDetailPage({ bookingId, client }: { bookingId: string; cl
   return (
     <section className="booking-screen">
       <BookingBar />
-      <CheckoutReturn
-        client={client}
-        onRetry={() => {
-          window.location.assign("/reservar");
-        }}
-      />
       <Card className="detail-card">
         <p className="detail-card__line">
           <RingDot color={session.ringColor} />

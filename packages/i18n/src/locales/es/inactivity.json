@@ -3,7 +3,7 @@
   "back": "Volver al perfil",
   "loading": "Cargando el período de inactividad",
   "loadError": "No se ha podido cargar el período de inactividad.",
-  "intro": "Puedes pedir un período de inactividad por meses completos. Hazlo antes del día {deadlineDay} del mes anterior.",
+  "intro": "Tienes derecho a pedir una pausa (en meses). Durante este tiempo no participarías en las actividades del club y pagarás una cuota mínima de mantenimiento que conserva tu plaza y tu cuota actual para cuando vuelvas. Puede pedirse hasta el día {deadlineDay} del mes anterior al inicio del período de inactividad.",
   "endNote": "La fecha final se puede modificar durante el período de inactividad (también hasta el día {deadlineDay}).",
   "form": {
     "fromMonth": "Mes de inicio (obligatorio)",

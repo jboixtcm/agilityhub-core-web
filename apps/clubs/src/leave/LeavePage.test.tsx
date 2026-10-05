@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { e8Client, renderE8, setupE8World } from "../test/e8";
 
@@ -36,6 +36,22 @@ describe("T-13-30 member leave", () => {
     );
   });
 
+  it("withdraws a pending request and returns to the profile", async () => {
+    const first = await renderE8(<LeavePage client={e8Client()} />);
+    fireEvent.change(await screen.findByLabelText("Motiu"), { target: { value: "NO_TIME" } });
+    fireEvent.click(screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
+    await screen.findByRole("button", { name: "Torna al perfil" });
+    first.unmount();
+
+    const navigate = vi.fn();
+    vi.spyOn(window, "confirm").mockReturnValue(true);
+    await renderE8(<LeavePage client={e8Client()} navigate={navigate} />);
+    fireEvent.click(await screen.findByRole("button", { name: "RETIRA LA SOL·LICITUD" }));
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/perfil");
+    });
+  });
+
   it("renders a planned leave read-only", async () => {
     await renderE8(<LeavePage client={e8Client()} />, { scenario: "memberPlannedLeave" });
     expect(await screen.findByText(/Tens la baixa prevista el/u)).toBeVisible();
@@ -46,6 +62,7 @@ describe("T-13-30 member leave", () => {
     for (const locale of ["ca", "es", "en"] as const) {
       const view = await renderE8(<LeavePage client={e8Client(locale)} />, { locale });
       await waitFor(() => {
+        expect(view.container.querySelector("form")).not.toBeNull();
         expect(view.container.textContent).not.toContain("leave:");
       });
       expect(view.container.textContent).toMatchSnapshot(locale);

@@ -61,6 +61,7 @@ import { TasksPage } from "./instructor/TasksPage";
 import { LeavePage } from "./leave/LeavePage";
 import { logoutWithPush } from "./notifications/push";
 import { NotificationsPage } from "./NotificationsPage";
+import { CheckoutReturn } from "./payments/CheckoutReturn";
 import { NoticesCard } from "./profile/NoticesCard";
 import { ProfileLifecycleSection } from "./profile/ProfileLifecycleSection";
 import { PublicFooter } from "./PublicFooter";
@@ -1417,12 +1418,12 @@ function LegacyAccessRedirect() {
   return null;
 }
 
-type AppProps = {
+interface AppProps {
   apiClient?: ApiClient;
   authClient: AuthClient;
   navigate?: (path: string, replace: boolean) => void;
   publicApiClient?: ApiClient;
-};
+}
 
 export function App(props: AppProps) {
   const { t } = useTranslation("common");
@@ -1670,11 +1671,19 @@ function AppContent({
       </RequireAuth>
     ) : route.path === "/reserves/:id" ? (
       <RequireAuth>
-        <BookingDetailPage
-          bookingId={safeDecode(pathname.split("/")[2] ?? "")}
-          client={apiClient}
-          key={pathname}
-        />
+        <>
+          <CheckoutReturn
+            client={apiClient}
+            onRetry={() => {
+              window.location.assign("/reservar");
+            }}
+          />
+          <BookingDetailPage
+            bookingId={safeDecode(pathname.split("/")[2] ?? "")}
+            client={apiClient}
+            key={pathname}
+          />
+        </>
       </RequireAuth>
     ) : route.path === "/espera/:id" ? (
       <RequireAuth>

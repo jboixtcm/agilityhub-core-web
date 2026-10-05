@@ -50,7 +50,7 @@ export interface MockScenarioDefinition {
   inbox?: InboxVariant;
   me: Me;
   /** S12/S13 member/D10 variants added by E8-W02. */
-  memberBilling?: "cardInvalid" | "deadlinePassed" | "packPlan" | "plannedLeave";
+  memberBilling?: "cardInvalid" | "deadlinePassed" | "noInactivity" | "packPlan" | "plannedLeave";
   /** The S11 feed variant of screen 11 (`fixtures/notifications.ts`, E7-W02). */
   notifications?: NotificationsVariant;
   sessions: SessionList;
@@ -252,6 +252,12 @@ const scenarios = {
     branding: { ...canic, locales: ["ca", "es", "en"] },
     me: member,
     memberBilling: "deadlinePassed",
+    sessions: accountSessions,
+  },
+  memberNoInactivity: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: member,
+    memberBilling: "noInactivity",
     sessions: accountSessions,
   },
   billingOff: {

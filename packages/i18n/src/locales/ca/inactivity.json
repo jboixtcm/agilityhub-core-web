@@ -3,7 +3,7 @@
   "back": "Torna al perfil",
   "loading": "Carregant el període d'inactivitat",
   "loadError": "No s'ha pogut carregar el període d'inactivitat.",
-  "intro": "Pots demanar un període d'inactivitat per mesos complets. Fes-ho abans del dia {deadlineDay} del mes anterior.",
+  "intro": "Tens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia {deadlineDay} del mes anterior al que es vol començar el període d'inactivitat.",
   "endNote": "La data de final es pot modificar durant el període d'inactivitat (també fins al dia {deadlineDay}).",
   "form": {
     "fromMonth": "Mes d'inici (obligatori)",
