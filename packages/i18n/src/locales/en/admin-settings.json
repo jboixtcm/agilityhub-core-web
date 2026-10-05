@@ -109,6 +109,8 @@
     "open": "Edit {label}",
     "opens": "{day} opening time",
     "reason": "Reason for change (optional)",
+    "reviewCashConditions": "If you change this value, also review the signup cash-payment conditions text.",
+    "reviewPaymentDay": "If you change this value, also review the signup payment-day text.",
     "removeHoliday": "Remove holiday {index}",
     "reset": "Restore product default",
     "time": "Time"
@@ -252,7 +254,7 @@
       },
       "sepa": {
         "collectionDayOfMonth": {
-          "help": "Day of the month on which the fee is collected.",
+          "help": "Day of the billed month on which the fee is collected; 0 means that month's last day.",
           "label": "SEPA collection day"
         },
         "schema": {

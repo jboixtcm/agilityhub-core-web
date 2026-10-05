@@ -38,7 +38,7 @@ async function renderPage(kind: "dogs" | "members") {
   const i18n = await createI18n({
     branding,
     browserLanguages: ["ca"],
-    initialNamespaces: ["census", "errors"],
+    initialNamespaces: ["census", "enums", "errors"],
     storage: undefined,
   });
   const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
@@ -158,6 +158,24 @@ describe("T-03-38 D5 universal member list", () => {
     expect(new URLSearchParams(window.location.search).get("fields")).toBe(
       "fullName,dogs,displayStatus",
     );
+  });
+
+  it("T-13-22 offers the leave columns and keeps the system leave view non-deletable", async () => {
+    window.history.pushState(null, "", "/abonats");
+    await renderPage("members");
+    expect(await screen.findByText("Laura Serra Vidal")).toBeVisible();
+
+    fireEvent.click(screen.getByText("Columnes"));
+    expect(screen.getByRole("checkbox", { name: "Origen de la baixa" })).toBeVisible();
+    expect(screen.getByRole("checkbox", { name: "Inactiva fins" })).toBeVisible();
+
+    fireEvent.click(screen.getByText("Vistes", { selector: "summary" }));
+    const systemView = screen.getByRole<HTMLOptionElement>("option", { name: "Baixes previstes" });
+    expect(systemView).toBeVisible();
+    fireEvent.change(screen.getByRole("combobox", { name: "Vistes" }), {
+      target: { value: systemView.value },
+    });
+    expect(screen.queryByRole("button", { name: "Elimina la vista" })).not.toBeInTheDocument();
   });
 });
 

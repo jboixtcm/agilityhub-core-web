@@ -73,7 +73,9 @@
       "idDocument": "DNI",
       "imageRights": "Drets d'imatge",
       "joinedAt": "Alta des de",
+      "inactivityUntil": "Inactiva fins",
       "leaveDate": "Data de baixa",
+      "leaveSource": "Origen de la baixa",
       "memberNumber": "Número",
       "nextInvoiceDate": "Proper rebut",
       "paymentMethod": "Pagament",
@@ -93,6 +95,7 @@
       "freeTrainingAllowed": "Entrenament lliure",
       "fullName": "Abonat",
       "hasPendingDocuments": "Documents pendents",
+      "hasPendingRequest": "Sol·licitud pendent",
       "imageRightsGranted": "Drets d'imatge",
       "lastName": "Cognoms",
       "paymentMethodType": "Mètode de pagament",
@@ -101,6 +104,7 @@
       "status": "Estat"
     },
     "search": "Cerca per nom, DNI, gos…",
+    "status": {"inactive": "inactiva", "inactiveUntil": "inactiva fins {date}", "leaveScheduled": "baixa prevista {date}"},
     "selectRow": "Selecciona {name}",
     "statusLabel": "Estat dels abonats",
     "statuses": {

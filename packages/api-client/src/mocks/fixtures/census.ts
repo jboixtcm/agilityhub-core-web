@@ -546,7 +546,7 @@ const featuredMembers = [
     bookingBlocked: false,
     city: "Vilassar de Mar",
     contact: "eva.perez@example.test · 655 100 104",
-    displayStatus: { date: "2026-09-15", kind: "INACTIVE_PERIOD", label: "inactiva fins 15/09" },
+    displayStatus: { date: "2026-09-30", kind: "INACTIVE_PERIOD", label: "inactiva fins 30/09" },
     dogs: [{ id: "dog-fish", levelCode: "B", name: "Fish" }],
     firstName: "Eva",
     freeTrainingAllowed: false,
@@ -556,6 +556,7 @@ const featuredMembers = [
     idDocument: "39······4S",
     imageRightsGranted: true,
     joinedAt: "2022-05-16T09:00:00Z",
+    inactivityUntil: "2026-09-30",
     lastName: "Perez Prunell",
     memberNumber: 90,
     nextInvoiceDate: "2026-10-31",
@@ -608,6 +609,7 @@ const featuredMembers = [
     joinedAt: "2020-09-04T09:00:00Z",
     lastName: "Tresserra Casas",
     leaveDate: "2026-08-31",
+    leaveSource: "ADMIN" as const,
     memberNumber: 92,
     nextInvoiceDate: "2026-08-31",
     paymentMethod: "···· ···· ···· ···· 9041",
@@ -692,6 +694,8 @@ function memberListItem(input: MemberFixtureInput): MemberListItem {
     imageRights: { granted: input.imageRightsGranted },
     joinedAt: input.joinedAt,
     ...("leaveDate" in input ? { leaveDate: input.leaveDate } : {}),
+    ...("leaveSource" in input ? { leaveSource: input.leaveSource } : {}),
+    ...("inactivityUntil" in input ? { inactivityUntil: input.inactivityUntil } : {}),
     memberNumber: input.memberNumber,
     nextInvoiceDate: input.nextInvoiceDate,
     paymentMethod: input.paymentMethod.includes("····")
@@ -921,7 +925,7 @@ export const censusDogs: readonly DogListItem[] = [
 
 export const initialSavedViews: readonly SavedView[] = [
   {
-    columns: ["fullName", "dogs", "plan", "displayStatus"],
+    columns: ["fullName", "dogs", "plan", "leaveDate", "leaveSource"],
     filters: [{ field: "displayStatus", op: "eq", value: "LEAVE_SCHEDULED" }],
     id: "view-members-leave",
     listKey: "members",
@@ -929,6 +933,7 @@ export const initialSavedViews: readonly SavedView[] = [
     ownerAccountId: "account-admin",
     shared: true,
     sort: ["leaveDate,asc"],
+    system: true,
     version: 1,
   },
   {

@@ -282,6 +282,12 @@
     "CARD": "Tarjeta",
     "MANUAL": "Efectivo"
   },
+  "cancelledBookingType": {
+    "ACTIVITY": "Actividades",
+    "CLASS": "Clases",
+    "TRAINING": "Entrenamientos",
+    "WAITLIST": "Lista de espera"
+  },
   "billingIncident": {
     "MEMBER_NOT_ACTIVE": "abonado no activo",
     "PAYMENT_METHOD_CHANGED": "método de pago cambiado",
@@ -344,5 +350,10 @@
     "card_declined": "tarjeta rechazada",
     "expired_card": "tarjeta caducada",
     "insufficient_funds": "fondos insuficientes"
-  }
+  },
+  "leaveSource": {"MEMBER": "solicitud del abonado", "ADMIN": "decisión del club", "PACK_EXPIRED": "caducidad del pack", "MIGRATED": "migración"},
+  "origin": {"APP": "app", "BACKOFFICE": "club", "SYSTEM": "sistema"},
+  "memberDisplayStatus": {"INACTIVE_PERIOD": "inactiva", "INACTIVE_PERIOD_DATED": "inactiva hasta {date}", "LEAVE_SCHEDULED": "baja prevista {date}"},
+  "finishReason": {"SCHEDULED": "finalización prevista", "ADMIN": "decisión del club", "LEAVE": "baja"},
+  "cancelReason": {"WITHDRAWN": "retirada", "EXPIRED": "caducada", "LEAVE": "baja", "MEMBER": "por el abonado", "ADMIN": "por el club", "SYSTEM": "por el sistema"}
 }

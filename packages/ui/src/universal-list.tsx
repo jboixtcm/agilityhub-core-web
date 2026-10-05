@@ -112,6 +112,8 @@ export interface UniversalListSavedView {
   name: string;
   shared: boolean;
   sort: string[];
+  /** A product view seeded by the api: selectable and defaultable, never renamed or deleted. */
+  system?: boolean;
 }
 
 export interface UniversalListLabels<Row> {
@@ -874,7 +876,9 @@ export function UniversalList<Row>({
                 {labels.createView}
               </Button>
               <Button
-                disabled={selectedView === undefined || viewName.trim() === ""}
+                disabled={
+                  selectedView === undefined || selectedView.system === true || viewName.trim() === ""
+                }
                 onClick={() => {
                   if (selectedView !== undefined) {
                     runSavedViewAction(onRenameView(selectedView, viewName.trim()));
@@ -884,19 +888,25 @@ export function UniversalList<Row>({
               >
                 {labels.renameView}
               </Button>
-              <Button
-                disabled={selectedView === undefined}
-                onClick={() => {
-                  if (selectedView !== undefined) {
-                    runSavedViewAction(onDeleteView(selectedView.id).then(() => undefined));
-                    setSelectedViewId("");
-                    setViewName("");
-                  }
-                }}
-                variant="danger"
-              >
-                {labels.deleteView}
-              </Button>
+              {selectedView?.system === true ? null : (
+                <Button
+                  disabled={selectedView === undefined}
+                  onClick={() => {
+                    if (selectedView !== undefined) {
+                      runSavedViewAction(
+                        onDeleteView(selectedView.id).then(() => {
+                          setSelectedViewId("");
+                          setViewName("");
+                          return undefined;
+                        }),
+                      );
+                    }
+                  }}
+                  variant="danger"
+                >
+                  {labels.deleteView}
+                </Button>
+              )}
             </div>
             {savedViewError ? <p role="alert">{labels.saveError}</p> : null}
           </div>

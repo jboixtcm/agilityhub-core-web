@@ -32,6 +32,10 @@ import { NotificationPreferencesBlock } from "../messaging/NotificationPreferenc
 
 import { MemberBillingBlock } from "./MemberBillingBlock";
 import { MemberBookingsCard } from "./MemberBookingsCard";
+import { MemberInactivityDrawer } from "./MemberInactivityDrawer";
+import { MemberLeaveDrawer } from "./MemberLeaveDrawer";
+import { MemberPaymentMethodDrawer } from "./MemberPaymentMethodDrawer";
+import { MemberPlanDrawer } from "./MemberPlanDrawer";
 type MemberOverview = components["schemas"]["MemberOverview"];
 type MemberDetail = components["schemas"]["Member"];
 type MemberPatchRequest = components["schemas"]["MemberPatch"];
@@ -70,7 +74,16 @@ type Plan = components["schemas"]["Plan"] & {
   billingMode?: components["schemas"]["PlanBillingMode"];
 };
 type Role = "ADMIN" | "INSTRUCTOR" | "MEMBER";
-type MemberDialog = "block" | "impersonate" | "payment" | "resend" | "roles" | null;
+type MemberDialog =
+  | "block"
+  | "impersonate"
+  | "inactivity"
+  | "leave"
+  | "payment"
+  | "plan"
+  | "resend"
+  | "roles"
+  | null;
 
 interface Feedback {
   message: string;
@@ -540,8 +553,6 @@ function MemberSummary({
   const modules = branding.modules;
   const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
   const [reason, setReason] = useState("");
-  const [iban, setIban] = useState("");
-  const [holderName, setHolderName] = useState(member.paymentMethod?.holderName ?? member.fullName);
   const [roles, setRoles] = useState<Role[]>(member.roles as Role[]);
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<string>();
@@ -641,7 +652,16 @@ function MemberSummary({
             <DataRow label={t("admin-census:member.fields.contact")}>{contact}</DataRow>
             {modules.includes("BILLING") && memberPlan !== undefined ? (
               <DataRow label={t("admin-census:member.fields.plan")}>
-                <strong>{memberPlan.name}</strong>
+                <strong>{memberPlan.name}</strong>{" "}
+                {erased ? null : (
+                  <Button
+                    className="census-record__inline-action"
+                    onClick={() => { setDialog("plan"); }}
+                    variant="ghost"
+                  >
+                    {t("admin-census:common.edit")}
+                  </Button>
+                )}
               </DataRow>
             ) : null}
             {modules.includes("BILLING") && memberPlan?.billingMode !== undefined ? (
@@ -843,10 +863,10 @@ function MemberSummary({
           {erased ? null : (
             <div className="census-record__footer-actions">
               {modules.includes("INACTIVITY") ? (
-                <a className="census-record__action-link" href="/inactivitats">
+                <Button onClick={() => { setDialog("inactivity"); }} variant="ghost">
                   <Icon aria-hidden="true" name="palm" />
                   {t("admin-census:member.actions.inactivity")}
-                </a>
+                </Button>
               ) : null}
               <Button
                 onClick={() => {
@@ -875,9 +895,9 @@ function MemberSummary({
                   ? t("admin-census:member.actions.unblock")
                   : t("admin-census:member.actions.block")}
               </Button>
-              <a className="census-record__action-link" href="/inactivitats">
+              <Button onClick={() => { setDialog("leave"); }} variant="ghost">
                 {t("admin-census:member.actions.leave")}
-              </a>
+              </Button>
             </div>
           )}
         </Card>
@@ -996,80 +1016,6 @@ function MemberSummary({
             </Button>
           )}
         </div>
-      </Modal>
-
-      <Modal
-        closeLabel={t("admin-census:common.close")}
-        onClose={() => {
-          setDialog(null);
-        }}
-        open={dialog === "payment"}
-        title={t("admin-census:member.payment.title")}
-      >
-        <form
-          className="census-record__form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (erased) return;
-            void run(async () => {
-              const result = await client.PATCH("/members/{id}/payment-method", {
-                body: { sepa: { holderName, iban }, type: "SEPA_DD" },
-                params: { path: { id: member.id } },
-              });
-              if (result.data === undefined) {
-                throw new TypeError("Payment response did not contain data");
-              }
-              onChange({
-                ...overview,
-                member: { ...member, accountMissing: false, paymentMethod: result.data },
-              });
-              onFeedback({ message: t("admin-census:member.feedback.payment"), tone: "success" });
-            });
-          }}
-        >
-          <FormField
-            help={t("admin-census:member.payment.ibanHelp")}
-            id="member-iban"
-            label={t("admin-census:member.payment.iban")}
-          >
-            <Input
-              autoComplete="off"
-              id="member-iban"
-              onChange={(event) => {
-                setIban(event.currentTarget.value);
-              }}
-              required
-              type="password"
-              value={iban}
-            />
-          </FormField>
-          <FormField id="member-holder" label={t("admin-census:member.payment.holder")}>
-            <Input
-              id="member-holder"
-              onChange={(event) => {
-                setHolderName(event.currentTarget.value);
-              }}
-              required
-              value={holderName}
-            />
-          </FormField>
-          {failure === undefined ? null : <p role="alert">{failure}</p>}
-          <div className="census-record__dialog-actions">
-            <Button
-              onClick={() => {
-                setDialog(null);
-              }}
-              variant="ghost"
-            >
-              {t("admin-census:common.cancel")}
-            </Button>
-            {erased ? null : (
-              <Button loading={pending} type="submit">
-                {t("admin-census:common.save")}
-              </Button>
-            )}
-          </div>
-        </form>
       </Modal>
 
       <Modal
@@ -1202,7 +1148,18 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
   const [reload, setReload] = useState(0);
   const [editOpen, setEditOpen] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>();
-  const [memberDialog, setMemberDialog] = useState<MemberDialog>(null);
+  const [memberDialog, setMemberDialog] = useState<MemberDialog>(() => {
+    const requested = new URLSearchParams(window.location.search).get("calaix");
+    return requested === "inactivitat"
+      ? "inactivity"
+      : requested === "baixa"
+        ? "leave"
+        : requested === "pagament"
+          ? "payment"
+          : requested === "modalitat"
+            ? "plan"
+            : null;
+  });
   // The member a change found erased after the record was read (`409 MEMBER_ERASED`, S14 §5).
   const [erasedMeanwhile, setErasedMeanwhile] = useState<string>();
 
@@ -1267,6 +1224,22 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
               {t("admin-census:member.activeSince", { year: joinedYear })}
             </Badge>
           )}
+          {member.displayStatus.kind === "INACTIVE_PERIOD" ? (
+            <Badge tone="warning">
+              {member.displayStatus.date == null
+                ? t("admin-census:inactivity.badgeOpen")
+                : t("admin-census:inactivity.badgeUntil", {
+                    date: formatDate(member.displayStatus.date, branding.defaultLocale, false),
+                  })}
+            </Badge>
+          ) : null}
+          {member.displayStatus.kind === "LEAVE_SCHEDULED" && member.displayStatus.date != null ? (
+            <Badge tone="warning">
+              {t("admin-census:leave.badgeScheduled", {
+                date: formatDate(member.displayStatus.date, branding.defaultLocale),
+              })}
+            </Badge>
+          ) : null}
           {branding.modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
             <Badge>
               {holder
@@ -1282,7 +1255,7 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
           ) : null}
           {branding.modules.includes("BILLING") &&
           member.paymentMethod?.type === "CARD" &&
-          (overview.recentInvoices ?? []).some((invoice) => invoice.status === "FAILED") ? (
+          member.paymentMethod.invalid === true ? (
             <Badge tone="danger">{t("admin-census:member.billing.invalidCard")}</Badge>
           ) : null}
         </div>
@@ -1381,6 +1354,51 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
         }}
         open={editOpen}
       />
+      {branding.modules.includes("INACTIVITY") && !erased ? (
+        <MemberInactivityDrawer
+          client={client}
+          memberId={member.id}
+          onChanged={() => { setReload((value) => value + 1); }}
+          onClose={() => { setMemberDialog(null); }}
+          open={memberDialog === "inactivity"}
+        />
+      ) : null}
+      {!erased ? (
+        <MemberLeaveDrawer
+          client={client}
+          member={member}
+          onChanged={(saved) => {
+            if (saved?.id === member.id) setOverview({ ...overview, member: saved });
+            else setReload((value) => value + 1);
+          }}
+          onClose={() => { setMemberDialog(null); }}
+          open={memberDialog === "leave"}
+        />
+      ) : null}
+      {branding.modules.includes("BILLING") && !erased ? (
+        <MemberPaymentMethodDrawer
+          client={client}
+          memberId={member.id}
+          onChanged={(paymentMethod) => {
+            setOverview({
+              ...overview,
+              member: { ...member, accountMissing: false, paymentMethod },
+            });
+            setFeedback({ message: t("admin-census:member.feedback.payment"), tone: "success" });
+          }}
+          onClose={() => { setMemberDialog(null); }}
+          open={memberDialog === "payment"}
+          paymentMethod={member.paymentMethod}
+        />
+      ) : null}
+      {branding.modules.includes("BILLING") && !erased ? (
+        <MemberPlanDrawer
+          client={client}
+          member={member}
+          onClose={() => { setMemberDialog(null); }}
+          open={memberDialog === "plan"}
+        />
+      ) : null}
     </section>
   );
 }

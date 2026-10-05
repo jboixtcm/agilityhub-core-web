@@ -484,11 +484,14 @@ const memberFilterLabels: Readonly<Record<string, string>> = {
   fullName: "Abonat",
   gender: "Gènere",
   hasPendingDocuments: "Documents pendents",
+  hasPendingRequest: "Sol·licitud pendent",
   id: "Abonat",
   imageRightsGranted: "Drets d'imatge",
   joinedAt: "Data d'alta",
   lastName: "Cognoms",
   leaveDate: "Data de baixa",
+  leaveSource: "Origen de la baixa",
+  inactivityUntil: "Inactiva fins",
   memberNumber: "Número",
   nextInvoiceDate: "Proper rebut",
   paymentMethodType: "Pagament",
@@ -644,6 +647,8 @@ function memberValues(item: MemberListItem, field: string): string[] | undefined
       return item.gender === undefined ? [] : [item.gender];
     case "hasPendingDocuments":
       return [String((item.pendingDocuments?.length ?? 0) > 0)];
+    case "hasPendingRequest":
+      return [String(item.id === "member-laura" || item.id === "member-montse")];
     case "id":
       return [item.id];
     case "imageRightsGranted":
@@ -654,6 +659,10 @@ function memberValues(item: MemberListItem, field: string): string[] | undefined
       return [item.fullName.split(" ").slice(1).join(" ")];
     case "leaveDate":
       return item.leaveDate === undefined ? [] : [item.leaveDate];
+    case "leaveSource":
+      return item.leaveSource === undefined ? [] : [item.leaveSource];
+    case "inactivityUntil":
+      return item.inactivityUntil == null ? [] : [item.inactivityUntil];
     case "memberNumber":
       return item.memberNumber === undefined ? [] : [String(item.memberNumber)];
     case "nextInvoiceDate":
@@ -1638,6 +1647,8 @@ export const handlers = [
     const modules = currentMockScenario().branding.modules;
     const counters: DashboardCounters = {
       followUpUnread: modules.includes("TASKS") ? 5 : 0,
+      pendingInactivityRequests: modules.includes("INACTIVITY") ? 1 : 0,
+      pendingLeaveRequests: 1,
       pendingRequests: modules.includes("INACTIVITY") ? 1 : 0,
       pendingSignups: dashboardState.pendingSignups?.count ?? 0,
     };
@@ -2173,7 +2184,12 @@ export const handlers = [
         ) {
           return apiError("MODULE_DISABLED", "Module disabled", 404);
         }
-        return HttpResponse.json(configured);
+        return HttpResponse.json(
+          key === "inactivity.cancelBookingsOnApproval" &&
+            scenario.lifecycle === "inactivityNoCancelBookings"
+            ? { ...configured, value: false }
+            : configured,
+        );
       }
       const base: Omit<Parameter, "key" | "label" | "type" | "value" | "version"> = {
         block: "general",
@@ -2759,7 +2775,19 @@ export const handlers = [
     }
     // S03 T-03-34 (R-03-30): with BILLING off the api sends no invoices, next invoice or
     // payment method.
-    const overview = censusRecordState.memberOverview;
+    const baseOverview = censusRecordState.memberOverview;
+    const overview =
+      currentMockScenario().lifecycle === "memberLeft"
+        ? {
+            ...baseOverview,
+            member: {
+              ...baseOverview.member,
+              displayStatus: { kind: "LEFT", label: "baixa" },
+              leaveDate: null,
+              status: "LEFT" as const,
+            },
+          }
+        : baseOverview;
     if (currentMockScenario().branding.modules.includes("BILLING")) {
       return HttpResponse.json(overview);
     }
@@ -3789,6 +3817,13 @@ export const handlers = [
     );
     return HttpResponse.json(catalogResponse(plans));
   }),
+  http.get("*/api/v1/prices", ({ request }) => {
+    const planId = new URL(request.url).searchParams.get("planId");
+    const prices = catalogState.plans
+      .filter((plan) => planId === null || plan.id === planId)
+      .flatMap((plan) => plan.prices ?? []);
+    return HttpResponse.json(catalogResponse(prices));
+  }),
   http.post("*/api/v1/plans", async ({ request }) => {
     const body = (await request.json()) as PlanCreate;
     const item: Plan = {
@@ -4137,6 +4172,9 @@ export const handlers = [
     const index = savedViews.findIndex((view) => view.id === String(params.id));
     if (index < 0) {
       return apiError("NOT_FOUND", "Saved view not found", 404);
+    }
+    if (savedViews[index]?.system === true) {
+      return apiError("FORBIDDEN", "System view cannot be deleted", 403);
     }
     savedViews.splice(index, 1);
     return new HttpResponse(null, { status: 204 });

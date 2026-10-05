@@ -73,7 +73,9 @@
       "idDocument": "ID document",
       "imageRights": "Image rights",
       "joinedAt": "Joined",
+      "inactivityUntil": "Inactive until",
       "leaveDate": "Leave date",
+      "leaveSource": "Leave source",
       "memberNumber": "Number",
       "nextInvoiceDate": "Next invoice",
       "paymentMethod": "Payment",
@@ -93,6 +95,7 @@
       "freeTrainingAllowed": "Free training",
       "fullName": "Member",
       "hasPendingDocuments": "Pending documents",
+      "hasPendingRequest": "Pending request",
       "imageRightsGranted": "Image rights",
       "lastName": "Last name",
       "paymentMethodType": "Payment method",
@@ -101,6 +104,7 @@
       "status": "Status"
     },
     "search": "Search by name, ID, dog…",
+    "status": {"inactive": "inactive", "inactiveUntil": "inactive until {date}", "leaveScheduled": "leave scheduled {date}"},
     "selectRow": "Select {name}",
     "statusLabel": "Member status",
     "statuses": {

@@ -49,6 +49,7 @@ import { SettingsPage } from "./catalogs/SettingsPage";
 import { TeamPage } from "./catalogs/TeamPage";
 import { DogsPage, MembersPage } from "./census/CensusListPage";
 import { DogRecordPage, MemberRecordPage } from "./census/CensusRecordPage";
+import { InactivityLeavePage } from "./census/InactivityLeavePage";
 import { CountersRefreshContext } from "./dashboard/counters";
 import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
@@ -229,6 +230,10 @@ export function AdminNavigation({
   const { t } = useTranslation("shell");
   const hasPlatformRole = (roles as readonly string[]).includes("AGILITYHUB_ADMIN");
   const unreadFollowUp = followUpUnread ?? counters?.followUpUnread;
+  const lifecycleRequests =
+    counters?.pendingInactivityRequests === undefined && counters?.pendingLeaveRequests === undefined
+      ? counters?.pendingRequests
+      : (counters.pendingInactivityRequests ?? 0) + (counters.pendingLeaveRequests ?? 0);
   const definitions: GatedSidebarGroup[] = [
     {
       label: t("shell:nav.dashboard"),
@@ -280,9 +285,9 @@ export function AdminNavigation({
         { href: "/abonats", icon: "user", id: "members", label: t("shell:nav.members") },
         { href: "/gossos", icon: "paw", id: "dogs", label: t("shell:nav.dogs") },
         {
-          ...(counters?.pendingRequests === undefined || counters.pendingRequests === 0
+          ...(lifecycleRequests === undefined || lifecycleRequests === 0
             ? {}
-            : { count: counters.pendingRequests }),
+            : { count: lifecycleRequests }),
           href: "/inactivitats",
           icon: "palm",
           id: "inactivity",
@@ -578,6 +583,9 @@ function routeContent(
   }
   if (route.path === "/abonats/:id/auditoria") {
     return <MemberAuditPage client={client} />;
+  }
+  if (route.path === "/inactivitats") {
+    return <InactivityLeavePage client={client} onNavigate={onNavigate} />;
   }
   if (route.path === "/gossos/:id") {
     return <DogRecordPage client={client} />;

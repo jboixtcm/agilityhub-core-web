@@ -51,6 +51,13 @@ export interface MockScenarioDefinition {
   me: Me;
   /** S12/S13 member/D10 variants added by E8-W02. */
   memberBilling?: "cardInvalid" | "deadlinePassed" | "noInactivity" | "packPlan" | "plannedLeave";
+  /** S13 admin lifecycle variants used by D10 and `/inactivitats`. */
+  lifecycle?:
+    | "inactivityNoCancelBookings"
+    | "inactivityDeadlinePassed"
+    | "leaveDateInvalid"
+    | "memberLeft"
+    | "memberPackPlan";
   /** The S11 feed variant of screen 11 (`fixtures/notifications.ts`, E7-W02). */
   notifications?: NotificationsVariant;
   sessions: SessionList;
@@ -184,6 +191,45 @@ const scenarios = {
       locales: ["ca", "es", "en"],
       modules: canic.modules.filter((module) => module !== "BILLING"),
     },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  inactivityNoCancelBookings: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    lifecycle: "inactivityNoCancelBookings",
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  inactivityOff: {
+    branding: {
+      ...canic,
+      locales: ["ca", "es", "en"],
+      modules: canic.modules.filter((module) => module !== "INACTIVITY"),
+    },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  adminMemberPackPlan: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    lifecycle: "memberPackPlan",
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  leaveDateInvalid: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    lifecycle: "leaveDateInvalid",
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  memberLeft: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    lifecycle: "memberLeft",
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  inactivityDeadlinePassed: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    lifecycle: "inactivityDeadlinePassed",
     me: meAdmin as Me,
     sessions: accountSessions,
   },

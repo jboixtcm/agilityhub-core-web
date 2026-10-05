@@ -762,7 +762,7 @@ export interface paths {
         put?: never;
         /**
          * chargeRunCards
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-13 [COBRA LES TARGETES]: an off-session PaymentIntent per CARD invoice of the run (idempotencyKey = invoiceId, batches of 25), Collection SUBMITTED, invoice COLLECTING; run CHARGING until every Stripe collection is resolved by webhook. An invoice without a valid card → FAILED{NO_PAYMENT_METHOD} + N-35, listed in skipped. CARD_CHARGES_STARTED audit. A run not GENERATED → 409 INVALID_STATE; STRIPE not enabled → 422 PAYMENT_PROVIDER_NOT_ENABLED. Until E8-T04 there is no card provider: every call answers 422 PAYMENT_PROVIDER_NOT_ENABLED after the guards. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-13 [COBRA LES TARGETES]: an off-session PaymentIntent per CARD invoice of the run (idempotencyKey = invoiceId, batches of 25), Collection SUBMITTED, invoice COLLECTING; run CHARGING until every Stripe collection is resolved by webhook. An invoice without a valid card → FAILED{NO_PAYMENT_METHOD} + N-35, listed in skipped. CARD_CHARGES_STARTED audit. A run must be GENERATED or CHARGING; any other state → 409 INVALID_STATE. Already submitted invoices are not charged again. STRIPE not enabled → 422 PAYMENT_PROVIDER_NOT_ENABLED. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["chargeRunCards"];
         delete?: never;
@@ -7855,6 +7855,10 @@ export interface components {
             pendingRequests: number;
             /** Format: int32 */
             pendingSignups: number;
+            /** Format: int32 */
+            pendingInactivityRequests?: number;
+            /** Format: int32 */
+            pendingLeaveRequests?: number;
         };
         DashboardKpis: {
             activeMembers: components["schemas"]["ActiveMembersKpi"] | null;
@@ -9815,6 +9819,8 @@ export interface components {
             features: string[];
             impersonation?: components["schemas"]["Impersonation"];
             membership?: components["schemas"]["MembershipSummary"];
+            /** @description Current member's payment method; absent without BILLING or a member */
+            paymentMethod?: components["schemas"]["MePaymentMethod"];
         };
         MeAccount: {
             /** Format: email */
@@ -9994,6 +10000,12 @@ export interface components {
              * @description The same count as GET /me/home notifications.unreadCount
              */
             unreadCount: number;
+        };
+        MePaymentMethod: {
+            /** @description Present only for CARD; true when the saved card is invalid */
+            invalid?: boolean;
+            /** @enum {string} */
+            type: "CARD" | "SEPA_DD" | "MANUAL";
         };
         MeProfile: {
             address: components["schemas"]["Address"];
@@ -10222,6 +10234,9 @@ export interface components {
             /** Format: int64 */
             version?: number;
             warnings?: components["schemas"]["SignupWarning"][];
+            leaveSource?: components["schemas"]["LeaveSource"];
+            /** Format: date */
+            inactivityUntil?: string | null;
         };
         MemberListSignup: {
             /** Format: date-time */
@@ -10894,6 +10909,8 @@ export interface components {
         PaymentMethodView: {
             channel?: string | null;
             holderName?: string | null;
+            /** @description Present only for CARD; true when the saved card is invalid */
+            invalid?: boolean;
             maskedAccount?: string | null;
             /** @enum {string} */
             type: "SEPA_DD" | "CARD" | "MANUAL";
@@ -11972,6 +11989,7 @@ export interface components {
             sort: string[];
             /** Format: int64 */
             version: number;
+            system?: boolean;
         };
         SavedViewCreate: {
             columns: string[];

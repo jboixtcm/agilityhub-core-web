@@ -35,6 +35,8 @@ export const MEMBER_LIST_FIELDS = [
   "familyGroup",
   "joinedAt",
   "leaveDate",
+  "leaveSource",
+  "inactivityUntil",
   "bookingBlocked",
   "imageRights",
   "roles",

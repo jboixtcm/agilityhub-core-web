@@ -282,6 +282,12 @@
     "CARD": "Card",
     "MANUAL": "Cash"
   },
+  "cancelledBookingType": {
+    "ACTIVITY": "Activities",
+    "CLASS": "Classes",
+    "TRAINING": "Training sessions",
+    "WAITLIST": "Waiting list"
+  },
   "billingIncident": {
     "MEMBER_NOT_ACTIVE": "member not active",
     "PAYMENT_METHOD_CHANGED": "payment method changed",
@@ -344,5 +350,10 @@
     "card_declined": "card declined",
     "expired_card": "expired card",
     "insufficient_funds": "insufficient funds"
-  }
+  },
+  "leaveSource": {"MEMBER": "member request", "ADMIN": "club decision", "PACK_EXPIRED": "pack expiry", "MIGRATED": "migration"},
+  "origin": {"APP": "app", "BACKOFFICE": "club", "SYSTEM": "system"},
+  "memberDisplayStatus": {"INACTIVE_PERIOD": "inactive", "INACTIVE_PERIOD_DATED": "inactive until {date}", "LEAVE_SCHEDULED": "leave scheduled {date}"},
+  "finishReason": {"SCHEDULED": "scheduled end", "ADMIN": "club decision", "LEAVE": "leave"},
+  "cancelReason": {"WITHDRAWN": "withdrawn", "EXPIRED": "expired", "LEAVE": "leave", "MEMBER": "by member", "ADMIN": "by club", "SYSTEM": "by system"}
 }

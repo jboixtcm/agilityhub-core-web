@@ -109,6 +109,8 @@
     "open": "Edita {label}",
     "opens": "Obertura de {day}",
     "reason": "Motiu del canvi (opcional)",
+    "reviewCashConditions": "Si canvies aquest valor, revisa també el text de les condicions de pagament en efectiu de l'alta.",
+    "reviewPaymentDay": "Si canvies aquest valor, revisa també el text del dia de pagament de l'alta.",
     "removeHoliday": "Elimina el festiu {index}",
     "reset": "Restableix el valor de producte",
     "time": "Hora"
@@ -252,7 +254,7 @@
       },
       "sepa": {
         "collectionDayOfMonth": {
-          "help": "Dia del mes en què es cobra la quota.",
+          "help": "Dia del mes facturat en què es cobra la quota; 0 vol dir l'últim dia d'aquell mes.",
           "label": "Dia de cobrament SEPA"
         },
         "schema": {

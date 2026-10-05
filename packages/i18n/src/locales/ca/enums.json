@@ -282,6 +282,12 @@
     "CARD": "Targeta",
     "MANUAL": "Efectiu"
   },
+  "cancelledBookingType": {
+    "ACTIVITY": "Activitats",
+    "CLASS": "Classes",
+    "TRAINING": "Entrenaments",
+    "WAITLIST": "Llista d'espera"
+  },
   "billingIncident": {
     "MEMBER_NOT_ACTIVE": "abonat no actiu",
     "PAYMENT_METHOD_CHANGED": "mètode de pagament canviat",
@@ -344,5 +350,10 @@
     "card_declined": "targeta rebutjada",
     "expired_card": "targeta caducada",
     "insufficient_funds": "fons insuficients"
-  }
+  },
+  "leaveSource": {"MEMBER": "sol·licitud de l'abonat", "ADMIN": "decisió del club", "PACK_EXPIRED": "caducitat del pack", "MIGRATED": "migració"},
+  "origin": {"APP": "app", "BACKOFFICE": "club", "SYSTEM": "sistema"},
+  "memberDisplayStatus": {"INACTIVE_PERIOD": "inactiva", "INACTIVE_PERIOD_DATED": "inactiva fins {date}", "LEAVE_SCHEDULED": "baixa prevista {date}"},
+  "finishReason": {"SCHEDULED": "finalització prevista", "ADMIN": "decisió del club", "LEAVE": "baixa"},
+  "cancelReason": {"WITHDRAWN": "retirada", "EXPIRED": "caducada", "LEAVE": "baixa", "MEMBER": "per l'abonat", "ADMIN": "pel club", "SYSTEM": "pel sistema"}
 }

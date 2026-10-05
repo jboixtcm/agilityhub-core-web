@@ -109,6 +109,8 @@
     "open": "Editar {label}",
     "opens": "Apertura del {day}",
     "reason": "Motivo del cambio (opcional)",
+    "reviewCashConditions": "Si cambias este valor, revisa también el texto de las condiciones de pago en efectivo del alta.",
+    "reviewPaymentDay": "Si cambias este valor, revisa también el texto del día de pago del alta.",
     "removeHoliday": "Eliminar el festivo {index}",
     "reset": "Restablecer el valor de producto",
     "time": "Hora"
@@ -252,7 +254,7 @@
       },
       "sepa": {
         "collectionDayOfMonth": {
-          "help": "Día del mes en que se cobra la cuota.",
+          "help": "Día del mes facturado en que se cobra la cuota; 0 significa el último día de ese mes.",
           "label": "Día de cobro SEPA"
         },
         "schema": {

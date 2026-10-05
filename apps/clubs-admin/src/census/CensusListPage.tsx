@@ -123,6 +123,7 @@ function toUniversalSavedView(view: SavedView): UniversalListSavedView {
     name: view.name,
     shared: view.shared,
     sort: [...view.sort],
+    system: view.system === true,
   };
 }
 
@@ -140,12 +141,16 @@ function queryFor(kind: CensusKind, state: UniversalListState) {
   };
 }
 
-function formatDate(value: string, locale: string): string {
+function formatDate(value: string, locale: string, withYear = false): string {
   const [year, month, day] = value.slice(0, 10).split("-").map(Number);
   if (year === undefined || month === undefined || day === undefined) {
     return value;
   }
-  return new Intl.DateTimeFormat(locale, { day: "2-digit", month: "2-digit" }).format(
+  return new Intl.DateTimeFormat(locale, {
+    day: "2-digit",
+    month: "2-digit",
+    ...(withYear ? { year: "numeric" } : {}),
+  }).format(
     new Date(Date.UTC(year, month - 1, day)),
   );
 }
@@ -405,7 +410,7 @@ function useActiveCount(client: ApiClient, kind: CensusKind) {
 }
 
 function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind }) {
-  const { i18n, t } = useTranslation(["census", "errors"]);
+  const { i18n, t } = useTranslation(["census", "enums", "errors"]);
   const branding = useBranding();
   const modules = branding.modules;
   const [state, setState, applySavedView] = useSyncedListState(kind, modules);
@@ -502,10 +507,21 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
     (item: MemberRow) => {
       const status = item.displayStatus;
       if (status === undefined) return t("census:values.empty");
-      const label = status.kind === "ACTIVE" ? t("census:values.activeMember") : status.label;
+      const label =
+        status.kind === "ACTIVE"
+          ? t("census:values.activeMember")
+          : status.kind === "INACTIVE_PERIOD"
+            ? status.date == null
+              ? t("census:members.status.inactive")
+              : t("census:members.status.inactiveUntil", { date: formatDate(status.date, locale) })
+            : status.kind === "LEAVE_SCHEDULED" && status.date != null
+              ? t("census:members.status.leaveScheduled", {
+                  date: formatDate(status.date, locale, true),
+                })
+              : status.label;
       return <Badge tone={toneForStatus(status.kind)}>{label}</Badge>;
     },
-    [t],
+    [locale, t],
   );
 
   const dogStatus = useCallback(
@@ -617,6 +633,22 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               ? t("census:values.empty")
               : formatDate(item.leaveDate, locale),
           sortKey: "leaveDate",
+        },
+        {
+          key: "leaveSource",
+          label: t("census:members.columns.leaveSource"),
+          render: (item) =>
+            item.leaveSource === undefined
+              ? t("census:values.empty")
+              : t(`enums:leaveSource.${item.leaveSource}`),
+        },
+        {
+          key: "inactivityUntil",
+          label: t("census:members.columns.inactivityUntil"),
+          render: (item) =>
+            item.inactivityUntil == null
+              ? t("census:values.empty")
+              : formatDate(item.inactivityUntil, locale),
         },
         {
           key: "bookingBlocked",
@@ -848,6 +880,13 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
       : []),
     { key: "joinedAt", label: t("census:members.columns.joinedAt"), type: "date" },
     { key: "leaveDate", label: t("census:members.columns.leaveDate"), type: "date" },
+    { key: "leaveSource", label: t("census:members.columns.leaveSource"), type: "enum" },
+    { key: "inactivityUntil", label: t("census:members.columns.inactivityUntil"), type: "date" },
+    {
+      key: "hasPendingRequest",
+      label: t("census:members.filters.hasPendingRequest"),
+      type: "boolean",
+    },
     { key: "bookingBlocked", label: t("census:members.filters.bookingBlocked"), type: "boolean" },
     ...(modules.includes("FAMILY_GROUP")
       ? [

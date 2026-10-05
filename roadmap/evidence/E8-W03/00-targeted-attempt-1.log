@@ -1,0 +1,920 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/census/MemberInactivityDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/census/InactivityLeavePage.test.tsx src/census/CensusListPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+stderr | src/census/MemberLeaveDrawer.test.tsx > T-13-31 admin leave lifecycle > prefills the effective date for a pending request
+[MSW] Error: intercepted a request without a matching request handler:
+
+  • GET /api/v1/prices?planId=plan-family
+
+If you still wish to intercept this unhandled request, please create a request handler for it.
+Read more: https://mswjs.io/docs/http/intercepting-requests
+
+ ❯ src/census/MemberInactivityDrawer.test.tsx (3 tests | 1 failed) 177ms
+   ❯ T-13-31 admin inactivity lifecycle (3)
+     × shows approve and deny only for a requested period 120ms
+ ❯ src/census/CensusListPage.test.tsx (5 tests | 1 failed) 1655ms
+   ❯ T-03-38 D5 universal member list (4)
+     × T-13-22 offers the leave columns and keeps the system leave view non-deletable 273ms
+stderr | src/census/MemberLeaveDrawer.test.tsx > T-13-32 ca/es/en drawer literals > renders en
+[MSW] Error: intercepted a request without a matching request handler:
+
+  • GET /api/v1/prices?planId=plan-family
+
+If you still wish to intercept this unhandled request, please create a request handler for it.
+Read more: https://mswjs.io/docs/http/intercepting-requests
+
+ ❯ src/census/MemberLeaveDrawer.test.tsx (6 tests | 2 failed) 10213ms
+   ❯ T-13-31 admin leave lifecycle (3)
+     × prefills the effective date for a pending request 94ms
+   ❯ T-13-32 ca/es/en drawer literals (3)
+     × renders en 10011ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > T-13-22 offers the leave columns and keeps the system leave view non-deletable
+TestingLibraryElementError: Found multiple elements with the text: Vistes
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<summary>[39m
+  [0mVistes[0m
+  [36m<span[39m
+    [33maria-hidden[39m=[32m"true"[39m
+  [36m>[39m
+    [0m▾[0m
+  [36m</span>[39m
+[36m</summary>[39m
+
+Ignored nodes: comments, script, style
+[36m<span>[39m
+  [0mVistes[0m
+[36m</span>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"census-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-page__header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mAbonats[0m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0m184 d'alta[0m
+          [36m</span>[39m
+        [36m</h1>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-send"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mEnviar comunicat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Llistat d'abonats"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca per nom, DNI, gos…[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca per nom, DNI, gos…"[39m
+              [33mplaceholder[39m=[32m"Cerca per nom, DNI, gos…"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<select[39m
+            [33maria-label[39m=[32m"Estat dels abonats"[39m
+            [33mclass[39m=[32m"ah-universal-list__status"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"ACTIVE"[39m
+            [36m>[39m
+              [0mAlta[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"LEFT"[39m
+            [36m>[39m
+              [0mBaixa[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTots[0m
+            [36m</option>[39m
+          [36m</select>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberNumber"[39m
+                  [36m>[39m
+                    [0mNúmero[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"lastName"[39m
+                  [36m>[39m
+                    [0mCognoms[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"fullName"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"displayStatus"[39m
+                  [36m>[39m
+                    [0mEstat visible[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"planId"[39m
+                  [36m>[39m
+                    [0mModalitat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"priceId"[39m
+                  [36m>[39m
+                    [0mTarifa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"paymentMethodType"[39m
+                  [36m>[39m
+                    [0mMètode de pagament[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nextInvoiceDate"[39m
+                  [36m>[39m
+                    [0mProper rebut[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"joinedAt"[39m
+                  [36m>[39m
+                    [0mAlta des de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"leaveDate"[39m
+                  [36m>[39m
+                    [0mData de baixa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"leaveSource"[39m
+                  [36m>[39m
+                    [0mOrigen de la baixa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"inactivityUntil"[39m
+                  [36m>[39m
+                    [0mInactiva fins[0m
+            ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusListPage.test.tsx:172:28
+    170|     expect(screen.getByRole("checkbox", { name: "Inactiva fins" })).to…
+    171|
+    172|     fireEvent.click(screen.getByText("Vistes"));
+       |                            ^
+    173|     expect(screen.getByRole("option", { name: "Baixes previstes" })).t…
+    174|     expect(screen.queryByRole("button", { name: "Elimina la vista" }))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/census/MemberInactivityDrawer.test.tsx > T-13-31 admin inactivity lifecycle > shows approve and deny only for a requested period
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Aprova"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Inactivitat":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_0_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  --------------------------------------------------heading:
+
+  Name "Nou període d'inactivitat":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Comentaris":
+  [36m<textarea[39m
+    [33mclass[39m=[32m"ah-input ah-textarea"[39m
+    [33mid[39m=[32m"inactivity-comments"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  checkbox:
+
+  Name "Salta el termini del dia 25":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Crea i aprova":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mtype[39m=[32m"submit"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  alert:
+
+  Name "":
+  [36m<div[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mInactivitat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<h3>[39m
+        [0mNou període d'inactivitat[0m
+      [36m</h3>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"inactivity-from"[39m
+        [36m>[39m
+          [0mMes d'inici[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"inactivity-from"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"month"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"inactivity-to"[39m
+        [36m>[39m
+          [0mMes final (— encara no ho sé)[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"inactivity-to"[39m
+          [33mtype[39m=[32m"month"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"inactivity-comments"[39m
+        [36m>[39m
+          [0mComentaris[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea"[39m
+          [33mid[39m=[32m"inactivity-comments"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"census-record__check-row"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [0mSalta el termini del dia 25[0m
+      [36m</label>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCrea i aprova[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+    [36m<div[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mNo es reconeix el valor de configuració.[0m
+      [36m</p>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberInactivityDrawer.test.tsx:51:27
+     49|     await renderDrawer();
+     50|     const drawer = await screen.findByRole("dialog", { name: "Inactivi…
+     51|     expect(within(drawer).getByRole("button", { name: "Aprova" })).toB…
+       |                           ^
+     52|     expect(within(drawer).getByRole("button", { name: "Denega" })).toB…
+     53|     expect(within(drawer).queryByText("Nou període d'inactivitat")).no…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/census/MemberLeaveDrawer.test.tsx > T-13-31 admin leave lifecycle > prefills the effective date for a pending request
+Error: expect(element).toHaveValue(2026-08-31)
+
+Expected the element to have value:
+  2026-08-31
+Received:
+
+ ❯ src/census/MemberLeaveDrawer.test.tsx:53:60
+     51|     await renderDrawer(member);
+     52|     const drawer = await screen.findByRole("dialog", { name: "Baixa (a…
+     53|     expect(within(drawer).getByLabelText("Data d'efecte")).toHaveValue…
+       |                                                            ^
+     54|     expect(within(drawer).getByRole("button", { name: "Aprova" })).toB…
+     55|     expect(within(drawer).getByRole("button", { name: "Denega" })).toB…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/census/MemberLeaveDrawer.test.tsx > T-13-32 ca/es/en drawer literals > renders en
+TestingLibraryElementError: Unable to find role="dialog" and name "Leave (with date)"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-labelledby[39m=[32m"_r_a_"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-drawer"[39m
+        [33mrole[39m=[32m"dialog"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_a_"[39m
+          [36m>[39m
+            [0mBaixa (amb data)[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mclass[39m=[32m"ah-overlay__close"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__body"[39m
+        [36m>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"census-record__form"[39m
+          [36m>[39m
+            [36m<h3>[39m
+              [0mPrograma la baixa[0m
+            [36m</h3>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"census-record__warning"[39m
+            [36m>[39m
+              [0mSi hi ha una sol·licitud pendent, quedarà anul·lada.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-date"[39m
+              [36m>[39m
+                [0mData d'efecte[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"direct-leave-date"[39m
+                [33mrequired[39m=[32m""[39m
+                [33mtype[39m=[32m"date"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-reason"[39m
+              [36m>[39m
+                [0mMotiu (opcional)[0m
+              [36m</label>[39m
+              [36m<select[39m
+                [33mclass[39m=[32m"ah-input ah-select"[39m
+                [33mid[39m=[32m"direct-leave-reason"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTria una opció[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-note"[39m
+              [36m>[39m
+                [0mNota (opcional)[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"direct-leave-note"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mPrograma la baixa[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</form>[39m
+          [36m<p[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [0mNo es reconeix el valor de configuració.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-labelledby[39m=[32m"_r_a_"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-drawer"[39m
+        [33mrole[39m=[32m"dialog"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_a_"[39m
+          [36m>[39m
+            [0mBaixa (amb data)[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mclass[39m=[32m"ah-overlay__close"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__body"[39m
+        [36m>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"census-record__form"[39m
+          [36m>[39m
+            [36m<h3>[39m
+              [0mPrograma la baixa[0m
+            [36m</h3>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"census-record__warning"[39m
+            [36m>[39m
+              [0mSi hi ha una sol·licitud pendent, quedarà anul·lada.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-date"[39m
+              [36m>[39m
+                [0mData d'efecte[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"direct-leave-date"[39m
+                [33mrequired[39m=[32m""[39m
+                [33mtype[39m=[32m"date"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-reason"[39m
+              [36m>[39m
+                [0mMotiu (opcional)[0m
+              [36m</label>[39m
+              [36m<select[39m
+                [33mclass[39m=[32m"ah-input ah-select"[39m
+                [33mid[39m=[32m"direct-leave-reason"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTria una opció[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-note"[39m
+              [36m>[39m
+                [0mNota (opcional)[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"direct-leave-note"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mPrograma la baixa[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</form>[39m
+          [36m<p[39m
+            [33mrole[39m=[32m"alert"[39m
+          [36m>[39m
+            [0mNo es reconeix el valor de configuració.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/MemberLeaveDrawer.test.tsx:81:25
+     79|     const member = await loadMember();
+     80|     await renderDrawer(member, language);
+     81|     expect(await screen.findByRole("dialog", { name: title })).toBeVis…
+       |                         ^
+     82|     expect(screen.getAllByText(action).length).toBeGreaterThan(0);
+     83|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 6 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ApiError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+ ❯ Function.network ../../packages/api-client/src/api-error.ts:63:12
+     61|
+     62|   static network(error: unknown): ApiError {
+     63|     return new ApiError({
+       |            ^
+     64|       code: "NETWORK",
+     65|       details: error,
+ ❯ Object.onError ../../packages/api-client/src/client.ts:148:49
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/dist/index.mjs:130:38
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'NETWORK', details: { stack: 'InternalError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+    at applyStrategy (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/on-unhandled-frame.mjs:40:9)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:117:7)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+    at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24)
+    at InterceptorSource.queue (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/network-source.mjs:17:5)
+    at InterceptorSource.#handleRequest (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/interceptor-source.mjs:38:5)
+    at emitAsync (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:33:36)
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:145:3
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@open-draft+until@2.1.0/node_modules/@open-draft/until/lib/index.mjs:4:18)', message: '[MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.', name: 'InternalError', constructor: 'Function<InternalError>', toString: 'Function<toString>' }, status: 0, traceId: undefined, retryAfter: undefined }
+This error originated in "src/census/MemberLeaveDrawer.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "prefills the effective date for a pending request". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ApiError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+ ❯ Function.network ../../packages/api-client/src/api-error.ts:63:12
+     61|
+     62|   static network(error: unknown): ApiError {
+     63|     return new ApiError({
+       |            ^
+     64|       code: "NETWORK",
+     65|       details: error,
+ ❯ Object.onError ../../packages/api-client/src/client.ts:148:49
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/dist/index.mjs:130:38
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'NETWORK', details: { stack: 'InternalError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+    at applyStrategy (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/on-unhandled-frame.mjs:40:9)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:117:7)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+    at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24)
+    at InterceptorSource.queue (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/network-source.mjs:17:5)
+    at InterceptorSource.#handleRequest (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/interceptor-source.mjs:38:5)
+    at emitAsync (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:33:36)
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:145:3
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@open-draft+until@2.1.0/node_modules/@open-draft/until/lib/index.mjs:4:18)', message: '[MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.', name: 'InternalError', constructor: 'Function<InternalError>', toString: 'Function<toString>' }, status: 0, traceId: undefined, retryAfter: undefined }
+This error originated in "src/census/MemberLeaveDrawer.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "shows planned-leave cancellation only when the member has a planned date". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ApiError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+ ❯ Function.network ../../packages/api-client/src/api-error.ts:63:12
+     61|
+     62|   static network(error: unknown): ApiError {
+     63|     return new ApiError({
+       |            ^
+     64|       code: "NETWORK",
+     65|       details: error,
+ ❯ Object.onError ../../packages/api-client/src/client.ts:148:49
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/dist/index.mjs:130:38
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'NETWORK', details: { stack: 'InternalError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+    at applyStrategy (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/on-unhandled-frame.mjs:40:9)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:117:7)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+    at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24)
+    at InterceptorSource.queue (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/network-source.mjs:17:5)
+    at InterceptorSource.#handleRequest (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/interceptor-source.mjs:38:5)
+    at emitAsync (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:33:36)
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:145:3
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@open-draft+until@2.1.0/node_modules/@open-draft/until/lib/index.mjs:4:18)', message: '[MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.', name: 'InternalError', constructor: 'Function<InternalError>', toString: 'Function<toString>' }, status: 0, traceId: undefined, retryAfter: undefined }
+This error originated in "src/census/MemberLeaveDrawer.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "a left member shows only the reactivation flow". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ApiError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+ ❯ Function.network ../../packages/api-client/src/api-error.ts:63:12
+     61|
+     62|   static network(error: unknown): ApiError {
+     63|     return new ApiError({
+       |            ^
+     64|       code: "NETWORK",
+     65|       details: error,
+ ❯ Object.onError ../../packages/api-client/src/client.ts:148:49
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/dist/index.mjs:130:38
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'NETWORK', details: { stack: 'InternalError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+    at applyStrategy (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/on-unhandled-frame.mjs:40:9)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:117:7)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+    at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24)
+    at InterceptorSource.queue (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/network-source.mjs:17:5)
+    at InterceptorSource.#handleRequest (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/interceptor-source.mjs:38:5)
+    at emitAsync (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:33:36)
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:145:3
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@open-draft+until@2.1.0/node_modules/@open-draft/until/lib/index.mjs:4:18)', message: '[MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.', name: 'InternalError', constructor: 'Function<InternalError>', toString: 'Function<toString>' }, status: 0, traceId: undefined, retryAfter: undefined }
+This error originated in "src/census/MemberLeaveDrawer.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "renders ca". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ApiError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+ ❯ Function.network ../../packages/api-client/src/api-error.ts:63:12
+     61|
+     62|   static network(error: unknown): ApiError {
+     63|     return new ApiError({
+       |            ^
+     64|       code: "NETWORK",
+     65|       details: error,
+ ❯ Object.onError ../../packages/api-client/src/client.ts:148:49
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/dist/index.mjs:130:38
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'NETWORK', details: { stack: 'InternalError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+    at applyStrategy (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/on-unhandled-frame.mjs:40:9)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:117:7)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+    at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24)
+    at InterceptorSource.queue (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/network-source.mjs:17:5)
+    at InterceptorSource.#handleRequest (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/interceptor-source.mjs:38:5)
+    at emitAsync (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:33:36)
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:145:3
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@open-draft+until@2.1.0/node_modules/@open-draft/until/lib/index.mjs:4:18)', message: '[MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.', name: 'InternalError', constructor: 'Function<InternalError>', toString: 'Function<toString>' }, status: 0, traceId: undefined, retryAfter: undefined }
+This error originated in "src/census/MemberLeaveDrawer.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "renders es". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ApiError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+ ❯ Function.network ../../packages/api-client/src/api-error.ts:63:12
+     61|
+     62|   static network(error: unknown): ApiError {
+     63|     return new ApiError({
+       |            ^
+     64|       code: "NETWORK",
+     65|       details: error,
+ ❯ Object.onError ../../packages/api-client/src/client.ts:148:49
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/dist/index.mjs:130:38
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'NETWORK', details: { stack: 'InternalError: [MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.
+    at applyStrategy (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/on-unhandled-frame.mjs:40:9)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:117:7)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+    at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24)
+    at InterceptorSource.queue (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/network-source.mjs:17:5)
+    at InterceptorSource.#handleRequest (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/sources/interceptor-source.mjs:38:5)
+    at emitAsync (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:33:36)
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@mswjs+interceptors@0.41.9/node_modules/@mswjs/interceptors/lib/node/handleRequest-FIQv5pwH.mjs:145:3
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/@open-draft+until@2.1.0/node_modules/@open-draft/until/lib/index.mjs:4:18)', message: '[MSW] Cannot bypass a request when using the "error" strategy for the "onUnhandledRequest" option.', name: 'InternalError', constructor: 'Function<InternalError>', toString: 'Function<toString>' }, status: 0, traceId: undefined, retryAfter: undefined }
+This error originated in "src/census/MemberLeaveDrawer.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "renders en". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  3 failed | 1 passed (4)
+      Tests  4 failed | 12 passed (16)
+     Errors  6 errors
+   Start at  12:48:29
+   Duration  11.50s (tests 70%, transform 12%, environment 10%, import 5%, setup 3%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/census/MemberInactivityDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/census/InactivityLeavePage.test.tsx src/census/CensusListPage.test.tsx`
+Exit status 1

@@ -1,6 +1,7 @@
 {
   "common": {
     "cancel": "Cancel",
+    "choose": "Choose an option",
     "close": "Close",
     "edit": "Edit",
     "genericError": "The action could not be completed.",
@@ -9,6 +10,22 @@
     "retry": "Try again",
     "save": "Save",
     "saving": "Saving…"
+  },
+  "inactivity": {
+    "title": "Inactivity", "current": "Current period", "new": "New inactivity period", "modify": "Change the months", "terminate": "End the period", "approve": "Approve", "deny": "Deny", "note": "Note (optional)", "fromMonth": "Start month", "toMonth": "End month (— I do not know yet)", "comments": "Comments", "overrideDeadline": "Override the day {day} deadline", "createApprove": "Create and approve", "approveConfirmTitle": "Approve period", "approveConfirmCancel": "Approval will cancel bookings that fall within the period.", "approveConfirmKeep": "Approval will keep bookings that fall within the period.", "openEnded": "— I do not know yet", "cancelledBookings": "{count, plural, one {# booking cancelled} other {# bookings cancelled}}", "cancelledToast": "{count, plural, one {# booking has been cancelled} other {# bookings have been cancelled}}", "noCancellationToast": "The period was approved without cancelling bookings.", "feeSnapshot": "First month fee {first} · Following months {following}/month", "bookingBreakdown": "{type}: {count}", "history": "History", "notApplicable": "Pack plans cannot request inactivity.", "badgeOpen": "inactive", "badgeUntil": "inactive until {date}",
+    "errors": {"deadline": "The first possible month is {month}. Select the option to override the deadline.", "overlap": "This period overlaps an existing inactivity period.", "openExisting": "Open the existing period"}
+  },
+  "leave": {
+    "title": "Leave (with date)", "pending": "Pending request", "planned": "Leave scheduled for {date}", "cancelPlanned": "Cancel scheduled leave", "cancelPlannedConfirm": "Do you want to cancel this scheduled leave?", "cancelledPlannedToast": "The scheduled leave was cancelled.", "direct": "Schedule leave", "directWarning": "Any pending request will be cancelled.", "effectiveDate": "Effective date", "reason": "Reason (optional)", "note": "Note (optional)", "nps": "NPS: {value}", "approve": "Approve", "deny": "Deny", "confirm": "Schedule leave", "cancelledToast": "{count, plural, one {# booking has been cancelled} other {# bookings have been cancelled}}", "badgeScheduled": "leave scheduled {date}",
+    "errors": {"dateInvalid": "The requested date has passed: choose a new one"}
+  },
+  "reactivation": {"title": "Reactivate member", "description": "Reactivation does not charge an entry fee. Dogs remain inactive until they are reactivated individually from their records.", "plan": "Plan", "price": "Price", "nextInvoiceDate": "Next invoice date", "action": "Reactivate member", "success": "The member was reactivated."},
+  "paymentMethod": {"current": "Current method", "type": "Type", "channel": "Channel", "invalidCard": "Invalid card", "sendCardLink": "Send card update link", "copy": "Copy link", "providerMissing": "The club has not configured Stripe."},
+  "plan": {"title": "Plan", "current": "Current plan", "maintenance": "Maintenance fee", "monthly": "Monthly fee", "newPlan": "New plan", "price": "Price", "priceAmount": "{amount} {currency}", "nextInvoiceDate": "Next invoice date", "packDiscountRule": "When moving from a pack of 10 sessions or more to a monthly plan, the entry fee has a 40% discount. The API must calculate the amount.", "contractUnavailable": "The current contract does not yet publish the plan-change operation or preview.", "addDog": "Add a second dog through its signup"},
+  "inactivityLeavePage": {
+    "title": "Inactivity and leave", "tabs": "Inactivity and leave", "member": "Member", "from": "From", "to": "To", "state": "State", "origin": "Origin", "requestedAt": "Requested at", "requestedDate": "Requested date", "effectiveDate": "Effective date", "reason": "Reason", "nps": "NPS", "addFilter": "Add filter", "clearFilters": "Clear filters", "columns": "Columns", "createView": "Create view", "defaultView": "Default view", "deleteView": "Delete view", "export": "Export", "filter": "Filter", "filterField": "Field", "filterOperator": "Operator", "filterValue": "Value", "formatPdf": "PDF", "formatXlsx": "Excel", "loadingFilterValues": "Loading values…", "nextPage": "Next page", "noSavedView": "No saved view", "page": "Page {page} of {totalPages}", "previousPage": "Previous page", "removeFilter": "Remove filter {field}", "renameView": "Rename", "rowsPerPage": "Rows per page", "saveError": "The view could not be saved.", "saveViewName": "View name", "selectAll": "Select all", "selected": "{count} selected", "sharedView": "Shared view", "sortAscending": "Sort {column} ascending", "sortDescending": "Sort {column} descending", "view": "View {name}", "views": "Views", "openMember": "Open {name}'s record",
+    "operators": {"between": "between", "contains": "contains", "eq": "is", "exists": "exists", "gt": "greater than", "gte": "at least", "in": "one of", "lt": "less than", "lte": "at most", "ne": "is not", "nin": "none of", "startsWith": "starts with"},
+    "inactivity": {"label": "Inactivity", "search": "Search inactivity", "emptyTitle": "No inactivity periods", "emptyDescription": "No periods match these criteria."}, "leave": {"label": "Leave", "search": "Search leave", "emptyTitle": "No leave requests", "emptyDescription": "No requests match these criteria."}
   },
   "dog": {
     "actions": {

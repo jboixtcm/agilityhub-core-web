@@ -148,6 +148,8 @@ const dynamicKeyPrefixes = [
   "admin-census:signupReview.upfrontLines.",
   // Rendered by SignupWarning code (E3-W07 step 0), so a new api value needs only its key.
   "admin-census:signupReview.warning.",
+  "admin-census:inactivityLeavePage.inactivity.",
+  "admin-census:inactivityLeavePage.leave.",
   "admin-census:values.",
   // S15 form A (E5-W03): rendered by the api's `dayLabel` and `status`.
   "admin-dashboard:risk.day.",
@@ -212,6 +214,7 @@ const dynamicKeyPrefixes = [
   // billing enums (incidents, methods, channels, remittances, rollback reasons, lines, concepts).
   "admin-billing:status.",
   "enums:billingIncident.",
+  "enums:cancelledBookingType.",
   "enums:collectionFailure.",
   "enums:collectionProvider.",
   "enums:collectionStatus.",
@@ -219,7 +222,12 @@ const dynamicKeyPrefixes = [
   "enums:invoiceLineOrigin.",
   "enums:invoiceStatus.",
   "enums:inactivityState.",
+  "enums:cancelReason.",
+  "enums:finishReason.",
+  "enums:leaveSource.",
   "enums:leaveRequestState.",
+  "enums:memberDisplayStatus.",
+  "enums:origin.",
   "enums:paymentChannel.",
   "enums:paymentMethodType.",
   "enums:remittanceStatus.",

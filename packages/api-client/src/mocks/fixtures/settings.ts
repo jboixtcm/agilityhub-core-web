@@ -158,8 +158,67 @@ const initialParameters: Parameters = {
           constraints: { values: ["MONTHLY", "SEMESTER"] },
           module: "BILLING",
         }),
+        parameter("billing.cashPeriodMonths", "billing", "int", 6, {
+          constraints: { min: 1 }, module: "BILLING",
+        }),
         parameter("billing.invoiceSeriesPattern", "billing", "string", "{YYYY}", {
           module: "BILLING",
+        }),
+        parameter("billing.invoiceResetYearly", "billing", "bool", true, { module: "BILLING" }),
+        parameter("billing.taxIncluded", "billing", "bool", true, { module: "BILLING" }),
+        parameter("billing.sepa.collectionDayOfMonth", "billing", "int", 5, {
+          constraints: { max: 28, min: 0 }, module: "BILLING",
+        }),
+        parameter("billing.sepa.useFrst", "billing", "bool", true, { module: "BILLING" }),
+        parameter("billing.sepa.schema", "billing", "enum", "CORE", {
+          constraints: { values: ["CORE", "B2B"] }, module: "BILLING",
+        }),
+        parameter("billing.stripeMaxAttempts", "billing", "int", 3, {
+          constraints: { min: 1 }, module: "BILLING",
+        }),
+        parameter("billing.remittanceReminderDay", "billing", "int", 20, {
+          constraints: { max: 28, min: 1 }, module: "BILLING",
+        }),
+        parameter("billing.packLowBalanceSessions", "billing", "int", 2, {
+          constraints: { min: 0 }, module: "BILLING",
+        }),
+        parameter("billing.packExpiryWarningDays", "billing", "int", 15, {
+          constraints: { min: 0 }, module: "BILLING",
+        }),
+        parameter("billing.singleClassCancelPolicy", "billing", "enum", "CREDIT", {
+          constraints: { values: ["NONE", "CREDIT", "REFUND"] }, module: "BILLING",
+        }),
+        parameter("billing.upfrontCutoffDay", "billing", "int", 25, {
+          constraints: { max: 28, min: 1 }, module: "BILLING",
+        }),
+        parameter("billing.packToMemberEntryDiscountPercent", "billing", "int", 40, {
+          constraints: { max: 100, min: 0 }, module: "BILLING",
+        }),
+        parameter("billing.packToMemberMinSessions", "billing", "int", 10, {
+          constraints: { min: 1 }, module: "BILLING",
+        }),
+        parameter("inactivity.requestDeadlineDay", "billing", "int", 25, {
+          constraints: { max: 28, min: 1 }, module: "INACTIVITY",
+        }),
+        parameter("inactivity.cancelBookingsOnApproval", "billing", "bool", true, {
+          module: "INACTIVITY",
+        }),
+        parameter("inactivity.maxStartMonthsAhead", "billing", "int", 12, {
+          constraints: { min: 1 }, module: "INACTIVITY",
+        }),
+        parameter("leave.reasons", "billing", "json", [
+          { audience: "MEMBER", key: "LEARNED_ENOUGH", label: { ca: "Ja he après tot el que volia", en: "I have already learned everything I wanted", es: "Ya he aprendido todo lo que quería" } },
+          { audience: "MEMBER", key: "NO_TIME", label: { ca: "No trobo temps per anar-hi", en: "I cannot find the time to go", es: "No encuentro tiempo para ir" } },
+          { audience: "MEMBER", key: "NOT_EXPECTED", label: { ca: "No és el que esperava", en: "It is not what I expected", es: "No es lo que esperaba" } },
+          { audience: "MEMBER", key: "EXTERNAL", label: { ca: "Condicionants meus aliens al club", en: "Personal circumstances unrelated to the club", es: "Circunstancias mías ajenas al club" } },
+          { audience: "MEMBER", key: "OTHER", label: { ca: "Altres", en: "Other", es: "Otros" } },
+          { audience: "ADMIN", key: "CLUB_DECISION", label: { ca: "Decisió del club", en: "Club decision", es: "Decisión del club" } },
+          { audience: "SYSTEM", key: "PACK_EXPIRED", label: { ca: "Pack caducat", en: "Expired pack", es: "Pack caducado" } },
+        ]),
+        parameter("leave.npsEnabled", "billing", "bool", true),
+        parameter("leave.fullMonthIfLater", "billing", "bool", true),
+        parameter("leave.packExpiryGraceDays", "billing", "int", 7, {
+          constraints: { min: 0 },
         }),
       ],
       title: "admin-settings:block.billing.title",

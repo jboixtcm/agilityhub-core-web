@@ -746,6 +746,15 @@ function ParameterEditor({
   return (
     <form className="settings-editor" onSubmit={(event) => void submit(event)}>
       <p className="settings-editor__help">{parameterHelp(t, parameter.key)}</p>
+      {parameter.key === "billing.cashInvoicing" ? (
+        <p className="settings-editor__future">
+          {t("admin-settings:editor.reviewCashConditions")}
+        </p>
+      ) : parameter.key === "billing.sepa.collectionDayOfMonth" ? (
+        <p className="settings-editor__future">
+          {t("admin-settings:editor.reviewPaymentDay")}
+        </p>
+      ) : null}
       <p className="settings-editor__future">{t("admin-settings:editor.appliesFromNow")}</p>
       <ParameterControl
         draft={draft}

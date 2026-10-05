@@ -73,7 +73,9 @@
       "idDocument": "DNI",
       "imageRights": "Derechos de imagen",
       "joinedAt": "De alta desde",
+      "inactivityUntil": "Inactiva hasta",
       "leaveDate": "Fecha de baja",
+      "leaveSource": "Origen de la baja",
       "memberNumber": "Número",
       "nextInvoiceDate": "Próximo recibo",
       "paymentMethod": "Pago",
@@ -93,6 +95,7 @@
       "freeTrainingAllowed": "Entrenamiento libre",
       "fullName": "Abonado",
       "hasPendingDocuments": "Documentos pendientes",
+      "hasPendingRequest": "Solicitud pendiente",
       "imageRightsGranted": "Derechos de imagen",
       "lastName": "Apellidos",
       "paymentMethodType": "Método de pago",
@@ -101,6 +104,7 @@
       "status": "Estado"
     },
     "search": "Buscar por nombre, DNI, perro…",
+    "status": {"inactive": "inactiva", "inactiveUntil": "inactiva hasta {date}", "leaveScheduled": "baja prevista {date}"},
     "selectRow": "Seleccionar a {name}",
     "statusLabel": "Estado de los abonados",
     "statuses": {
