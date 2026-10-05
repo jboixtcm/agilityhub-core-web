@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 import { createApiClient } from "@agilityhub/api-client";
 import {
   BILLING_MOCK_NOW,
@@ -99,10 +102,21 @@ async function renderPage({
       </BrandingProvider>
     </I18nextProvider>,
   );
-  await screen.findByRole("heading", {
-    level: 2,
-    name: /Pas 1|Paso 1|Step 1|Encara|Todavía|There is/u,
-  });
+  const parameters = new URLSearchParams(search);
+  const acrossMonths =
+    parameters.get("mes") === null &&
+    parameters.getAll("filter").some((filter) => filter.startsWith("memberId:eq:"));
+  if (acrossMonths) {
+    await screen.findByRole("heading", {
+      level: 1,
+      name: /Tots els mesos|Todos los meses|All months/u,
+    });
+  } else {
+    await screen.findByRole("heading", {
+      level: 2,
+      name: /Pas 1|Paso 1|Step 1|Encara|Todavía|There is/u,
+    });
+  }
   return { onNavigate };
 }
 
@@ -614,6 +628,60 @@ describe("T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-1
     ).toBeVisible();
     expect(button).toBeDisabled();
   });
+
+  it("E8-W01 round 2 #4: a receipt paid in its drawer leaves the held selection before pagination, so a later bulk payment never resends its id", async () => {
+    await renderPage();
+    fireEvent.click(
+      within(await invoiceRow("2026-0915")).getByRole("checkbox", {
+        name: "Selecciona el rebut 2026-0915",
+      }),
+    );
+    const drawer = await openDrawer("2026-0915");
+    await within(drawer).findByText("Quota Abonat — Setembre 2026");
+    fireEvent.click(within(drawer).getByRole("button", { name: "Marca cobrat" }));
+    fireEvent.click(
+      within(await screen.findByRole("dialog", { name: "Marca cobrat" })).getByRole("button", {
+        name: "Marca cobrat",
+      }),
+    );
+    expect(await within(drawer).findByText("Rebut marcat com a cobrat.")).toBeVisible();
+    const paid = requests("POST", "/invoices/payments").at(-1);
+    expect(paid).toBeUndefined();
+    const paidId = sent
+      .find((entry) => entry.method === "POST" && entry.url.pathname.endsWith("/payment"))
+      ?.url.pathname.split("/")
+      .at(-2);
+    expect(paidId).toBeTruthy();
+    await waitFor(() => {
+      expect(screen.queryByText("1 seleccionat")).toBeNull();
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Tanca el rebut" }));
+
+    for (const page of [2, 3, 4]) {
+      fireEvent.click(screen.getByRole("button", { name: "Pàgina següent" }));
+      await screen.findByText(`Pàgina ${String(page)} de 4`);
+    }
+    const payable = within(invoiceTable())
+      .getAllByRole("checkbox")
+      .find(
+        (checkbox) =>
+          !checkbox.hasAttribute("disabled") &&
+          checkbox.getAttribute("aria-label")?.startsWith("Selecciona el rebut ") === true,
+      );
+    if (payable === undefined) throw new TypeError("No payable receipt on the last page");
+    fireEvent.click(payable);
+    fireEvent.click(screen.getByRole("button", { name: "Marcar cobrat (selecció)" }));
+    const bulkDialog = await screen.findByRole("dialog", { name: "Marcar cobrat" });
+    expect(within(bulkDialog).getByText("Es marcarà 1 rebut com a cobrat.")).toBeVisible();
+    fireEvent.click(within(bulkDialog).getByRole("button", { name: "Marca cobrat" }));
+    await waitFor(() => {
+      expect(requests("POST", "/invoices/payments")).toHaveLength(1);
+    });
+    const bulk = requests("POST", "/invoices/payments")[0]?.body as
+      { invoiceIds?: string[] } | undefined;
+    expect(bulk?.invoiceIds).toHaveLength(1);
+    expect(bulk?.invoiceIds).not.toContain(paidId);
+  });
 });
 
 describe("T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20)", () => {
@@ -770,6 +838,44 @@ describe("T-12-25 the receipt drawer: the actions each state allows (R-12-16…R
     });
   });
 
+  it("E8-W01 round 2 #6: a failed drawer refetch stays beside the cached receipt, unlocks its actions and recovers through [Torna-ho a provar]", async () => {
+    server.use(
+      http.post("*/api/v1/invoices/:id/payment", () =>
+        HttpResponse.json(
+          { code: "STALE_VERSION", details: {}, message: "Stale version", traceId: "t-409" },
+          { status: 409 },
+        ),
+      ),
+    );
+    await renderPage();
+    const dialog = await openDrawer("2026-0915");
+    await within(dialog).findByText("Quota Abonat — Setembre 2026");
+    server.use(
+      http.get("*/api/v1/invoices/:id", () =>
+        HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t-503" },
+          { status: 503 },
+        ),
+      ),
+    );
+    fireEvent.click(within(dialog).getByRole("button", { name: "Marca cobrat" }));
+    fireEvent.click(
+      within(await screen.findByRole("dialog", { name: "Marca cobrat" })).getByRole("button", {
+        name: "Marca cobrat",
+      }),
+    );
+    expect(await within(dialog).findByText("No s'ha pogut carregar el rebut.")).toBeVisible();
+    expect(within(dialog).getByText("Quota Abonat — Setembre 2026")).toBeVisible();
+    expect(within(dialog).getByRole("button", { name: "Marca cobrat" })).toBeEnabled();
+
+    server.resetHandlers();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Torna-ho a provar" }));
+    await waitFor(() => {
+      expect(within(dialog).queryByText("No s'ha pogut carregar el rebut.")).toBeNull();
+    });
+    expect(within(dialog).getByRole("button", { name: "Marca cobrat" })).toBeEnabled();
+  });
+
   it("T-12-25: [Descarrega el justificant] opens the PDF in a new tab without parsing it", async () => {
     const tab = { close: vi.fn(), location: { href: "" } };
     const open = vi.spyOn(window, "open").mockReturnValue(tab as unknown as Window);
@@ -847,6 +953,7 @@ describe("T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R
         ?.idempotencyKey,
     ).toMatch(/^[0-9a-f-]{36}$/u);
     expect(await screen.findByText("Cobrant les targetes…")).toBeVisible();
+    expect(cells(await invoiceRow("2026-0912")).at(6)).toBe("cobrant");
     expect(screen.queryByRole("button", { name: "COBRA LES TARGETES" })).toBeNull();
     // The poll (every 5 s while CHARGING) reads the run settled: the month and the list are read again.
     const runReads = () =>
@@ -1147,6 +1254,53 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
       expect(reads()).toBeGreaterThan(stopped);
     });
   }, 30_000);
+
+  it("E8-W01 round 2 #3: a CHARGING period starts bounded monitoring when the first run read fails, shows retry and settles on a later poll", async () => {
+    mockScenario("billingStripe");
+    const api = client();
+    const period = await api.GET("/billing/periods/{period}", {
+      params: { path: { period: "2026-09" } },
+    });
+    const run = period.data?.run;
+    if (run === undefined || run === null) throw new TypeError("No Stripe run");
+    await api.POST("/billing/runs/{id}/card-charges", {
+      params: { header: { "Idempotency-Key": crypto.randomUUID() }, path: { id: run.id } },
+    });
+    sent.length = 0;
+    let runReads = 0;
+    server.use(
+      http.get("*/api/v1/billing/runs/:id", () => {
+        runReads += 1;
+        if (runReads === 1) {
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t-run" },
+            { status: 503 },
+          );
+        }
+        const stored = billingState.world.runs.find((item) => item.run.id === run.id)?.run;
+        if (stored === undefined) throw new TypeError("Stored Stripe run missing");
+        stored.status = "COMPLETED";
+        return HttpResponse.json(stored);
+      }),
+    );
+
+    await renderPage({ scenario: "billingStripe" });
+    expect(
+      await screen.findByText("No s'ha pogut actualitzar l'estat dels cobraments."),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "Torna-ho a provar" })).toBeVisible();
+    expect(screen.getByText("Cobrant les targetes…")).toBeVisible();
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 5_200));
+    });
+    await waitFor(() => {
+      expect(runReads).toBeGreaterThanOrEqual(2);
+      expect(requests("GET", "/billing/periods/2026-09").length).toBeGreaterThan(1);
+    });
+    await waitFor(() => {
+      expect(screen.queryByText("Cobrant les targetes…")).toBeNull();
+    });
+  }, 20_000);
 });
 
 describe("E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt", () => {
@@ -1180,6 +1334,115 @@ describe("E8-W01 second review (01-10): the manual receipt's member and errors, 
     fireEvent.click(within(dialog).getByRole("button", { name: "Crea el rebut" }));
     expect(await within(dialog).findByText("Tria un abonat.")).toBeVisible();
     expect(requests("POST", "/invoices")).toHaveLength(0);
+  });
+
+  it("E8-W01 round 2 #2: the manual adjustment search has no ACTIVE filter, shows a LEFT member's display status and creates their receipt", async () => {
+    server.use(
+      http.get("*/api/v1/members", ({ request }) => {
+        expect(new URL(request.url).searchParams.getAll("filter")).toEqual([]);
+        return HttpResponse.json({
+          appliedFilters: [],
+          items: [
+            {
+              displayStatus: { kind: "LEFT", label: "baixa" },
+              fullName: "Rita Fictícia",
+              id: "b1000000-0000-4000-8000-000000000777",
+              memberNumber: 777,
+              paymentMethod: { type: "MANUAL" },
+            },
+          ],
+          page: 0,
+          size: 20,
+          totalItems: 1,
+          totalPages: 1,
+        });
+      }),
+      http.post("*/api/v1/invoices", () => {
+        const source = billingState.world.invoices.find(
+          (item) => item.invoice.displayNumber === "2026-0915",
+        )?.invoice;
+        if (source === undefined) throw new TypeError("Manual invoice fixture unavailable");
+        const amount = { amountMinor: -3000, currency: "EUR" as const };
+        const zero = { amountMinor: 0, currency: "EUR" as const };
+        return HttpResponse.json(
+          {
+            ...source,
+            base: amount,
+            displayNumber: "2026-1081",
+            id: "b2000000-0000-4000-8000-000000001081",
+            kind: "MANUAL",
+            lines: [
+              {
+                ...source.lines[0],
+                base: amount,
+                description: "Retorn quota en efectiu",
+                origin: "ADJUSTMENT",
+                tax: zero,
+                total: amount,
+              },
+            ],
+            memberId: "b1000000-0000-4000-8000-000000000777",
+            memberSnapshot: { fullName: "Rita Fictícia", number: 777, taxId: null },
+            note: null,
+            number: 1081,
+            paymentMethod: {
+              channel: "CASH",
+              holderName: null,
+              last4: null,
+              mandateRef: null,
+              maskedAccount: null,
+              type: "MANUAL",
+            },
+            refundedTotal: zero,
+            remittanceId: null,
+            runId: null,
+            status: "PENDING",
+            tax: zero,
+            total: amount,
+            version: 1,
+          },
+          { status: 201 },
+        );
+      }),
+    );
+    await renderPage();
+    fireEvent.click(screen.getByRole("button", { name: "Rebut manual" }));
+    const dialog = await screen.findByRole("dialog", { name: "Rebut manual" });
+    fireEvent.change(within(dialog).getByLabelText("Abonat"), { target: { value: "Rita" } });
+    expect(await within(dialog).findByText("baixa")).toHaveClass("ah-badge");
+    fireEvent.click(within(dialog).getByRole("radio", { name: "Rita Fictícia · núm. 777" }));
+    fireEvent.change(within(dialog).getByLabelText("Concepte (línia 1)"), {
+      target: { value: "Retorn quota en efectiu" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("Import (línia 1)"), {
+      target: { value: "-30" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Crea el rebut" }));
+    expect(await screen.findByText("Rebut 2026-1081 creat.")).toBeVisible();
+    expect(requests("POST", "/invoices")[0]?.body).toMatchObject({
+      memberId: "b1000000-0000-4000-8000-000000000777",
+    });
+  });
+
+  it("E8-W01 round 2 #2: 409 MEMBER_ERASED is mapped to the manual receipt's member field", async () => {
+    server.use(
+      http.post("*/api/v1/invoices", () =>
+        HttpResponse.json(
+          { code: "MEMBER_ERASED", details: {}, message: "Erased", traceId: "t-erased" },
+          { status: 409 },
+        ),
+      ),
+    );
+    await renderPage();
+    const dialog = await openManual();
+    fireEvent.click(within(dialog).getByRole("button", { name: "Crea el rebut" }));
+    const memberField = within(dialog).getByLabelText("Abonat").closest(".ah-form-field");
+    expect(memberField).not.toBeNull();
+    await waitFor(() => {
+      expect(memberField).toHaveTextContent(
+        "Aquest abonat ha estat suprimit i ja no es pot modificar.",
+      );
+    });
   });
 
   it("R-12-19: the api's 400 on a line's member (lines[0].description) sits on that line, and on includeInNextRun under its checkbox, with no second generic alert", async () => {
@@ -1246,6 +1509,56 @@ describe("E8-W01 second review (01-10): the manual receipt's member and errors, 
     expect(runs[1]?.body).toMatchObject({ collectionDate: "2026-09-02", period: "2026-09" });
     expect(runs[1]?.idempotencyKey).toMatch(/^[0-9a-f-]{36}$/u);
     expect(runs[1]?.idempotencyKey).not.toBe(runs[0]?.idempotencyKey);
+  });
+
+  it("E8-W01 round 2 #1: 422 → accepted earliest → 503 → retry keeps the accepted body and the same Idempotency-Key", async () => {
+    vi.setSystemTime(new Date("2026-08-31T08:00:00Z"));
+    let attempt = 0;
+    server.use(
+      http.post("*/api/v1/billing/runs", () => {
+        attempt += 1;
+        return attempt === 1
+          ? HttpResponse.json(
+              {
+                code: "COLLECTION_DATE_TOO_SOON",
+                details: { earliest: "2026-09-02", requested: "2026-09-01" },
+                message: "Too soon",
+                traceId: "t-422",
+              },
+              { status: 422 },
+            )
+          : HttpResponse.json(
+              { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t-503" },
+              { status: 503 },
+            );
+      }),
+    );
+    await renderPage({ scenario: "billingStale" });
+    const [simulate] = screen.getAllByRole("button", { name: "1 · SIMULA EL MES" });
+    if (simulate === undefined) throw new TypeError("No simulate button");
+    fireEvent.click(simulate);
+    await screen.findByText("Mes simulat.");
+    fireEvent.click(screen.getByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }));
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+    fireEvent.click(
+      await within(dialog).findByRole("button", {
+        name: "Genera amb cobrament el 02/09/2026",
+      }),
+    );
+    expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "S'ha produït un error inesperat.",
+    );
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: "Genera amb cobrament el 02/09/2026" }),
+    );
+    await waitFor(() => {
+      expect(requests("POST", "/billing/runs")).toHaveLength(3);
+    });
+    const runs = requests("POST", "/billing/runs");
+    expect(runs[1]?.body).toEqual(runs[2]?.body);
+    expect(runs[1]?.body).toMatchObject({ collectionDate: "2026-09-02" });
+    expect(runs[1]?.idempotencyKey).toBe(runs[2]?.idempotencyKey);
   });
 
   it("R-12-14 E89: a receipt the admin cancelled before the rollback reads «anul·lat · retrocés» in the list and in its drawer, with its own reason", async () => {
@@ -1354,6 +1667,41 @@ describe("R-12-19 and R-12-26: the manual receipt and the accounting export", ()
   });
 });
 
+describe("E8-W01 round 2 #7: member history, charging copy and the Docker defaults", () => {
+  it("Q3: a memberId link without mes lists all months, names that scope and selecting a month restores period:eq", async () => {
+    const lauraId = billingState.world.members.find(
+      (member) => member.fullName === "Laura Serra",
+    )?.id;
+    if (lauraId === undefined) throw new TypeError("Laura's billing id is unavailable");
+    await renderPage({ search: `?filter=memberId:eq:${lauraId}` });
+    expect(screen.getByRole("heading", { level: 1, name: "Tots els mesos" })).toBeVisible();
+    await waitFor(() => {
+      const filters = requests("GET", "/invoices").at(-1)?.url.searchParams.getAll("filter");
+      expect(filters).toContain(`memberId:eq:${lauraId}`);
+      expect(filters?.some((filter) => filter.startsWith("period:eq:"))).toBe(false);
+    });
+    expect(await screen.findByText("Filtre (1): Abonat = «Laura Serra»")).toBeVisible();
+
+    fireEvent.click(screen.getByRole("button", { name: "Mes següent" }));
+    expect(await screen.findByRole("heading", { level: 1, name: "Setembre 2026" })).toBeVisible();
+    await waitFor(() => {
+      expect(requests("GET", "/invoices").at(-1)?.url.searchParams.getAll("filter")).toEqual([
+        "period:eq:2026-09",
+        `memberId:eq:${lauraId}`,
+      ]);
+    });
+  });
+
+  it("Q6: e2e-docker defaults to four workers and gives Chromium host IPC", () => {
+    const script = readFileSync(
+      resolve(import.meta.dirname, "../../../../scripts/e2e-docker.sh"),
+      "utf8",
+    );
+    expect(script).toContain("default_playwright_workers=4");
+    expect(script).toContain("--ipc=host");
+  });
+});
+
 describe("E8-W01 step 10: the D6 literals in ca (mockup V7) and the same keys in es and en", () => {
   it("E8-W01: «Pas 1 — Simulació: incidències primer», «Actius amb pagament en efectiu», «Marcar cobrat (selecció)», «Exporta per a comptabilitat»", async () => {
     const ca = (await loadNamespace("ca", "admin-billing")) as {
@@ -1370,6 +1718,8 @@ describe("E8-W01 step 10: the D6 literals in ca (mockup V7) and the same keys in
     const enums = (await loadNamespace("ca", "enums")) as Record<string, Record<string, string>>;
     expect(enums.billingIncident?.NO_BANK_ACCOUNT).toBe("sense compte bancari informat");
     expect(enums.billingIncident?.NO_PRICE).toBe("sense tarifa assignada");
+    expect(enums.billingIncident?.MEMBER_NOT_ACTIVE).toBe("abonat no actiu");
+    expect(enums.billingIncident?.PAYMENT_METHOD_CHANGED).toBe("mètode de pagament canviat");
     expect(enums.paymentMethodType).toEqual({
       CARD: "Targeta",
       MANUAL: "Efectiu",
@@ -1395,5 +1745,11 @@ describe("E8-W01 step 10: the D6 literals in ca (mockup V7) and the same keys in
       "Direct debit",
       "in remittance",
     ]);
+    const esEnums = (await loadNamespace("es", "enums")) as Record<string, Record<string, string>>;
+    const enEnums = (await loadNamespace("en", "enums")) as Record<string, Record<string, string>>;
+    expect(esEnums.billingIncident?.MEMBER_NOT_ACTIVE).toBe("abonado no activo");
+    expect(esEnums.billingIncident?.PAYMENT_METHOD_CHANGED).toBe("método de pago cambiado");
+    expect(enEnums.billingIncident?.MEMBER_NOT_ACTIVE).toBe("member not active");
+    expect(enEnums.billingIncident?.PAYMENT_METHOD_CHANGED).toBe("payment method changed");
   });
 });

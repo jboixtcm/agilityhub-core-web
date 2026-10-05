@@ -127,7 +127,14 @@ export function RemittancesPage({
     return value !== null && /^\d{4}-(0[1-9]|1[0-2])$/u.test(value) ? value : undefined;
   });
   const backPath = month === undefined ? "/facturacio" : `/facturacio?mes=${month}`;
+  // A bare route stays bare until `useSavedViews` resolves its default. Otherwise this effect adds
+  // fields/page first and the hook correctly treats the URL as an explicit, shareable list state.
+  const urlWritten = useRef(window.location.search !== "");
   useEffect(() => {
+    if (!urlWritten.current) {
+      urlWritten.current = true;
+      return;
+    }
     const parameters = universalListSearchParams(state);
     if (month !== undefined) parameters.set("mes", month);
     window.history.replaceState(null, "", `${window.location.pathname}?${parameters.toString()}`);

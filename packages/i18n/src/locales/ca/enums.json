@@ -283,6 +283,8 @@
     "MANUAL": "Efectiu"
   },
   "billingIncident": {
+    "MEMBER_NOT_ACTIVE": "abonat no actiu",
+    "PAYMENT_METHOD_CHANGED": "mètode de pagament canviat",
     "NO_BANK_ACCOUNT": "sense compte bancari informat",
     "NO_PRICE": "sense tarifa assignada",
     "NO_PLAN": "sense modalitat assignada",

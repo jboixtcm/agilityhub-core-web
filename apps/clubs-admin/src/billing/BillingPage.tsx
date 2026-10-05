@@ -136,8 +136,22 @@ function readListState(search: string): UniversalListState {
   return { ...state, filters: state.filters.filter((filter) => filter.field !== "period") };
 }
 
-function writeUrl(period: string, state: UniversalListState, invoiceId: string | undefined) {
-  const parameters = new URLSearchParams({ mes: period });
+/** A D10 member link has no month: it asks for that member's receipts across every period. */
+function readsMemberHistory(search: string): boolean {
+  const parameters = new URLSearchParams(search);
+  return (
+    parameters.get("mes") === null &&
+    parameters.getAll("filter").some((filter) => filter.startsWith("memberId:eq:"))
+  );
+}
+
+function writeUrl(
+  period: string,
+  state: UniversalListState,
+  invoiceId: string | undefined,
+  memberHistory: boolean,
+) {
+  const parameters = new URLSearchParams(memberHistory ? undefined : { mes: period });
   universalListSearchParams(state).forEach((value, key) => {
     parameters.append(key, value);
   });
@@ -147,6 +161,14 @@ function writeUrl(period: string, state: UniversalListState, invoiceId: string |
 
 function apiFilters(state: UniversalListState): string[] {
   return state.filters.map((filter) => `${filter.field}:${filter.operator}:${filter.value}`);
+}
+
+function invoiceFilters(
+  period: string,
+  state: UniversalListState,
+  memberHistory: boolean,
+): string[] {
+  return [...(memberHistory ? [] : [`period:eq:${period}`]), ...apiFilters(state)];
 }
 
 interface Feedback {
@@ -182,6 +204,9 @@ export function BillingPage({
   const keys = useSubmissionKeys();
   const [period, setPeriod] = useState(() => readPeriod(window.location.search, branding.timeZone));
   const [state, setState] = useState(() => readListState(window.location.search));
+  const [memberHistory, setMemberHistory] = useState(() =>
+    readsMemberHistory(window.location.search),
+  );
   const [invoiceId, setInvoiceId] = useState<string | undefined>(
     () => new URLSearchParams(window.location.search).get("rebut") ?? undefined,
   );
@@ -202,8 +227,8 @@ export function BillingPage({
       urlWritten.current = true;
       return;
     }
-    writeUrl(period, state, invoiceId);
-  }, [invoiceId, period, state]);
+    writeUrl(period, state, invoiceId, memberHistory);
+  }, [invoiceId, memberHistory, period, state]);
 
   const say = useCallback((text: ReactNode, tone: Tone = "success") => {
     const id = nextFeedback.current;
@@ -220,8 +245,9 @@ export function BillingPage({
     error?: unknown;
     key: string;
   }>();
-  const periodKey = `${period}#${String(reload)}`;
+  const periodKey = `${memberHistory ? "all" : period}#${String(reload)}`;
   useEffect(() => {
+    if (memberHistory) return undefined;
     let current = true;
     void client.GET("/billing/periods/{period}", { params: { path: { period } } }).then(
       (result) => {
@@ -234,7 +260,7 @@ export function BillingPage({
     return () => {
       current = false;
     };
-  }, [client, period, periodKey]);
+  }, [client, memberHistory, period, periodKey]);
   // The month shown is always the header's: another month's late answer is never drawn.
   const month = periodResult?.data?.period === period ? periodResult.data : undefined;
   const periodError = periodResult?.key === periodKey ? periodResult.error : undefined;
@@ -250,11 +276,13 @@ export function BillingPage({
 
   // The run's detail: its collection date, the members it skipped, and its CHARGING progress.
   const [runDetail, setRunDetail] = useState<BillingRun>();
+  const [runReadError, setRunReadError] = useState<{ error: unknown; id: string }>();
   const [pollTick, setPollTick] = useState(0);
   const pollStart = useRef<number | undefined>(undefined);
   const lastRunStatus = useRef<{ id: string; status: BillingRun["status"] } | undefined>(undefined);
   const [pollStopped, setPollStopped] = useState(false);
   const runId = run?.id;
+  const runStatus = run?.status;
   useEffect(() => {
     if (runId === undefined) return undefined;
     let current = true;
@@ -262,23 +290,32 @@ export function BillingPage({
       (result) => {
         if (!current || result.data === undefined) return;
         const next = result.data;
+        const previousStatus =
+          lastRunStatus.current?.id === next.id
+            ? lastRunStatus.current.status
+            : runId === next.id
+              ? runStatus
+              : undefined;
         // The cards settled (R-12-13): the month's chips and the receipts are read again.
-        const settled =
-          lastRunStatus.current?.id === next.id &&
-          lastRunStatus.current.status === "CHARGING" &&
-          next.status !== "CHARGING";
+        const settled = previousStatus === "CHARGING" && next.status !== "CHARGING";
         lastRunStatus.current = { id: next.id, status: next.status };
         setRunDetail(next);
+        setRunReadError(undefined);
         if (settled) refreshAll();
       },
-      () => undefined,
+      (error: unknown) => {
+        if (current) setRunReadError({ error, id: runId });
+      },
     );
     return () => {
       current = false;
     };
-  }, [client, pollTick, refreshAll, reload, runId]);
+  }, [client, pollTick, refreshAll, reload, runId, runStatus]);
   const detail = runDetail?.id === runId ? runDetail : undefined;
-  const charging = detail?.status === "CHARGING";
+  const detailError =
+    runReadError !== undefined && runReadError.id === runId ? runReadError.error : undefined;
+  // The period is enough to start monitoring. A failed first detail read must not stop the loop.
+  const charging = runStatus === "CHARGING" || detail?.status === "CHARGING";
 
   // R-12-13: every 5 s while the cards are charging, for two minutes at most (then [Actualitza]).
   useEffect(() => {
@@ -300,7 +337,7 @@ export function BillingPage({
 
   // The receipts of the month (`GET /invoices`, universal list, `listKey = invoices`).
   const [listResult, setListResult] = useState<{ data?: ListData; error?: unknown; key: string }>();
-  const listKey = JSON.stringify({ period, reload, state });
+  const listKey = JSON.stringify({ memberHistory, period, reload, state });
   useEffect(() => {
     let current = true;
     const query = {
@@ -308,7 +345,7 @@ export function BillingPage({
         ...ROW_FIELDS,
         ...state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [column]),
       ]),
-      filter: [`period:eq:${period}`, ...apiFilters(state)],
+      filter: invoiceFilters(period, state, memberHistory),
       page: state.page,
       ...(state.q === "" ? {} : { q: state.q }),
       size: state.size,
@@ -319,10 +356,20 @@ export function BillingPage({
         if (!current) return;
         try {
           if (result.data === undefined) throw new TypeError("Invoice list without data");
+          const items = itemsWith(result.data.items, ROW_FIELDS);
+          // Persist the removal in the controlled selection. Otherwise navigating to another page
+          // can resurrect a receipt this fresh response just made non-payable.
+          setSelected((selectedIds) => {
+            const stale = items.filter((row) => selectedIds.has(row.id) && !isPayable(row));
+            if (stale.length === 0) return selectedIds;
+            const next = new Set(selectedIds);
+            stale.forEach((row) => next.delete(row.id));
+            return next;
+          });
           setListResult({
             data: {
               appliedFilters: result.data.appliedFilters,
-              items: itemsWith(result.data.items, ROW_FIELDS),
+              items,
               totalPages: result.data.totalPages,
             },
             key: listKey,
@@ -338,20 +385,11 @@ export function BillingPage({
     return () => {
       current = false;
     };
-  }, [client, listKey, period, state]);
+  }, [client, listKey, memberHistory, period, state]);
   const list = listResult?.key === listKey ? listResult.data : undefined;
   const listError = listResult?.key === listKey ? listResult.error : undefined;
   const rows = useMemo(() => list?.items ?? [], [list]);
-
-  // A selected receipt the api no longer lets «Marca cobrat» (paid in its drawer, say) is out of
-  // the selection as soon as the list reads it so.
-  const selection = useMemo(() => {
-    const stale = rows.filter((row) => selected.has(row.id) && !isPayable(row));
-    if (stale.length === 0) return selected;
-    const next = new Set(selected);
-    stale.forEach((row) => next.delete(row.id));
-    return next;
-  }, [rows, selected]);
+  const selection = selected;
 
   // Another filter or search shows other receipts: a selection the admin can no longer see would be
   // marked paid unseen, so it goes (a new page keeps it, as the universal list does).
@@ -360,11 +398,17 @@ export function BillingPage({
       if (JSON.stringify(state.filters) !== JSON.stringify(next.filters) || state.q !== next.q) {
         setSelected(new Set());
       }
+      if (memberHistory && !next.filters.some((filter) => filter.field === "memberId")) {
+        setMemberHistory(false);
+      }
       setState(next);
     },
-    [state],
+    [memberHistory, state],
   );
   const applySavedView = useCallback((view: UniversalListSavedView) => {
+    setMemberHistory(
+      (current) => current && view.filters.some((filter) => filter.field === "memberId"),
+    );
     setState((current) => ({
       ...current,
       columns: view.columns,
@@ -377,6 +421,7 @@ export function BillingPage({
 
   const changePeriod = (next: string) => {
     setPeriod(next);
+    setMemberHistory(false);
     setSelected(new Set());
     setState((current) => ({ ...current, page: 0 }));
     setPollStopped(false);
@@ -410,7 +455,7 @@ export function BillingPage({
   // The month's receipts by member and amount, for the universal filter's values (no
   // filter-values route for `GET /invoices`): read once per month, page by page.
   // Keyed by the month and its reads: a write (a generation, a rollback) makes them read again.
-  const valuesKey = `${period}#${String(reload)}`;
+  const valuesKey = `${memberHistory ? "all" : period}#${String(reload)}`;
   const monthValues = useRef<{ key: string; promise: Promise<InvoiceListItem[]> }>(undefined);
   const monthItems = useCallback(() => {
     if (monthValues.current?.key === valuesKey) return monthValues.current.promise;
@@ -421,7 +466,7 @@ export function BillingPage({
           params: {
             query: {
               fields: listFields(["member", "total"]),
-              filter: [`period:eq:${period}`],
+              filter: memberHistory ? [] : [`period:eq:${period}`],
               page,
               size: 1000,
               sort: ["number,asc"],
@@ -439,7 +484,7 @@ export function BillingPage({
     });
     monthValues.current = { key: valuesKey, promise };
     return promise;
-  }, [client, period, valuesKey]);
+  }, [client, memberHistory, period, valuesKey]);
 
   const statusOptions = useMemo(
     () =>
@@ -465,7 +510,9 @@ export function BillingPage({
       })),
     [t],
   );
-  const monthTitle = formats.formatMonthTitle(period);
+  const monthTitle = memberHistory
+    ? t("admin-billing:header.allMonths")
+    : formats.formatMonthTitle(period);
   // By id, so a re-read of the month (every write) does not reload the filter's values.
   const remittanceId = month?.remittance?.id;
   const loadFilterValues = useCallback(
@@ -798,56 +845,62 @@ export function BillingPage({
           </button>
         </div>
         <span className="billing-header__spacer" />
-        <Button
-          className="billing-action"
-          loading={simulating}
-          loadingLabel={t("admin-billing:actions.simulating")}
-          onClick={() => void simulate()}
-          variant="secondary"
-        >
-          {t("admin-billing:actions.simulate")}
-        </Button>
-        {clubProviders === undefined ? null : (
-          <span title={generateBlocked}>
+        {memberHistory ? null : (
+          <>
             <Button
-              aria-describedby={generateBlocked === undefined ? undefined : "billing-generate-why"}
               className="billing-action"
-              disabled={generateBlocked !== undefined || month === undefined}
-              onClick={() => {
-                setModal("generate");
-              }}
+              loading={simulating}
+              loadingLabel={t("admin-billing:actions.simulating")}
+              onClick={() => void simulate()}
+              variant="secondary"
             >
-              {generateLabel(t, clubProviders)}
+              {t("admin-billing:actions.simulate")}
             </Button>
-            {generateBlocked === undefined ? null : (
-              <span className="ah-sr-only" id="billing-generate-why">
-                {generateBlocked}
+            {clubProviders === undefined ? null : (
+              <span title={generateBlocked}>
+                <Button
+                  aria-describedby={
+                    generateBlocked === undefined ? undefined : "billing-generate-why"
+                  }
+                  className="billing-action"
+                  disabled={generateBlocked !== undefined || month === undefined}
+                  onClick={() => {
+                    setModal("generate");
+                  }}
+                >
+                  {generateLabel(t, clubProviders)}
+                </Button>
+                {generateBlocked === undefined ? null : (
+                  <span className="ah-sr-only" id="billing-generate-why">
+                    {generateBlocked}
+                  </span>
+                )}
               </span>
             )}
-          </span>
+            {canCharge ? (
+              <Button
+                className="billing-action"
+                onClick={() => {
+                  setModal("charge");
+                }}
+              >
+                {t("admin-billing:actions.chargeCards")}
+              </Button>
+            ) : null}
+            {run?.rollbackable === true ? (
+              <Button
+                className="billing-action"
+                onClick={() => {
+                  setModal("rollback");
+                }}
+                variant="ghost"
+              >
+                <Icon aria-hidden="true" name="undo" />
+                {t("admin-billing:actions.rollback")}
+              </Button>
+            ) : null}
+          </>
         )}
-        {canCharge ? (
-          <Button
-            className="billing-action"
-            onClick={() => {
-              setModal("charge");
-            }}
-          >
-            {t("admin-billing:actions.chargeCards")}
-          </Button>
-        ) : null}
-        {run?.rollbackable === true ? (
-          <Button
-            className="billing-action"
-            onClick={() => {
-              setModal("rollback");
-            }}
-            variant="ghost"
-          >
-            <Icon aria-hidden="true" name="undo" />
-            {t("admin-billing:actions.rollback")}
-          </Button>
-        ) : null}
         {/* The discreet [＋ Rebut manual] of step 6 (not in the mockup): its name is its label. It
             sits with the month's actions: the receipts toolbar fills the 1280 px row already. */}
         <IconButton
@@ -894,9 +947,23 @@ export function BillingPage({
             ) : null}
           </Toast>
         ) : null}
+        {detailError === undefined ? null : (
+          <Toast tone="danger">
+            <span>{t("admin-billing:errors.loadRun")}</span>
+            <Button
+              onClick={() => {
+                setRunReadError(undefined);
+                setPollTick((value) => value + 1);
+              }}
+              variant="ghost"
+            >
+              {t("admin-billing:actions.retry")}
+            </Button>
+          </Toast>
+        )}
       </div>
 
-      {month === undefined ? (
+      {memberHistory ? null : month === undefined ? (
         periodError === undefined ? (
           <Skeleton height="14rem" label={t("admin-billing:list.loading")} />
         ) : isApiError(periodError, "MODULE_DISABLED") ? (
@@ -994,29 +1061,31 @@ export function BillingPage({
       )}
 
       <div className="billing-toolbar">
-        <div aria-label={t("admin-billing:list.chips")} className="billing-chips" role="group">
-          {STATUS_CHIPS.map((chip) => (
-            <button
-              aria-pressed={activeChip === chip.key}
-              className="billing-chip"
-              key={chip.key}
-              onClick={() => {
-                const others = state.filters.filter((filter) => filter.field !== "status");
-                changeState({
-                  ...state,
-                  filters:
-                    chip.status === ""
-                      ? others
-                      : [...others, { field: "status", operator: "eq", value: chip.status }],
-                  page: 0,
-                });
-              }}
-              type="button"
-            >
-              {chipLabel(chip.key)}
-            </button>
-          ))}
-        </div>
+        {memberHistory ? null : (
+          <div aria-label={t("admin-billing:list.chips")} className="billing-chips" role="group">
+            {STATUS_CHIPS.map((chip) => (
+              <button
+                aria-pressed={activeChip === chip.key}
+                className="billing-chip"
+                key={chip.key}
+                onClick={() => {
+                  const others = state.filters.filter((filter) => filter.field !== "status");
+                  changeState({
+                    ...state,
+                    filters:
+                      chip.status === ""
+                        ? others
+                        : [...others, { field: "status", operator: "eq", value: chip.status }],
+                    page: 0,
+                  });
+                }}
+                type="button"
+              >
+                {chipLabel(chip.key)}
+              </button>
+            ))}
+          </div>
+        )}
         <span className="billing-toolbar__spacer" />
         {/* A selection may span pages: how many receipts the action takes is always in sight. */}
         {selection.size === 0 ? null : (
@@ -1035,15 +1104,17 @@ export function BillingPage({
         >
           {t("admin-billing:actions.markPaidSelection")}
         </button>
-        <Button
-          onClick={() => {
-            setModal("export");
-          }}
-          variant="ghost"
-        >
-          <Icon aria-hidden="true" name="export" />
-          {t("admin-billing:actions.accountingExport")}
-        </Button>
+        {memberHistory ? null : (
+          <Button
+            onClick={() => {
+              setModal("export");
+            }}
+            variant="ghost"
+          >
+            <Icon aria-hidden="true" name="export" />
+            {t("admin-billing:actions.accountingExport")}
+          </Button>
+        )}
       </div>
 
       <UniversalList<InvoiceRow>
@@ -1070,7 +1141,7 @@ export function BillingPage({
         onExport={(format, current) => {
           void listExport.run("/invoices/export", {
             columns: current.columns.join(","),
-            filter: [`period:eq:${period}`, ...apiFilters(current)],
+            filter: invoiceFilters(period, current, memberHistory),
             format,
             ...(current.q === "" ? {} : { q: current.q }),
             sort: current.sort,

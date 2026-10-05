@@ -37,15 +37,25 @@ mkdir -p "$evidence_directory"
 # `e2e` tasks: turbo's strict env mode drops any undeclared one.)
 #   pnpm e2e:docker E5-W05 --capture-task=E5-W05
 capture_task="${E2E_CAPTURE_TASK:-}"
+default_playwright_workers=4
+has_workers=false
 playwright_args=()
 if [[ $# -gt 1 ]]; then
   for argument in "${@:2}"; do
     case "$argument" in
       --) ;;
       --capture-task=*) capture_task="${argument#--capture-task=}" ;;
-      *) playwright_args+=("$argument") ;;
+      *)
+        case "$argument" in
+          --workers|--workers=*) has_workers=true ;;
+        esac
+        playwright_args+=("$argument")
+        ;;
     esac
   done
+fi
+if [[ "$has_workers" == false ]]; then
+  playwright_args=("--workers=$default_playwright_workers" "${playwright_args[@]}")
 fi
 capture_env=()
 if [[ -n "$capture_task" ]]; then
@@ -70,6 +80,7 @@ else
   echo "Playwright arguments: ${playwright_args[*]}"
 fi
 docker run --rm \
+  --ipc=host \
   --env CI=1 \
   --env EVIDENCE_TASKS="$evidence_tasks" \
   ${capture_env[@]+"${capture_env[@]}"} \

@@ -210,7 +210,9 @@ export function InvoiceDrawer({
   const refresh = useCallback(() => {
     setReload((value) => value + 1);
   }, []);
-  const reading = loaded !== reload;
+  // A failed refresh keeps the cached receipt usable: only an unanswered current read locks it.
+  const currentLoadError = loadError?.reload === reload ? loadError.error : undefined;
+  const reading = loaded !== reload && currentLoadError === undefined;
 
   const openDocument = async (current: Invoice) => {
     // Opened by the click itself, so no pop-up blocker stops it; the PDF is never parsed here.
@@ -287,6 +289,15 @@ export function InvoiceDrawer({
           >
             {notice.text}
           </p>
+        )}
+        {invoice === undefined || currentLoadError === undefined ? null : (
+          <div className="billing-drawer__notice billing-drawer__notice--danger" role="alert">
+            <p>{t("admin-billing:drawer.loadError")}</p>
+            <p>{errorMessage(currentLoadError)}</p>
+            <Button onClick={refresh} variant="secondary">
+              {t("admin-billing:actions.retry")}
+            </Button>
+          </div>
         )}
         {invoice === undefined ? (
           loadError?.reload !== reload ? (

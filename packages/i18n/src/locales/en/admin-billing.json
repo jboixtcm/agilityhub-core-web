@@ -1,5 +1,6 @@
 {
   "header": {
+    "allMonths": "All months",
     "months": "Change month",
     "previous": "‹ month",
     "next": "month ›",
@@ -128,6 +129,7 @@
     "selectedCount": "{count, plural, one {# selected} other {# selected}}"
   },
   "status": {
+    "charging": "charging",
     "pendingManual": "pending · mark paid",
     "refunded": "refunded",
     "failedManual": "unpaid (manual)",
@@ -271,6 +273,7 @@
     "submitted": "Remittance marked as sent to the bank."
   },
   "errors": {
+    "loadRun": "The card charge status could not be refreshed.",
     "billingBusy": "A generation is in progress. Try again in a few minutes.",
     "simulationStale": "There have been changes since the last simulation. Simulate the month again.",
     "simulateAgain": "Simulate again",

@@ -113,6 +113,48 @@ function text(row: HTMLElement) {
 }
 
 describe("S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12)", () => {
+  it("E8-W01 round 2 #5: a bare route waits for saved views and applies the default before writing list state into the URL", async () => {
+    localStorage.setItem("agilityhub.list.defaultView.remittances", "view-remittances-rolled-back");
+    server.use(
+      http.get("*/api/v1/saved-views", ({ request }) => {
+        const url = new URL(request.url);
+        if (url.searchParams.get("listKey") !== "remittances") return HttpResponse.json([]);
+        return HttpResponse.json([
+          {
+            columns: [
+              "period",
+              "creationAt",
+              "count",
+              "total",
+              "requestedCollectionDate",
+              "status",
+              "actions",
+            ],
+            filters: [{ field: "status", op: "eq", value: "ROLLED_BACK" }],
+            id: "view-remittances-rolled-back",
+            listKey: "remittances",
+            name: "Retrocedides",
+            shared: false,
+            sort: [],
+            version: 1,
+          },
+        ]);
+      }),
+    );
+
+    await renderPage();
+    await waitFor(() => {
+      expect(new URLSearchParams(window.location.search).getAll("filter")).toEqual([
+        "status:eq:ROLLED_BACK",
+      ]);
+    });
+    await waitFor(() => {
+      const lists = sent.filter((entry) => entry.url.pathname === "/api/v1/remittances");
+      expect(lists.at(-1)?.url.searchParams.getAll("filter")).toEqual(["status:eq:ROLLED_BACK"]);
+    });
+    expect(await screen.findByText("Vistes: «Retrocedides»")).toBeVisible();
+  });
+
   it("lists the remittances newest first with month, creation, receipts, amount, collection date and status; no free-text search", async () => {
     const { onNavigate } = await renderPage();
     const [september, august, rolledBack] = await rows();

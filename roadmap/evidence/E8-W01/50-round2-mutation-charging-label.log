@@ -1,0 +1,31 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (47 tests | 1 failed | 46 skipped) 444ms
+   ❯ T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R-12-28) (3)
+     × T-12-32 billingStripe: «2 · GENERA ELS REBUTS I COBRA LES TARGETES», the card KPI, [COBRA LES TARGETES] → 202, the 5 s poll while CHARGING and «impagat (targeta)» 442ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R-12-28) > T-12-32 billingStripe: «2 · GENERA ELS REBUTS I COBRA LES TARGETES», the card KPI, [COBRA LES TARGETES] → 202, the 5 s poll while CHARGING and «impagat (targeta)»
+AssertionError: expected 'remesat' to be 'cobrant' // Object.is equality
+
+Expected: "cobrant"
+Received: "remesat"
+
+ ❯ src/billing/BillingPage.test.tsx:955:56
+    953|     ).toMatch(/^[0-9a-f-]{36}$/u);
+    954|     expect(await screen.findByText("Cobrant les targetes…")).toBeVisib…
+    955|     expect(cells(await invoiceRow("2026-0912")).at(6)).toBe("cobrant");
+       |                                                        ^
+    956|     expect(screen.queryByRole("button", { name: "COBRA LES TARGETES" }…
+    957|     // The poll (every 5 s while CHARGING) reads the run settled: the …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 46 skipped (47)
+   Start at  10:33:30
+   Duration  1.81s (transform 32%, tests 26%, environment 23%, import 13%, setup 6%)
+

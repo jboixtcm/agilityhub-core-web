@@ -140,6 +140,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- D6 billing follow-ups (E8-W01 round 2): retain the accepted collection date and key across retries; allow LEFT members in manual receipts with their status and field-level erased-member errors; keep bounded card-run monitoring and cached drawer actions usable through read failures; persist removal of newly non-payable selections; apply the default remittance view before URL synchronization; support all-month member receipt history; distinguish card receipts as «cobrant»; and stabilize Docker Playwright at four workers with host IPC.
 - Screens 11 and 12 and web push (E7-W02 round 2):
   - leaving 12 sends every unsaved preference at once with `keepalive` (the one on its way included), the latest choice wins over an older `PUT` that answers last, and a change left behind is sent again on the next visit of the same account and club (`sessionStorage`, 5 min);
   - a logout waits (bounded) for a push subscription still on its way and drops it when it lands: deleted, or unsubscribed in the browser once the session is gone; its id is never stored;

@@ -6,7 +6,16 @@ import {
   listFields,
   type SubmissionKeys,
 } from "@agilityhub/api-client";
-import { Button, Checkbox, FormField, Input, Modal, Textarea, useBranding } from "@agilityhub/ui";
+import {
+  Badge,
+  Button,
+  Checkbox,
+  FormField,
+  Input,
+  Modal,
+  Textarea,
+  useBranding,
+} from "@agilityhub/ui";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -15,7 +24,7 @@ import { errorFields, type Invoice, minorUnits, useBillingErrorMessage } from ".
 type MemberListItem = components["schemas"]["MemberListItem"];
 
 const MEMBER_FIELDS = ["fullName"] as const;
-const SEARCH_FIELDS = ["fullName", "memberNumber", "paymentMethod"];
+const SEARCH_FIELDS = ["fullName", "memberNumber", "paymentMethod", "displayStatus"];
 const SEARCH_DEBOUNCE_MS = 300;
 /** `ManualInvoiceLine.description` (`maxLength` of the contract: the SEPA remittance text). */
 const DESCRIPTION_MAX = 140;
@@ -97,7 +106,6 @@ export function ManualInvoiceModal({
           params: {
             query: {
               fields: listFields(SEARCH_FIELDS),
-              filter: ["status:eq:ACTIVE"],
               page: 0,
               q: text,
               size: 20,
@@ -192,7 +200,9 @@ export function ManualInvoiceModal({
   };
 
   const generalError =
-    failure === undefined || (fields.length > 0 && fields.every(shownOnForm))
+    failure === undefined ||
+    isApiError(failure, "MEMBER_ERASED") ||
+    (fields.length > 0 && fields.every(shownOnForm))
       ? undefined
       : isApiError(failure, "CURRENCY_MISMATCH")
         ? t("errors:CURRENCY_MISMATCH")
@@ -216,9 +226,11 @@ export function ManualInvoiceModal({
         <FormField
           {...(submitted && member === undefined
             ? { error: t("admin-billing:manual.memberRequired") }
-            : fields.includes("memberId")
-              ? { error: apiError }
-              : {})}
+            : isApiError(failure, "MEMBER_ERASED")
+              ? { error: t("errors:MEMBER_ERASED") }
+              : fields.includes("memberId")
+                ? { error: apiError }
+                : {})}
           id="billing-manual-member"
           label={t("admin-billing:manual.member")}
         >
@@ -262,6 +274,21 @@ export function ManualInvoiceModal({
                         name: candidate.fullName,
                         number: candidate.memberNumber,
                       })}
+                  {candidate.displayStatus === undefined ? null : (
+                    <Badge
+                      aria-hidden="true"
+                      tone={
+                        candidate.displayStatus.kind === "ACTIVE"
+                          ? "success"
+                          : candidate.displayStatus.kind === "LEFT" ||
+                              candidate.displayStatus.kind === "ERASED"
+                            ? "danger"
+                            : "warning"
+                      }
+                    >
+                      {candidate.displayStatus.label}
+                    </Badge>
+                  )}
                 </label>
               ))}
             </fieldset>

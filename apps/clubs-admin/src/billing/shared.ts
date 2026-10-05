@@ -103,7 +103,9 @@ export function invoiceStatusView(
         ? { key: "admin-billing:status.pendingManual", tone: "warning" }
         : { key: "enums:invoiceStatus.PENDING", tone: "warning" };
     case "COLLECTING":
-      return { key: "enums:invoiceStatus.COLLECTING", tone: "neutral" };
+      return item.paymentMethodType === "CARD"
+        ? { key: "admin-billing:status.charging", tone: "neutral" }
+        : { key: "enums:invoiceStatus.COLLECTING", tone: "neutral" };
     case "PAID":
       return item.refundedTotal !== undefined &&
         item.total !== undefined &&

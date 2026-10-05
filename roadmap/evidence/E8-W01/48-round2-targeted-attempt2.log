@@ -1,0 +1,30 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (47 tests | 1 failed) 31855ms
+   ❯ E8-W01 round 2 #7: member history, charging copy and the Docker defaults (2)
+     × Q3: a memberId link without mes lists all months, names that scope and selecting a month restores period:eq 26ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 round 2 #7: member history, charging copy and the Docker defaults > Q3: a memberId link without mes lists all months, names that scope and selecting a month restores period:eq
+Error: expect(element).toBeVisible()
+
+Received element is not visible:
+  <span />
+ ❯ src/billing/BillingPage.test.tsx:1645:63
+    1643|       expect(filters?.some((filter) => filter.startsWith("period:eq:")…
+    1644|     });
+    1645|     expect(await screen.findByText("Abonat = «Laura Serra»")).toBeVisi…
+       |                                                               ^
+    1646|
+    1647|     fireEvent.click(screen.getByRole("button", { name: "Mes següent" }…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 57 passed (58)
+   Start at  10:31:42
+   Duration  33.43s (tests 92%, transform 3%, environment 3%, import 1%, setup 1%)
+

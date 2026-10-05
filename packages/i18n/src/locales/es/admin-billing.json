@@ -1,5 +1,6 @@
 {
   "header": {
+    "allMonths": "Todos los meses",
     "months": "Cambio de mes",
     "previous": "‹ mes",
     "next": "mes ›",
@@ -128,6 +129,7 @@
     "selectedCount": "{count, plural, one {# seleccionado} other {# seleccionados}}"
   },
   "status": {
+    "charging": "cobrando",
     "pendingManual": "pendiente · marcar cobrado",
     "refunded": "reembolsado",
     "failedManual": "impagado (manual)",
@@ -271,6 +273,7 @@
     "submitted": "Remesa marcada como enviada al banco."
   },
   "errors": {
+    "loadRun": "No se ha podido actualizar el estado de los cobros.",
     "billingBusy": "Hay una generación en curso. Vuelve a intentarlo dentro de unos minutos.",
     "simulationStale": "Ha habido cambios desde la última simulación. Vuelve a simular el mes.",
     "simulateAgain": "Simular de nuevo",

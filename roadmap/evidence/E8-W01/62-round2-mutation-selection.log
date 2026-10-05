@@ -1,0 +1,143 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (47 tests | 1 failed | 46 skipped) 750ms
+   ❯ T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) (3)
+     × E8-W01 round 2 #4: a receipt paid in its drawer leaves the held selection before pagination, so a later bulk payment never resends its id 748ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) > E8-W01 round 2 #4: a receipt paid in its drawer leaves the held selection before pagination, so a later bulk payment never resends its id
+TestingLibraryElementError: Unable to find an element with the text: Es marcarà 1 rebut com a cobrat.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_2_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_2_"[39m
+    [36m>[39m
+      [0mMarcar cobrat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"billing-modal__body"[39m
+    [36m>[39m
+      [0mEs marcaran 2 rebuts com a cobrats.[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-form-field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"ah-form-field__label"[39m
+        [33mfor[39m=[32m"billing-bulk-paid-at"[39m
+      [36m>[39m
+        [0mData de cobrament[0m
+      [36m</label>[39m
+      [36m<input[39m
+        [33mclass[39m=[32m"ah-input"[39m
+        [33mid[39m=[32m"billing-bulk-paid-at"[39m
+        [33mmax[39m=[32m"2026-08-26"[39m
+        [33mrequired[39m=[32m""[39m
+        [33mtype[39m=[32m"date"[39m
+        [33mvalue[39m=[32m"2026-08-26"[39m
+      [36m/>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-form-field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"ah-form-field__label"[39m
+        [33mfor[39m=[32m"billing-bulk-channel"[39m
+      [36m>[39m
+        [0mCanal[0m
+      [36m</label>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+        [33mid[39m=[32m"billing-bulk-channel"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"CASH"[39m
+        [36m>[39m
+          [0mEfectiu[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"TRANSFER"[39m
+        [36m>[39m
+          [0mTransferència[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"BIZUM"[39m
+        [36m>[39m
+          [0mBizum[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-modal__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mMarca cobrat[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/billing/BillingPage.test.tsx:675:31
+    673|     fireEvent.click(screen.getByRole("button", { name: "Marcar cobrat …
+    674|     const bulkDialog = await screen.findByRole("dialog", { name: "Marc…
+    675|     expect(within(bulkDialog).getByText("Es marcarà 1 rebut com a cobr…
+       |                               ^
+    676|     fireEvent.click(within(bulkDialog).getByRole("button", { name: "Ma…
+    677|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 46 skipped (47)
+   Start at  11:12:24
+   Duration  2.24s (tests 35%, transform 27%, environment 21%, import 12%, setup 5%)
+

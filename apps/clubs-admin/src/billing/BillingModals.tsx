@@ -116,6 +116,9 @@ export function GenerateModal({
   const errorMessage = useBillingErrorMessage();
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<unknown>();
+  // Once the admin accepts the api's first valid collection day, it is part of the submission
+  // payload. A retryable failure must not turn the next press back into the original payload.
+  const [acceptedCollectionDate, setAcceptedCollectionDate] = useState<string>();
   const [simulating, setSimulating] = useState(false);
   const [simulateError, setSimulateError] = useState<string>();
   // R-12-06: the included members' next receipt moves to that day of the following month.
@@ -127,7 +130,7 @@ export function GenerateModal({
    * `collectionDate` only when the admin takes the api's `earliest` after `422
    * COLLECTION_DATE_TOO_SOON` (`BillingRunRequest.collectionDate`): another payload, another key.
    */
-  const generate = async (collectionDate?: string) => {
+  const generate = async (collectionDate = acceptedCollectionDate) => {
     setPending(true);
     setFailure(undefined);
     const body = {
@@ -170,6 +173,7 @@ export function GenerateModal({
     /^\d{4}-\d{2}-\d{2}$/u.test(details.earliest)
       ? details.earliest
       : undefined;
+  const retryCollectionDate = earliest ?? acceptedCollectionDate;
 
   return (
     <Modal
@@ -239,7 +243,7 @@ export function GenerateModal({
             </Alert>
           )}
           <Actions>
-            {earliest === undefined ? (
+            {retryCollectionDate === undefined ? (
               <Button
                 disabled={nextDay === undefined}
                 loading={pending}
@@ -253,10 +257,13 @@ export function GenerateModal({
               <Button
                 loading={pending}
                 loadingLabel={t("admin-billing:confirm.generating")}
-                onClick={() => void generate(earliest)}
+                onClick={() => {
+                  setAcceptedCollectionDate(retryCollectionDate);
+                  void generate(retryCollectionDate);
+                }}
               >
                 {t("admin-billing:confirm.generateWithEarliest", {
-                  date: formats.formatPlainDate(earliest),
+                  date: formats.formatPlainDate(retryCollectionDate),
                 })}
               </Button>
             )}

@@ -1,0 +1,1664 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/RemittancesPage.test.tsx (11 tests | 1 failed) 10786ms
+   ❯ S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12) (11)
+     × E8-W01 round 2 #5: a bare route waits for saved views and applies the default before writing list state into the URL 10159ms
+ ❯ src/billing/BillingPage.test.tsx (47 tests | 1 failed) 42021ms
+   ❯ E8-W01 round 2 #7: member history, charging copy and the Docker defaults (2)
+     × Q3: a memberId link without mes lists all months, names that scope and selecting a month restores period:eq 10026ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 round 2 #7: member history, charging copy and the Docker defaults > Q3: a memberId link without mes lists all months, names that scope and selecting a month restores period:eq
+TestingLibraryElementError: Unable to find an element with the text: Abonat = «Laura Serra». This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mTots els mesos[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Canvi de mes"[39m
+          [33mclass[39m=[32m"billing-stepper"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes anterior"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m‹ mes[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m·[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes següent"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mmes ›[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-header__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Rebut manual"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtitle[39m=[32m"Rebut manual"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-toolbar"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-toolbar__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"billing-chip"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mMarcar cobrat (selecció)[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Rebuts · Tots els mesos"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+          [33mrole[39m=[32m"alert"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span>[39m
+              [0mNo s'han pogut carregar els rebuts.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mTorna-ho a provar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca per número o abonat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca per número o abonat"[39m
+              [33mplaceholder[39m=[32m"Cerca per número o abonat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"paymentMethodType"[39m
+                  [36m>[39m
+                    [0mMètode[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"runId"[39m
+                  [36m>[39m
+                    [0mGeneració[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"remittanceId"[39m
+                  [36m>[39m
+                    [0mRemesa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"issueDate"[39m
+                  [36m>[39m
+                    [0mData d'emissió[0m
+                  ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mTots els mesos[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Canvi de mes"[39m
+          [33mclass[39m=[32m"billing-stepper"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes anterior"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m‹ mes[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m·[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes següent"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mmes ›[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-header__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Rebut manual"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtitle[39m=[32m"Rebut manual"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-toolbar"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-toolbar__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"billing-chip"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mMarcar cobrat (selecció)[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Rebuts · Tots els mesos"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-toast ah-tone--danger"[39m
+          [33mrole[39m=[32m"alert"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span>[39m
+              [0mNo s'han pogut carregar els rebuts.[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mTorna-ho a provar[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-universal-list__search"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mCerca per número o abonat[0m
+            [36m</span>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<input[39m
+              [33maria-label[39m=[32m"Cerca per número o abonat"[39m
+              [33mplaceholder[39m=[32m"Cerca per número o abonat"[39m
+              [33mtype[39m=[32m"search"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</label>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m""[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"memberId"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"paymentMethodType"[39m
+                  [36m>[39m
+                    [0mMètode[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"runId"[39m
+                  [36m>[39m
+                    [0mGeneració[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"remittanceId"[39m
+                  [36m>[39m
+                    [0mRemesa[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"issueDate"[39m
+                  [36m>[39m
+                    [0mData d'emissió[0m
+                  ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/BillingPage.test.tsx:1641:25
+    1639|       expect(filters?.some((filter) => filter.startsWith("period:eq:")…
+    1640|     });
+    1641|     expect(await screen.findByText("Abonat = «Laura Serra»")).toBeVisi…
+       |                         ^
+    1642|
+    1643|     fireEvent.click(screen.getByRole("button", { name: "Mes següent" }…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/billing/RemittancesPage.test.tsx > S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12) > E8-W01 round 2 #5: a bare route waits for saved views and applies the default before writing list state into the URL
+TestingLibraryElementError: Unable to find an element with the text: Vista Retrocedides. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"billing-header__back"[39m
+          [33mhref[39m=[32m"/facturacio"[39m
+        [36m>[39m
+          [0m‹ Facturació[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRemeses[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Remeses SEPA"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre (1): Estat = «retrocedida»[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mEstat = «retrocedida»[0m
+                [36m</span>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Treu el filtre de Estat"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"period"[39m
+                  [36m>[39m
+                    [0mMes[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"exists"[39m
+                  [36m>[39m
+                    [0mté valor[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"2026-09"[39m
+                  [36m>[39m
+                    [0mSetembre 2026 (1)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"2026-08"[39m
+                  [36m>[39m
+                    [0mAgost 2026 (2)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mAfegeix el filtre[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mNeteja[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</details>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu"[39m
+          [36m>[39m
+            [36m<summary>[39m
+              [0mColumnes[0m
+              [0m [0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<ul[39m
+                [33mclass[39m=[32m"ah-universal-list__columns"[39m
+              [36m>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mMes[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mData de creació[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mRebuts[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mImport[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mData de cobrament[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mEstat[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mAccions[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mEnviada al banc[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+              [36m</ul>[39m
+            [36m</div>[39m
+          [36m</details>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu"[39m
+          [36m>[39m
+            [36m<summary>[39m
+              [0mVistes: «Retrocedides»[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel ah-universal-list__views"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mVistes[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m>[39m
+                    [0mCap vista desada[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"view-remittances-rolled-back"[39m
+                  [36m>[39m
+                    [0mRetrocedides[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mNom de la vista[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33mmaxlength[39m=[32m"40"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__check-label"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mclass[39m=[32m"ah-checkbox"[39m
+                  [33mtype[39m=[32m"checkbox"[39m
+                [36m/>[39m
+                [0mVista compartida[0m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__check-label"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mchecked[39m=[32m""[39m
+                  [33mclass[39m=[32m"ah-checkbox"[39m
+                  [33mtype[39m=[32m"checkbox"[39m
+                [36m/>[39m
+                [0mVista per defecte[0m
+              [36m</label>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mDesa la vista[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mCanvia el nom[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mElimina la vista[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</details>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__table-wrap"[39m
+        [36m>[39m
+          [36m<table>[39m
+            [36m<caption[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRemeses SEPA[0m
+            [36m</caption>[39m
+            [36m<thead>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Ordena Mes de manera ascendent"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mMes[0m
+                  [36m</button>[39m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Ordena Data de creació de manera ascendent"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mData de creació[0m
+                  [36m</button>[39m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mRebuts[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mImport[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mData de cobrament[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mEstat[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mAccions[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m/>[39m
+              [36m</tr>[39m
+            [36m</thead>[39m
+            [36m<tbody>[39m
+              [36m<tr[39m
+                [33mdata-remittance-status[39m=[32m"ROLLED_BACK"[39m
+              [36m>[39m
+                [36m<td>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Obre la remesa: Agost 2026"[39m
+                    [33mclass[39m=[32m"billing-number"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mAgost 2026[0m
+                  [36m</button>[39m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0m24/07/2026 10:10[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0m164[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [36m<strong>[39m
+                    [0m6.240,00 €[0m
+                  [36m</strong>[39m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0m01/08/2026[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                  [36m>[39m
+                    [0mretrocedida[0m
+                  [36m</span>[39m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"billing-remittance-actions"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                        [0mDescarrega l'XML[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</span>[39m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+                [36m/>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+          [36m</table>[39m
+        [36m</div>[39m
+        [36m<footer[39m
+          [33mclass[39m=[32m"ah-universal-list__footer"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__bulk"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__pagination"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Pàgina anterior"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<span>[39m
+              [0mPàgina 1 de 1[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Pàgina següent"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<label>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mfiles per pàgina[0m
+              [36m</span>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"files per pàgina"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"20"[39m
+                [36m>[39m
+                  [0m20 files per pàgina[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"50"[39m
+                [36m>[39m
+                  [0m50 files per pàgina[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"200"[39m
+                [36m>[39m
+                  [0m200 files per pàgina[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"1000"[39m
+                [36m>[39m
+                  [0m1000 files per pàgina[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</label>[39m
+          [36m</div>[39m
+        [36m</footer>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"billing-header__back"[39m
+          [33mhref[39m=[32m"/facturacio"[39m
+        [36m>[39m
+          [0m‹ Facturació[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRemeses[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Remeses SEPA"[39m
+        [33mclass[39m=[32m"ah-universal-list"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+        [36m>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+          [36m>[39m
+            [36m<summary[39m
+              [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mFiltre (1): Estat = «retrocedida»[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+              [36m>[39m
+                [36m<span>[39m
+                  [0mEstat = «retrocedida»[0m
+                [36m</span>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Treu el filtre de Estat"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mColumna[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"period"[39m
+                  [36m>[39m
+                    [0mMes[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"status"[39m
+                  [36m>[39m
+                    [0mEstat[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mOperador[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"eq"[39m
+                  [36m>[39m
+                    [0més igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"ne"[39m
+                  [36m>[39m
+                    [0mno és igual a[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0més un de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"nin"[39m
+                  [36m>[39m
+                    [0mno és cap de[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"exists"[39m
+                  [36m>[39m
+                    [0mté valor[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mValor[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"2026-09"[39m
+                  [36m>[39m
+                    [0mSetembre 2026 (1)[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"2026-08"[39m
+                  [36m>[39m
+                    [0mAgost 2026 (2)[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mAfegeix el filtre[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mNeteja[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</details>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu"[39m
+          [36m>[39m
+            [36m<summary>[39m
+              [0mColumnes[0m
+              [0m [0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+            [36m>[39m
+              [36m<ul[39m
+                [33mclass[39m=[32m"ah-universal-list__columns"[39m
+              [36m>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mMes[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mData de creació[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mRebuts[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mImport[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mData de cobrament[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mEstat[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mchecked[39m=[32m""[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mAccions[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+                [36m<li[39m
+                  [33mdraggable[39m=[32m"true"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m↕[0m
+                  [36m</span>[39m
+                  [36m<label>[39m
+                    [36m<input[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mEnviada al banc[0m
+                  [36m</label>[39m
+                [36m</li>[39m
+              [36m</ul>[39m
+            [36m</div>[39m
+          [36m</details>[39m
+          [36m<details[39m
+            [33mclass[39m=[32m"ah-universal-list__menu"[39m
+          [36m>[39m
+            [36m<summary>[39m
+              [0mVistes: «Retrocedides»[0m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m▾[0m
+              [36m</span>[39m
+            [36m</summary>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__menu-panel ah-universal-list__views"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mVistes[0m
+                [36m</span>[39m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m>[39m
+                    [0mCap vista desada[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"view-remittances-rolled-back"[39m
+                  [36m>[39m
+                    [0mRetrocedides[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [36m<span>[39m
+                  [0mNom de la vista[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33mmaxlength[39m=[32m"40"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__check-label"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mclass[39m=[32m"ah-checkbox"[39m
+                  [33mtype[39m=[32m"checkbox"[39m
+                [36m/>[39m
+                [0mVista compartida[0m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__check-label"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mchecked[39m=[32m""[39m
+                  [33mclass[39m=[32m"ah-checkbox"[39m
+                  [33mtype[39m=[32m"checkbox"[39m
+                [36m/>[39m
+                [0mVista per defecte[0m
+              [36m</label>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-actions"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mDesa la vista[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mCanvia el nom[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mElimina la vista[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</details>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-universal-list__table-wrap"[39m
+        [36m>[39m
+          [36m<table>[39m
+            [36m<caption[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRemeses SEPA[0m
+            [36m</caption>[39m
+            [36m<thead>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Ordena Mes de manera ascendent"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mMes[0m
+                  [36m</button>[39m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Ordena Data de creació de manera ascendent"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mData de creació[0m
+                  [36m</button>[39m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mRebuts[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mImport[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mData de cobrament[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mEstat[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m>[39m
+                  [0mAccions[0m
+                [36m</th>[39m
+                [36m<th[39m
+                  [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+                  [33mscope[39m=[32m"col"[39m
+                [36m/>[39m
+              [36m</tr>[39m
+            [36m</thead>[39m
+            [36m<tbody>[39m
+              [36m<tr[39m
+                [33mdata-remittance-status[39m=[32m"ROLLED_BACK"[39m
+              [36m>[39m
+                [36m<td>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Obre la remesa: Agost 2026"[39m
+                    [33mclass[39m=[32m"billing-number"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [0mAgost 2026[0m
+                  [36m</button>[39m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0m24/07/2026 10:10[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0m164[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [36m<strong>[39m
+                    [0m6.240,00 €[0m
+                  [36m</strong>[39m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0m01/08/2026[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                  [36m>[39m
+                    [0mretrocedida[0m
+                  [36m</span>[39m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"billing-remittance-actions"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                        [0mDescarrega l'XML[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</span>[39m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+                [36m/>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+          [36m</table>[39m
+        [36m</div>[39m
+        [36m<footer[39m
+          [33mclass[39m=[32m"ah-universal-list__footer"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__bulk"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__pagination"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Pàgina anterior"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<span>[39m
+              [0mPàgina 1 de 1[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Pàgina següent"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+            [36m<label>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0mfiles per pàgina[0m
+              [36m</span>[39m
+              [36m<select[39m
+                [33maria-label[39m=[32m"files per pàgina"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"20"[39m
+                [36m>[39m
+                  [0m20 files per pàgina[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"50"[39m
+                [36m>[39m
+                  [0m50 files per pàgina[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"200"[39m
+                [36m>[39m
+                  [0m200 files per pàgina[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"1000"[39m
+                [36m>[39m
+                  [0m1000 files per pàgina[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</label>[39m
+          [36m</div>[39m
+        [36m</footer>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/RemittancesPage.test.tsx:155:25
+    153|       expect(lists.at(-1)?.url.searchParams.getAll("filter")).toEqual(…
+    154|     });
+    155|     expect(await screen.findByText("Vista Retrocedides")).toBeVisible(…
+       |                         ^
+    156|   });
+    157|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 56 passed (58)
+   Start at  10:29:44
+   Duration  43.37s (tests 95%, transform 2%, environment 2%, import 1%)
+

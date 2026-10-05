@@ -283,6 +283,8 @@
     "MANUAL": "Cash"
   },
   "billingIncident": {
+    "MEMBER_NOT_ACTIVE": "member not active",
+    "PAYMENT_METHOD_CHANGED": "payment method changed",
     "NO_BANK_ACCOUNT": "no bank account on file",
     "NO_PRICE": "no rate assigned",
     "NO_PLAN": "no modality assigned",

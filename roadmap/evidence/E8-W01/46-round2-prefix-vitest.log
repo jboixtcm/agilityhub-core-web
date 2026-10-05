@@ -1,0 +1,2382 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/RemittancesPage.test.tsx (11 tests | 1 failed) 10767ms
+   ❯ S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12) (11)
+     × E8-W01 round 2 #5: a bare route waits for saved views and applies the default before writing list state into the URL 10124ms
+stderr | src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > E8-W01 round 2 #2: the manual adjustment search has no ACTIVE filter, shows a LEFT member's display status and creates their receipt
+AssertionError: expected [ 'status:eq:ACTIVE' ] to deeply equal []
+    at /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/billing/BillingPage.test.tsx:1340:68
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:191:26
+    at HttpHandler.run (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:157:35)
+    at runNextTicks (node:internal/process/task_queues:64:5)
+    at processTimers (node:internal/timers:518:9)
+    at executeHandlers (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/utils/executeHandlers.mjs:11:14)
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/until-async@3.0.2/node_modules/until-async/lib/index.js:14:17)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:81:41)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+    at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24) {
+  actual: [ 'status:eq:ACTIVE' ],
+  expected: [],
+  showDiff: true,
+  operator: 'deepStrictEqual'
+}
+[MSW] Encountered an unhandled exception during the handler lookup for "GET http://localhost:3000/api/v1/members?fields=id%2CfullName%2CmemberNumber%2CpaymentMethod&filter=status%3Aeq%3AACTIVE&page=0&q=Rita&size=20&sort=lastName%2Casc". Please see the original error above.
+
+ ❯ src/billing/BillingPage.test.tsx (47 tests | 11 failed) 70911ms
+   ❯ T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) (3)
+     × E8-W01 round 2 #4: a receipt paid in its drawer leaves the held selection before pagination, so a later bulk payment never resends its id 380ms
+   ❯ T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20) (6)
+     × E8-W01 round 2 #6: a failed drawer refetch stays beside the cached receipt, unlocks its actions and recovers through [Torna-ho a provar] 10120ms
+   ❯ T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R-12-28) (3)
+     × T-12-32 billingStripe: «2 · GENERA ELS REBUTS I COBRA LES TARGETES», the card KPI, [COBRA LES TARGETES] → 202, the 5 s poll while CHARGING and «impagat (targeta)» 118ms
+   ❯ E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides (11)
+     × E8-W01 round 2 #3: a CHARGING period starts bounded monitoring when the first run read fails, shows retry and settles on a later poll 10092ms
+   ❯ E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt (7)
+     × E8-W01 round 2 #2: the manual adjustment search has no ACTIVE filter, shows a LEFT member's display status and creates their receipt 10113ms
+     × E8-W01 round 2 #2: 409 MEMBER_ERASED is mapped to the manual receipt's member field 10652ms
+     × E8-W01 round 2 #1: 422 → accepted earliest → 503 → retry keeps the accepted body and the same Idempotency-Key 115ms
+   ❯ E8-W01 round 2 #7: member history, charging copy and the Docker defaults (2)
+     × Q3: a memberId link without mes lists all months, names that scope and selecting a month restores period:eq 10014ms
+     × Q6: e2e-docker defaults to four workers and gives Chromium host IPC 5ms
+   ❯ E8-W01 step 10: the D6 literals in ca (mockup V7) and the same keys in es and en (2)
+     × E8-W01: «Pas 1 — Simulació: incidències primer», «Actius amb pagament en efectiu», «Marcar cobrat (selecció)», «Exporta per a comptabilitat» 3ms
+     × E8-W01: D6 in es and en reads its own month titles and never a Catalan literal 312ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) > E8-W01 round 2 #4: a receipt paid in its drawer leaves the held selection before pagination, so a later bulk payment never resends its id
+TestingLibraryElementError: Unable to find an element with the text: Es marcarà 1 rebut com a cobrat.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_b_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_b_"[39m
+    [36m>[39m
+      [0mMarcar cobrat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p[39m
+      [33mclass[39m=[32m"billing-modal__body"[39m
+    [36m>[39m
+      [0mEs marcaran 2 rebuts com a cobrats.[0m
+    [36m</p>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-form-field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"ah-form-field__label"[39m
+        [33mfor[39m=[32m"billing-bulk-paid-at"[39m
+      [36m>[39m
+        [0mData de cobrament[0m
+      [36m</label>[39m
+      [36m<input[39m
+        [33mclass[39m=[32m"ah-input"[39m
+        [33mid[39m=[32m"billing-bulk-paid-at"[39m
+        [33mmax[39m=[32m"2026-08-26"[39m
+        [33mrequired[39m=[32m""[39m
+        [33mtype[39m=[32m"date"[39m
+        [33mvalue[39m=[32m"2026-08-26"[39m
+      [36m/>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-form-field"[39m
+    [36m>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"ah-form-field__label"[39m
+        [33mfor[39m=[32m"billing-bulk-channel"[39m
+      [36m>[39m
+        [0mCanal[0m
+      [36m</label>[39m
+      [36m<select[39m
+        [33mclass[39m=[32m"ah-input ah-select"[39m
+        [33mid[39m=[32m"billing-bulk-channel"[39m
+      [36m>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"CASH"[39m
+        [36m>[39m
+          [0mEfectiu[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"TRANSFER"[39m
+        [36m>[39m
+          [0mTransferència[0m
+        [36m</option>[39m
+        [36m<option[39m
+          [33mvalue[39m=[32m"BIZUM"[39m
+        [36m>[39m
+          [0mBizum[0m
+        [36m</option>[39m
+      [36m</select>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-modal__actions"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mMarca cobrat[0m
+        [36m</span>[39m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCancel·la[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/billing/BillingPage.test.tsx:674:31
+    672|     fireEvent.click(screen.getByRole("button", { name: "Marcar cobrat …
+    673|     const bulkDialog = await screen.findByRole("dialog", { name: "Marc…
+    674|     expect(within(bulkDialog).getByText("Es marcarà 1 rebut com a cobr…
+       |                               ^
+    675|     fireEvent.click(within(bulkDialog).getByRole("button", { name: "Ma…
+    676|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20) > E8-W01 round 2 #6: a failed drawer refetch stays beside the cached receipt, unlocks its actions and recovers through [Torna-ho a provar]
+TestingLibraryElementError: Unable to find an element with the text: No s'ha pogut carregar el rebut.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_k_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_k_"[39m
+    [36m>[39m
+      [0mRebut 2026-0915[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca el rebut"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-drawer"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"billing-drawer__notice billing-drawer__notice--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mEl rebut ha canviat. Torna a obrir-lo.[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-drawer__head"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+        [36m>[39m
+          [0mpendent · marca cobrat[0m
+        [36m</span>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000004"[39m
+        [36m>[39m
+          [0mJoan Vila[0m
+        [36m</a>[39m
+      [36m</div>[39m
+      [36m<dl[39m
+        [33mclass[39m=[32m"billing-drawer__facts"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-drawer__row"[39m
+        [36m>[39m
+          [36m<dt>[39m
+            [0mMes[0m
+          [36m</dt>[39m
+          [36m<dd>[39m
+            [0mSetembre 2026[0m
+          [36m</dd>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-drawer__row"[39m
+        [36m>[39m
+          [36m<dt>[39m
+            [0mData d'emissió[0m
+          [36m</dt>[39m
+          [36m<dd>[39m
+            [0m25/08/2026[0m
+          [36m</dd>[39m
+        [36m</div>[39m
+      [36m</dl>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"billing-drawer-lines"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"billing-drawer-lines"[39m
+        [36m>[39m
+          [0mLínies[0m
+        [36m</h3>[39m
+        [36m<table[39m
+          [33mclass[39m=[32m"billing-drawer__lines"[39m
+        [36m>[39m
+          [36m<thead>[39m
+            [36m<tr>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0mConcepte[0m
+              [36m</th>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0mTotal[0m
+              [36m</th>[39m
+            [36m</tr>[39m
+          [36m</thead>[39m
+          [36m<tbody>[39m
+            [36m<tr>[39m
+              [36m<td>[39m
+                [0mQuota Abonat — Setembre 2026[0m
+                [36m<small>[39m
+                  [0mQuota mensual[0m
+                [36m</small>[39m
+              [36m</td>[39m
+              [36m<td>[39m
+                [0m60,00 €[0m
+              [36m</td>[39m
+            [36m</tr>[39m
+          [36m</tbody>[39m
+          [36m<tfoot>[39m
+            [36m<tr>[39m
+              [36m<th[39m
+                [33mcolspan[39m=[32m"1"[39m
+                [33mscope[39m=[32m"row"[39m
+              [36m>[39m
+                [0mTotal[0m
+              [36m</th>[39m
+              [36m<td>[39m
+                [36m<strong>[39m
+                  [0m60,00 €[0m
+                [36m</strong>[39m
+              [36m</td>[39m
+            [36m</tr>[39m
+          [36m</tfoot>[39m
+        [36m</table>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"billing-drawer-method"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"billing-drawer-method"[39m
+        [36m>[39m
+          [0mMètode de pagament[0m
+        [36m</h3>[39m
+        [36m<dl[39m
+          [33mclass[39m=[32m"billing-drawer__facts"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-drawer__row"[39m
+          [36m>[39m
+            [36m<dt>[39m
+              [0mTipus[0m
+            [36m</dt>[39m
+            [36m<dd>[39m
+              [0mEfectiu[0m
+            [36m</dd>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-drawer__row"[39m
+          [36m>[39m
+            [36m<dt>[39m
+              [0mCanal[0m
+            [36m</dt>[39m
+            [36m<dd>[39m
+              [0mEfectiu[0m
+            [36m</dd>[39m
+          [36m</div>[39m
+        [36m</dl>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"billing-drawer-collections"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"billing-drawer-collections"[39m
+        [36m>[39m
+          [0mCobraments[0m
+        [36m</h3>[39m
+        [36m<ol[39m
+          [33mclass[39m=[32m"billing-drawer__timeline"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<strong>[39m
+              [0mManual · intent 1 · creat[0m
+            [36m</strong>[39m
+            [36m<span>[39m
+              [0m25/08/2026 09:20[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ol>[39m
+      [36m</section>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Accions del rebut"[39m
+        [33mclass[39m=[32m"billing-drawer__actions"[39m
+        [33mrole[39m=[32m"group"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mMarca cobrat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mAnul·la el rebut[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mDescarrega el justificant[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_k_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_k_"[39m
+    [36m>[39m
+      [0mRebut 2026-0915[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca el rebut"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-drawer"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"billing-drawer__notice billing-drawer__notice--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mEl rebut ha canviat. Torna a obrir-lo.[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-drawer__head"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+        [36m>[39m
+          [0mpendent · marca cobrat[0m
+        [36m</span>[39m
+        [36m<a[39m
+          [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000004"[39m
+        [36m>[39m
+          [0mJoan Vila[0m
+        [36m</a>[39m
+      [36m</div>[39m
+      [36m<dl[39m
+        [33mclass[39m=[32m"billing-drawer__facts"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-drawer__row"[39m
+        [36m>[39m
+          [36m<dt>[39m
+            [0mMes[0m
+          [36m</dt>[39m
+          [36m<dd>[39m
+            [0mSetembre 2026[0m
+          [36m</dd>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-drawer__row"[39m
+        [36m>[39m
+          [36m<dt>[39m
+            [0mData d'emissió[0m
+          [36m</dt>[39m
+          [36m<dd>[39m
+            [0m25/08/2026[0m
+          [36m</dd>[39m
+        [36m</div>[39m
+      [36m</dl>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"billing-drawer-lines"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"billing-drawer-lines"[39m
+        [36m>[39m
+          [0mLínies[0m
+        [36m</h3>[39m
+        [36m<table[39m
+          [33mclass[39m=[32m"billing-drawer__lines"[39m
+        [36m>[39m
+          [36m<thead>[39m
+            [36m<tr>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0mConcepte[0m
+              [36m</th>[39m
+              [36m<th[39m
+                [33mscope[39m=[32m"col"[39m
+              [36m>[39m
+                [0mTotal[0m
+              [36m</th>[39m
+            [36m</tr>[39m
+          [36m</thead>[39m
+          [36m<tbody>[39m
+            [36m<tr>[39m
+              [36m<td>[39m
+                [0mQuota Abonat — Setembre 2026[0m
+                [36m<small>[39m
+                  [0mQuota mensual[0m
+                [36m</small>[39m
+              [36m</td>[39m
+              [36m<td>[39m
+                [0m60,00 €[0m
+              [36m</td>[39m
+            [36m</tr>[39m
+          [36m</tbody>[39m
+          [36m<tfoot>[39m
+            [36m<tr>[39m
+              [36m<th[39m
+                [33mcolspan[39m=[32m"1"[39m
+                [33mscope[39m=[32m"row"[39m
+              [36m>[39m
+                [0mTotal[0m
+              [36m</th>[39m
+              [36m<td>[39m
+                [36m<strong>[39m
+                  [0m60,00 €[0m
+                [36m</strong>[39m
+              [36m</td>[39m
+            [36m</tr>[39m
+          [36m</tfoot>[39m
+        [36m</table>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"billing-drawer-method"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"billing-drawer-method"[39m
+        [36m>[39m
+          [0mMètode de pagament[0m
+        [36m</h3>[39m
+        [36m<dl[39m
+          [33mclass[39m=[32m"billing-drawer__facts"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-drawer__row"[39m
+          [36m>[39m
+            [36m<dt>[39m
+              [0mTipus[0m
+            [36m</dt>[39m
+            [36m<dd>[39m
+              [0mEfectiu[0m
+            [36m</dd>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-drawer__row"[39m
+          [36m>[39m
+            [36m<dt>[39m
+              [0mCanal[0m
+            [36m</dt>[39m
+            [36m<dd>[39m
+              [0mEfectiu[0m
+            [36m</dd>[39m
+          [36m</div>[39m
+        [36m</dl>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"billing-drawer-collections"[39m
+      [36m>[39m
+        [36m<h3[39m
+          [33mid[39m=[32m"billing-drawer-collections"[39m
+        [36m>[39m
+          [0mCobraments[0m
+        [36m</h3>[39m
+        [36m<ol[39m
+          [33mclass[39m=[32m"billing-drawer__timeline"[39m
+        [36m>[39m
+          [36m<li>[39m
+            [36m<strong>[39m
+              [0mManual · intent 1 · creat[0m
+            [36m</strong>[39m
+            [36m<span>[39m
+              [0m25/08/2026 09:20[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ol>[39m
+      [36m</section>[39m
+      [36m<div[39m
+        [33maria-label[39m=[32m"Accions del rebut"[39m
+        [33mclass[39m=[32m"billing-drawer__actions"[39m
+        [33mrole[39m=[32m"group"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mMarca cobrat[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mAnul·la el rebut[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mDescarrega el justificant[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/BillingPage.test.tsx:867:33
+    865|       }),
+    866|     );
+    867|     expect(await within(dialog).findByText("No s'ha pogut carregar el …
+       |                                 ^
+    868|     expect(within(dialog).getByText("Quota Abonat — Setembre 2026")).t…
+    869|     expect(within(dialog).getByRole("button", { name: "Marca cobrat" }…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R-12-28) > T-12-32 billingStripe: «2 · GENERA ELS REBUTS I COBRA LES TARGETES», the card KPI, [COBRA LES TARGETES] → 202, the 5 s poll while CHARGING and «impagat (targeta)»
+AssertionError: expected 'pendent' to be 'cobrant' // Object.is equality
+
+Expected: "cobrant"
+Received: "pendent"
+
+ ❯ src/billing/BillingPage.test.tsx:941:56
+    939|     const card = screen.getByText("Amb targeta").parentElement;
+    940|     expect(card).toHaveTextContent("164Amb targeta6.240,00 €");
+    941|     expect(cells(await invoiceRow("2026-0912")).at(6)).toBe("cobrant");
+       |                                                        ^
+    942|     fireEvent.click(await screen.findByRole("button", { name: "COBRA L…
+    943|     const dialog = await screen.findByRole("dialog", { name: "Cobra le…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > E8-W01 round 2 #3: a CHARGING period starts bounded monitoring when the first run read fails, shows retry and settles on a later poll
+TestingLibraryElementError: Unable to find an element with the text: No s'ha pogut actualitzar l'estat dels cobraments.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSetembre 2026[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Canvi de mes"[39m
+          [33mclass[39m=[32m"billing-stepper"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes anterior"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m‹ mes[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m·[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes següent"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mmes ›[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-header__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0m1 · SIMULA EL MES[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-describedby[39m=[32m"billing-generate-why"[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m2 · GENERA ELS REBUTS I COBRA LES TARGETES[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"billing-generate-why"[39m
+          [36m>[39m
+            [0mEls rebuts d'aquest mes ja s'han generat.[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Rebut manual"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtitle[39m=[32m"Rebut manual"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card billing-simulation"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-simulation__head"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPas 1 — Simulació: incidències primer[0m
+            [36m</h2>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m2[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0m2 incidències[0m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mJoan Vila[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0mtargeta no vàlida[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000904"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mPau Riera[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense tarifa assignada[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Pau Riera"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000902"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+          [36m</table>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"billing-simulation__footnote"[39m
+          [36m>[39m
+            [0mEls abonats amb incidència s'ometen de la generació.[0m
+          [36m</p>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"billing-simulation__subtitle"[39m
+          [36m>[39m
+            [0mActius amb pagament en efectiu[0m
+          [36m</h3>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mSetembre 2026[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Canvi de mes"[39m
+          [33mclass[39m=[32m"billing-stepper"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes anterior"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m‹ mes[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m·[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes següent"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mmes ›[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-header__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0m1 · SIMULA EL MES[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-describedby[39m=[32m"billing-generate-why"[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m2 · GENERA ELS REBUTS I COBRA LES TARGETES[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"billing-generate-why"[39m
+          [36m>[39m
+            [0mEls rebuts d'aquest mes ja s'han generat.[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Rebut manual"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtitle[39m=[32m"Rebut manual"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card billing-simulation"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-simulation__head"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPas 1 — Simulació: incidències primer[0m
+            [36m</h2>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m2[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0m2 incidències[0m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mJoan Vila[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0mtargeta no vàlida[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000904"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mPau Riera[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense tarifa assignada[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Pau Riera"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000902"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+          [36m</table>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"billing-simulation__footnote"[39m
+          [36m>[39m
+            [0mEls abonats amb incidència s'ometen de la generació.[0m
+          [36m</p>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"billing-simulation__subtitle"[39m
+          [36m>[39m
+            [0mActius amb pagament en efectiu[0m
+          [36m</h3>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/BillingPage.test.tsx:1288:25
+    1286|
+    1287|     await renderPage({ scenario: "billingStripe" });
+    1288|     expect(await screen.findByText("No s'ha pogut actualitzar l'estat …
+       |                         ^
+    1289|     expect(screen.getByRole("button", { name: "Torna-ho a provar" })).…
+    1290|     expect(screen.getByText("Cobrant les targetes…")).toBeVisible();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > E8-W01 round 2 #2: the manual adjustment search has no ACTIVE filter, shows a LEFT member's display status and creates their receipt
+TestingLibraryElementError: Unable to find an element with the text: baixa. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_12_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_12_"[39m
+    [36m>[39m
+      [0mRebut manual[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"billing-manual"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"billing-manual-member"[39m
+        [36m>[39m
+          [0mAbonat[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33maria-describedby[39m=[32m"billing-manual-member-results"[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"billing-manual-member"[39m
+          [33mplaceholder[39m=[32m"Cerca per nom o número"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m"Rita"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mid[39m=[32m"billing-manual-member-results"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0mCap abonat coincideix amb la cerca.[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<fieldset[39m
+        [33mclass[39m=[32m"billing-manual__lines"[39m
+      [36m>[39m
+        [36m<legend>[39m
+          [0mLínies[0m
+        [36m</legend>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-manual__line"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-description-1"[39m
+            [36m>[39m
+              [0mConcepte (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-description-1"[39m
+              [33mmaxlength[39m=[32m"140"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-amount-1"[39m
+            [36m>[39m
+              [0mImport (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-amount-1"[39m
+              [33minputmode[39m=[32m"decimal"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-tax-1"[39m
+            [36m>[39m
+              [0m% impost (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-tax-1"[39m
+              [33minputmode[39m=[32m"decimal"[39m
+              [33mvalue[39m=[32m"0"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mAfegeix una línia[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</fieldset>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"billing-manual-note"[39m
+        [36m>[39m
+          [0mNota[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea"[39m
+          [33mid[39m=[32m"billing-manual-note"[39m
+          [33mmaxlength[39m=[32m"500"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-modal__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCrea el rebut[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCancel·la[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_12_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_12_"[39m
+    [36m>[39m
+      [0mRebut manual[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"billing-manual"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"billing-manual-member"[39m
+        [36m>[39m
+          [0mAbonat[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33maria-describedby[39m=[32m"billing-manual-member-results"[39m
+          [33mautocomplete[39m=[32m"off"[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"billing-manual-member"[39m
+          [33mplaceholder[39m=[32m"Cerca per nom o número"[39m
+          [33mtype[39m=[32m"search"[39m
+          [33mvalue[39m=[32m"Rita"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mid[39m=[32m"billing-manual-member-results"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0mCap abonat coincideix amb la cerca.[0m
+        [36m</p>[39m
+      [36m</div>[39m
+      [36m<fieldset[39m
+        [33mclass[39m=[32m"billing-manual__lines"[39m
+      [36m>[39m
+        [36m<legend>[39m
+          [0mLínies[0m
+        [36m</legend>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-manual__line"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-description-1"[39m
+            [36m>[39m
+              [0mConcepte (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-description-1"[39m
+              [33mmaxlength[39m=[32m"140"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-amount-1"[39m
+            [36m>[39m
+              [0mImport (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-amount-1"[39m
+              [33minputmode[39m=[32m"decimal"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"billing-manual-tax-1"[39m
+            [36m>[39m
+              [0m% impost (línia 1)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"billing-manual-tax-1"[39m
+              [33minputmode[39m=[32m"decimal"[39m
+              [33mvalue[39m=[32m"0"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mAfegeix una línia[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</fieldset>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"billing-manual-note"[39m
+        [36m>[39m
+          [0mNota[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea"[39m
+          [33mid[39m=[32m"billing-manual-note"[39m
+          [33mmaxlength[39m=[32m"500"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-modal__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCrea el rebut[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCancel·la[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/BillingPage.test.tsx:1373:33
+    1371|     const dialog = await screen.findByRole("dialog", { name: "Rebut ma…
+    1372|     fireEvent.change(within(dialog).getByLabelText("Abonat"), { target…
+    1373|     expect(await within(dialog).findByText("baixa")).toHaveClass("ah-b…
+       |                                 ^
+    1374|     fireEvent.click(within(dialog).getByRole("radio", { name: "Rita Fi…
+    1375|     fireEvent.change(within(dialog).getByLabelText("Concepte (línia 1)…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > E8-W01 round 2 #2: 409 MEMBER_ERASED is mapped to the manual receipt's member field
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Aquest abonat ha estat suprimit i ja no es pot modificar.
+Received:
+  Abonat
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"billing-header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSetembre 2026[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Canvi de mes"[39m
+            [33mclass[39m=[32m"billing-stepper"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Mes anterior"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m‹ mes[0m
+            [36m</button>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m·[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Mes següent"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mmes ›[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"billing-header__spacer"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m1 · SIMULA EL MES[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-describedby[39m=[32m"billing-generate-why"[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0m2 · GENERA REMESA SEPA (XML)[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mid[39m=[32m"billing-generate-why"[39m
+            [36m>[39m
+              [0mEls rebuts d'aquest mes ja s'han generat.[0m
+            [36m</span>[39m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost billing-action"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mRetrocedeix la remesa[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Rebut manual"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+            [33mtitle[39m=[32m"Rebut manual"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-feedback"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card billing-simulation"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"billing-simulation__head"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mPas 1 — Simulació: incidències primer[0m
+              [36m</h2>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m2[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0m2 incidències[0m
+                [36m</span>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"billing-members"[39m
+            [36m>[39m
+              [36m<tbody>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"row"[39m
+                  [36m>[39m
+                    [0mJoan Vila[0m
+                  [36m</th>[39m
+                  [36m<td>[39m
+                    [0msense compte bancari informat[0m
+                  [36m</td>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"billing-members__action"[39m
+                  [36m>[39m
+                    [36m<a[39m
+                      [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                      [33mclass[39m=[32m"ah-button ah-button--gh...
+ ❯ src/billing/BillingPage.test.tsx:1403:27
+    1401|     expect(memberField).not.toBeNull();
+    1402|     await waitFor(() => {
+    1403|       expect(memberField).toHaveTextContent(
+       |                           ^
+    1404|         "Aquest abonat ha estat suprimit i ja no es pot modificar.",
+    1405|       );
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > E8-W01 round 2 #1: 422 → accepted earliest → 503 → retry keeps the accepted body and the same Idempotency-Key
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Hi ha hagut un error intern.
+Received:
+  S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.
+ ❯ src/billing/BillingPage.test.tsx:1510:54
+    1508|       }),
+    1509|     );
+    1510|     expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+       |                                                      ^
+    1511|       "Hi ha hagut un error intern.",
+    1512|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 round 2 #7: member history, charging copy and the Docker defaults > Q3: a memberId link without mes lists all months, names that scope and selecting a month restores period:eq
+TestingLibraryElementError: Unable to find role="heading" and name `/Tots els mesos|Todos los meses|All months/u`
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mAgost 2026[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Canvi de mes"[39m
+          [33mclass[39m=[32m"billing-stepper"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes anterior"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m‹ mes[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m·[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes següent"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mmes ›[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-header__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0m1 · SIMULA EL MES[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-describedby[39m=[32m"billing-generate-why"[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m2 · GENERA REMESA SEPA (XML)[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"billing-generate-why"[39m
+          [36m>[39m
+            [0mEls rebuts d'aquest mes ja s'han generat.[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Rebut manual"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtitle[39m=[32m"Rebut manual"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card billing-simulation"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-simulation__head"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPas 1 — Simulació: incidències primer[0m
+            [36m</h2>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m2[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0m2 incidències[0m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mJoan Vila[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense compte bancari informat[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000901"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mPau Riera[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense tarifa assignada[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Pau Riera"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000902"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+          [36m</table>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"billing-simulation__footnote"[39m
+          [36m>[39m
+            [0mEls abonats amb incidència s'ometen de la generació.[0m
+          [36m</p>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"billing-simulation__subtitle"[39m
+          [36m>[39m
+            [0mActius amb pagament en efectiu[0m
+          [36m</h3>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscop...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-header"[39m
+      [36m>[39m
+        [36m<h1>[39m
+          [0mAgost 2026[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Canvi de mes"[39m
+          [33mclass[39m=[32m"billing-stepper"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes anterior"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0m‹ mes[0m
+          [36m</button>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m>[39m
+            [0m·[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Mes següent"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mmes ›[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"billing-header__spacer"[39m
+        [36m/>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0m1 · SIMULA EL MES[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<span[39m
+          [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-describedby[39m=[32m"billing-generate-why"[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m2 · GENERA REMESA SEPA (XML)[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"billing-generate-why"[39m
+          [36m>[39m
+            [0mEls rebuts d'aquest mes ja s'han generat.[0m
+          [36m</span>[39m
+        [36m</span>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Rebut manual"[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+          [33mtitle[39m=[32m"Rebut manual"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-feedback"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card billing-simulation"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"billing-simulation__head"[39m
+          [36m>[39m
+            [36m<h2>[39m
+              [0mPas 1 — Simulació: incidències primer[0m
+            [36m</h2>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m2[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-sr-only"[39m
+              [36m>[39m
+                [0m2 incidències[0m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mJoan Vila[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense compte bancari informat[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000901"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscope[39m=[32m"row"[39m
+                [36m>[39m
+                  [0mPau Riera[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0msense tarifa assignada[0m
+                [36m</td>[39m
+                [36m<td[39m
+                  [33mclass[39m=[32m"billing-members__action"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33maria-label[39m=[32m"Obre fitxa de Pau Riera"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                    [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000902"[39m
+                  [36m>[39m
+                    [0mObre fitxa[0m
+                  [36m</a>[39m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+          [36m</table>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"billing-simulation__footnote"[39m
+          [36m>[39m
+            [0mEls abonats amb incidència s'ometen de la generació.[0m
+          [36m</p>[39m
+          [36m<h3[39m
+            [33mclass[39m=[32m"billing-simulation__subtitle"[39m
+          [36m>[39m
+            [0mActius amb pagament en efectiu[0m
+          [36m</h3>[39m
+          [36m<table[39m
+            [33mclass[39m=[32m"billing-members"[39m
+          [36m>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<th[39m
+                  [33mscop...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ renderPage src/billing/BillingPage.test.tsx:109:18
+    107|     parameters.getAll("filter").some((filter) => filter.startsWith("me…
+    108|   if (acrossMonths) {
+    109|     await screen.findByRole("heading", {
+       |                  ^
+    110|       level: 1,
+    111|       name: /Tots els mesos|Todos los meses|All months/u,
+ ❯ src/billing/BillingPage.test.tsx:1633:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 round 2 #7: member history, charging copy and the Docker defaults > Q6: e2e-docker defaults to four workers and gives Chromium host IPC
+AssertionError: expected '#!/usr/bin/env bash\n\nset -euo pipef…' to contain 'default_playwright_workers=4'
+
+- Expected
++ Received
+
+- default_playwright_workers=4
++ #!/usr/bin/env bash
++
++ set -euo pipefail
++
++ repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
++ playwright_version="$(cd "$repository_root" && pnpm exec playwright --version)"
++ playwright_version="${playwright_version#Version }"
++ playwright_image="mcr.microsoft.com/playwright:v${playwright_version}-noble"
++ evidence_directory="$repository_root/roadmap/evidence"
++
++ # Only the evidence of the task being worked on comes back from the container, and only the
++ # files this run wrote: the complete suite re-captures every task's screenshots, and copying the
++ # whole folder back overwrote other tasks' PNGs and the logs the executor was writing next to them.
++ # Override with E2E_EVIDENCE_TASK="E4-W01 E4-W02"; by default, every task whose status is in_progress.
++ evidence_tasks="${E2E_EVIDENCE_TASK:-}"
++ if [[ -z "$evidence_tasks" ]]; then
++   for task_file in "$repository_root"/roadmap/tasks/*.md; do
++     if grep -q '^status: in_progress$' "$task_file"; then
++       evidence_tasks="${evidence_tasks:+$evidence_tasks }$(basename "$task_file" .md)"
++     fi
++   done
++ fi
++
++ mkdir -p "$evidence_directory"
++
++ # `pnpm e2e:docker <ID> [--] <Playwright arguments>` (E4-W12): the arguments after the task id go to
++ # every app's `playwright test` (for example `--repeat-each=20 --grep=… --pass-with-no-tests`);
++ # without them the complete suite runs, as before. The task id itself is informative only.
++ #
++ # `--capture-task=<ID>` (E5-W05 round 2, review #10), anywhere among those arguments, is the
++ # script's own and never reaches Playwright: the permanent mock specs that take screenshots
++ # (`booking.spec.ts`, `instructor-registrants.spec.ts`, `e5-backoffice.spec.ts`) write them into
++ # `roadmap/evidence/$E2E_CAPTURE_TASK`, by default the task that owns each spec (E5-W01, E5-W03),
++ # so a later complete run never rewrites another task's captures. The option goes into the
++ # container as `--env E2E_CAPTURE_TASK=<ID>`, and its task joins the evidence copied back. Without
++ # it a host `E2E_CAPTURE_TASK` is forwarded the same way. (`turbo.json` passes the variable to the
++ # `e2e` tasks: turbo's strict env mode drops any undeclared one.)
++ #   pnpm e2e:docker E5-W05 --capture-task=E5-W05
++ capture_task="${E2E_CAPTURE_TASK:-}"
++ playwright_args=()
++ if [[ $# -gt 1 ]]; then
++   for argument in "${@:2}"; do
++     case "$argument" in
++       --) ;;
++       --capture-task=*) capture_task="${argument#--capture-task=}" ;;
++       *) playwright_args+=("$argument") ;;
++     esac
++   done
++ fi
++ capture_env=()
++ if [[ -n "$capture_task" ]]; then
++   if [[ ! "$capture_task" =~ ^E[0-9]+-W[0-9]+$ ]]; then
++     echo "--capture-task takes a task id (E5-W05), not: $capture_task" >&2
++     exit 2
++   fi
++   capture_env=(--env "E2E_CAPTURE_TASK=$capture_task")
++   case " $evidence_tasks " in
++     *" $capture_task "*) ;;
++     *) evidence_tasks="${evidence_tasks:+$evidence_tasks }$capture_task" ;;
++   esac
++ fi
++
++ echo "Running Playwright in $playwright_image"
++ echo "Evidence copied back for: ${evidence_tasks:-<no task>}"
++ # (No apostrophe inside the `${…:-…}` below: bash reads it as an opening quote there.)
++ echo "Capture folder of the permanent mock specs: ${capture_task:-<the task of each spec>}"
++ if [[ ${#playwright_args[@]} -eq 0 ]]; then
++   echo "Playwright arguments: <none, complete suite>"
++ else
++   echo "Playwright arguments: ${playwright_args[*]}"
++ fi
++ docker run --rm \
++   --env CI=1 \
++   --env EVIDENCE_TASKS="$evidence_tasks" \
++   ${capture_env[@]+"${capture_env[@]}"} \
++   --volume "$repository_root:/src:ro" \
++   --volume "$evidence_directory:/evidence" \
++   --workdir /work \
++   "$playwright_image" \
++   sh -c '
++     set -eu
++     # Not copied: the roadmap kit files (`.roadmap-*`, the executor log reached 400 MB on 24-09)
++     # and the stray `.pnpm-store` of 06-09 (390 MB) that no config uses.
++     tar \
++       --exclude=.git \
++       --exclude=".roadmap-*" \
++       --exclude=.pnpm-store \
++       --exclude=.turbo \
++       --exclude=dist \
++       --exclude=node_modules \
++       --exclude=playwright-report \
++       --exclude=test-results \
++       -cf - -C /src . | tar -xf - -C /work
++     echo "Checkout copied into the container: $(du -sh /work | cut -f1)"
++     corepack enable
++     pnpm install --frozen-lockfile
++     touch /tmp/e2e-started
++     e2e_status=0
++     if [ "$#" -gt 0 ]; then
++       pnpm exec turbo run e2e --concurrency=1 -- "$@" || e2e_status=$?
++     else
++       pnpm e2e || e2e_status=$?
++     fi
++     for task in $EVIDENCE_TASKS; do
++       task_directory="/work/roadmap/evidence/$task"
++       [ -d "$task_directory" ] || continue
++       (cd "$task_directory" && find . -type f -newer /tmp/e2e-started) | while read -r file; do
++         mkdir -p "/evidence/$task/$(dirname "$file")"
++         cp "$task_directory/$file" "/evidence/$task/$file"
++         echo "evidence: $task/${file#./}"
++       done
++     done
++     exit "$e2e_status"
++   ' sh ${playwright_args[@]+"${playwright_args[@]}"}
++
+
+ ❯ src/billing/BillingPage.test.tsx:1657:20
+    1655|       "utf8",
+    1656|     );
+    1657|     expect(script).toContain("default_playwright_workers=4");
+       |                    ^
+    1658|     expect(script).toContain("--ipc=host");
+    1659|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 step 10: the D6 literals in ca (mockup V7) and the same keys in es and en > E8-W01: «Pas 1 — Simulació: incidències primer», «Actius amb pagament en efectiu», «Marcar cobrat (selecció)», «Exporta per a comptabilitat»
+AssertionError: expected undefined to be 'abonat no actiu' // Object.is equality
+
+- Expected:
+"abonat no actiu"
+
++ Received:
+undefined
+
+ ❯ src/billing/BillingPage.test.tsx:1678:54
+    1676|     expect(enums.billingIncident?.NO_BANK_ACCOUNT).toBe("sense compte …
+    1677|     expect(enums.billingIncident?.NO_PRICE).toBe("sense tarifa assigna…
+    1678|     expect(enums.billingIncident?.MEMBER_NOT_ACTIVE).toBe("abonat no a…
+       |                                                      ^
+    1679|     expect(enums.billingIncident?.PAYMENT_METHOD_CHANGED).toBe("mètode…
+    1680|     expect(enums.paymentMethodType).toEqual({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/12]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 step 10: the D6 literals in ca (mockup V7) and the same keys in es and en > E8-W01: D6 in es and en reads its own month titles and never a Catalan literal
+AssertionError: expected undefined to be 'abonado no activo' // Object.is equality
+
+- Expected:
+"abonado no activo"
+
++ Received:
+undefined
+
+ ❯ src/billing/BillingPage.test.tsx:1713:56
+    1711|       Record<string, string>
+    1712|     >;
+    1713|     expect(esEnums.billingIncident?.MEMBER_NOT_ACTIVE).toBe("abonado n…
+       |                                                        ^
+    1714|     expect(esEnums.billingIncident?.PAYMENT_METHOD_CHANGED).toBe("méto…
+    1715|     expect(enEnums.billingIncident?.MEMBER_NOT_ACTIVE).toBe("member no…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/12]⎯
+
+ FAIL  src/billing/RemittancesPage.test.tsx > S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12) > E8-W01 round 2 #5: a bare route waits for saved views and applies the default before writing list state into the URL
+AssertionError: expected [] to deeply equal [ 'status:eq:ROLLED_BACK' ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"billing-header"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"billing-header__back"[39m
+            [33mhref[39m=[32m"/facturacio"[39m
+          [36m>[39m
+            [0m‹ Facturació[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mRemeses[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-feedback"[39m
+        [36m/>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Remeses SEPA"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"period"[39m
+                    [36m>[39m
+                      [0mMes[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"status"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"in"[39m
+                    [36m>[39m
+                      [0més un de[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"nin"[39m
+                    [36m>[39m
+                      [0mno és cap de[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"exists"[39m
+                    [36m>[39m
+                      [0mté valor[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mValor[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"2026-09"[39m
+                    [36m>[39m
+                      [0mSetembre 2026 (1)[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"2026-08"[39m
+                    [36m>[39m
+                      [0mAgost 2026 (2)[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-actions"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [0mAfegeix el filtre[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [0mNeteja[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</details>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu"[39m
+            [36m>[39m
+              [36m<summary>[39m
+                [0mColumnes[0m
+                [0m [0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"...
+
+- Expected
++ Received
+
+- [
+-   "status:eq:ROLLED_BACK",
+- ]
++ []
+
+ ❯ src/billing/RemittancesPage.test.tsx:147:76
+    145|     await renderPage();
+    146|     await waitFor(() => {
+    147|       expect(new URLSearchParams(window.location.search).getAll("filte…
+       |                                                                            ^
+    148|         "status:eq:ROLLED_BACK",
+    149|       ]);
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/12]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  12 failed | 46 passed (58)
+   Start at  10:26:11
+   Duration  72.47s (tests 97%, environment 1%, transform 1%, import 1%)
+

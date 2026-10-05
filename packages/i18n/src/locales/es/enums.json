@@ -283,6 +283,8 @@
     "MANUAL": "Efectivo"
   },
   "billingIncident": {
+    "MEMBER_NOT_ACTIVE": "abonado no activo",
+    "PAYMENT_METHOD_CHANGED": "método de pago cambiado",
     "NO_BANK_ACCOUNT": "sin cuenta bancaria informada",
     "NO_PRICE": "sin tarifa asignada",
     "NO_PLAN": "sin modalidad asignada",

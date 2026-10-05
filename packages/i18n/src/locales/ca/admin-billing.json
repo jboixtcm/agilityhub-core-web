@@ -1,5 +1,6 @@
 {
   "header": {
+    "allMonths": "Tots els mesos",
     "months": "Canvi de mes",
     "previous": "‹ mes",
     "next": "mes ›",
@@ -128,6 +129,7 @@
     "selectedCount": "{count, plural, one {# seleccionat} other {# seleccionats}}"
   },
   "status": {
+    "charging": "cobrant",
     "pendingManual": "pendent · marca cobrat",
     "refunded": "reemborsat",
     "failedManual": "impagat (manual)",
@@ -271,6 +273,7 @@
     "submitted": "Remesa marcada com a enviada al banc."
   },
   "errors": {
+    "loadRun": "No s'ha pogut actualitzar l'estat dels cobraments.",
     "billingBusy": "Hi ha una generació en curs. Torna-ho a provar d'aquí a uns minuts.",
     "simulationStale": "Hi ha hagut canvis des de l'última simulació. Torna a simular el mes.",
     "simulateAgain": "Simula de nou",
