@@ -1,17 +1,27 @@
 {
   "created": {
-    "localeEs": "dcc573…",
-    "pushSubscription": "11b226…",
+    "localeEs": "ef5b15…",
+    "templateEdited": "6ac33b…",
+    "bookingCca": "090cb7…",
+    "bookingCes": "546bfd…",
+    "templateReset": "6ac33b…",
+    "clubChangesOff": "599134…",
+    "bookingD": "844fc4…",
+    "clubChangesOn": "599134…",
+    "pushSubscription": "bbd2f4…",
     "pushDeleted": "204",
-    "reminderCleared": "2e8694…",
-    "localeRestored": "dcc573…"
+    "bookingH": "34346f…",
+    "reminderSet": "599134…",
+    "reminderCleared": "599134…",
+    "bookingHCancelled": "34346f…",
+    "localeRestored": "ef5b15…"
   },
-  "runId": "pw3pqm",
+  "runId": "uu3k4a",
   "steps": {
     "instants": {
       "coreUrl": "http://core:8080",
-      "demoNow": "2026-10-05T05:00:00.000Z",
-      "weekStart": "2026-10-05"
+      "demoNow": "2026-10-12T05:00:00.000Z",
+      "weekStart": "2026-10-12"
     },
     "preflight": {
       "meNotifications": 200,
@@ -50,13 +60,16 @@
       "cleanup"
     ],
     "core-health": {
-      "builtAt": "2026-10-01T16:06:14.957Z",
+      "builtAt": "2026-10-01T18:58:56.094Z",
       "status": 200,
       "version": "0.1.0-SNAPSHOT"
     },
+    "clock-2026-10-12T05:00:00.000Z": {
+      "status": 200
+    },
     "clock": {
-      "forcedOff": true,
-      "reason": "POST /test/clock is not available: week 0 is not open for the bookings (c), (d) and (h) add, and (h) needs the clock two hours before its class (api evidence: E7-T07's smoke and NotificationEngineIT for P4, cited in the report)"
+      "instant": "2026-10-12T05:00:00.000Z",
+      "status": 200
     },
     "parameters": {
       "bookings.lateCancelThresholdMinutes": 240,
@@ -124,11 +137,11 @@
     },
     "scene-bookings": {
       "ca": [
-        "2026-10-05T08:30"
+        "2026-10-12T08:30"
       ],
       "es": [
-        "2026-10-05T08:30",
-        "2026-10-07T08:30"
+        "2026-10-12T08:30",
+        "2026-10-14T08:30"
       ],
       "seededA": true
     },
@@ -176,30 +189,30 @@
     },
     "scene": {
       "ca": {
-        "bookingA": "0fa691…",
-        "dogId": "cdb5bf…",
+        "bookingA": "a7b5a4…",
+        "dogId": "e133ce…",
         "dogName": "Suro 190",
         "email": "#5",
         "firstName": "Laia",
-        "memberId": "2e8694…"
+        "memberId": "599134…"
       },
       "classA": {
-        "date": "2026-10-05",
+        "date": "2026-10-12",
         "description": "C+D+E",
-        "id": "36b107…",
+        "id": "cd41ac…",
         "ringName": "Muntanya",
         "time": "08:30"
       },
-      "customTemplateId": "76b082…",
+      "customTemplateId": "bb32bb…",
       "es": {
-        "bookingA": "645a3d…",
-        "dogId": "2ff7fa…",
+        "bookingA": "b6ee30…",
+        "dogId": "8a4e60…",
         "dogName": "Neu 192",
         "email": "#7",
         "firstName": "Ona",
-        "memberId": "dcc573…"
+        "memberId": "ef5b15…"
       },
-      "n08aTemplateId": "6abeab…",
+      "n08aTemplateId": "6ac33b…",
       "n08aTexts": {
         "locales": [
           "ca",
@@ -212,52 +225,52 @@
         {
           "email": "#5",
           "fullName": "Laia Fictici006",
-          "id": "2e8694…"
+          "id": "599134…"
         },
         {
           "email": "#6",
           "fullName": "Aina Fictici007",
-          "id": "2c331f…"
+          "id": "ec9fd6…"
         },
         {
           "email": "#7",
           "fullName": "Ona Fictici008",
-          "id": "dcc573…"
+          "id": "ef5b15…"
         },
         {
           "email": "#8",
           "fullName": "Aleix Fictici009",
-          "id": "8332f5…"
+          "id": "611e02…"
         },
         {
           "email": "#9",
           "fullName": "Guillem Fictici010",
-          "id": "3242e3…"
+          "id": "a6afe3…"
         },
         {
           "email": "#10",
           "fullName": "Pol Fictici011",
-          "id": "539368…"
+          "id": "81916d…"
         },
         {
           "email": "#11",
           "fullName": "Ona Fictici012",
-          "id": "392891…"
+          "id": "ea9d56…"
         },
         {
           "email": "#12",
           "fullName": "Rita Fictici013",
-          "id": "411da8…"
+          "id": "e85927…"
         },
         {
           "email": "#13",
           "fullName": "Pol Fictici014",
-          "id": "41e21b…"
+          "id": "97b4eb…"
         },
         {
           "email": "#14",
           "fullName": "Jana Fictici015",
-          "id": "540077…"
+          "id": "c0e6fe…"
         }
       ]
     },
@@ -351,32 +364,32 @@
             {
               "attempts": 1,
               "channel": "SMS",
-              "providerRef": "log-c0…",
+              "providerRef": "log-22…",
               "status": "SENT"
             }
           ],
           "locale": "es"
         },
         {
-          "audience": "MEMBER",
+          "audience": "ADMINS",
           "deliveries": [
             {
               "attempts": 0,
               "channel": "APP",
               "providerRef": null,
               "status": "DELIVERED"
-            },
+            }
+          ],
+          "locale": "ca"
+        },
+        {
+          "audience": "ADMINS",
+          "deliveries": [
             {
-              "attempts": 1,
-              "channel": "EMAIL",
-              "providerRef": "local-…",
-              "status": "SENT"
-            },
-            {
-              "attempts": 1,
-              "channel": "SMS",
-              "providerRef": "log-9d…",
-              "status": "SENT"
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
             }
           ],
           "locale": "ca"
@@ -400,25 +413,25 @@
           "locale": "ca"
         },
         {
-          "audience": "ADMINS",
+          "audience": "MEMBER",
           "deliveries": [
             {
               "attempts": 0,
               "channel": "APP",
               "providerRef": null,
               "status": "DELIVERED"
-            }
-          ],
-          "locale": "ca"
-        },
-        {
-          "audience": "ADMINS",
-          "deliveries": [
+            },
             {
-              "attempts": 0,
-              "channel": "APP",
-              "providerRef": null,
-              "status": "DELIVERED"
+              "attempts": 1,
+              "channel": "EMAIL",
+              "providerRef": "local-…",
+              "status": "SENT"
+            },
+            {
+              "attempts": 1,
+              "channel": "SMS",
+              "providerRef": "log-a8…",
+              "status": "SENT"
             }
           ],
           "locale": "ca"
@@ -433,7 +446,7 @@
         {
           "attempts": 1,
           "channel": "SMS",
-          "providerRef": "log-9d…",
+          "providerRef": "log-a8…",
           "status": "SENT"
         }
       ],
@@ -442,11 +455,55 @@
         "es": "Clase cancelada por el club"
       }
     },
-    "c-skipped": {
-      "reason": "POST /test/clock is not available: week 0 is not open for the bookings (c), (d) and (h) add, and (h) needs the clock two hours before its class (api evidence: E7-T07's smoke and NotificationEngineIT for P4, cited in the report)"
+    "c-template": {
+      "class": {
+        "description": "C+D+E",
+        "startsAtLocal": "2026-10-14T08:30"
+      },
+      "marker": " (uu3k4a)",
+      "put": 200,
+      "reset": 200,
+      "templateVersions": {
+        "aNotice": 0,
+        "afterReset": 2,
+        "cNotice": 1,
+        "edited": 1,
+        "read": 0
+      },
+      "titles": {
+        "ca": "Classe anul·lada pel club",
+        "es": "Clase cancelada por el club"
+      }
     },
-    "d-skipped": {
-      "reason": "POST /test/clock is not available: week 0 is not open for the bookings (c), (d) and (h) add, and (h) needs the clock two hours before its class (api evidence: E7-T07's smoke and NotificationEngineIT for P4, cited in the report)"
+    "d-matrix": {
+      "class": {
+        "description": "C+D+E",
+        "startsAtLocal": "2026-10-15T08:30"
+      },
+      "d10Put": 200,
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 0,
+          "channel": "EMAIL",
+          "providerRef": null,
+          "status": "SKIPPED_BY_PREFERENCE"
+        },
+        {
+          "attempts": 1,
+          "channel": "SMS",
+          "providerRef": "log-cc…",
+          "status": "SENT"
+        }
+      ],
+      "mailboxForHer": 0,
+      "meta": "fa 0 min · i per SMS",
+      "put12": 200
     },
     "f-push": {
       "deviceLabel": "Linux · Chrome",
@@ -462,10 +519,10 @@
     },
     "e-announcement": {
       "batch": {
-        "batchId": "4e3cea…",
+        "batchId": "f2c88f…",
         "code": "N-24",
         "createdAt": [
-          "2026-10-01T18:51:18.583Z"
+          "2026-10-12T05:00:17.241Z"
         ],
         "eventType": "AnnouncementSent",
         "rows": 10
@@ -500,24 +557,7 @@
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#9"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "SENT"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SENT"
-            }
-          ],
-          "member": "#14"
+          "member": "#11"
         },
         {
           "channels": [
@@ -535,6 +575,23 @@
             }
           ],
           "member": "#7"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#10"
         },
         {
           "channels": [
@@ -568,7 +625,7 @@
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#10"
+          "member": "#9"
         },
         {
           "channels": [
@@ -602,23 +659,6 @@
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#5"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "SENT"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
           "member": "#13"
         },
         {
@@ -636,7 +676,7 @@
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#11"
+          "member": "#12"
         },
         {
           "channels": [
@@ -653,7 +693,24 @@
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#12"
+          "member": "#5"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SENT"
+            }
+          ],
+          "member": "#14"
         }
       ],
       "selection": {
@@ -757,11 +814,73 @@
       "faqItems": 7,
       "rulesTitle": "Normes del club"
     },
-    "h-skipped": {
-      "reason": "POST /test/clock is not available: week 0 is not open for the bookings (c), (d) and (h) add, and (h) needs the clock two hours before its class (api evidence: E7-T07's smoke and NotificationEngineIT for P4, cited in the report)"
+    "clock-2026-10-17T12:30:00.000Z": {
+      "status": 200
+    },
+    "h-reminder": {
+      "class": {
+        "description": "D+E",
+        "startsAtLocal": "2026-10-17T16:30"
+      },
+      "clock": "2026-10-17T12:30:00.000Z",
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 0,
+          "channel": "EMAIL",
+          "providerRef": null,
+          "status": "SKIPPED_BY_PREFERENCE"
+        },
+        {
+          "attempts": 0,
+          "channel": "PUSH",
+          "providerRef": null,
+          "status": "SKIPPED_NO_CONTACT"
+        }
+      ],
+      "plan": {
+        "counters": {
+          "WOULD_REMIND": 1
+        },
+        "dialogRow": "Booking 34346f… · WOULD_REMIND",
+        "items": 1,
+        "status": "SUCCEEDED"
+      },
+      "run": {
+        "counters": {
+          "classReminders": 1
+        },
+        "items": 1,
+        "status": "SUCCEEDED"
+      },
+      "second": {
+        "counters": {},
+        "items": 0,
+        "status": "SUCCEEDED"
+      },
+      "title": "Recordatori de classe",
+      "view": {
+        "body": "(asserted)",
+        "borderLeft": "solid 1px",
+        "button": null,
+        "buttonDisabled": null,
+        "code": "N-13",
+        "icon": "clock",
+        "meta": "fa 0 min",
+        "tone": "neutral",
+        "title": "Recordatori de classe"
+      }
     },
     "j-cleanup": {
-      "booking": null,
+      "booking": {
+        "state": "CANCELLED_LATE",
+        "status": 200
+      },
       "clubChanges": true,
       "locale": {
         "locale": "ca",
@@ -774,9 +893,12 @@
       },
       "templateCustomized": false
     },
+    "clock-2026-10-05T05:54:07.586Z": {
+      "status": 200
+    },
     "j-clock-restored": {
-      "moved": false,
-      "status": null
+      "moved": true,
+      "status": 200
     },
     "afterAll-safety-net": {},
     "jobs-switched-on": {
@@ -810,5 +932,5 @@
       }
     }
   },
-  "weekStart": "2026-10-05"
+  "weekStart": "2026-10-12"
 }

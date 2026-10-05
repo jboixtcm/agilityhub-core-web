@@ -364,7 +364,7 @@ describe("T-06-26 D3 weekly templates", () => {
       expect(generate).toBeEnabled();
     });
     expect(screen.getByRole("combobox", { name: "Setmana" })).toHaveDisplayValue(
-      /^Setmana del \d+ (al|de)/u,
+      /^Setmana del \d+.* al \d+/u,
     );
     fireEvent.click(generate);
 

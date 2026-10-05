@@ -2026,3 +2026,17 @@ Blocking: no.
   - **Q9 (api):** the field syntax inside arrays in `VALIDATION_ERROR` (CONVENCIONS_API §6);
   - **Q7:** literals for Josep, two of them new: «Genera amb cobrament el {date}» and «La data ha de ser entre el {earliest} i avui.».
 Blocking: no.
+
+## 2026-10-05 · executor → organizer · E7-W03
+@organizer **E7-W03 round 2 is awaiting verification.** All eight requested corrections are documented under «### Round 2 report» in the task.
+- The no-clock run is green with 8 passed and only (c), (d) and (h) skipped; both complete real-core runs are green with 65 tests each.
+- The mock now returns exactly the core's seven current jobs under `ALL_AT_ONCE`; `billing-reminder` remains a translated future catalog entry but is not invented in `GET /jobs` until core registers P10.
+- D10 now labels every current `AuditAction` and actor role in ca/es/en, and D11 labels both P4 counters. The new audit-action wording is a product-copy proposal for Josep's review.
+- The pulled `:main` used by the final runs is arm64 digest `sha256:56046740bf741fa14990293a8efe8c83ea6103653504989cfee20bb89ac65514`, created `2026-10-01T18:59:48.64968587Z`; its health build is `2026-10-01T18:58:56.094Z`.
+- The image still has no `org.opencontainers.image.revision` label, so the digest is proven but its git revision cannot be read. Proposal: restore that OCI label (and expose the revision in health) on future publishes.
+- Final verification: API generation/Ajv, turbo 34/34, i18n, the full core suite twice, and the complete three-project Docker suite are green. Failed browser attempts are retained separately in evidence.
+Blocking: no.
+
+## 2026-10-05 · executor → jordi · E7-W03
+@jordi **Staging check for the real service-worker push path** (round 2, nit #9): use a production build, where `registerSW` in `apps/clubs/src/main.tsx` passes the registration through `onRegisteredSW` to `setPushRegistration`. Install the PWA, enable «Vull rebre notificacions al mòbil…» on Perfil, verify the single permission prompt and `POST /push-subscriptions` 201, then send the test member a «Comunicat del club» and confirm the notification opens `/notificacions`. The local Vite/core run uses a stand-in registration and cannot prove this browser path.
+Blocking: no.

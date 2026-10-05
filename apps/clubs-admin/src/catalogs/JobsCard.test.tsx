@@ -108,6 +108,16 @@ async function saveFifoMode(scenario: MockScenario): Promise<void> {
   expect(saved.data?.value).toBe("FIFO");
 }
 
+async function switchJob(scenario: MockScenario, name: string, enabled: boolean): Promise<void> {
+  mockScenario(scenario);
+  const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+  const saved = await client.PUT("/jobs/{name}/switch", {
+    body: { enabled },
+    params: { path: { name } },
+  });
+  expect(saved.data).toEqual({ enabled, name });
+}
+
 function rowOf(card: HTMLElement, name: string): HTMLElement {
   const row = within(card).getByText(name).closest("li");
   if (row === null) throw new TypeError(`No row ${name}`);
@@ -115,7 +125,7 @@ function rowOf(card: HTMLElement, name: string): HTMLElement {
 }
 
 describe("T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09)", () => {
-  it("E7-W03 round 2 #6 · S15 §2 «fila absent»: under waitlist.mode = ALL_AT_ONCE the Cànic's card has no «Llista d'espera (FIFO)» row — the core's seven processes plus «Recordatori de facturació»", async () => {
+  it("E7-W03 round 2 #6 · S15 §2 «fila absent»: under waitlist.mode = ALL_AT_ONCE the default card lists exactly the core's seven processes", async () => {
     const card = await renderCard("admin");
     await within(card).findByText("Revisió de classes en risc");
     expect(
@@ -130,16 +140,16 @@ describe("T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15
       "expirations",
       "class-finishing",
       "cleanup",
-      "billing-reminder",
     ]);
     expect(within(card).queryByText("Llista d'espera (FIFO)")).toBeNull();
+    expect(within(card).queryByText("Recordatori de facturació")).toBeNull();
   });
 
-  it("with waitlist.mode = FIFO lists the ten processes of the full club and the eight of the club mínim, each with its cadence and last run", async () => {
+  it("with waitlist.mode = FIFO lists the nine published processes of the full club and the eight of the club mínim, each with its cadence and last run", async () => {
     await saveFifoMode("jobsFullClub");
     const card = await renderCard();
     await within(card).findByText("Revisió de classes en risc");
-    expect(within(card).getAllByRole("listitem")).toHaveLength(10);
+    expect(within(card).getAllByRole("listitem")).toHaveLength(9);
     const risk = rowOf(card, "Revisió de classes en risc");
     expect(within(risk).getByText("cada dia a les 7:30")).toBeVisible();
     expect(
@@ -151,9 +161,6 @@ describe("T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15
       within(rowOf(card, "Obertura de la setmana")).getByText("diumenge a les 20:00"),
     ).toBeVisible();
     expect(within(rowOf(card, "Recordatoris")).getByText("continu")).toBeVisible();
-    expect(
-      within(rowOf(card, "Recordatori de facturació")).getByText("el dia 22 a les 6:00"),
-    ).toBeVisible();
     // A FIFO club's P6 runs every minute (R-15-16): never «omesa» for a module that is off.
     const fifo = rowOf(card, "Llista d'espera (FIFO)");
     expect(within(fifo).getByText("continu")).toBeVisible();
@@ -180,17 +187,18 @@ describe("T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15
   });
 
   it("R-15-09 dims a disabled process and keeps its [Executa ara] (and [Simula])", async () => {
-    const card = await renderCard();
-    const off = await waitForRow(card, "Recordatori de facturació");
+    await switchJob("jobsFullClub", "risk-review", false);
+    const card = await renderCard("jobsFullClub");
+    const off = await waitForRow(card, "Revisió de classes en risc");
     expect(off).toHaveClass("jobs-card__row--off");
     expect(
-      within(off).getByRole("switch", { name: "Recordatori de facturació activat" }),
+      within(off).getByRole("switch", { name: "Revisió de classes en risc activat" }),
     ).toHaveAttribute("aria-checked", "false");
     expect(
-      within(off).getByRole("button", { name: "Executa ara Recordatori de facturació" }),
+      within(off).getByRole("button", { name: "Executa ara Revisió de classes en risc" }),
     ).toBeEnabled();
     expect(
-      within(off).getByRole("button", { name: "Simula Recordatori de facturació" }),
+      within(off).getByRole("button", { name: "Simula Revisió de classes en risc" }),
     ).toBeEnabled();
   });
 

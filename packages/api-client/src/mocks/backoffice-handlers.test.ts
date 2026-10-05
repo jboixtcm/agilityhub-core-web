@@ -103,11 +103,11 @@ async function jobNames(scenario: MockScenario): Promise<string[]> {
 }
 
 /**
- * What the core's `GET /jobs` listed for the Cànic (its 13 modules, the mock Cànic's; `waitlist.mode`
- * ALL_AT_ONCE), in catalog order: E7-W03 `106-e6-core-run.json` and `107-e6-core-run.json`,
+ * What the core's `GET /jobs` listed for the default 13-module fixture with `waitlist.mode`
+ * ALL_AT_ONCE, in catalog order: E7-W03 `106-e6-core-run.json` and `107-e6-core-run.json`,
  * `steps.jobs-listed.names`, image `c374bb2`.
  */
-const CORE_CANIC_JOBS = [
+const CORE_ALL_AT_ONCE_JOBS = [
   "week-opening",
   "risk-review",
   "no-show-notices",
@@ -118,27 +118,17 @@ const CORE_CANIC_JOBS = [
 ];
 
 describe("E7-W03 round 2 #6 · S15 §6 `GET /jobs`: the processes of a module that is off are absent (R-15-01, R-15-16)", () => {
-  it("E7-W03 round 2 #6 · T-15-32: under waitlist.mode = ALL_AT_ONCE the Cànic lists the core's processes in catalog order — no waitlist-fifo — plus billing-reminder (BILLING on, a P10 the core does not register yet)", async () => {
+  it("E7-W03 round 2 #6 · T-15-32: under waitlist.mode = ALL_AT_ONCE the default fixture lists exactly the core's seven processes in catalog order — no mock-only waitlist-fifo or billing-reminder", async () => {
     expect(findParameter("waitlist.mode")?.value).toBe("ALL_AT_ONCE");
-    const canic = await jobNames("admin");
-    expect(canic).toEqual([
-      "week-opening",
-      "risk-review",
-      "no-show-notices",
-      "reminders",
-      "expirations",
-      "class-finishing",
-      "cleanup",
-      "billing-reminder",
-    ]);
-    expect(canic.filter((name) => name !== "billing-reminder")).toEqual(CORE_CANIC_JOBS);
+    const defaultClub = await jobNames("admin");
+    expect(defaultClub).toEqual(CORE_ALL_AT_ONCE_JOBS);
     // The club mínim (WAITLIST, FAQ, PUSH) in the same mode: exactly the core's seven.
-    expect(await jobNames("jobsMinimalClub")).toEqual(CORE_CANIC_JOBS);
+    expect(await jobNames("jobsMinimalClub")).toEqual(CORE_ALL_AT_ONCE_JOBS);
     // With SINGLE_CLASS on: `payment-timeouts` at its catalog place, still no `waitlist-fifo`.
     const full = await jobNames("jobsFullClub");
     expect(full).not.toContain("waitlist-fifo");
     expect(full.slice(5, 7)).toEqual(["payment-timeouts", "class-finishing"]);
-    expect(full).toHaveLength(9);
+    expect(full).toHaveLength(8);
   });
 
   it("E7-W03 round 2 #6 · R-15-09: under ALL_AT_ONCE waitlist-fifo's routes answer like a process whose module is off — 404 MODULE_DISABLED (CATALEG_ERRORS §1) — and nothing runs or switches", async () => {
@@ -164,13 +154,13 @@ describe("E7-W03 round 2 #6 · S15 §6 `GET /jobs`: the processes of a module th
 
   it("E7-W03 round 2 #6 · T-15-24: with waitlist.mode = FIFO waitlist-fifo is listed at its catalog place and runs — its history is a FIFO club's, never SKIPPED{MODULE_OFF}", async () => {
     setParameter("waitlist.mode", "FIFO");
-    const canic = await jobNames("admin");
-    expect(canic).toHaveLength(9);
-    expect(canic[5]).toBe("waitlist-fifo");
+    const defaultClub = await jobNames("admin");
+    expect(defaultClub).toHaveLength(8);
+    expect(defaultClub[5]).toBe("waitlist-fifo");
     expect(await jobNames("jobsMinimalClub")).toEqual([
-      ...CORE_CANIC_JOBS.slice(0, 5),
+      ...CORE_ALL_AT_ONCE_JOBS.slice(0, 5),
       "waitlist-fifo",
-      ...CORE_CANIC_JOBS.slice(5),
+      ...CORE_ALL_AT_ONCE_JOBS.slice(5),
     ]);
     const runs = await as<components["schemas"]["ListPageJobRunListItem"]>(
       "admin",
@@ -196,20 +186,20 @@ describe("E7-W03 round 2 #6 · S15 §6 `GET /jobs`: the processes of a module th
 });
 
 describe("E5-W03 step 8 · S15 processes (GET /jobs, trigger, switch, runs) answer like the api", () => {
-  it("T-15-32 with waitlist.mode = FIFO lists the processes whose module is on: 10 in the full club, 9 in the Cànic, 8 in the club mínim", async () => {
+  it("T-15-32 with waitlist.mode = FIFO lists the published processes whose module is on: 9 in the full club and 8 in the default and minimum clubs", async () => {
     // T-15-32's «P6 present» needs a FIFO club (R-15-01: `WAITLIST` + `waitlist.mode=FIFO`).
     setParameter("waitlist.mode", "FIFO");
-    expect(await jobNames("jobsFullClub")).toHaveLength(10);
-    // The Cànic has no SINGLE_CLASS: no `payment-timeouts`.
+    expect(await jobNames("jobsFullClub")).toHaveLength(9);
+    // The default fixture has no SINGLE_CLASS: no `payment-timeouts`.
     expect(await jobNames("admin")).not.toContain("payment-timeouts");
-    expect(await jobNames("admin")).toHaveLength(9);
+    expect(await jobNames("admin")).toHaveLength(8);
     const minimal = await jobNames("jobsMinimalClub");
     expect(minimal).toHaveLength(8);
     expect(minimal).toContain("waitlist-fifo");
     expect(minimal).not.toContain("billing-reminder");
 
     const jobs = (await as<JobSummaries>("jobsFullClub", "GET", "/jobs")).body.items;
-    expect(jobs.find((job) => job.name === "billing-reminder")?.enabled).toBe(false);
+    expect(jobs.find((job) => job.name === "billing-reminder")).toBeUndefined();
     expect(jobs.find((job) => job.name === "no-show-notices")?.lastRun?.status).toBe("FAILED");
     expect(jobs.find((job) => job.name === "expirations")?.lastRun?.status).toBe("PARTIAL");
     expect(jobs.find((job) => job.name === "risk-review")?.schedule).toEqual({
@@ -558,7 +548,7 @@ describe("E5-W03 step 8 · S08 staff reads (registrants, waiting list, GET /book
       `/class-sessions/${D4_CLASS}/waitlist-entries`,
     );
     valid("ClassWaitlist", waitlist.body);
-    // The Cànic's `waitlist.mode = ALL_AT_ONCE`: no positions (R-08-13).
+    // The default fixture's `waitlist.mode = ALL_AT_ONCE`: no positions (R-08-13).
     expect(waitlist.body.items.map((item) => [item.dogName, item.position, item.state])).toEqual([
       ["Kira", null, "ACTIVE"],
       ["Lluna", null, "ACTIVE"],
@@ -1082,7 +1072,6 @@ describe("E5-W05 round 2 · the jobs mock reads its parameters (S15 R-15-01, R-1
         ]),
       );
     expect(await next()).toMatchObject({
-      "billing-reminder": ["06:00", "2026-08-22T06:00"],
       cleanup: ["06:00", "2026-08-11T06:00"],
       expirations: ["06:00", "2026-08-11T06:00"],
       reminders: [null, null],
@@ -1094,7 +1083,6 @@ describe("E5-W05 round 2 · the jobs mock reads its parameters (S15 R-15-01, R-1
     setParameter("classes.riskReviewTime", "09:00");
     setParameter("bookings.weekOpensAt", { dayOfWeek: "SATURDAY", time: "10:00" });
     expect(await next()).toMatchObject({
-      "billing-reminder": ["05:15", "2026-08-22T05:15"],
       cleanup: ["05:15", "2026-08-11T05:15"],
       expirations: ["05:15", "2026-08-11T05:15"],
       "risk-review": ["09:00", "2026-08-10T09:00"],

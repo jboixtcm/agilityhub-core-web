@@ -58,10 +58,11 @@ const continuous: JobSummary["schedule"] = {
 
 /**
  * R-15-01, in the catalog's fixed order. The api lists a process only when its module is on
- * (`GET /jobs`, S15 §6; `jobModuleOn`), and P6 only in a FIFO club. Under the mock's
- * `waitlist.mode = ALL_AT_ONCE` the Cànic lists eight (no `waitlist-fifo`, no `payment-timeouts`:
- * the core's seven plus `billing-reminder`), the full club (+ SINGLE_CLASS) nine and the «club
- * mínim» (WAITLIST, FAQ, PUSH) seven; in a FIFO club ten, nine and eight (T-15-32).
+ * (`GET /jobs`, S15 §6; `jobModuleOn`), and P6 only in a FIFO club. P10 remains in this product
+ * catalog and in the contract, but the published core does not register it yet (E7-W03 round 2,
+ * ruling E89), so `initialJobs` leaves it out of the current mock answer. Under
+ * `waitlist.mode = ALL_AT_ONCE` the default and minimum fixtures list the core's seven processes;
+ * the full club adds `payment-timeouts`. FIFO mode adds `waitlist-fifo` (T-15-32).
  */
 export const JOB_CATALOG: readonly CatalogEntry[] = [
   {
@@ -483,8 +484,11 @@ export interface StoredJob {
 }
 
 function initialJobs(): StoredJob[] {
-  return JOB_CATALOG.map((entry) => ({
-    enabled: entry.name !== "billing-reminder",
+  // P10 belongs to E8 and is not registered by the published core yet. Keep its catalog entry and
+  // i18n label so the generic D11 card is ready for the api row, but do not invent that row or its
+  // `{name}` routes in the E7 mock world (organizer round 2 #6: match `GET /jobs` exactly).
+  return JOB_CATALOG.filter((entry) => entry.name !== "billing-reminder").map((entry) => ({
+    enabled: true,
     entry,
     runs: initialRuns(entry),
   }));
@@ -575,7 +579,7 @@ function nextOccurrence(schedule: JobSummary["schedule"], now: number): string |
  * it (S15 §6: the processes of a module that is off are absent; §2 D11: «fila absent») and its
  * `{name}` routes reach it (R-15-09: otherwise `404 MODULE_DISABLED`): its module, if any, is on
  * and, for P6, the club's `waitlist.mode` is FIFO (under ALL_AT_ONCE P6 is `MODULE_OFF`, R-15-16;
- * the core omits it from the Cànic's list, E7-W03 step 5 #7, ruling E89).
+ * the core omits it from the default fixture's list, E7-W03 step 5 #7, ruling E89).
  */
 export function jobModuleOn(
   entry: CatalogEntry,

@@ -206,9 +206,9 @@ test.describe("E5-W03 D11 · «Processos automàtics» (S15 §2, no mockup)", ()
     await signIn(page, "admin", jobsNow);
     await page.goto(`${baseUrl}/parametres#processos`);
     const card = page.getByRole("region", { name: "Processos automàtics" });
-    // The Cànic under `waitlist.mode = ALL_AT_ONCE`: no `waitlist-fifo` nor `payment-timeouts`
-    // (S15 §6, E7-W03 round 2 #6).
-    await expect(card.getByRole("listitem")).toHaveCount(8);
+    // Under `waitlist.mode = ALL_AT_ONCE`: no `waitlist-fifo` nor `payment-timeouts`;
+    // `billing-reminder` is also absent until the core registers P10 (E7-W03 round 2 #6).
+    await expect(card.getByRole("listitem")).toHaveCount(7);
     await expect(card.getByText("Llista d'espera (FIFO)")).toHaveCount(0);
     await expect(card.getByText("cada dia a les 7:30")).toBeVisible();
     await card.scrollIntoViewIfNeeded();

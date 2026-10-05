@@ -51,10 +51,6 @@
     {
       "_id": "N-32b",
       "count": 48
-    },
-    {
-      "_id": "N-42",
-      "count": 1
     }
   ],
   "notices": [
@@ -62,7 +58,7 @@
       "action": null,
       "code": "N-19",
       "createdAt": {
-        "$date": "2026-10-01T14:44:54.593Z"
+        "$date": "2026-10-05T05:52:21.043Z"
       },
       "deliveries": [
         {
@@ -88,16 +84,16 @@
         "gender": "other",
         "dog_name": "Mel",
         "dog_name_article": "la Mel",
-        "class_date": "dimecres, 9 de setembre de 2026",
+        "class_date": "dimecres, 16 de setembre de 2026",
         "class_description": "A+B",
-        "entityId": "7c246be0-f7a3-4807-9dae-9ec54d5a08fc"
+        "entityId": "6d065c37-c042-4827-b6d4-63a772bc8f37"
       }
     },
     {
       "action": "CLAIM_SEAT",
       "code": "N-15",
       "createdAt": {
-        "$date": "2026-10-05T02:00:04.727Z"
+        "$date": "2026-10-12T02:00:07.288Z"
       },
       "deliveries": [
         {
@@ -132,14 +128,14 @@
         "dog_name": "Gira",
         "dog_name_article": "la Gira",
         "mode": "ALL_AT_ONCE",
-        "entityId": "1ed982c3-6e00-40d2-9361-f7f5ce8708ef"
+        "entityId": "6178b685-b492-44c3-a79c-51e6e01ebdac"
       }
     },
     {
       "action": null,
       "code": "N-19",
       "createdAt": {
-        "$date": "2026-10-06T06:00:02.222Z"
+        "$date": "2026-10-13T06:00:01.842Z"
       },
       "deliveries": [
         {
@@ -165,9 +161,9 @@
         "gender": "other",
         "dog_name": "Trufa",
         "dog_name_article": "la Trufa",
-        "class_date": "dilluns, 5 d’octubre de 2026",
+        "class_date": "dilluns, 12 d’octubre de 2026",
         "class_description": "A+B",
-        "entityId": "9f4b6982-ef79-453d-8b45-3be0adb09433"
+        "entityId": "a0a65073-840a-4fb0-9ad9-a95b5143cf60"
       }
     }
   ]

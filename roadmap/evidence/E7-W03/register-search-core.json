@@ -3,12 +3,12 @@
     "byNote": {
       "allMatch": true,
       "code": null,
-      "q": "E5 pn9nn0",
+      "q": "E5 uu0bhj",
       "returned": 1,
       "rows": [
         {
-          "id": "398971cb-6901-4225-8c92-b303faef92d5",
-          "note": "E5 pn9nn0",
+          "id": "b00dced6-1eac-43a3-90a1-8efd81d20a0f",
+          "note": "E5 uu0bhj",
           "ringName": "Muntanya",
           "state": "CANCELLED"
         }
@@ -23,8 +23,8 @@
       "returned": 1,
       "rows": [
         {
-          "id": "398971cb-6901-4225-8c92-b303faef92d5",
-          "note": "E5 pn9nn0",
+          "id": "b00dced6-1eac-43a3-90a1-8efd81d20a0f",
+          "note": "E5 uu0bhj",
           "ringName": "Muntanya",
           "state": "CANCELLED"
         }
@@ -35,8 +35,8 @@
     "week": 2
   },
   "filters": {
-    "blocks": "from:between:2026-10-04T22:00:00.000Z,2026-10-11T22:00:00.000Z",
-    "training": "date:between:2026-10-05,2026-10-11"
+    "blocks": "from:between:2026-10-11T22:00:00.000Z,2026-10-18T22:00:00.000Z",
+    "training": "date:between:2026-10-12,2026-10-18"
   },
   "training": {
     "byDog": {
@@ -47,7 +47,7 @@
       "rows": [
         {
           "dogName": "Ginesta 191",
-          "id": "3b227cf5-b7d0-45d8-b8c4-0504e6810b24",
+          "id": "349b5039-aee3-40d9-a932-28c52e6eb002",
           "memberName": "Aina Fictici007",
           "ringName": "Central",
           "state": "ACTIVE"
@@ -64,7 +64,7 @@
       "rows": [
         {
           "dogName": "Ginesta 191",
-          "id": "3b227cf5-b7d0-45d8-b8c4-0504e6810b24",
+          "id": "349b5039-aee3-40d9-a932-28c52e6eb002",
           "memberName": "Aina Fictici007",
           "ringName": "Central",
           "state": "ACTIVE"
