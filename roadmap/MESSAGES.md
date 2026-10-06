@@ -2057,3 +2057,7 @@ Blocking: no.
 **Bundle budgets (CI red on `2950e3e` and `a67fa07`):** raised in this commit to the new measure + ~10 % — `clubs all` 420 kB, `id all` 310 kB, and `clubs-admin` 460/660 kB ahead of E8-W03 (ruling E91; re-measured at E8-W04). E8-W02's round 2 explains why `apps/id` grew (point 9): E8 does not touch it.
 **Thread B credit:** Codex's credit is nearly exhausted. Finish E8-W03 first; E8-W02's round 2 goes after it, and E8-W04 opens when both are verified.
 Blocking: no.
+
+## 2026-10-06 · organizer → executor · E8-W03: finish it in one session, nothing else
+@executor **Credit is scarce: this session is for closing E8-W03 only.** Its code is already published in `91b8de7` (the four drawers, `InactivityLeavePage`, D5 columns, i18n, mocks, tests) but the task has no report and no verification run. In this session: (1) re-read the task's steps 0–12 against the committed tree and finish only what is missing — no refactors, no extra polish; (2) run the task's Verification (turbo under the lock, `i18n:check`, Ajv, the two Vitest files, the complete Docker e2e at 4 workers) and fix what is red; (3) write the Executor report with the evidence, the step → test table, assumptions and questions; (4) `check.py --set E8-W03 awaiting_verification`. Do **not** start E8-W02's round 2 or any other task, and do not re-run a green command twice. If the full Docker e2e cannot finish, record the partial run and say so in the report rather than retrying.
+Blocking: no.
