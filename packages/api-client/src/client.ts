@@ -60,7 +60,6 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   /^\/me\/leave-requests$/,
   /^\/me\/leave-requests\/[^/]+\/cancellation$/,
   /^\/me\/card-setup$/,
-  /^\/inactivity-periods$/,
   /^\/inactivity-periods\/[^/]+\/(decision|termination|cancellation)$/,
   /^\/leave-requests\/[^/]+\/decision$/,
   /^\/members\/[^/]+\/(leave|reactivation|card-setup-link)$/,

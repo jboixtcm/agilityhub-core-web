@@ -75,15 +75,7 @@ type Plan = components["schemas"]["Plan"] & {
 };
 type Role = "ADMIN" | "INSTRUCTOR" | "MEMBER";
 type MemberDialog =
-  | "block"
-  | "impersonate"
-  | "inactivity"
-  | "leave"
-  | "payment"
-  | "plan"
-  | "resend"
-  | "roles"
-  | null;
+  "block" | "impersonate" | "inactivity" | "leave" | "payment" | "plan" | "resend" | "roles" | null;
 
 interface Feedback {
   message: string;
@@ -656,7 +648,9 @@ function MemberSummary({
                 {erased ? null : (
                   <Button
                     className="census-record__inline-action"
-                    onClick={() => { setDialog("plan"); }}
+                    onClick={() => {
+                      setDialog("plan");
+                    }}
                     variant="ghost"
                   >
                     {t("admin-census:common.edit")}
@@ -862,42 +856,65 @@ function MemberSummary({
               offered (E7-W07 step 3). */}
           {erased ? null : (
             <div className="census-record__footer-actions">
-              {modules.includes("INACTIVITY") ? (
-                <Button onClick={() => { setDialog("inactivity"); }} variant="ghost">
+              {member.status === "LEFT" ? (
+                <Button
+                  onClick={() => {
+                    setDialog("leave");
+                  }}
+                  variant="ghost"
+                >
+                  {t("admin-census:reactivation.action")}
+                </Button>
+              ) : modules.includes("INACTIVITY") ? (
+                <Button
+                  onClick={() => {
+                    setDialog("inactivity");
+                  }}
+                  variant="ghost"
+                >
                   <Icon aria-hidden="true" name="palm" />
                   {t("admin-census:member.actions.inactivity")}
                 </Button>
               ) : null}
-              <Button
-                onClick={() => {
-                  if (member.bookingBlock.active) {
-                    void run(async () => {
-                      await client.DELETE("/members/{id}/booking-block", {
-                        params: { path: { id: member.id } },
-                      });
-                      onChange({
-                        ...overview,
-                        member: { ...member, bookingBlock: { active: false } },
-                      });
-                      onFeedback({
-                        message: t("admin-census:member.feedback.unblocked"),
-                        tone: "success",
-                      });
-                    }, "page");
-                  } else {
-                    setDialog("block");
-                  }
-                }}
-                variant="ghost"
-              >
-                <Icon aria-hidden="true" name={member.bookingBlock.active ? "unlock" : "lock"} />
-                {member.bookingBlock.active
-                  ? t("admin-census:member.actions.unblock")
-                  : t("admin-census:member.actions.block")}
-              </Button>
-              <Button onClick={() => { setDialog("leave"); }} variant="ghost">
-                {t("admin-census:member.actions.leave")}
-              </Button>
+              {member.status === "LEFT" ? null : (
+                <Button
+                  onClick={() => {
+                    if (member.bookingBlock.active) {
+                      void run(async () => {
+                        await client.DELETE("/members/{id}/booking-block", {
+                          params: { path: { id: member.id } },
+                        });
+                        onChange({
+                          ...overview,
+                          member: { ...member, bookingBlock: { active: false } },
+                        });
+                        onFeedback({
+                          message: t("admin-census:member.feedback.unblocked"),
+                          tone: "success",
+                        });
+                      }, "page");
+                    } else {
+                      setDialog("block");
+                    }
+                  }}
+                  variant="ghost"
+                >
+                  <Icon aria-hidden="true" name={member.bookingBlock.active ? "unlock" : "lock"} />
+                  {member.bookingBlock.active
+                    ? t("admin-census:member.actions.unblock")
+                    : t("admin-census:member.actions.block")}
+                </Button>
+              )}
+              {member.status === "LEFT" ? null : (
+                <Button
+                  onClick={() => {
+                    setDialog("leave");
+                  }}
+                  variant="ghost"
+                >
+                  {t("admin-census:member.actions.leave")}
+                </Button>
+              )}
             </div>
           )}
         </Card>
@@ -1141,7 +1158,7 @@ function MemberSummary({
 
 export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient; id?: string }) {
   const branding = useBranding();
-  const { t } = useTranslation("admin-census");
+  const { i18n, t } = useTranslation("admin-census");
   const [overview, setOverview] = useState<MemberOverview>();
   // Why the record could not be read: a `409 MEMBER_ERASED` is final, anything else retried.
   const [failure, setFailure] = useState<{ error: unknown }>();
@@ -1197,6 +1214,7 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
     return <LoadingRecord />;
   }
   const member = overview.member;
+  const locale = normalizeLocale(i18n.resolvedLanguage ?? branding.defaultLocale);
   const joinedYear =
     member.joinedAt == null ? undefined : new Date(member.joinedAt).getUTCFullYear();
   const holder = overview.familyGroup?.holderMemberId === member.id;
@@ -1229,14 +1247,14 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
               {member.displayStatus.date == null
                 ? t("admin-census:inactivity.badgeOpen")
                 : t("admin-census:inactivity.badgeUntil", {
-                    date: formatDate(member.displayStatus.date, branding.defaultLocale, false),
+                    date: formatDate(member.displayStatus.date, locale, false),
                   })}
             </Badge>
           ) : null}
           {member.displayStatus.kind === "LEAVE_SCHEDULED" && member.displayStatus.date != null ? (
             <Badge tone="warning">
               {t("admin-census:leave.badgeScheduled", {
-                date: formatDate(member.displayStatus.date, branding.defaultLocale),
+                date: formatDate(member.displayStatus.date, locale),
               })}
             </Badge>
           ) : null}
@@ -1358,8 +1376,12 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
         <MemberInactivityDrawer
           client={client}
           memberId={member.id}
-          onChanged={() => { setReload((value) => value + 1); }}
-          onClose={() => { setMemberDialog(null); }}
+          onChanged={() => {
+            setReload((value) => value + 1);
+          }}
+          onClose={() => {
+            setMemberDialog(null);
+          }}
           open={memberDialog === "inactivity"}
         />
       ) : null}
@@ -1371,11 +1393,13 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
             if (saved?.id === member.id) setOverview({ ...overview, member: saved });
             else setReload((value) => value + 1);
           }}
-          onClose={() => { setMemberDialog(null); }}
+          onClose={() => {
+            setMemberDialog(null);
+          }}
           open={memberDialog === "leave"}
         />
       ) : null}
-      {branding.modules.includes("BILLING") && !erased ? (
+      {branding.modules.includes("BILLING") && (!erased || memberDialog === "payment") ? (
         <MemberPaymentMethodDrawer
           client={client}
           memberId={member.id}
@@ -1386,7 +1410,10 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
             });
             setFeedback({ message: t("admin-census:member.feedback.payment"), tone: "success" });
           }}
-          onClose={() => { setMemberDialog(null); }}
+          onClose={() => {
+            setMemberDialog(null);
+          }}
+          onErased={onErased}
           open={memberDialog === "payment"}
           paymentMethod={member.paymentMethod}
         />
@@ -1395,7 +1422,9 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
         <MemberPlanDrawer
           client={client}
           member={member}
-          onClose={() => { setMemberDialog(null); }}
+          onClose={() => {
+            setMemberDialog(null);
+          }}
           open={memberDialog === "plan"}
         />
       ) : null}

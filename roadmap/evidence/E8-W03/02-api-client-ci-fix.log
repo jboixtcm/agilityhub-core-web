@@ -1,0 +1,13 @@
+
+> @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> vitest run src/index.test.ts src/mocks/list-fields.test.ts
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+
+ Test Files  2 passed (2)
+      Tests  29 passed (29)
+   Start at  10:14:40
+   Duration  1.13s (transform 43%, tests 34%, import 22%)
+

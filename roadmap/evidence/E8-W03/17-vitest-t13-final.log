@@ -1,0 +1,17 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/census/MemberInactivityDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/census/InactivityLeavePage.test.tsx src/census/CensusListPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  4 passed (4)
+      Tests  16 passed (16)
+   Start at  10:21:14
+   Duration  4.13s (transform 34%, tests 30%, environment 18%, import 12%, setup 5%)
+
+  Transform  transforming modules took 3.56s · 34% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

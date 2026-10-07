@@ -116,8 +116,8 @@ test.describe("E2-W02 census records", () => {
 
     await expect(page.getByRole("heading", { exact: true, name: "Auditoria" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Bloqueja les reserves" })).toBeVisible();
-    await expect(page.getByRole("link", { exact: true, name: "Inactivitat" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Baixa (amb data)" })).toBeVisible();
+    await expect(page.getByRole("button", { exact: true, name: "Inactivitat" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Baixa (amb data)" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Tota l'auditoria ›" })).toBeVisible();
     await expect(page.getByRole("link", { name: /Tots els rebuts/u })).toHaveCount(0);
     await page.screenshot({

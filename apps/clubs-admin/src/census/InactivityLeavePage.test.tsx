@@ -4,7 +4,7 @@ import brandingFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import type { ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
@@ -36,10 +36,12 @@ describe("T-13-31 inactivity and leave queues", () => {
     render(await provider(<InactivityLeavePage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} />));
     expect(await screen.findByRole("tab", { name: "Inactivitats" })).toBeVisible();
     expect(screen.getByRole("tab", { name: "Baixes" })).toBeVisible();
-    expect(requests).toEqual(expect.arrayContaining([
-      expect.objectContaining({ filters: ["state:in:REQUESTED,APPROVED,ACTIVE"], sort: ["fromMonth,asc"] }),
-      expect.objectContaining({ filters: ["state:eq:PENDING"], sort: ["requestedAt,asc"] }),
-    ]));
+    await waitFor(() => {
+      expect(requests).toEqual(expect.arrayContaining([
+        expect.objectContaining({ filters: ["state:in:REQUESTED,APPROVED,ACTIVE"], sort: ["fromMonth,asc"] }),
+        expect.objectContaining({ filters: ["state:eq:PENDING"], sort: ["requestedAt,asc"] }),
+      ]));
+    });
   });
 
   it("sums the two lifecycle counters in the menu badge", async () => {

@@ -40,7 +40,7 @@ test("T-14-25 / T-04-33 validates a D1 pending signup in D2 and refreshes the co
   await expect(page.getByText("87%", { exact: true })).toBeVisible();
   await expect(page.getByRole("figure", { name: "Gossos per nivell — 242 actius" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Preinscripcions\s*3/u })).toBeVisible();
-  await expect(page.getByRole("link", { name: /Inactivitats i baixes\s*1/u })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Inactivitats i baixes\s*2/u })).toBeVisible();
   await expect(page.getByRole("link", { name: /Seguiment alumnes\s*5/u })).toBeVisible();
   await page.screenshot({
     fullPage: true,

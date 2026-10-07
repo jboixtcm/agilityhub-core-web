@@ -1,0 +1,240 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/census/CensusRecordPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/CensusRecordPage.test.tsx (27 tests | 1 failed) 2433ms
+   ❯ E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final (8)
+     × E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 77ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+TestingLibraryElementError: Found multiple elements with the text: ···· ···· ···· ···· 2231
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<strong>[39m
+  [0m · [0m
+  [0m···· ···· ···· ···· 2231[0m
+[36m</strong>[39m
+
+Ignored nodes: comments, script, style
+[36m<p>[39m
+  [0mDomiciliació[0m
+  [0m · ···· ···· ···· ···· 2231[0m
+  [0m · Laura Serra Vidal[0m
+[36m</p>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_7d_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_7d_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_7d_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_7d_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_7d_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_7d_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_7d_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_7d_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mContacte[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mlaura.serra@example.test · feina.laura@example.test · +34 655100101 (Laura) · +34 617100102 (Joan)[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mModalitat[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0mAbonat · 2 gossos[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mMode de facturació[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mQuota mensual[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mPagament[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [0mDomiciliació[0m
+                    [36m<strong>[39m
+                      [0m · [0m
+                      [0m···· ···· ···· ···· 2231[0m
+                    [36m</strong>[39m
+                    [0m [0m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                    [36m>[39m
+                      [0mcanvi només admin[0m
+                    [36m</span>[39m
+                    [0m [0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__data-row"[39m
+                [36m>[39m
+                  [36m<dt>[39m
+                    [0mProper rebut[0m
+                  [36m</dt>[39m
+                  [36m<dd>[39m
+                    [36m<strong>[39m
+                      [0m01/09/2026[0m
+                    [36m</strong>[39m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m90,00 €[0m
+                  [36m</dd>[39m
+                [36m</div>[39m
+                [36m<div[39m
+ ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ Object.unchanged src/census/CensusRecordPage.test.tsx:365:23
+    363|       submit: "Desa",
+    364|       unchanged: () => {
+    365|         expect(screen.getByText("···· ···· ···· ···· 2231", { exact: f…
+       |                       ^
+    366|       },
+    367|     },
+ ❯ src/census/CensusRecordPage.test.tsx:482:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 26 passed (27)
+   Start at  10:22:59
+   Duration  3.80s (tests 66%, transform 18%, environment 9%, import 6%, setup 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/census/CensusRecordPage.test.tsx`
+Exit status 1

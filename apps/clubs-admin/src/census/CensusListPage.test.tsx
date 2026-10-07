@@ -161,6 +161,13 @@ describe("T-03-38 D5 universal member list", () => {
   });
 
   it("T-13-22 offers the leave columns and keeps the system leave view non-deletable", async () => {
+    const memberRequests: (string | null)[] = [];
+    server.events.on("request:start", ({ request }) => {
+      const url = new URL(request.url);
+      if (url.pathname.endsWith("/api/v1/members")) {
+        memberRequests.push(url.searchParams.get("fields"));
+      }
+    });
     window.history.pushState(null, "", "/abonats");
     await renderPage("members");
     expect(await screen.findByText("Laura Serra Vidal")).toBeVisible();
@@ -176,6 +183,8 @@ describe("T-03-38 D5 universal member list", () => {
       target: { value: systemView.value },
     });
     expect(screen.queryByRole("button", { name: "Elimina la vista" })).not.toBeInTheDocument();
+    expect(await screen.findByRole("columnheader", { name: "Origen de la baixa" })).toBeVisible();
+    expect(memberRequests).toContain(null);
   });
 });
 

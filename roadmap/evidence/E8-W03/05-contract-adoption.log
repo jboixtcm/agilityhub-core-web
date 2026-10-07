@@ -1,0 +1,5 @@
+git show 91b8de7^:packages/api-client/openapi/openapi.next.json | cmp - packages/api-client/openapi/openapi.json
+cmp exit 0
+sha256sum packages/api-client/openapi/openapi.json packages/api-client/openapi/pending.json
+a21995bbece09a02c40194015df1ca22a9b8437451f168dd6baf0b5eb81bf3f2  packages/api-client/openapi/openapi.json
+8d3d73f0064323f48dec389691bd598fe38e8f9a2d12960d5c315432d628f4c2  packages/api-client/openapi/pending.json

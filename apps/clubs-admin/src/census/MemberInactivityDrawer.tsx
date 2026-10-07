@@ -1,22 +1,6 @@
-import {
-  isApiError,
-  type ApiClient,
-  type components,
-  useSubmissionKeys,
-} from "@agilityhub/api-client";
+import { isApiError, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
-import {
-  Badge,
-  Button,
-  Checkbox,
-  Drawer,
-  FormField,
-  Input,
-  Modal,
-  Textarea,
-  Toast,
-  useBranding,
-} from "@agilityhub/ui";
+import { Badge, Button, Checkbox, Drawer, FormField, Input, Modal, Textarea, Toast, useBranding } from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -24,24 +8,10 @@ type Period = components["schemas"]["InactivityPeriod"];
 type PeriodRow = components["schemas"]["InactivityPeriodListItem"];
 
 function detail(error: unknown, key: string): unknown {
-  return isApiError(error) && typeof error.details === "object" && error.details !== null
-    ? (error.details as Record<string, unknown>)[key]
-    : undefined;
+  return isApiError(error) && typeof error.details === "object" && error.details !== null ? (error.details as Record<string, unknown>)[key] : undefined;
 }
 
-export function MemberInactivityDrawer({
-  client,
-  memberId,
-  onChanged,
-  onClose,
-  open,
-}: {
-  client: ApiClient;
-  memberId: string;
-  onChanged: () => void;
-  onClose: () => void;
-  open: boolean;
-}) {
+export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, open }: { client: ApiClient; memberId: string; onChanged: () => void; onClose: () => void; open: boolean }) {
   const { t } = useTranslation(["admin-census", "enums", "errors"]);
   const branding = useBranding();
   const formats = useClubFormats();
@@ -66,7 +36,6 @@ export function MemberInactivityDrawer({
   useEffect(() => {
     if (!open) return undefined;
     let current = true;
-    setLoading(true);
     void Promise.all([
       client.GET("/inactivity-periods", {
         params: {
@@ -90,9 +59,7 @@ export function MemberInactivityDrawer({
         if (!current) return;
         const nextRows = list.data?.items ?? [];
         setRows(nextRows);
-        const live = nextRows.find((item) =>
-          item.state === "REQUESTED" || item.state === "APPROVED" || item.state === "ACTIVE",
-        );
+        const live = nextRows.find((item) => item.state === "REQUESTED" || item.state === "APPROVED" || item.state === "ACTIVE");
         if (live !== undefined) {
           const result = await client.GET("/inactivity-periods/{id}", {
             params: { path: { id: live.id } },
@@ -135,16 +102,26 @@ export function MemberInactivityDrawer({
     if (!open) keys.drop(memberId);
   }, [keys, memberId, open]);
 
-  const submit = async (
-    signature: string,
-    write: (key: string) => Promise<unknown>,
-    onSuccess?: (result: unknown) => void,
-  ) => {
+  const submit = async (signature: string, write: (key: string) => Promise<unknown>, onSuccess?: (result: unknown) => void) => {
     setPending(true);
     setFailure(undefined);
     try {
       const result = await keys.send(signature, write, memberId);
       onSuccess?.(result);
+      setReload((value) => value + 1);
+      onChanged();
+    } catch (error) {
+      setFailure(error);
+      if (isApiError(error, "STALE_VERSION")) setReload((value) => value + 1);
+    } finally {
+      setPending(false);
+    }
+  };
+  const submitUnkeyed = async (write: () => Promise<unknown>) => {
+    setPending(true);
+    setFailure(undefined);
+    try {
+      await write();
       setReload((value) => value + 1);
       onChanged();
     } catch (error) {
@@ -164,18 +141,11 @@ export function MemberInactivityDrawer({
     }
     if (isApiError(failure, "INACTIVITY_OVERLAP")) return t("admin-census:inactivity.errors.overlap");
     if (isApiError(failure, "INACTIVITY_NOT_APPLICABLE")) return t("admin-census:inactivity.notApplicable");
-    return isApiError(failure)
-      ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") })
-      : t("admin-census:common.genericError");
+    return isApiError(failure) ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") }) : t("admin-census:common.genericError");
   }, [failure, t]);
 
   return (
-    <Drawer
-      closeLabel={t("admin-census:common.close")}
-      onClose={onClose}
-      open={open}
-      title={t("admin-census:inactivity.title")}
-    >
+    <Drawer closeLabel={t("admin-census:common.close")} onClose={onClose} open={open} title={t("admin-census:inactivity.title")}>
       {loading ? <p role="status">{t("admin-census:common.loading")}</p> : null}
       {isApiError(failure, "INACTIVITY_NOT_APPLICABLE") ? (
         <p role="alert">{t("admin-census:inactivity.notApplicable")}</p>
@@ -185,11 +155,7 @@ export function MemberInactivityDrawer({
             <section className="census-record__fieldset">
               <h3>{t("admin-census:inactivity.current")}</h3>
               <p>
-                <Badge>{t(`enums:inactivityState.${period.state}`)}</Badge> ·{" "}
-                {formats.formatMonthTitle(period.fromMonth)} ·{" "}
-                {period.toMonth === null || period.toMonth === undefined
-                  ? t("admin-census:inactivity.openEnded")
-                  : formats.formatMonthTitle(period.toMonth)}
+                <Badge>{t(`enums:inactivityState.${period.state}`)}</Badge> · {formats.formatMonthTitle(period.fromMonth)} · {period.toMonth === null || period.toMonth === undefined ? t("admin-census:inactivity.openEnded") : formats.formatMonthTitle(period.toMonth)}
               </p>
               {period.comments == null ? null : <p>{period.comments}</p>}
               {!branding.modules.includes("BILLING") || period.feeSnapshot == null ? null : (
@@ -224,10 +190,7 @@ export function MemberInactivityDrawer({
                 <ul className="census-record__history">
                   {period.history.map((entry) => (
                     <li key={`${entry.at}-${entry.fromMonth}`}>
-                      {formats.formatDateTime(entry.at)} · {formats.formatMonthTitle(entry.fromMonth)} ·{" "}
-                      {entry.toMonth == null
-                        ? t("admin-census:inactivity.openEnded")
-                        : formats.formatMonthTitle(entry.toMonth)}
+                      {formats.formatDateTime(entry.at)} · {formats.formatMonthTitle(entry.fromMonth)} · {entry.toMonth == null ? t("admin-census:inactivity.openEnded") : formats.formatMonthTitle(entry.toMonth)}
                     </li>
                   ))}
                 </ul>
@@ -237,27 +200,37 @@ export function MemberInactivityDrawer({
 
           {period?.state === "REQUESTED" ? (
             <section className="census-record__form">
-              <FormField id="inactivity-decision-note" label={t("admin-census:inactivity.note") }>
-                <Textarea id="inactivity-decision-note" maxLength={500} onChange={(event) => { setNote(event.currentTarget.value); }} value={note} />
+              <FormField id="inactivity-decision-note" label={t("admin-census:inactivity.note")}>
+                <Textarea
+                  id="inactivity-decision-note"
+                  maxLength={500}
+                  onChange={(event) => {
+                    setNote(event.currentTarget.value);
+                  }}
+                  value={note}
+                />
               </FormField>
               <div className="census-record__dialog-actions">
                 <Button
                   disabled={pending}
-                  onClick={() => void submit(
-                    JSON.stringify({ id: period.id, decision: "DENIED", note }),
-                    (key) => client.POST("/inactivity-periods/{id}/decision", {
-                      body: { decision: "DENIED", ...(note.trim() === "" ? {} : { note }) },
-                      headers: { "Idempotency-Key": key },
-                      params: { path: { id: period.id } },
-                    }),
-                  )}
+                  onClick={() =>
+                    void submit(JSON.stringify({ id: period.id, decision: "DENIED", note }), (key) =>
+                      client.POST("/inactivity-periods/{id}/decision", {
+                        body: { decision: "DENIED", ...(note.trim() === "" ? {} : { note }) },
+                        headers: { "Idempotency-Key": key },
+                        params: { path: { id: period.id } },
+                      }),
+                    )
+                  }
                   variant="secondary"
                 >
                   {t("admin-census:inactivity.deny")}
                 </Button>
                 <Button
                   loading={pending}
-                  onClick={() => { setConfirmApprove(true); }}
+                  onClick={() => {
+                    setConfirmApprove(true);
+                  }}
                 >
                   {t("admin-census:inactivity.approve")}
                 </Button>
@@ -266,7 +239,12 @@ export function MemberInactivityDrawer({
           ) : null}
 
           {(period?.state === "APPROVED" || period?.state === "ACTIVE") && !editing ? (
-            <Button onClick={() => { setEditing(true); }} variant="secondary">
+            <Button
+              onClick={() => {
+                setEditing(true);
+              }}
+              variant="secondary"
+            >
               {t("admin-census:inactivity.modify")}
             </Button>
           ) : null}
@@ -283,42 +261,61 @@ export function MemberInactivityDrawer({
                   toMonth: toMonth === "" ? null : toMonth,
                 };
                 if (period === undefined) {
-                  void submit(JSON.stringify({ memberId, ...body }), (key) =>
+                  void submitUnkeyed(() =>
                     client.POST("/inactivity-periods", {
                       body: { memberId, ...body },
-                      headers: { "Idempotency-Key": key },
                     }),
                   );
                 } else {
-                  void submit(JSON.stringify({ id: period.id, version: period.version, ...body }), (key) =>
+                  void submitUnkeyed(() =>
                     client.PATCH("/inactivity-periods/{id}", {
                       body: { ...body, version: period.version },
-                      headers: { "Idempotency-Key": key },
                       params: { path: { id: period.id } },
                     }),
                   );
                 }
               }}
             >
-              <h3>
-                {period === undefined
-                  ? t("admin-census:inactivity.new")
-                  : t("admin-census:inactivity.modify")}
-              </h3>
+              <h3>{period === undefined ? t("admin-census:inactivity.new") : t("admin-census:inactivity.modify")}</h3>
               <FormField id="inactivity-from" label={t("admin-census:inactivity.fromMonth")}>
-                <Input id="inactivity-from" onChange={(event) => { setFromMonth(event.currentTarget.value); }} required type="month" value={fromMonth} />
+                <Input
+                  id="inactivity-from"
+                  onChange={(event) => {
+                    setFromMonth(event.currentTarget.value);
+                  }}
+                  required
+                  type="month"
+                  value={fromMonth}
+                />
               </FormField>
               <FormField id="inactivity-to" label={t("admin-census:inactivity.toMonth")}>
-                <Input id="inactivity-to" onChange={(event) => { setToMonth(event.currentTarget.value); }} type="month" value={toMonth} />
+                <Input
+                  id="inactivity-to"
+                  onChange={(event) => {
+                    setToMonth(event.currentTarget.value);
+                  }}
+                  type="month"
+                  value={toMonth}
+                />
               </FormField>
               <FormField id="inactivity-comments" label={t("admin-census:inactivity.comments")}>
-                <Textarea id="inactivity-comments" onChange={(event) => { setComments(event.currentTarget.value); }} value={comments} />
+                <Textarea
+                  id="inactivity-comments"
+                  maxLength={500}
+                  onChange={(event) => {
+                    setComments(event.currentTarget.value);
+                  }}
+                  value={comments}
+                />
               </FormField>
               <label className="census-record__check-row">
-                <Checkbox checked={overrideDeadline} onChange={(event) => {
-                  setOverrideDeadline(event.currentTarget.checked);
-                  if (event.currentTarget.checked && isApiError(failure, "INACTIVITY_DEADLINE_PASSED")) setFailure(undefined);
-                }} />
+                <Checkbox
+                  checked={overrideDeadline}
+                  onChange={(event) => {
+                    setOverrideDeadline(event.currentTarget.checked);
+                    if (event.currentTarget.checked && isApiError(failure, "INACTIVITY_DEADLINE_PASSED")) setFailure(undefined);
+                  }}
+                />
                 {t("admin-census:inactivity.overrideDeadline", { day: deadlineDay })}
               </label>
               <Button loading={pending} type="submit">
@@ -330,11 +327,15 @@ export function MemberInactivityDrawer({
           {period?.state === "ACTIVE" ? (
             <Button
               disabled={pending || toMonth === ""}
-              onClick={() => void submit(JSON.stringify({ id: period.id, toMonth }), (key) =>
-                client.POST("/inactivity-periods/{id}/termination", {
-                  body: { toMonth }, headers: { "Idempotency-Key": key }, params: { path: { id: period.id } },
-                }),
-              )}
+              onClick={() =>
+                void submit(JSON.stringify({ id: period.id, toMonth }), (key) =>
+                  client.POST("/inactivity-periods/{id}/termination", {
+                    body: { toMonth },
+                    headers: { "Idempotency-Key": key },
+                    params: { path: { id: period.id } },
+                  }),
+                )
+              }
               variant="secondary"
             >
               {t("admin-census:inactivity.terminate")}
@@ -342,11 +343,15 @@ export function MemberInactivityDrawer({
           ) : period?.state === "APPROVED" ? (
             <Button
               disabled={pending}
-              onClick={() => void submit(JSON.stringify({ id: period.id, cancel: true }), (key) =>
-                client.POST("/inactivity-periods/{id}/cancellation", {
-                  body: note.trim() === "" ? {} : { note }, headers: { "Idempotency-Key": key }, params: { path: { id: period.id } },
-                }),
-              )}
+              onClick={() =>
+                void submit(JSON.stringify({ id: period.id, cancel: true }), (key) =>
+                  client.POST("/inactivity-periods/{id}/cancellation", {
+                    body: note.trim() === "" ? {} : { note },
+                    headers: { "Idempotency-Key": key },
+                    params: { path: { id: period.id } },
+                  }),
+                )
+              }
               variant="secondary"
             >
               {t("admin-census:common.cancel")}
@@ -356,23 +361,29 @@ export function MemberInactivityDrawer({
           {errorMessage === undefined ? null : (
             <div role="alert">
               <p>{errorMessage}</p>
-              {isApiError(failure, "INACTIVITY_OVERLAP") && detail(failure, "periodId") !== undefined ? (
-                <a href={`/inactivitats?period=${String(detail(failure, "periodId"))}`}>
-                  {t("admin-census:inactivity.errors.openExisting")}
-                </a>
-              ) : null}
+              {isApiError(failure, "INACTIVITY_OVERLAP") && detail(failure, "periodId") !== undefined ? <a href={`/inactivitats?period=${String(detail(failure, "periodId"))}`}>{t("admin-census:inactivity.errors.openExisting")}</a> : null}
             </div>
           )}
           {rows.length > 1 ? (
             <section>
               <h3>{t("admin-census:inactivity.history")}</h3>
               <ul className="census-record__history">
-                {rows.map((row) => <li key={row.id}>{row.fromMonth ?? "—"} · {row.toMonth ?? "—"} · {row.state === undefined ? "—" : t(`enums:inactivityState.${row.state}`)}</li>)}
+                {rows.map((row) => (
+                  <li key={row.id}>
+                    {row.fromMonth ?? "—"} · {row.toMonth ?? "—"} · {row.state === undefined ? "—" : t(`enums:inactivityState.${row.state}`)}
+                  </li>
+                ))}
               </ul>
             </section>
           ) : null}
           {success === undefined ? null : (
-            <Toast dismissLabel={t("admin-census:common.close")} onDismiss={() => { setSuccess(undefined); }} tone="success">
+            <Toast
+              dismissLabel={t("admin-census:common.close")}
+              onDismiss={() => {
+                setSuccess(undefined);
+              }}
+              tone="success"
+            >
               {success}
             </Toast>
           )}
@@ -380,17 +391,20 @@ export function MemberInactivityDrawer({
       )}
       <Modal
         closeLabel={t("admin-census:common.close")}
-        onClose={() => { setConfirmApprove(false); }}
+        onClose={() => {
+          setConfirmApprove(false);
+        }}
         open={confirmApprove}
         title={t("admin-census:inactivity.approveConfirmTitle")}
       >
-        <p>
-          {cancelBookings
-            ? t("admin-census:inactivity.approveConfirmCancel")
-            : t("admin-census:inactivity.approveConfirmKeep")}
-        </p>
+        <p>{cancelBookings ? t("admin-census:inactivity.approveConfirmCancel") : t("admin-census:inactivity.approveConfirmKeep")}</p>
         <div className="census-record__dialog-actions">
-          <Button onClick={() => { setConfirmApprove(false); }} variant="ghost">
+          <Button
+            onClick={() => {
+              setConfirmApprove(false);
+            }}
+            variant="ghost"
+          >
             {t("admin-census:common.cancel")}
           </Button>
           <Button
@@ -399,11 +413,12 @@ export function MemberInactivityDrawer({
               if (period?.state !== "REQUESTED") return;
               void submit(
                 JSON.stringify({ id: period.id, decision: "APPROVED", note }),
-                (key) => client.POST("/inactivity-periods/{id}/decision", {
-                  body: { decision: "APPROVED", ...(note.trim() === "" ? {} : { note }) },
-                  headers: { "Idempotency-Key": key },
-                  params: { path: { id: period.id } },
-                }),
+                (key) =>
+                  client.POST("/inactivity-periods/{id}/decision", {
+                    body: { decision: "APPROVED", ...(note.trim() === "" ? {} : { note }) },
+                    headers: { "Idempotency-Key": key },
+                    params: { path: { id: period.id } },
+                  }),
                 (result) => {
                   const data = (result as { data?: Period }).data;
                   setConfirmApprove(false);

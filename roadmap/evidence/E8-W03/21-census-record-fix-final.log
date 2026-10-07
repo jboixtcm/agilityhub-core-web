@@ -1,0 +1,129 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/census/CensusRecordPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/CensusRecordPage.test.tsx (27 tests | 1 failed) 2376ms
+   ❯ E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final (8)
+     × E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 68ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final > E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Cancel·la"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Mètode de pagament":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_7n_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  --------------------------------------------------heading:
+
+  Name "Mètode actual":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  alert:
+
+  Name "":
+  [36m<p[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_7n_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_7n_"[39m
+    [36m>[39m
+      [0mMètode de pagament[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record__fieldset"[39m
+    [36m>[39m
+      [36m<h3>[39m
+        [0mMètode actual[0m
+      [36m</h3>[39m
+      [36m<p>[39m
+        [0mDomiciliació[0m
+        [0m · ···· ···· ···· ···· 2231[0m
+        [0m · Laura Serra Vidal[0m
+      [36m</p>[39m
+    [36m</section>[39m
+    [36m<p[39m
+      [33mrole[39m=[32m"alert"[39m
+    [36m>[39m
+      [0mAquest abonat ha estat suprimit i ja no es pot modificar.[0m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/CensusRecordPage.test.tsx:486:42
+    484|         // The record offers no other change either: the member is era…
+    485|         if (dialog !== undefined) {
+    486|           fireEvent.click(within(dialog).getByRole("button", { name: "…
+       |                                          ^
+    487|           expect(dialog).not.toBeInTheDocument();
+    488|         }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 26 passed (27)
+   Start at  10:23:08
+   Duration  3.77s (tests 65%, transform 18%, environment 10%, import 6%, setup 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/census/CensusRecordPage.test.tsx`
+Exit status 1

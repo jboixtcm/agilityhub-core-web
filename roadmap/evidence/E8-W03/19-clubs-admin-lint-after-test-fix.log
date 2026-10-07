@@ -1,0 +1,4 @@
+
+> clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> eslint . --max-warnings 0 --config ../../eslint.config.mjs
+

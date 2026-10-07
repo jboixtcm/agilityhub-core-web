@@ -1,0 +1,62 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/census/MemberInactivityDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/census/InactivityLeavePage.test.tsx src/census/CensusListPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/InactivityLeavePage.test.tsx (2 tests | 1 failed) 183ms
+   ❯ T-13-31 inactivity and leave queues (2)
+     × uses both tabs and the contract default filters and sorts 136ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > uses both tabs and the contract default filters and sorts
+AssertionError: expected [] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   ObjectContaining {
+-     "filters": [
+-       "state:in:REQUESTED,APPROVED,ACTIVE",
+-     ],
+-     "sort": [
+-       "fromMonth,asc",
+-     ],
+-   },
+-   ObjectContaining {
+-     "filters": [
+-       "state:eq:PENDING",
+-     ],
+-     "sort": [
+-       "requestedAt,asc",
+-     ],
+-   },
+- ]
++ []
+
+ ❯ src/census/InactivityLeavePage.test.tsx:39:22
+     37|     expect(await screen.findByRole("tab", { name: "Inactivitats" })).t…
+     38|     expect(screen.getByRole("tab", { name: "Baixes" })).toBeVisible();
+     39|     expect(requests).toEqual(expect.arrayContaining([
+       |                      ^
+     40|       expect.objectContaining({ filters: ["state:in:REQUESTED,APPROVED…
+     41|       expect.objectContaining({ filters: ["state:eq:PENDING"], sort: […
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 15 passed (16)
+   Start at  10:21:02
+   Duration  4.24s (transform 33%, tests 32%, environment 19%, import 12%, setup 5%)
+
+  Transform  transforming modules took 3.45s · 33% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/census/MemberInactivityDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/census/InactivityLeavePage.test.tsx src/census/CensusListPage.test.tsx`
+Exit status 1

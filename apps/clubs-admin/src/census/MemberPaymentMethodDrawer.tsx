@@ -11,6 +11,7 @@ export function MemberPaymentMethodDrawer({
   memberId,
   onChanged,
   onClose,
+  onErased,
   open,
   paymentMethod,
 }: {
@@ -18,6 +19,7 @@ export function MemberPaymentMethodDrawer({
   memberId: string;
   onChanged: (paymentMethod: Payment) => void;
   onClose: () => void;
+  onErased: () => void;
   open: boolean;
   paymentMethod?: Payment | null | undefined;
 }) {
@@ -30,19 +32,30 @@ export function MemberPaymentMethodDrawer({
   const [checkoutUrl, setCheckoutUrl] = useState<string>();
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<unknown>();
+  const [erased, setErased] = useState(false);
 
   useEffect(() => {
-    if (open) {
-      setType(paymentMethod?.type ?? "SEPA_DD");
-      setHolderName(paymentMethod?.holderName ?? "");
-      setIban("");
-      setChannel(paymentMethod?.channel ?? "CASH");
-      setCheckoutUrl(undefined);
-      setFailure(undefined);
-    } else {
-      keys.drop(memberId);
+    if (!open) keys.drop(memberId);
+  }, [keys, memberId, open]);
+
+  const close = () => {
+    setType(paymentMethod?.type ?? "SEPA_DD");
+    setHolderName(paymentMethod?.holderName ?? "");
+    setIban("");
+    setChannel(paymentMethod?.channel ?? "CASH");
+    setCheckoutUrl(undefined);
+    setFailure(undefined);
+    setErased(false);
+    keys.drop(memberId);
+    onClose();
+  };
+  const fail = (cause: unknown) => {
+    setFailure(cause);
+    if (isApiError(cause, "MEMBER_ERASED")) {
+      setErased(true);
+      onErased();
     }
-  }, [keys, memberId, open, paymentMethod]);
+  };
 
   const error = failure === undefined
     ? undefined
@@ -53,7 +66,7 @@ export function MemberPaymentMethodDrawer({
         : t("admin-census:common.genericError");
 
   return (
-    <Drawer closeLabel={t("admin-census:common.close")} onClose={onClose} open={open} title={t("admin-census:member.payment.title")}>
+    <Drawer closeLabel={t("admin-census:common.close")} onClose={close} open={open} title={t("admin-census:member.payment.title")}>
       {paymentMethod === undefined || paymentMethod === null ? null : (
         <section className="census-record__fieldset">
           <h3>{t("admin-census:paymentMethod.current")}</h3>
@@ -72,7 +85,7 @@ export function MemberPaymentMethodDrawer({
           ) : null}
         </section>
       )}
-      <form className="census-record__form" onSubmit={(event) => {
+      {erased ? <><p role="alert">{t("errors:MEMBER_ERASED")}</p><Button onClick={close} variant="ghost">{t("admin-census:common.cancel")}</Button></> : <form className="census-record__form" onSubmit={(event) => {
         event.preventDefault();
         if (type === "CARD") return;
         const body: components["schemas"]["PaymentMethodPatch"] = type === "SEPA_DD"
@@ -89,7 +102,7 @@ export function MemberPaymentMethodDrawer({
             if (result.data === undefined) throw new TypeError("Payment response did not contain data");
             onChanged(result.data);
           } catch (cause) {
-            setFailure(cause);
+            fail(cause);
           } finally {
             setPending(false);
           }
@@ -133,20 +146,20 @@ export function MemberPaymentMethodDrawer({
             ).then((result) => {
               if (result.data === undefined) throw new TypeError("Card setup response did not contain data");
               setCheckoutUrl(result.data.checkoutUrl);
-            }).catch((cause: unknown) => { setFailure(cause); }).finally(() => { setPending(false); });
+            }).catch(fail).finally(() => { setPending(false); });
           }} type="button">
             {t("admin-census:paymentMethod.sendCardLink")}
           </Button>
         )}
         {type === "CARD" || checkoutUrl !== undefined ? null : <Button loading={pending} type="submit">{t("admin-census:common.save")}</Button>}
-      </form>
-      {checkoutUrl === undefined ? null : (
+      </form>}
+      {erased || checkoutUrl === undefined ? null : (
         <p>
           <a href={checkoutUrl} rel="noreferrer" target="_blank">{checkoutUrl}</a>{" "}
           <Button onClick={() => void navigator.clipboard.writeText(checkoutUrl)} variant="ghost">{t("admin-census:paymentMethod.copy")}</Button>
         </p>
       )}
-      {error === undefined ? null : <p role="alert">{error}</p>}
+      {erased || error === undefined ? null : <p role="alert">{error}</p>}
     </Drawer>
   );
 }

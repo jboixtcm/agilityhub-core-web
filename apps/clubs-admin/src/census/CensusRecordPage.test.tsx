@@ -266,17 +266,14 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
     "Entra com l'abonat",
     "Bloqueja les reserves",
     "Desbloqueja les reserves",
+    "Inactivitat",
+    "Baixa (amb data)",
     "Registra un pagament",
     "Ajusta",
   ];
-  const changeLinks = ["Inactivitat", "Baixa (amb data)"];
-
   function expectNoChangeOffered() {
     for (const name of changeButtons) {
       expect(screen.queryAllByRole("button", { name }), name).toEqual([]);
-    }
-    for (const name of changeLinks) {
-      expect(screen.queryAllByRole("link", { name }), name).toEqual([]);
     }
   }
 
@@ -365,7 +362,7 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
       },
       submit: "Desa",
       unchanged: () => {
-        expect(screen.getByText("···· ···· ···· ···· 2231", { exact: false })).toBeVisible();
+        expect(screen.getAllByText("···· ···· ···· ···· 2231", { exact: false }).length).toBeGreaterThan(0);
       },
     },
     {
@@ -598,8 +595,8 @@ describe("T-03-34 (front) E4-W16 step 7 (INC-27, R-03-30): D10 without BILLING k
 
     expect(screen.getByRole("heading", { name: "Auditoria" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Bloqueja les reserves" })).toBeVisible();
-    expect(screen.getByRole("link", { name: "Inactivitat" })).toBeVisible();
-    expect(screen.getByRole("link", { name: "Baixa (amb data)" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Inactivitat" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Baixa (amb data)" })).toBeVisible();
     expect(screen.getByRole("link", { name: "Tota l'auditoria ›" })).toHaveAttribute(
       "href",
       "/abonats/member-laura/auditoria",

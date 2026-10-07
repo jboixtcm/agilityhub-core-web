@@ -3,13 +3,7 @@ import { http, HttpResponse } from "msw";
 import type { components } from "../generated/schema";
 
 import { censusRecordState, ERASED_MEMBER_ID, erasedMemberOverview } from "./fixtures/census";
-import {
-  adminInactivityPeriods,
-  adminLeaveRequests,
-  inactivityContextFixture,
-  inactivityPreviewFixture,
-  leaveContextFixture,
-} from "./fixtures/inactivity";
+import { adminInactivityPeriods, adminLeaveRequests, inactivityContextFixture, inactivityPreviewFixture, leaveContextFixture } from "./fixtures/inactivity";
 import { meInvoiceFixtures, packBalanceFixtures } from "./fixtures/member-self-service";
 import { currentMockScenario } from "./scenarios";
 
@@ -26,9 +20,7 @@ type LeaveDecisionRequest = components["schemas"]["LeaveDecisionRequest"];
 type DirectLeaveRequest = components["schemas"]["DirectLeaveRequest"];
 type ReactivationRequest = components["schemas"]["ReactivationRequest"];
 
-function normalizeOverviewInvoiceStatus(
-  status: string,
-): components["schemas"]["InvoiceStatus"] {
+function normalizeOverviewInvoiceStatus(status: string): components["schemas"]["InvoiceStatus"] {
   switch (status) {
     case "FAILED":
     case "PAID":
@@ -41,16 +33,11 @@ function normalizeOverviewInvoiceStatus(
 }
 
 function error(code: string, status: number, details: Record<string, unknown> = {}) {
-  return HttpResponse.json<ApiError>(
-    { code, details, message: code, traceId: "mock-e8-w02" },
-    { status },
-  );
+  return HttpResponse.json<ApiError>({ code, details, message: code, traceId: "mock-e8-w02" }, { status });
 }
 
 function moduleOff(module: string) {
-  return currentMockScenario().branding.modules.includes(module)
-    ? undefined
-    : error("MODULE_DISABLED", 404, { module });
+  return currentMockScenario().branding.modules.includes(module) ? undefined : error("MODULE_DISABLED", 404, { module });
 }
 
 let inactivity = structuredClone(inactivityContextFixture);
@@ -106,20 +93,8 @@ function localizedLeave(request: Request) {
   const language = (request.headers.get("Accept-Language") ?? "ca").slice(0, 2);
   const labels = {
     ca: leaveContextFixture.reasons.map((item) => item.label),
-    es: [
-      "Ya he aprendido todo lo que quería",
-      "No encuentro tiempo para ir",
-      "No es lo que esperaba",
-      "Condicionantes personales ajenos al club",
-      "Otros",
-    ],
-    en: [
-      "I have learnt everything I wanted",
-      "I cannot find time to attend",
-      "It is not what I expected",
-      "Personal circumstances unrelated to the club",
-      "Other",
-    ],
+    es: ["Ya he aprendido todo lo que quería", "No encuentro tiempo para ir", "No es lo que esperaba", "Condicionantes personales ajenos al club", "Otros"],
+    en: ["I have learnt everything I wanted", "I cannot find time to attend", "It is not what I expected", "Personal circumstances unrelated to the club", "Other"],
   } as const;
   const chosen = language === "es" ? labels.es : language === "en" ? labels.en : labels.ca;
   return {
@@ -140,10 +115,7 @@ export const memberBillingHandlers = [
     if (memberId !== undefined && currentMockScenario().lifecycle === "memberPackPlan") {
       return error("INACTIVITY_NOT_APPLICABLE", 422);
     }
-    const filtered = adminPeriods.filter((item) =>
-      (memberId === undefined || item.member.id === memberId) &&
-      (states === undefined || states.includes(item.state)),
-    );
+    const filtered = adminPeriods.filter((item) => (memberId === undefined || item.member.id === memberId) && (states === undefined || states.includes(item.state)));
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 20);
     const items = filtered.slice(page * size, (page + 1) * size).map((item) => ({
@@ -158,7 +130,14 @@ export const memberBillingHandlers = [
       state: item.state,
       toMonth: item.toMonth,
     }));
-    return HttpResponse.json({ appliedFilters: [], items, page, size, totalItems: filtered.length, totalPages: Math.ceil(filtered.length / size) });
+    return HttpResponse.json({
+      appliedFilters: [],
+      items,
+      page,
+      size,
+      totalItems: filtered.length,
+      totalPages: Math.ceil(filtered.length / size),
+    });
   }),
   http.get("*/api/v1/inactivity-periods/:id", ({ params }) => {
     const refused = moduleOff("INACTIVITY");
@@ -171,20 +150,41 @@ export const memberBillingHandlers = [
     if (refused !== undefined) return refused;
     const body = (await request.json()) as AdminInactivityRequest;
     if (currentMockScenario().lifecycle === "memberPackPlan") return error("INACTIVITY_NOT_APPLICABLE", 422);
-    if (currentMockScenario().lifecycle === "inactivityDeadlinePassed" && body.overrideDeadline !== true)
-      return error("INACTIVITY_DEADLINE_PASSED", 422, { earliestMonth: "2026-11" });
+    if (currentMockScenario().lifecycle === "inactivityDeadlinePassed" && body.overrideDeadline !== true) return error("INACTIVITY_DEADLINE_PASSED", 422, { earliestMonth: "2026-11" });
     const existing = adminPeriods.find((period) => period.member.id === body.memberId && ["REQUESTED", "APPROVED", "ACTIVE"].includes(period.state));
     if (existing !== undefined) return error("INACTIVITY_OVERLAP", 409, { hint: "EXTEND", periodId: existing.id });
     const member = censusRecordState.memberOverview.member;
     const created: components["schemas"]["InactivityPeriod"] = {
-      cancelledBookings: [], comments: body.comments ?? null,
-      decision: { at: "2026-10-05T10:00:00Z", byAccountId: "account-admin", deadlineOverridden: body.overrideDeadline === true, decision: "APPROVED", note: null },
+      cancelledBookings: [],
+      comments: body.comments ?? null,
+      decision: {
+        at: "2026-10-05T10:00:00Z",
+        byAccountId: "account-admin",
+        deadlineOverridden: body.overrideDeadline === true,
+        decision: "APPROVED",
+        note: null,
+      },
       editable: { cancel: true, fromMonth: true, toMonth: true },
-      feeSnapshot: currentMockScenario().branding.modules.includes("BILLING") ? { firstMonth: { amountMinor: 2000, currency: "EUR" }, followingMonths: { amountMinor: 1000, currency: "EUR" } } : null,
-      fromMonth: body.fromMonth, history: [], id: `admin-inactivity-${String(adminPeriods.length + 1)}`,
-      member: { fullName: member.fullName, id: body.memberId, ...(member.memberNumber === undefined ? {} : { memberNumber: member.memberNumber }) }, origin: "BACKOFFICE",
-      requestedAt: "2026-10-05T10:00:00Z", requestedBy: { accountId: "account-admin", impersonatedMemberId: null },
-      state: "APPROVED", toMonth: body.toMonth ?? null, version: 1,
+      feeSnapshot: currentMockScenario().branding.modules.includes("BILLING")
+        ? {
+            firstMonth: { amountMinor: 2000, currency: "EUR" },
+            followingMonths: { amountMinor: 1000, currency: "EUR" },
+          }
+        : null,
+      fromMonth: body.fromMonth,
+      history: [],
+      id: `admin-inactivity-${String(adminPeriods.length + 1)}`,
+      member: {
+        fullName: member.fullName,
+        id: body.memberId,
+        ...(member.memberNumber === undefined ? {} : { memberNumber: member.memberNumber }),
+      },
+      origin: "BACKOFFICE",
+      requestedAt: "2026-10-05T10:00:00Z",
+      requestedBy: { accountId: "account-admin", impersonatedMemberId: null },
+      state: "APPROVED",
+      toMonth: body.toMonth ?? null,
+      version: 1,
     };
     adminPeriods = [created, ...adminPeriods];
     return HttpResponse.json(created, { status: 201 });
@@ -203,7 +203,13 @@ export const memberBillingHandlers = [
     if (item === undefined) return error("NOT_FOUND", 404);
     if (item.state !== "REQUESTED") return error("INACTIVITY_INVALID_STATE", 409);
     item.state = body.decision === "APPROVED" ? "APPROVED" : "DENIED";
-    item.decision = { at: "2026-10-05T10:00:00Z", byAccountId: "account-admin", deadlineOverridden: false, decision: body.decision, note: body.note ?? null };
+    item.decision = {
+      at: "2026-10-05T10:00:00Z",
+      byAccountId: "account-admin",
+      deadlineOverridden: false,
+      decision: body.decision,
+      note: body.note ?? null,
+    };
     item.version += 1;
     return HttpResponse.json(item);
   }),
@@ -211,13 +217,21 @@ export const memberBillingHandlers = [
     const item = adminPeriods.find((period) => period.id === String(params.id));
     if (item === undefined) return error("NOT_FOUND", 404);
     const body = (await request.json()) as components["schemas"]["TerminationRequest"];
-    item.toMonth = body.toMonth; item.state = "FINISHED"; item.finishReason = "ADMIN"; item.finishedAt = "2026-10-05T10:00:00Z"; item.version += 1;
+    item.toMonth = body.toMonth;
+    item.state = "FINISHED";
+    item.finishReason = "ADMIN";
+    item.finishedAt = "2026-10-05T10:00:00Z";
+    item.version += 1;
     return HttpResponse.json(item);
   }),
   http.post("*/api/v1/inactivity-periods/:id/cancellation", ({ params }) => {
     const item = adminPeriods.find((period) => period.id === String(params.id));
     if (item === undefined) return error("NOT_FOUND", 404);
-    item.state = "CANCELLED"; item.cancelReason = "WITHDRAWN"; item.cancelledAt = "2026-10-05T10:00:00Z"; item.cancelledBy = "ADMIN"; item.version += 1;
+    item.state = "CANCELLED";
+    item.cancelReason = "WITHDRAWN";
+    item.cancelledAt = "2026-10-05T10:00:00Z";
+    item.cancelledBy = "ADMIN";
+    item.version += 1;
     return HttpResponse.json(item);
   }),
   http.get("*/api/v1/leave-requests", ({ request }) => {
@@ -226,9 +240,28 @@ export const memberBillingHandlers = [
     const memberId = filters.find((value) => value.startsWith("memberId:eq:"))?.slice("memberId:eq:".length);
     const state = filters.find((value) => value.startsWith("state:eq:"))?.slice("state:eq:".length);
     const filtered = adminLeaves.filter((item) => (memberId === undefined || item.member.id === memberId) && (state === undefined || item.state === state));
-    const page = Number(url.searchParams.get("page") ?? 0); const size = Number(url.searchParams.get("size") ?? 20);
-    const items = filtered.slice(page * size, (page + 1) * size).map((item) => ({ comment: item.comment, effectiveDate: item.decision?.effectiveDate, id: item.id, member: item.member, nps: item.nps, reasonKey: item.reasonKey, requestedAt: item.requestedAt, requestedDate: item.requestedDate, source: item.source, state: item.state }));
-    return HttpResponse.json({ appliedFilters: [], items, page, size, totalItems: filtered.length, totalPages: Math.ceil(filtered.length / size) });
+    const page = Number(url.searchParams.get("page") ?? 0);
+    const size = Number(url.searchParams.get("size") ?? 20);
+    const items = filtered.slice(page * size, (page + 1) * size).map((item) => ({
+      comment: item.comment,
+      effectiveDate: item.decision?.effectiveDate,
+      id: item.id,
+      member: item.member,
+      nps: item.nps,
+      reasonKey: item.reasonKey,
+      requestedAt: item.requestedAt,
+      requestedDate: item.requestedDate,
+      source: item.source,
+      state: item.state,
+    }));
+    return HttpResponse.json({
+      appliedFilters: [],
+      items,
+      page,
+      size,
+      totalItems: filtered.length,
+      totalPages: Math.ceil(filtered.length / size),
+    });
   }),
   http.get("*/api/v1/leave-requests/:id", ({ params }) => {
     const item = adminLeaves.find((leaveRequest) => leaveRequest.id === String(params.id));
@@ -241,7 +274,13 @@ export const memberBillingHandlers = [
     const body = (await request.json()) as LeaveDecisionRequest;
     if (currentMockScenario().lifecycle === "leaveDateInvalid") return error("LEAVE_DATE_INVALID", 422);
     item.state = body.decision === "APPROVED" ? "APPROVED" : "DENIED";
-    item.decision = { at: "2026-10-05T10:00:00Z", byAccountId: "account-admin", decision: body.decision, effectiveDate: body.decision === "APPROVED" ? body.effectiveDate ?? item.requestedDate : null, note: body.note ?? null };
+    item.decision = {
+      at: "2026-10-05T10:00:00Z",
+      byAccountId: "account-admin",
+      decision: body.decision,
+      effectiveDate: body.decision === "APPROVED" ? (body.effectiveDate ?? item.requestedDate) : null,
+      note: body.note ?? null,
+    };
     item.version += 1;
     return HttpResponse.json(item);
   }),
@@ -251,37 +290,64 @@ export const memberBillingHandlers = [
     const member = censusRecordState.memberOverview.member;
     if (member.id !== String(params.id)) return error("NOT_FOUND", 404);
     member.leaveDate = body.effectiveDate;
-    member.displayStatus = { date: body.effectiveDate, kind: "LEAVE_SCHEDULED", label: `baixa prevista ${body.effectiveDate}` };
-    const created = adminLeaveRequests[0];
-    return HttpResponse.json({ ...created, id: `admin-leave-${String(adminLeaves.length + 1)}`, member: { fullName: member.fullName, id: member.id, leaveDate: body.effectiveDate, leftAt: null, leftReason: null, memberNumber: member.memberNumber, status: "ACTIVE" }, requestedDate: body.effectiveDate, source: "ADMIN", state: "APPROVED" }, { status: 201 });
+    member.displayStatus = {
+      date: body.effectiveDate,
+      kind: "LEAVE_SCHEDULED",
+      label: `baixa prevista ${body.effectiveDate}`,
+    };
+    for (const pendingRequest of adminLeaves.filter((item) => item.member.id === member.id && item.state === "PENDING")) {
+      pendingRequest.state = "CANCELLED";
+      pendingRequest.version += 1;
+    }
+    const seed = adminLeaveRequests[0];
+    if (seed === undefined) throw new TypeError("The leave fixture requires a seed row");
+    const created: components["schemas"]["LeaveRequest"] = {
+      ...seed,
+      comment: body.note ?? null,
+      decision: { at: "2026-10-05T10:00:00Z", byAccountId: "account-admin", decision: "APPROVED", effectiveDate: body.effectiveDate, note: body.note ?? null },
+      id: `admin-leave-${String(adminLeaves.length + 1)}`,
+      member: { fullName: member.fullName, id: member.id, leaveDate: body.effectiveDate, leftAt: null, leftReason: null, ...(member.memberNumber === undefined ? {} : { memberNumber: member.memberNumber }), status: "ACTIVE" },
+      origin: "BACKOFFICE",
+      reasonKey: body.reasonKey ?? null,
+      requestedAt: "2026-10-05T10:00:00Z",
+      requestedBy: { accountId: "account-admin", impersonatedMemberId: null },
+      requestedDate: body.effectiveDate,
+      source: "ADMIN",
+      state: "APPROVED",
+      version: 1,
+    };
+    adminLeaves = [created, ...adminLeaves];
+    return HttpResponse.json(created, { status: 201 });
   }),
   http.delete("*/api/v1/members/:id/planned-leave", ({ params }) => {
     const member = censusRecordState.memberOverview.member;
     if (member.id !== String(params.id)) return error("NOT_FOUND", 404);
-    if (member.leaveDate == null) return error("NO_PLANNED_LEAVE", 422);
-    member.leaveDate = null; member.displayStatus = { kind: "ACTIVE", label: "alta" };
+    if (member.leaveDate == null) return error("NO_PLANNED_LEAVE", 409);
+    member.leaveDate = null;
+    member.displayStatus = { kind: "ACTIVE", label: "alta" };
     return new HttpResponse(null, { status: 204 });
   }),
   http.post("*/api/v1/members/:id/reactivation", async ({ params, request }) => {
     const member = censusRecordState.memberOverview.member;
     if (member.id !== String(params.id)) return error("NOT_FOUND", 404);
-    if (member.status !== "LEFT" && currentMockScenario().lifecycle !== "memberLeft") return error("MEMBER_NOT_LEFT", 422);
+    if (member.status !== "LEFT" && currentMockScenario().lifecycle !== "memberLeft") return error("MEMBER_NOT_LEFT", 409);
     const body = (await request.json()) as ReactivationRequest;
-    Object.assign(member, body, { displayStatus: { kind: "ACTIVE", label: "alta" }, leaveDate: null, status: "ACTIVE", version: member.version + 1 });
+    Object.assign(member, body, {
+      displayStatus: { kind: "ACTIVE", label: "alta" },
+      leaveDate: null,
+      status: "ACTIVE",
+      version: member.version + 1,
+    });
     return HttpResponse.json(member);
   }),
   http.post("*/api/v1/members/:id/card-setup-link", ({ params }) => {
     if (String(params.id) !== censusRecordState.memberOverview.member.id) return error("NOT_FOUND", 404);
-    return currentMockScenario().branding.modules.includes("BILLING")
-      ? HttpResponse.json({ checkoutUrl: "https://checkout.example.test/setup/admin-card" }, { status: 201 })
-      : error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
+    return currentMockScenario().branding.modules.includes("BILLING") ? HttpResponse.json({ checkoutUrl: "https://checkout.example.test/setup/admin-card" }, { status: 201 }) : error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
   }),
   http.get("*/api/v1/invoices", ({ request }) => {
     const url = new URL(request.url);
     const filters = url.searchParams.getAll("filter");
-    const memberId = filters
-      .find((filter) => filter.startsWith("memberId:eq:"))
-      ?.slice("memberId:eq:".length);
+    const memberId = filters.find((filter) => filter.startsWith("memberId:eq:"))?.slice("memberId:eq:".length);
     if (memberId !== "member-laura" && memberId !== ERASED_MEMBER_ID) return undefined;
     const items: components["schemas"]["InvoiceListItem"][] =
       memberId === ERASED_MEMBER_ID
@@ -350,12 +416,7 @@ export const memberBillingHandlers = [
   http.post("*/api/v1/me/card-setup", () => {
     const refused = moduleOff("BILLING");
     if (refused !== undefined) return refused;
-    return currentMockScenario().memberBilling === "cardInvalid"
-      ? HttpResponse.json(
-          { checkoutUrl: "https://checkout.example.test/setup/cs_card" },
-          { status: 201 },
-        )
-      : error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
+    return currentMockScenario().memberBilling === "cardInvalid" ? HttpResponse.json({ checkoutUrl: "https://checkout.example.test/setup/cs_card" }, { status: 201 }) : error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
   }),
   http.get("*/api/v1/checkout-sessions/:id", ({ params }) => {
     const refused = moduleOff("BILLING");
@@ -375,13 +436,11 @@ export const memberBillingHandlers = [
   http.get("*/api/v1/me/inactivity-periods", () => {
     const refused = moduleOff("INACTIVITY");
     if (refused !== undefined) return refused;
-    if (currentMockScenario().memberBilling === "packPlan")
-      return error("INACTIVITY_NOT_APPLICABLE", 422);
+    if (currentMockScenario().memberBilling === "packPlan") return error("INACTIVITY_NOT_APPLICABLE", 422);
     return HttpResponse.json({
       ...inactivity,
       fee: currentMockScenario().branding.modules.includes("BILLING") ? inactivity.fee : null,
-      periods:
-        currentMockScenario().memberBilling === "noInactivity" ? [] : inactivity.periods,
+      periods: currentMockScenario().memberBilling === "noInactivity" ? [] : inactivity.periods,
     });
   }),
   http.get("*/api/v1/me/inactivity-periods/preview", () => {
@@ -390,8 +449,7 @@ export const memberBillingHandlers = [
   }),
   http.post("*/api/v1/me/inactivity-periods", async ({ request }) => {
     const body = (await request.json()) as InactivityRequest;
-    if (currentMockScenario().memberBilling === "deadlinePassed")
-      return error("INACTIVITY_DEADLINE_PASSED", 422, { earliestMonth: "2026-11" });
+    if (currentMockScenario().memberBilling === "deadlinePassed") return error("INACTIVITY_DEADLINE_PASSED", 422, { earliestMonth: "2026-11" });
     return HttpResponse.json({ ...inactivity.periods[0], ...body }, { status: 201 });
   }),
   http.patch("*/api/v1/me/inactivity-periods/:id", async ({ params, request }) => {
@@ -448,8 +506,7 @@ export const memberBillingHandlers = [
   }),
   http.post("*/api/v1/upfront-payments", async ({ request }) => {
     const body = (await request.json()) as UpfrontRequest;
-    if (body.amountPaid.amountMinor > body.amountDue.amountMinor)
-      return error("AMOUNT_EXCEEDS_DUE", 422);
+    if (body.amountPaid.amountMinor > body.amountDue.amountMinor) return error("AMOUNT_EXCEEDS_DUE", 422);
     if (body.concept === "PACK" && body.dogId === undefined) return error("PLAN_NOT_PACK", 422);
     const item: components["schemas"]["UpfrontPayment"] = {
       ...body,
@@ -476,22 +533,14 @@ export const memberBillingHandlers = [
     const url = new URL(request.url);
     const memberId = url.searchParams.get("memberId");
     const dogId = url.searchParams.get("dogId");
-    const effectiveMemberId =
-      memberId === "member-laura" ? "20000000-0000-4000-8000-000000000002" : memberId;
-    return HttpResponse.json(
-      packs.filter(
-        (item) =>
-          (effectiveMemberId === null || item.memberId === effectiveMemberId) &&
-          (dogId === null || item.dogId === dogId),
-      ),
-    );
+    const effectiveMemberId = memberId === "member-laura" ? "20000000-0000-4000-8000-000000000002" : memberId;
+    return HttpResponse.json(packs.filter((item) => (effectiveMemberId === null || item.memberId === effectiveMemberId) && (dogId === null || item.dogId === dogId)));
   }),
   http.post("*/api/v1/pack-balances/:id/adjustments", async ({ params, request }) => {
     const body = (await request.json()) as PackAdjustment;
     const balance = packs.find((item) => item.id === String(params.id));
     if (balance === undefined) return error("NOT_FOUND", 404);
-    if (balance.state === "EXPIRED" && body.expiresOn === undefined)
-      return error("VALIDATION_ERROR", 400, { fields: [{ field: "expiresOn", code: "REQUIRED" }] });
+    if (balance.state === "EXPIRED" && body.expiresOn === undefined) return error("VALIDATION_ERROR", 400, { fields: [{ field: "expiresOn", code: "REQUIRED" }] });
     if (balance.remaining + body.delta < 0) return error("PACK_NEGATIVE", 422);
     balance.remaining += body.delta;
     balance.consumed = balance.sessionsTotal - balance.remaining;

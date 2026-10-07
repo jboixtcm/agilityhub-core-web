@@ -128,11 +128,19 @@ function toUniversalSavedView(view: SavedView): UniversalListSavedView {
 }
 
 function queryFor(kind: CensusKind, state: UniversalListState) {
+  const requestedFields = [
+    ...(kind === "members" ? MEMBER_ROW_FIELDS : DOG_ROW_FIELDS),
+    ...state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [column]),
+  ];
+  // E8-T01 publishes the lifecycle filters, but its adopted `x-fields` does not yet publish these
+  // two S13 columns. Asking for either would make the real API reject the projection. Until the
+  // projection contract catches up, request the complete row; `pending.json` supplies their row
+  // types and the API may include them in that non-sparse response.
+  const usesPendingMemberColumn =
+    kind === "members" &&
+    requestedFields.some((field) => field === "leaveSource" || field === "inactivityUntil");
   return {
-    fields: listFields([
-      ...(kind === "members" ? MEMBER_ROW_FIELDS : DOG_ROW_FIELDS),
-      ...state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [column]),
-    ]),
+    ...(usesPendingMemberColumn ? {} : { fields: listFields(requestedFields) }),
     filter: apiFilters(state.filters),
     page: state.page,
     ...(state.q === "" ? {} : { q: state.q }),
@@ -150,9 +158,7 @@ function formatDate(value: string, locale: string, withYear = false): string {
     day: "2-digit",
     month: "2-digit",
     ...(withYear ? { year: "numeric" } : {}),
-  }).format(
-    new Date(Date.UTC(year, month - 1, day)),
-  );
+  }).format(new Date(Date.UTC(year, month - 1, day)));
 }
 
 function toneForStatus(kind: components["schemas"]["DisplayStatus"]["kind"]) {
@@ -629,7 +635,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           key: "leaveDate",
           label: t("census:members.columns.leaveDate"),
           render: (item) =>
-            item.leaveDate === undefined
+            item.leaveDate == null
               ? t("census:values.empty")
               : formatDate(item.leaveDate, locale),
           sortKey: "leaveDate",
