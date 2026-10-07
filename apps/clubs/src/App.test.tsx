@@ -546,6 +546,52 @@ describe("T-01-21 profile access rows and impersonation", () => {
     expect(within(locale).queryByRole("option", { name: "Anglès" })).not.toBeInTheDocument();
   });
 
+  it("E8-W02 round 3 #1 reads /me.paymentMethod.invalid on profile and receipts without a failed CARD receipt", async () => {
+    mockScenario("memberCardInvalid");
+    const profileClient = authClient();
+    await profileClient.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(profileClient);
+    expect(await screen.findByText(/No hem pogut cobrar/u)).toBeVisible();
+
+    cleanup();
+    mockScenario("memberCardInvalid");
+    const receiptsClient = authClient();
+    await receiptsClient.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/rebuts");
+    await renderApplication(receiptsClient);
+    expect(await screen.findByText(/No hem pogut cobrar/u)).toBeVisible();
+  });
+
+  it("E8-W02 round 3 #5 hides member lifecycle links and reads for an instructor-only profile", async () => {
+    mockScenario("instructor");
+    const memberReads: string[] = [];
+    server.events.on("request:start", ({ request }) => {
+      const path = new URL(request.url).pathname;
+      if (
+        path === "/api/v1/me/invoices" ||
+        path === "/api/v1/me/inactivity-periods" ||
+        path === "/api/v1/me/leave-requests"
+      ) {
+        memberReads.push(path);
+      }
+    });
+    const client = authClient();
+    await client.login("ivet.puig@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+
+    expect(await screen.findByRole("button", { name: "Tanca la sessió" })).toBeVisible();
+    expect(screen.queryByRole("link", { name: "Rebuts" })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /^Sol·licitar període d'inactivitat/u }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Sol·licitar la baixa" })).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(memberReads).toEqual([]);
+    });
+  });
+
   it("keeps the impersonation banner visible from /me", async () => {
     mockScenario("impersonated");
     const client = authClient();
@@ -1358,6 +1404,43 @@ describe("T-03-40 mobile own dogs", () => {
     await screen.findByRole("heading", { name: "Els meus gossos" });
     expect(screen.queryByText("Notes als instructors", { exact: false })).not.toBeInTheDocument();
     expect(screen.queryByText("Tasques", { exact: true })).not.toBeInTheDocument();
+  });
+
+  it("E8-W02 round 3 #4 keeps expired sessions visible without availability and counts only usable extra packs", async () => {
+    const pack = (id: string, dogId: string, state: "ACTIVE" | "EXPIRED") => ({
+      consumed: state === "ACTIVE" ? 2 : 6,
+      dogId,
+      expiresOn: state === "ACTIVE" ? "2027-01-31" : "2026-07-31",
+      id,
+      memberId: "member-laura",
+      movements: [],
+      openedOn: "2026-01-01",
+      planId: "plan-pack-10",
+      planName: "Pack 10",
+      remaining: state === "ACTIVE" ? 8 : 4,
+      sessionsTotal: 10,
+      state,
+      upfrontPaymentId: null,
+    });
+    server.use(
+      http.get("*/api/v1/me/pack-balances", () =>
+        HttpResponse.json([
+          pack("pack-duna-expired", "dog-duna", "EXPIRED"),
+          pack("pack-rock-active", "31000000-0000-4000-8000-000000000002", "ACTIVE"),
+          pack("pack-rock-expired", "31000000-0000-4000-8000-000000000002", "EXPIRED"),
+        ]),
+      ),
+    );
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/gossos");
+    await renderApplication(client);
+
+    const duna = (await screen.findByRole("heading", { name: "Duna" })).closest(".dog-card");
+    const rock = screen.getByRole("heading", { name: "Rock" }).closest(".dog-card");
+    expect(duna).toHaveTextContent("4");
+    expect(duna).not.toHaveTextContent("4 disponibles");
+    expect(rock).not.toHaveTextContent("+1 pack");
   });
 
   it("E36 (R-04-25): a dog added from the app shows «pendent de validació» and has no actions", async () => {

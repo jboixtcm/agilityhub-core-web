@@ -1,0 +1,7 @@
+
+> agilityhub-core-web@0.0.0 i18n:check /Users/jordib/dev/agilityhub/agilityhub-core-web
+> node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs && node scripts/check-parameter-keys.mjs
+
+i18n check failed with 1 issue(s):
+- unused translation key billing:list.refunded
+ ELIFECYCLE  Command failed with exit code 1.

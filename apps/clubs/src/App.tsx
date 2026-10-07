@@ -1307,6 +1307,9 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
       <ProfileLifecycleSection
         client={client}
         logoutDisabled={working}
+        memberAccess={
+          me.impersonation !== undefined || me.membership.roles.includes("MEMBER")
+        }
         onLogout={() => {
           setWorking(true);
           // R-11-07: this device's push subscription goes first, never blocking the logout. An
@@ -1318,6 +1321,7 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
               : authClient.logout()
           ).catch(() => undefined);
         }}
+        {...(me.paymentMethod === undefined ? {} : { paymentMethod: me.paymentMethod })}
       />
       {working ? <p role="status">{t("auth:profile.working")}</p> : null}
       <PasswordModal
@@ -1594,7 +1598,12 @@ function AppContent({
     ) : pathname === "/rebuts" ? (
       <MemberSelfServiceRoute>
         <RequireModule module="BILLING">
-          <InvoicesPage client={apiClient} />
+          <InvoicesPage
+            client={apiClient}
+            {...(session.me?.paymentMethod === undefined
+              ? {}
+              : { paymentMethod: session.me.paymentMethod })}
+          />
         </RequireModule>
       </MemberSelfServiceRoute>
     ) : route.path === "/rebuts/:id" ? (

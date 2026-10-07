@@ -2076,3 +2076,7 @@ Blocking: no.
 - **E8-W02, round 3 (11 points):** the card banner must read `paymentMethod.invalid`, as round 2 asked; the end-month options must reach any valid end; and nine small fixes in the same files.
 - **Order:** E8-W02 first (the loop takes it by order), then E8-W03. E8-W04 opens when both are verified and the api's E8-T06 is done. One task per session.
 Blocking: no.
+
+## 2026-10-07 · executor → organizer · E8-W02
+@organizer **Contract proposal — inactivity start-month bound** — `MeInactivityContext` still omits `inactivity.maxStartMonthsAhead`, although S13 R-13-02 requires screen 14 to use the club parameter. Round 3 keeps the existing 13-option start-month fallback (current month plus 12) until the api publishes the bound in this context; please add the field to the next S13 contract snapshot.
+Blocking: no.

@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type Invoice = components["schemas"]["MeInvoice"];
+type PaymentMethod = components["schemas"]["MePaymentMethod"];
 
 const tones = {
   CANCELLED: "neutral",
@@ -18,6 +19,13 @@ const tones = {
   PAID: "success",
   PENDING: "warning",
 } as const;
+
+function isFullyRefunded(invoice: Invoice): boolean {
+  return (
+    invoice.status === "PAID" &&
+    invoice.refundedTotal.amountMinor === invoice.total.amountMinor
+  );
+}
 
 export function CardFailureBanner({ client, invoice }: { client: ApiClient; invoice: Invoice }) {
   const { t } = useTranslation("billing");
@@ -73,8 +81,7 @@ function ReceiptRow({ invoice }: { invoice: Invoice }) {
       <span className="receipt-row__meta">
         <b>{formats.formatMoney(invoice.total.amountMinor / 100)}</b>
         <Badge tone={tones[invoice.status]}>
-          {invoice.status === "PAID" &&
-          invoice.refundedTotal.amountMinor === invoice.total.amountMinor
+          {isFullyRefunded(invoice)
             ? t("billing:list.refunded")
             : t(`enums:invoiceStatus.${invoice.status}`)}
         </Badge>
@@ -144,7 +151,11 @@ function Detail({ client, id }: { client: ApiClient; id: string }) {
         <Card className="receipt-detail">
           <div className="receipt-detail__heading">
             <strong>{invoice.displayNumber}</strong>
-            <Badge tone={tones[invoice.status]}>{t(`enums:invoiceStatus.${invoice.status}`)}</Badge>
+            <Badge tone={tones[invoice.status]}>
+              {isFullyRefunded(invoice)
+                ? t("billing:list.refunded")
+                : t(`enums:invoiceStatus.${invoice.status}`)}
+            </Badge>
           </div>
           <p>{formats.formatMonthTitle(invoice.period)}</p>
           <table>
@@ -188,7 +199,15 @@ function Detail({ client, id }: { client: ApiClient; id: string }) {
   );
 }
 
-export function InvoicesPage({ client, invoiceId }: { client: ApiClient; invoiceId?: string }) {
+export function InvoicesPage({
+  client,
+  invoiceId,
+  paymentMethod,
+}: {
+  client: ApiClient;
+  invoiceId?: string;
+  paymentMethod?: PaymentMethod;
+}) {
   const { t } = useTranslation("billing");
   const [items, setItems] = useState<Invoice[]>([]);
   const [page, setPage] = useState(0);
@@ -244,9 +263,12 @@ export function InvoicesPage({ client, invoiceId }: { client: ApiClient; invoice
     };
   }, [client, invoiceId]);
   if (invoiceId !== undefined) return <Detail client={client} id={invoiceId} />;
-  const invalidCard = items.find(
+  const failedCard = items.find(
     (item) => item.status === "FAILED" && item.paymentMethod.type === "CARD",
   );
+  const invalidCard =
+    failedCard ??
+    (paymentMethod?.type === "CARD" && paymentMethod.invalid === true ? items[0] : undefined);
   return (
     <div className="billing-page">
       <header className="billing-page__bar">

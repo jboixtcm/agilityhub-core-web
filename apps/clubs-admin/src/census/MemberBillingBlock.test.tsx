@@ -212,4 +212,110 @@ describe("D10 member billing block", () => {
       expect(within(dialog).getByRole("alert")).toBeVisible();
     });
   });
+
+  it("keeps an expiry validation visible when the pack expired after the modal opened", async () => {
+    let packReads = 0;
+    const balance = (state: "ACTIVE" | "EXPIRED") => ({
+      consumed: 6,
+      dogId: "dog-rock",
+      expiresOn: "2026-07-31",
+      id: "pack-race",
+      memberId: "member-laura",
+      movements: [],
+      openedOn: "2026-01-01",
+      planId: "plan-pack-10",
+      planName: "Pack 10",
+      remaining: 4,
+      sessionsTotal: 10,
+      state,
+      upfrontPaymentId: null,
+    });
+    server.use(
+      http.get("*/api/v1/pack-balances", () => {
+        packReads += 1;
+        return HttpResponse.json([balance(packReads === 1 ? "ACTIVE" : "EXPIRED")]);
+      }),
+      http.post("*/api/v1/pack-balances/:id/adjustments", () =>
+        HttpResponse.json(
+          {
+            code: "VALIDATION_ERROR",
+            details: { fieldErrors: [{ code: "REQUIRED", field: "expiresOn" }] },
+            message: "VALIDATION_ERROR",
+            traceId: "pack-race",
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+    await renderBlock();
+    fireEvent.click(await screen.findByRole("button", { name: "Ajusta" }));
+    const dialog = screen.getByRole("dialog", { name: "Ajusta" });
+    fireEvent.change(within(dialog).getByLabelText("Variació de sessions"), {
+      target: { value: "1" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), { target: { value: "Correcció" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(within(dialog).getByLabelText("Nova caducitat")).toBeVisible();
+    });
+    expect(within(dialog).getByText(/camps destacats/u)).toBeVisible();
+  });
+
+  it("shows and retries section-level errors for rejected receipt, payment and pack reads", async () => {
+    const failing = () =>
+      HttpResponse.json(
+        { code: "INTERNAL_ERROR", details: {}, message: "INTERNAL_ERROR", traceId: "read-test" },
+        { status: 500 },
+      );
+    server.use(
+      http.get("*/api/v1/invoices", failing),
+      http.get("*/api/v1/upfront-payments", failing),
+      http.get("*/api/v1/pack-balances", failing),
+    );
+    await renderBlock();
+
+    for (const name of ["Rebuts recents", "Pagaments a l'acte", "Packs"]) {
+      const section = (await screen.findByRole("heading", { name })).closest("section");
+      if (section === null) throw new Error(`Missing ${name} section`);
+      expect(await within(section).findByRole("alert")).toBeVisible();
+      expect(
+        within(section).getByRole("button", { name: "Torna-ho a provar" }),
+      ).toBeVisible();
+    }
+
+    server.resetHandlers();
+    const retry = screen.getAllByRole("button", { name: "Torna-ho a provar" })[0];
+    if (retry === undefined) throw new Error("Missing billing read retry");
+    fireEvent.click(retry);
+    expect(retry).toBeDisabled();
+    expect(await screen.findByText("2026-0912")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.queryAllByRole("alert")).toHaveLength(0);
+    });
+  });
+
+  it("keeps stale section data visible with an error when a post-write refresh is rejected", async () => {
+    await renderBlock();
+    expect(await screen.findByText("Entrada")).toBeVisible();
+    const failing = () =>
+      HttpResponse.json(
+        { code: "INTERNAL_ERROR", details: {}, message: "INTERNAL_ERROR", traceId: "refresh-test" },
+        { status: 500 },
+      );
+    server.use(
+      http.get("*/api/v1/invoices", failing),
+      http.get("*/api/v1/upfront-payments", failing),
+      http.get("*/api/v1/pack-balances", failing),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Registra un pagament" }));
+    const dialog = screen.getByRole("dialog", { name: "Registra un pagament" });
+    fireEvent.change(within(dialog).getByLabelText("Import degut"), { target: { value: "10" } });
+    fireEvent.change(within(dialog).getByLabelText("Import pagat"), { target: { value: "10" } });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+
+    const payments = screen.getByRole("heading", { name: "Pagaments a l'acte" }).closest("section");
+    if (payments === null) throw new Error("Missing upfront section");
+    expect(await within(payments).findByRole("alert")).toBeVisible();
+    expect(within(payments).getByText("Entrada")).toBeVisible();
+  });
 });

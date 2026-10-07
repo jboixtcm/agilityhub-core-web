@@ -78,20 +78,11 @@ export function resetMemberBillingState(): void {
 
 function invoices() {
   const rows = structuredClone(meInvoiceFixtures);
-  if (currentMockScenario().memberBilling === "cardInvalid" && rows[0] !== undefined) {
-    rows[0].paymentMethod = {
-      channel: null,
-      holderName: "Laura Serra Vidal",
-      last4: "4242",
-      mandateRef: null,
-      maskedAccount: "•••• 4242",
-      type: "CARD",
-    };
-  }
   return rows;
 }
 
 function localizedLeave(request: Request) {
+  const scenario = currentMockScenario();
   const language = (request.headers.get("Accept-Language") ?? "ca").slice(0, 2);
   const labels = {
     ca: leaveContextFixture.reasons.map((item) => item.label),
@@ -101,6 +92,10 @@ function localizedLeave(request: Request) {
   const chosen = language === "es" ? labels.es : language === "en" ? labels.en : labels.ca;
   return {
     ...leave,
+    offerInactivity:
+      scenario.branding.modules.includes("INACTIVITY") &&
+      scenario.memberBilling !== "packPlan" &&
+      scenario.lifecycle !== "memberPackPlan",
     reasons: leave.reasons.map((item, index) => ({ ...item, label: chosen[index] ?? item.label })),
   };
 }
@@ -435,7 +430,7 @@ export const memberBillingHandlers = [
     checkoutReads.set(id, count + 1);
     return HttpResponse.json({
       checkoutSessionId: id,
-      status: id.includes("expired") ? "EXPIRED" : count === 0 ? "PENDING" : "PAID",
+      status: id.includes("expired") ? "EXPIRED" : count < 2 ? "PENDING" : "PAID",
     });
   }),
   http.get("*/api/v1/me/pack-balances", () => {

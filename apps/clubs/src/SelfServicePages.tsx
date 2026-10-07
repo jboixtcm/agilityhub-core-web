@@ -563,13 +563,14 @@ function DogCard({
   const packsEnabled = modules.includes("PACKS");
   const freeTrainingEnabled = modules.includes("FREE_TRAINING");
   const dogPacks = packs
-    .filter((pack) => pack.dogId === dog.id)
+    .filter((pack) => pack.dogId === dog.id && pack.state !== "CLOSED")
     .sort((left, right) => {
       if (left.state === "ACTIVE" && right.state !== "ACTIVE") return -1;
       if (left.state !== "ACTIVE" && right.state === "ACTIVE") return 1;
       return left.expiresOn.localeCompare(right.expiresOn);
     });
   const pack = dogPacks[0];
+  const usablePackCount = dogPacks.filter((item) => item.state === "ACTIVE").length;
   const progress =
     pack === undefined || pack.sessionsTotal === 0 ? 0 : pack.consumed / pack.sessionsTotal;
 
@@ -655,8 +656,8 @@ function DogCard({
             {pack.state === "EXPIRED" ? (
               <span className="dog-pack__expired">{t("census:myDogs.packExpired")}</span>
             ) : null}
-            {dogPacks.length > 1 ? (
-              <span>{t("census:myDogs.packMore", { count: dogPacks.length - 1 })}</span>
+            {pack.state === "ACTIVE" && usablePackCount > 1 ? (
+              <span>{t("census:myDogs.packMore", { count: usablePackCount - 1 })}</span>
             ) : null}
           </div>
           <div aria-hidden="true" className="dog-pack__track">
@@ -664,7 +665,13 @@ function DogCard({
           </div>
           <p>
             <strong>{t("census:myDogs.consumed", { count: pack.consumed })}</strong> ·{" "}
-            <b>{t("census:myDogs.available", { count: pack.remaining })}</b>
+            {pack.state === "EXPIRED" ? (
+              <>
+                <b>{pack.remaining}</b> · <span>{t("census:myDogs.packExpired")}</span>
+              </>
+            ) : (
+              <b>{t("census:myDogs.available", { count: pack.remaining })}</b>
+            )}
           </p>
         </section>
       ) : null}

@@ -45,6 +45,10 @@ function inclusiveMonthCount(start: string, end: null | string | undefined): num
   return Math.max(13, distance);
 }
 
+function shiftMonth(month: string, offset: number): string {
+  return monthRange(month, offset + 1)[offset] ?? month;
+}
+
 export function InactivityPage({
   client,
   navigate = (path) => {
@@ -143,15 +147,23 @@ export function InactivityPage({
     [context?.earliestFromMonth, live?.fromMonth],
   );
   const ends = useMemo(
-    () =>
-      fromMonth === ""
-        ? []
-        : includeMonths(
-            monthRange(fromMonth, inclusiveMonthCount(fromMonth, live?.toMonth)),
-            live?.toMonth,
-          ),
-    [fromMonth, live?.toMonth],
+    () => {
+      if (fromMonth === "") return [];
+      const horizons = [
+        shiftMonth(fromMonth, 12),
+        shiftMonth(context?.proposedFromMonth ?? fromMonth, 12),
+        live?.toMonth == null ? undefined : shiftMonth(live.toMonth, 12),
+      ].filter((month): month is string => month !== undefined);
+      const horizon = horizons.sort().at(-1);
+      return includeMonths(
+        monthRange(fromMonth, inclusiveMonthCount(fromMonth, horizon)),
+        live?.toMonth,
+      );
+    },
+    [context?.proposedFromMonth, fromMonth, live],
   );
+
+  const overlap = isApiError(failure, "INACTIVITY_OVERLAP");
 
   const message = (() => {
     if (failure === undefined || context === undefined) return undefined;
@@ -213,7 +225,9 @@ export function InactivityPage({
       navigate("/perfil");
     } catch (cause) {
       setFailure(cause);
-      if (isApiError(cause, "STALE_VERSION")) setReload((value) => value + 1);
+      if (isApiError(cause, "STALE_VERSION") || isApiError(cause, "INACTIVITY_OVERLAP")) {
+        setReload((value) => value + 1);
+      }
     } finally {
       setPending(false);
     }
@@ -338,7 +352,7 @@ export function InactivityPage({
           ) : null}
           {message === undefined ? null : (
             <p className="lifecycle-error" role="alert">
-              {message}
+              {overlap ? <a href="/inactivitat">{message}</a> : message}
             </p>
           )}
           <Button disabled={pending} loading={pending} type="submit">

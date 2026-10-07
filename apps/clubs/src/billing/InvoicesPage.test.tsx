@@ -51,13 +51,54 @@ describe("T-12-26 member receipts", () => {
     });
   });
 
-  it("shows the invalid-card banner and POST action only for the failed CARD scenario", async () => {
+  it("shows a fully refunded PAID receipt as refunded in its detail", async () => {
+    server.use(
+      http.get("*/api/v1/me/invoices/:id", () =>
+        HttpResponse.json({
+          displayNumber: "2026-0812",
+          familyGroup: false,
+          id: "receipt-refunded",
+          issueDate: "2026-08-01",
+          lines: [
+            {
+              description: "Quota agost 2026",
+              origin: "MONTHLY_FEE",
+              total: { amountMinor: 6000, currency: "EUR" },
+            },
+          ],
+          paidAt: "2026-08-05T09:00:00Z",
+          paymentMethod: {
+            channel: null,
+            holderName: "Laura Serra Vidal",
+            last4: null,
+            mandateRef: null,
+            maskedAccount: "···· 2231",
+            type: "SEPA_DD",
+          },
+          period: "2026-08",
+          refundedTotal: { amountMinor: 6000, currency: "EUR" },
+          status: "PAID",
+          total: { amountMinor: 6000, currency: "EUR" },
+        }),
+      ),
+    );
+    await renderE8(<InvoicesPage client={e8Client()} invoiceId="receipt-refunded" />);
+    expect(await screen.findByText("reemborsat")).toBeVisible();
+  });
+
+  it("shows the invalid-card banner and POST action from /me.paymentMethod.invalid", async () => {
     const posted: string[] = [];
     const client = e8Client();
     server.events.on("request:start", ({ request }) => {
       if (request.method === "POST") posted.push(new URL(request.url).pathname);
     });
-    await renderE8(<InvoicesPage client={client} />, { scenario: "memberCardInvalid" });
+    await renderE8(
+      <InvoicesPage
+        client={client}
+        paymentMethod={{ invalid: true, type: "CARD" }}
+      />,
+      { scenario: "memberCardInvalid" },
+    );
     expect(await screen.findByText(/No hem pogut cobrar/u)).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Actualitza la targeta" }));
     await waitFor(() => {

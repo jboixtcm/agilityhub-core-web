@@ -1,5 +1,5 @@
 import { server } from "@agilityhub/api-client/mocks/server";
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
 
@@ -84,13 +84,92 @@ describe("T-13-29 member inactivity", () => {
     );
     await renderE8(<InactivityPage client={e8Client()} />);
     const end = await screen.findByLabelText("Mes de finalització (si el saps)");
-    await waitFor(() => {
-      expect(screen.queryByText(/Ara tens/u)).not.toBeInTheDocument();
-    });
     fireEvent.change(end, { target: { value: "2026-11" } });
     expect(await screen.findByText(/Ara tens 1 reserva dins del període/u)).toBeVisible();
     fireEvent.change(end, { target: { value: "2026-12" } });
     expect(await screen.findByText(/Ara tens 2 reserves dins del període/u)).toBeVisible();
+    fireEvent.change(end, { target: { value: "" } });
+    await waitFor(() => {
+      expect(screen.queryByText(/Ara tens/u)).not.toBeInTheDocument();
+    });
+  });
+
+  it("offers future ends for a historical open ACTIVE period and beyond a long fixed end", async () => {
+    let toMonth: string | null = null;
+    server.use(
+      http.get("*/api/v1/me/inactivity-periods", () =>
+        HttpResponse.json({
+          deadlineDay: 25,
+          earliestFromMonth: "2026-10",
+          fee: null,
+          periods: [
+            {
+              comments: null,
+              editable: { cancel: false, fromMonth: false, toMonth: true },
+              fee: null,
+              fromMonth: "2025-08",
+              id: "period-historical-open",
+              state: "ACTIVE",
+              toMonth,
+              version: 7,
+            },
+          ],
+          proposedFromMonth: "2026-10",
+        }),
+      ),
+    );
+    const open = await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
+    const openEnd = await screen.findByLabelText("Mes de finalització (si el saps)");
+    expect(within(openEnd).getByRole("option", { name: "Octubre 2027" })).toBeVisible();
+    open.unmount();
+
+    toMonth = "2027-12";
+    await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
+    const fixedEnd = await screen.findByLabelText("Mes de finalització (si el saps)");
+    expect(within(fixedEnd).getByRole("option", { name: "Desembre 2028" })).toBeVisible();
+  });
+
+  it("loads and links to the conflicting live period after INACTIVITY_OVERLAP", async () => {
+    let reads = 0;
+    const live = {
+      comments: "Període existent",
+      editable: { cancel: true, fromMonth: true, toMonth: true },
+      fee: null,
+      fromMonth: "2026-11",
+      id: "period-conflict",
+      state: "REQUESTED" as const,
+      toMonth: null,
+      version: 3,
+    };
+    server.use(
+      http.get("*/api/v1/me/inactivity-periods", () => {
+        reads += 1;
+        return HttpResponse.json({
+          deadlineDay: 25,
+          earliestFromMonth: "2026-10",
+          fee: null,
+          periods: reads === 1 ? [] : [live],
+          proposedFromMonth: "2026-10",
+        });
+      }),
+      http.post("*/api/v1/me/inactivity-periods", () =>
+        HttpResponse.json(
+          {
+            code: "INACTIVITY_OVERLAP",
+            details: { hint: "EXTEND", periodId: live.id },
+            message: "INACTIVITY_OVERLAP",
+            traceId: "overlap-test",
+          },
+          { status: 409 },
+        ),
+      ),
+    );
+    await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
+    fireEvent.click(await screen.findByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
+    const overlap = await screen.findByRole("link", { name: /Ja tens un període demanat/u });
+    expect(overlap).toHaveAttribute("href", "/inactivitat");
+    expect(await screen.findByRole("button", { name: "MODIFICA" })).toBeVisible();
+    expect(screen.getByLabelText("Mes d'inici (obligatori)")).toHaveValue("2026-11");
   });
 
   it("renders a historical ACTIVE period and patches only its changed editable end", async () => {

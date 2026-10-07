@@ -111,6 +111,17 @@ describe("T-13-30 member leave", () => {
     expect(screen.queryByRole("group", { name: /probabilitat/u })).not.toBeInTheDocument();
   });
 
+  it("derives the inactivity offer from the real pack-plan and module-off mock variants", async () => {
+    for (const scenario of ["memberPackPlan", "inactivityOff"] as const) {
+      const view = await renderE8(<LeavePage client={e8Client()} />, { scenario });
+      await screen.findByLabelText("Data en què vols la baixa");
+      expect(
+        screen.queryByRole("link", { name: "VULL DEMANAR INACTIVITAT" }),
+      ).not.toBeInTheDocument();
+      view.unmount();
+    }
+  });
+
   it("formats the API's club-local today for Madrid and Buenos Aires", async () => {
     const contexts = [
       { date: "2026-08-11", text: "Avui, 11 d’agost del 2026", timeZone: "Europe/Madrid" },

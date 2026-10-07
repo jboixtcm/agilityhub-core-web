@@ -54,6 +54,12 @@ export function MemberBillingBlock({
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [payments, setPayments] = useState<Upfront[]>([]);
   const [packs, setPacks] = useState<Pack[]>([]);
+  const [readFailures, setReadFailures] = useState({
+    invoices: false,
+    packs: false,
+    payments: false,
+  });
+  const [reading, setReading] = useState(false);
   const [reload, setReload] = useState(0);
   const [paymentOpen, setPaymentOpen] = useState(false);
   const [adjusting, setAdjusting] = useState<Pack>();
@@ -92,10 +98,28 @@ export function MemberBillingBlock({
       packRequest,
     ]).then(([invoiceResult, paymentResult, packResult]) => {
       if (!active) return;
-      if (invoiceResult.status === "fulfilled")
-        setInvoices((invoiceResult.value.data?.items ?? []).slice(0, 5));
-      if (paymentResult.status === "fulfilled") setPayments(paymentResult.value.data?.items ?? []);
-      if (packResult.status === "fulfilled") setPacks(packResult.value.data ?? []);
+      const invoiceData =
+        invoiceResult.status === "fulfilled" ? invoiceResult.value.data : undefined;
+      const paymentData =
+        paymentResult.status === "fulfilled" ? paymentResult.value.data : undefined;
+      const packData = packResult.status === "fulfilled" ? packResult.value.data : undefined;
+      if (invoiceData !== undefined) setInvoices(invoiceData.items.slice(0, 5));
+      if (paymentData !== undefined) setPayments(paymentData.items);
+      if (packData !== undefined) {
+        const nextPacks = packData;
+        setPacks(nextPacks);
+        setAdjusting((current) =>
+          current === undefined
+            ? undefined
+            : (nextPacks.find((item) => item.id === current.id) ?? current),
+        );
+      }
+      setReadFailures({
+        invoices: invoiceData === undefined,
+        packs: packsEnabled && packData === undefined,
+        payments: paymentData === undefined,
+      });
+      setReading(false);
     });
     return () => {
       active = false;
@@ -108,8 +132,10 @@ export function MemberBillingBlock({
     adjustmentFields.some((entry) => entry.field === field)
       ? t("errors:VALIDATION_ERROR")
       : undefined;
-  const hasKnownAdjustmentField = adjustmentFields.some((entry) =>
-    ["delta", "expiresOn", "reason"].includes(entry.field),
+  const hasHiddenAdjustmentField = adjustmentFields.some(
+    (entry) =>
+      !["delta", "reason"].includes(entry.field) &&
+      !(entry.field === "expiresOn" && adjusting?.state === "EXPIRED"),
   );
   const deltaError = adjustmentFieldError("delta");
   const reasonError = adjustmentFieldError("reason");
@@ -164,10 +190,31 @@ export function MemberBillingBlock({
       setReload((value) => value + 1);
     } catch (cause) {
       setFailure(cause);
+      if (apiFieldErrors(cause).some((entry) => entry.field === "expiresOn")) {
+        setReload((value) => value + 1);
+      }
     } finally {
       setPending(false);
     }
   };
+
+  const readError = (failed: boolean) =>
+    failed ? (
+      <div role="alert">
+        <p>{t("admin-census:common.genericError")}</p>
+        <Button
+          disabled={reading}
+          loading={reading}
+          onClick={() => {
+            setReading(true);
+            setReload((value) => value + 1);
+          }}
+          variant="secondary"
+        >
+          {t("admin-census:common.retry")}
+        </Button>
+      </div>
+    ) : null;
 
   return (
     <Card className="member-billing">
@@ -194,6 +241,7 @@ export function MemberBillingBlock({
             </li>
           ))}
         </ul>
+        {readError(readFailures.invoices)}
         <a href={`/facturacio?filter=${encodeURIComponent(`memberId:eq:${memberId}`)}`}>
           {t("admin-census:member.billing.allReceipts")}
         </a>
@@ -225,6 +273,7 @@ export function MemberBillingBlock({
             </li>
           ))}
         </ul>
+        {readError(readFailures.payments)}
       </section>
       {packsEnabled ? (
         <section>
@@ -263,6 +312,7 @@ export function MemberBillingBlock({
               )}
             </div>
           ))}
+          {readError(readFailures.packs)}
         </section>
       ) : null}
       <Modal
@@ -473,7 +523,7 @@ export function MemberBillingBlock({
           ) : null}
           {failure !== undefined &&
           !isApiError(failure, "PACK_NEGATIVE") &&
-          !hasKnownAdjustmentField ? (
+          (adjustmentFields.length === 0 || hasHiddenAdjustmentField) ? (
             <p role="alert">{t("admin-census:common.genericError")}</p>
           ) : null}
           <Button disabled={pending} loading={pending} type="submit">

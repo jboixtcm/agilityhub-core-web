@@ -1,0 +1,450 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/census/MemberBillingBlock.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/MemberBillingBlock.test.tsx (8 tests | 2 failed) 10380ms
+   ❯ D10 member billing block (8)
+     × keeps an expiry validation visible when the pack expired after the modal opened 10035ms
+     × shows and retries section-level errors for rejected receipt, payment and pack reads 27ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > D10 member billing block > keeps an expiry validation visible when the pack expired after the modal opened
+TestingLibraryElementError: Unable to find a label with the text of: Nova caducitat
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_d_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_d_"[39m
+    [36m>[39m
+      [0mAjusta[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Cancel·la"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [36m<strong>[39m
+          [0mGos[0m
+          [0m:[0m
+        [36m</strong>[39m
+        [0m [0m
+        [0mRock[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"pack-delta"[39m
+        [36m>[39m
+          [0mVariació de sessions[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"pack-delta"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"number"[39m
+          [33mvalue[39m=[32m"1"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"pack-reason"[39m
+        [36m>[39m
+          [0mMotiu[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"pack-reason"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mvalue[39m=[32m"Correcció"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDesa[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card member-billing"[39m
+      [36m>[39m
+        [36m<h2>[39m
+          [0mFacturació[0m
+        [36m</h2>[39m
+        [36m<section>[39m
+          [36m<h3>[39m
+            [0mRebuts recents[0m
+          [36m</h3>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"census-record__invoice-list"[39m
+          [36m>[39m
+            [36m<li>[39m
+              [36m<span>[39m
+                [36m<strong>[39m
+                  [0m2026-0912[0m
+                [36m</strong>[39m
+                [36m<small>[39m
+                  [0mQuota setembre 2026[0m
+                [36m</small>[39m
+              [36m</span>[39m
+              [36m<span>[39m
+                [0m60,00 €[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+              [36m>[39m
+                [0mimpagat[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span>[39m
+                [36m<strong>[39m
+                  [0m2026-0812[0m
+                [36m</strong>[39m
+                [36m<small>[39m
+                  [0mQuota agost 2026[0m
+                [36m</small>[39m
+              [36m</span>[39m
+              [36m<span>[39m
+                [0m60,00 €[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcobrat[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span>[39m
+                [36m<strong>[39m
+                  [0m2026-0712[0m
+                [36m</strong>[39m
+                [36m<small>[39m
+                  [0mQuota juliol 2026[0m
+                [36m</small>[39m
+              [36m</span>[39m
+              [36m<span>[39m
+                [0m60,00 €[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mremesat[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<span>[39m
+                [36m<strong>[39m
+                  [0m2026-0610[0m
+                [36m</strong>[39m
+                [36m<small>[39m
+                  [0mQuota familiar juny 2026[0m
+                [36m</small>[39m
+              [36m</span>[39m
+              [36m<span>[39m
+                [0m95,00 €[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mcobrat[0m
+              [36m</span>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+          [36m<a[39m
+            [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+          [36m>[39m
+            [0mTots els rebuts ›[0m
+          [36m</a>[39m
+        [36m</section>[39m
+        [36m<section>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"member-billing__heading"[39m
+          [36m>[39m
+            [36m<h3>[39m
+              [0mPagaments a l'acte[0m
+            [36m</h3>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mRegistra un pagament[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"census-record__plain-list"[39m
+          [36m>[39m
+            [36m<li>[39m
+              [36m<span>[39m
+                [0mEntrada[0m
+              [36m</span>[39m
+              [36m<span>[39m
+                [0m30,00 €[0m
+                [0m /[0m
+                [0m [0m
+                [0m30,00 €[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+              [36m>[39m
+                [0mcobrat[0m
+              [36m</span>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+        [36m</section>[39m
+        [36m<section>[39m
+          [36m<h3>[39m
+            [0mPacks[0m
+          [36m</h3>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"member-billing__pack"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [36m<strong>[39m
+                [0mRock[0m
+                [0m · [0m
+                [0mPack 10[0m
+              [36m</strong>[39m
+              [0m [0m
+              [0m—[0m
+              [0m [0m
+              [0m6 consumides · 4 disponibles · caduca el 31/07/2026[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mAjusta[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-labelledby[39m=[32m"_r_d_"[39m
+            [33maria-modal[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-modal"[39m
+            [33mrole[39m=[32m"dialog"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-overlay__header"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mid[39m=[32m"_r_d_"[39m
+              [36m>[39m
+                [0mAjusta[0m
+              [36m</h2>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Cancel·la"[39m
+                [33mclass[39m=[32m"ah-overlay__close"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-overlay__body"[39m
+            [36m>[39m
+              [36m<form[39m
+                [33mclass[39m=[32m"census-record__form"[39m
+              [36m>[39m
+                [36m<p>[39m
+                  [36m<strong>[39m
+                    [0mGos[0m
+                    [0m:[0m
+                  [36m</strong>[39m
+                  [0m [0m
+                  [0mRock[0m
+                [36m</p>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-form-field"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"ah-form-field__label"[39m
+                    [33mfor[39m=[32m"pack-delta"[39m
+                  [36m>[39m
+                    [0mVariació de sessions[0m
+                  [36m</label>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"ah-input"[39m
+                    [33mid[39m=[32m"pack-delta"[39m
+                    [33mrequired[39m=[32m""[39m
+                    [33mtype[39m=[32m"number"[39m
+                    [33mvalue[39m=[32m"1"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-form-field"[39m
+                [36m>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"ah-form-field__label"[39m
+                    [33mfor[39m=[32m"pack-reason"[39m
+                  [36m>[39m
+                    [0mMotiu[0m
+                  [36m</label>[39m
+                  [36m<input[39m
+                    [33mclass[39m=[32m"ah-input"[39m
+                    [33mid[39m=[32m"pack-reason"[39m
+                    [33mrequired[39m=[32m""[39m
+                    [33mvalue[39m=[32m"Correcció"[39m
+                  [36m/>[39m
+                [36m</div>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mtype[39m=[32m"submit"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mDesa[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</form>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ src/census/MemberBillingBlock.test.tsx:258:11
+    256|     fireEvent.change(within(dialog).getByLabelText("Motiu"), { target:…
+    257|     fireEvent.click(within(dialog).getByRole("button", { name: "Desa" …
+    258|     await waitFor(() => {
+       |           ^
+    259|       expect(within(dialog).getByLabelText("Nova caducitat")).toBeVisi…
+    260|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > D10 member billing block > shows and retries section-level errors for rejected receipt, payment and pack reads
+TestingLibraryElementError: Unable to find an accessible element with the role "alert"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Rebuts recents":
+  [36m<h3 />[39m
+
+  --------------------------------------------------list:
+
+  Name "":
+  [36m<ul[39m
+    [33mclass[39m=[32m"census-record__invoice-list"[39m
+  [36m/>[39m
+
+  --------------------------------------------------link:
+
+  Name "Tots els rebuts ›":
+  [36m<a[39m
+    [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<section>[39m
+  [36m<h3>[39m
+    [0mRebuts recents[0m
+  [36m</h3>[39m
+  [36m<ul[39m
+    [33mclass[39m=[32m"census-record__invoice-list"[39m
+  [36m/>[39m
+  [36m<a[39m
+    [33mhref[39m=[32m"/facturacio?filter=memberId%3Aeq%3Amember-laura"[39m
+  [36m>[39m
+    [0mTots els rebuts ›[0m
+  [36m</a>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberBillingBlock.test.tsx:280:30
+    278|       const section = (await screen.findByRole("heading", { name })).c…
+    279|       if (section === null) throw new Error(`Missing ${name} section`);
+    280|       expect(within(section).getByRole("alert")).toBeVisible();
+       |                              ^
+    281|       expect(within(section).getByRole("button", { name: "Torna-ho a p…
+    282|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 passed (8)
+   Start at  21:59:22
+   Duration  11.45s (tests 91%, transform 4%, environment 2%, import 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/census/MemberBillingBlock.test.tsx`
+Exit status 1

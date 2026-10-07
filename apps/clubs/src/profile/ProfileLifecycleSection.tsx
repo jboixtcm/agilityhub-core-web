@@ -9,15 +9,20 @@ import { CardFailureBanner } from "../billing/InvoicesPage";
 type Invoice = components["schemas"]["MeInvoice"];
 type Inactivity = components["schemas"]["MeInactivityContext"];
 type Leave = components["schemas"]["MeLeaveContext"];
+type PaymentMethod = components["schemas"]["MePaymentMethod"];
 
 export function ProfileLifecycleSection({
   client,
   logoutDisabled,
+  memberAccess = true,
   onLogout,
+  paymentMethod,
 }: {
   client: ApiClient;
   logoutDisabled: boolean;
+  memberAccess?: boolean;
   onLogout: () => void;
+  paymentMethod?: PaymentMethod;
 }) {
   const branding = useBranding();
   const formats = useClubFormats();
@@ -28,16 +33,22 @@ export function ProfileLifecycleSection({
   const [leave, setLeave] = useState<Leave>();
 
   useEffect(() => {
+    if (!memberAccess) return undefined;
     let active = true;
     if (branding.modules.includes("BILLING")) {
       void client.GET("/me/invoices", { params: { query: { page: 0, size: 20 } } }).then(
         ({ data }) => {
-          if (active)
-            setFailedCard(
-              data?.items.find(
-                (item) => item.status === "FAILED" && item.paymentMethod.type === "CARD",
-              ),
+          if (active) {
+            const failed = data?.items.find(
+              (item) => item.status === "FAILED" && item.paymentMethod.type === "CARD",
             );
+            setFailedCard(
+              failed ??
+                (paymentMethod?.type === "CARD" && paymentMethod.invalid === true
+                  ? data?.items[0]
+                  : undefined),
+            );
+          }
         },
         () => undefined,
       );
@@ -62,7 +73,7 @@ export function ProfileLifecycleSection({
     return () => {
       active = false;
     };
-  }, [branding.modules, client]);
+  }, [branding.modules, client, memberAccess, paymentMethod]);
 
   const livePeriod = inactivity?.periods.find((item) =>
     ["REQUESTED", "APPROVED", "ACTIVE"].includes(item.state),
@@ -96,16 +107,18 @@ export function ProfileLifecycleSection({
 
   return (
     <>
-      {failedCard === undefined ? null : <CardFailureBanner client={client} invoice={failedCard} />}
+      {!memberAccess || failedCard === undefined ? null : (
+        <CardFailureBanner client={client} invoice={failedCard} />
+      )}
       <Card className="profile-list profile-list--final">
-        {branding.modules.includes("BILLING") ? (
+        {memberAccess && branding.modules.includes("BILLING") ? (
           <a href="/rebuts">
             <Icon aria-hidden="true" name="doc" />
             <span>{t("billing:title")}</span>
             <Icon aria-hidden="true" name="chev" />
           </a>
         ) : null}
-        {branding.modules.includes("INACTIVITY") && inactivityApplicable ? (
+        {memberAccess && branding.modules.includes("INACTIVITY") && inactivityApplicable ? (
           <a href="/inactivitat">
             <Icon aria-hidden="true" name="palm" />
             <span className="profile-list__copy">
@@ -115,14 +128,16 @@ export function ProfileLifecycleSection({
             <Icon aria-hidden="true" name="chev" />
           </a>
         ) : null}
-        <a className="profile-list__muted" href="/baixa">
-          <Icon aria-hidden="true" name="ban" />
-          <span className="profile-list__copy">
-            <span>{t("auth:profile.leave")}</span>
-            {leaveSubtitle === undefined ? null : <small>{leaveSubtitle}</small>}
-          </span>
-          <Icon aria-hidden="true" name="chev" />
-        </a>
+        {memberAccess ? (
+          <a className="profile-list__muted" href="/baixa">
+            <Icon aria-hidden="true" name="ban" />
+            <span className="profile-list__copy">
+              <span>{t("auth:profile.leave")}</span>
+              {leaveSubtitle === undefined ? null : <small>{leaveSubtitle}</small>}
+            </span>
+            <Icon aria-hidden="true" name="chev" />
+          </a>
+        ) : null}
         <button
           className="profile-list__logout"
           disabled={logoutDisabled}

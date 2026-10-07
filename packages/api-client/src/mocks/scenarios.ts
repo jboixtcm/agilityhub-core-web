@@ -278,7 +278,7 @@ const scenarios = {
   },
   memberCardInvalid: {
     branding: { ...canic, locales: ["ca", "es", "en"] },
-    me: member,
+    me: { ...member, paymentMethod: { invalid: true, type: "CARD" } },
     memberBilling: "cardInvalid",
     sessions: accountSessions,
   },
