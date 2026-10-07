@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`T-13-31 admin inactivity lifecycle > T-13-32 renders the complete requested-period actions in ca, es and en > ca 1`] = `"InactivitatPeríode actualsol·licitat · Octubre 2026 · Desembre 2026Descans de la Duna0 reserves anul·ladesNota (opcional)DenegaAprova"`;
+
+exports[`T-13-31 admin inactivity lifecycle > T-13-32 renders the complete requested-period actions in ca, es and en > en 1`] = `"InactivityCurrent periodrequested · October 2026 · December 2026Descans de la Duna0 bookings cancelledNote (optional)DenyApprove"`;
+
+exports[`T-13-31 admin inactivity lifecycle > T-13-32 renders the complete requested-period actions in ca, es and en > es 1`] = `"InactividadPeriodo actualsolicitado · Octubre 2026 · Diciembre 2026Descans de la Duna0 reservas canceladasNota (opcional)DeniegaAprueba"`;

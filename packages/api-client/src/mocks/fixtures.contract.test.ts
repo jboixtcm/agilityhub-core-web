@@ -57,6 +57,8 @@ import {
   memberBlockView,
 } from "./fixtures/day-grid";
 import {
+  adminInactivityPeriods,
+  adminLeaveRequests,
   inactivityContextFixture,
   inactivityPreviewFixture,
   leaveContextFixture,
@@ -69,6 +71,7 @@ import {
   mockDisplayDescription,
   mockWeek,
 } from "./fixtures/planning";
+import { findParameter } from "./fixtures/settings";
 import { signupConfig, signupMemberFixture, signupResultUpfront } from "./fixtures/signup";
 import {
   addDogSignupReview,
@@ -210,6 +213,23 @@ describe("E8-W02 member billing and lifecycle fixtures follow the published cont
   ] as const)("validates %s", (name, fixture) => {
     const validate = schema(name);
     expect(validate(fixture), JSON.stringify(validate.errors, null, 2)).toBe(true);
+  });
+
+  it("validates every administrative inactivity period and leave request", () => {
+    const inactivityPeriod = schema("InactivityPeriod");
+    for (const item of adminInactivityPeriods) {
+      expect(inactivityPeriod(item), JSON.stringify(inactivityPeriod.errors, null, 2)).toBe(true);
+    }
+    const leaveRequest = schema("LeaveRequest");
+    for (const item of adminLeaveRequests) {
+      expect(leaveRequest(item), JSON.stringify(leaveRequest.errors, null, 2)).toBe(true);
+    }
+  });
+
+  it("publishes documented ISO 20022 pain.008 schema versions", () => {
+    const parameter = findParameter("billing.sepa.schema");
+    expect(parameter?.value).toBe("pain.008.001.02");
+    expect(parameter?.constraints).toMatchObject({ values: ["pain.008.001.02", "pain.008.001.08"] });
   });
 });
 

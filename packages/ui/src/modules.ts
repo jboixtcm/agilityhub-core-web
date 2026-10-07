@@ -66,8 +66,8 @@ export const moduleUi = {
   SMS: { menuEntries: [], routes: [], tabs: [] },
   PUSH: { menuEntries: [], routes: [], tabs: [] },
   INACTIVITY: {
-    menuEntries: ["inactivity"],
-    routes: ["/inactivitat", "/inactivitats"],
+    menuEntries: [],
+    routes: ["/inactivitat"],
     tabs: [],
   },
   COURSES: {

@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`T-13-32 ca/es/en drawer literals > renders ca > ca 1`] = `"Baixa (amb data)Programa la baixaSi hi ha una sol·licitud pendent, quedarà anul·lada.Data d'efecteMotiu (opcional)Tria una opcióJa he après tot el que voliaNo trobo temps per anar-hiNo és el que esperavaCondicionants meus aliens al clubAltresDecisió del clubNota (opcional)Programa la baixa"`;
+
+exports[`T-13-32 ca/es/en drawer literals > renders en > en 1`] = `"Leave (with date)Schedule leaveAny pending request will be cancelled.Effective dateReason (optional)Choose an optionI have already learned everything I wantedI cannot find the time to goIt is not what I expectedPersonal circumstances unrelated to the clubOtherClub decisionNote (optional)Schedule leave"`;
+
+exports[`T-13-32 ca/es/en drawer literals > renders es > es 1`] = `"Baja (con fecha)Programa la bajaSi existe una solicitud pendiente, quedará cancelada.Fecha de efectoMotivo (opcional)Elige una opciónYa he aprendido todo lo que queríaNo encuentro tiempo para irNo es lo que esperabaCircunstancias mías ajenas al clubOtrosDecisión del clubNota (opcional)Programa la baja"`;

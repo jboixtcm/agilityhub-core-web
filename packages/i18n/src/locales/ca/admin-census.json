@@ -31,7 +31,7 @@
     "openEnded": "— encara no ho sé",
     "cancelledBookings": "{count, plural, one {# reserva anul·lada} other {# reserves anul·lades}}",
     "cancelledToast": "S'han anul·lat {count, plural, one {# reserva} other {# reserves}}",
-    "noCancellationToast": "El període s'ha aprovat sense anul·lar reserves.",
+    "noCancellationToast": "S'han mantingut {count, plural, one {# reserva} other {# reserves}} dins del període.",
     "feeSnapshot": "Quota del 1r mes {first} · Mesos següents {following}/mes",
     "bookingBreakdown": "{type}: {count}",
     "history": "Historial",
@@ -93,6 +93,7 @@
     "price": "Tarifa",
     "priceAmount": "{amount} {currency}",
     "nextInvoiceDate": "Data del proper rebut",
+    "effectiveMonth": "Mes d'efecte (opcional)",
     "packDiscountRule": "En passar d'un pack de 10 sessions o més a una quota mensual, l'entrada té un 40 % de descompte. L'import l'ha de calcular l'API.",
     "contractUnavailable": "El contracte actual encara no publica l'operació ni la previsualització del canvi de modalitat.",
     "addDog": "Afegeix un segon gos des de la seva alta"

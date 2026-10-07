@@ -170,8 +170,8 @@ const initialParameters: Parameters = {
           constraints: { max: 28, min: 0 }, module: "BILLING",
         }),
         parameter("billing.sepa.useFrst", "billing", "bool", true, { module: "BILLING" }),
-        parameter("billing.sepa.schema", "billing", "enum", "CORE", {
-          constraints: { values: ["CORE", "B2B"] }, module: "BILLING",
+        parameter("billing.sepa.schema", "billing", "enum", "pain.008.001.02", {
+          constraints: { values: ["pain.008.001.02", "pain.008.001.08"] }, module: "BILLING",
         }),
         parameter("billing.stripeMaxAttempts", "billing", "int", 3, {
           constraints: { min: 1 }, module: "BILLING",

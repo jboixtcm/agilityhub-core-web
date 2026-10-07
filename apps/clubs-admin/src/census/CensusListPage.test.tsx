@@ -175,6 +175,7 @@ describe("T-03-38 D5 universal member list", () => {
     fireEvent.click(screen.getByText("Columnes"));
     expect(screen.getByRole("checkbox", { name: "Origen de la baixa" })).toBeVisible();
     expect(screen.getByRole("checkbox", { name: "Inactiva fins" })).toBeVisible();
+    fireEvent.click(screen.getByRole("checkbox", { name: "Inactiva fins" }));
 
     fireEvent.click(screen.getByText("Vistes", { selector: "summary" }));
     const systemView = screen.getByRole<HTMLOptionElement>("option", { name: "Baixes previstes" });
@@ -184,7 +185,8 @@ describe("T-03-38 D5 universal member list", () => {
     });
     expect(screen.queryByRole("button", { name: "Elimina la vista" })).not.toBeInTheDocument();
     expect(await screen.findByRole("columnheader", { name: "Origen de la baixa" })).toBeVisible();
-    expect(memberRequests).toContain(null);
+    expect(memberRequests.some((fields) => fields?.split(",").includes("leaveSource") === true)).toBe(true);
+    expect(memberRequests.some((fields) => fields?.split(",").includes("inactivityUntil") === true)).toBe(true);
   });
 });
 

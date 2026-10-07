@@ -13,6 +13,8 @@ import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
+import { CountersRefreshContext } from "../dashboard/counters";
+
 import { DogRecordPage, MemberRecordPage } from "./CensusRecordPage";
 
 const branding: Branding = {
@@ -29,6 +31,7 @@ afterEach(() => {
   server.resetHandlers();
   resetCensusRecordState();
   mockScenario("admin");
+  window.history.pushState(null, "", "/");
 });
 
 afterAll(() => {
@@ -40,6 +43,7 @@ async function renderRecord(
   recordBranding: Branding = branding,
   memberId = "member-laura",
   language = "ca",
+  refreshCounters = () => undefined,
 ) {
   const i18n = await createI18n({
     branding: recordBranding,
@@ -51,11 +55,13 @@ async function renderRecord(
   render(
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={recordBranding}>
-        {kind === "member" ? (
-          <MemberRecordPage client={client} id={memberId} />
-        ) : (
-          <DogRecordPage client={client} id="dog-duna" />
-        )}
+        <CountersRefreshContext.Provider value={refreshCounters}>
+          {kind === "member" ? (
+            <MemberRecordPage client={client} id={memberId} />
+          ) : (
+            <DogRecordPage client={client} id="dog-duna" />
+          )}
+        </CountersRefreshContext.Provider>
       </BrandingProvider>
     </I18nextProvider>,
   );
@@ -129,6 +135,29 @@ describe("T-03-39 D10 member record", () => {
         "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-lo i torneu-ho a provar.",
       ),
     ).toBeVisible();
+  });
+
+  it("E8-W03 round 2 #18 refreshes dashboard counters after a lifecycle write", async () => {
+    const refreshCounters = vi.fn();
+    await renderRecord("member", branding, "member-laura", "ca", refreshCounters);
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    fireEvent.click(screen.getByRole("button", { name: "Baixa (amb data)" }));
+    const drawer = await screen.findByRole("dialog", { name: "Baixa (amb data)" });
+    fireEvent.change(await within(drawer).findByLabelText("Data d'efecte"), { target: { value: "2026-11-30" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Programa la baixa" }));
+    const confirmation = screen.getAllByRole("dialog", { name: "Programa la baixa" }).at(-1);
+    if (confirmation === undefined) throw new TypeError("Missing direct-leave confirmation");
+    fireEvent.click(within(confirmation).getByRole("button", { name: "Programa la baixa" }));
+    await waitFor(() => { expect(refreshCounters).toHaveBeenCalledTimes(1); });
+  });
+
+  it("E8-W03 round 2 #8 opens the exact period carried by queue navigation", async () => {
+    const periodId = "62000000-0000-4000-8000-000000000002";
+    window.history.pushState(null, "", `/abonats/member-eva?calaix=inactivitat&period=${periodId}`);
+    await renderRecord("member", branding, "member-eva");
+    const drawer = await screen.findByRole("dialog", { name: "Inactivitat" });
+    expect(await within(drawer).findByText("Període obert")).toBeVisible();
+    expect(within(drawer).getByText("actiu", { exact: true })).toBeVisible();
   });
 });
 

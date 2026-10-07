@@ -1,0 +1,2720 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/App.test.tsx src/census/MemberInactivityDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/census/MemberPlanDrawer.test.tsx src/census/MemberPaymentMethodDrawer.test.tsx src/census/InactivityLeavePage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/MemberPaymentMethodDrawer.test.tsx (1 test | 1 failed) 148ms
+   × E8-W03 round 2 #16 shows Save after switching away from a generated card link 146ms
+ ❯ src/census/MemberPlanDrawer.test.tsx (2 tests | 2 failed) 168ms
+   ❯ E8-W03 round 2 member plan change (2)
+     × #2 submits the published plan-change mutation and refreshes D10 134ms
+     × #2 shows the 40% rule only for a qualifying ten-session pack 33ms
+ ❯ src/App.test.tsx (20 tests | 1 failed) 734ms
+   ❯ T-02-14 clubs-admin shell (7)
+     × E8-W03 round 2 #1 keeps leave management reachable when INACTIVITY is disabled 2ms
+ ❯ src/census/MemberLeaveDrawer.test.tsx (10 tests | 4 failed) 10386ms
+   ❯ T-13-31 admin leave lifecycle (7)
+     × E8-W03 round 2 #5 confirms direct leave before POST and reports cancelled bookings 43ms
+     × E8-W03 round 2 #7 reports detail and reactivation plan-read failures 10012ms
+     × E8-W03 round 2 #14 offers MEMBER and ADMIN reasons but excludes SYSTEM reasons 49ms
+     × E8-W03 round 2 #12 submits reactivation and formats prices through club money rules 57ms
+ ❯ src/census/MemberInactivityDrawer.test.tsx (9 tests | 5 failed) 20435ms
+   ❯ T-13-31 admin inactivity lifecycle (9)
+     × E8-W03 round 2 #4 follows editable and PATCHes only toMonth for an ACTIVE period 26ms
+     × E8-W03 round 2 #12 terminates an active period and reports approval cancellations 75ms
+     × E8-W03 round 2 #12 reports the no-cancellation branch 22ms
+     × E8-W03 round 2 #7 shows a detail-read failure instead of stale content 10006ms
+     × E8-W03 round 2 #13 gates an empty creation state from the member's pack plan 10011ms
+ ❯ src/census/InactivityLeavePage.test.tsx (6 tests | 2 failed) 20292ms
+   ❯ T-13-31 inactivity and leave queues (6)
+     × E8-W03 round 2 #3 loads real filter values and saved views 10051ms
+     × E8-W03 round 2 #8 resolves period to its member and navigates to that exact drawer 10034ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-02-14 clubs-admin shell > E8-W03 round 2 #1 keeps leave management reachable when INACTIVITY is disabled
+AssertionError: expected [ 'INACTIVITY' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "INACTIVITY",
++ ]
+
+ ❯ src/App.test.tsx:171:65
+    169|   it("E8-W03 round 2 #1 keeps leave management reachable when INACTIVI…
+    170|     const modules = branding.modules.filter((module) => module !== "IN…
+    171|     expect(requiredModulesForUiItem("routes", "/inactivitats")).toEqua…
+       |                                                                 ^
+    172|     expect(requiredModulesForUiItem("menuEntries", "inactivity")).toEq…
+    173|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > E8-W03 round 2 #3 loads real filter values and saved views
+TestingLibraryElementError: Unable to find role="option" and name `/Laura Serra Vidal/u`
+
+Ignored nodes: comments, script, style
+[36m<select[39m
+  [33mdisabled[39m=[32m""[39m
+[36m/>[39m
+
+Ignored nodes: comments, script, style
+[36m<select[39m
+  [33mdisabled[39m=[32m""[39m
+[36m/>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/InactivityLeavePage.test.tsx:68:32
+     66|     expect(await screen.findByText("Laura Serra Vidal")).toBeVisible();
+     67|     const value = screen.getByRole("combobox", { name: "Valor" });
+     68|     expect(await within(value).findByRole("option", { name: /Laura Ser…
+       |                                ^
+     69|     fireEvent.click(screen.getByText("Vistes", { selector: "summary" }…
+     70|     expect(screen.getByRole("combobox", { name: "Vistes" })).toBeVisib…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > E8-W03 round 2 #8 resolves period to its member and navigates to that exact drawer
+AssertionError: expected [] to deeply equal [ Array(1) ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<section>[39m
+        [36m<h1>[39m
+          [0mInactivitats i baixes[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-tabs"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Inactivitats i baixes"[39m
+            [33mclass[39m=[32m"ah-tabs__list"[39m
+            [33mrole[39m=[32m"tablist"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_3_-panel-inactivity"[39m
+              [33maria-selected[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_3_-tab-inactivity"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mInactivitats[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_3_-panel-leave"[39m
+              [33maria-selected[39m=[32m"false"[39m
+              [33mclass[39m=[32m"ah-tabs__tab"[39m
+              [33mid[39m=[32m"_r_3_-tab-leave"[39m
+              [33mrole[39m=[32m"tab"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mBaixes[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33maria-labelledby[39m=[32m"_r_3_-tab-inactivity"[39m
+            [33mclass[39m=[32m"ah-tabs__panel"[39m
+            [33mid[39m=[32m"_r_3_-panel-inactivity"[39m
+            [33mrole[39m=[32m"tabpanel"[39m
+          [36m>[39m
+            [36m<section[39m
+              [33maria-label[39m=[32m"Inactivitats"[39m
+              [33mclass[39m=[32m"ah-universal-list"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-universal-list__search"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCerca inactivitats[0m
+                  [36m</span>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<input[39m
+                    [33maria-label[39m=[32m"Cerca inactivitats"[39m
+                    [33mplaceholder[39m=[32m"Cerca inactivitats"[39m
+                    [33mtype[39m=[32m"search"[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<details[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+                [36m>[39m
+                  [36m<summary[39m
+                    [33mclass[39m=[32m""[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                    [0mFiltra[0m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                    [36m>[39m
+                      [0m▾[0m
+                    [36m</span>[39m
+                  [36m</summary>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                  [36m>[39m
+                    [36m<label>[39m
+                      [36m<span>[39m
+                        [0mCamp[0m
+                      [36m</span>[39m
+                      [36m<select>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"memberId"[39m
+                        [36m>[39m
+                          [0mAbonat[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"state"[39m
+                        [36m>[39m
+                          [0mEstat[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"fromMonth"[39m
+                        [36m>[39m
+                          [0mDes de[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"toMonth"[39m
+                        [36m>[39m
+                          [0mFins a[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"origin"[39m
+                        [36m>[39m
+                          [0mOrigen[0m
+                        [36m</option>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"requestedAt"[39m
+                        [36m>[39m
+                          [0mSol·licitat el[0m
+                        [36m</option>[39m
+                      [36m</select>[39m
+                    [36m</label>[39m
+                    [36m<label>[39m
+                      [36m<span>[39m
+                        [0mOperador[0m
+                      [36m</span>[39m
+                      [36m<select>[39m
+                        [36m<option[39m
+                          [33mvalue[39m=[32m"eq"[39m
+                        [36m>[39...
+
+- Expected
++ Received
+
+- [
+-   "/abonats/member-eva?calaix=inactivitat&period=admin-inactivity-2",
+- ]
++ []
+
+ ❯ src/census/InactivityLeavePage.test.tsx:79:27
+     77|     render(await provider(<InactivityLeavePage client={createApiClient…
+     78|     await waitFor(() => {
+     79|       expect(navigations).toEqual(["/abonats/member-eva?calaix=inactiv…
+       |                           ^
+     80|     });
+     81|   });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+ FAIL  src/census/MemberInactivityDrawer.test.tsx > T-13-31 admin inactivity lifecycle > E8-W03 round 2 #4 follows editable and PATCHes only toMonth for an ACTIVE period
+Error: expect(element).toBeDisabled()
+
+Received element is not disabled:
+  <input
+  class="ah-input"
+  id="inactivity-from"
+  required=""
+  type="month"
+  value="2026-08"
+/>
+ ❯ src/census/MemberInactivityDrawer.test.tsx:119:58
+    117|     const drawer = await screen.findByRole("dialog", { name: "Inactivi…
+    118|     fireEvent.click(await within(drawer).findByRole("button", { name: …
+    119|     expect(within(drawer).getByLabelText("Mes d'inici")).toBeDisabled(…
+       |                                                          ^
+    120|     expect(within(drawer).getByLabelText("Comentaris")).toBeDisabled();
+    121|     fireEvent.change(within(drawer).getByLabelText(/Mes final/u), { ta…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯
+
+ FAIL  src/census/MemberInactivityDrawer.test.tsx > T-13-31 admin inactivity lifecycle > E8-W03 round 2 #12 terminates an active period and reports approval cancellations
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Aprova"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Inactivitat":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_a_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  --------------------------------------------------status:
+
+  Name "":
+  [36m<p[39m
+    [33mrole[39m=[32m"status"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Nou període d'inactivitat":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Comentaris":
+  [36m<textarea[39m
+    [33mclass[39m=[32m"ah-input ah-textarea"[39m
+    [33mid[39m=[32m"inactivity-comments"[39m
+    [33mmaxlength[39m=[32m"500"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  checkbox:
+
+  Name "Salta el termini del dia 25":
+  [36m<input[39m
+    [33mclass[39m=[32m"ah-checkbox"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Crea i aprova":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mtype[39m=[32m"submit"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_a_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_a_"[39m
+    [36m>[39m
+      [0mInactivitat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<p[39m
+      [33mrole[39m=[32m"status"[39m
+    [36m>[39m
+      [0mCarregant la fitxa…[0m
+    [36m</p>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<h3>[39m
+        [0mNou període d'inactivitat[0m
+      [36m</h3>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"inactivity-from"[39m
+        [36m>[39m
+          [0mMes d'inici[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"inactivity-from"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"month"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"inactivity-to"[39m
+        [36m>[39m
+          [0mMes final (— encara no ho sé)[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"inactivity-to"[39m
+          [33mtype[39m=[32m"month"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"inactivity-comments"[39m
+        [36m>[39m
+          [0mComentaris[0m
+        [36m</label>[39m
+        [36m<textarea[39m
+          [33mclass[39m=[32m"ah-input ah-textarea"[39m
+          [33mid[39m=[32m"inactivity-comments"[39m
+          [33mmaxlength[39m=[32m"500"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"census-record__check-row"[39m
+      [36m>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-checkbox"[39m
+          [33mtype[39m=[32m"checkbox"[39m
+        [36m/>[39m
+        [0mSalta el termini del dia 25[0m
+      [36m</label>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCrea i aprova[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberInactivityDrawer.test.tsx:152:39
+    150|     await renderDrawer();
+    151|     const requested = await screen.findByRole("dialog", { name: "Inact…
+    152|     fireEvent.click(within(requested).getByRole("button", { name: "Apr…
+       |                                       ^
+    153|     fireEvent.click(within(screen.getByRole("dialog", { name: "Aprova …
+    154|     expect(await screen.findByText("S'han anul·lat 2 reserves")).toBeV…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯
+
+ FAIL  src/census/MemberInactivityDrawer.test.tsx > T-13-31 admin inactivity lifecycle > E8-W03 round 2 #12 reports the no-cancellation branch
+TestingLibraryElementError: Unable to find an element with the text: En aprovar, es mantindran les reserves incloses dins del període.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-labelledby[39m=[32m"_r_c_"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-drawer"[39m
+        [33mrole[39m=[32m"dialog"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_c_"[39m
+          [36m>[39m
+            [0mInactivitat[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mclass[39m=[32m"ah-overlay__close"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__body"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"census-record__fieldset"[39m
+          [36m>[39m
+            [36m<h3>[39m
+              [0mPeríode actual[0m
+            [36m</h3>[39m
+            [36m<p>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+              [36m>[39m
+                [0msol·licitat[0m
+              [36m</span>[39m
+              [0m · [0m
+              [0mOctubre 2026[0m
+              [0m · [0m
+              [0mDesembre 2026[0m
+            [36m</p>[39m
+            [36m<p>[39m
+              [0mDescans de la Duna[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"census-record__muted"[39m
+            [36m>[39m
+              [0m0 reserves anul·lades[0m
+            [36m</p>[39m
+          [36m</section>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"census-record__form"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-decision-note"[39m
+              [36m>[39m
+                [0mNota (opcional)[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"inactivity-decision-note"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"census-record__dialog-actions"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mDenega[0m
+                [36m</span>[39m
+              [36m</button>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mAprova[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</section>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay"[39m
+          [36m>[39m
+            [36m<section[39m
+              [33maria-labelledby[39m=[32m"_r_d_"[39m
+              [33maria-modal[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-modal"[39m
+              [33mrole[39m=[32m"dialog"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-overlay__header"[39m
+              [36m>[39m
+                [36m<h2[39m
+                  [33mid[39m=[32m"_r_d_"[39m
+                [36m>[39m
+                  [0mAprova el període[0m
+                [36m</h2>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Tanca"[39m
+                  [33mclass[39m=[32m"ah-overlay__close"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-overlay__body"[39m
+              [36m>[39m
+                [36m<p>[39m
+                  [0mEn aprovar, les reserves que quedin dins del període es mantindran.[0m
+                [36m</p>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"census-record__dialog-actions"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [0mCancel·la[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [0mAprova[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</section>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberInactivityDrawer.test.tsx:166:19
+    164|     const drawer = await screen.findByRole("dialog", { name: "Inactivi…
+    165|     fireEvent.click(await within(drawer).findByRole("button", { name: …
+    166|     expect(screen.getByText("En aprovar, es mantindran les reserves in…
+       |                   ^
+    167|   });
+    168|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯
+
+ FAIL  src/census/MemberInactivityDrawer.test.tsx > T-13-31 admin inactivity lifecycle > E8-W03 round 2 #7 shows a detail-read failure instead of stale content
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-labelledby[39m=[32m"_r_e_"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-drawer"[39m
+        [33mrole[39m=[32m"dialog"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_e_"[39m
+          [36m>[39m
+            [0mInactivitat[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mclass[39m=[32m"ah-overlay__close"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__body"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m>[39m
+            [0mCarregant la fitxa…[0m
+          [36m</p>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"census-record__form"[39m
+          [36m>[39m
+            [36m<h3>[39m
+              [0mNou període d'inactivitat[0m
+            [36m</h3>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-from"[39m
+              [36m>[39m
+                [0mMes d'inici[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"inactivity-from"[39m
+                [33mrequired[39m=[32m""[39m
+                [33mtype[39m=[32m"month"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-to"[39m
+              [36m>[39m
+                [0mMes final (— encara no ho sé)[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"inactivity-to"[39m
+                [33mtype[39m=[32m"month"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-comments"[39m
+              [36m>[39m
+                [0mComentaris[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"inactivity-comments"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"census-record__check-row"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-checkbox"[39m
+                [33mtype[39m=[32m"checkbox"[39m
+              [36m/>[39m
+              [0mSalta el termini del dia 25[0m
+            [36m</label>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mCrea i aprova[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</form>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-labelledby[39m=[32m"_r_e_"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-drawer"[39m
+        [33mrole[39m=[32m"dialog"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_e_"[39m
+          [36m>[39m
+            [0mInactivitat[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mclass[39m=[32m"ah-overlay__close"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__body"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m>[39m
+            [0mCarregant la fitxa…[0m
+          [36m</p>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"census-record__form"[39m
+          [36m>[39m
+            [36m<h3>[39m
+              [0mNou període d'inactivitat[0m
+            [36m</h3>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-from"[39m
+              [36m>[39m
+                [0mMes d'inici[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"inactivity-from"[39m
+                [33mrequired[39m=[32m""[39m
+                [33mtype[39m=[32m"month"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-to"[39m
+              [36m>[39m
+                [0mMes final (— encara no ho sé)[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"inactivity-to"[39m
+                [33mtype[39m=[32m"month"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-comments"[39m
+              [36m>[39m
+                [0mComentaris[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"inactivity-comments"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"census-record__check-row"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-checkbox"[39m
+                [33mtype[39m=[32m"checkbox"[39m
+              [36m/>[39m
+              [0mSalta el termini del dia 25[0m
+            [36m</label>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mCrea i aprova[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</form>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/MemberInactivityDrawer.test.tsx:174:25
+    172|     );
+    173|     await renderDrawer();
+    174|     expect(await screen.findByRole("alert")).toHaveTextContent("No s'h…
+       |                         ^
+    175|     expect(screen.queryByText("Nou període d'inactivitat")).not.toBeIn…
+    176|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯
+
+ FAIL  src/census/MemberInactivityDrawer.test.tsx > T-13-31 admin inactivity lifecycle > E8-W03 round 2 #13 gates an empty creation state from the member's pack plan
+TestingLibraryElementError: Unable to find an element with the text: Les modalitats de pack no poden demanar inactivitat.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-labelledby[39m=[32m"_r_g_"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-drawer"[39m
+        [33mrole[39m=[32m"dialog"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_g_"[39m
+          [36m>[39m
+            [0mInactivitat[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mclass[39m=[32m"ah-overlay__close"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__body"[39m
+        [36m>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"census-record__form"[39m
+          [36m>[39m
+            [36m<h3>[39m
+              [0mNou període d'inactivitat[0m
+            [36m</h3>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-from"[39m
+              [36m>[39m
+                [0mMes d'inici[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"inactivity-from"[39m
+                [33mrequired[39m=[32m""[39m
+                [33mtype[39m=[32m"month"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-to"[39m
+              [36m>[39m
+                [0mMes final (— encara no ho sé)[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"inactivity-to"[39m
+                [33mtype[39m=[32m"month"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-comments"[39m
+              [36m>[39m
+                [0mComentaris[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"inactivity-comments"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"census-record__check-row"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-checkbox"[39m
+                [33mtype[39m=[32m"checkbox"[39m
+              [36m/>[39m
+              [0mSalta el termini del dia 25[0m
+            [36m</label>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mCrea i aprova[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</form>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-labelledby[39m=[32m"_r_g_"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-drawer"[39m
+        [33mrole[39m=[32m"dialog"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_g_"[39m
+          [36m>[39m
+            [0mInactivitat[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mclass[39m=[32m"ah-overlay__close"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__body"[39m
+        [36m>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"census-record__form"[39m
+          [36m>[39m
+            [36m<h3>[39m
+              [0mNou període d'inactivitat[0m
+            [36m</h3>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-from"[39m
+              [36m>[39m
+                [0mMes d'inici[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"inactivity-from"[39m
+                [33mrequired[39m=[32m""[39m
+                [33mtype[39m=[32m"month"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-to"[39m
+              [36m>[39m
+                [0mMes final (— encara no ho sé)[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"inactivity-to"[39m
+                [33mtype[39m=[32m"month"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"inactivity-comments"[39m
+              [36m>[39m
+                [0mComentaris[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"inactivity-comments"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"census-record__check-row"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-checkbox"[39m
+                [33mtype[39m=[32m"checkbox"[39m
+              [36m/>[39m
+              [0mSalta el termini del dia 25[0m
+            [36m</label>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mCrea i aprova[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</form>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/MemberInactivityDrawer.test.tsx:189:25
+    187|     );
+    188|     await renderDrawer();
+    189|     expect(await screen.findByText("Les modalitats de pack no poden de…
+       |                         ^
+    190|     expect(screen.queryByText("Nou període d'inactivitat")).not.toBeIn…
+    191|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯
+
+ FAIL  src/census/MemberLeaveDrawer.test.tsx > T-13-31 admin leave lifecycle > E8-W03 round 2 #5 confirms direct leave before POST and reports cancelled bookings
+TestingLibraryElementError: Unable to find an accessible element with the role "dialog" and name "Programa la baixa"
+
+Here are the accessible roles:
+
+  dialog:
+
+  Name "Baixa (amb data)":
+  [36m<aside[39m
+    [33maria-labelledby[39m=[32m"_r_9_"[39m
+    [33maria-modal[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-drawer"[39m
+    [33mrole[39m=[32m"dialog"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "Baixa (amb data)":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_9_"[39m
+  [36m/>[39m
+
+  Name "Programa la baixa":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  Name "Programa la baixa":
+  [36m<button[39m
+    [33maria-busy[39m=[32m"true"[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"submit"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"census-record__warning"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Motiu (opcional)":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"direct-leave-reason"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Tria una opció":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Ja he après tot el que volia":
+  [36m<option[39m
+    [33mvalue[39m=[32m"LEARNED_ENOUGH"[39m
+  [36m/>[39m
+
+  Name "No trobo temps per anar-hi":
+  [36m<option[39m
+    [33mvalue[39m=[32m"NO_TIME"[39m
+  [36m/>[39m
+
+  Name "No és el que esperava":
+  [36m<option[39m
+    [33mvalue[39m=[32m"NOT_EXPECTED"[39m
+  [36m/>[39m
+
+  Name "Condicionants meus aliens al club":
+  [36m<option[39m
+    [33mvalue[39m=[32m"EXTERNAL"[39m
+  [36m/>[39m
+
+  Name "Altres":
+  [36m<option[39m
+    [33mvalue[39m=[32m"OTHER"[39m
+  [36m/>[39m
+
+  Name "Decisió del club":
+  [36m<option[39m
+    [33mvalue[39m=[32m"CLUB_DECISION"[39m
+  [36m/>[39m
+
+  Name "Pack caducat":
+  [36m<option[39m
+    [33mvalue[39m=[32m"PACK_EXPIRED"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "Nota (opcional)":
+  [36m<textarea[39m
+    [33mclass[39m=[32m"ah-input ah-textarea"[39m
+    [33mid[39m=[32m"direct-leave-note"[39m
+    [33mmaxlength[39m=[32m"500"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-labelledby[39m=[32m"_r_9_"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-drawer"[39m
+        [33mrole[39m=[32m"dialog"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_9_"[39m
+          [36m>[39m
+            [0mBaixa (amb data)[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mclass[39m=[32m"ah-overlay__close"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__body"[39m
+        [36m>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"census-record__form"[39m
+          [36m>[39m
+            [36m<h3>[39m
+              [0mPrograma la baixa[0m
+            [36m</h3>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"census-record__warning"[39m
+            [36m>[39m
+              [0mSi hi ha una sol·licitud pendent, quedarà anul·lada.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-date"[39m
+              [36m>[39m
+                [0mData d'efecte[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"direct-leave-date"[39m
+                [33mmin[39m=[32m"2026-10-07"[39m
+                [33mrequired[39m=[32m""[39m
+                [33mtype[39m=[32m"date"[39m
+                [33mvalue[39m=[32m"2026-11-30"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-reason"[39m
+              [36m>[39m
+                [0mMotiu (opcional)[0m
+              [36m</label>[39m
+              [36m<select[39m
+                [33mclass[39m=[32m"ah-input ah-select"[39m
+                [33mid[39m=[32m"direct-leave-reason"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTria una opció[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"LEARNED_ENOUGH"[39m
+                [36m>[39m
+                  [0mJa he après tot el que volia[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"NO_TIME"[39m
+                [36m>[39m
+                  [0mNo trobo temps per anar-hi[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"NOT_EXPECTED"[39m
+                [36m>[39m
+                  [0mNo és el que esperava[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"EXTERNAL"[39m
+                [36m>[39m
+                  [0mCondicionants meus aliens al club[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"OTHER"[39m
+                [36m>[39m
+                  [0mAltres[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"CLUB_DECISION"[39m
+                [36m>[39m
+                  [0mDecisió del club[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"PACK_EXPIRED"[39m
+                [36m>[39m
+                  [0mPack caducat[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-note"[39m
+              [36m>[39m
+                [0mNota (opcional)[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"direct-leave-note"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33maria-busy[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-spinner"[39m
+              [36m/>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+              [36m>[39m
+                [0mPrograma la baixa[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</form>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ src/census/MemberLeaveDrawer.test.tsx:86:28
+     84|     fireEvent.click(within(drawer).getByRole("button", { name: "Progra…
+     85|     expect(writes).toHaveLength(0);
+     86|     const confirm = screen.getAllByRole("dialog", { name: "Programa la…
+       |                            ^
+     87|     if (confirm === undefined) throw new TypeError("Missing direct-lea…
+     88|     fireEvent.click(within(confirm).getByRole("button", { name: "Progr…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/15]⎯
+
+ FAIL  src/census/MemberLeaveDrawer.test.tsx > T-13-31 admin leave lifecycle > E8-W03 round 2 #7 reports detail and reactivation plan-read failures
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-labelledby[39m=[32m"_r_c_"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-drawer"[39m
+        [33mrole[39m=[32m"dialog"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_c_"[39m
+          [36m>[39m
+            [0mBaixa (amb data)[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mclass[39m=[32m"ah-overlay__close"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__body"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m>[39m
+            [0mCarregant la fitxa…[0m
+          [36m</p>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"census-record__form"[39m
+          [36m>[39m
+            [36m<h3>[39m
+              [0mPrograma la baixa[0m
+            [36m</h3>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"census-record__warning"[39m
+            [36m>[39m
+              [0mSi hi ha una sol·licitud pendent, quedarà anul·lada.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-date"[39m
+              [36m>[39m
+                [0mData d'efecte[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"direct-leave-date"[39m
+                [33mmin[39m=[32m"2026-10-07"[39m
+                [33mrequired[39m=[32m""[39m
+                [33mtype[39m=[32m"date"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-reason"[39m
+              [36m>[39m
+                [0mMotiu (opcional)[0m
+              [36m</label>[39m
+              [36m<select[39m
+                [33mclass[39m=[32m"ah-input ah-select"[39m
+                [33mid[39m=[32m"direct-leave-reason"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTria una opció[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"LEARNED_ENOUGH"[39m
+                [36m>[39m
+                  [0mJa he après tot el que volia[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"NO_TIME"[39m
+                [36m>[39m
+                  [0mNo trobo temps per anar-hi[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"NOT_EXPECTED"[39m
+                [36m>[39m
+                  [0mNo és el que esperava[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"EXTERNAL"[39m
+                [36m>[39m
+                  [0mCondicionants meus aliens al club[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"OTHER"[39m
+                [36m>[39m
+                  [0mAltres[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"CLUB_DECISION"[39m
+                [36m>[39m
+                  [0mDecisió del club[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"PACK_EXPIRED"[39m
+                [36m>[39m
+                  [0mPack caducat[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-note"[39m
+              [36m>[39m
+                [0mNota (opcional)[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"direct-leave-note"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mPrograma la baixa[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</form>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+    [36m>[39m
+      [36m<aside[39m
+        [33maria-labelledby[39m=[32m"_r_c_"[39m
+        [33maria-modal[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-drawer"[39m
+        [33mrole[39m=[32m"dialog"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__header"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"_r_c_"[39m
+          [36m>[39m
+            [0mBaixa (amb data)[0m
+          [36m</h2>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Tanca"[39m
+            [33mclass[39m=[32m"ah-overlay__close"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-overlay__body"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m>[39m
+            [0mCarregant la fitxa…[0m
+          [36m</p>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"census-record__form"[39m
+          [36m>[39m
+            [36m<h3>[39m
+              [0mPrograma la baixa[0m
+            [36m</h3>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"census-record__warning"[39m
+            [36m>[39m
+              [0mSi hi ha una sol·licitud pendent, quedarà anul·lada.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-date"[39m
+              [36m>[39m
+                [0mData d'efecte[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"direct-leave-date"[39m
+                [33mmin[39m=[32m"2026-10-07"[39m
+                [33mrequired[39m=[32m""[39m
+                [33mtype[39m=[32m"date"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-reason"[39m
+              [36m>[39m
+                [0mMotiu (opcional)[0m
+              [36m</label>[39m
+              [36m<select[39m
+                [33mclass[39m=[32m"ah-input ah-select"[39m
+                [33mid[39m=[32m"direct-leave-reason"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mTria una opció[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"LEARNED_ENOUGH"[39m
+                [36m>[39m
+                  [0mJa he après tot el que volia[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"NO_TIME"[39m
+                [36m>[39m
+                  [0mNo trobo temps per anar-hi[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"NOT_EXPECTED"[39m
+                [36m>[39m
+                  [0mNo és el que esperava[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"EXTERNAL"[39m
+                [36m>[39m
+                  [0mCondicionants meus aliens al club[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"OTHER"[39m
+                [36m>[39m
+                  [0mAltres[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"CLUB_DECISION"[39m
+                [36m>[39m
+                  [0mDecisió del club[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"PACK_EXPIRED"[39m
+                [36m>[39m
+                  [0mPack caducat[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-form-field__label"[39m
+                [33mfor[39m=[32m"direct-leave-note"[39m
+              [36m>[39m
+                [0mNota (opcional)[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"direct-leave-note"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mPrograma la baixa[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</form>[39m
+        [36m</div>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/MemberLeaveDrawer.test.tsx:103:25
+    101|     );
+    102|     await renderDrawer(member);
+    103|     expect(await screen.findByRole("alert")).toHaveTextContent("No s'h…
+       |                         ^
+    104|     cleanup();
+    105|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/15]⎯
+
+ FAIL  src/census/MemberLeaveDrawer.test.tsx > T-13-31 admin leave lifecycle > E8-W03 round 2 #14 offers MEMBER and ADMIN reasons but excludes SYSTEM reasons
+TestingLibraryElementError: Unable to find an accessible element with the role "option" and name "Decisió del club"
+
+Here are the accessible roles:
+
+  option:
+
+  Name "Tria una opció":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<select[39m
+  [33mclass[39m=[32m"ah-input ah-select"[39m
+  [33mid[39m=[32m"direct-leave-reason"[39m
+[36m>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m>[39m
+    [0mTria una opció[0m
+  [36m</option>[39m
+[36m</select>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberLeaveDrawer.test.tsx:117:27
+    115|     await renderDrawer(member);
+    116|     const reason = await screen.findByLabelText("Motiu (opcional)");
+    117|     expect(within(reason).getByRole("option", { name: "Decisió del clu…
+       |                           ^
+    118|     expect(within(reason).queryByRole("option", { name: "Pack caducat"…
+    119|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/15]⎯
+
+ FAIL  src/census/MemberLeaveDrawer.test.tsx > T-13-31 admin leave lifecycle > E8-W03 round 2 #12 submits reactivation and formats prices through club money rules
+TestingLibraryElementError: Unable to find an accessible element with the role "option" and name `/60,00.*€/u`
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Reactiva l'abonat":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_k_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Modalitat":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"reactivation-plan"[39m
+    [33mrequired[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Tarifa":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"reactivation-price"[39m
+    [33mrequired[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Tria una opció":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<option[39m
+    [33mvalue[39m=[32m"plan-member"[39m
+  [36m/>[39m
+
+  Name "Abonat · 2 gossos":
+  [36m<option[39m
+    [33mvalue[39m=[32m"plan-family"[39m
+  [36m/>[39m
+
+  Name "Pack 6":
+  [36m<option[39m
+    [33mvalue[39m=[32m"plan-pack-6"[39m
+  [36m/>[39m
+
+  Name "Pack 10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"plan-pack-10"[39m
+  [36m/>[39m
+
+  Name "Teràpia":
+  [36m<option[39m
+    [33mvalue[39m=[32m"plan-therapy"[39m
+  [36m/>[39m
+
+  Name "Tria una opció":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "55 EUR":
+  [36m<option[39m
+    [33mvalue[39m=[32m"price-member-old"[39m
+  [36m/>[39m
+
+  Name "60 EUR":
+  [36m<option[39m
+    [33mvalue[39m=[32m"price-member"[39m
+  [36m/>[39m
+
+  Name "65 EUR":
+  [36m<option[39m
+    [33mvalue[39m=[32m"price-member-next"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Reactiva l'abonat":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mtype[39m=[32m"submit"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_k_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_k_"[39m
+    [36m>[39m
+      [0mReactiva l'abonat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mLa reactivació no cobra entrada. Els gossos continuaran inactius fins que es reactivin un per un des de la seva fitxa.[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"reactivation-plan"[39m
+        [36m>[39m
+          [0mModalitat[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"reactivation-plan"[39m
+          [33mrequired[39m=[32m""[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-member"[39m
+          [36m>[39m
+            [0mAbonat[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-family"[39m
+          [36m>[39m
+            [0mAbonat · 2 gossos[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-6"[39m
+          [36m>[39m
+            [0mPack 6[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-10"[39m
+          [36m>[39m
+            [0mPack 10[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-therapy"[39m
+          [36m>[39m
+            [0mTeràpia[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"reactivation-price"[39m
+        [36m>[39m
+          [0mTarifa[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"reactivation-price"[39m
+          [33mrequired[39m=[32m""[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member-old"[39m
+          [36m>[39m
+            [0m55 EUR[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member"[39m
+          [36m>[39m
+            [0m60 EUR[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member-next"[39m
+          [36m>[39m
+            [0m65 EUR[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"reactivation-invoice-date"[39m
+        [36m>[39m
+          [0mData del proper rebut[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"reactivation-invoice-date"[39m
+          [33mmin[39m=[32m"2026-10-07"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"date"[39m
+          [33mvalue[39m=[32m"2026-11-01"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mReactiva l'abonat[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberLeaveDrawer.test.tsx:133:26
+    131|     fireEvent.change(within(modal).getByLabelText("Modalitat"), { targ…
+    132|     fireEvent.change(await within(modal).findByLabelText("Tarifa"), { …
+    133|     expect(within(modal).getByRole("option", { name: /60,00.*€/u })).t…
+       |                          ^
+    134|     fireEvent.click(within(modal).getByRole("button", { name: "Reactiv…
+    135|     await waitFor(() => { expect(writes).toEqual([{ nextInvoiceDate: "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/15]⎯
+
+ FAIL  src/census/MemberPaymentMethodDrawer.test.tsx > E8-W03 round 2 #16 shows Save after switching away from a generated card link
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Desa"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Mètode de pagament":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_0_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  --------------------------------------------------heading:
+
+  Name "Mètode actual":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Tipus":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"payment-method-type"[39m
+  [36m/>[39m
+
+  Name "Canal":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"payment-channel"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Domiciliació":
+  [36m<option[39m
+    [33mvalue[39m=[32m"SEPA_DD"[39m
+  [36m/>[39m
+
+  Name "Targeta":
+  [36m<option[39m
+    [33mvalue[39m=[32m"CARD"[39m
+  [36m/>[39m
+
+  Name "Efectiu":
+  [36m<option[39m
+    [33mvalue[39m=[32m"MANUAL"[39m
+  [36m/>[39m
+
+  Name "Efectiu":
+  [36m<option[39m
+    [33mvalue[39m=[32m"CASH"[39m
+  [36m/>[39m
+
+  Name "Transferència":
+  [36m<option[39m
+    [33mvalue[39m=[32m"TRANSFER"[39m
+  [36m/>[39m
+
+  Name "Bizum":
+  [36m<option[39m
+    [33mvalue[39m=[32m"BIZUM"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "https://checkout.example.test/setup/admin-card":
+  [36m<a[39m
+    [33mhref[39m=[32m"https://checkout.example.test/setup/admin-card"[39m
+    [33mrel[39m=[32m"noreferrer"[39m
+    [33mtarget[39m=[32m"_blank"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Copia l'enllaç":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mMètode de pagament[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record__fieldset"[39m
+    [36m>[39m
+      [36m<h3>[39m
+        [0mMètode actual[0m
+      [36m</h3>[39m
+      [36m<p>[39m
+        [0mDomiciliació[0m
+        [0m · ···· ···· ···· ···· 2231[0m
+        [0m · Laura Serra Vidal[0m
+      [36m</p>[39m
+    [36m</section>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"payment-method-type"[39m
+        [36m>[39m
+          [0mTipus[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"payment-method-type"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"SEPA_DD"[39m
+          [36m>[39m
+            [0mDomiciliació[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"CARD"[39m
+          [36m>[39m
+            [0mTargeta[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"MANUAL"[39m
+          [36m>[39m
+            [0mEfectiu[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"payment-channel"[39m
+        [36m>[39m
+          [0mCanal[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"payment-channel"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"CASH"[39m
+          [36m>[39m
+            [0mEfectiu[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"TRANSFER"[39m
+          [36m>[39m
+            [0mTransferència[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"BIZUM"[39m
+          [36m>[39m
+            [0mBizum[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+    [36m<p>[39m
+      [36m<a[39m
+        [33mhref[39m=[32m"https://checkout.example.test/setup/admin-card"[39m
+        [33mrel[39m=[32m"noreferrer"[39m
+        [33mtarget[39m=[32m"_blank"[39m
+      [36m>[39m
+        [0mhttps://checkout.example.test/setup/admin-card[0m
+      [36m</a>[39m
+      [0m [0m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mCopia l'enllaç[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberPaymentMethodDrawer.test.tsx:51:25
+     49|
+     50|   fireEvent.change(within(drawer).getByLabelText("Tipus"), { target: {…
+     51|   expect(within(drawer).getByRole("button", { name: "Desa" })).toBeEna…
+       |                         ^
+     52|   expect(within(drawer).queryByRole("link", { name: /checkout\.example…
+     53| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/15]⎯
+
+ FAIL  src/census/MemberPlanDrawer.test.tsx > E8-W03 round 2 member plan change > #2 submits the published plan-change mutation and refreshes D10
+TestingLibraryElementError: Unable to find an accessible element with the role "option" and name "60,00 €"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Modalitat":
+  [36m<h2[39m
+    [33mid[39m=[32m"_r_0_"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Tanca":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Tanca"[39m
+    [33mclass[39m=[32m"ah-overlay__close"[39m
+  [36m/>[39m
+
+  --------------------------------------------------heading:
+
+  Name "Modalitat actual":
+  [36m<h3 />[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"census-record__warning"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Modalitat nova":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"member-plan"[39m
+  [36m/>[39m
+
+  Name "Tarifa":
+  [36m<select[39m
+    [33mclass[39m=[32m"ah-input ah-select"[39m
+    [33mid[39m=[32m"member-price"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "Tria una opció":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "Abonat":
+  [36m<option[39m
+    [33mvalue[39m=[32m"plan-member"[39m
+  [36m/>[39m
+
+  Name "Abonat · 2 gossos":
+  [36m<option[39m
+    [33mvalue[39m=[32m"plan-family"[39m
+  [36m/>[39m
+
+  Name "Pack 6":
+  [36m<option[39m
+    [33mvalue[39m=[32m"plan-pack-6"[39m
+  [36m/>[39m
+
+  Name "Pack 10":
+  [36m<option[39m
+    [33mvalue[39m=[32m"plan-pack-10"[39m
+  [36m/>[39m
+
+  Name "Teràpia":
+  [36m<option[39m
+    [33mvalue[39m=[32m"plan-therapy"[39m
+  [36m/>[39m
+
+  Name "Tria una opció":
+  [36m<option[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  Name "55 EUR":
+  [36m<option[39m
+    [33mvalue[39m=[32m"price-member-old"[39m
+  [36m/>[39m
+
+  Name "60 EUR":
+  [36m<option[39m
+    [33mvalue[39m=[32m"price-member"[39m
+  [36m/>[39m
+
+  Name "65 EUR":
+  [36m<option[39m
+    [33mvalue[39m=[32m"price-member-next"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Desa":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "Afegeix un segon gos des de la seva alta":
+  [36m<a[39m
+    [33mhref[39m=[32m"/abonats/member-laura?accio=afegir-gos"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mModalitat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record__fieldset"[39m
+    [36m>[39m
+      [36m<h3>[39m
+        [0mModalitat actual[0m
+      [36m</h3>[39m
+      [36m<p>[39m
+        [0mAbonat · 2 gossos[0m
+      [36m</p>[39m
+      [36m<p>[39m
+        [0mQuota mensual[0m
+      [36m</p>[39m
+    [36m</section>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"member-plan"[39m
+        [36m>[39m
+          [0mModalitat nova[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"member-plan"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-member"[39m
+          [36m>[39m
+            [0mAbonat[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-family"[39m
+          [36m>[39m
+            [0mAbonat · 2 gossos[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-6"[39m
+          [36m>[39m
+            [0mPack 6[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-10"[39m
+          [36m>[39m
+            [0mPack 10[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-therapy"[39m
+          [36m>[39m
+            [0mTeràpia[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"member-price"[39m
+        [36m>[39m
+          [0mTarifa[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"member-price"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member-old"[39m
+          [36m>[39m
+            [0m55 EUR[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member"[39m
+          [36m>[39m
+            [0m60 EUR[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"price-member-next"[39m
+          [36m>[39m
+            [0m65 EUR[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"member-plan-invoice-date"[39m
+        [36m>[39m
+          [0mData del proper rebut[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"member-plan-invoice-date"[39m
+          [33mtype[39m=[32m"date"[39m
+          [33mvalue[39m=[32m"2026-09-01"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"census-record__warning"[39m
+      [36m>[39m
+        [0mEl contracte actual encara no publica l'operació ni la previsualització del canvi de modalitat.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDesa[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+    [36m<a[39m
+      [33mhref[39m=[32m"/abonats/member-laura?accio=afegir-gos"[39m
+    [36m>[39m
+      [0mAfegeix un segon gos des de la seva alta[0m
+    [36m</a>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/census/MemberPlanDrawer.test.tsx:62:27
+     60|     fireEvent.change(within(drawer).getByLabelText("Modalitat nova"), …
+     61|     fireEvent.change(await within(drawer).findByLabelText("Tarifa"), {…
+     62|     expect(within(drawer).getByRole("option", { name: "60,00 €" })).to…
+       |                           ^
+     63|     fireEvent.click(within(drawer).getByRole("button", { name: "Desa" …
+     64|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/15]⎯
+
+ FAIL  src/census/MemberPlanDrawer.test.tsx > E8-W03 round 2 member plan change > #2 shows the 40% rule only for a qualifying ten-session pack
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <p>
+  En passar d'un pack de 10 sessions o més a una quota mensual, l'entrada té un 40 % de descompte. L'import l'ha de calcular l'API.
+</p> instead
+ ❯ src/census/MemberPlanDrawer.test.tsx:82:53
+     80|     drawer = await screen.findByRole("dialog", { name: "Modalitat" });
+     81|     fireEvent.change(within(drawer).getByLabelText("Modalitat nova"), …
+     82|     expect(within(drawer).queryByText(/40 %/u)).not.toBeInTheDocument(…
+       |                                                     ^
+     83|   });
+     84| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/15]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 2 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ApiError: failed
+ ❯ Function.fromResponse ../../packages/api-client/src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse ../../packages/api-client/src/client.ts:142:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/dist/index.mjs:161:28
+ ❯ src/census/MemberLeaveDrawer.tsx:79:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'INTERNAL_ERROR', details: {}, status: 500, traceId: 'test', retryAfter: undefined }
+This error originated in "src/census/MemberLeaveDrawer.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "E8-W03 round 2 #7 reports detail and reactivation plan-read failures". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+ApiError: failed
+ ❯ Function.fromResponse ../../packages/api-client/src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse ../../packages/api-client/src/client.ts:142:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/dist/index.mjs:161:28
+ ❯ src/census/MemberInactivityDrawer.tsx:64:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'INTERNAL_ERROR', details: {}, status: 500, traceId: 'test', retryAfter: undefined }
+This error originated in "src/census/MemberInactivityDrawer.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "E8-W03 round 2 #7 shows a detail-read failure instead of stale content". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  6 failed (6)
+      Tests  15 failed | 33 passed (48)
+     Errors  2 errors
+   Start at  22:47:23
+   Duration  21.84s (tests 88%, transform 5%, environment 3%, import 2%, setup 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/App.test.tsx src/census/MemberInactivityDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/census/MemberPlanDrawer.test.tsx src/census/MemberPaymentMethodDrawer.test.tsx src/census/InactivityLeavePage.test.tsx`
+Exit status 1
+exit 1

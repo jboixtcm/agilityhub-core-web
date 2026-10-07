@@ -6,7 +6,7 @@ import {
   type components,
   type ListItemWith,
 } from "@agilityhub/api-client";
-import { fmtMaskedIban } from "@agilityhub/i18n";
+import { fmtMaskedIban, fmtPlainDate, normalizeLocale } from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -132,15 +132,8 @@ function queryFor(kind: CensusKind, state: UniversalListState) {
     ...(kind === "members" ? MEMBER_ROW_FIELDS : DOG_ROW_FIELDS),
     ...state.columns.flatMap((column) => COLUMN_FIELDS[column] ?? [column]),
   ];
-  // E8-T01 publishes the lifecycle filters, but its adopted `x-fields` does not yet publish these
-  // two S13 columns. Asking for either would make the real API reject the projection. Until the
-  // projection contract catches up, request the complete row; `pending.json` supplies their row
-  // types and the API may include them in that non-sparse response.
-  const usesPendingMemberColumn =
-    kind === "members" &&
-    requestedFields.some((field) => field === "leaveSource" || field === "inactivityUntil");
   return {
-    ...(usesPendingMemberColumn ? {} : { fields: listFields(requestedFields) }),
+    fields: listFields(requestedFields),
     filter: apiFilters(state.filters),
     page: state.page,
     ...(state.q === "" ? {} : { q: state.q }),
@@ -150,15 +143,7 @@ function queryFor(kind: CensusKind, state: UniversalListState) {
 }
 
 function formatDate(value: string, locale: string, withYear = false): string {
-  const [year, month, day] = value.slice(0, 10).split("-").map(Number);
-  if (year === undefined || month === undefined || day === undefined) {
-    return value;
-  }
-  return new Intl.DateTimeFormat(locale, {
-    day: "2-digit",
-    month: "2-digit",
-    ...(withYear ? { year: "numeric" } : {}),
-  }).format(new Date(Date.UTC(year, month - 1, day)));
+  return fmtPlainDate(value, normalizeLocale(locale), withYear ? "short" : "dayMonthNumeric");
 }
 
 function toneForStatus(kind: components["schemas"]["DisplayStatus"]["kind"]) {
@@ -644,7 +629,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           key: "leaveSource",
           label: t("census:members.columns.leaveSource"),
           render: (item) =>
-            item.leaveSource === undefined
+            item.leaveSource == null
               ? t("census:values.empty")
               : t(`enums:leaveSource.${item.leaveSource}`),
         },

@@ -48,16 +48,16 @@ function authClient() {
   });
 }
 
-async function renderApplication(client: AuthClient) {
+async function renderApplication(client: AuthClient, appBranding: Branding = branding) {
   const i18n = await createI18n({
-    branding,
+    branding: appBranding,
     browserLanguages: ["ca"],
     initialNamespaces: ["admin-audit", "auth", "shell"],
     storage: undefined,
   });
   render(
     <I18nextProvider i18n={i18n}>
-      <BrandingProvider branding={branding}>
+      <BrandingProvider branding={appBranding}>
         <SessionProvider client={client}>
           <App authClient={client} />
         </SessionProvider>
@@ -164,6 +164,39 @@ describe("T-02-14 clubs-admin shell", () => {
         "/consola/*",
       ]),
     );
+  });
+
+  it("E8-W03 round 2 #1 keeps leave management reachable when INACTIVITY is disabled", async () => {
+    const modules = branding.modules.filter((module) => module !== "INACTIVITY");
+    expect(requiredModulesForUiItem("routes", "/inactivitats")).toEqual([]);
+    expect(requiredModulesForUiItem("menuEntries", "inactivity")).toEqual([]);
+
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["shell"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={{ ...branding, modules }}>
+          <AdminNavigation modules={modules} pathname="/inactivitats" roles={["ADMIN"]} />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    expect(screen.getByRole("link", { name: "Inactivitats i baixes" })).toHaveAttribute(
+      "href",
+      "/inactivitats",
+    );
+
+    cleanup();
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/inactivitats");
+    await renderApplication(client, { ...branding, modules });
+    expect(await screen.findByRole("heading", { name: "Inactivitats i baixes" })).toBeVisible();
+    expect(screen.getByRole("tab", { name: "Baixes" })).toBeVisible();
+    expect(screen.queryByRole("tab", { name: "Inactivitats" })).not.toBeInTheDocument();
   });
 });
 

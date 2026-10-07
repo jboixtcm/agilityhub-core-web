@@ -7,18 +7,6 @@
   },
   "paths": {},
   "x-schema-overlays": {
-    "MemberListItem": {
-      "type": "object",
-      "properties": {
-        "leaveSource": {
-          "$ref": "#/components/schemas/LeaveSource"
-        },
-        "inactivityUntil": {
-          "type": ["string", "null"],
-          "format": "date"
-        }
-      }
-    },
     "SavedView": {
       "type": "object",
       "properties": {

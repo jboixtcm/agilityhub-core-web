@@ -2060,13 +2060,13 @@ export interface paths {
         };
         /**
          * inactivityPeriods
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. «Inactivitats i baixes» › «Inactivitats» (universal list, CONVENCIONS_API §4): by default state:in:REQUESTED,APPROVED,ACTIVE ordered by fromMonth; q searches the member's name. An undeclared filter, sort or fields key → 400 INVALID_FILTER. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. «Inactivitats i baixes» › «Inactivitats» (universal list, CONVENCIONS_API §4): by default state:in:REQUESTED,APPROVED,ACTIVE ordered by fromMonth; q searches the member's name. An undeclared filter, sort or fields key → 400 INVALID_FILTER.
          */
         get: operations["inactivityPeriods"];
         put?: never;
         /**
          * createInactivity
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. R-13-05 D10 «Nou període d'inactivitat»: created and approved at once (origin BACKOFFICE, feeSnapshot frozen, bookings inside cancelled, ACTIVE at once from the 1st of fromMonth); overrideDeadline skips the day-25 rule (decision.deadlineOverridden, audited). InactivityResolved{APPROVED} → N-18b, INACTIVITY_RESOLVED audit. The same checks as the member's request; another club's member → 404; an erased one → 409 MEMBER_ERASED. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. R-13-05 D10 «Nou període d'inactivitat»: created and approved at once (origin BACKOFFICE, feeSnapshot frozen, bookings inside cancelled, ACTIVE at once from the 1st of fromMonth); overrideDeadline skips the day-25 rule (decision.deadlineOverridden, audited). InactivityResolved{APPROVED} → N-18b, INACTIVITY_RESOLVED audit. The same checks as the member's request; another club's member → 404; an erased one → 409 MEMBER_ERASED.
          */
         post: operations["createInactivity"];
         delete?: never;
@@ -2084,7 +2084,7 @@ export interface paths {
         };
         /**
          * inactivityPeriod
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. D10's drawer: the period with its history and cancelled bookings. Another club's → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. D10's drawer: the period with its history and cancelled bookings. Another club's → 404.
          */
         get: operations["inactivityPeriod"];
         put?: never;
@@ -2094,7 +2094,7 @@ export interface paths {
         head?: never;
         /**
          * changeInactivity
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. R-13-05 [Modifica els mesos]: as the member's change (R-13-04), with overrideDeadline; months already billed are not recomputed (an ADJUSTMENT invoice in S12). An old version → 409 STALE_VERSION. Field presence: an omitted field stays, toMonth: null opens the period, fromMonth: null or an unknown field → 400 VALIDATION_ERROR. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. R-13-05 [Modifica els mesos]: as the member's change (R-13-04), with overrideDeadline; months already billed are not recomputed (an ADJUSTMENT invoice in S12). An old version → 409 STALE_VERSION. Field presence: an omitted field stays, toMonth: null opens the period, fromMonth: null or an unknown field → 400 VALIDATION_ERROR.
          */
         patch: operations["changeInactivity"];
         trace?: never;
@@ -2110,7 +2110,7 @@ export interface paths {
         put?: never;
         /**
          * cancelInactivity
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. [Anul·la]: an APPROVED period not started yet → CANCELLED{ADMIN}, InactivityCancelled; the cancelled bookings are not restored. Otherwise → 409 INACTIVITY_INVALID_STATE. Idempotent by effect. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. [Anul·la]: an APPROVED period not started yet → CANCELLED{ADMIN}, InactivityCancelled; the cancelled bookings are not restored. Otherwise → 409 INACTIVITY_INVALID_STATE. Idempotent by effect.
          */
         post: operations["cancelInactivity"];
         delete?: never;
@@ -2130,7 +2130,7 @@ export interface paths {
         put?: never;
         /**
          * decideInactivity
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. R-13-05 [Aprova] / [Denega]: only a REQUESTED period (409 INACTIVITY_INVALID_STATE). APPROVED freezes feeSnapshot, cancels the bookings inside (R-13-06, cancelledBookings) and is ACTIVE at once from the 1st of fromMonth (InactivityStarted in the same transaction); DENIED changes nothing else. InactivityResolved → N-18b with the note, INACTIVITY_RESOLVED audit. Idempotent by effect. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. R-13-05 [Aprova] / [Denega]: only a REQUESTED period (409 INACTIVITY_INVALID_STATE). APPROVED freezes feeSnapshot, cancels the bookings inside (R-13-06, cancelledBookings) and is ACTIVE at once from the 1st of fromMonth (InactivityStarted in the same transaction); DENIED changes nothing else. InactivityResolved → N-18b with the note, INACTIVITY_RESOLVED audit. Idempotent by effect.
          */
         post: operations["decideInactivity"];
         delete?: never;
@@ -2150,7 +2150,7 @@ export interface paths {
         put?: never;
         /**
          * terminateInactivity
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. R-13-05 [Finalitza el període]: an ACTIVE period ends at toMonth ≥ fromMonth (422 INACTIVITY_INVALID_RANGE): before the current month → FINISHED now (finishReason ADMIN, InactivityEnded → N-18c); otherwise toMonth is set and the scheduler closes it. Not ACTIVE → 409 INACTIVITY_INVALID_STATE. Idempotent by effect. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). INACTIVITY off → 404 MODULE_DISABLED. R-13-05 [Finalitza el període]: an ACTIVE period ends at toMonth ≥ fromMonth and no later than its current end (422 INACTIVITY_INVALID_RANGE): before the current month → FINISHED now (finishReason ADMIN, InactivityEnded → N-18c); otherwise toMonth is set and the scheduler closes it. Not ACTIVE → 409 INACTIVITY_INVALID_STATE. Idempotent by effect.
          */
         post: operations["terminateInactivity"];
         delete?: never;
@@ -2580,7 +2580,7 @@ export interface paths {
         };
         /**
          * leaveRequests
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. «Inactivitats i baixes» › «Baixes» (universal list, CONVENCIONS_API §4): by default state:eq:PENDING ordered by requestedAt; q searches the member's name. An undeclared filter, sort or fields key → 400 INVALID_FILTER. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. «Inactivitats i baixes» › «Baixes» (universal list, CONVENCIONS_API §4): by default state:eq:PENDING ordered by requestedAt; q searches the member's name. An undeclared filter, sort or fields key → 400 INVALID_FILTER.
          */
         get: operations["leaveRequests"];
         put?: never;
@@ -2600,7 +2600,7 @@ export interface paths {
         };
         /**
          * leaveRequest
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. D10's drawer: the request with its decision and cancelled bookings. Another club's → 404 (T-13-24). Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. D10's drawer: the request with its decision and cancelled bookings. Another club's → 404 (T-13-24).
          */
         get: operations["leaveRequest"];
         put?: never;
@@ -2622,7 +2622,7 @@ export interface paths {
         put?: never;
         /**
          * decideLeave
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. R-13-10 [Aprova] / [Denega] of a PENDING request (409 LEAVE_INVALID_STATE). APPROVED: effectiveDate (default requestedDate, today or later: 422 LEAVE_DATE_INVALID) becomes Member.leaveDate; bookings after it are cancelled (R-13-12), live inactivity periods closed; the member stays active up to leaveDate included. LeaveResolved → N-28, LEAVE_RESOLVED audit; the answer's member carries the leaveDate. Idempotent by effect. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. R-13-10 [Aprova] / [Denega] of a PENDING request (409 LEAVE_INVALID_STATE). APPROVED: effectiveDate (default requestedDate, today or later: 422 LEAVE_DATE_INVALID) becomes Member.leaveDate; bookings after it are cancelled (R-13-12), live inactivity periods closed; the member stays active up to leaveDate included. LeaveResolved → N-28, LEAVE_RESOLVED audit; the answer's member carries the leaveDate. Idempotent by effect.
          */
         post: operations["decideLeave"];
         delete?: never;
@@ -3032,13 +3032,13 @@ export interface paths {
         };
         /**
          * myInactivityContext
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. Screen 14's context (S13 §6 JSON): the first month the caller may still change E(today) (R-13-01, inactivity.requestDeadlineDay in the club's time zone), the fee with BILLING, and the caller's own periods with what each still lets them change. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. Screen 14's context (S13 §6 JSON): the first month the caller may still change E(today) (R-13-01, inactivity.requestDeadlineDay in the club's time zone), the fee with BILLING, and the caller's own periods with what each still lets them change.
          */
         get: operations["myInactivityContext"];
         put?: never;
         /**
          * requestInactivity
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. R-13-02 [ENVIA LA SOL·LICITUD]: a REQUESTED period of the caller (origin APP, or BACKOFFICE under impersonation, audited with both ids); InactivityRequested → N-18a. Only an ACTIVE member (422 MEMBER_NOT_ACTIVE) without a planned leave (409 LEAVE_ALREADY_SCHEDULED) on a MONTHLY plan (a PACK or SINGLE_CLASS plan → 422 INACTIVITY_NOT_APPLICABLE); fromMonth ≥ E(today) (422 INACTIVITY_DEADLINE_PASSED {earliestMonth}) and ≤ E(today) + inactivity.maxStartMonthsAhead, toMonth null or ≥ fromMonth (422 INACTIVITY_INVALID_RANGE); no overlap nor adjacency with a live period (409 INACTIVITY_OVERLAP {periodId, hint: EXTEND}). The same Idempotency-Key answers the same period. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. R-13-02 [ENVIA LA SOL·LICITUD]: a REQUESTED period of the caller (origin APP, or BACKOFFICE under impersonation, audited with both ids); InactivityRequested → N-18a. Only an ACTIVE member (422 MEMBER_NOT_ACTIVE) without a planned leave (409 LEAVE_ALREADY_SCHEDULED) on a MONTHLY plan (a PACK or SINGLE_CLASS plan → 422 INACTIVITY_NOT_APPLICABLE); fromMonth ≥ E(today) (422 INACTIVITY_DEADLINE_PASSED {earliestMonth}) and ≤ E(today) + inactivity.maxStartMonthsAhead, toMonth null or ≥ fromMonth (422 INACTIVITY_INVALID_RANGE); no overlap nor adjacency with a live period (409 INACTIVITY_OVERLAP {periodId, hint: EXTEND}). The same Idempotency-Key answers the same period.
          */
         post: operations["requestInactivity"];
         delete?: never;
@@ -3056,7 +3056,7 @@ export interface paths {
         };
         /**
          * previewInactivity
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. Screen 14's yellow note and fee card (R-13-06/08), recomputed at each change of months: the caller's live bookings inside the months (a counter of a module that is off is absent) and the fee per month. toMonth before fromMonth → 422 INACTIVITY_INVALID_RANGE; a malformed month → 400 VALIDATION_ERROR. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. Screen 14's yellow note and fee card (R-13-06/08), recomputed at each change of months: the caller's live bookings inside the months (a counter of a module that is off is absent) and the fee per month. toMonth before fromMonth → 422 INACTIVITY_INVALID_RANGE; a malformed month → 400 VALIDATION_ERROR.
          */
         get: operations["previewInactivity"];
         put?: never;
@@ -3082,7 +3082,7 @@ export interface paths {
         head?: never;
         /**
          * changeMyInactivity
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. R-13-04 [MODIFICA]: REQUESTED everything, APPROVED the months and comments, ACTIVE only toMonth (lengthen, shorten, set or open the end), within R-13-03's day-25 rule (422 INACTIVITY_DEADLINE_PASSED {earliestMonth}); applied without a new approval, history +1, InactivityChanged → N-18d; bookings in added months are cancelled (R-13-06). FINISHED/DENIED/CANCELLED → 409 INACTIVITY_INVALID_STATE; an old version → 409 STALE_VERSION (the version comes with each period of GET /me/inactivity-periods). Another member's → 404. Field presence: an omitted field stays, toMonth: null opens the period, fromMonth: null or an unknown field → 400 VALIDATION_ERROR. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. R-13-04 [MODIFICA]: REQUESTED everything, APPROVED the months and comments, ACTIVE only toMonth (a different fromMonth or comments → 403 READ_ONLY; lengthen, shorten, set or open the end), within R-13-03's day-25 rule (422 INACTIVITY_DEADLINE_PASSED {earliestMonth}); applied without a new approval, history +1, InactivityChanged → N-18d; bookings in added months are cancelled (R-13-06). FINISHED/DENIED/CANCELLED → 409 INACTIVITY_INVALID_STATE; an old version → 409 STALE_VERSION (the version comes with each period of GET /me/inactivity-periods). Another member's → 404. Field presence: an omitted field stays, toMonth: null opens the period, fromMonth: null or an unknown field → 400 VALIDATION_ERROR.
          */
         patch: operations["changeMyInactivity"];
         trace?: never;
@@ -3098,7 +3098,7 @@ export interface paths {
         put?: never;
         /**
          * withdrawMyInactivity
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. R-13-04 [RETIRA LA SOL·LICITUD]: REQUESTED always, APPROVED only while fromMonth ≥ E(today) (422 INACTIVITY_DEADLINE_PASSED) → CANCELLED{MEMBER, WITHDRAWN}, InactivityCancelled; an ACTIVE one is shortened instead (409 INACTIVITY_INVALID_STATE). Idempotent by effect. Another member's → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). INACTIVITY off → 404 MODULE_DISABLED. R-13-04 [RETIRA LA SOL·LICITUD]: REQUESTED always, APPROVED only while fromMonth ≥ E(today) (422 INACTIVITY_DEADLINE_PASSED) → CANCELLED{MEMBER, WITHDRAWN}, InactivityCancelled; an ACTIVE one is shortened instead (409 INACTIVITY_INVALID_STATE). Idempotent by effect. Another member's → 404; an erased caller → 409 MEMBER_ERASED.
          */
         post: operations["withdrawMyInactivity"];
         delete?: never;
@@ -3176,13 +3176,13 @@ export interface paths {
         };
         /**
          * myLeaveContext
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). No module. Screen 15's context (S13 §6): the inactivity offer (INACTIVITY on and a plan that may request it), the fee with BILLING, today in the club's time zone, leave.fullMonthIfLater, leave.npsEnabled, the MEMBER reasons of leave.reasons in the reader's locale, the caller's planned leave and requests. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). No module. Screen 15's context (S13 §6): the inactivity offer (INACTIVITY on and a plan that may request it), the fee with BILLING, today in the club's time zone, leave.fullMonthIfLater, leave.npsEnabled, the MEMBER reasons of leave.reasons in the reader's locale, the caller's planned leave and requests.
          */
         get: operations["myLeaveContext"];
         put?: never;
         /**
          * requestLeave
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). No module. R-13-09 [ENVIA LA SOL·LICITUD]: a PENDING request of the caller (origin APP, or BACKOFFICE under impersonation, audited); LeaveRequested → N-14 with the localized reason. Only an ACTIVE member (422 MEMBER_NOT_ACTIVE), one PENDING request (409 LEAVE_ALREADY_REQUESTED) and no planned leave (409 LEAVE_ALREADY_SCHEDULED); requestedDate today or later (422 LEAVE_DATE_INVALID); reasonKey of leave.reasons (422 LEAVE_REASON_UNKNOWN, rule 0: S13 writes 400); nps only with leave.npsEnabled (403 READ_ONLY, §1: T-13-15 writes 400). The same Idempotency-Key answers the same request. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). No module. R-13-09 [ENVIA LA SOL·LICITUD]: a PENDING request of the caller (origin APP, or BACKOFFICE under impersonation, audited); LeaveRequested → N-14 with the localized reason. Only an ACTIVE member (422 MEMBER_NOT_ACTIVE), one PENDING request (409 LEAVE_ALREADY_REQUESTED) and no planned leave (409 LEAVE_ALREADY_SCHEDULED); requestedDate today or later (422 LEAVE_DATE_INVALID); reasonKey of leave.reasons (422 LEAVE_REASON_UNKNOWN, rule 0: S13 writes 400); nps only with leave.npsEnabled (403 READ_ONLY, §1: T-13-15 writes 400). The same Idempotency-Key answers the same request.
          */
         post: operations["requestLeave"];
         delete?: never;
@@ -3202,7 +3202,7 @@ export interface paths {
         put?: never;
         /**
          * withdrawMyLeave
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). No module. R-13-09 [RETIRA LA SOL·LICITUD]: a PENDING request → CANCELLED{MEMBER, WITHDRAWN}, LeaveCancelled, LEAVE_CANCELLED audit; otherwise 409 LEAVE_INVALID_STATE. Idempotent by effect. Another member's request, also of the caller's family group → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). No module. R-13-09 [RETIRA LA SOL·LICITUD]: a PENDING request → CANCELLED{MEMBER, WITHDRAWN}, LeaveCancelled, LEAVE_CANCELLED audit; otherwise 409 LEAVE_INVALID_STATE. Idempotent by effect. Another member's request, also of the caller's family group → 404; an erased caller → 409 MEMBER_ERASED.
          */
         post: operations["withdrawMyLeave"];
         delete?: never;
@@ -3348,7 +3348,7 @@ export interface paths {
         };
         /**
          * myPackBalances
-         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). BILLING off → 404 MODULE_DISABLED. PACKS off → 404 MODULE_DISABLED. Screen 13 «Pack {n} — amb {gos}»: the packs of the caller's dogs with their movements, the live ones first. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: MEMBER, also the impersonation token (ADMIN- or INSTRUCTOR-only tokens → 403). BILLING off → 404 MODULE_DISABLED. PACKS off → 404 MODULE_DISABLED. Screen 13 «Pack {n} — amb {gos}»: the packs of the caller's dogs with their movements, the live ones first.
          */
         get: operations["myPackBalances"];
         put?: never;
@@ -3496,7 +3496,7 @@ export interface paths {
         };
         /**
          * List members
-         * @description S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorListItem (the keys of MemberInstructorView) without financial or internal data. Fields/filters are limited by role; with fields an item has id and the requested keys only (CONVENCIONS_API §4). S04 reserves ADMIN-only signupPending, pendingDogs, warnings and signup.submittedAt for E3-T03; the current runtime does not yet evaluate these virtual fields. S13 R-13-17 (E8-T01): the ADMIN-only filters leaveSource (MEMBER · ADMIN · PACK_EXPIRED · MIGRATED), inactivityUntil (date; with INACTIVITY) and hasPendingRequest are published; until E8-T05 computes them a filter on one of them answers 501 NOT_IMPLEMENTED.
+         * @description S03 §6, R-03-22/R-03-31. ADMIN gets MemberListItem; INSTRUCTOR gets MemberInstructorListItem (the keys of MemberInstructorView) without financial or internal data. Fields/filters are limited by role; with fields an item has id and the requested keys only (CONVENCIONS_API §4). S04 reserves ADMIN-only signupPending, pendingDogs, warnings and signup.submittedAt for E3-T03; the current runtime does not yet evaluate these virtual fields. S13 R-13-17 (E8-T01): the ADMIN-only filters leaveSource (MEMBER · ADMIN · PACK_EXPIRED · MIGRATED), inactivityUntil (date; with INACTIVITY) and hasPendingRequest are published; they are evaluated from the tenant-scoped lifecycle documents.
          */
         get: operations["listMembers"];
         put?: never;
@@ -3758,7 +3758,7 @@ export interface paths {
         put?: never;
         /**
          * scheduleLeave
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. R-13-10 direct leave from D10: an APPROVED LeaveRequest{source ADMIN, origin BACKOFFICE} with the same effects as an approval; a PENDING one becomes CANCELLED{ADMIN}. Only an ACTIVE member (422 MEMBER_NOT_ACTIVE) without a planned leave (409 LEAVE_ALREADY_SCHEDULED). Another club's member → 404; an erased one → 409 MEMBER_ERASED. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. R-13-10 direct leave from D10: an APPROVED LeaveRequest{source ADMIN, origin BACKOFFICE} with the same effects as an approval; a PENDING one becomes CANCELLED{ADMIN}. Only an ACTIVE member (422 MEMBER_NOT_ACTIVE) without a planned leave (409 LEAVE_ALREADY_SCHEDULED). Another club's member → 404; an erased one → 409 MEMBER_ERASED.
          */
         post: operations["scheduleLeave"];
         delete?: never;
@@ -3851,6 +3851,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/members/{id}/plan-change": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * changeMemberPlan
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. Changes the current plan and price without moving nextInvoiceDate. A PACK to MONTHLY change creates a DUE entry fee, discounted once per eligible pack. effectiveMonth, if supplied, must be the current club-local month.
+         */
+        post: operations["change"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/members/{id}/planned-leave": {
         parameters: {
             query?: never;
@@ -3863,7 +3883,7 @@ export interface paths {
         post?: never;
         /**
          * cancelPlannedLeave
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. R-13-15 [Anul·la la baixa prevista]: an ACTIVE member with a leaveDate loses it, its LeaveRequest becomes CANCELLED{ADMIN}, LeaveCancelled → N-28 (variant), LEAVE_CANCELLED audit; billing returns to normal; the cancelled bookings are not restored. Without a planned leave → 422 NO_PLANNED_LEAVE (rule 0, S13 writes 409). No body. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. R-13-15 [Anul·la la baixa prevista]: an ACTIVE member with a leaveDate loses it, its LeaveRequest becomes CANCELLED{ADMIN}, LeaveCancelled → N-28 (variant), LEAVE_CANCELLED audit; billing returns to normal; the cancelled bookings are not restored. Without a planned leave → 422 NO_PLANNED_LEAVE (rule 0, S13 writes 409). No body.
          */
         delete: operations["cancelPlannedLeave"];
         options?: never;
@@ -3882,7 +3902,7 @@ export interface paths {
         put?: never;
         /**
          * reactivateMember
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. R-13-16 [Reactiva l'abonat]: a LEFT member becomes ACTIVE with the same number (leaveHistory +1, leaveDate/leftAt/leftReason cleared, Membership ACTIVE, dogs stay INACTIVE, no entry fee); MemberStatusChanged{LEFT→ACTIVE}, audited. With BILLING planId, priceId and nextInvoiceDate are required (400 VALIDATION_ERROR). Not LEFT → 422 MEMBER_NOT_LEFT (rule 0, S13 writes 409). Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). No module. R-13-16 [Reactiva l'abonat]: a LEFT member becomes ACTIVE with the same number (leaveHistory +1, leaveDate/leftAt/leftReason cleared, Membership ACTIVE, dogs stay INACTIVE, no entry fee); MemberStatusChanged{LEFT→ACTIVE}, audited. With BILLING planId, priceId and nextInvoiceDate are required (400 VALIDATION_ERROR). Not LEFT → 422 MEMBER_NOT_LEFT (rule 0, S13 writes 409).
          */
         post: operations["reactivateMember"];
         delete?: never;
@@ -4172,13 +4192,13 @@ export interface paths {
         };
         /**
          * packBalances
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. PACKS off → 404 MODULE_DISABLED. D10 «Pack {n} — {consumides} consumides · {disponibles} disponibles · caduca el {data}»: the packs of a member (memberId) or of a dog (dogId), at least one of the two; with their movements. Another club's member or dog → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. PACKS off → 404 MODULE_DISABLED. D10 «Pack {n} — {consumides} consumides · {disponibles} disponibles · caduca el {data}»: the packs of a member (memberId) or of a dog (dogId), at least one of the two; with their movements. Another club's member or dog → 404.
          */
         get: operations["packBalances"];
         put?: never;
         /**
          * openPackBalance
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. PACKS off → 404 MODULE_DISABLED. A pack opened by hand (migration, a gift): sessionsTotal defaults to the plan's pack.sessions and expiresOn to openedOn + validityMonths − 1 day (R-12-23); PackOpened. A plan that is not a pack → 422 PLAN_NOT_PACK; another club's member or dog → 404; an erased member → 409 MEMBER_ERASED. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. PACKS off → 404 MODULE_DISABLED. A pack opened by hand (migration, a gift): sessionsTotal defaults to the plan's pack.sessions and expiresOn to openedOn + validityMonths − 1 day (R-12-23); PackOpened. A plan that is not a pack → 422 PLAN_NOT_PACK; another club's member or dog → 404; an erased member → 409 MEMBER_ERASED.
          */
         post: operations["openPackBalance"];
         delete?: never;
@@ -4198,7 +4218,7 @@ export interface paths {
         put?: never;
         /**
          * adjustPackBalance
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. PACKS off → 404 MODULE_DISABLED. R-12-24 [Ajusta]: an ADJUST movement of delta sessions with its reason; it may reopen an EXPIRED pack with a new expiresOn (required then). Below zero → 422 PACK_NEGATIVE. PackAdjusted, PACK_ADJUSTED audit. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. PACKS off → 404 MODULE_DISABLED. R-12-24 [Ajusta]: an ADJUST movement of delta sessions with its reason; it may reopen an EXPIRED pack with a new expiresOn (required then). Below zero → 422 PACK_NEGATIVE. PackAdjusted, PACK_ADJUSTED audit.
          */
         post: operations["adjustPackBalance"];
         delete?: never;
@@ -5380,13 +5400,13 @@ export interface paths {
         };
         /**
          * upfrontPayments
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D10 «Pagaments a l'acte»: a member's payments on the spot (entry fee, first month, packs, single classes, activities), newest first, optionally of one status. Another club's member → 404. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. D10 «Pagaments a l'acte»: a member's payments on the spot (entry fee, first month, packs, single classes, activities), newest first, optionally of one status. Another club's member → 404.
          */
         get: operations["upfrontPayments"];
         put?: never;
         /**
          * recordUpfrontPayment
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-23 [Registra un pagament]: a MANUAL payment (cash, transfer, Bizum) with amountPaid ≤ amountDue (PARTIAL when less; more → 422 AMOUNT_EXCEEDS_DUE). A PACK payment opens the dog's pack (PackOpened; a plan that is not a pack → 422 PLAN_NOT_PACK; one pack per payment). UpfrontPaymentRecorded, UPFRONT_PAYMENT_RECORDED audit. Another club's member or dog → 404; an erased member → 409 MEMBER_ERASED. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-23 [Registra un pagament]: a MANUAL payment (cash, transfer, Bizum) with amountPaid ≤ amountDue (PARTIAL when less; more → 422 AMOUNT_EXCEEDS_DUE). A PACK payment opens the dog's pack (PackOpened; a plan that is not a pack → 422 PLAN_NOT_PACK; one pack per payment). UpfrontPaymentRecorded, UPFRONT_PAYMENT_RECORDED audit. Another club's member or dog → 404; an erased member → 409 MEMBER_ERASED.
          */
         post: operations["recordUpfrontPayment"];
         delete?: never;
@@ -6698,15 +6718,22 @@ export interface components {
             /** Format: uuid */
             id: string;
         };
-        /** @description R-12-07: a member the simulation (or the run, skipped[]) leaves out */
+        /** @description R-12-07: a member-level or waiting-receipt incident; skipped[] only contains members not billed by the run */
         BillingIncident: {
             code: components["schemas"]["BillingIncidentCode"];
+            /** @description Waiting receipts only */
+            displayNumber?: string;
+            /**
+             * Format: uuid
+             * @description Waiting receipts only
+             */
+            invoiceId?: string;
             /** Format: uuid */
             memberId: string;
             memberName: string;
         };
         /** @enum {string} */
-        BillingIncidentCode: "NO_BANK_ACCOUNT" | "NO_PLAN" | "NO_PRICE" | "CARD_INVALID" | "CURRENCY_MISMATCH" | "PROVIDER_DISABLED";
+        BillingIncidentCode: "NO_BANK_ACCOUNT" | "NO_PLAN" | "NO_PRICE" | "CARD_INVALID" | "CURRENCY_MISMATCH" | "PROVIDER_DISABLED" | "MEMBER_NOT_ACTIVE" | "PAYMENT_METHOD_CHANGED";
         /** @description S12 §6 GET /billing/periods/{period}: the month as D6 shows it; simulation, run and remittance are null until they exist */
         BillingPeriod: {
             counts: components["schemas"]["InvoiceCounts"];
@@ -8743,6 +8770,8 @@ export interface components {
         };
         /** @description S13 §3 InactivityPeriod, whole months from the 1st of fromMonth to the end of toMonth (null = open, «encara no ho sé»). feeSnapshot is frozen at approval with BILLING (R-13-08), null before or without BILLING. The member is the period's owner. */
         InactivityPeriod: {
+            /** Format: int32 */
+            bookingsInside?: number | null;
             cancelReason?: components["schemas"]["InactivityCancelReason"] | null;
             /** Format: date-time */
             cancelledAt?: string | null;
@@ -10210,14 +10239,18 @@ export interface components {
             fullName?: string;
             /** @enum {string} */
             gender?: "MALE" | "FEMALE" | "OTHER";
+            hasPendingRequest?: boolean;
             /** Format: uuid */
             id: string;
             idDocument?: string;
             imageRights?: components["schemas"]["ImageRights"];
+            /** Format: date */
+            inactivityUntil?: string | null;
             /** Format: date-time */
             joinedAt?: string;
             /** Format: date */
             leaveDate?: string;
+            leaveSource?: components["schemas"]["LeaveSource"] | null;
             /** Format: int32 */
             memberNumber?: number;
             /** Format: date */
@@ -10234,9 +10267,6 @@ export interface components {
             /** Format: int64 */
             version?: number;
             warnings?: components["schemas"]["SignupWarning"][];
-            leaveSource?: components["schemas"]["LeaveSource"];
-            /** Format: date */
-            inactivityUntil?: string | null;
         };
         MemberListSignup: {
             /** Format: date-time */
@@ -10246,6 +10276,9 @@ export interface components {
         MemberOverview: {
             dogs: components["schemas"]["OverviewDog"][];
             familyGroup?: components["schemas"]["FamilyGroup"];
+            inactivity?: {
+                [key: string]: unknown;
+            };
             /** Format: int64 */
             invoicesCount?: number;
             member: components["schemas"]["Member"];
@@ -10253,6 +10286,7 @@ export interface components {
             notificationPreferences: {
                 [key: string]: unknown;
             };
+            plannedLeave?: components["schemas"]["PlannedLeave"] | null;
             recentAudit: components["schemas"]["AuditSummary"][];
             recentInvoices?: components["schemas"]["InvoiceSummary"][];
         };
@@ -10277,6 +10311,11 @@ export interface components {
             signup?: components["schemas"]["SignupPlanPatch"];
             /** Format: int64 */
             version: number;
+        };
+        MemberPlanChangeRequest: {
+            effectiveMonth?: string;
+            planId: string;
+            priceId: string;
         };
         MemberSignupView: {
             dogs: components["schemas"]["SignupDogView"][];
@@ -12576,6 +12615,11 @@ export interface components {
             byProvider: components["schemas"]["ByProvider"];
             /** Format: int32 */
             cashPending: number;
+            /**
+             * Format: date
+             * @description Default collection date in the billed month, club-local; null for a simulation stored before E90
+             */
+            collectionDate?: string | null;
             /** Format: int32 */
             count: number;
             inactivityFees: components["schemas"]["InactivityFees"];
@@ -13306,7 +13350,7 @@ export interface components {
         WaitlistEntry: {
             bookingId?: string | null;
             /** @enum {string|null} */
-            cancelReason?: "MEMBER" | "CLASS_CANCELLED" | "CLASS_STARTED" | "ADMIN" | "BOOKED_DIRECTLY" | "MEMBER_LEFT" | null;
+            cancelReason?: "MEMBER" | "CLASS_CANCELLED" | "CLASS_STARTED" | "ADMIN" | "BOOKED_DIRECTLY" | "MEMBER_LEFT" | "INACTIVITY" | "LEAVE" | null;
             /** Format: date-time */
             cancelledAt?: string | null;
             classSession: components["schemas"]["BookingClassSession"];
@@ -16155,7 +16199,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description ACTIVITY_NOT_PUBLISHED, REGISTRATION_CLOSED, LEVEL_NOT_ALLOWED, MEMBER_NOT_ACTIVE, BOOKING_BLOCKED, INACTIVITY_PERIOD */
+            /** @description ACTIVITY_NOT_PUBLISHED, REGISTRATION_CLOSED, LEVEL_NOT_ALLOWED, MEMBER_NOT_ACTIVE, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -19759,7 +19803,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description SWAP_NOT_ALLOWED, CLASS_NOT_BOOKABLE, NOT_YET_OPEN, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_NOT_ACTIVE, LEVEL_NOT_ALLOWED, PACK_EMPTY */
+            /** @description SWAP_NOT_ALLOWED, CLASS_NOT_BOOKABLE, NOT_YET_OPEN, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING, MEMBER_NOT_ACTIVE, LEVEL_NOT_ALLOWED, PACK_EMPTY */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -29414,7 +29458,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description READ_ONLY */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -29432,7 +29476,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INACTIVITY_INVALID_STATE, STALE_VERSION */
+            /** @description INACTIVITY_INVALID_STATE, STALE_VERSION, INACTIVITY_OVERLAP */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -36440,7 +36484,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description READ_ONLY */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -36458,7 +36502,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INACTIVITY_INVALID_STATE, STALE_VERSION */
+            /** @description MEMBER_ERASED, INACTIVITY_INVALID_STATE, STALE_VERSION, INACTIVITY_OVERLAP */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -36581,7 +36625,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INACTIVITY_INVALID_STATE */
+            /** @description MEMBER_ERASED, INACTIVITY_INVALID_STATE */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -37323,7 +37367,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description LEAVE_INVALID_STATE */
+            /** @description MEMBER_ERASED, LEAVE_INVALID_STATE */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -42358,6 +42402,133 @@ export interface operations {
                 };
             };
             /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    change: {
+        parameters: {
+            query?: never;
+            header: {
+                "Idempotency-Key": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemberPlanChangeRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description PLAN_NOT_AVAILABLE */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -51798,7 +51969,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description CLASS_NOT_BOOKABLE, NOT_YET_OPEN, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_NOT_ACTIVE, LEVEL_NOT_ALLOWED, PACK_EMPTY, WAITLIST_NOT_NOTIFIED, WAITLIST_OFFER_EXPIRED */
+            /** @description CLASS_NOT_BOOKABLE, NOT_YET_OPEN, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING, MEMBER_NOT_ACTIVE, LEVEL_NOT_ALLOWED, PACK_EMPTY, WAITLIST_NOT_NOTIFIED, WAITLIST_OFFER_EXPIRED */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -53807,7 +53978,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description DOG_ALREADY_BOOKED, DOG_NOT_ALLOWED, RING_NOT_RESERVABLE, SLOT_OUT_OF_WINDOW, CLUB_CLOSED, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_NOT_ACTIVE */
+            /** @description DOG_ALREADY_BOOKED, DOG_NOT_ALLOWED, RING_NOT_RESERVABLE, SLOT_OUT_OF_WINDOW, CLUB_CLOSED, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING, MEMBER_NOT_ACTIVE, DOG_NOT_ACTIVE */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -54709,7 +54880,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description AMOUNT_EXCEEDS_DUE, PLAN_NOT_PACK */
+            /** @description AMOUNT_EXCEEDS_DUE, PLAN_NOT_PACK, CURRENCY_MISMATCH */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -54963,7 +55134,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description CLASS_NOT_FULL, BOOKING_BLOCKED, INACTIVITY_PERIOD, PACK_EMPTY, LEVEL_NOT_ALLOWED, MEMBER_NOT_ACTIVE */
+            /** @description CLASS_NOT_FULL, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING, PACK_EMPTY, LEVEL_NOT_ALLOWED, MEMBER_NOT_ACTIVE */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -55338,7 +55509,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description WAITLIST_NOT_NOTIFIED, WAITLIST_OFFER_EXPIRED, SWAP_NOT_ALLOWED */
+            /** @description WAITLIST_NOT_NOTIFIED, WAITLIST_OFFER_EXPIRED, INACTIVITY_PERIOD, MEMBER_LEAVING, SWAP_NOT_ALLOWED */
             422: {
                 headers: {
                     [name: string]: unknown;

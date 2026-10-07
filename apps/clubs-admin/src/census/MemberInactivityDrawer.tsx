@@ -11,7 +11,7 @@ function detail(error: unknown, key: string): unknown {
   return isApiError(error) && typeof error.details === "object" && error.details !== null ? (error.details as Record<string, unknown>)[key] : undefined;
 }
 
-export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, open }: { client: ApiClient; memberId: string; onChanged: () => void; onClose: () => void; open: boolean }) {
+export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onChanged, onClose, onErased, open }: { client: ApiClient; initialPeriodId?: string; memberId: string; onChanged: () => void; onClose: () => void; onErased: () => void; open: boolean }) {
   const { t } = useTranslation(["admin-census", "enums", "errors"]);
   const branding = useBranding();
   const formats = useClubFormats();
@@ -32,12 +32,16 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
   const [success, setSuccess] = useState<string>();
   const [failure, setFailure] = useState<unknown>();
   const [reload, setReload] = useState(0);
+  const [erased, setErased] = useState(false);
+  const [notApplicable, setNotApplicable] = useState(false);
 
   useEffect(() => {
     if (!open) return undefined;
     let current = true;
-    void Promise.all([
-      client.GET("/inactivity-periods", {
+    void (async () => {
+      try {
+        const [list, parameter, cancellationParameter, overview, plansResult] = await Promise.all([
+          client.GET("/inactivity-periods", {
         params: {
           query: {
             fields: "member,fromMonth,toMonth,state,origin,requestedAt,comments,decision,feeSnapshot",
@@ -47,24 +51,32 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
             sort: ["fromMonth,desc"],
           },
         },
-      }),
-      client.GET("/parameters/{key}", {
+          }),
+          client.GET("/parameters/{key}", {
         params: { path: { key: "inactivity.requestDeadlineDay" } },
-      }),
-      client.GET("/parameters/{key}", {
+          }),
+          client.GET("/parameters/{key}", {
         params: { path: { key: "inactivity.cancelBookingsOnApproval" } },
-      }),
-    ]).then(
-      async ([list, parameter, cancellationParameter]) => {
+          }),
+          client.GET("/members/{id}/overview", { params: { path: { id: memberId } } }),
+          client.GET("/plans", { params: { query: { includeInactive: false } } }),
+        ]);
+        // The promise may settle after the drawer has closed.
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!current) return;
         const nextRows = list.data?.items ?? [];
         setRows(nextRows);
-        const live = nextRows.find((item) => item.state === "REQUESTED" || item.state === "APPROVED" || item.state === "ACTIVE");
-        if (live !== undefined) {
+        const planId = overview.data?.member.planId;
+        const memberPlan = (plansResult.data?.items ?? []).find((plan) => plan.id === planId);
+        const blockedByPlan = memberPlan?.type === "PACK" || memberPlan?.type === "SINGLE_CLASS";
+        setNotApplicable(blockedByPlan);
+        const live = initialPeriodId === undefined
+          ? nextRows.find((item) => item.state === "REQUESTED" || item.state === "APPROVED" || item.state === "ACTIVE")
+          : nextRows.find((item) => item.id === initialPeriodId) ?? { id: initialPeriodId };
+        if (!blockedByPlan && live !== undefined) {
           const result = await client.GET("/inactivity-periods/{id}", {
             params: { path: { id: live.id } },
           });
-          // The second read can finish after the drawer closed.
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (current && result.data !== undefined) {
             setPeriod(result.data);
@@ -85,18 +97,23 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
         }
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (current) setLoading(false);
-      },
-      (error: unknown) => {
+      } catch (error: unknown) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (current) {
           setFailure(error);
+          if (isApiError(error, "INACTIVITY_NOT_APPLICABLE")) setNotApplicable(true);
+          if (isApiError(error, "MEMBER_ERASED")) {
+            setErased(true);
+            onErased();
+          }
           setLoading(false);
         }
-      },
-    );
+      }
+    })();
     return () => {
       current = false;
     };
-  }, [client, memberId, open, reload]);
+  }, [client, initialPeriodId, memberId, onErased, open, reload]);
 
   useEffect(() => {
     if (!open) keys.drop(memberId);
@@ -113,6 +130,11 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
     } catch (error) {
       setFailure(error);
       if (isApiError(error, "STALE_VERSION")) setReload((value) => value + 1);
+      if (isApiError(error, "MEMBER_ERASED")) {
+        setErased(true);
+        setConfirmApprove(false);
+        onErased();
+      }
     } finally {
       setPending(false);
     }
@@ -127,6 +149,11 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
     } catch (error) {
       setFailure(error);
       if (isApiError(error, "STALE_VERSION")) setReload((value) => value + 1);
+      if (isApiError(error, "MEMBER_ERASED")) {
+        setErased(true);
+        setConfirmApprove(false);
+        onErased();
+      }
     } finally {
       setPending(false);
     }
@@ -143,11 +170,18 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
     if (isApiError(failure, "INACTIVITY_NOT_APPLICABLE")) return t("admin-census:inactivity.notApplicable");
     return isApiError(failure) ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") }) : t("admin-census:common.genericError");
   }, [failure, t]);
+  const recoverableFormFailure =
+    isApiError(failure, "INACTIVITY_DEADLINE_PASSED") ||
+    isApiError(failure, "INACTIVITY_OVERLAP") ||
+    isApiError(failure, "INACTIVITY_INVALID_RANGE") ||
+    isApiError(failure, "STALE_VERSION");
 
   return (
     <Drawer closeLabel={t("admin-census:common.close")} onClose={onClose} open={open} title={t("admin-census:inactivity.title")}>
       {loading ? <p role="status">{t("admin-census:common.loading")}</p> : null}
-      {isApiError(failure, "INACTIVITY_NOT_APPLICABLE") ? (
+      {erased ? (
+        <><p role="alert">{t("errors:MEMBER_ERASED")}</p><Button onClick={onClose} variant="ghost">{t("admin-census:common.cancel")}</Button></>
+      ) : notApplicable || isApiError(failure, "INACTIVITY_NOT_APPLICABLE") ? (
         <p role="alert">{t("admin-census:inactivity.notApplicable")}</p>
       ) : (
         <>
@@ -238,7 +272,7 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
             </section>
           ) : null}
 
-          {(period?.state === "APPROVED" || period?.state === "ACTIVE") && !editing ? (
+          {(period?.state === "APPROVED" || period?.state === "ACTIVE") && !editing && Object.values(period.editable).some(Boolean) ? (
             <Button
               onClick={() => {
                 setEditing(true);
@@ -249,27 +283,33 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
             </Button>
           ) : null}
 
-          {period === undefined || editing ? (
+          {!loading && (failure === undefined || recoverableFormFailure) && (period === undefined || editing) ? (
             <form
               className="census-record__form"
               onSubmit={(event) => {
                 event.preventDefault();
-                const body = {
-                  comments: comments.trim() === "" ? null : comments,
-                  fromMonth,
-                  overrideDeadline,
-                  toMonth: toMonth === "" ? null : toMonth,
-                };
                 if (period === undefined) {
+                  const body = {
+                    comments: comments.trim() === "" ? null : comments,
+                    fromMonth,
+                    overrideDeadline,
+                    toMonth: toMonth === "" ? null : toMonth,
+                  };
                   void submitUnkeyed(() =>
                     client.POST("/inactivity-periods", {
                       body: { memberId, ...body },
                     }),
                   );
                 } else {
+                  const body: components["schemas"]["InactivityPatchRequest"] = {
+                    ...(period.editable.fromMonth ? { fromMonth } : {}),
+                    ...(period.editable.toMonth ? { toMonth: toMonth === "" ? null : toMonth } : {}),
+                    ...(period.state === "ACTIVE" ? {} : { comments: comments.trim() === "" ? null : comments }),
+                    version: period.version,
+                  };
                   void submitUnkeyed(() =>
                     client.PATCH("/inactivity-periods/{id}", {
-                      body: { ...body, version: period.version },
+                      body,
                       params: { path: { id: period.id } },
                     }),
                   );
@@ -283,6 +323,7 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
                   onChange={(event) => {
                     setFromMonth(event.currentTarget.value);
                   }}
+                  disabled={period !== undefined && !period.editable.fromMonth}
                   required
                   type="month"
                   value={fromMonth}
@@ -294,6 +335,7 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
                   onChange={(event) => {
                     setToMonth(event.currentTarget.value);
                   }}
+                  disabled={period !== undefined && !period.editable.toMonth}
                   type="month"
                   value={toMonth}
                 />
@@ -305,10 +347,11 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
                   onChange={(event) => {
                     setComments(event.currentTarget.value);
                   }}
+                  disabled={period?.state === "ACTIVE"}
                   value={comments}
                 />
               </FormField>
-              <label className="census-record__check-row">
+              {period === undefined ? <label className="census-record__check-row">
                 <Checkbox
                   checked={overrideDeadline}
                   onChange={(event) => {
@@ -317,7 +360,7 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
                   }}
                 />
                 {t("admin-census:inactivity.overrideDeadline", { day: deadlineDay })}
-              </label>
+              </label> : null}
               <Button loading={pending} type="submit">
                 {period === undefined ? t("admin-census:inactivity.createApprove") : t("admin-census:common.save")}
               </Button>
@@ -394,7 +437,7 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
         onClose={() => {
           setConfirmApprove(false);
         }}
-        open={confirmApprove}
+        open={!erased && confirmApprove}
         title={t("admin-census:inactivity.approveConfirmTitle")}
       >
         <p>{cancelBookings ? t("admin-census:inactivity.approveConfirmCancel") : t("admin-census:inactivity.approveConfirmKeep")}</p>
@@ -427,7 +470,7 @@ export function MemberInactivityDrawer({ client, memberId, onChanged, onClose, o
                       ? t("admin-census:inactivity.cancelledToast", {
                           count: data?.cancelledBookings.length ?? 0,
                         })
-                      : t("admin-census:inactivity.noCancellationToast"),
+                      : t("admin-census:inactivity.noCancellationToast", { count: data?.bookingsInside ?? 0 }),
                   );
                 },
               );

@@ -125,7 +125,7 @@ import {
   fieldsProjection,
   MEMBER_LIST_FIELDS,
 } from "./list-fields";
-import { memberBillingHandlers, resetMemberBillingState } from "./member-billing-handlers";
+import { lifecycleMemberOverview, memberBillingHandlers, resetMemberBillingState } from "./member-billing-handlers";
 import {
   messagingHandlers,
   notificationExportRows,
@@ -660,7 +660,7 @@ function memberValues(item: MemberListItem, field: string): string[] | undefined
     case "leaveDate":
       return item.leaveDate === undefined ? [] : [item.leaveDate];
     case "leaveSource":
-      return item.leaveSource === undefined ? [] : [item.leaveSource];
+      return item.leaveSource == null ? [] : [item.leaveSource];
     case "inactivityUntil":
       return item.inactivityUntil == null ? [] : [item.inactivityUntil];
     case "memberNumber":
@@ -2770,12 +2770,11 @@ export const handlers = [
   http.get("*/api/v1/members/:id/overview", ({ params }) => {
     // S14 R-14-15: an erased member's record is read with what the api keeps.
     if (String(params.id) === ERASED_MEMBER_ID) return HttpResponse.json(erasedMemberOverview());
-    if (String(params.id) !== censusRecordState.memberOverview.member.id) {
-      return apiError("NOT_FOUND", "Member not found", 404);
-    }
+    const lifecycleOverview = lifecycleMemberOverview(String(params.id));
+    if (lifecycleOverview === undefined) return apiError("NOT_FOUND", "Member not found", 404);
     // S03 T-03-34 (R-03-30): with BILLING off the api sends no invoices, next invoice or
     // payment method.
-    const baseOverview = censusRecordState.memberOverview;
+    const baseOverview = lifecycleOverview;
     const overview =
       currentMockScenario().lifecycle === "memberLeft"
         ? {

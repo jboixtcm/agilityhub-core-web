@@ -109,7 +109,7 @@ export function MemberPaymentMethodDrawer({
         })();
       }}>
         <FormField id="payment-method-type" label={t("admin-census:paymentMethod.type")}>
-          <Select id="payment-method-type" onChange={(event) => { setType(event.currentTarget.value as PaymentType); }} value={type}>
+          <Select id="payment-method-type" onChange={(event) => { setType(event.currentTarget.value as PaymentType); setCheckoutUrl(undefined); }} value={type}>
             <option value="SEPA_DD">{t("enums:paymentMethodType.SEPA_DD")}</option>
             <option value="CARD">{t("enums:paymentMethodType.CARD")}</option>
             <option value="MANUAL">{t("enums:paymentMethodType.MANUAL")}</option>
@@ -151,7 +151,7 @@ export function MemberPaymentMethodDrawer({
             {t("admin-census:paymentMethod.sendCardLink")}
           </Button>
         )}
-        {type === "CARD" || checkoutUrl !== undefined ? null : <Button loading={pending} type="submit">{t("admin-census:common.save")}</Button>}
+        {type === "CARD" ? null : <Button loading={pending} type="submit">{t("admin-census:common.save")}</Button>}
       </form>}
       {erased || checkoutUrl === undefined ? null : (
         <p>

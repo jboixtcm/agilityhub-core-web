@@ -18,6 +18,7 @@ function parameterReasons(value: unknown, language: string): { key: string; labe
     if (typeof entry !== "object" || entry === null) return [];
     const item = entry as Record<string, unknown>;
     if (typeof item.key !== "string") return [];
+    if (item.audience !== "MEMBER" && item.audience !== "ADMIN") return [];
     if (typeof item.label === "string") return [{ key: item.key, label: item.label }];
     if (typeof item.label !== "object" || item.label === null) return [];
     const labels = item.label as Record<string, unknown>;
@@ -26,7 +27,7 @@ function parameterReasons(value: unknown, language: string): { key: string; labe
   });
 }
 
-export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: { client: ApiClient; member: Member; onChanged: (member?: Member) => void; onClose: () => void; open: boolean }) {
+export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased, open }: { client: ApiClient; member: Member; onChanged: (member?: Member) => void; onClose: () => void; onErased: () => void; open: boolean }) {
   const branding = useBranding();
   const formats = useClubFormats();
   const { i18n, t } = useTranslation(["admin-census", "enums", "errors"]);
@@ -43,19 +44,23 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: 
   const [priceId, setPriceId] = useState(member.priceId ?? "");
   const [nextInvoiceDate, setNextInvoiceDate] = useState(member.nextInvoiceDate ?? "");
   const [confirmCancel, setConfirmCancel] = useState(false);
+  const [confirmDirect, setConfirmDirect] = useState(false);
   const [reactivationOpen, setReactivationOpen] = useState(false);
   const [pending, setPending] = useState(false);
   const [loading, setLoading] = useState(open);
   const [failure, setFailure] = useState<unknown>();
   const [success, setSuccess] = useState<string>();
   const [reload, setReload] = useState(0);
+  const [erased, setErased] = useState(false);
   const billing = branding.modules.includes("BILLING");
 
   useEffect(() => {
     if (!open) return undefined;
     let current = true;
-    const reads = [
-      client.GET("/leave-requests", {
+    void (async () => {
+      try {
+        const [list, parameter] = await Promise.all([
+          client.GET("/leave-requests", {
         params: {
           query: {
             fields: "member,requestedDate,effectiveDate,reasonKey,source,state,nps,requestedAt,comment",
@@ -65,11 +70,11 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: 
             sort: ["requestedAt,desc"],
           },
         },
-      }),
-      client.GET("/parameters/{key}", { params: { path: { key: "leave.reasons" } } }),
-    ] as const;
-    void Promise.all(reads).then(
-      async ([list, parameter]) => {
+          }),
+          client.GET("/parameters/{key}", { params: { path: { key: "leave.reasons" } } }),
+        ] as const);
+        // The promise may settle after the drawer has closed.
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!current) return;
         const nextRows = list.data?.items ?? [];
         setRows(nextRows);
@@ -97,18 +102,22 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: 
         }
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (current) setLoading(false);
-      },
-      (error: unknown) => {
+      } catch (error: unknown) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (current) {
           setFailure(error);
+          if (isApiError(error, "MEMBER_ERASED")) {
+            setErased(true);
+            onErased();
+          }
           setLoading(false);
         }
-      },
-    );
+      }
+    })();
     return () => {
       current = false;
     };
-  }, [billing, client, i18n.resolvedLanguage, member.id, member.status, open, reload]);
+  }, [billing, client, i18n.resolvedLanguage, member.id, member.status, onErased, open, reload]);
 
   useEffect(() => {
     if (!open) keys.drop(member.id);
@@ -119,9 +128,10 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: 
       return undefined;
     }
     let current = true;
-    void client.GET("/prices", { params: { query: { planId } } }).then((result) => {
-      if (current) setPrices(result.data?.items ?? []);
-    });
+    void client.GET("/prices", { params: { query: { planId } } }).then(
+      (result) => { if (current) setPrices(result.data?.items ?? []); },
+      (cause: unknown) => { if (current) setFailure(cause); },
+    );
     return () => {
       current = false;
     };
@@ -136,9 +146,17 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: 
       setReload((value) => value + 1);
       onChanged(result.data as Member | undefined);
       setConfirmCancel(false);
+      setConfirmDirect(false);
       setReactivationOpen(false);
     } catch (error) {
       setFailure(error);
+      if (isApiError(error, "MEMBER_ERASED")) {
+        setErased(true);
+        setConfirmCancel(false);
+        setConfirmDirect(false);
+        setReactivationOpen(false);
+        onErased();
+      }
     } finally {
       setPending(false);
     }
@@ -154,7 +172,9 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: 
   return (
     <Drawer closeLabel={t("admin-census:common.close")} onClose={onClose} open={open} title={t("admin-census:leave.title")}>
       {loading ? <p role="status">{t("admin-census:common.loading")}</p> : null}
-      {member.status === "LEFT" ? (
+      {erased ? (
+        <><p role="alert">{t("errors:MEMBER_ERASED")}</p><Button onClick={onClose} variant="ghost">{t("admin-census:common.cancel")}</Button></>
+      ) : member.status === "LEFT" ? (
         <Button
           onClick={() => {
             setReactivationOpen(true);
@@ -263,17 +283,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: 
               className="census-record__form"
               onSubmit={(event) => {
                 event.preventDefault();
-                void run(JSON.stringify({ memberId: member.id, effectiveDate, reasonKey, note }), (key) =>
-                  client.POST("/members/{id}/leave", {
-                    body: {
-                      effectiveDate,
-                      ...(reasonKey === "" ? {} : { reasonKey }),
-                      ...(note.trim() === "" ? {} : { note }),
-                    },
-                    headers: { "Idempotency-Key": key },
-                    params: { path: { id: member.id } },
-                  }),
-                );
+                setConfirmDirect(true);
               }}
             >
               <h3>{t("admin-census:leave.direct")}</h3>
@@ -323,7 +333,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: 
           )}
         </>
       )}
-      {errorMessage === undefined || isApiError(failure, "LEAVE_DATE_INVALID") ? null : <p role="alert">{errorMessage}</p>}
+      {erased || errorMessage === undefined || isApiError(failure, "LEAVE_DATE_INVALID") ? null : <p role="alert">{errorMessage}</p>}
       {success === undefined ? null : (
         <Toast
           dismissLabel={t("admin-census:common.close")}
@@ -337,10 +347,38 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: 
       )}
       <Modal
         closeLabel={t("admin-census:common.close")}
+        onClose={() => { setConfirmDirect(false); }}
+        open={!erased && confirmDirect}
+        title={t("admin-census:leave.confirm")}
+      >
+        <p>{t("admin-census:leave.directWarning")}</p>
+        <div className="census-record__dialog-actions">
+          <Button onClick={() => { setConfirmDirect(false); }} variant="ghost">{t("admin-census:common.cancel")}</Button>
+          <Button loading={pending} onClick={() => {
+            void run(
+              JSON.stringify({ memberId: member.id, effectiveDate, reasonKey, note }),
+              (key) => client.POST("/members/{id}/leave", {
+                body: {
+                  effectiveDate,
+                  ...(reasonKey === "" ? {} : { reasonKey }),
+                  ...(note.trim() === "" ? {} : { note }),
+                },
+                headers: { "Idempotency-Key": key },
+                params: { path: { id: member.id } },
+              }),
+              (data) => {
+                setSuccess(t("admin-census:leave.cancelledToast", { count: (data as Leave | undefined)?.cancelledBookings.length ?? 0 }));
+              },
+            );
+          }}>{t("admin-census:leave.confirm")}</Button>
+        </div>
+      </Modal>
+      <Modal
+        closeLabel={t("admin-census:common.close")}
         onClose={() => {
           setConfirmCancel(false);
         }}
-        open={confirmCancel}
+        open={!erased && confirmCancel}
         title={t("admin-census:leave.cancelPlanned")}
       >
         <p>{t("admin-census:leave.cancelPlannedConfirm")}</p>
@@ -377,7 +415,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: 
         onClose={() => {
           setReactivationOpen(false);
         }}
-        open={reactivationOpen}
+        open={!erased && reactivationOpen}
         title={t("admin-census:reactivation.title")}
       >
         <form
@@ -433,10 +471,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, open }: 
                   <option value="">{t("admin-census:common.choose")}</option>
                   {prices.map((price) => (
                     <option key={price.id} value={price.id}>
-                      {t("admin-census:plan.priceAmount", {
-                        amount: price.amount.amountMinor / 100,
-                        currency: price.amount.currency,
-                      })}
+                      {formats.formatMoney(price.amount.amountMinor / 100)}
                     </option>
                   ))}
                 </Select>

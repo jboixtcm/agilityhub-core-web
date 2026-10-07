@@ -1,11 +1,14 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
 import { fmtDateTime, fmtPlainDate, normalizeLocale, useClubFormats } from "@agilityhub/i18n";
-import { Badge, Tabs, UniversalList, type UniversalFilter, type UniversalFilterOperator, type UniversalListColumn, type UniversalListFilterColumn, type UniversalListLabels, type UniversalListState, useBranding } from "@agilityhub/ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Badge, Tabs, UniversalList, type UniversalFilter, type UniversalFilterOperator, type UniversalListColumn, type UniversalListFilterColumn, type UniversalListLabels, type UniversalListSavedView, type UniversalListState, useBranding } from "@agilityhub/ui";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 type InactivityRow = components["schemas"]["InactivityPeriodListItem"];
 type LeaveRow = components["schemas"]["LeaveRequestListItem"];
+type SavedView = components["schemas"]["SavedView"];
+type SavedViewCreate = components["schemas"]["SavedViewCreate"];
+type SavedViewUpdate = components["schemas"]["SavedViewUpdate"];
 
 const INACTIVITY_DEFAULT: UniversalListState = {
   columns: ["member", "fromMonth", "toMonth", "state", "origin", "requestedAt"],
@@ -32,6 +35,54 @@ function filterValue(value: unknown): string {
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean" ? String(value) : "";
 }
 
+function savedViewFilters(filters: readonly UniversalFilter[]): components["schemas"]["Filter"][] {
+  return filters.map((filter) => ({ field: filter.field, op: filter.operator, value: filter.value }));
+}
+
+function toSavedView(view: SavedView): UniversalListSavedView {
+  return {
+    columns: [...view.columns],
+    filters: view.filters.map((filter) => ({ field: filter.field, operator: filter.op, value: filterValue(filter.value) })),
+    id: view.id,
+    name: view.name,
+    shared: view.shared,
+    sort: [...view.sort],
+    system: view.system === true,
+  };
+}
+
+function useSavedViews(client: ApiClient, listKey: string) {
+  const [views, setViews] = useState<SavedView[]>([]);
+  useEffect(() => {
+    let current = true;
+    void client.GET("/saved-views", { params: { query: { listKey } } }).then((result) => {
+      if (current && result.data !== undefined) setViews(result.data);
+    });
+    return () => { current = false; };
+  }, [client, listKey]);
+  const create = async (name: string, shared: boolean, state: UniversalListState) => {
+    const body: SavedViewCreate = { columns: state.columns, filters: savedViewFilters(state.filters), listKey, name, shared, sort: state.sort };
+    const result = await client.POST("/saved-views", { body });
+    if (result.data === undefined) throw new TypeError("Saved view response did not contain data");
+    setViews((current) => [...current, result.data]);
+    return toSavedView(result.data);
+  };
+  const rename = async (view: UniversalListSavedView, name: string) => {
+    const source = views.find((item) => item.id === view.id);
+    if (source === undefined) throw new TypeError("Saved view version is unavailable");
+    const body: SavedViewUpdate = { columns: view.columns, filters: savedViewFilters(view.filters), listKey, name, shared: view.shared, sort: view.sort, version: source.version };
+    const result = await client.PUT("/saved-views/{id}", { body, params: { path: { id: view.id } } });
+    if (result.data === undefined) throw new TypeError("Saved view response did not contain data");
+    setViews((current) => current.map((item) => item.id === view.id ? result.data : item));
+    return toSavedView(result.data);
+  };
+  const remove = async (id: string) => {
+    await client.DELETE("/saved-views/{id}", { params: { path: { id } } });
+    setViews((current) => current.filter((view) => view.id !== id));
+  };
+  return { create, remove, rename, views: views.map(toSavedView) };
+}
+
 // The row parameter preserves each UniversalList's exact generated projection.
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 function useQueue<Row extends InactivityRow | LeaveRow>(client: ApiClient, kind: "inactivity" | "leave", state: UniversalListState, enabled = true) {
@@ -47,7 +98,7 @@ function useQueue<Row extends InactivityRow | LeaveRow>(client: ApiClient, kind:
     if (!enabled) return undefined;
     let current = true;
     const query = {
-      fields: state.columns.join(","),
+      fields: Array.from(new Set(["member", ...state.columns])).join(","),
       filter: apiFilters(state.filters),
       page: state.page,
       ...(state.q === "" ? {} : { q: state.q }),
@@ -94,8 +145,11 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
   const [leaveState, setLeaveState] = useState(LEAVE_DEFAULT);
   const inactivity = useQueue<InactivityRow>(client, "inactivity", inactivityState, inactivityEnabled);
   const leave = useQueue<LeaveRow>(client, "leave", leaveState);
+  const inactivityViews = useSavedViews(client, "inactivity-periods");
+  const leaveViews = useSavedViews(client, "leave-requests");
   const [leaveReasons, setLeaveReasons] = useState<Map<string, string>>(new Map());
   const locale = normalizeLocale(i18n.resolvedLanguage ?? branding.defaultLocale);
+  const resolvedPeriod = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     let current = true;
@@ -118,6 +172,45 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
       current = false;
     };
   }, [client, locale]);
+
+  useEffect(() => {
+    const periodId = new URLSearchParams(window.location.search).get("period");
+    if (periodId === null || resolvedPeriod.current === periodId) return undefined;
+    resolvedPeriod.current = periodId;
+    let current = true;
+    void client.GET("/inactivity-periods/{id}", { params: { path: { id: periodId } } }).then((result) => {
+      if (!current || result.data === undefined) return;
+      const path = `/abonats/${result.data.member.id}?calaix=inactivitat&period=${periodId}`;
+      if (onNavigate === undefined) window.location.assign(path);
+      else onNavigate(path);
+    });
+    return () => { current = false; };
+  }, [client, onNavigate]);
+
+  // UniversalList's loader contract is asynchronous even though these values come from the page.
+  // eslint-disable-next-line @typescript-eslint/require-await
+  const loadInactivityFilterValues = useCallback(async (field: string) => {
+    const rows = inactivity.data?.items ?? [];
+    if (field === "memberId") {
+      const members = new Map(rows.flatMap((row) => row.member === undefined ? [] : [[row.member.id, row.member.fullName] as const]));
+      return [...members].map(([value, label]) => ({ count: rows.filter((row) => row.member?.id === value).length, label, value }));
+    }
+    if (field === "state") return (["REQUESTED", "APPROVED", "ACTIVE", "FINISHED", "DENIED", "CANCELLED"] as const).map((value) => ({ count: rows.filter((row) => row.state === value).length, label: t(`enums:inactivityState.${value}`), value }));
+    if (field === "origin") return (["APP", "BACKOFFICE"] as const).map((value) => ({ count: rows.filter((row) => row.origin === value).length, label: t(`enums:origin.${value}`), value }));
+    return [];
+  }, [inactivity.data?.items, t]);
+  // eslint-disable-next-line @typescript-eslint/require-await
+  const loadLeaveFilterValues = useCallback(async (field: string) => {
+    const rows = leave.data?.items ?? [];
+    if (field === "memberId") {
+      const members = new Map(rows.flatMap((row) => row.member === undefined ? [] : [[row.member.id, row.member.fullName] as const]));
+      return [...members].map(([value, label]) => ({ count: rows.filter((row) => row.member?.id === value).length, label, value }));
+    }
+    if (field === "state") return (["PENDING", "APPROVED", "DENIED", "CANCELLED"] as const).map((value) => ({ count: rows.filter((row) => row.state === value).length, label: t(`enums:leaveRequestState.${value}`), value }));
+    if (field === "source") return (["MEMBER", "ADMIN", "PACK_EXPIRED", "MIGRATED"] as const).map((value) => ({ count: rows.filter((row) => row.source === value).length, label: t(`enums:leaveSource.${value}`), value }));
+    if (field === "reasonKey") return [...leaveReasons].map(([value, label]) => ({ count: rows.filter((row) => row.reasonKey === value).length, label, value }));
+    return [];
+  }, [leave.data?.items, leaveReasons, t]);
 
   const operators: Record<UniversalFilterOperator, string> = useMemo(
     () => ({
@@ -176,10 +269,6 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
     view: (view) => t("admin-census:inactivityLeavePage.view", { name: view }),
     views: t("admin-census:inactivityLeavePage.views"),
   });
-  const noValues = useCallback(() => Promise.resolve([]), []);
-  const noCreate = useCallback(() => Promise.reject(new TypeError("Saved views are unavailable")), []);
-  const noDelete = useCallback(() => Promise.reject(new TypeError("Saved views are unavailable")), []);
-  const noRename = useCallback(() => Promise.reject(new TypeError("Saved views are unavailable")), []);
   const go = (path: string) => {
     if (onNavigate === undefined) window.location.assign(path);
     else onNavigate(path);
@@ -314,21 +403,21 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
                       filterColumns={inactivityFilters}
                       labels={labels<InactivityRow>("inactivity")}
                       listKey="inactivity-periods"
-                      loadFilterValues={noValues}
+                      loadFilterValues={loadInactivityFilterValues}
                       loading={inactivity.loading}
-                      onCreateView={noCreate}
-                      onDeleteView={noDelete}
+                      onCreateView={inactivityViews.create}
+                      onDeleteView={inactivityViews.remove}
                       onExport={() => undefined}
-                      onRenameView={noRename}
+                      onRenameView={inactivityViews.rename}
                       onRetry={inactivity.retry}
                       onRowActivate={(row) => {
-                        if (row.member !== undefined) go(`/abonats/${row.member.id}?calaix=inactivitat`);
+                        if (row.member !== undefined) go(`/abonats/${row.member.id}?calaix=inactivitat&period=${row.id}`);
                       }}
                       onStateChange={setInactivityState}
-                      rowHref={(row) => (row.member === undefined ? "#" : `/abonats/${row.member.id}?calaix=inactivitat`)}
+                      rowHref={(row) => (row.member === undefined ? "#" : `/abonats/${row.member.id}?calaix=inactivitat&period=${row.id}`)}
                       rowKey={(row) => row.id}
                       rows={inactivity.data?.items ?? []}
-                      savedViews={[]}
+                      savedViews={inactivityViews.views}
                       state={inactivityState}
                       totalPages={inactivity.data?.totalPages ?? 0}
                     />
@@ -357,12 +446,12 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
                 filterColumns={leaveFilters}
                 labels={labels<LeaveRow>("leave")}
                 listKey="leave-requests"
-                loadFilterValues={noValues}
+                loadFilterValues={loadLeaveFilterValues}
                 loading={leave.loading}
-                onCreateView={noCreate}
-                onDeleteView={noDelete}
+                onCreateView={leaveViews.create}
+                onDeleteView={leaveViews.remove}
                 onExport={() => undefined}
-                onRenameView={noRename}
+                onRenameView={leaveViews.rename}
                 onRetry={leave.retry}
                 onRowActivate={(row) => {
                   if (row.member !== undefined) go(`/abonats/${row.member.id}?calaix=baixa`);
@@ -371,7 +460,7 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
                 rowHref={(row) => (row.member === undefined ? "#" : `/abonats/${row.member.id}?calaix=baixa`)}
                 rowKey={(row) => row.id}
                 rows={leave.data?.items ?? []}
-                savedViews={[]}
+                savedViews={leaveViews.views}
                 state={leaveState}
                 totalPages={leave.data?.totalPages ?? 0}
               />

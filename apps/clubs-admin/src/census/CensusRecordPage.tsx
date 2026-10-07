@@ -27,6 +27,7 @@ import { type ReactNode, type SyntheticEvent, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 
 import { AuditTrail, auditActionLabel, auditRoleLabel } from "../audit/AuditPage";
+import { useRefreshCounters } from "../dashboard/counters";
 import { loadDogDocumentTypes } from "../dashboard/readmission";
 import { NotificationPreferencesBlock } from "../messaging/NotificationPreferencesBlock";
 
@@ -1158,6 +1159,7 @@ function MemberSummary({
 
 export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient; id?: string }) {
   const branding = useBranding();
+  const refreshCounters = useRefreshCounters();
   const { i18n, t } = useTranslation("admin-census");
   const [overview, setOverview] = useState<MemberOverview>();
   // Why the record could not be read: a `409 MEMBER_ERASED` is final, anything else retried.
@@ -1179,6 +1181,7 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
   });
   // The member a change found erased after the record was read (`409 MEMBER_ERASED`, S14 §5).
   const [erasedMeanwhile, setErasedMeanwhile] = useState<string>();
+  const initialPeriodId = new URLSearchParams(window.location.search).get("period") ?? undefined;
 
   useEffect(() => {
     let current = true;
@@ -1372,30 +1375,35 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
         }}
         open={editOpen}
       />
-      {branding.modules.includes("INACTIVITY") && !erased ? (
+      {branding.modules.includes("INACTIVITY") && (!erased || memberDialog === "inactivity") ? (
         <MemberInactivityDrawer
           client={client}
+          {...(initialPeriodId === undefined ? {} : { initialPeriodId })}
           memberId={member.id}
           onChanged={() => {
             setReload((value) => value + 1);
+            refreshCounters();
           }}
           onClose={() => {
             setMemberDialog(null);
           }}
+          onErased={onErased}
           open={memberDialog === "inactivity"}
         />
       ) : null}
-      {!erased ? (
+      {!erased || memberDialog === "leave" ? (
         <MemberLeaveDrawer
           client={client}
           member={member}
           onChanged={(saved) => {
             if (saved?.id === member.id) setOverview({ ...overview, member: saved });
             else setReload((value) => value + 1);
+            refreshCounters();
           }}
           onClose={() => {
             setMemberDialog(null);
           }}
+          onErased={onErased}
           open={memberDialog === "leave"}
         />
       ) : null}
@@ -1418,13 +1426,17 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
           paymentMethod={member.paymentMethod}
         />
       ) : null}
-      {branding.modules.includes("BILLING") && !erased ? (
+      {branding.modules.includes("BILLING") && (!erased || memberDialog === "plan") ? (
         <MemberPlanDrawer
           client={client}
           member={member}
+          onChanged={() => {
+            setReload((value) => value + 1);
+          }}
           onClose={() => {
             setMemberDialog(null);
           }}
+          onErased={onErased}
           open={memberDialog === "plan"}
         />
       ) : null}

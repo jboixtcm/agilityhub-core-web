@@ -3,8 +3,9 @@ import { http, HttpResponse } from "msw";
 import type { components } from "../generated/schema";
 
 import { censusRecordState, ERASED_MEMBER_ID, erasedMemberOverview } from "./fixtures/census";
-import { adminInactivityPeriods, adminLeaveRequests, inactivityContextFixture, inactivityPreviewFixture, leaveContextFixture } from "./fixtures/inactivity";
+import { adminInactivityPeriods, adminLeaveRequests, inactivityContextFixture, inactivityPreviewFixture, leaveContextFixture, lifecycleMemberId, lifecycleMembers } from "./fixtures/inactivity";
 import { meInvoiceFixtures, packBalanceFixtures } from "./fixtures/member-self-service";
+import { findParameter } from "./fixtures/settings";
 import { currentMockScenario } from "./scenarios";
 
 type ApiError = components["schemas"]["ApiError"];
@@ -19,6 +20,7 @@ type DecisionRequest = components["schemas"]["DecisionRequest"];
 type LeaveDecisionRequest = components["schemas"]["LeaveDecisionRequest"];
 type DirectLeaveRequest = components["schemas"]["DirectLeaveRequest"];
 type ReactivationRequest = components["schemas"]["ReactivationRequest"];
+type PlanChangeRequest = components["schemas"]["MemberPlanChangeRequest"];
 
 function normalizeOverviewInvoiceStatus(status: string): components["schemas"]["InvoiceStatus"] {
   switch (status) {
@@ -46,6 +48,7 @@ let packs = structuredClone(packBalanceFixtures);
 let adminPeriods = structuredClone(adminInactivityPeriods);
 let adminLeaves = structuredClone(adminLeaveRequests);
 let memberCreatedInactivity = false;
+let lifecycleOverviews = createLifecycleOverviews();
 const initialUpfront: components["schemas"]["UpfrontPayment"][] = [
   {
     amountDue: { amountMinor: 3000, currency: "EUR" },
@@ -65,12 +68,42 @@ const initialUpfront: components["schemas"]["UpfrontPayment"][] = [
 let upfront = structuredClone(initialUpfront);
 const checkoutReads = new Map<string, number>();
 
+function createLifecycleOverviews(): Map<string, components["schemas"]["MemberOverview"]> {
+  return new Map(lifecycleMembers.map((lifecycleMember) => {
+    const overview = structuredClone(censusRecordState.memberOverview);
+    Object.assign(overview.member, {
+      displayStatus: { kind: "ACTIVE", label: "alta" },
+      fullName: lifecycleMember.fullName,
+      id: lifecycleMember.id,
+      leaveDate: null,
+      memberNumber: lifecycleMember.memberNumber,
+      status: "ACTIVE",
+    });
+    return [lifecycleMember.id, overview];
+  }));
+}
+
+export function lifecycleMemberOverview(value: string): components["schemas"]["MemberOverview"] | undefined {
+  if (value === censusRecordState.memberOverview.member.id) return censusRecordState.memberOverview;
+  return lifecycleOverviews.get(lifecycleMemberId(value));
+}
+
+function updateLifecycleMember(value: string, update: (member: components["schemas"]["Member"]) => void): void {
+  const id = lifecycleMemberId(value);
+  const lifecycle = lifecycleOverviews.get(id);
+  if (lifecycle !== undefined) update(lifecycle.member);
+  if (id === lifecycleMembers[0].id || value === censusRecordState.memberOverview.member.id) {
+    update(censusRecordState.memberOverview.member);
+  }
+}
+
 export function resetMemberBillingState(): void {
   inactivity = structuredClone(inactivityContextFixture);
   leave = structuredClone(leaveContextFixture);
   packs = structuredClone(packBalanceFixtures);
   adminPeriods = structuredClone(adminInactivityPeriods);
   adminLeaves = structuredClone(adminLeaveRequests);
+  lifecycleOverviews = createLifecycleOverviews();
   memberCreatedInactivity = false;
   upfront = structuredClone(initialUpfront);
   checkoutReads.clear();
@@ -108,7 +141,8 @@ export const memberBillingHandlers = [
     const memberFilter = url.searchParams.getAll("filter").find((value) => value.startsWith("memberId:eq:"));
     const stateFilter = url.searchParams.getAll("filter").find((value) => value.startsWith("state:"));
     const states = stateFilter?.split(":").slice(2).join(":").split(",");
-    const memberId = memberFilter?.slice("memberId:eq:".length);
+    const requestedMemberId = memberFilter?.slice("memberId:eq:".length);
+    const memberId = requestedMemberId === undefined ? undefined : lifecycleMemberId(requestedMemberId);
     if (memberId !== undefined && currentMockScenario().lifecycle === "memberPackPlan") {
       return error("INACTIVITY_NOT_APPLICABLE", 422);
     }
@@ -148,7 +182,8 @@ export const memberBillingHandlers = [
     const body = (await request.json()) as AdminInactivityRequest;
     if (currentMockScenario().lifecycle === "memberPackPlan") return error("INACTIVITY_NOT_APPLICABLE", 422);
     if (currentMockScenario().lifecycle === "inactivityDeadlinePassed" && body.overrideDeadline !== true) return error("INACTIVITY_DEADLINE_PASSED", 422, { earliestMonth: "2026-11" });
-    const existing = adminPeriods.find((period) => period.member.id === body.memberId && ["REQUESTED", "APPROVED", "ACTIVE"].includes(period.state));
+    const normalizedMemberId = lifecycleMemberId(body.memberId);
+    const existing = adminPeriods.find((period) => period.member.id === normalizedMemberId && ["REQUESTED", "APPROVED", "ACTIVE"].includes(period.state));
     if (existing !== undefined) return error("INACTIVITY_OVERLAP", 409, { hint: "EXTEND", periodId: existing.id });
     const member = censusRecordState.memberOverview.member;
     const created: components["schemas"]["InactivityPeriod"] = {
@@ -156,7 +191,7 @@ export const memberBillingHandlers = [
       comments: body.comments ?? null,
       decision: {
         at: "2026-10-05T10:00:00Z",
-        byAccountId: "account-admin",
+        byAccountId: "63000000-0000-4000-8000-000000000099",
         deadlineOverridden: body.overrideDeadline === true,
         decision: "APPROVED",
         note: null,
@@ -170,15 +205,15 @@ export const memberBillingHandlers = [
         : null,
       fromMonth: body.fromMonth,
       history: [],
-      id: `admin-inactivity-${String(adminPeriods.length + 1)}`,
+      id: `62000000-0000-4000-8000-${String(adminPeriods.length + 1).padStart(12, "0")}`,
       member: {
         fullName: member.fullName,
-        id: body.memberId,
+        id: normalizedMemberId,
         ...(member.memberNumber === undefined ? {} : { memberNumber: member.memberNumber }),
       },
       origin: "BACKOFFICE",
       requestedAt: "2026-10-05T10:00:00Z",
-      requestedBy: { accountId: "account-admin", impersonatedMemberId: null },
+      requestedBy: { accountId: "63000000-0000-4000-8000-000000000099", impersonatedMemberId: null },
       state: "APPROVED",
       toMonth: body.toMonth ?? null,
       version: 1,
@@ -199,14 +234,33 @@ export const memberBillingHandlers = [
     const item = adminPeriods.find((period) => period.id === String(params.id));
     if (item === undefined) return error("NOT_FOUND", 404);
     if (item.state !== "REQUESTED") return error("INACTIVITY_INVALID_STATE", 409);
-    item.state = body.decision === "APPROVED" ? "APPROVED" : "DENIED";
+    item.state = body.decision === "APPROVED" ? (item.fromMonth <= "2026-10" ? "ACTIVE" : "APPROVED") : "DENIED";
     item.decision = {
       at: "2026-10-05T10:00:00Z",
-      byAccountId: "account-admin",
+      byAccountId: "63000000-0000-4000-8000-000000000099",
       deadlineOverridden: false,
       decision: body.decision,
       note: body.note ?? null,
     };
+    if (body.decision === "APPROVED") {
+      item.feeSnapshot = currentMockScenario().branding.modules.includes("BILLING")
+        ? { firstMonth: { amountMinor: 2000, currency: "EUR" }, followingMonths: { amountMinor: 1000, currency: "EUR" } }
+        : null;
+      item.bookingsInside ??= 2;
+      const cancelOnApproval = findParameter("inactivity.cancelBookingsOnApproval")?.value !== false;
+      item.cancelledBookings = cancelOnApproval
+        ? [
+            { id: "64000000-0000-4000-8000-000000000001", sessionDate: "2026-10-12", type: "CLASS" },
+            { id: "64000000-0000-4000-8000-000000000002", sessionDate: "2026-10-14", type: "TRAINING" },
+          ]
+        : [];
+      updateLifecycleMember(item.member.id, (member) => {
+        member.displayStatus = item.state === "ACTIVE"
+          ? { date: item.toMonth == null ? null : `${item.toMonth}-31`, kind: "INACTIVE_PERIOD", label: "inactiva" }
+          : { kind: "ACTIVE", label: "alta" };
+        if (item.state === "ACTIVE") member.status = "INACTIVE";
+      });
+    }
     item.version += 1;
     return HttpResponse.json(item);
   }),
@@ -215,9 +269,19 @@ export const memberBillingHandlers = [
     if (item === undefined) return error("NOT_FOUND", 404);
     const body = (await request.json()) as components["schemas"]["TerminationRequest"];
     item.toMonth = body.toMonth;
-    item.state = "FINISHED";
-    item.finishReason = "ADMIN";
-    item.finishedAt = "2026-10-05T10:00:00Z";
+    if (body.toMonth < "2026-10") {
+      item.state = "FINISHED";
+      item.finishReason = "ADMIN";
+      item.finishedAt = "2026-10-05T10:00:00Z";
+      updateLifecycleMember(item.member.id, (member) => {
+        member.displayStatus = { kind: "ACTIVE", label: "alta" };
+        member.status = "ACTIVE";
+      });
+    } else {
+      item.state = "ACTIVE";
+      item.finishReason = null;
+      item.finishedAt = null;
+    }
     item.version += 1;
     return HttpResponse.json(item);
   }),
@@ -234,7 +298,8 @@ export const memberBillingHandlers = [
   http.get("*/api/v1/leave-requests", ({ request }) => {
     const url = new URL(request.url);
     const filters = url.searchParams.getAll("filter");
-    const memberId = filters.find((value) => value.startsWith("memberId:eq:"))?.slice("memberId:eq:".length);
+    const requestedMemberId = filters.find((value) => value.startsWith("memberId:eq:"))?.slice("memberId:eq:".length);
+    const memberId = requestedMemberId === undefined ? undefined : lifecycleMemberId(requestedMemberId);
     const state = filters.find((value) => value.startsWith("state:eq:"))?.slice("state:eq:".length);
     const filtered = adminLeaves.filter((item) => (memberId === undefined || item.member.id === memberId) && (state === undefined || item.state === state));
     const page = Number(url.searchParams.get("page") ?? 0);
@@ -273,26 +338,43 @@ export const memberBillingHandlers = [
     item.state = body.decision === "APPROVED" ? "APPROVED" : "DENIED";
     item.decision = {
       at: "2026-10-05T10:00:00Z",
-      byAccountId: "account-admin",
+      byAccountId: "63000000-0000-4000-8000-000000000099",
       decision: body.decision,
       effectiveDate: body.decision === "APPROVED" ? (body.effectiveDate ?? item.requestedDate) : null,
       note: body.note ?? null,
     };
+    if (body.decision === "APPROVED") {
+      const effectiveDate = body.effectiveDate ?? item.requestedDate;
+      item.cancelledBookings = [
+        { id: "64000000-0000-4000-8000-000000000003", sessionDate: effectiveDate, type: "CLASS" },
+      ];
+      item.member.leaveDate = effectiveDate;
+      updateLifecycleMember(item.member.id, (member) => {
+        member.leaveDate = effectiveDate;
+        member.displayStatus = { date: effectiveDate, kind: "LEAVE_SCHEDULED", label: `baixa prevista ${effectiveDate}` };
+      });
+    }
     item.version += 1;
     return HttpResponse.json(item);
   }),
   http.post("*/api/v1/members/:id/leave", async ({ params, request }) => {
     const body = (await request.json()) as DirectLeaveRequest;
     if (currentMockScenario().lifecycle === "leaveDateInvalid") return error("LEAVE_DATE_INVALID", 422);
-    const member = censusRecordState.memberOverview.member;
-    if (member.id !== String(params.id)) return error("NOT_FOUND", 404);
-    member.leaveDate = body.effectiveDate;
-    member.displayStatus = {
-      date: body.effectiveDate,
-      kind: "LEAVE_SCHEDULED",
-      label: `baixa prevista ${body.effectiveDate}`,
-    };
-    for (const pendingRequest of adminLeaves.filter((item) => item.member.id === member.id && item.state === "PENDING")) {
+    const requestedId = String(params.id);
+    if (requestedId === ERASED_MEMBER_ID) return error("MEMBER_ERASED", 409);
+    const overview = lifecycleMemberOverview(requestedId);
+    if (overview === undefined) return error("NOT_FOUND", 404);
+    const normalizedId = lifecycleMemberId(requestedId);
+    updateLifecycleMember(requestedId, (member) => {
+      member.leaveDate = body.effectiveDate;
+      member.displayStatus = {
+        date: body.effectiveDate,
+        kind: "LEAVE_SCHEDULED",
+        label: `baixa prevista ${body.effectiveDate}`,
+      };
+    });
+    const member = overview.member;
+    for (const pendingRequest of adminLeaves.filter((item) => item.member.id === normalizedId && item.state === "PENDING")) {
       pendingRequest.state = "CANCELLED";
       pendingRequest.version += 1;
     }
@@ -302,12 +384,13 @@ export const memberBillingHandlers = [
       ...seed,
       comment: body.note ?? null,
       decision: { at: "2026-10-05T10:00:00Z", byAccountId: "account-admin", decision: "APPROVED", effectiveDate: body.effectiveDate, note: body.note ?? null },
-      id: `admin-leave-${String(adminLeaves.length + 1)}`,
-      member: { fullName: member.fullName, id: member.id, leaveDate: body.effectiveDate, leftAt: null, leftReason: null, ...(member.memberNumber === undefined ? {} : { memberNumber: member.memberNumber }), status: "ACTIVE" },
+      cancelledBookings: [{ id: "64000000-0000-4000-8000-000000000004", sessionDate: body.effectiveDate, type: "CLASS" }],
+      id: `65000000-0000-4000-8000-${String(adminLeaves.length + 1).padStart(12, "0")}`,
+      member: { fullName: member.fullName, id: normalizedId, leaveDate: body.effectiveDate, leftAt: null, leftReason: null, ...(member.memberNumber === undefined ? {} : { memberNumber: member.memberNumber }), status: "ACTIVE" },
       origin: "BACKOFFICE",
       reasonKey: body.reasonKey ?? null,
       requestedAt: "2026-10-05T10:00:00Z",
-      requestedBy: { accountId: "account-admin", impersonatedMemberId: null },
+      requestedBy: { accountId: "63000000-0000-4000-8000-000000000099", impersonatedMemberId: null },
       requestedDate: body.effectiveDate,
       source: "ADMIN",
       state: "APPROVED",
@@ -317,25 +400,46 @@ export const memberBillingHandlers = [
     return HttpResponse.json(created, { status: 201 });
   }),
   http.delete("*/api/v1/members/:id/planned-leave", ({ params }) => {
-    const member = censusRecordState.memberOverview.member;
-    if (member.id !== String(params.id)) return error("NOT_FOUND", 404);
+    const requestedId = String(params.id);
+    if (requestedId === ERASED_MEMBER_ID) return error("MEMBER_ERASED", 409);
+    const member = lifecycleMemberOverview(requestedId)?.member;
+    if (member === undefined) return error("NOT_FOUND", 404);
     if (member.leaveDate == null) return error("NO_PLANNED_LEAVE", 409);
-    member.leaveDate = null;
-    member.displayStatus = { kind: "ACTIVE", label: "alta" };
+    updateLifecycleMember(requestedId, (updated) => {
+      updated.leaveDate = null;
+      updated.displayStatus = { kind: "ACTIVE", label: "alta" };
+    });
     return new HttpResponse(null, { status: 204 });
   }),
   http.post("*/api/v1/members/:id/reactivation", async ({ params, request }) => {
-    const member = censusRecordState.memberOverview.member;
-    if (member.id !== String(params.id)) return error("NOT_FOUND", 404);
+    const requestedId = String(params.id);
+    if (requestedId === ERASED_MEMBER_ID) return error("MEMBER_ERASED", 409);
+    const member = lifecycleMemberOverview(requestedId)?.member;
+    if (member === undefined) return error("NOT_FOUND", 404);
     if (member.status !== "LEFT" && currentMockScenario().lifecycle !== "memberLeft") return error("MEMBER_NOT_LEFT", 409);
     const body = (await request.json()) as ReactivationRequest;
-    Object.assign(member, body, {
-      displayStatus: { kind: "ACTIVE", label: "alta" },
-      leaveDate: null,
-      status: "ACTIVE",
-      version: member.version + 1,
+    updateLifecycleMember(requestedId, (updated) => {
+      Object.assign(updated, body, {
+        displayStatus: { kind: "ACTIVE", label: "alta" },
+        leaveDate: null,
+        status: "ACTIVE",
+        version: updated.version + 1,
+      });
     });
     return HttpResponse.json(member);
+  }),
+  http.post("*/api/v1/members/:id/plan-change", async ({ params, request }) => {
+    const requestedId = String(params.id);
+    if (requestedId === ERASED_MEMBER_ID) return error("MEMBER_ERASED", 409);
+    const member = lifecycleMemberOverview(requestedId)?.member;
+    if (member === undefined) return error("NOT_FOUND", 404);
+    const body = (await request.json()) as PlanChangeRequest;
+    updateLifecycleMember(requestedId, (updated) => {
+      updated.planId = body.planId;
+      updated.priceId = body.priceId;
+      updated.version += 1;
+    });
+    return new HttpResponse(null, { status: 204 });
   }),
   http.post("*/api/v1/members/:id/card-setup-link", ({ params }) => {
     if (String(params.id) !== censusRecordState.memberOverview.member.id) return error("NOT_FOUND", 404);
