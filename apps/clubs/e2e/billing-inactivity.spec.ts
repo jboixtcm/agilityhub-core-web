@@ -82,7 +82,9 @@ test.describe("E8-W02 member billing, packs and lifecycle", () => {
     await page.waitForURL("**/perfil");
 
     await page.goto(`${clubsUrl}/baixa`);
-    await expect(page.getByRole("heading", { name: "Abans de donar-te de baixa…" })).toBeVisible();
+    // Mockup 15: the offer is a highlighted note with no heading of its own.
+    await expect(page.getByText(/mantenir la teva entrada vigent/u)).toBeVisible();
+    await expect(page.getByRole("link", { name: "VULL DEMANAR INACTIVITAT" })).toBeVisible();
     await expect(page.getByRole("group").getByRole("button")).toHaveCount(11);
     await shot(page, "15-baixa-375.png");
 

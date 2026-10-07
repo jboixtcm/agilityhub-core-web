@@ -1,0 +1,78 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/payments/CheckoutReturn.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/payments/CheckoutReturn.test.tsx (4 tests | 1 failed) 10134ms
+   ❯ E8-W02 round 2 checkout return (4)
+     × a parent re-render with a new inline onPaid neither restarts the poll nor reads again 10009ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/payments/CheckoutReturn.test.tsx > E8-W02 round 2 checkout return > a parent re-render with a new inline onPaid neither restarts the poll nor reads again
+TestingLibraryElementError: Unable to find an element with the text: paid 1. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<output>[39m
+      [0mpaid 48813[0m
+    [36m</output>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card checkout-return checkout-return--paid"[39m
+      [33mrole[39m=[32m"status"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mPagament rebut[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<output>[39m
+      [0mpaid 48813[0m
+    [36m</output>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card checkout-return checkout-return--paid"[39m
+      [33mrole[39m=[32m"status"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mPagament rebut[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/payments/CheckoutReturn.test.tsx:101:25
+     99|     await renderE8(<Parent />);
+    100|     expect(await screen.findByText("Pagament rebut")).toBeVisible();
+    101|     expect(await screen.findByText("paid 1")).toBeInTheDocument();
+       |                         ^
+    102|     await new Promise((resolve) => setTimeout(resolve, 300));
+    103|     expect(reads).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  12:05:00
+   Duration  11.12s (tests 92%, transform 4%, environment 2%, import 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/payments/CheckoutReturn.test.tsx`
+Exit status 1

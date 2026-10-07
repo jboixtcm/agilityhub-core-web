@@ -1,0 +1,42 @@
+
+> agilityhub-core-web@0.0.0 size-limit /Users/jordib/dev/agilityhub/agilityhub-core-web
+> size-limit --json
+
+[
+  {
+    "name": "clubs initial JavaScript",
+    "passed": true,
+    "size": 191653,
+    "sizeLimit": 300000
+  },
+  {
+    "name": "clubs all JavaScript",
+    "passed": true,
+    "size": 388806,
+    "sizeLimit": 420000
+  },
+  {
+    "name": "clubs-admin initial JavaScript",
+    "passed": true,
+    "size": 420903,
+    "sizeLimit": 460000
+  },
+  {
+    "name": "clubs-admin all JavaScript",
+    "passed": true,
+    "size": 615243,
+    "sizeLimit": 660000
+  },
+  {
+    "name": "id initial JavaScript",
+    "passed": true,
+    "size": 99468,
+    "sizeLimit": 110000
+  },
+  {
+    "name": "id all JavaScript",
+    "passed": true,
+    "size": 129056,
+    "sizeLimit": 310000
+  }
+]

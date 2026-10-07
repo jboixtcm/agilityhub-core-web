@@ -1,6 +1,6 @@
 import type { ApiClient } from "@agilityhub/api-client";
 import { Button, Card } from "@agilityhub/ui";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export const CHECKOUT_RETURN_KEY = "checkout.return.v1";
@@ -37,6 +37,11 @@ export function CheckoutReturn({
   });
   const [state, setState] = useState<State>(sessionId === null ? "idle" : "pending");
   const [attempt, setAttempt] = useState(0);
+  // Callers pass inline callbacks: a parent re-render must not restart the poll nor its 10 s budget.
+  const onPaidRef = useRef(onPaid);
+  useEffect(() => {
+    onPaidRef.current = onPaid;
+  }, [onPaid]);
 
   useEffect(() => {
     if (sessionId === null) return;
@@ -61,7 +66,7 @@ export function CheckoutReturn({
         if (response.data.status === "PAID") {
           sessionStorage.removeItem(CHECKOUT_RETURN_KEY);
           setState("paid");
-          onPaid?.();
+          onPaidRef.current?.();
           return;
         }
         if (response.data.status === "EXPIRED") {
@@ -84,7 +89,7 @@ export function CheckoutReturn({
       active = false;
       if (timer !== undefined) window.clearTimeout(timer);
     };
-  }, [attempt, client, onPaid, sessionId, signupToken]);
+  }, [attempt, client, sessionId, signupToken]);
 
   if (state === "idle") return null;
   return (

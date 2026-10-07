@@ -1,0 +1,41 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/payments/CheckoutReturn.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/payments/CheckoutReturn.test.tsx (4 tests | 1 failed) 443ms
+   ❯ E8-W02 round 2 checkout return (4)
+     × a parent re-render with a new inline onPaid neither restarts the poll nor reads again 312ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/payments/CheckoutReturn.test.tsx > E8-W02 round 2 checkout return > a parent re-render with a new inline onPaid neither restarts the poll nor reads again
+AssertionError: expected 916 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 916
+
+ ❯ src/payments/CheckoutReturn.test.tsx:101:19
+     99|     expect(await screen.findByText("paid 1")).toBeInTheDocument();
+    100|     await new Promise((resolve) => setTimeout(resolve, 300));
+    101|     expect(reads).toBe(1);
+       |                   ^
+    102|     expect(screen.getByText("paid 1")).toBeInTheDocument();
+    103|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  12:04:32
+   Duration  1.75s (transform 29%, tests 27%, environment 24%, import 14%, setup 5%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/payments/CheckoutReturn.test.tsx`
+Exit status 1

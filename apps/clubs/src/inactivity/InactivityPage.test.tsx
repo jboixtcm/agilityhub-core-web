@@ -142,6 +142,67 @@ describe("T-13-29 member inactivity", () => {
     });
   });
 
+  it("after 409 STALE_VERSION keeps only the member's own edit on top of the new version", async () => {
+    const fee = {
+      firstMonth: { amountMinor: 2000, currency: "EUR" },
+      followingMonths: { amountMinor: 1000, currency: "EUR" },
+    };
+    const period = (version: number, fromMonth: string, comments: string) => ({
+      comments,
+      editable: { cancel: true, fromMonth: true, toMonth: true },
+      fee,
+      fromMonth,
+      id: "52000000-0000-4000-8000-000000000001",
+      state: "REQUESTED",
+      toMonth: null,
+      version,
+    });
+    let current = period(1, "2026-10", "Descans de la Duna");
+    const bodies: unknown[] = [];
+    server.use(
+      http.get("*/api/v1/me/inactivity-periods", () =>
+        HttpResponse.json({
+          deadlineDay: 25,
+          earliestFromMonth: "2026-10",
+          fee,
+          periods: [current],
+          proposedFromMonth: "2026-10",
+        }),
+      ),
+      http.patch("*/api/v1/me/inactivity-periods/:id", async ({ request }) => {
+        const body = (await request.json()) as { version: number };
+        bodies.push(body);
+        if (body.version !== current.version) {
+          return HttpResponse.json(
+            { code: "STALE_VERSION", details: {}, message: "STALE_VERSION", traceId: "t" },
+            { status: 409 },
+          );
+        }
+        return HttpResponse.json({ ...current, toMonth: "2027-01", version: 3 });
+      }),
+    );
+    await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
+    const end = await screen.findByLabelText("Mes de finalització (si el saps)");
+    fireEvent.change(end, { target: { value: "2027-01" } });
+    // Meanwhile the club changed the start and the comments: version 2.
+    current = period(2, "2026-11", "Canvi del club");
+    fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    expect(await screen.findByText("El període ha canviat.")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.getByLabelText("Mes d'inici (obligatori)")).toHaveValue("2026-11");
+    });
+    expect(screen.getByLabelText("Comentaris")).toHaveValue("Canvi del club");
+    expect(screen.getByLabelText("Mes de finalització (si el saps)")).toHaveValue("2027-01");
+    fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    await waitFor(() => {
+      expect(bodies).toHaveLength(2);
+    });
+    expect(bodies).toEqual([
+      { toMonth: "2027-01", version: 1 },
+      { toMonth: "2027-01", version: 2 },
+    ]);
+  });
+
   it("keeps a newly created period for the return-to-profile subtitle", async () => {
     const navigate = vi.fn();
     const view = await renderE8(<InactivityPage client={e8Client()} navigate={navigate} />, {

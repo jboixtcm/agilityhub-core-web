@@ -15,7 +15,7 @@ import {
   Textarea,
   useToast,
 } from "@agilityhub/ui";
-import { useEffect, useMemo, useState, type SyntheticEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { useTranslation } from "react-i18next";
 
 type Context = components["schemas"]["MeInactivityContext"];
@@ -67,6 +67,7 @@ export function InactivityPage({
   const [preview, setPreview] = useState<Preview>();
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<unknown>();
+  const baseline = useRef<{ comments: string; fromMonth: string; toMonth: string }>(undefined);
 
   useEffect(() => {
     let active = true;
@@ -81,9 +82,23 @@ export function InactivityPage({
         const live = data.periods.find((item) =>
           ["REQUESTED", "APPROVED", "ACTIVE"].includes(item.state),
         );
-        setFromMonth(live?.fromMonth ?? data.proposedFromMonth);
-        setToMonth(live?.toMonth ?? "");
-        setComments(live?.comments ?? "");
+        const loaded = {
+          comments: live?.comments ?? "",
+          fromMonth: live?.fromMonth ?? data.proposedFromMonth,
+          toMonth: live?.toMonth ?? "",
+        };
+        // After a 409 STALE_VERSION refetch, only the member's own edits (the fields that differ
+        // from the version they started from) are kept on top of the new version, and only where
+        // the new version still lets them edit; everything else takes the api's values.
+        const previous = baseline.current;
+        baseline.current = loaded;
+        const rebase = (field: keyof typeof loaded, editable: boolean) => (current: string) =>
+          previous !== undefined && live !== undefined && editable && current !== previous[field]
+            ? current
+            : loaded[field];
+        setFromMonth(rebase("fromMonth", live?.editable.fromMonth ?? false));
+        setToMonth(rebase("toMonth", live?.editable.toMonth ?? false));
+        setComments(rebase("comments", live !== undefined && live.state !== "ACTIVE"));
       },
       () => {
         if (active) setLoadError(true);

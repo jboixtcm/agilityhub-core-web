@@ -1,6 +1,7 @@
 import { server } from "@agilityhub/api-client/mocks/server";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
+import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { e8Client, renderE8, setupE8World } from "../test/e8";
@@ -67,6 +68,40 @@ describe("E8-W02 round 2 checkout return", () => {
     expect(screen.getByRole("button", { name: "Actualitza" })).toBeEnabled();
     expect(screen.getByText(/Ja pots tancar/u)).toBeVisible();
     expect(screen.queryByText("La sessió de pagament ha caducat.")).not.toBeInTheDocument();
+  });
+
+  it("a parent re-render with a new inline onPaid neither restarts the poll nor reads again", async () => {
+    returnFrom("cs_parent_render");
+    let reads = 0;
+    server.use(
+      http.get("*/api/v1/checkout-sessions/:id", () => {
+        reads += 1;
+        return HttpResponse.json({ checkoutSessionId: "cs_parent_render", status: "PAID" });
+      }),
+    );
+    // A stable client, as App and SignupPage pass: only the inline onPaid changes per render.
+    const client = e8Client();
+    function Parent() {
+      const [paidCalls, setPaidCalls] = useState(0);
+      return (
+        <>
+          <output>{`paid ${String(paidCalls)}`}</output>
+          <CheckoutReturn
+            client={client}
+            onPaid={() => {
+              setPaidCalls((value) => value + 1);
+            }}
+            onRetry={() => undefined}
+          />
+        </>
+      );
+    }
+    await renderE8(<Parent />);
+    expect(await screen.findByText("Pagament rebut")).toBeVisible();
+    expect(await screen.findByText("paid 1")).toBeInTheDocument();
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(reads).toBe(1);
+    expect(screen.getByText("paid 1")).toBeInTheDocument();
   });
 
   it("shows a failed read locally and retries the same status read", async () => {
