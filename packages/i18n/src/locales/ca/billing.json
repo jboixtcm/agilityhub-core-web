@@ -32,6 +32,8 @@
     "pending": "Estem confirmant el pagament…",
     "paid": "Pagament rebut",
     "expired": "La sessió de pagament ha caducat.",
-    "retry": "Torna-ho a provar"
+    "retry": "Torna-ho a provar",
+    "update": "Actualitza",
+    "closeHint": "Ja pots tancar aquesta pàgina."
   }
 }

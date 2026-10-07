@@ -193,20 +193,29 @@ export function InvoicesPage({ client, invoiceId }: { client: ApiClient; invoice
   const [items, setItems] = useState<Invoice[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [state, setState] = useState<"loading" | "ready" | "error" | "moduleOff">("loading");
   const load = useCallback(
     async (next: number) => {
+      if (next > 0) setLoadingMore(true);
       try {
         const { data } = await client.GET("/me/invoices", {
           params: { query: { page: next, size: 20 } },
         });
         if (data === undefined) throw new TypeError("Missing receipts");
-        setItems((current) => (next === 0 ? data.items : [...current, ...data.items]));
+        setItems((current) => {
+          if (next === 0) return data.items;
+          const byId = new Map(current.map((item) => [item.id, item]));
+          for (const item of data.items) byId.set(item.id, item);
+          return [...byId.values()];
+        });
         setPage(data.page);
         setTotalPages(data.totalPages);
         setState("ready");
       } catch (cause) {
         setState(isApiError(cause, "MODULE_DISABLED") ? "moduleOff" : "error");
+      } finally {
+        if (next > 0) setLoadingMore(false);
       }
     },
     [client],
@@ -276,7 +285,12 @@ export function InvoicesPage({ client, invoiceId }: { client: ApiClient; invoice
         </Card>
       )}
       {page + 1 < totalPages ? (
-        <Button onClick={() => void load(page + 1)} variant="secondary">
+        <Button
+          disabled={loadingMore}
+          loading={loadingMore}
+          onClick={() => void load(page + 1)}
+          variant="secondary"
+        >
           {t("billing:list.more")}
         </Button>
       ) : null}

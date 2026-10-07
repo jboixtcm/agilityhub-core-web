@@ -1,0 +1,578 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/payments/CheckoutReturn.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx src/billing/InvoicesPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+ ❯ src/leave/LeavePage.test.tsx (8 tests | 1 failed) 363ms
+   ❯ T-13-30 member leave (8)
+     × keeps the 15 literals complete in ca, es and en 18ms
+ ❯ src/billing/InvoicesPage.test.tsx (6 tests | 1 failed) 10281ms
+   ❯ T-12-26 member receipts (6)
+     × disables load-more while reading and de-duplicates overlapping pages by receipt id 10019ms
+ ❯ src/inactivity/InactivityPage.test.tsx (7 tests | 4 failed) 10886ms
+   ❯ T-13-29 member inactivity (7)
+     × renders consultation mode, the proposed open end, fee and debounced booking warning 152ms
+     × renders a historical ACTIVE period and patches only its changed editable end 10023ms
+     × keeps a newly created period for the return-to-profile subtitle 1ms
+     × keeps the 14 literals complete in ca, es and en 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/InvoicesPage.test.tsx > T-12-26 member receipts > disables load-more while reading and de-duplicates overlapping pages by receipt id
+TestingLibraryElementError: Unable to find role="link" and name `/Agost 2026/u`
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card receipt-list"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"receipt-row"[39m
+          [33mhref[39m=[32m"/rebuts/receipt-a"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRebut 2026-0901[0m
+              [0m.[0m
+              [0m [0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mSetembre 2026[0m
+            [36m</strong>[39m
+            [36m<small>[39m
+              [0mQuota 2026-09[0m
+            [36m</small>[39m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"receipt-row__meta"[39m
+          [36m>[39m
+            [36m<b>[39m
+              [0m60,00 €[0m
+            [36m</b>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33maria-busy[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-spinner"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+        [36m>[39m
+          [0mCarrega'n més[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card receipt-list"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"receipt-row"[39m
+          [33mhref[39m=[32m"/rebuts/receipt-a"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRebut 2026-0901[0m
+              [0m.[0m
+              [0m [0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mSetembre 2026[0m
+            [36m</strong>[39m
+            [36m<small>[39m
+              [0mQuota 2026-09[0m
+            [36m</small>[39m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"receipt-row__meta"[39m
+          [36m>[39m
+            [36m<b>[39m
+              [0m60,00 €[0m
+            [36m</b>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33maria-busy[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-spinner"[39m
+        [36m/>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content ah-button__content--loading"[39m
+        [36m>[39m
+          [0mCarrega'n més[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/InvoicesPage.test.tsx:140:18
+    138|     expect(more).toBeDisabled();
+    139|     release?.();
+    140|     await screen.findByRole("link", { name: /Agost 2026/u });
+       |                  ^
+    141|     expect(document.querySelectorAll('a[href="/rebuts/receipt-a"]')).t…
+    142|     expect(document.querySelectorAll('a[href="/rebuts/receipt-b"]')).t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > renders consultation mode, the proposed open end, fee and debounced booking warning
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  20,00 €
+Received:
+  Quota del 1r mes
+ ❯ src/inactivity/InactivityPage.test.tsx:20:51
+     18|     expect(screen.getByLabelText("Mes de finalització (si el saps)")).…
+     19|     expect(screen.getByRole("option", { name: "— encara no ho sé" })).…
+     20|     expect(screen.getByText(/Quota del 1r mes/u)).toHaveTextContent("2…
+       |                                                   ^
+     21|     expect(screen.getByRole("button", { name: "MODIFICA" })).toBeVisib…
+     22|     expect(screen.getByRole("button", { name: "RETIRA LA SOL·LICITUD" …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > renders a historical ACTIVE period and patches only its changed editable end
+AssertionError: expected { version: 7, toMonth: null } to deeply equal { toMonth: '2027-11', version: 7 }
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"lifecycle-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"lifecycle-page__bar"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna al perfil"[39m
+            [33mhref[39m=[32m"/perfil"[39m
+          [36m>[39m
+            [0m‹[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mPeríode d'inactivitat[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"lifecycle-form"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-intro"[39m
+          [36m>[39m
+            [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [0mMes d'inici (obligatori)[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mid[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2025-08"[39m
+              [36m>[39m
+                [0mAgost 2025[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10"[39m
+              [36m>[39m
+                [0mOctubre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11"[39m
+              [36m>[39m
+                [0mNovembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12"[39m
+              [36m>[39m
+                [0mDesembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-01"[39m
+              [36m>[39m
+                [0mGener 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-02"[39m
+              [36m>[39m
+                [0mFebrer 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-03"[39m
+              [36m>[39m
+                [0mMarç 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-04"[39m
+              [36m>[39m
+                [0mAbril 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-05"[39m
+              [36m>[39m
+                [0mMaig 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-06"[39m
+              [36m>[39m
+                [0mJuny 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-07"[39m
+              [36m>[39m
+                [0mJuliol 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-08"[39m
+              [36m>[39m
+                [0mAgost 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-09"[39m
+              [36m>[39m
+                [0mSetembre 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-10"[39m
+              [36m>[39m
+                [0mOctubre 2027[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-to"[39m
+            [36m>[39m
+              [0mMes de finalització (si el saps)[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mid[39m=[32m"inactivity-to"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0m— encara no ho sé[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2025-08"[39m
+              [36m>[39m
+                [0mAgost 2025[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2025-09"[39m
+              [36m>[39m
+                [0mSetembre 2025[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2025-10"[39m
+              [36m>[39m
+                [0mOctubre 2025[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2025-11"[39m
+              [36m>[39m
+                [0mNovembre 2025[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2025-12"[39m
+              [36m>[39m
+                [0mDesembre 2025[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-01"[39m
+              [36m>[39m
+                [0mGener 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-02"[39m
+              [36m>[39m
+                [0mFebrer 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-03"[39m
+              [36m>[39m
+                [0mMarç 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-04"[39m
+              [36m>[39m
+                [0mAbril 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-05"[39m
+              [36m>[39m
+                [0mMaig 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-06"[39m
+              [36m>[39m
+                [0mJuny 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-07"[39m
+              [36m>[39m
+                [0mJuliol 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-08"[39m
+              [36m>[39m
+                [0mAgost 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-12"[39m
+              [36m>[39m
+                [0mDesembre 2027[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-comments"[39m
+            [36m>[39m
+              [0mComentaris[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mid[39m=[32m"inactivity-comments"[39m
+              [33mmaxlength[39m=[32m"500"[39m
+            [36m>[39m
+              [0mPeríode històric[0m
+            [36m</textarea>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-note"[39m
+          [36m>[39m
+            [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-warning"[39m
+          [36m>[39m
+            [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mMODIFICA[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-toast ah-tone--success"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mLa sol·licitud s'ha desat.[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"close"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+- Expected
++ Received
+
+  {
+-   "toMonth": "2027-11",
++   "toMonth": null,
+    "version": 7,
+  }
+
+ ❯ src/inactivity/InactivityPage.test.tsx:139:25
+    137|     fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    138|     await waitFor(() => {
+    139|       expect(patchBody).toEqual({ toMonth: "2027-11", version: 7 });
+       |                         ^
+    140|     });
+    141|   });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > keeps a newly created period for the return-to-profile subtitle
+ReferenceError: vi is not defined
+ ❯ src/inactivity/InactivityPage.test.tsx:144:22
+    142|
+    143|   it("keeps a newly created period for the return-to-profile subtitle"…
+    144|     const navigate = vi.fn();
+       |                      ^
+    145|     const view = await renderE8(<InactivityPage client={e8Client()} na…
+    146|       scenario: "memberNoInactivity",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en
+Error: Snapshot `T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > ca 1` mismatched
+
+Expected: ""‹Període d'inactivitatTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.Mes d'inici (obligatori)Octubre 2026Novembre 2026Desembre 2026Gener 2027Febrer 2027Març 2027Abril 2027Maig 2027Juny 2027Juliol 2027Agost 2027Setembre 2027Octubre 2027Mes de finalització (si el saps)— encara no ho séOctubre 2026Novembre 2026Desembre 2026Gener 2027Febrer 2027Març 2027Abril 2027Maig 2027Juny 2027Juliol 2027Agost 2027Setembre 2027Octubre 2027ComentarisDescans de la DunaQuota del 1r mes · 20,00 €Mesos següents · 10,00 €/mesLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).MODIFICARETIRA LA SOL·LICITUD""
+Received: ""‹Període d'inactivitatTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.Mes d'inici (obligatori)Octubre 2026Novembre 2026Desembre 2026Gener 2027Febrer 2027Març 2027Abril 2027Maig 2027Juny 2027Juliol 2027Agost 2027Setembre 2027Octubre 2027Mes de finalització (si el saps)— encara no ho séOctubre 2026Novembre 2026Desembre 2026Gener 2027Febrer 2027Març 2027Abril 2027Maig 2027Juny 2027Juliol 2027Agost 2027Setembre 2027Octubre 2027ComentarisDescans de la DunaQuota del 1r mes20,00 €Mesos següents10,00 €/mesLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).MODIFICARETIRA LA SOL·LICITUD""
+
+ ❯ src/inactivity/InactivityPage.test.tsx:172:42
+    170|         expect(view.container.textContent).not.toContain("inactivity:"…
+    171|       });
+    172|       expect(view.container.textContent).toMatchSnapshot(locale);
+       |                                          ^
+    173|       view.unmount();
+    174|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/leave/LeavePage.test.tsx > T-13-30 member leave > keeps the 15 literals complete in ca, es and en
+Error: Snapshot `T-13-30 member leave > keeps the 15 literals complete in ca, es and en > ca 1` mismatched
+
+Expected: ""‹Sol·licitar la baixaAbans de donar-te de baixa…Si tens previst tornar més endavant, recorda que pots demanar un període d'inactivitat (predefinit o obert) i mantenir la teva plaça i la quota actual per quan tornis.La quota és de 20,00 € el primer mes i 10,00 € els següents.VULL DEMANAR INACTIVITATData en què vols la baixaAvui, 11 d’agost del 2026Si tries un dia d'un mes posterior a l'actual, aquell mes es cobrarà íntegrament.MotiuTria un motiuJa he après tot el que voliaNo trobo temps per anar-hiNo és el que esperavaCondicionants meus aliens al clubAltresDe 0 a 10, amb quina probabilitat ens recomanaries?012345678910Què podríem millorar perquè el club s'adaptés més a les teves necessitats?ENVIA LA SOL·LICITUDEl club la revisarà i et confirmarà la data d'efecte.""
+Received: ""‹Sol·licitar la baixaSi tens previst tornar més endavant, recorda que pots demanar un període d'inactivitat (predefinit o obert) i mantenir la teva entrada vigent i el teu import de quota actual per quan tornis.La quota és de 20,00 € el primer mes i 10,00 € els següents.VULL DEMANAR INACTIVITATData en què vols la baixaAvui, 11 d’agost del 2026Si tries un dia d'un mes posterior a l'actual, aquell mes es cobrarà íntegrament.MotiuTria un motiuJa he après tot el que voliaNo trobo temps per anar-hiNo és el que esperavaCondicionants meus aliens al clubAltresDe 0 a 10, amb quina probabilitat ens recomanaries?012345678910Què podríem millorar perquè el club s'adaptés més a les teves necessitats?ENVIA LA SOL·LICITUDEl club la revisarà i et confirmarà la data d'efecte.""
+
+ ❯ src/leave/LeavePage.test.tsx:153:42
+    151|         expect(view.container.textContent).not.toContain("leave:");
+    152|       });
+    153|       expect(view.container.textContent).toMatchSnapshot(locale);
+       |                                          ^
+    154|       view.unmount();
+    155|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+  Snapshots  2 failed
+             4 obsolete
+             ↳ src/leave/LeavePage.test.tsx
+               · T-13-30 member leave > keeps the 15 literals complete in ca, es and en > en 1
+               · T-13-30 member leave > keeps the 15 literals complete in ca, es and en > es 1
+             ↳ src/inactivity/InactivityPage.test.tsx
+               · T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > en 1
+               · T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > es 1
+
+ Test Files  3 failed | 1 passed (4)
+      Tests  6 failed | 18 passed (24)
+   Start at  11:04:13
+   Duration  12.70s (tests 76%, environment 9%, transform 8%, import 4%, setup 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/payments/CheckoutReturn.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx src/billing/InvoicesPage.test.tsx`
+Exit status 1

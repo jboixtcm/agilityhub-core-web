@@ -1,6 +1,7 @@
 import type { components } from "@agilityhub/api-client";
 import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
-import { createI18n, type Locale } from "@agilityhub/i18n";
+import { type Locale } from "@agilityhub/i18n";
+import { createIdI18n } from "@agilityhub/i18n/id";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -121,7 +122,7 @@ function createClient(fetcher: typeof fetch) {
 }
 
 async function createTestI18n(locale: Locale = "ca") {
-  return createI18n({
+  return createIdI18n({
     branding: { defaultLocale: locale, locales: ["ca", "es", "en"] },
     browserLanguages: [locale],
     initialNamespaces: ["errors", "id"],

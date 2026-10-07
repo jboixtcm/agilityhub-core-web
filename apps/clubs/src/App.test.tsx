@@ -267,6 +267,12 @@ describe("T-02-14 clubs shell", () => {
       ]),
     );
   });
+
+  it("E8-W02 round 2: receipts, inactivity and leave are MEMBER routes", () => {
+    for (const path of ["/rebuts", "/rebuts/:id", "/inactivitat", "/baixa"]) {
+      expect(MOBILE_ROUTES.find((route) => route.path === path)?.roles).toEqual(["MEMBER"]);
+    }
+  });
 });
 
 describe("T-01-18 access screen", () => {
@@ -499,6 +505,9 @@ describe("T-01-21 profile access rows and impersonation", () => {
       name: /^Sol·licitar període d'inactivitat/u,
     });
     expect(inactivity).toHaveAttribute("href", "/inactivitat");
+    expect(inactivity.querySelector(".profile-list__copy")).toHaveTextContent(
+      "Sol·licitar període d'inactivitatpendent d'aprovació",
+    );
     const leave = screen.getByRole("link", { name: "Sol·licitar la baixa" });
     expect(leave).toHaveAttribute("href", "/baixa");
     const logout = screen.getByRole("button", { name: "Tanca la sessió" });

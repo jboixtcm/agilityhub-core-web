@@ -108,11 +108,11 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/perfil" },
   { path: "/gossos" },
   { path: "/dades" },
-  { path: "/rebuts" },
-  { path: "/rebuts/:id" },
+  { path: "/rebuts", roles: ["MEMBER"] },
+  { path: "/rebuts/:id", roles: ["MEMBER"] },
   // Screens 14 and 15.
-  { path: "/inactivitat" },
-  { path: "/baixa" },
+  { path: "/inactivitat", roles: ["MEMBER"] },
+  { path: "/baixa", roles: ["MEMBER"] },
   // Screens 16–19.
   { path: "/apuntat-hi/*", public: true },
   { path: "/gossos/nou*" },
@@ -1389,6 +1389,16 @@ function MemberHistoryRoute({ client }: { client: ApiClient }) {
   );
 }
 
+/** Member-only self-service routes remain available to an admin impersonating that member. */
+function MemberSelfServiceRoute({ children }: { children: ReactNode }) {
+  const { me } = useSession();
+  return me?.impersonation !== undefined ? (
+    <RequireAuth>{children}</RequireAuth>
+  ) : (
+    <RequireRole roles={["MEMBER"]}>{children}</RequireRole>
+  );
+}
+
 /**
  * Screen 26 (S10 §9): without TASKS the page does not exist, so an authorised caller goes back to
  * 22 with the `errors:MODULE_DISABLED` note (no dead page).
@@ -1528,6 +1538,7 @@ function AppContent({
   if (pathname === "/apuntat-hi" || pathname.startsWith("/apuntat-hi/")) {
     return (
       <SignupPage
+        authenticated={session.status === "signedIn"}
         client={publicApiClient}
         onNavigate={(path) => {
           navigate(path, false);
@@ -1581,27 +1592,27 @@ function AppContent({
         <MyDataPage client={apiClient} />
       </RequireAuth>
     ) : pathname === "/rebuts" ? (
-      <RequireAuth>
+      <MemberSelfServiceRoute>
         <RequireModule module="BILLING">
           <InvoicesPage client={apiClient} />
         </RequireModule>
-      </RequireAuth>
+      </MemberSelfServiceRoute>
     ) : route.path === "/rebuts/:id" ? (
-      <RequireAuth>
+      <MemberSelfServiceRoute>
         <RequireModule module="BILLING">
           <InvoicesPage client={apiClient} invoiceId={safeDecode(pathname.split("/")[2] ?? "")} />
         </RequireModule>
-      </RequireAuth>
+      </MemberSelfServiceRoute>
     ) : pathname === "/inactivitat" ? (
-      <RequireAuth>
+      <MemberSelfServiceRoute>
         <RequireModule module="INACTIVITY">
           <InactivityPage client={apiClient} />
         </RequireModule>
-      </RequireAuth>
+      </MemberSelfServiceRoute>
     ) : pathname === "/baixa" ? (
-      <RequireAuth>
+      <MemberSelfServiceRoute>
         <LeavePage client={apiClient} />
-      </RequireAuth>
+      </MemberSelfServiceRoute>
     ) : pathname === "/info" ? (
       <RequireAuth>
         <InfoPage client={apiClient} />

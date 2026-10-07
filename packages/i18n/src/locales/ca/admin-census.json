@@ -339,6 +339,7 @@
       "recordPayment": "Registra un pagament",
       "packs": "Packs",
       "packLine": "{consumed} consumides · {remaining} disponibles · caduca el {date}",
+      "packExpiredLine": "{consumed} consumides · caducat el {date}",
       "adjust": "Ajusta",
       "dog": "Gos",
       "concept": "Concepte",

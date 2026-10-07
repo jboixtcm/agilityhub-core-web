@@ -108,15 +108,19 @@ export function ProfileLifecycleSection({
         {branding.modules.includes("INACTIVITY") && inactivityApplicable ? (
           <a href="/inactivitat">
             <Icon aria-hidden="true" name="palm" />
-            <span>{t("auth:profile.inactivity")}</span>
-            {inactivitySubtitle === undefined ? null : <small>{inactivitySubtitle}</small>}
+            <span className="profile-list__copy">
+              <span>{t("auth:profile.inactivity")}</span>
+              {inactivitySubtitle === undefined ? null : <small>{inactivitySubtitle}</small>}
+            </span>
             <Icon aria-hidden="true" name="chev" />
           </a>
         ) : null}
         <a className="profile-list__muted" href="/baixa">
           <Icon aria-hidden="true" name="ban" />
-          <span>{t("auth:profile.leave")}</span>
-          {leaveSubtitle === undefined ? null : <small>{leaveSubtitle}</small>}
+          <span className="profile-list__copy">
+            <span>{t("auth:profile.leave")}</span>
+            {leaveSubtitle === undefined ? null : <small>{leaveSubtitle}</small>}
+          </span>
           <Icon aria-hidden="true" name="chev" />
         </a>
         <button

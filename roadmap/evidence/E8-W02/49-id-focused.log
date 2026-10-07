@@ -1,0 +1,13 @@
+
+> id@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  11:07:04
+   Duration  1.03s (environment 39%, tests 25%, transform 22%, setup 9%, import 5%)
+

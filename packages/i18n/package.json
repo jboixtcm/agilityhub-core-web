@@ -6,7 +6,8 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./format": "./src/format.ts"
+    "./format": "./src/format.ts",
+    "./id": "./src/id.ts"
   },
   "dependencies": {
     "@agilityhub/ui": "workspace:*",

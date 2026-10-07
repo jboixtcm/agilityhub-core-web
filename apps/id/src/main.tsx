@@ -1,5 +1,5 @@
 import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
-import { createI18n } from "@agilityhub/i18n";
+import { createIdI18n } from "@agilityhub/i18n/id";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
@@ -25,7 +25,7 @@ async function bootstrap(root: HTMLElement) {
 
   const apiBaseUrl = env.VITE_API_BASE_URL ?? "/api/v1";
   const identityBaseUrl = env.VITE_IDENTITY_BASE_URL ?? "";
-  const i18n = await createI18n({
+  const i18n = await createIdI18n({
     branding: { defaultLocale: "ca", locales: ["ca", "es", "en"] },
     initialNamespaces: ["common", "errors", "id"],
   });

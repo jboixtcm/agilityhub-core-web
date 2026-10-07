@@ -29,6 +29,22 @@ function monthRange(start: string, count = 13): string[] {
   });
 }
 
+function includeMonths(months: string[], ...required: (null | string | undefined)[]): string[] {
+  return [...new Set([...months, ...required.filter((month): month is string => month != null)])].sort();
+}
+
+function inclusiveMonthCount(start: string, end: null | string | undefined): number {
+  if (end == null) return 13;
+  const [startYear, startMonth] = start.split("-").map(Number);
+  const [endYear, endMonth] = end.split("-").map(Number);
+  const distance =
+    ((endYear ?? startYear ?? 0) - (startYear ?? 0)) * 12 +
+    (endMonth ?? startMonth ?? 1) -
+    (startMonth ?? 1) +
+    1;
+  return Math.max(13, distance);
+}
+
 export function InactivityPage({
   client,
   navigate = (path) => {
@@ -104,10 +120,23 @@ export function InactivityPage({
     ["REQUESTED", "APPROVED", "ACTIVE"].includes(item.state),
   );
   const starts = useMemo(
-    () => monthRange(context?.earliestFromMonth ?? "2026-01"),
-    [context?.earliestFromMonth],
+    () =>
+      includeMonths(
+        monthRange(context?.earliestFromMonth ?? "2026-01"),
+        live?.fromMonth,
+      ),
+    [context?.earliestFromMonth, live?.fromMonth],
   );
-  const ends = useMemo(() => (fromMonth === "" ? [] : monthRange(fromMonth)), [fromMonth]);
+  const ends = useMemo(
+    () =>
+      fromMonth === ""
+        ? []
+        : includeMonths(
+            monthRange(fromMonth, inclusiveMonthCount(fromMonth, live?.toMonth)),
+            live?.toMonth,
+          ),
+    [fromMonth, live?.toMonth],
+  );
 
   const message = (() => {
     if (failure === undefined || context === undefined) return undefined;
@@ -133,26 +162,35 @@ export function InactivityPage({
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (context === undefined || (live?.editable.fromMonth === false && !live.editable.toMonth))
-      return;
-    const body = {
+    if (context === undefined) return;
+    const normalizedTo = toMonth === "" ? null : toMonth;
+    const normalizedComments = comments.trim() === "" ? null : comments.trim();
+    const request = {
       fromMonth,
-      toMonth: toMonth === "" ? null : toMonth,
-      comments: comments.trim() === "" ? null : comments.trim(),
+      toMonth: normalizedTo,
+      comments: normalizedComments,
     };
     setPending(true);
     setFailure(undefined);
     try {
       if (live === undefined) {
-        await keys.send(JSON.stringify(["inactivity", body]), (key) =>
+        await keys.send(JSON.stringify(["inactivity", request]), (key) =>
           client.POST("/me/inactivity-periods", {
-            body,
+            body: request,
             params: { header: { "Idempotency-Key": key } },
           }),
         );
       } else {
+        const body: components["schemas"]["InactivityPatchRequest"] = {
+          version: live.version,
+        };
+        if (live.editable.fromMonth && fromMonth !== live.fromMonth) body.fromMonth = fromMonth;
+        if (live.editable.toMonth && normalizedTo !== live.toMonth) body.toMonth = normalizedTo;
+        if (live.state !== "ACTIVE" && normalizedComments !== live.comments) {
+          body.comments = normalizedComments;
+        }
         await client.PATCH("/me/inactivity-periods/{id}", {
-          body: { ...body, version: live.version },
+          body,
           params: { path: { id: live.id } },
         });
       }
@@ -212,7 +250,9 @@ export function InactivityPage({
         <Skeleton height="20rem" label={t("inactivity:loading")} />
       ) : (
         <form className="lifecycle-form" onSubmit={(event) => void submit(event)}>
-          <p>{t("inactivity:intro", { deadlineDay: context.deadlineDay })}</p>
+          <p className="lifecycle-intro">
+            {t("inactivity:intro", { deadlineDay: context.deadlineDay })}
+          </p>
           <FormField id="inactivity-from" label={t("inactivity:form.fromMonth")}>
             <Select
               disabled={live !== undefined && !live.editable.fromMonth}
@@ -248,6 +288,7 @@ export function InactivityPage({
           </FormField>
           <FormField id="inactivity-comments" label={t("inactivity:form.comments")}>
             <Textarea
+              disabled={live?.state === "ACTIVE"}
               id="inactivity-comments"
               maxLength={500}
               onChange={(event) => {
@@ -258,16 +299,18 @@ export function InactivityPage({
           </FormField>
           {context.fee == null ? null : (
             <Card className="lifecycle-fee">
-              <strong>
-                {t("inactivity:form.firstMonth", {
-                  amount: formats.formatMoney(context.fee.firstMonth.amountMinor / 100),
-                })}
-              </strong>
-              <span>
-                {t("inactivity:form.followingMonths", {
-                  amount: formats.formatMoney(context.fee.followingMonths.amountMinor / 100),
-                })}
-              </span>
+              <div>
+                <span>{t("inactivity:form.firstMonth")}</span>
+                <strong>{formats.formatMoney(context.fee.firstMonth.amountMinor / 100)}</strong>
+              </div>
+              <div>
+                <span>{t("inactivity:form.followingMonths")}</span>
+                <strong>
+                  {t("inactivity:form.perMonth", {
+                    amount: formats.formatMoney(context.fee.followingMonths.amountMinor / 100),
+                  })}
+                </strong>
+              </div>
             </Card>
           )}
           <p className="lifecycle-note">

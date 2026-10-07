@@ -215,6 +215,7 @@
       "recordPayment": "Registrar un pago",
       "packs": "Packs",
       "packLine": "{consumed} consumidas · {remaining} disponibles · caduca el {date}",
+      "packExpiredLine": "{consumed} consumidas · caducado el {date}",
       "adjust": "Ajustar",
       "dog": "Perro",
       "concept": "Concepto",

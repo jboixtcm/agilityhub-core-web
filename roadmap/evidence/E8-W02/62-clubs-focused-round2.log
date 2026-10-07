@@ -1,0 +1,46 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/billing/InvoicesPage.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx src/payments/CheckoutReturn.test.tsx src/SignupPage.test.tsx src/App.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+ ❯ src/inactivity/InactivityPage.test.tsx (7 tests | 1 failed) 1149ms
+   ❯ T-13-29 member inactivity (7)
+     × keeps the 14 literals complete in ca, es and en 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en
+Error: Snapshot `T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > ca 1` mismatched
+
+Expected: ""‹Període d'inactivitatTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.Mes d'inici (obligatori)Octubre 2026Novembre 2026Desembre 2026Gener 2027Febrer 2027Març 2027Abril 2027Maig 2027Juny 2027Juliol 2027Agost 2027Setembre 2027Octubre 2027Mes de finalització (si el saps)— encara no ho séOctubre 2026Novembre 2026Desembre 2026Gener 2027Febrer 2027Març 2027Abril 2027Maig 2027Juny 2027Juliol 2027Agost 2027Setembre 2027Octubre 2027ComentarisDescans de la DunaQuota del 1r mes · 20,00 €Mesos següents · 10,00 €/mesLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).MODIFICARETIRA LA SOL·LICITUD""
+Received: ""‹Període d'inactivitatTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.Mes d'inici (obligatori)Octubre 2026Novembre 2026Desembre 2026Gener 2027Febrer 2027Març 2027Abril 2027Maig 2027Juny 2027Juliol 2027Agost 2027Setembre 2027Octubre 2027Mes de finalització (si el saps)— encara no ho séOctubre 2026Novembre 2026Desembre 2026Gener 2027Febrer 2027Març 2027Abril 2027Maig 2027Juny 2027Juliol 2027Agost 2027Setembre 2027Octubre 2027ComentarisDescans de la DunaQuota del 1r mes20,00 €Mesos següents10,00 €/mesLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).MODIFICARETIRA LA SOL·LICITUD""
+
+ ❯ src/inactivity/InactivityPage.test.tsx:174:42
+    172|         expect(view.container.textContent).not.toContain("inactivity:"…
+    173|       });
+    174|       expect(view.container.textContent).toMatchSnapshot(locale);
+       |                                          ^
+    175|       view.unmount();
+    176|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+  Snapshots  1 failed
+             2 obsolete
+             ↳ src/inactivity/InactivityPage.test.tsx
+               · T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > en 1
+               · T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > es 1
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 182 passed (183)
+   Start at  11:10:21
+   Duration  6.05s (tests 54%, transform 18%, environment 17%, import 7%, setup 4%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/billing/InvoicesPage.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx src/payments/CheckoutReturn.test.tsx src/SignupPage.test.tsx src/App.test.tsx`
+Exit status 1

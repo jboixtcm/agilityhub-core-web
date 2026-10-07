@@ -215,6 +215,7 @@
       "recordPayment": "Record a payment",
       "packs": "Packs",
       "packLine": "{consumed} used · {remaining} available · expires {date}",
+      "packExpiredLine": "{consumed} used · expired {date}",
       "adjust": "Adjust",
       "dog": "Dog",
       "concept": "Concept",

@@ -1,0 +1,61 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/App.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/App.test.tsx (55 tests | 2 failed) 2853ms
+   ❯ T-02-14 clubs shell (7)
+     × E8-W02 round 2: receipts, inactivity and leave are MEMBER routes 2ms
+   ❯ T-01-21 profile access rows and impersonation (3)
+     × renders the mockup rows in order without account sessions or backoffice handoff 80ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-02-14 clubs shell > E8-W02 round 2: receipts, inactivity and leave are MEMBER routes
+AssertionError: expected undefined to deeply equal [ 'MEMBER' ]
+
+- Expected:
+[
+  "MEMBER",
+]
+
++ Received:
+undefined
+
+ ❯ src/App.test.tsx:273:73
+    271|   it("E8-W02 round 2: receipts, inactivity and leave are MEMBER routes…
+    272|     for (const path of ["/rebuts", "/rebuts/:id", "/inactivitat", "/ba…
+    273|       expect(MOBILE_ROUTES.find((route) => route.path === path)?.roles…
+       |                                                                         ^
+    274|     }
+    275|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff
+Error: expect(received).toHaveTextContent()
+
+received value must be a Node.
+Received has type:  Null
+Received has value: null
+ ❯ src/App.test.tsx:508:61
+    506|     });
+    507|     expect(inactivity).toHaveAttribute("href", "/inactivitat");
+    508|     expect(inactivity.querySelector(".profile-list__copy")).toHaveText…
+       |                                                             ^
+    509|       "Sol·licitar període d'inactivitatpendent d'aprovació",
+    510|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 53 passed (55)
+   Start at  11:01:31
+   Duration  5.04s (tests 58%, transform 20%, environment 13%, import 6%, setup 3%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/App.test.tsx`
+Exit status 1

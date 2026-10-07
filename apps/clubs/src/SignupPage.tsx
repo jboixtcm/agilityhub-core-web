@@ -2553,7 +2553,19 @@ function PaymentStep({
   );
 }
 
-function SuccessStep({ addDog, client }: { addDog: boolean; client: ApiClient }) {
+function SuccessStep({
+  addDog,
+  client,
+  onPaid,
+  onRetry,
+  signupToken,
+}: {
+  addDog: boolean;
+  client: ApiClient;
+  onPaid: () => void;
+  onRetry: () => void;
+  signupToken?: string;
+}) {
   const { t } = useTranslation("signup");
   const [checkout] = useState(
     () =>
@@ -2572,9 +2584,9 @@ function SuccessStep({ addDog, client }: { addDog: boolean; client: ApiClient })
       {checkout ? (
         <CheckoutReturn
           client={client}
-          onRetry={() => {
-            window.location.assign(addDog ? "/gossos/nou/pagament" : "/apuntat-hi/pagament");
-          }}
+          onPaid={onPaid}
+          onRetry={onRetry}
+          {...(signupToken === undefined ? {} : { signupToken })}
         />
       ) : null}
       {/* A member who added a dog goes back to 13, where it waits «pendent de validació». */}
@@ -2589,6 +2601,7 @@ function SuccessStep({ addDog, client }: { addDog: boolean; client: ApiClient })
 
 export function SignupPage({
   addDog = false,
+  authenticated = false,
   client,
   onNavigate = (path) => {
     window.location.assign(path);
@@ -2596,6 +2609,7 @@ export function SignupPage({
 }: {
   client: ApiClient;
   addDog?: boolean;
+  authenticated?: boolean;
   onNavigate?: (path: string) => void;
 }) {
   const branding = useBranding();
@@ -2667,13 +2681,18 @@ export function SignupPage({
   const committed = draft.submission?.memberId !== undefined;
 
   useEffect(() => {
+    if (authenticated && committed) safeSessionRemove(DRAFT_KEY);
+  }, [authenticated, committed]);
+
+  useEffect(() => {
     if (sent) {
-      // The flow ends here: the draft (and the signup capability it holds) is discarded.
-      safeSessionRemove(DRAFT_KEY);
+      // A Stripe redirect is not proof of payment. Keep the committed member and its anonymous
+      // capability until the status endpoint answers PAID; an EXPIRED retry needs both values.
+      if (!committed) safeSessionRemove(DRAFT_KEY);
       return;
     }
     safeSessionSet(DRAFT_KEY, JSON.stringify({ ...draft, savedAt: Date.now() }));
-  }, [draft, sent]);
+  }, [committed, draft, sent]);
 
   useEffect(() => {
     let active = true;
@@ -2790,7 +2809,26 @@ export function SignupPage({
   if (sent) {
     return (
       <Layout {...(addDog ? { title: t("signup:success.addDogTitle") } : {})}>
-        <SuccessStep addDog={addDog} client={client} />
+        <SuccessStep
+          addDog={addDog}
+          client={client}
+          onPaid={() => {
+            safeSessionRemove(DRAFT_KEY);
+          }}
+          onRetry={() => {
+            safeSessionRemove(CHECKOUT_RETURN_KEY);
+            updateDraft((current) => {
+              if (current.submission?.checkoutKey === undefined) return current;
+              const submission = { ...current.submission };
+              delete submission.checkoutKey;
+              return { ...current, submission };
+            });
+            navigateTo(paths.payment ?? (addDog ? "/gossos/nou/pagament" : "/apuntat-hi/pagament"));
+          }}
+          {...(draft.submission?.signupToken === undefined
+            ? {}
+            : { signupToken: draft.submission.signupToken })}
+        />
       </Layout>
     );
   }

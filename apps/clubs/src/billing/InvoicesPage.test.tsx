@@ -1,5 +1,6 @@
 import { server } from "@agilityhub/api-client/mocks/server";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
 
 import { ProfileLifecycleSection } from "../profile/ProfileLifecycleSection";
@@ -19,6 +20,12 @@ describe("T-12-26 member receipts", () => {
       "href",
       "/rebuts/51000000-0000-4000-8000-000000000001",
     );
+  });
+
+  it("T-12-32 keeps the frozen Catalan description while an English member sees English month and money", async () => {
+    await renderE8(<InvoicesPage client={e8Client("en")} />, { locale: "en" });
+    expect(await screen.findByText("Quota setembre 2026")).toBeVisible();
+    expect(screen.getByRole("link", { name: /September 2026/u })).toHaveTextContent("€60.00");
   });
 
   it("shows the masked method in detail and requests the PDF document", async () => {
@@ -72,5 +79,69 @@ describe("T-12-26 member receipts", () => {
       { branding, scenario: "billingOff" },
     );
     expect(screen.queryByRole("link", { name: "Rebuts" })).not.toBeInTheDocument();
+  });
+
+  it("disables load-more while reading and de-duplicates overlapping pages by receipt id", async () => {
+    const receipt = (id: string, displayNumber: string, period: string) => ({
+      displayNumber,
+      familyGroup: false,
+      id,
+      issueDate: `${period}-01`,
+      lines: [
+        {
+          description: `Quota ${period}`,
+          origin: "MONTHLY_FEE",
+          total: { amountMinor: 6000, currency: "EUR" },
+        },
+      ],
+      paidAt: null,
+      paymentMethod: {
+        channel: null,
+        holderName: "Laura Serra Vidal",
+        last4: null,
+        mandateRef: null,
+        maskedAccount: "···· 2231",
+        type: "SEPA_DD",
+      },
+      period,
+      refundedTotal: { amountMinor: 0, currency: "EUR" },
+      status: "PAID",
+      total: { amountMinor: 6000, currency: "EUR" },
+    });
+    let release: (() => void) | undefined;
+    server.use(
+      http.get("*/api/v1/me/invoices", async ({ request }) => {
+        const page = Number(new URL(request.url).searchParams.get("page") ?? 0);
+        if (page === 1) {
+          await new Promise<void>((resolve) => {
+            release = resolve;
+          });
+        }
+        return HttpResponse.json({
+          items:
+            page === 0
+              ? [receipt("receipt-a", "2026-0901", "2026-09")]
+              : [
+                  receipt("receipt-a", "2026-0901", "2026-09"),
+                  receipt("receipt-b", "2026-0801", "2026-08"),
+                ],
+          page,
+          size: 20,
+          totalItems: 2,
+          totalPages: 2,
+        });
+      }),
+    );
+    await renderE8(<InvoicesPage client={e8Client()} />);
+    const more = await screen.findByRole("button", { name: "Carrega'n més" });
+    fireEvent.click(more);
+    expect(more).toBeDisabled();
+    await waitFor(() => {
+      expect(release).toBeTypeOf("function");
+    });
+    release?.();
+    await screen.findByRole("link", { name: /Agost 2026/u });
+    expect(document.querySelectorAll('a[href="/rebuts/receipt-a"]')).toHaveLength(1);
+    expect(document.querySelectorAll('a[href="/rebuts/receipt-b"]')).toHaveLength(1);
   });
 });

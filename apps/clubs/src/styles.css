@@ -467,6 +467,11 @@ select {
   color: var(--ah-color-text-muted);
 }
 
+.profile-list__copy {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
 .profile-list {
   padding-block: 0;
 }
@@ -702,6 +707,19 @@ select {
   gap: var(--ah-space-4);
 }
 
+.lifecycle-intro,
+.leave-offer {
+  background: color-mix(in srgb, var(--ah-color-primary) 14%, var(--ah-color-surface));
+  border: 1px solid var(--ah-color-primary);
+  border-radius: var(--ah-radius-md);
+  margin: 0;
+  padding: var(--ah-space-4);
+}
+
+.leave-offer p {
+  margin: 0;
+}
+
 .receipt-detail__heading,
 .lifecycle-fee {
   align-items: center;
@@ -735,8 +753,19 @@ select {
 }
 
 .lifecycle-fee {
+  align-items: stretch;
   flex-direction: column;
-  align-items: flex-start;
+}
+
+.lifecycle-fee > div {
+  align-items: center;
+  display: flex;
+  gap: var(--ah-space-3);
+  justify-content: space-between;
+}
+
+.lifecycle-fee strong {
+  color: var(--ah-color-primary);
 }
 
 .lifecycle-note,

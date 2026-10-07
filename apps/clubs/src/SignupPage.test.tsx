@@ -17,6 +17,8 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest
 import { SignupPage } from "./SignupPage";
 
 const DRAFT_KEY = "signup.draft.v1";
+const CHECKOUT_KEY = "signup.checkout.v1";
+const CHECKOUT_RETURN_KEY = "checkout.return.v1";
 const MEMBER_PLAN = "10000000-0000-4000-8000-000000000001";
 const PACK_6_PLAN = "10000000-0000-4000-8000-000000000002";
 const THERAPY_PLAN = "10000000-0000-4000-8000-000000000004";
@@ -90,6 +92,8 @@ async function renderSignup({
   scenario?: MockScenario;
 }) {
   window.history.pushState(null, "", path);
+  const requestedUrl = new URL(path, window.location.origin);
+  const pathname = requestedUrl.pathname;
   mockScenario(scenario);
   const branding = brandingOverride ?? brandingFor(scenario);
   // A same-document navigator (a client-side router): the address moves before the page renders
@@ -125,9 +129,11 @@ async function renderSignup({
   // The header's title: «Apunta-t'hi», or «Afegeix un gos» on the add-dog «enviada» page (E4-W16).
   await screen.findByRole("heading", {
     level: 1,
-    name: addDog && path.endsWith("/enviada") ? "Afegeix un gos" : "Apunta-t'hi",
+    name: addDog && pathname.endsWith("/enviada") ? "Afegeix un gos" : "Apunta-t'hi",
   });
-  if (!path.endsWith("/enviada")) await screen.findByText(/Pas \d de \d/u);
+  if (!pathname.endsWith("/enviada") || requestedUrl.searchParams.get("cs") === "cancel") {
+    await screen.findByText(/Pas \d de \d/u);
+  }
   return { i18n, navigate };
 }
 
@@ -1320,6 +1326,63 @@ function stubFullPageLoads(
   });
   return loads;
 }
+
+describe("E8-W02 round 2 signup checkout return", () => {
+  const committedSubmission = {
+    checkoutKey: "checkout-key",
+    fingerprint: "a".repeat(64),
+    idempotencyKey: "signup-key",
+    memberId: "member-signup-357",
+    signupToken: "mock-signup-token",
+  };
+
+  it("keeps the committed draft through EXPIRED and renews only the checkout", async () => {
+    seedDraft({ submission: committedSubmission });
+    sessionStorage.setItem(CHECKOUT_KEY, "1");
+    sessionStorage.setItem(CHECKOUT_RETURN_KEY, "cs_expired_signup");
+    server.use(
+      http.get("*/api/v1/checkout-sessions/:id", ({ request }) =>
+        request.headers.get("X-Signup-Token") === committedSubmission.signupToken
+          ? HttpResponse.json({ checkoutSessionId: "cs_expired_signup", status: "EXPIRED" })
+          : apiErrorResponse("UNAUTHENTICATED", 401),
+      ),
+    );
+    const loads = stubFullPageLoads("/apuntat-hi/enviada?cs=success");
+    await renderSignup({
+      path: "/apuntat-hi/enviada?cs=success",
+      productionNavigator: true,
+      scenario: "signupStripe",
+    });
+    fireEvent.click(await screen.findByRole("button", { name: "Torna-ho a provar" }));
+    expect(await screen.findByRole("button", { name: "PAGA ARA" })).toBeVisible();
+    expect(loads).toEqual(["/apuntat-hi/pagament"]);
+    expect(savedDraft().submission).toMatchObject({
+      memberId: committedSubmission.memberId,
+      signupToken: committedSubmission.signupToken,
+    });
+  });
+
+  it("sends the capability while polling and discards the draft only after PAID", async () => {
+    seedDraft({ submission: committedSubmission });
+    sessionStorage.setItem(CHECKOUT_KEY, "1");
+    sessionStorage.setItem(CHECKOUT_RETURN_KEY, "cs_paid_signup");
+    let capability: string | null = null;
+    server.use(
+      http.get("*/api/v1/checkout-sessions/:id", ({ request }) => {
+        capability = request.headers.get("X-Signup-Token");
+        return capability === committedSubmission.signupToken
+          ? HttpResponse.json({ checkoutSessionId: "cs_paid_signup", status: "PAID" })
+          : apiErrorResponse("UNAUTHENTICATED", 401);
+      }),
+    );
+    await renderSignup({ path: "/apuntat-hi/enviada?cs=success", scenario: "signupStripe" });
+    expect(await screen.findByText("Pagament rebut")).toBeVisible();
+    expect(capability).toBe(committedSubmission.signupToken);
+    await waitFor(() => {
+      expect(sessionStorage.getItem(DRAFT_KEY)).toBeNull();
+    });
+  });
+});
 
 describe("E3-W06 round 2", () => {
   it("#1 an INVALID_IBAN from 19 stays on 19, on the IBAN field (production navigator)", async () => {

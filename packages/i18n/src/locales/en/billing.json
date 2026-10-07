@@ -28,6 +28,8 @@
     "pending": "We are confirming the payment…",
     "paid": "Payment received",
     "expired": "The payment session has expired.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "update": "Refresh",
+    "closeHint": "You can now close this page."
   }
 }

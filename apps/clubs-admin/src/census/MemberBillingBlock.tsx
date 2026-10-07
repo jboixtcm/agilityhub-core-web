@@ -1,4 +1,5 @@
 import {
+  apiFieldErrors,
   isApiError,
   type ApiClient,
   type components,
@@ -45,8 +46,9 @@ export function MemberBillingBlock({
   memberId: string;
   readOnly?: boolean;
 }) {
-  const { t } = useTranslation(["admin-census", "enums"]);
+  const { t } = useTranslation(["admin-census", "enums", "errors"]);
   const branding = useBranding();
+  const packsEnabled = branding.modules.includes("PACKS");
   const formats = useClubFormats();
   const keys = useSubmissionKeys();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -71,6 +73,9 @@ export function MemberBillingBlock({
 
   useEffect(() => {
     let active = true;
+    const packRequest = packsEnabled
+      ? client.GET("/pack-balances", { params: { query: { memberId } } })
+      : Promise.resolve({ data: [] as Pack[] });
     void Promise.allSettled([
       client.GET("/invoices", {
         params: {
@@ -84,7 +89,7 @@ export function MemberBillingBlock({
         },
       }),
       client.GET("/upfront-payments", { params: { query: { memberId } } }),
-      client.GET("/pack-balances", { params: { query: { memberId } } }),
+      packRequest,
     ]).then(([invoiceResult, paymentResult, packResult]) => {
       if (!active) return;
       if (invoiceResult.status === "fulfilled")
@@ -95,7 +100,20 @@ export function MemberBillingBlock({
     return () => {
       active = false;
     };
-  }, [client, memberId, reload]);
+  }, [client, memberId, packsEnabled, reload]);
+
+  const dogName = (id: string) => dogs.find((dog) => dog.id === id)?.name ?? id;
+  const adjustmentFields = apiFieldErrors(failure);
+  const adjustmentFieldError = (field: string) =>
+    adjustmentFields.some((entry) => entry.field === field)
+      ? t("errors:VALIDATION_ERROR")
+      : undefined;
+  const hasKnownAdjustmentField = adjustmentFields.some((entry) =>
+    ["delta", "expiresOn", "reason"].includes(entry.field),
+  );
+  const deltaError = adjustmentFieldError("delta");
+  const reasonError = adjustmentFieldError("reason");
+  const expiryError = adjustmentFieldError("expiresOn");
 
   const cents = (value: string) => Math.round(Number(value.replace(",", ".")) * 100);
   const savePayment = async (event: SyntheticEvent<HTMLFormElement>) => {
@@ -208,35 +226,45 @@ export function MemberBillingBlock({
           ))}
         </ul>
       </section>
-      <section>
-        <h3>{t("admin-census:member.billing.packs")}</h3>
-        {packs.map((pack) => (
-          <div className="member-billing__pack" key={pack.id}>
-            <span>
-              <strong>{pack.planName}</strong> —{" "}
-              {t("admin-census:member.billing.packLine", {
-                consumed: pack.consumed,
-                remaining: pack.remaining,
-                date: formats.formatPlainDate(pack.expiresOn, "short"),
-              })}
-            </span>
-            {readOnly ? null : (
-              <Button
-                onClick={() => {
-                  setFailure(undefined);
-                  setDelta("");
-                  setReason("");
-                  setExpiresOn("");
-                  setAdjusting(pack);
-                }}
-                variant="ghost"
-              >
-                {t("admin-census:member.billing.adjust")}
-              </Button>
-            )}
-          </div>
-        ))}
-      </section>
+      {packsEnabled ? (
+        <section>
+          <h3>{t("admin-census:member.billing.packs")}</h3>
+          {packs.map((pack) => (
+            <div className="member-billing__pack" key={pack.id}>
+              <span>
+                <strong>
+                  {dogName(pack.dogId)} · {pack.planName}
+                </strong>{" "}
+                —{" "}
+                {pack.state === "EXPIRED"
+                  ? t("admin-census:member.billing.packExpiredLine", {
+                      consumed: pack.consumed,
+                      date: formats.formatPlainDate(pack.expiresOn, "short"),
+                    })
+                  : t("admin-census:member.billing.packLine", {
+                      consumed: pack.consumed,
+                      remaining: pack.remaining,
+                      date: formats.formatPlainDate(pack.expiresOn, "short"),
+                    })}
+              </span>
+              {readOnly ? null : (
+                <Button
+                  onClick={() => {
+                    setFailure(undefined);
+                    setDelta("");
+                    setReason("");
+                    setExpiresOn("");
+                    setAdjusting(pack);
+                  }}
+                  variant="ghost"
+                >
+                  {t("admin-census:member.billing.adjust")}
+                </Button>
+              )}
+            </div>
+          ))}
+        </section>
+      ) : null}
       <Modal
         closeLabel={t("admin-census:common.cancel")}
         onClose={() => {
@@ -276,8 +304,16 @@ export function MemberBillingBlock({
               }}
               value={concept}
             >
-              {(
-                ["ENTRY_FEE", "FIRST_MONTH", "PACK", "SINGLE_CLASS", "ACTIVITY", "OTHER"] as const
+              {(packsEnabled
+                ? ([
+                    "ENTRY_FEE",
+                    "FIRST_MONTH",
+                    "PACK",
+                    "SINGLE_CLASS",
+                    "ACTIVITY",
+                    "OTHER",
+                  ] as const)
+                : (["ENTRY_FEE", "FIRST_MONTH", "SINGLE_CLASS", "ACTIVITY", "OTHER"] as const)
               ).map((value) => (
                 <option key={value} value={value}>
                   {t(`enums:upfrontConcept.${value}`)}
@@ -380,10 +416,17 @@ export function MemberBillingBlock({
         title={t("admin-census:member.billing.adjust")}
       >
         <form className="census-record__form" onSubmit={(event) => void saveAdjustment(event)}>
+          {adjusting === undefined ? null : (
+            <p>
+              <strong>{t("admin-census:member.billing.dog")}:</strong> {dogName(adjusting.dogId)}
+            </p>
+          )}
           <FormField
             {...(isApiError(failure, "PACK_NEGATIVE")
               ? { error: t("admin-census:member.billing.packNegative") }
-              : {})}
+              : deltaError === undefined
+                ? {}
+                : { error: deltaError })}
             id="pack-delta"
             label={t("admin-census:member.billing.delta")}
           >
@@ -397,7 +440,11 @@ export function MemberBillingBlock({
               value={delta}
             />
           </FormField>
-          <FormField id="pack-reason" label={t("admin-census:member.billing.reason")}>
+          <FormField
+            {...(reasonError === undefined ? {} : { error: reasonError })}
+            id="pack-reason"
+            label={t("admin-census:member.billing.reason")}
+          >
             <Input
               id="pack-reason"
               onChange={(event) => {
@@ -408,7 +455,11 @@ export function MemberBillingBlock({
             />
           </FormField>
           {adjusting?.state === "EXPIRED" ? (
-            <FormField id="pack-expiry" label={t("admin-census:member.billing.expiresOn")}>
+            <FormField
+              {...(expiryError === undefined ? {} : { error: expiryError })}
+              id="pack-expiry"
+              label={t("admin-census:member.billing.expiresOn")}
+            >
               <Input
                 id="pack-expiry"
                 onChange={(event) => {
@@ -419,6 +470,11 @@ export function MemberBillingBlock({
                 value={expiresOn}
               />
             </FormField>
+          ) : null}
+          {failure !== undefined &&
+          !isApiError(failure, "PACK_NEGATIVE") &&
+          !hasKnownAdjustmentField ? (
+            <p role="alert">{t("admin-census:common.genericError")}</p>
           ) : null}
           <Button disabled={pending} loading={pending} type="submit">
             {t("admin-census:common.save")}

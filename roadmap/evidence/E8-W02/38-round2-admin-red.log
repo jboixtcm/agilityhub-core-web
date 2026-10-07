@@ -1,0 +1,249 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/census/MemberBillingBlock.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/MemberBillingBlock.test.tsx (6 tests | 4 failed) 10344ms
+   ❯ D10 member billing block (6)
+     × requires a new expiry when adjusting an expired pack 33ms
+     × names the dog on every pack row and inside its adjustment modal 20ms
+     × omits the pack request, section and upfront PACK concept when PACKS is off 20ms
+     × maps adjustment field errors and shows an alert for an unclassified failure 10044ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > D10 member billing block > requires a new expiry when adjusting an expired pack
+Error: expect(element).not.toHaveTextContent()
+
+Expected element not to have text content:
+  disponibles
+Received:
+  Pack 10 — 10 consumides · 0 disponibles · caduca el 31/07/2026Ajusta
+ ❯ src/census/MemberBillingBlock.test.tsx:119:79
+    117|     const dialog = screen.getByRole("dialog", { name: "Ajusta" });
+    118|     expect(within(dialog).getByLabelText("Nova caducitat")).toBeRequir…
+    119|     expect(screen.getByText(/Pack 10/u).closest(".member-billing__pack…
+       |                                                                               ^
+    120|       "disponibles",
+    121|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > D10 member billing block > names the dog on every pack row and inside its adjustment modal
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Duna
+Received:
+  Pack 10 — 1 consumides · 9 disponibles · caduca el 31/12/2026Ajusta
+ ❯ src/census/MemberBillingBlock.test.tsx:152:59
+    150|     const packRows = await screen.findAllByText("Pack 10", { exact: fa…
+    151|     expect(packRows).toHaveLength(2);
+    152|     expect(packRows[0]?.closest(".member-billing__pack")).toHaveTextCo…
+       |                                                           ^
+    153|     expect(packRows[1]?.closest(".member-billing__pack")).toHaveTextCo…
+    154|     const adjust = screen.getAllByRole("button", { name: "Ajusta" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > D10 member billing block > omits the pack request, section and upfront PACK concept when PACKS is off
+AssertionError: expected [ '/api/v1/invoices', …(2) ] to not include '/api/v1/pack-balances'
+ ❯ src/census/MemberBillingBlock.test.tsx:169:26
+    167|     });
+    168|     await screen.findByText("2026-0912");
+    169|     expect(requests).not.toContain("/api/v1/pack-balances");
+       |                          ^
+    170|     expect(screen.queryByRole("heading", { name: "Packs" })).not.toBeI…
+    171|     fireEvent.click(screen.getByRole("button", { name: "Registra un pa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/census/MemberBillingBlock.test.tsx > D10 member billing block > maps adjustment field errors and shows an alert for an unclassified failure
+TestingLibraryElementError: Unable to find an element with the text: /dades introduïdes/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_b_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_b_"[39m
+    [36m>[39m
+      [0mAjusta[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Cancel·la"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"pack-delta"[39m
+        [36m>[39m
+          [0mVariació de sessions[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"pack-delta"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"number"[39m
+          [33mvalue[39m=[32m"1"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"pack-reason"[39m
+        [36m>[39m
+          [0mMotiu[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"pack-reason"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mvalue[39m=[32m"Correcció"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDesa[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_b_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_b_"[39m
+    [36m>[39m
+      [0mAjusta[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Cancel·la"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"pack-delta"[39m
+        [36m>[39m
+          [0mVariació de sessions[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"pack-delta"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"number"[39m
+          [33mvalue[39m=[32m"1"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"pack-reason"[39m
+        [36m>[39m
+          [0mMotiu[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"pack-reason"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mvalue[39m=[32m"Correcció"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mDesa[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/MemberBillingBlock.test.tsx:197:33
+    195|     fireEvent.change(within(dialog).getByLabelText("Motiu"), { target:…
+    196|     fireEvent.click(within(dialog).getByRole("button", { name: "Desa" …
+    197|     expect(await within(dialog).findByText(/dades introduïdes/u)).toBe…
+       |                                 ^
+    198|
+    199|     server.use(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 2 passed (6)
+   Start at  11:01:31
+   Duration  12.12s (tests 86%, environment 5%, transform 5%, import 2%, setup 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/census/MemberBillingBlock.test.tsx`
+Exit status 1

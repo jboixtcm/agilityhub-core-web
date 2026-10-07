@@ -1,0 +1,23 @@
+
+> clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> eslint . --max-warnings 0 --config ../../eslint.config.mjs
+
+
+> clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> tsc --noEmit
+
+src/census/MemberBillingBlock.tsx(423,12): error TS2375: Type '{ children: Element; id: string; label: string; error?: string | undefined; }' is not assignable to type 'FormFieldProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'error' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/census/MemberBillingBlock.tsx(442,12): error TS2375: Type '{ children: Element; id: string; label: string; error?: string | undefined; }' is not assignable to type 'FormFieldProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'error' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/census/MemberBillingBlock.tsx(459,14): error TS2375: Type '{ children: Element; id: string; label: string; error?: string | undefined; }' is not assignable to type 'FormFieldProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'error' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 typecheck: `tsc --noEmit`
+Exit status 2

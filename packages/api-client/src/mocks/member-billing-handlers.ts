@@ -45,6 +45,7 @@ let leave = structuredClone(leaveContextFixture);
 let packs = structuredClone(packBalanceFixtures);
 let adminPeriods = structuredClone(adminInactivityPeriods);
 let adminLeaves = structuredClone(adminLeaveRequests);
+let memberCreatedInactivity = false;
 const initialUpfront: components["schemas"]["UpfrontPayment"][] = [
   {
     amountDue: { amountMinor: 3000, currency: "EUR" },
@@ -70,6 +71,7 @@ export function resetMemberBillingState(): void {
   packs = structuredClone(packBalanceFixtures);
   adminPeriods = structuredClone(adminInactivityPeriods);
   adminLeaves = structuredClone(adminLeaveRequests);
+  memberCreatedInactivity = false;
   upfront = structuredClone(initialUpfront);
   checkoutReads.clear();
 }
@@ -418,10 +420,17 @@ export const memberBillingHandlers = [
     if (refused !== undefined) return refused;
     return currentMockScenario().memberBilling === "cardInvalid" ? HttpResponse.json({ checkoutUrl: "https://checkout.example.test/setup/cs_card" }, { status: 201 }) : error("PAYMENT_PROVIDER_NOT_ENABLED", 422);
   }),
-  http.get("*/api/v1/checkout-sessions/:id", ({ params }) => {
+  http.get("*/api/v1/checkout-sessions/:id", ({ params, request }) => {
     const refused = moduleOff("BILLING");
     if (refused !== undefined) return refused;
     const id = String(params.id);
+    if (
+      id.includes("signup") &&
+      request.headers.get("Authorization") === null &&
+      request.headers.get("X-Signup-Token") !== "mock-signup-token"
+    ) {
+      return error("UNAUTHENTICATED", 401);
+    }
     const count = checkoutReads.get(id) ?? 0;
     checkoutReads.set(id, count + 1);
     return HttpResponse.json({
@@ -440,7 +449,10 @@ export const memberBillingHandlers = [
     return HttpResponse.json({
       ...inactivity,
       fee: currentMockScenario().branding.modules.includes("BILLING") ? inactivity.fee : null,
-      periods: currentMockScenario().memberBilling === "noInactivity" ? [] : inactivity.periods,
+      periods:
+        currentMockScenario().memberBilling === "noInactivity" && !memberCreatedInactivity
+          ? []
+          : inactivity.periods,
     });
   }),
   http.get("*/api/v1/me/inactivity-periods/preview", () => {
@@ -450,7 +462,20 @@ export const memberBillingHandlers = [
   http.post("*/api/v1/me/inactivity-periods", async ({ request }) => {
     const body = (await request.json()) as InactivityRequest;
     if (currentMockScenario().memberBilling === "deadlinePassed") return error("INACTIVITY_DEADLINE_PASSED", 422, { earliestMonth: "2026-11" });
-    return HttpResponse.json({ ...inactivity.periods[0], ...body }, { status: 201 });
+    const seed = inactivityContextFixture.periods[0];
+    if (seed === undefined) throw new TypeError("The inactivity fixture requires a seed period");
+    const created = {
+      ...seed,
+      comments: body.comments ?? null,
+      fromMonth: body.fromMonth,
+      id: "52000000-0000-4000-8000-000000000099",
+      state: "REQUESTED" as const,
+      toMonth: body.toMonth ?? null,
+      version: 1,
+    };
+    inactivity.periods = [created];
+    memberCreatedInactivity = true;
+    return HttpResponse.json(created, { status: 201 });
   }),
   http.patch("*/api/v1/me/inactivity-periods/:id", async ({ params, request }) => {
     const body = (await request.json()) as InactivityPatch;
@@ -534,7 +559,19 @@ export const memberBillingHandlers = [
     const memberId = url.searchParams.get("memberId");
     const dogId = url.searchParams.get("dogId");
     const effectiveMemberId = memberId === "member-laura" ? "20000000-0000-4000-8000-000000000002" : memberId;
-    return HttpResponse.json(packs.filter((item) => (effectiveMemberId === null || item.memberId === effectiveMemberId) && (dogId === null || item.dogId === dogId)));
+    const rows = packs
+      .filter(
+        (item) =>
+          (effectiveMemberId === null || item.memberId === effectiveMemberId) &&
+          (dogId === null || item.dogId === dogId),
+      )
+      .map((item) =>
+        memberId === "member-laura" &&
+        item.dogId === "31000000-0000-4000-8000-000000000002"
+          ? { ...item, dogId: "dog-rock" }
+          : item,
+      );
+    return HttpResponse.json(rows);
   }),
   http.post("*/api/v1/pack-balances/:id/adjustments", async ({ params, request }) => {
     const body = (await request.json()) as PackAdjustment;

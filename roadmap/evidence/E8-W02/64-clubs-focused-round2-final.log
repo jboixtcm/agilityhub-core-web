@@ -1,0 +1,15 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/billing/InvoicesPage.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx src/payments/CheckoutReturn.test.tsx src/SignupPage.test.tsx src/App.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+ Test Files  6 passed (6)
+      Tests  183 passed (183)
+   Start at  11:10:53
+   Duration  6.29s (tests 54%, transform 21%, environment 14%, import 8%, setup 3%)
+

@@ -1,0 +1,271 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/payments/CheckoutReturn.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx src/billing/InvoicesPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+ ❯ src/billing/InvoicesPage.test.tsx (6 tests | 1 failed) 280ms
+   ❯ T-12-26 member receipts (6)
+     × disables load-more while reading and de-duplicates overlapping pages by receipt id 17ms
+ ❯ src/leave/LeavePage.test.tsx (8 tests | 1 failed) 401ms
+   ❯ T-13-30 member leave (8)
+     × shows a pending request's own future date and disables the field 10ms
+ ❯ src/inactivity/InactivityPage.test.tsx (7 tests | 2 failed) 1119ms
+   ❯ T-13-29 member inactivity (7)
+     × renders a historical ACTIVE period and patches only its changed editable end 12ms
+     × keeps a newly created period for the return-to-profile subtitle 0ms
+ ❯ src/payments/CheckoutReturn.test.tsx (3 tests | 3 failed) 20110ms
+   ❯ E8-W02 round 2 checkout return (3)
+     × sends the signup capability only for an anonymous signup return 10050ms
+     × keeps PENDING after the ten-second budget, offers refresh and keeps the close hint 49ms
+     × shows a failed read locally and retries the same status read 10008ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/InvoicesPage.test.tsx > T-12-26 member receipts > disables load-more while reading and de-duplicates overlapping pages by receipt id
+Error: expect(element).toBeDisabled()
+
+Received element is not disabled:
+  <button
+  class="ah-button ah-button--secondary"
+  type="button"
+/>
+ ❯ src/billing/InvoicesPage.test.tsx:138:18
+    136|     const more = await screen.findByRole("button", { name: "Carrega'n …
+    137|     fireEvent.click(more);
+    138|     expect(more).toBeDisabled();
+       |                  ^
+    139|     release?.();
+    140|     await screen.findByRole("link", { name: /Agost 2026/u });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > renders a historical ACTIVE period and patches only its changed editable end
+Error: expect(element).toHaveValue(2025-08)
+
+Expected the element to have value:
+  2025-08
+Received:
+  2026-10
+ ❯ src/inactivity/InactivityPage.test.tsx:132:70
+    130|     );
+    131|     await renderE8(<InactivityPage client={e8Client()} navigate={() =>…
+    132|     expect(await screen.findByLabelText("Mes d'inici (obligatori)")).t…
+       |                                                                      ^
+    133|     const end = screen.getByLabelText("Mes de finalització (si el saps…
+    134|     expect(end).toHaveValue("2027-12");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > keeps a newly created period for the return-to-profile subtitle
+ReferenceError: vi is not defined
+ ❯ src/inactivity/InactivityPage.test.tsx:144:22
+    142|
+    143|   it("keeps a newly created period for the return-to-profile subtitle"…
+    144|     const navigate = vi.fn();
+       |                      ^
+    145|     const view = await renderE8(<InactivityPage client={e8Client()} na…
+    146|       scenario: "memberNoInactivity",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/leave/LeavePage.test.tsx > T-13-30 member leave > shows a pending request's own future date and disables the field
+Error: expect(element).toHaveValue(2026-09-30)
+
+Expected the element to have value:
+  2026-09-30
+Received:
+  2026-08-11
+ ❯ src/leave/LeavePage.test.tsx:88:71
+     86|     );
+     87|     await renderE8(<LeavePage client={e8Client()} />);
+     88|     expect(await screen.findByLabelText("Data en què vols la baixa")).…
+       |                                                                       ^
+     89|     expect(screen.getByLabelText("Data en què vols la baixa")).toBeDis…
+     90|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/payments/CheckoutReturn.test.tsx > E8-W02 round 2 checkout return > sends the signup capability only for an anonymous signup return
+TestingLibraryElementError: Unable to find an element with the text: La sessió de pagament ha caducat.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card checkout-return checkout-return--pending"[39m
+      [33mrole[39m=[32m"status"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mEstem confirmant el pagament…[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card checkout-return checkout-return--pending"[39m
+      [33mrole[39m=[32m"status"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mEstem confirmant el pagament…[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/payments/CheckoutReturn.test.tsx:39:25
+     37|       />,
+     38|     );
+     39|     expect(await screen.findByText("La sessió de pagament ha caducat."…
+       |                         ^
+     40|     expect(header).toBe("mock-signup-token");
+     41|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/payments/CheckoutReturn.test.tsx > E8-W02 round 2 checkout return > keeps PENDING after the ten-second budget, offers refresh and keeps the close hint
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Actualitza"
+
+Here are the accessible roles:
+
+  status:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-card checkout-return checkout-return--expired"[39m
+    [33mrole[39m=[32m"status"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Torna-ho a provar":
+  [36m<button[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card checkout-return checkout-return--expired"[39m
+      [33mrole[39m=[32m"status"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mLa sessió de pagament ha caducat.[0m
+      [36m</p>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mTorna-ho a provar[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/payments/CheckoutReturn.test.tsx:67:19
+     65|     await renderE8(<CheckoutReturn client={e8Client()} onRetry={() => …
+     66|     expect(await screen.findByText("Estem confirmant el pagament…")).t…
+     67|     expect(screen.getByRole("button", { name: "Actualitza" })).toBeEna…
+       |                   ^
+     68|     expect(screen.getByText(/Ja pots tancar/u)).toBeVisible();
+     69|     expect(screen.queryByText("La sessió de pagament ha caducat.")).no…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/payments/CheckoutReturn.test.tsx > E8-W02 round 2 checkout return > shows a failed read locally and retries the same status read
+TestingLibraryElementError: Unable to find an element with the text: /error inesperat/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card checkout-return checkout-return--paid"[39m
+      [33mrole[39m=[32m"status"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mPagament rebut[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"ah-card checkout-return checkout-return--paid"[39m
+      [33mrole[39m=[32m"status"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mPagament rebut[0m
+      [36m</p>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/payments/CheckoutReturn.test.tsx:84:25
+     82|     );
+     83|     await renderE8(<CheckoutReturn client={e8Client()} onRetry={() => …
+     84|     expect(await screen.findByText(/error inesperat/u)).toBeVisible();
+       |                         ^
+     85|     fireEvent.click(screen.getByRole("button", { name: "Actualitza" })…
+     86|     expect(await screen.findByText("Pagament rebut")).toBeVisible();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  7 failed | 17 passed (24)
+   Start at  11:01:31
+   Duration  21.90s (tests 76%, environment 9%, transform 8%, import 4%, setup 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/payments/CheckoutReturn.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx src/billing/InvoicesPage.test.tsx`
+Exit status 1

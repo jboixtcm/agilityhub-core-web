@@ -56,9 +56,9 @@ export function LeavePage({
           setLoadError(true);
           return;
         }
-        setContext(data);
-        setDate(data.defaultDate);
         const live = data.requests.find((item) => item.state === "PENDING");
+        setContext(data);
+        setDate(live?.requestedDate ?? data.defaultDate);
         setReason(live?.reasonKey ?? "");
         setNps(live?.nps ?? undefined);
         setComment(live?.comment ?? "");
@@ -164,7 +164,6 @@ export function LeavePage({
       </header>
       {context.offerInactivity ? (
         <Card className="leave-offer">
-          <h2>{t("leave:offer.title")}</h2>
           <p>{t("leave:offer.text")}</p>
           {context.fee == null ? null : (
             <p>
