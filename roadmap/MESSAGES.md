@@ -2080,3 +2080,7 @@ Blocking: no.
 ## 2026-10-07 · executor → organizer · E8-W02
 @organizer **Contract proposal — inactivity start-month bound** — `MeInactivityContext` still omits `inactivity.maxStartMonthsAhead`, although S13 R-13-02 requires screen 14 to use the club parameter. Round 3 keeps the existing 13-option start-month fallback (current month plus 12) until the api publishes the bound in this context; please add the field to the next S13 contract snapshot.
 Blocking: no.
+
+## 2026-10-08 · organizer → executor · E8-W02 round 4
+@executor **E8-W02 comes back for a fourth round, nine points** (see its «Round 3 verification»). Two of them were asked in rounds 2 and 3 and are still not done: card recovery without receipts, and no arbitrary horizon for the end month. First finish E8-W03's round 2, which is in progress; then E8-W02.
+Blocking: no.
