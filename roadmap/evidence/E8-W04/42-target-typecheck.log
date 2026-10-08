@@ -1,0 +1,49 @@
+• turbo 2.10.12
+
+   • Packages in scope: clubs, clubs-admin
+   • Running typecheck in 2 packages
+   • Remote caching disabled
+
+@agilityhub/api-client:typecheck: cache miss, executing 7b5f97224df062c6
+@agilityhub/ui:typecheck: cache hit, replaying logs adb9c9be8580ae93
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/i18n:typecheck: cache miss, executing 805dff8f7fe38cfc
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/auth:typecheck: cache miss, executing b61d8d0ff9c8393a
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+clubs:typecheck: cache miss, executing c1f1d2773d47ea59
+clubs-admin:typecheck: cache miss, executing 71937945c6b5b8d9
+clubs-admin:typecheck: 
+clubs-admin:typecheck: > clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:typecheck: > tsc --noEmit
+clubs-admin:typecheck: 
+clubs:typecheck: 
+clubs:typecheck: > clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:typecheck: > tsc --noEmit
+clubs:typecheck: 
+clubs:typecheck: src/booking/BookPage.tsx(128,10): error TS18048: 'badge' is possibly 'undefined'.
+clubs:typecheck: src/booking/BookPage.tsx(133,9): error TS18048: 'badge' is possibly 'undefined'.
+clubs:typecheck: src/booking/BookPage.tsx(135,55): error TS18048: 'badge' is possibly 'undefined'.
+clubs:typecheck: src/booking/BookPage.tsx(136,11): error TS18048: 'badge' is possibly 'undefined'.
+clubs:typecheck:  ELIFECYCLE  Command failed with exit code 2.
+clubs#typecheck:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run typecheck exited (2)
+
+ Tasks:    4 successful, 6 total
+Cached:    1 cached, 6 total
+  Time:    9.204s 
+Failed:    clubs#typecheck
+
+ ERROR  run failed: command  exited (2)

@@ -104,7 +104,7 @@
       "status": "Estado"
     },
     "search": "Buscar por nombre, DNI, perro…",
-    "status": {"inactive": "inactiva", "inactiveUntil": "inactiva hasta {date}", "leaveScheduled": "baja prevista {date}"},
+    "status": {"inactive": "inactiva", "inactiveUntil": "inactiva hasta {date}", "leaveScheduled": "baja {date}"},
     "selectRow": "Seleccionar a {name}",
     "statusLabel": "Estado de los abonados",
     "statuses": {

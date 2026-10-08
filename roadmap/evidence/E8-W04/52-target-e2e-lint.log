@@ -1,0 +1,23 @@
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/e2e/core/e8-core.spec.ts
+   17:7   error  'fifoClubsUrl' is assigned a value but never used                                                                   @typescript-eslint/no-unused-vars
+   42:6   error  'LeavePage' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+  295:29  error  Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function  @typescript-eslint/no-confusing-void-expression
+  589:9   error  'secondSimulation' is assigned a value but never used                                                               @typescript-eslint/no-unused-vars
+  631:38  error  Invalid type "string | undefined" of template literal expression                                                    @typescript-eslint/restrict-template-expressions
+  717:7   error  Unnecessary conditional, the types have no overlap                                                                  @typescript-eslint/no-unnecessary-condition
+  729:5   error  Unsafe call of a type that could not be resolved                                                                    @typescript-eslint/no-unsafe-call
+  729:16  error  Unsafe member access .some on a type that cannot be resolved                                                        @typescript-eslint/no-unsafe-member-access
+  729:36  error  Unsafe member access .origin on an `any` value                                                                      @typescript-eslint/no-unsafe-member-access
+  732:3   error  Unsafe call of a type that could not be resolved                                                                    @typescript-eslint/no-unsafe-call
+  733:5   error  Unsafe call of a type that could not be resolved                                                                    @typescript-eslint/no-unsafe-call
+  733:33  error  Unsafe member access .some on a type that cannot be resolved                                                        @typescript-eslint/no-unsafe-member-access
+  734:7   error  Unsafe return of a value of type `any`                                                                              @typescript-eslint/no-unsafe-return
+  734:7   error  Unsafe call of an `any` typed value                                                                                 @typescript-eslint/no-unsafe-call
+  734:12  error  Unsafe member access .description on an `any` value                                                                 @typescript-eslint/no-unsafe-member-access
+  736:5   error  Unsafe member access .toBe on a type that cannot be resolved                                                        @typescript-eslint/no-unsafe-member-access
+  739:32  error  This is the default value for this type parameter, so it can be omitted                                             @typescript-eslint/no-unnecessary-type-arguments
+
+✖ 17 problems (17 errors, 0 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+

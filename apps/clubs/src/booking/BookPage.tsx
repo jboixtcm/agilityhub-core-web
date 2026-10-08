@@ -110,9 +110,17 @@ function rowBadge(
     case "PACK_EMPTY":
       badge = { content: t("booking:list.packEmpty"), tone: "neutral" };
       break;
+    case "NOT_BOOKABLE":
+      if (row.notBookableReason === "INACTIVITY") {
+        badge = { content: t("errors:INACTIVITY_PERIOD"), tone: "warning" };
+      } else if (row.notBookableReason === "LEAVING") {
+        badge = { content: t("errors:MEMBER_LEAVING"), tone: "warning" };
+      }
+      break;
     default:
       return undefined;
   }
+  if (badge === undefined) return undefined;
   if (row.price === null || row.price === undefined) return badge;
   const price = money(row.price.amountMinor / 100);
   return {

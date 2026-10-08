@@ -507,7 +507,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               : t("census:members.status.inactiveUntil", { date: formatDate(status.date, locale) })
             : status.kind === "LEAVE_SCHEDULED" && status.date != null
               ? t("census:members.status.leaveScheduled", {
-                  date: formatDate(status.date, locale, true),
+                  date: formatDate(status.date, locale),
                 })
               : status.label;
       return <Badge tone={toneForStatus(status.kind)}>{label}</Badge>;

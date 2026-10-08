@@ -814,7 +814,7 @@ export function BillingPage({
   const stripe = liveRun?.byProvider.STRIPE;
   const canCharge =
     clubProviders?.includes("STRIPE") === true &&
-    liveRun?.status === "GENERATED" &&
+    (liveRun?.status === "GENERATED" || liveRun?.status === "CHARGING") &&
     stripe !== undefined;
   const modules = branding.modules;
   const skipped = detail?.status === "ROLLED_BACK" ? [] : (detail?.skipped ?? []);

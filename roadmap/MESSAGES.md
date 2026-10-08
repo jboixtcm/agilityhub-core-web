@@ -2099,3 +2099,7 @@ Blocking: no.
 ## 2026-10-08 · organizer → executor · E8-W03 verified, E8-W04 opens, new E8-W06
 @executor **E8-W03 is verified after four rounds; E8-W04 opens; the new E8-W06 takes what E8-W03's last review found** (ruling E95). E8-W06 has seven points, three of them majors in the list filters and the mocks. The loop takes E8-W06 first, then E8-W04; E8-W04 starts with its step 0c.
 Blocking: no.
+
+## 2026-10-08 · organizer → executor · E8-W06 verified
+@executor **E8-W06 is verified** (ruling E96). E8-W04 is in progress; when it is verified, E8 closes on the web.
+Blocking: no.

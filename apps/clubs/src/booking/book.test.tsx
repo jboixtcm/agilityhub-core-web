@@ -156,6 +156,52 @@ describe("T-08-37 screen 04 «Reservar»: every row state with its mockup badge 
     expect(document.querySelector(".pack-card")).toBeNull();
   });
 
+  it("T-13-32: a NOT_BOOKABLE row carries the published inactivity reason and stays inert", async () => {
+    server.use(
+      http.get("*/api/v1/me/bookable-classes", () =>
+        HttpResponse.json({
+          activities: null,
+          bookingBlock: null,
+          classes: [
+            {
+              description: "B+C",
+              endsAtLocal: "2026-08-05T19:50:00",
+              freeSeats: 2,
+              id: "class-inactivity",
+              notBookableReason: "INACTIVITY",
+              opensAt: null,
+              price: null,
+              ringColor: null,
+              ringName: "Central",
+              startsAtLocal: "2026-08-05T18:50:00",
+              state: "NOT_BOOKABLE",
+              waiting: null,
+              waitlistMax: null,
+              week: "CURRENT",
+            },
+          ],
+          dog: {
+            id: "dog-duna",
+            levelId: "level-c",
+            levelName: "C",
+            name: "Duna",
+            own: true,
+            sex: "FEMALE",
+          },
+          dogs: [],
+          pack: null,
+          singleClass: null,
+        }),
+      ),
+    );
+    await renderBook();
+    expect(
+      screen.getByText("Aquest abonament està en un període d'inactivitat."),
+    ).toBeVisible();
+    expect(rows()[0]).toHaveAttribute("data-bookable-state", "NOT_BOOKABLE");
+    expect(rows()[0]?.querySelector("button")).toBeNull();
+  });
+
   it("modules gate the page: ACTIVITIES off has no «Activitats» block, PACKS off has no pack card", async () => {
     await renderBook({
       branding: { ...canic, modules: without("ACTIVITIES").filter((module) => module !== "PACKS") },

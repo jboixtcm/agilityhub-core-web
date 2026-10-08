@@ -104,7 +104,7 @@
       "status": "Status"
     },
     "search": "Search by name, ID, dog…",
-    "status": {"inactive": "inactive", "inactiveUntil": "inactive until {date}", "leaveScheduled": "leave scheduled {date}"},
+    "status": {"inactive": "inactive", "inactiveUntil": "inactive until {date}", "leaveScheduled": "leaving {date}"},
     "selectRow": "Select {name}",
     "statusLabel": "Member status",
     "statuses": {

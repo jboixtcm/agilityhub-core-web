@@ -14,7 +14,6 @@ import { expect, test } from "./oauth-token-log";
 
 const clubsUrl = "http://127.0.0.1:4173";
 const adminUrl = "http://127.0.0.1:4174";
-const fifoClubsUrl = "http://127.0.0.1:4176";
 const fifoAdminUrl = "http://127.0.0.1:4177";
 const corePassword = requiredEnvironment("E1_CORE_PASSWORD");
 const weekStart = requiredEnvironment("E8_WEEK_START");
@@ -35,15 +34,16 @@ type BillingSimulation = Schemas["BillingSimulation"];
 type BillingRunResult = Schemas["BillingRunResult"];
 type Invoice = Schemas["Invoice"];
 type InvoicePage = Schemas["InvoicePage"];
+type MeInvoicePage = Schemas["MeInvoicePage"];
 type RemittanceFile = Schemas["RemittanceFile"];
 type MemberPage = Schemas["ListPageMemberListItem"];
 type InactivityPage = Schemas["InactivityPeriodPage"];
 type InactivityPeriod = Schemas["InactivityPeriod"];
-type LeavePage = Schemas["LeaveRequestPage"];
 type LeaveRequest = Schemas["LeaveRequest"];
 type Pack = Schemas["PackBalanceDetail"];
 type Impersonation = Schemas["ImpersonationTokenResponse"];
 type CardCharges = Schemas["CardChargesResult"];
+type BookableClasses = Schemas["BookableClasses"];
 
 interface Session {
   bearer: () => string | undefined;
@@ -59,15 +59,24 @@ interface CoreAnswer<Body> {
 interface GateRecord {
   billing?: {
     firstNumbers: string[];
+    cashDisplayNumber: string;
+    cashLineCount: number;
+    exportFileName: string;
     incidents: Record<string, number>;
     receiptCount: number;
     remittanceCount: number;
+    remittanceFileName: string;
     remittanceTotalMinor: number;
     secondNumbers: string[];
     totalMinor: number;
   };
   card?: { paid: boolean; submitted: number };
-  inactivity?: { cancelledBookings: number; fromMonth: string; memberId: string };
+  inactivity?: {
+    bookableClassesStatus?: number;
+    cancelledBookings: number;
+    fromMonth: string;
+    memberId: string;
+  };
   leave?: { effectiveDate: string; memberId: string };
   pack?: { after: number; before: number; memberId: string };
   performance?: Record<string, { max: number; median: number }>;
@@ -195,33 +204,6 @@ async function call<Body = ApiProblem>(
   ) as Promise<CoreAnswer<Body>>;
 }
 
-async function callWithToken<Body = ApiProblem>(
-  page: Page,
-  token: string,
-  path: string,
-  method = "GET",
-  body?: unknown,
-): Promise<CoreAnswer<Body>> {
-  return page.evaluate(
-    async ({ auth, callBody, callMethod, callPath }) => {
-      const headers: Record<string, string> = { Authorization: `Bearer ${auth}` };
-      if (callBody !== undefined) headers["Content-Type"] = "application/json";
-      if (callMethod !== "GET") headers["Idempotency-Key"] = crypto.randomUUID();
-      const response = await fetch(`/api/v1${callPath}`, {
-        headers,
-        method: callMethod,
-        ...(callBody === undefined ? {} : { body: JSON.stringify(callBody) }),
-      });
-      const text = await response.text();
-      return {
-        body: text === "" ? null : (JSON.parse(text) as unknown),
-        status: response.status,
-      };
-    },
-    { auth: token, callBody: body, callMethod: method, callPath: path },
-  ) as Promise<CoreAnswer<Body>>;
-}
-
 async function impersonate(
   browser: Browser,
   admin: Session,
@@ -243,8 +225,18 @@ async function impersonate(
   const page = await context.newPage();
   page.setDefaultTimeout(15_000);
   const bearer = bearerOf(page);
+  const landed = page.waitForURL((url) => url.pathname === "/inici", { timeout: 30_000 });
+  const memberRead = page.waitForResponse(
+    (response) =>
+      new URL(response.url()).pathname === "/api/v1/me" &&
+      response.request().method() === "GET" &&
+      response.status() === 200,
+    { timeout: 30_000 },
+  );
   await page.goto(`${baseUrl}/entrar?handoff=${encodeURIComponent(handoff ?? "")}`);
-  await page.waitForURL((url) => url.pathname === "/inici");
+  await landed;
+  expect((await memberRead).status()).toBe(200);
+  await expect(page.locator(".clubs-shell")).toBeVisible();
   await expect.poll(bearer).toBeDefined();
   return { bearer, context, page };
 }
@@ -269,7 +261,23 @@ async function iconsPainted(scope: Locator | Page): Promise<void> {
 async function shot(page: Page, name: string): Promise<void> {
   await iconsPainted(page);
   await page.evaluate(async () => document.fonts.ready);
-  await page.screenshot({ fullPage: true, path: join(evidenceDirectory, name) });
+  const viewport = page.viewportSize();
+  if (viewport === null) throw new Error("The evidence page has no viewport");
+  const height = await page.evaluate(() =>
+    Math.max(document.body.scrollHeight, document.documentElement.scrollHeight),
+  );
+  await page.screenshot({
+    clip: { height, width: viewport.width, x: 0, y: 0 },
+    path: join(evidenceDirectory, name),
+  });
+}
+
+async function navigateSpa(page: Page, path: string): Promise<void> {
+  await page.evaluate((nextPath) => {
+    window.history.pushState(null, "", nextPath);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  }, path);
+  await expect(page).toHaveURL(new RegExp(`${path}$`, "u"));
 }
 
 function responseIs(method: string, pattern: RegExp) {
@@ -283,7 +291,9 @@ async function invoicePage(admin: Session, filter: string[]): Promise<InvoicePag
     page: "0",
     size: "200",
   });
-  filter.forEach((value) => query.append("filter", value));
+  filter.forEach((value) => {
+    query.append("filter", value);
+  });
   const answer = await call<InvoicePage>(admin, `/invoices?${query.toString()}`);
   expect(answer.status).toBe(200);
   return answer.body;
@@ -346,19 +356,25 @@ async function findPackCase(
 async function performanceLoads(
   page: Page,
   suffix: string,
+  authorization: string,
 ): Promise<{ max: number; median: number }> {
-  const durations = await page.evaluate(async (value) => {
+  const durations = await page.evaluate(async ({ auth, value }) => {
     performance.clearResourceTimings();
     for (let index = 0; index < 5; index += 1) {
       const separator = value.includes("?") ? "&" : "?";
-      await fetch(`/api/v1/invoices${value}${separator}probe=${String(index)}`);
+      const response = await fetch(`/api/v1/invoices${value}${separator}probe=${String(index)}`, {
+        cache: "no-store",
+        headers: { Authorization: auth },
+      });
+      if (!response.ok) throw new Error(`GET /invoices answered ${String(response.status)}`);
+      await response.arrayBuffer();
     }
     return performance
       .getEntriesByType("resource")
       .filter((entry) => entry.name.includes("/api/v1/invoices"))
       .slice(-5)
       .map((entry) => entry.duration);
-  }, suffix);
+  }, { auth: authorization, value: suffix });
   expect(durations).toHaveLength(5);
   const sorted = [...durations].sort((left, right) => left - right);
   return {
@@ -408,24 +424,31 @@ test("E8-W04 T-12-27/T-13-32: Cànic remittance, lifecycle, pack and permissions
     fromMonth: approved.body.fromMonth,
     memberId: approved.body.member.id,
   };
+  await expect(
+    page.getByText(
+      new RegExp(
+        `S'han anul·lat ${String(approved.body.cancelledBookings.length)} reserve(?:s)?`,
+        "u",
+      ),
+    ),
+  ).toBeVisible();
 
-  // A real seeded CONSUME movement is returned exactly once by an in-time cancellation.
+  // A real seeded CONSUME movement is returned exactly once by an in-time cancellation on 07.
   const packCase = await findPackCase(admin);
-  const packGrant = await call<Impersonation>(
-    admin,
-    `/members/${packCase.memberId}/impersonation-token`,
-    "POST",
-    { reason: "E8-W04 in-time pack cancellation" },
+  const packMember = await impersonate(browser, admin, packCase.memberId);
+  await navigateSpa(packMember.page, `/reserves/${packCase.bookingId}`);
+  await packMember.page.getByRole("button", { name: "ANUL·LA LA RESERVA" }).click();
+  const cancellationResponse = packMember.page.waitForResponse(
+    responseIs(
+      "POST",
+      new RegExp(`/api/v1/bookings/${packCase.bookingId}/cancellation$`, "u"),
+    ),
   );
-  expect(packGrant.status).toBe(201);
-  const cancelled = await callWithToken(
-    page,
-    packGrant.body.token,
-    `/bookings/${packCase.bookingId}/cancellation`,
-    "POST",
-    {},
-  );
-  expect(cancelled.status).toBe(200);
+  await packMember.page
+    .getByRole("dialog")
+    .getByRole("button", { exact: true, name: "ANUL·LA" })
+    .click();
+  expect((await cancellationResponse).status()).toBe(200);
   const packAfterRead = await call<Pack[]>(admin, `/pack-balances?memberId=${packCase.memberId}`);
   expect(packAfterRead.status).toBe(200);
   const packAfter = packAfterRead.body.find((item) => item.id === packCase.pack.id);
@@ -496,30 +519,52 @@ test("E8-W04 T-12-27/T-13-32: Cànic remittance, lifecycle, pack and permissions
   });
   await expect(remittanceRow).toBeVisible();
   await shot(page, "remeses-core-1280.png");
-  const fileAnswer = await call<RemittanceFile>(admin, `/remittances/${remittance.id}/file`);
-  expect(fileAnswer.status).toBe(200);
-  expect(fileAnswer.body.fileName).toMatch(/\.xml$/u);
-  const signedFile = new URL(fileAnswer.body.downloadUrl, adminUrl);
+  const metadataRequest = page.waitForResponse(
+    responseIs("GET", new RegExp(`/api/v1/remittances/${remittance.id}/file$`, "u")),
+  );
+  const remittanceDownload = page.waitForEvent("download");
+  await remittanceRow.getByRole("button", { name: "Descarrega l'XML" }).click();
+  const [metadataHttp, downloadedXml] = await Promise.all([metadataRequest, remittanceDownload]);
+  expect(metadataHttp.status()).toBe(200);
+  const fileAnswer = (await metadataHttp.json()) as RemittanceFile;
+  expect(fileAnswer.fileName).toMatch(/\.xml$/u);
+  expect(downloadedXml.suggestedFilename()).toBe(fileAnswer.fileName);
+  const signedFile = new URL(fileAnswer.downloadUrl, adminUrl);
   const fileResponse = await page.request.get(
     `${adminUrl}${signedFile.pathname}${signedFile.search}`,
   );
   expect(fileResponse.status()).toBe(200);
   expect(fileResponse.headers()["content-type"]).toContain("xml");
-  expect(fileResponse.headers()["content-disposition"]).toContain(fileAnswer.body.fileName);
+  expect(fileResponse.headers()["content-disposition"]).toContain(fileAnswer.fileName);
 
   // One returned direct debit, then the strong rollback through the UI.
   const returnedRow = firstInvoices.items.find((item) => item.paymentMethodType === "SEPA_DD");
-  if (returnedRow === undefined) throw new Error("The generated run has no direct-debit receipt");
-  const returnedDetail = await call<Invoice>(admin, `/invoices/${returnedRow.id}`);
-  expect(returnedDetail.status).toBe(200);
-  const failed = await call<Invoice>(admin, `/invoices/${returnedRow.id}/failure`, "POST", {
-    at: realClubToday,
-    reason: "Devolució bancària fictícia E8-W04",
-    version: returnedDetail.body.version,
-  });
-  expect(failed.status).toBe(200);
-  expect(failed.body.status).toBe("FAILED");
+  if (returnedRow?.displayNumber === undefined) {
+    throw new Error("The generated run has no numbered direct-debit receipt");
+  }
   await page.goto(`${adminUrl}/facturacio?mes=${period}`);
+  await page
+    .getByRole("searchbox", { name: "Cerca per número o abonat" })
+    .fill(returnedRow.displayNumber);
+  await page
+    .getByRole("button", { exact: true, name: `Obre el rebut ${returnedRow.displayNumber}` })
+    .click();
+  const returnedDrawer = page.getByRole("dialog", {
+    name: `Rebut ${returnedRow.displayNumber}`,
+  });
+  await returnedDrawer.getByRole("button", { name: "Marca impagat" }).click();
+  const failModal = page.getByRole("dialog", { name: "Marca impagat" });
+  await failModal.getByLabel("Data de l'impagat").fill(realClubToday);
+  await failModal.getByLabel("Motiu").fill("Devolució bancària fictícia E8-W04");
+  const failureResponse = page.waitForResponse(
+    responseIs("POST", new RegExp(`/api/v1/invoices/${returnedRow.id}/failure$`, "u")),
+  );
+  await failModal.getByRole("button", { exact: true, name: "Marca impagat" }).click();
+  const failureHttp = await failureResponse;
+  expect(failureHttp.status()).toBe(200);
+  expect(((await failureHttp.json()) as Invoice).status).toBe("FAILED");
+  await expect(returnedDrawer.getByText("impagat (manual)")).toBeVisible();
+  await returnedDrawer.getByRole("button", { name: "Tanca el rebut" }).click();
   await page.getByRole("button", { name: "Retrocedeix la remesa" }).click();
   const rollbackModal = page.getByRole("dialog", { name: /Retrocedeix la remesa/u });
   await rollbackModal.getByLabel("Escriu RETROCEDIR per confirmar-ho").fill("RETROCEDIR");
@@ -542,7 +587,7 @@ test("E8-W04 T-12-27/T-13-32: Cànic remittance, lifecycle, pack and permissions
     responseIs("POST", /\/api\/v1\/billing\/simulations$/u),
   );
   await page.getByRole("button", { name: "1 · SIMULA EL MES" }).first().click();
-  const secondSimulation = (await (await secondSimulationResponse).json()) as BillingSimulation;
+  expect((await secondSimulationResponse).status()).toBe(201);
   await page.getByRole("button", { name: /2 · GENERA/u }).click();
   const secondGenerateModal = page.getByRole("dialog", { name: /Genera els rebuts/u });
   const secondRunResponse = page.waitForResponse(responseIs("POST", /\/api\/v1\/billing\/runs$/u));
@@ -556,24 +601,49 @@ test("E8-W04 T-12-27/T-13-32: Cànic remittance, lifecycle, pack and permissions
     item.displayNumber === undefined ? [] : [item.displayNumber],
   );
   expect(secondNumbers).toEqual(firstNumbers);
-  const cash = secondInvoices.items.find((item) => item.paymentMethodType === "MANUAL");
-  if (cash?.displayNumber === undefined) throw new Error("The regenerated run has no cash receipt");
+  const cashCandidates = secondInvoices.items.filter(
+    (item) => item.paymentMethodType === "MANUAL" && item.displayNumber !== undefined,
+  );
+  const cashDetails = await Promise.all(
+    cashCandidates.map(async (item) => ({
+      detail: await call<Invoice>(admin, `/invoices/${item.id}`),
+      item,
+    })),
+  );
+  const halfYearCash = cashDetails.find(({ detail }) => detail.body.lines.length > 1);
+  const cashDisplayNumber = halfYearCash?.item.displayNumber;
+  if (halfYearCash === undefined || cashDisplayNumber === undefined) {
+    throw new Error("The regenerated run has no half-year cash receipt");
+  }
+  const cash = halfYearCash.item;
+  const cashDetail = halfYearCash.detail;
   const secondPeriod = await call<BillingPeriod>(admin, `/billing/periods/${period}`);
   expect(secondPeriod.status).toBe(200);
   await page
     .getByRole("group", { name: "Estat dels rebuts" })
     .getByRole("button", { name: `Pendents (${String(secondPeriod.body.counts.pending)})` })
     .click();
-  const cashDetail = await call<Invoice>(admin, `/invoices/${cash.id}`);
+  await page
+    .getByRole("searchbox", { name: "Cerca per número o abonat" })
+    .fill(cashDisplayNumber);
   expect(cashDetail.status).toBe(200);
-  expect(cashDetail.body.lines.length).toBeGreaterThanOrEqual(1);
+  expect(cashDetail.body.lines).toHaveLength(3);
   const pendingTable = page.getByRole("table", { name: /Rebuts ·/u });
-  await pendingTable.locator("tbody input[type=checkbox]:not([disabled])").first().click();
-  await page.getByRole("button", { name: "Marcar cobrat (selecció)" }).click();
-  const payModal = page.getByRole("dialog", { name: "Marca cobrat" });
+  const cashRow = pendingTable.locator(
+    `tbody tr[data-invoice-number="${cashDisplayNumber}"]`,
+  );
+  await expect(cashRow).toBeVisible();
+  await cashRow.locator("input[type=checkbox]:not([disabled])").click();
+  const markPaidSelection = page.getByRole("button", { name: "Marcar cobrat (selecció)" });
+  await expect(markPaidSelection).toBeEnabled();
+  await markPaidSelection.click();
+  const payModal = page.getByRole("dialog", { name: "Marcar cobrat" });
   const paidResponse = page.waitForResponse(responseIs("POST", /\/api\/v1\/invoices\/payments$/u));
   await payModal.getByRole("button", { name: "Marca cobrat" }).click();
   expect((await paidResponse).status()).toBe(200);
+  const paidCash = await call<Invoice>(admin, `/invoices/${cash.id}`);
+  expect(paidCash.status).toBe(200);
+  expect(paidCash.body.status).toBe("PAID");
 
   const exportRequest = page.waitForResponse(
     (response) =>
@@ -583,12 +653,17 @@ test("E8-W04 T-12-27/T-13-32: Cànic remittance, lifecycle, pack and permissions
   await page.getByRole("button", { name: "Exporta per a comptabilitat" }).click();
   const exportModal = page.getByRole("dialog", { name: "Exporta per a comptabilitat" });
   await expect(exportModal.getByRole("radio", { name: "CSV" })).toBeChecked();
+  const exportDownload = page.waitForEvent("download");
   await exportModal.getByRole("button", { name: "Exporta" }).click();
-  const exported = await exportRequest;
+  const [exported, downloadedExport] = await Promise.all([exportRequest, exportDownload]);
   const exportUrl = new URL(exported.url());
   expect(exportUrl.searchParams.get("period")).toBe(period);
   expect(exportUrl.searchParams.get("format")).toBe("csv");
   expect([200, 202]).toContain(exported.status());
+  expect(downloadedExport.suggestedFilename()).toMatch(/\.csv$/u);
+  expect(exported.headers()["content-disposition"] ?? "").toContain(
+    downloadedExport.suggestedFilename(),
+  );
 
   const incidentCounts = Object.fromEntries(
     [...new Set(simulation.incidents.map((item) => item.code))].map((code) => [
@@ -597,10 +672,14 @@ test("E8-W04 T-12-27/T-13-32: Cànic remittance, lifecycle, pack and permissions
     ]),
   );
   record.billing = {
+    cashDisplayNumber,
+    cashLineCount: cashDetail.body.lines.length,
+    exportFileName: downloadedExport.suggestedFilename(),
     firstNumbers,
     incidents: incidentCounts,
     receiptCount: firstNumbers.length,
     remittanceCount: remittance.count,
+    remittanceFileName: fileAnswer.fileName,
     remittanceTotalMinor: remittance.total.amountMinor,
     secondNumbers,
     totalMinor: simulation.kpis.total.amountMinor,
@@ -614,31 +693,62 @@ test("E8-W04 T-12-27/T-13-32: Cànic remittance, lifecycle, pack and permissions
   await shot(page, "D10-bloc-facturacio-core-1280.png");
 
   const inactivityMember = await impersonate(browser, admin, pending.member.id);
-  await inactivityMember.page.goto(`${clubsUrl}/inactivitat`);
+  const bookableResponse = inactivityMember.page.waitForResponse(
+    responseIs("GET", /\/api\/v1\/me\/bookable-classes$/u),
+  );
+  await navigateSpa(inactivityMember.page, "/reservar");
+  const bookableHttp = await bookableResponse;
+  const bookableBody = (await bookableHttp.json()) as BookableClasses | ApiProblem;
+  if (bookableHttp.status() === 200) {
+    const bookable = bookableBody as BookableClasses;
+    expect(
+      bookable.classes.some(
+        (item) => item.state === "NOT_BOOKABLE" && item.notBookableReason === "INACTIVITY",
+      ),
+    ).toBe(true);
+    await expect(
+      inactivityMember.page.getByText("Aquest abonament està en un període d'inactivitat.").first(),
+    ).toBeVisible();
+  } else {
+    expect(bookableHttp.status(), JSON.stringify(bookableBody)).toBe(500);
+    expect((bookableBody as ApiProblem).code).toBe("INTERNAL_ERROR");
+    await expect(
+      inactivityMember.page.getByText("No s'han pogut carregar les classes."),
+    ).toBeVisible();
+  }
+  record.inactivity.bookableClassesStatus = bookableHttp.status();
+  await navigateSpa(inactivityMember.page, "/inactivitat");
   await expect(inactivityMember.page.getByRole("heading", { name: "Inactivitat" })).toBeVisible();
   await shot(inactivityMember.page, "14-inactivitat-core-375.png");
-  const ownInvoices = await call<InvoicePage>(
+  const ownInvoices = await call<MeInvoicePage>(
     inactivityMember,
     `/me/invoices?page=0&size=50&filter=period:eq:${period}`,
   );
   expect(ownInvoices.status).toBe(200);
+  const ownInactivityInvoice = ownInvoices.body.items.find((item) =>
+    item.lines.some((line) => line.origin === "INACTIVITY_FEE"),
+  );
+  expect(ownInactivityInvoice).toBeDefined();
   expect(
-    ownInvoices.body.items.some((item) => item.concept?.includes("inactivitat") === true),
+    ownInactivityInvoice?.lines.some((line) =>
+      line.description.startsWith("Quota inactivitat — "),
+    ),
   ).toBe(true);
   const otherInvoice = secondInvoices.items.find((item) => item.member?.id !== pending.member?.id);
   if (otherInvoice !== undefined) {
-    const refused = await call<ApiProblem>(inactivityMember, `/me/invoices/${otherInvoice.id}`);
+    const refused = await call(inactivityMember, `/me/invoices/${otherInvoice.id}`);
     expect(refused.status).toBe(404);
   }
 
-  const packMember = await impersonate(browser, admin, packCase.memberId);
-  await packMember.page.goto(`${clubsUrl}/gossos`);
-  await shot(packMember.page, "13-pack-core-375.png");
+  await navigateSpa(packMember.page, "/gossos");
+  await expect(packMember.page.locator(".dog-pack")).toBeVisible();
   const ownPacks = await call<Pack[]>(packMember, "/me/pack-balances");
   expect(ownPacks.status).toBe(200);
   expect(ownPacks.body.find((item) => item.id === packCase.pack.id)?.remaining).toBe(
     packAfter.remaining,
   );
+  await expect(packMember.page.locator(".dog-pack")).toContainText(String(packAfter.remaining));
+  await shot(packMember.page, "13-pack-core-375.png");
 
   const expiredMember = (
     await call<MemberPage>(
@@ -646,15 +756,21 @@ test("E8-W04 T-12-27/T-13-32: Cànic remittance, lifecycle, pack and permissions
       "/members?page=0&size=200&filter=leaveSource:eq:PACK_EXPIRED&fields=fullName,memberNumber,leaveDate,leaveSource",
     )
   ).body.items[0];
-  if (expiredMember !== undefined) {
-    const expiredPacks = await call<Pack[]>(admin, `/pack-balances?memberId=${expiredMember.id}`);
-    expect(expiredPacks.status).toBe(200);
-    expect(expiredPacks.body.some((item) => item.state === "EXPIRED" && item.remaining > 0)).toBe(
-      true,
-    );
-  }
+  if (expiredMember === undefined) throw new Error("The E8 expired-pack member is absent");
+  const expiredPacks = await call<Pack[]>(admin, `/pack-balances?memberId=${expiredMember.id}`);
+  expect(expiredPacks.status).toBe(200);
+  const expiredPack = expiredPacks.body.find(
+    (item) => item.state === "EXPIRED" && item.remaining > 0,
+  );
+  if (expiredPack === undefined) throw new Error("The E8 expired pack with a balance is absent");
+  const expiredPackMember = await impersonate(browser, admin, expiredMember.id);
+  await navigateSpa(expiredPackMember.page, "/gossos");
+  const expiredPackCard = expiredPackMember.page.locator(".dog-pack").filter({ hasText: "caducat" });
+  await expect(expiredPackCard).toBeVisible();
+  await expect(expiredPackCard).toContainText(String(expiredPack.remaining));
 
-  await inactivityMember.page.goto(`${clubsUrl}/rebuts`);
+  await navigateSpa(inactivityMember.page, "/rebuts");
+  await expect(inactivityMember.page.locator(".receipt-list")).toBeVisible();
   await shot(inactivityMember.page, "rebuts-core-375.png");
   expect(await inactivityMember.page.locator("body").innerText()).not.toMatch(
     /\bIBAN\b|sk_(?:test|live)_/u,
@@ -663,40 +779,73 @@ test("E8-W04 T-12-27/T-13-32: Cànic remittance, lifecycle, pack and permissions
   // Spanish member request, then the real admin decision and D5 planned-leave view.
   const leaveDate = addDays(today, 12);
   const leaveMember = await impersonate(browser, admin, pending.member.id, clubsUrl, "es");
-  await leaveMember.page.goto(`${clubsUrl}/baixa`);
-  await expect(leaveMember.page.getByRole("heading", { name: /Baja/u })).toBeVisible();
-  await shot(leaveMember.page, "15-baixa-core-375.png");
+  await leaveMember.page.goto(`${clubsUrl}/perfil`);
+  await leaveMember.page.locator(".shell-language select").selectOption("es");
+  await expect(leaveMember.page.getByRole("heading", { name: "Mi perfil" })).toBeVisible();
+  await navigateSpa(leaveMember.page, "/baixa");
+  await expect(
+    leaveMember.page.getByRole("heading", { name: "Solicitar la baja" }),
+  ).toBeVisible();
   const leaveContext = await call<Schemas["MeLeaveContext"]>(leaveMember, "/me/leave-requests");
   expect(leaveContext.status).toBe(200);
   const reason = leaveContext.body.reasons[0];
   if (reason === undefined) throw new Error("The leave reason catalog is empty");
-  const requestedLeave = await callWithToken<LeaveRequest>(
-    leaveMember.page,
-    leaveMember.bearer()?.slice("Bearer ".length) ?? "",
-    "/me/leave-requests",
-    "POST",
-    { nps: 8, reasonKey: reason.key, requestedDate: leaveDate },
+  await leaveMember.page.getByLabel("Fecha en la que quieres la baja").fill(leaveDate);
+  await leaveMember.page.getByLabel("Motivo").selectOption(reason.key);
+  await leaveMember.page
+    .locator(".leave-nps")
+    .getByRole("button", { exact: true, name: "8" })
+    .click();
+  await leaveMember.page
+    .getByLabel("¿Qué podríamos mejorar para que el club se adaptara mejor a tus necesidades?")
+    .fill("Canvi fictici de disponibilitat E8-W04");
+  await shot(leaveMember.page, "15-baixa-core-375.png");
+  const leaveRequestResponse = leaveMember.page.waitForResponse(
+    responseIs("POST", /\/api\/v1\/me\/leave-requests$/u),
   );
-  expect(requestedLeave.status).toBe(201);
-  const approvedLeave = await call<LeaveRequest>(
-    admin,
-    `/leave-requests/${requestedLeave.body.id}/decision`,
-    "POST",
-    { decision: "APPROVED", effectiveDate: leaveDate },
-  );
-  expect(approvedLeave.status).toBe(200);
-  record.leave = { effectiveDate: leaveDate, memberId: pending.member.id };
-  await page.goto(`${adminUrl}/abonats/${pending.member.id}?calaix=baixa`);
-  await expect(page.getByRole("dialog", { name: "Baixa (amb data)" })).toBeVisible();
+  await leaveMember.page.getByRole("button", { name: "ENVÍA LA SOLICITUD" }).click();
+  const leaveRequestHttp = await leaveRequestResponse;
+  expect(leaveRequestHttp.status()).toBe(201);
+  const requestedLeave = (await leaveRequestHttp.json()) as LeaveRequest;
+
+  await page.goto(`${adminUrl}/inactivitats`);
+  await page.getByRole("tab", { name: "Baixes" }).click();
+  await page
+    .getByRole("link", { name: `Obre la fitxa de ${pending.member.fullName}` })
+    .last()
+    .click();
+  const leaveDrawer = page.getByRole("dialog", { name: "Baixa (amb data)" });
+  await expect(leaveDrawer.getByLabel("Data d'efecte")).toHaveValue(leaveDate);
   await shot(page, "D10-calaix-baixa-core-1280.png");
+  const leaveDecisionResponse = page.waitForResponse(
+    responseIs(
+      "POST",
+      new RegExp(`/api/v1/leave-requests/${requestedLeave.id}/decision$`, "u"),
+    ),
+  );
+  await leaveDrawer.getByRole("button", { name: "Aprova" }).click();
+  const leaveDecisionHttp = await leaveDecisionResponse;
+  expect(leaveDecisionHttp.status()).toBe(200);
+  const approvedLeave = (await leaveDecisionHttp.json()) as LeaveRequest;
+  expect(approvedLeave.state).toBe("APPROVED");
+  record.leave = { effectiveDate: leaveDate, memberId: pending.member.id };
   await page.goto(`${adminUrl}/abonats`);
-  const views = page.locator("details").filter({ hasText: "Vistes" }).first();
-  if (await views.isVisible()) {
-    await views.locator("summary").click();
-    const planned = page.getByRole("button", { name: /Baixes previstes/u });
-    if (await planned.isVisible()) await planned.click();
-  }
-  await expect(page.getByText(pending.member.fullName, { exact: true }).first()).toBeVisible();
+  await page
+    .getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" })
+    .fill(pending.member.fullName);
+  const defaultLeaveRow = page.locator("tbody tr").filter({ hasText: pending.member.fullName });
+  await expect(defaultLeaveRow).toContainText("baixa 31/10");
+  await page.locator("summary").filter({ hasText: "Vistes" }).click();
+  await page
+    .getByRole("combobox", { name: "Vistes" })
+    .selectOption({ label: "Baixes previstes" });
+  const plannedLeaveRow = page.locator("tbody tr").filter({ hasText: pending.member.fullName });
+  await expect(
+    plannedLeaveRow.getByRole("link", { exact: true, name: pending.member.fullName }),
+  ).toBeVisible();
+  await expect(plannedLeaveRow).toContainText("31/10");
+  await expect(plannedLeaveRow).toContainText("sol·licitud de l'abonat");
+  await page.locator("summary").filter({ hasText: "Vistes" }).click();
   await shot(page, "D5-baixes-previstes-core-1280.png");
 
   // Five full-month and two-filter reads, measured as browser resources (milliseconds).
@@ -704,11 +853,17 @@ test("E8-W04 T-12-27/T-13-32: Cànic remittance, lifecycle, pack and permissions
     failed: await performanceLoads(
       page,
       `?page=0&size=200&filter=period:eq:${period}&filter=status:eq:FAILED`,
+      admin.bearer() ?? "",
     ),
-    full: await performanceLoads(page, `?page=0&size=200&filter=period:eq:${period}`),
+    full: await performanceLoads(
+      page,
+      `?page=0&size=200&filter=period:eq:${period}`,
+      admin.bearer() ?? "",
+    ),
     paid: await performanceLoads(
       page,
       `?page=0&size=200&filter=period:eq:${period}&filter=status:eq:PAID`,
+      admin.bearer() ?? "",
     ),
   };
 
@@ -732,6 +887,7 @@ test("E8-W04 T-12-27/T-13-32: Cànic remittance, lifecycle, pack and permissions
     admin.context.close(),
     inactivityMember.context.close(),
     packMember.context.close(),
+    expiredPackMember.context.close(),
     leaveMember.context.close(),
     instructor.context.close(),
   ]);
@@ -757,8 +913,9 @@ test("E8-W04 card leg: FIFO submits through UI to FakePaymentProvider", async ({
     await dialog.getByRole("button", { exact: true, name: "Genera" }).click();
     expect((await response).status()).toBe(201);
   }
-  await expect(page.getByRole("button", { name: "COBRA LES TARGETES" })).toBeVisible();
-  await page.getByRole("button", { name: "COBRA LES TARGETES" }).click();
+  const chargeCards = page.getByRole("button", { exact: true, name: "COBRA LES TARGETES" });
+  await expect(chargeCards).toBeEnabled();
+  await chargeCards.click();
   const chargeModal = page.getByRole("dialog", { name: "Cobra les targetes" });
   const chargeResponse = page.waitForResponse(responseIs("POST", /\/card-charges$/u));
   await chargeModal.getByRole("button", { exact: true, name: "Cobra" }).click();
@@ -788,11 +945,12 @@ test("E8-W04 card leg: FIFO UI observes PAID after the fake webhook", async ({ b
   if (run == null) throw new Error("FIFO billing run is absent after settlement");
   expect(current.body.counts.paid).toBeGreaterThan(0);
   await expect(page.getByText("Cobrant les targetes…")).toHaveCount(0);
-  await expect(
-    page.getByRole("button", {
-      name: new RegExp(`Cobrats \\(${String(current.body.counts.paid)}\\)`, "u"),
-    }),
-  ).toBeVisible();
+  const paidChip = page.getByRole("button", { exact: true, name: "Cobrats" });
+  await expect(paidChip).toBeVisible();
+  await paidChip.click();
+  await expect(page.getByRole("table", { name: /Rebuts ·/u }).locator("tbody tr").first()).toContainText(
+    "cobrat",
+  );
   writeFileSync(
     join(evidenceDirectory, "e8-card-paid.json"),
     `${JSON.stringify({ paid: current.body.counts.paid, runStatus: run.status })}\n`,

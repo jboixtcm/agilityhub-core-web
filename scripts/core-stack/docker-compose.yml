@@ -148,12 +148,14 @@ services:
       - ../..:/src:ro
       - ../../roadmap/evidence:/evidence
       - mailbox:/mailbox:ro
+      - ${CORE_PNPM_STORE_DIRECTORY:?CORE_PNPM_STORE_DIRECTORY is required}:/pnpm-store
     command:
       - /bin/sh
       - -ec
       - |
         tar --exclude=.git --exclude=.turbo --exclude=dist --exclude=node_modules --exclude=playwright-report --exclude=test-results -cf - -C /src . | tar -xf - -C /work
         corepack enable
+        pnpm config set store-dir /pnpm-store
         pnpm install --frozen-lockfile
         pnpm exec playwright test --config=e2e/core/playwright.config.ts ${CORE_TEST_FILES:-}
     depends_on:

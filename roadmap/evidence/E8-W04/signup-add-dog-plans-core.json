@@ -1,0 +1,36 @@
+{
+  "memberPlanId": "35e74644-473e-424b-8af3-88bf6cafab10",
+  "memberPlanQuoted": true,
+  "plans": [
+    {
+      "current": false,
+      "id": "2a9c4234-0efa-4362-a7eb-04823bdec3d8",
+      "name": "Abonat",
+      "priceLabel": null
+    },
+    {
+      "current": true,
+      "id": "35e74644-473e-424b-8af3-88bf6cafab10",
+      "name": "Abonat · 2 gossos (familiar)",
+      "priceLabel": null
+    },
+    {
+      "current": false,
+      "id": "e21e4f35-94cf-4146-b719-147eb16cfa19",
+      "name": "Pack 6",
+      "priceLabel": null
+    },
+    {
+      "current": false,
+      "id": "11417b2c-112c-482e-82ac-24b6247d2fe0",
+      "name": "Pack 10",
+      "priceLabel": null
+    },
+    {
+      "current": false,
+      "id": "ed6dcfc1-e50f-41f0-b6f7-7455ec1c82fd",
+      "name": "Teràpia",
+      "priceLabel": "condicions i cost segons cada cas"
+    }
+  ]
+}

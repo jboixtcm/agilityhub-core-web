@@ -81,6 +81,11 @@ export BILLING_BANK_KEY="${BILLING_BANK_KEY:-$(openssl rand -base64 32)}"
 export BILLING_SECRETS_KEY="${BILLING_SECRETS_KEY:-$(openssl rand -base64 32)}"
 export CORE_EVIDENCE_SUBDIRECTORY="$evidence_subdirectory"
 export COMPOSE_PROJECT_NAME="$core_project_name"
+# Every isolated stage uses a fresh /work, but the packages are content-addressed and identical.
+# Keep only pnpm's download store outside the compose project so `down --volumes` cannot force all
+# 852 packages through the registry again (a partial download otherwise stalls whole gate runs).
+export CORE_PNPM_STORE_DIRECTORY="${CORE_PNPM_STORE_DIRECTORY:-/private/tmp/agilityhub-core-web-pnpm-store}"
+echo "pnpm store: $CORE_PNPM_STORE_DIRECTORY (package cache only)"
 
 # E5-W05 step 20 (E5-W04 question R2-3): `down` names the `e2e` profile, so a Playwright one-off
 # container (`run playwright`, a service of that profile) left by an interrupted stage goes with
@@ -110,6 +115,21 @@ save_seed_log() {
   echo "seed log: $evidence_directory/seed-$1.log ($(wc -l <"$evidence_directory/seed-$1.log" | tr -d ' ') lines)"
 }
 
+check_e8_seed_totals() {
+  local seed_log="$evidence_directory/seed-$1.log"
+  grep -Fq \
+    "billingProviders=1, pendingInactivity=1, activeInactivity=1, plannedLeave=1, expiredPacks=1" \
+    "$seed_log" || {
+      echo "E8 seed totals: Cànic lifecycle/billing scenario totals are absent" >&2
+      return 1
+    }
+  grep -Fq "cardMembers=1, pendingCharges=2" "$seed_log" || {
+    echo "E8 seed totals: FIFO card scenario totals are absent" >&2
+    return 1
+  }
+  echo "E8 seed totals: Cànic billing/lifecycle and FIFO card scenarios asserted"
+}
+
 run_core_suite() {
   # `run_stage` calls it as `run_core_suite <stage> || …`, which turns `set -e` off in here: a core
   # that does not start stops the stage (its seed log is kept all the same).
@@ -118,6 +138,9 @@ run_core_suite() {
   save_seed_log "$1"
   if [[ "$up_status" -ne 0 ]]; then
     return "$up_status"
+  fi
+  if [[ "$CORE_TEST_FILES" == *e8-core* ]]; then
+    check_e8_seed_totals "$1" || return $?
   fi
   # E4-W16 round 2: `--no-deps`, because the stack is already up and seeded. Without it `run` walks
   # `depends_on` (core → activate-demo-club → seed) and starts the exited seed again next to the

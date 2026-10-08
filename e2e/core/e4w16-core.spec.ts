@@ -672,9 +672,9 @@ test("T-03-34 (front) E4-W16 step 7 · D10 keeps the block, «Inactivitat», «B
   await expect(
     admin.getByRole("button", { name: /^(Bloqueja|Desbloqueja) les reserves$/u }),
   ).toBeVisible();
-  await expect(admin.getByRole("link", { name: "Baixa (amb data)" })).toBeVisible();
+  await expect(admin.getByRole("button", { name: "Baixa (amb data)" })).toBeVisible();
   await expect(admin.getByRole("link", { name: "Tota l'auditoria ›" })).toBeVisible();
-  await expect(admin.getByRole("link", { exact: true, name: "Inactivitat" })).toHaveCount(
+  await expect(admin.getByRole("button", { exact: true, name: "Inactivitat" })).toHaveCount(
     modules.includes("INACTIVITY") ? 1 : 0,
   );
   await expect(admin.getByRole("link", { name: /Tots els rebuts/u })).toHaveCount(

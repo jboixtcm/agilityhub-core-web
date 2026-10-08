@@ -922,7 +922,7 @@ describe("T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R
       await screen.findByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }),
     ).toBeVisible();
     expect(screen.queryByText("Amb targeta")).toBeNull();
-    expect(screen.queryByRole("button", { name: "COBRA LES TARGETES" })).toBeNull();
+    expect(screen.getByRole("button", { name: "COBRA LES TARGETES" })).toBeVisible();
   });
 
   it("T-12-32 billingManualOnly: «2 · GENERA ELS REBUTS»; the run issues every receipt by hand and makes no remittance", async () => {
