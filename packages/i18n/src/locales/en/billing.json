@@ -19,6 +19,7 @@
     "downloadError": "The receipt could not be downloaded."
   },
   "cardBanner": {
+    "invalid": "Invalid card",
     "title": "We could not collect the receipt for {month}",
     "action": "Update card",
     "working": "Opening card update",

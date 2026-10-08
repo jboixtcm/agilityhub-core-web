@@ -42,10 +42,10 @@ export const leaveContextFixture: components["schemas"]["MeLeaveContext"] = {
   offerInactivity: true,
   plannedLeave: null,
   reasons: [
-    { key: "LEARNT_ENOUGH", label: "Ja he après tot el que volia" },
+    { key: "LEARNED_ENOUGH", label: "Ja he après tot el que volia" },
     { key: "NO_TIME", label: "No trobo temps per anar-hi" },
     { key: "NOT_EXPECTED", label: "No és el que esperava" },
-    { key: "PERSONAL", label: "Condicionants meus aliens al club" },
+    { key: "EXTERNAL", label: "Condicionants meus aliens al club" },
     { key: "OTHER", label: "Altres" },
   ],
   requests: [],

@@ -6,7 +6,7 @@ import { censusRecordState, ERASED_MEMBER_ID, erasedMemberOverview } from "./fix
 import { adminInactivityPeriods, adminLeaveRequests, inactivityContextFixture, inactivityPreviewFixture, leaveContextFixture, lifecycleMemberId, lifecycleMembers } from "./fixtures/inactivity";
 import { meInvoiceFixtures, packBalanceFixtures } from "./fixtures/member-self-service";
 import { findParameter } from "./fixtures/settings";
-import { currentMockScenario } from "./scenarios";
+import { currentMockScenario, currentMockScenarioName } from "./scenarios";
 
 type ApiError = components["schemas"]["ApiError"];
 type InactivityPatch = components["schemas"]["InactivityPatchRequest"];
@@ -68,6 +68,95 @@ const initialUpfront: components["schemas"]["UpfrontPayment"][] = [
 let upfront = structuredClone(initialUpfront);
 const checkoutReads = new Map<string, number>();
 
+interface PersistedMemberLifecycle {
+  inactivityPeriods: ContextPeriods;
+  leaveRequests: LeaveRequests;
+}
+
+type ContextPeriods = components["schemas"]["MeInactivityContext"]["periods"];
+type LeaveRequests = components["schemas"]["MeLeaveContext"]["requests"];
+
+function memberLifecycleStorage(): Storage | undefined {
+  try {
+    return typeof localStorage === "undefined" ? undefined : localStorage;
+  } catch {
+    return undefined;
+  }
+}
+
+function memberLifecycleStorageKey(): string {
+  const clubId = currentMockScenario().me.membership?.clubId ?? "anonymous";
+  return `agilityhub.mock.member-lifecycle:${clubId}:${currentMockScenarioName()}`;
+}
+
+function restoreMemberLifecycle(): void {
+  const stored = memberLifecycleStorage()?.getItem(memberLifecycleStorageKey());
+  if (stored === null || stored === undefined) return;
+  try {
+    const parsed = JSON.parse(stored) as Partial<PersistedMemberLifecycle>;
+    if (Array.isArray(parsed.inactivityPeriods)) {
+      inactivity.periods = structuredClone(parsed.inactivityPeriods);
+      memberCreatedInactivity = inactivity.periods.length > 0;
+    }
+    if (Array.isArray(parsed.leaveRequests)) {
+      leave.requests = structuredClone(parsed.leaveRequests);
+    }
+  } catch {
+    memberLifecycleStorage()?.removeItem(memberLifecycleStorageKey());
+  }
+}
+
+function persistMemberLifecycle(): void {
+  memberLifecycleStorage()?.setItem(
+    memberLifecycleStorageKey(),
+    JSON.stringify({
+      inactivityPeriods: inactivity.periods,
+      leaveRequests: leave.requests,
+    } satisfies PersistedMemberLifecycle),
+  );
+}
+
+function pdfText(value: string): string {
+  return value.replaceAll("\\", "\\\\").replaceAll("(", "\\(").replaceAll(")", "\\)");
+}
+
+function receiptPdf(invoice: components["schemas"]["MeInvoice"]): Uint8Array {
+  const encoder = new TextEncoder();
+  const concept = invoice.lines[0]?.description ?? invoice.displayNumber;
+  const stream = [
+    "BT",
+    "/F1 18 Tf",
+    "72 760 Td",
+    `(Rebut ${pdfText(invoice.displayNumber)}) Tj`,
+    "0 -30 Td",
+    `(${pdfText(concept)}) Tj`,
+    "ET",
+  ].join("\n");
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>",
+    `<< /Length ${String(encoder.encode(stream).length)} >>\nstream\n${stream}\nendstream`,
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+  ];
+  let document = "%PDF-1.4\n";
+  const offsets = [0];
+  objects.forEach((object, index) => {
+    offsets.push(encoder.encode(document).length);
+    document += `${String(index + 1)} 0 obj\n${object}\nendobj\n`;
+  });
+  const xrefOffset = encoder.encode(document).length;
+  document += `xref\n0 ${String(objects.length + 1)}\n`;
+  document += "0000000000 65535 f \n";
+  document += offsets
+    .slice(1)
+    .map((offset) => `${String(offset).padStart(10, "0")} 00000 n \n`)
+    .join("");
+  document += `trailer\n<< /Size ${String(objects.length + 1)} /Root 1 0 R >>\n`;
+  document += `startxref\n${String(xrefOffset)}\n%%EOF\n`;
+  return encoder.encode(document);
+}
+
 function createLifecycleOverviews(): Map<string, components["schemas"]["MemberOverview"]> {
   return new Map(lifecycleMembers.map((lifecycleMember) => {
     const overview = structuredClone(censusRecordState.memberOverview);
@@ -98,6 +187,7 @@ function updateLifecycleMember(value: string, update: (member: components["schem
 }
 
 export function resetMemberBillingState(): void {
+  memberLifecycleStorage()?.removeItem(memberLifecycleStorageKey());
   inactivity = structuredClone(inactivityContextFixture);
   leave = structuredClone(leaveContextFixture);
   packs = structuredClone(packBalanceFixtures);
@@ -502,7 +592,7 @@ export const memberBillingHandlers = [
     if (refused !== undefined) return refused;
     const item = invoices().find((row) => row.id === String(params.id));
     if (item === undefined) return error("NOT_FOUND", 404);
-    return new HttpResponse(new Uint8Array([37, 80, 68, 70, 45, 49, 46, 52]), {
+    return new HttpResponse(receiptPdf(item), {
       headers: {
         "Content-Disposition": `inline; filename="${item.displayNumber}.pdf"`,
         "Content-Type": "application/pdf",
@@ -546,6 +636,7 @@ export const memberBillingHandlers = [
     const refused = moduleOff("INACTIVITY");
     if (refused !== undefined) return refused;
     if (currentMockScenario().memberBilling === "packPlan") return error("INACTIVITY_NOT_APPLICABLE", 422);
+    restoreMemberLifecycle();
     return HttpResponse.json({
       ...inactivity,
       fee: currentMockScenario().branding.modules.includes("BILLING") ? inactivity.fee : null,
@@ -560,6 +651,7 @@ export const memberBillingHandlers = [
     return refused ?? HttpResponse.json(inactivityPreviewFixture);
   }),
   http.post("*/api/v1/me/inactivity-periods", async ({ request }) => {
+    restoreMemberLifecycle();
     const body = (await request.json()) as InactivityRequest;
     if (currentMockScenario().memberBilling === "deadlinePassed") return error("INACTIVITY_DEADLINE_PASSED", 422, { earliestMonth: "2026-11" });
     const seed = inactivityContextFixture.periods[0];
@@ -575,24 +667,30 @@ export const memberBillingHandlers = [
     };
     inactivity.periods = [created];
     memberCreatedInactivity = true;
+    persistMemberLifecycle();
     return HttpResponse.json(created, { status: 201 });
   }),
   http.patch("*/api/v1/me/inactivity-periods/:id", async ({ params, request }) => {
+    restoreMemberLifecycle();
     const body = (await request.json()) as InactivityPatch;
     const period = inactivity.periods.find((item) => item.id === String(params.id));
     if (period === undefined) return error("NOT_FOUND", 404);
     if (body.version !== period.version) return error("STALE_VERSION", 409);
     Object.assign(period, body, { version: period.version + 1 });
+    persistMemberLifecycle();
     return HttpResponse.json(period);
   }),
   http.post("*/api/v1/me/inactivity-periods/:id/cancellation", ({ params }) => {
+    restoreMemberLifecycle();
     const period = inactivity.periods.find((item) => item.id === String(params.id));
     if (period === undefined) return error("NOT_FOUND", 404);
     period.state = "CANCELLED";
     period.editable = { cancel: false, fromMonth: false, toMonth: false };
+    persistMemberLifecycle();
     return HttpResponse.json(period);
   }),
   http.get("*/api/v1/me/leave-requests", ({ request }) => {
+    restoreMemberLifecycle();
     const context = localizedLeave(request);
     if (!currentMockScenario().branding.modules.includes("BILLING")) context.fee = null;
     if (currentMockScenario().memberBilling === "plannedLeave")
@@ -606,19 +704,26 @@ export const memberBillingHandlers = [
     return HttpResponse.json(context);
   }),
   http.post("*/api/v1/me/leave-requests", async ({ request }) => {
+    restoreMemberLifecycle();
     const body = (await request.json()) as LeaveRequest;
+    if (!leave.reasons.some((reason) => reason.key === body.reasonKey)) {
+      return error("LEAVE_REASON_UNKNOWN", 400);
+    }
     const created = {
       ...body,
       id: "55000000-0000-4000-8000-000000000002",
       state: "PENDING" as const,
     };
     leave.requests = [created];
+    persistMemberLifecycle();
     return HttpResponse.json(created, { status: 201 });
   }),
   http.post("*/api/v1/me/leave-requests/:id/cancellation", ({ params }) => {
+    restoreMemberLifecycle();
     const row = leave.requests.find((item) => item.id === String(params.id));
     if (row === undefined) return error("NOT_FOUND", 404);
     row.state = "CANCELLED";
+    persistMemberLifecycle();
     return HttpResponse.json(row);
   }),
   http.get("*/api/v1/upfront-payments", ({ request }) => {

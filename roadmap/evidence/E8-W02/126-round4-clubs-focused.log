@@ -1,0 +1,73 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/billing/InvoicesPage.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/inactivity/InactivityPage.test.tsx (12 tests | 12 failed) 83ms
+   ❯ T-13-29 member inactivity (12)
+     × renders consultation mode, the proposed open end, fee and debounced booking warning 25ms
+     × shows the API earliest month for INACTIVITY_DEADLINE_PASSED 6ms
+     × does not render the fee card when the context has no fee 5ms
+     × covers zero, singular and plural booking previews after the selected months change 5ms
+     × offers future ends for a historical open ACTIVE period and beyond a long fixed end 6ms
+     × loads and links to the conflicting live period after INACTIVITY_OVERLAP 5ms
+     × clears an end month overtaken by a changed start and submits an open end 4ms
+     × clears an old booking warning and reports a failed replacement preview 5ms
+     × renders a historical ACTIVE period and patches only its changed editable end 7ms
+     × after 409 STALE_VERSION keeps only the member's own edit on top of the new version 5ms
+     × keeps a newly created period for the return-to-profile subtitle 4ms
+     × keeps the 14 literals complete in ca, es and en 4ms
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > renders consultation mode, the proposed open end, fee and debounced booking warning
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > shows the API earliest month for INACTIVITY_DEADLINE_PASSED
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > does not render the fee card when the context has no fee
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > covers zero, singular and plural booking previews after the selected months change
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > offers future ends for a historical open ACTIVE period and beyond a long fixed end
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > loads and links to the conflicting live period after INACTIVITY_OVERLAP
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > clears an end month overtaken by a changed start and submits an open end
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > clears an old booking warning and reports a failed replacement preview
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > renders a historical ACTIVE period and patches only its changed editable end
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > after 409 STALE_VERSION keeps only the member's own edit on top of the new version
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > keeps a newly created period for the return-to-profile subtitle
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en
+TypeError: Cannot read properties of undefined (reading 'failed')
+ ❯ InactivityPage src/inactivity/InactivityPage.tsx:160:57
+    158|   const previewKey = fromMonth === "" ? undefined : `${fromMonth}:${to…
+    159|   const currentPreview =
+    160|     previewResult?.key === previewKey && !previewResult.failed
+       |                                                         ^
+    161|       ? previewResult.data
+    162|       : undefined;
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+
+  Snapshots  3 obsolete
+             ↳ src/inactivity/InactivityPage.test.tsx
+               · T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > ca 1
+               · T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > en 1
+               · T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > es 1
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  12 failed | 21 passed (33)
+   Start at  13:15:26
+   Duration  2.07s (environment 29%, transform 28%, tests 22%, import 14%, setup 7%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/billing/InvoicesPage.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx`
+Exit status 1

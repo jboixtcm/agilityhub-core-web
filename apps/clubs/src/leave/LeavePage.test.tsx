@@ -52,8 +52,6 @@ describe("T-13-30 member leave", () => {
     await expect(
       e8Client().POST("/me/leave-requests", {
         body: {
-          comment: null,
-          nps: null,
           reasonKey: "UNKNOWN",
           requestedDate: "2026-08-11",
         },

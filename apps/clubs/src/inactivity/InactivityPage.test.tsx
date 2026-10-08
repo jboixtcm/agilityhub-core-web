@@ -1,5 +1,5 @@
 import { server } from "@agilityhub/api-client/mocks/server";
-import { fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
 
@@ -16,7 +16,7 @@ describe("T-13-29 member inactivity", () => {
     const start = await screen.findByLabelText("Mes d'inici (obligatori)");
     expect(start).toHaveValue("2026-10");
     expect(screen.getByLabelText("Mes de finalització (si el saps)")).toHaveValue("");
-    expect(screen.getByRole("option", { name: "— encara no ho sé" })).toBeVisible();
+    expect(screen.getByRole("checkbox", { name: "— encara no ho sé" })).toBeChecked();
     expect(screen.getByText(/Quota del 1r mes/u).closest(".lifecycle-fee")).toHaveTextContent(
       "20,00 €",
     );
@@ -194,7 +194,10 @@ describe("T-13-29 member inactivity", () => {
     await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
     fireEvent.click(await screen.findByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
     const overlap = await screen.findByRole("link", { name: /Ja tens un període demanat/u });
-    expect(overlap).toHaveAttribute("href", "/inactivitat");
+    expect(overlap).toHaveAttribute(
+      "href",
+      "/inactivitat?periodId=period-conflict",
+    );
     expect(await screen.findByRole("button", { name: "MODIFICA" })).toBeVisible();
     expect(screen.getByLabelText("Mes d'inici (obligatori)")).toHaveValue("2026-11");
     fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
@@ -274,8 +277,10 @@ describe("T-13-29 member inactivity", () => {
     expect(await screen.findByText(/Ara tens 1 reserva dins del període/u)).toBeVisible();
     fireEvent.change(end, { target: { value: "2026-12" } });
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "No s'ha pogut desar la sol·licitud.",
+      "No s'ha pogut carregar el període d'inactivitat.",
     );
+    expect(screen.getByRole("button", { name: "Torna-ho a provar" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" })).toBeDisabled();
     expect(screen.queryByText(/Ara tens 1 reserva dins del període/u)).not.toBeInTheDocument();
   });
 

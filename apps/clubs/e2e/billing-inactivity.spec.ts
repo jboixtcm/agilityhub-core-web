@@ -99,6 +99,8 @@ test.describe("E8-W02 member billing, packs and lifecycle", () => {
     await page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }).click();
     await page.waitForURL("**/perfil");
     await expect(page.getByRole("link", { name: /pendent d'aprovació/u })).toBeVisible();
+    await page.reload();
+    await expect(page.getByRole("link", { name: /pendent d'aprovació/u })).toBeVisible();
 
     await page.goto(`${clubsUrl}/baixa`);
     await page.getByLabel("Motiu").selectOption("EXTERNAL");
@@ -106,12 +108,15 @@ test.describe("E8-W02 member billing, packs and lifecycle", () => {
     await page.getByRole("button", { name: "Torna al perfil" }).click();
     await page.waitForURL("**/perfil");
     await expect(page.getByRole("link", { name: /baixa sol·licitada/u })).toBeVisible();
+    await page.reload();
+    await expect(page.getByRole("link", { name: /pendent d'aprovació/u })).toBeVisible();
+    await expect(page.getByRole("link", { name: /baixa sol·licitada/u })).toBeVisible();
   });
 
   test("T-12-26 renders the invalid-card banner", async ({ page }) => {
     await loginMember(page, "memberCardInvalid");
     await page.goto(`${clubsUrl}/rebuts`);
-    await expect(page.getByText(/No hem pogut cobrar el rebut/u)).toBeVisible();
+    await expect(page.getByText("Targeta no vàlida")).toBeVisible();
     await expect(page.getByRole("button", { name: "Actualitza la targeta" })).toBeVisible();
     await shot(page, "rebuts-baner-targeta-375.png");
   });

@@ -27,7 +27,13 @@ function isFullyRefunded(invoice: Invoice): boolean {
   );
 }
 
-export function CardFailureBanner({ client, invoice }: { client: ApiClient; invoice: Invoice }) {
+export function CardFailureBanner({
+  client,
+  invoice,
+}: {
+  client: ApiClient;
+  invoice: Invoice | undefined;
+}) {
   const { t } = useTranslation("billing");
   const formats = useClubFormats();
   const toast = useToast();
@@ -52,7 +58,9 @@ export function CardFailureBanner({ client, invoice }: { client: ApiClient; invo
   return (
     <Card className="billing-card-banner" role="alert">
       <strong>
-        {t("billing:cardBanner.title", { month: formats.formatMonthTitle(invoice.period) })}
+        {invoice === undefined
+          ? t("billing:cardBanner.invalid")
+          : t("billing:cardBanner.title", { month: formats.formatMonthTitle(invoice.period) })}
       </strong>
       <Button
         disabled={pending}
@@ -92,20 +100,23 @@ function ReceiptRow({ invoice }: { invoice: Invoice }) {
 }
 
 function Detail({ client, id }: { client: ApiClient; id: string }) {
-  const { t } = useTranslation(["billing", "enums"]);
+  const { t } = useTranslation(["billing", "enums", "errors"]);
   const formats = useClubFormats();
   const [invoice, setInvoice] = useState<Invoice>();
-  const [failed, setFailed] = useState(false);
+  const [state, setState] = useState<"loading" | "ready" | "error" | "moduleOff">("loading");
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState(false);
   useEffect(() => {
     let active = true;
     void client.GET("/me/invoices/{id}", { params: { path: { id } } }).then(
       ({ data }) => {
-        if (active && data !== undefined) setInvoice(data);
+        if (active && data !== undefined) {
+          setInvoice(data);
+          setState("ready");
+        }
       },
-      () => {
-        if (active) setFailed(true);
+      (cause: unknown) => {
+        if (active) setState(isApiError(cause, "MODULE_DISABLED") ? "moduleOff" : "error");
       },
     );
     return () => {
@@ -143,9 +154,14 @@ function Detail({ client, id }: { client: ApiClient; id: string }) {
         </a>
         <h1>{t("billing:detail.title")}</h1>
       </header>
-      {failed ? (
+      {state === "moduleOff" ? (
+        <EmptyState
+          description={t("errors:MODULE_DISABLED")}
+          title={t("errors:MODULE_DISABLED")}
+        />
+      ) : state === "error" ? (
         <EmptyState description={t("billing:loadError")} title={t("billing:loadError")} />
-      ) : invoice === undefined ? (
+      ) : state === "loading" || invoice === undefined ? (
         <Skeleton height="12rem" label={t("billing:loading")} />
       ) : (
         <Card className="receipt-detail">
@@ -208,7 +224,7 @@ export function InvoicesPage({
   invoiceId?: string;
   paymentMethod?: PaymentMethod;
 }) {
-  const { t } = useTranslation("billing");
+  const { t } = useTranslation(["billing", "errors"]);
   const [items, setItems] = useState<Invoice[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -263,12 +279,14 @@ export function InvoicesPage({
     };
   }, [client, invoiceId]);
   if (invoiceId !== undefined) return <Detail client={client} id={invoiceId} />;
-  const failedCard = items.find(
-    (item) => item.status === "FAILED" && item.paymentMethod.type === "CARD",
-  );
+  const latestInvoice = items[0];
+  const failedCard =
+    latestInvoice?.status === "FAILED" && latestInvoice.paymentMethod.type === "CARD"
+      ? latestInvoice
+      : undefined;
   const invalidCard =
-    failedCard ??
-    (paymentMethod?.type === "CARD" && paymentMethod.invalid === true ? items[0] : undefined);
+    failedCard !== undefined ||
+    (paymentMethod?.type === "CARD" && paymentMethod.invalid === true);
   return (
     <div className="billing-page">
       <header className="billing-page__bar">
@@ -277,8 +295,8 @@ export function InvoicesPage({
         </a>
         <h1>{t("billing:title")}</h1>
       </header>
-      {invalidCard === undefined ? null : (
-        <CardFailureBanner client={client} invoice={invalidCard} />
+      {!invalidCard ? null : (
+        <CardFailureBanner client={client} invoice={failedCard} />
       )}
       {state === "loading" ? (
         <Skeleton height="12rem" label={t("billing:loading")} />
@@ -297,7 +315,12 @@ export function InvoicesPage({
           description={t("billing:loadError")}
           title={t("billing:loadError")}
         />
-      ) : state === "moduleOff" || items.length === 0 ? (
+      ) : state === "moduleOff" ? (
+        <EmptyState
+          description={t("errors:MODULE_DISABLED")}
+          title={t("errors:MODULE_DISABLED")}
+        />
+      ) : items.length === 0 ? (
         <EmptyState description={t("billing:empty")} title={t("billing:empty")} />
       ) : (
         <Card className="receipt-list">

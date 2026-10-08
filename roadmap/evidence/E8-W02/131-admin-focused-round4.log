@@ -1,0 +1,13 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/census/MemberBillingBlock.test.tsx src/census/CensusRecordPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  2 passed (2)
+      Tests  38 passed (38)
+   Start at  13:16:09
+   Duration  3.72s (tests 57%, transform 21%, environment 11%, import 8%, setup 3%)
+

@@ -1,0 +1,668 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/billing/InvoicesPage.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+ ❯ src/inactivity/InactivityPage.test.tsx (12 tests | 1 failed) 1854ms
+   ❯ T-13-29 member inactivity (12)
+     × keeps the 14 literals complete in ca, es and en 11ms
+ ❯ src/billing/InvoicesPage.test.tsx (11 tests | 3 failed) 30392ms
+   ❯ T-12-26 member receipts (11)
+     × shows the masked method in detail and requests the PDF document 10028ms
+     × shows the invalid-card banner and POST action from /me.paymentMethod.invalid 10010ms
+     × shows the shared module-off state in the receipt list and detail 10006ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/InvoicesPage.test.tsx > T-12-26 member receipts > shows the masked method in detail and requests the PDF document
+AssertionError: expected undefined to be an instance of Blob
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"billing-page__bar"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna al perfil"[39m
+            [33mhref[39m=[32m"/rebuts"[39m
+          [36m>[39m
+            [0m‹[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mDetall del rebut[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card receipt-detail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"receipt-detail__heading"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0m2026-0912[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<p>[39m
+            [0mSetembre 2026[0m
+          [36m</p>[39m
+          [36m<table>[39m
+            [36m<caption[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mConceptes[0m
+            [36m</caption>[39m
+            [36m<thead>[39m
+              [36m<tr>[39m
+                [36m<th>[39m
+                  [0mConcepte[0m
+                [36m</th>[39m
+                [36m<th>[39m
+                  [0mImport[0m
+                [36m</th>[39m
+              [36m</tr>[39m
+            [36m</thead>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<td>[39m
+                  [0mQuota setembre 2026[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0m60,00 €[0m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+            [36m<tfoot>[39m
+              [36m<tr>[39m
+                [36m<th>[39m
+                  [0mTotal[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0m60,00 €[0m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tfoot>[39m
+          [36m</table>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mMètode de pagament[0m
+            [36m</strong>[39m
+            [36m<br />[39m
+            [0mDomiciliació[0m
+            [0m · ···· 2231[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mDescarrega el justificant[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/billing/InvoicesPage.test.tsx:55:26
+     53|         "/api/v1/me/invoices/51000000-0000-4000-8000-000000000001/docu…
+     54|       );
+     55|       expect(openedBlob).toBeInstanceOf(Blob);
+       |                          ^
+     56|     });
+     57|     const pdf = new TextDecoder().decode(await openedBlob?.arrayBuffer…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/billing/InvoicesPage.test.tsx > T-12-26 member receipts > shows the invalid-card banner and POST action from /me.paymentMethod.invalid
+TestingLibraryElementError: Unable to find an element with the text: /No hem pogut cobrar/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card billing-card-banner"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<strong>[39m
+          [0mTargeta no vàlida[0m
+        [36m</strong>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mActualitza la targeta[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card receipt-list"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"receipt-row"[39m
+          [33mhref[39m=[32m"/rebuts/51000000-0000-4000-8000-000000000001"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRebut 2026-0912[0m
+              [0m.[0m
+              [0m [0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mSetembre 2026[0m
+            [36m</strong>[39m
+            [36m<small>[39m
+              [0mQuota setembre 2026[0m
+            [36m</small>[39m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"receipt-row__meta"[39m
+          [36m>[39m
+            [36m<b>[39m
+              [0m60,00 €[0m
+            [36m</b>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"receipt-row"[39m
+          [33mhref[39m=[32m"/rebuts/51000000-0000-4000-8000-000000000002"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRebut 2026-0812[0m
+              [0m.[0m
+              [0m [0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mAgost 2026[0m
+            [36m</strong>[39m
+            [36m<small>[39m
+              [0mQuota agost 2026[0m
+            [36m</small>[39m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"receipt-row__meta"[39m
+          [36m>[39m
+            [36m<b>[39m
+              [0m60,00 €[0m
+            [36m</b>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"receipt-row"[39m
+          [33mhref[39m=[32m"/rebuts/51000000-0000-4000-8000-000000000003"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRebut 2026-0712[0m
+              [0m.[0m
+              [0m [0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mJuliol 2026[0m
+            [36m</strong>[39m
+            [36m<small>[39m
+              [0mQuota juliol 2026[0m
+            [36m</small>[39m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"receipt-row__meta"[39m
+          [36m>[39m
+            [36m<b>[39m
+              [0m60,00 €[0m
+            [36m</b>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mremesat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"receipt-row"[39m
+          [33mhref[39m=[32m"/rebuts/51000000-0000-4000-8000-000000000004"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRebut 2026-0610[0m
+              [0m.[0m
+              [0m [0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mJuny 2026[0m
+            [36m</strong>[39m
+            [36m<small>[39m
+              [0mQuota familiar juny 2026[0m
+            [36m</small>[39m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"receipt-row__meta"[39m
+          [36m>[39m
+            [36m<b>[39m
+              [0m95,00 €[0m
+            [36m</b>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-chip ah-tone--neutral"[39m
+            [36m>[39m
+              [0mGrup familiar[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card billing-card-banner"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<strong>[39m
+          [0mTargeta no vàlida[0m
+        [36m</strong>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mActualitza la targeta[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card receipt-list"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"receipt-row"[39m
+          [33mhref[39m=[32m"/rebuts/51000000-0000-4000-8000-000000000001"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRebut 2026-0912[0m
+              [0m.[0m
+              [0m [0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mSetembre 2026[0m
+            [36m</strong>[39m
+            [36m<small>[39m
+              [0mQuota setembre 2026[0m
+            [36m</small>[39m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"receipt-row__meta"[39m
+          [36m>[39m
+            [36m<b>[39m
+              [0m60,00 €[0m
+            [36m</b>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"receipt-row"[39m
+          [33mhref[39m=[32m"/rebuts/51000000-0000-4000-8000-000000000002"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRebut 2026-0812[0m
+              [0m.[0m
+              [0m [0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mAgost 2026[0m
+            [36m</strong>[39m
+            [36m<small>[39m
+              [0mQuota agost 2026[0m
+            [36m</small>[39m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"receipt-row__meta"[39m
+          [36m>[39m
+            [36m<b>[39m
+              [0m60,00 €[0m
+            [36m</b>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"receipt-row"[39m
+          [33mhref[39m=[32m"/rebuts/51000000-0000-4000-8000-000000000003"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRebut 2026-0712[0m
+              [0m.[0m
+              [0m [0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mJuliol 2026[0m
+            [36m</strong>[39m
+            [36m<small>[39m
+              [0mQuota juliol 2026[0m
+            [36m</small>[39m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"receipt-row__meta"[39m
+          [36m>[39m
+            [36m<b>[39m
+              [0m60,00 €[0m
+            [36m</b>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mremesat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"receipt-row"[39m
+          [33mhref[39m=[32m"/rebuts/51000000-0000-4000-8000-000000000004"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mRebut 2026-0610[0m
+              [0m.[0m
+              [0m [0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0mJuny 2026[0m
+            [36m</strong>[39m
+            [36m<small>[39m
+              [0mQuota familiar juny 2026[0m
+            [36m</small>[39m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"receipt-row__meta"[39m
+          [36m>[39m
+            [36m<b>[39m
+              [0m95,00 €[0m
+            [36m</b>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mcobrat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-chip ah-tone--neutral"[39m
+            [36m>[39m
+              [0mGrup familiar[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/InvoicesPage.test.tsx:113:25
+    111|       { scenario: "memberCardInvalid" },
+    112|     );
+    113|     expect(await screen.findByText(/No hem pogut cobrar/u)).toBeVisibl…
+       |                         ^
+    114|     fireEvent.click(screen.getByRole("button", { name: "Actualitza la …
+    115|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/billing/InvoicesPage.test.tsx > T-12-26 member receipts > shows the shared module-off state in the receipt list and detail
+TestingLibraryElementError: Found multiple elements with the text: Aquest mòdul està desactivat.
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<h2>[39m
+  [0mAquest mòdul està desactivat.[0m
+[36m</h2>[39m
+
+Ignored nodes: comments, script, style
+[36m<p>[39m
+  [0mAquest mòdul està desactivat.[0m
+[36m</p>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"ah-empty-state"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<h2>[39m
+          [0mAquest mòdul està desactivat.[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [0mAquest mòdul està desactivat.[0m
+        [36m</p>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"ah-empty-state"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<h2>[39m
+          [0mAquest mòdul està desactivat.[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [0mAquest mòdul està desactivat.[0m
+        [36m</p>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/InvoicesPage.test.tsx:230:25
+    228|     );
+    229|     const list = await renderE8(<InvoicesPage client={e8Client()} />);
+    230|     expect(await screen.findByText("Aquest mòdul està desactivat.")).t…
+       |                         ^
+    231|     expect(screen.queryByText("Encara no tens cap rebut.")).not.toBeIn…
+    232|     list.unmount();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en
+Error: Snapshot `T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > ca 1` mismatched
+
+Expected: ""‹Període d'inactivitatTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.Mes d'inici (obligatori)Octubre 2026Novembre 2026Desembre 2026Gener 2027Febrer 2027Març 2027Abril 2027Maig 2027Juny 2027Juliol 2027Agost 2027Setembre 2027Octubre 2027Mes de finalització (si el saps)— encara no ho séOctubre 2026Novembre 2026Desembre 2026Gener 2027Febrer 2027Març 2027Abril 2027Maig 2027Juny 2027Juliol 2027Agost 2027Setembre 2027Octubre 2027ComentarisDescans de la DunaQuota del 1r mes20,00 €Mesos següents10,00 €/mesLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).MODIFICARETIRA LA SOL·LICITUD""
+Received: ""‹Període d'inactivitatTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.Mes d'inici (obligatori)Octubre 2026Novembre 2026Desembre 2026Gener 2027Febrer 2027Març 2027Abril 2027Maig 2027Juny 2027Juliol 2027Agost 2027Setembre 2027Octubre 2027Mes de finalització (si el saps)— encara no ho séComentarisDescans de la DunaQuota del 1r mes20,00 €Mesos següents10,00 €/mesLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).MODIFICARETIRA LA SOL·LICITUD""
+
+ ❯ src/inactivity/InactivityPage.test.tsx:426:42
+    424|         expect(view.container.textContent).not.toContain("inactivity:"…
+    425|       });
+    426|       expect(view.container.textContent).toMatchSnapshot(locale);
+       |                                          ^
+    427|       view.unmount();
+    428|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+  Snapshots  1 failed
+             2 obsolete
+             ↳ src/inactivity/InactivityPage.test.tsx
+               · T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > en 1
+               · T-13-29 member inactivity > keeps the 14 literals complete in ca, es and en > es 1
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  4 failed | 29 passed (33)
+   Start at  13:13:05
+   Duration  32.04s (tests 87%, environment 5%, transform 4%, import 2%, setup 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/billing/InvoicesPage.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx`
+Exit status 1

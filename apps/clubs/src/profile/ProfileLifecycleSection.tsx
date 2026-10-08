@@ -27,7 +27,7 @@ export function ProfileLifecycleSection({
   const branding = useBranding();
   const formats = useClubFormats();
   const { t } = useTranslation(["auth", "billing", "inactivity", "leave"]);
-  const [failedCard, setFailedCard] = useState<Invoice>();
+  const [latestInvoice, setLatestInvoice] = useState<Invoice>();
   const [inactivity, setInactivity] = useState<Inactivity>();
   const [inactivityApplicable, setInactivityApplicable] = useState(true);
   const [leave, setLeave] = useState<Leave>();
@@ -38,17 +38,7 @@ export function ProfileLifecycleSection({
     if (branding.modules.includes("BILLING")) {
       void client.GET("/me/invoices", { params: { query: { page: 0, size: 20 } } }).then(
         ({ data }) => {
-          if (active) {
-            const failed = data?.items.find(
-              (item) => item.status === "FAILED" && item.paymentMethod.type === "CARD",
-            );
-            setFailedCard(
-              failed ??
-                (paymentMethod?.type === "CARD" && paymentMethod.invalid === true
-                  ? data?.items[0]
-                  : undefined),
-            );
-          }
+          if (active) setLatestInvoice(data?.items[0]);
         },
         () => undefined,
       );
@@ -104,10 +94,17 @@ export function ProfileLifecycleSection({
         : t("leave:profileRow.requested", {
             date: formats.formatPlainDate(pendingLeave.requestedDate, "short"),
           });
+  const failedCard =
+    latestInvoice?.status === "FAILED" && latestInvoice.paymentMethod.type === "CARD"
+      ? latestInvoice
+      : undefined;
+  const invalidCard =
+    failedCard !== undefined ||
+    (paymentMethod?.type === "CARD" && paymentMethod.invalid === true);
 
   return (
     <>
-      {!memberAccess || failedCard === undefined ? null : (
+      {!memberAccess || !invalidCard ? null : (
         <CardFailureBanner client={client} invoice={failedCard} />
       )}
       <Card className="profile-list profile-list--final">

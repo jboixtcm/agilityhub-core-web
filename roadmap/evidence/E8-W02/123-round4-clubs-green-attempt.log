@@ -1,0 +1,147 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/billing/InvoicesPage.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx -u
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+ ❯ src/billing/InvoicesPage.test.tsx (11 tests | 1 failed) 10391ms
+   ❯ T-12-26 member receipts (11)
+     × shows the masked method in detail and requests the PDF document 10023ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/InvoicesPage.test.tsx > T-12-26 member receipts > shows the masked method in detail and requests the PDF document
+AssertionError: expected Blob { size: 624, type: 'application/pdf' } to be an instance of Blob
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"billing-page__bar"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna al perfil"[39m
+            [33mhref[39m=[32m"/rebuts"[39m
+          [36m>[39m
+            [0m‹[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mDetall del rebut[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card receipt-detail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"receipt-detail__heading"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0m2026-0912[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<p>[39m
+            [0mSetembre 2026[0m
+          [36m</p>[39m
+          [36m<table>[39m
+            [36m<caption[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mConceptes[0m
+            [36m</caption>[39m
+            [36m<thead>[39m
+              [36m<tr>[39m
+                [36m<th>[39m
+                  [0mConcepte[0m
+                [36m</th>[39m
+                [36m<th>[39m
+                  [0mImport[0m
+                [36m</th>[39m
+              [36m</tr>[39m
+            [36m</thead>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<td>[39m
+                  [0mQuota setembre 2026[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0m60,00 €[0m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+            [36m<tfoot>[39m
+              [36m<tr>[39m
+                [36m<th>[39m
+                  [0mTotal[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0m60,00 €[0m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tfoot>[39m
+          [36m</table>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mMètode de pagament[0m
+            [36m</strong>[39m
+            [36m<br />[39m
+            [0mDomiciliació[0m
+            [0m · ···· 2231[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mDescarrega el justificant[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/billing/InvoicesPage.test.tsx:55:26
+     53|         "/api/v1/me/invoices/51000000-0000-4000-8000-000000000001/docu…
+     54|       );
+     55|       expect(openedBlob).toBeInstanceOf(Blob);
+       |                          ^
+     56|     });
+     57|     const pdf = new TextDecoder().decode(await openedBlob?.arrayBuffer…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+  Snapshots  3 updated 
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 32 passed (33)
+   Start at  13:13:51
+   Duration  11.90s (tests 75%, environment 10%, transform 9%, import 4%, setup 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/billing/InvoicesPage.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx -u`
+Exit status 1

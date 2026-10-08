@@ -23,6 +23,7 @@
     "downloadError": "No s'ha pogut descarregar el justificant."
   },
   "cardBanner": {
+    "invalid": "Targeta no vàlida",
     "title": "No hem pogut cobrar el rebut de {month}",
     "action": "Actualitza la targeta",
     "working": "Obrint l'actualització de targeta",

@@ -9,7 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - Add the D10 inactivity, dated-leave, reactivation, payment-method and plan drawers; the ADMIN-only lifecycle queues; the D5 lifecycle columns and protected «Baixes previstes» view; catalog-driven D8/D11 billing values; translated stateful mocks, tests and desktop evidence (E8-W03).
-- Add E8 member billing and lifecycle views: own receipts and PDF download, invalid-card recovery and checkout confirmation, API-backed dog pack balances, inactivity and leave requests, and the D10 billing block with upfront-payment and pack-adjustment controls (E8-W02).
+- Add E8 member billing and lifecycle views: own receipts with a valid PDF download, receipt-independent invalid-card recovery and checkout confirmation, API-backed dog pack balances, uncapped inactivity end-month edits, reload-safe inactivity and leave requests, and the D10 billing block with upfront-payment and pack-adjustment controls (E8-W02).
 - Initial pnpm and Turborepo workspace with the three applications, shared package skeletons, strict TypeScript, linting, formatting, tests, and commit hooks.
 - Add the shared themed UI system with branding tokens, accessible base components, extracted mockup icons, Cànic fixtures, and the development component gallery.
 - Add the shared i18n foundation with lazy ICU namespaces, Catalan/Spanish/English catalogs, club-aware formats, catalog-complete error messages, and translation CI checks.

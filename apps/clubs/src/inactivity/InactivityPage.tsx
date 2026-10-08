@@ -8,8 +8,10 @@ import { useClubFormats } from "@agilityhub/i18n";
 import {
   Button,
   Card,
+  Checkbox,
   EmptyState,
   FormField,
+  Input,
   Select,
   Skeleton,
   Textarea,
@@ -33,20 +35,11 @@ function includeMonths(months: string[], ...required: (null | string | undefined
   return [...new Set([...months, ...required.filter((month): month is string => month != null)])].sort();
 }
 
-function inclusiveMonthCount(start: string, end: null | string | undefined): number {
-  if (end == null) return 13;
-  const [startYear, startMonth] = start.split("-").map(Number);
-  const [endYear, endMonth] = end.split("-").map(Number);
-  const distance =
-    ((endYear ?? startYear ?? 0) - (startYear ?? 0)) * 12 +
-    (endMonth ?? startMonth ?? 1) -
-    (startMonth ?? 1) +
-    1;
-  return Math.max(13, distance);
-}
-
-function shiftMonth(month: string, offset: number): string {
-  return monthRange(month, offset + 1)[offset] ?? month;
+function livePeriod(context: Context | undefined, selectedId: null | string) {
+  const live = context?.periods.filter((item) =>
+    ["REQUESTED", "APPROVED", "ACTIVE"].includes(item.state),
+  );
+  return selectedId === null ? live?.[0] : live?.find((item) => item.id === selectedId);
 }
 
 export function InactivityPage({
@@ -58,7 +51,7 @@ export function InactivityPage({
   client: ApiClient;
   navigate?: (path: string) => void;
 }) {
-  const { t } = useTranslation("inactivity");
+  const { t } = useTranslation(["inactivity", "billing"]);
   const formats = useClubFormats();
   const toast = useToast();
   const keys = useSubmissionKeys();
@@ -68,10 +61,20 @@ export function InactivityPage({
   const [fromMonth, setFromMonth] = useState("");
   const [toMonth, setToMonth] = useState("");
   const [comments, setComments] = useState("");
-  const [preview, setPreview] = useState<Preview>();
+  const [previewResult, setPreviewResult] = useState<{
+    data?: Preview;
+    failed: boolean;
+    key: string;
+  }>();
+  const [previewRetryKey, setPreviewRetryKey] = useState<string>();
+  const [previewReload, setPreviewReload] = useState(0);
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<unknown>();
+  const [selectedPeriodId, setSelectedPeriodId] = useState<null | string>(() =>
+    new URLSearchParams(window.location.search).get("periodId"),
+  );
   const baseline = useRef<{ comments: string; fromMonth: string; toMonth: string }>(undefined);
+  const rebaseAfterStale = useRef(false);
 
   useEffect(() => {
     let active = true;
@@ -83,9 +86,7 @@ export function InactivityPage({
           return;
         }
         setContext(data);
-        const live = data.periods.find((item) =>
-          ["REQUESTED", "APPROVED", "ACTIVE"].includes(item.state),
-        );
+        const live = livePeriod(data, selectedPeriodId);
         const loaded = {
           comments: live?.comments ?? "",
           fromMonth: live?.fromMonth ?? data.proposedFromMonth,
@@ -94,7 +95,8 @@ export function InactivityPage({
         // After a 409 STALE_VERSION refetch, only the member's own edits (the fields that differ
         // from the version they started from) are kept on top of the new version, and only where
         // the new version still lets them edit; everything else takes the api's values.
-        const previous = baseline.current;
+        const previous = rebaseAfterStale.current ? baseline.current : undefined;
+        rebaseAfterStale.current = false;
         baseline.current = loaded;
         const rebase = (field: keyof typeof loaded, editable: boolean) => (current: string) =>
           previous !== undefined && live !== undefined && editable && current !== previous[field]
@@ -111,10 +113,11 @@ export function InactivityPage({
     return () => {
       active = false;
     };
-  }, [client, reload]);
+  }, [client, reload, selectedPeriodId]);
 
   useEffect(() => {
     if (fromMonth === "") return;
+    const requestKey = `${fromMonth}:${toMonth}`;
     const controller = new AbortController();
     const timer = window.setTimeout(() => {
       void client
@@ -124,20 +127,26 @@ export function InactivityPage({
         })
         .then(
           ({ data }) => {
-            if (data !== undefined) setPreview(data);
+            if (data !== undefined && !controller.signal.aborted) {
+              setPreviewResult({ data, failed: false, key: requestKey });
+              setPreviewRetryKey(undefined);
+            }
           },
-          () => undefined,
+          () => {
+            if (!controller.signal.aborted) {
+              setPreviewResult({ failed: true, key: requestKey });
+              setPreviewRetryKey(undefined);
+            }
+          },
         );
     }, 300);
     return () => {
       window.clearTimeout(timer);
       controller.abort();
     };
-  }, [client, fromMonth, toMonth]);
+  }, [client, fromMonth, previewReload, toMonth]);
 
-  const live = context?.periods.find((item) =>
-    ["REQUESTED", "APPROVED", "ACTIVE"].includes(item.state),
-  );
+  const live = livePeriod(context, selectedPeriodId);
   const starts = useMemo(
     () =>
       includeMonths(
@@ -146,22 +155,14 @@ export function InactivityPage({
       ),
     [context?.earliestFromMonth, live?.fromMonth],
   );
-  const ends = useMemo(
-    () => {
-      if (fromMonth === "") return [];
-      const horizons = [
-        shiftMonth(fromMonth, 12),
-        shiftMonth(context?.proposedFromMonth ?? fromMonth, 12),
-        live?.toMonth == null ? undefined : shiftMonth(live.toMonth, 12),
-      ].filter((month): month is string => month !== undefined);
-      const horizon = horizons.sort().at(-1);
-      return includeMonths(
-        monthRange(fromMonth, inclusiveMonthCount(fromMonth, horizon)),
-        live?.toMonth,
-      );
-    },
-    [context?.proposedFromMonth, fromMonth, live],
-  );
+  const previewKey = fromMonth === "" ? undefined : `${fromMonth}:${toMonth}`;
+  const currentPreview =
+    previewResult !== undefined && previewResult.key === previewKey && !previewResult.failed
+      ? previewResult.data
+      : undefined;
+  const currentPreviewFailed =
+    previewResult !== undefined && previewResult.key === previewKey && previewResult.failed;
+  const currentPreviewRetrying = previewRetryKey === previewKey;
 
   const overlap = isApiError(failure, "INACTIVITY_OVERLAP");
 
@@ -189,7 +190,7 @@ export function InactivityPage({
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (context === undefined) return;
+    if (context === undefined || currentPreviewFailed) return;
     const normalizedTo = toMonth === "" ? null : toMonth;
     const normalizedComments = comments.trim() === "" ? null : comments.trim();
     const request = {
@@ -225,7 +226,12 @@ export function InactivityPage({
       navigate("/perfil");
     } catch (cause) {
       setFailure(cause);
-      if (isApiError(cause, "STALE_VERSION") || isApiError(cause, "INACTIVITY_OVERLAP")) {
+      if (isApiError(cause, "STALE_VERSION")) {
+        rebaseAfterStale.current = true;
+        setReload((value) => value + 1);
+      } else if (isApiError(cause, "INACTIVITY_OVERLAP")) {
+        const details = cause.details as Record<string, unknown>;
+        setSelectedPeriodId(typeof details.periodId === "string" ? details.periodId : null);
         setReload((value) => value + 1);
       }
     } finally {
@@ -287,7 +293,9 @@ export function InactivityPage({
               disabled={live !== undefined && !live.editable.fromMonth}
               id="inactivity-from"
               onChange={(event) => {
-                setFromMonth(event.currentTarget.value);
+                const next = event.currentTarget.value;
+                setFromMonth(next);
+                setToMonth((current) => (current !== "" && current < next ? "" : current));
               }}
               value={fromMonth}
             >
@@ -299,22 +307,28 @@ export function InactivityPage({
             </Select>
           </FormField>
           <FormField id="inactivity-to" label={t("inactivity:form.toMonth")}>
-            <Select
+            <Input
               disabled={live !== undefined && !live.editable.toMonth}
               id="inactivity-to"
+              min={fromMonth}
               onChange={(event) => {
                 setToMonth(event.currentTarget.value);
               }}
+              type="month"
               value={toMonth}
-            >
-              <option value="">{t("inactivity:form.openEnd")}</option>
-              {ends.map((month) => (
-                <option key={month} value={month}>
-                  {formats.formatMonthTitle(month)}
-                </option>
-              ))}
-            </Select>
+            />
           </FormField>
+          <label className="lifecycle-open-end" htmlFor="inactivity-open-end">
+            <Checkbox
+              checked={toMonth === ""}
+              disabled={live !== undefined && !live.editable.toMonth}
+              id="inactivity-open-end"
+              onChange={(event) => {
+                setToMonth(event.currentTarget.checked ? "" : fromMonth);
+              }}
+            />
+            <span>{t("inactivity:form.openEnd")}</span>
+          </label>
           <FormField id="inactivity-comments" label={t("inactivity:form.comments")}>
             <Textarea
               disabled={live?.state === "ACTIVE"}
@@ -345,17 +359,52 @@ export function InactivityPage({
           <p className="lifecycle-note">
             {t("inactivity:endNote", { deadlineDay: context.deadlineDay })}
           </p>
-          {(preview?.bookingsInside.total ?? 0) > 0 ? (
+          {(currentPreview?.bookingsInside.total ?? 0) > 0 ? (
             <p className="lifecycle-warning">
-              {t("inactivity:form.bookingsInside", { count: preview?.bookingsInside.total ?? 0 })}
+              {t("inactivity:form.bookingsInside", {
+                count: currentPreview?.bookingsInside.total ?? 0,
+              })}
             </p>
+          ) : null}
+          {currentPreviewFailed ? (
+            <div className="lifecycle-error" role="alert">
+              <p>{t("inactivity:loadError")}</p>
+              <Button
+                disabled={currentPreviewRetrying}
+                loading={currentPreviewRetrying}
+                onClick={() => {
+                  setPreviewRetryKey(previewKey);
+                  setPreviewReload((value) => value + 1);
+                }}
+                type="button"
+                variant="secondary"
+              >
+                {t("billing:retry")}
+              </Button>
+            </div>
           ) : null}
           {message === undefined ? null : (
             <p className="lifecycle-error" role="alert">
-              {overlap ? <a href="/inactivitat">{message}</a> : message}
+              {overlap ? (
+                <a
+                  href={
+                    selectedPeriodId === null
+                      ? "/inactivitat"
+                      : `/inactivitat?periodId=${encodeURIComponent(selectedPeriodId)}`
+                  }
+                >
+                  {message}
+                </a>
+              ) : (
+                message
+              )}
             </p>
           )}
-          <Button disabled={pending} loading={pending} type="submit">
+          <Button
+            disabled={pending || currentPreviewFailed || currentPreviewRetrying}
+            loading={pending}
+            type="submit"
+          >
             {live === undefined ? t("inactivity:form.submit") : t("inactivity:form.modify")}
           </Button>
           {live?.editable.cancel === true ? (

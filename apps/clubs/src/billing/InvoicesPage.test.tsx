@@ -37,7 +37,7 @@ describe("T-12-26 member receipts", () => {
       vi.fn(() => null),
     );
     vi.spyOn(URL, "createObjectURL").mockImplementation((blob) => {
-      openedBlob = blob;
+      openedBlob = blob as Blob;
       return "blob:test";
     });
     server.events.on("request:start", ({ request }) =>
@@ -52,14 +52,14 @@ describe("T-12-26 member receipts", () => {
       expect(requested).toContain(
         "/api/v1/me/invoices/51000000-0000-4000-8000-000000000001/document",
       );
-      expect(openedBlob).toBeInstanceOf(Blob);
+      expect(openedBlob).toBeDefined();
     });
     const pdf = new TextDecoder().decode(await openedBlob?.arrayBuffer());
     expect(openedBlob?.type).toBe("application/pdf");
     expect(pdf).toContain("%PDF-1.4");
     expect(pdf).toContain("(Rebut 2026-0912)");
     expect(pdf).toContain("(Quota setembre 2026)");
-    expect(pdf.trimEnd()).toEndWith("%%EOF");
+    expect(pdf.trimEnd().endsWith("%%EOF")).toBe(true);
   });
 
   it("shows a fully refunded PAID receipt as refunded in its detail", async () => {
@@ -110,7 +110,7 @@ describe("T-12-26 member receipts", () => {
       />,
       { scenario: "memberCardInvalid" },
     );
-    expect(await screen.findByText(/No hem pogut cobrar/u)).toBeVisible();
+    expect(await screen.findByText("Targeta no vàlida")).toBeVisible();
     fireEvent.click(screen.getByRole("button", { name: "Actualitza la targeta" }));
     await waitFor(() => {
       expect(posted).toContain("/api/v1/me/card-setup");
@@ -227,12 +227,16 @@ describe("T-12-26 member receipts", () => {
       http.get("*/api/v1/me/invoices/:id", moduleOff),
     );
     const list = await renderE8(<InvoicesPage client={e8Client()} />);
-    expect(await screen.findByText("Aquest mòdul està desactivat.")).toBeVisible();
+    expect(
+      await screen.findByRole("heading", { name: "Aquest mòdul està desactivat." }),
+    ).toBeVisible();
     expect(screen.queryByText("Encara no tens cap rebut.")).not.toBeInTheDocument();
     list.unmount();
 
     await renderE8(<InvoicesPage client={e8Client()} invoiceId="receipt-off" />);
-    expect(await screen.findByText("Aquest mòdul està desactivat.")).toBeVisible();
+    expect(
+      await screen.findByRole("heading", { name: "Aquest mòdul està desactivat." }),
+    ).toBeVisible();
   });
 
   it("hides the profile receipt row when BILLING is off", async () => {

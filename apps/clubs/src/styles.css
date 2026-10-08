@@ -752,6 +752,12 @@ select {
   padding: var(--ah-space-4);
 }
 
+.lifecycle-open-end {
+  align-items: center;
+  display: flex;
+  gap: var(--ah-space-2);
+}
+
 .lifecycle-fee {
   align-items: stretch;
   flex-direction: column;
@@ -790,6 +796,15 @@ select {
 .lifecycle-error {
   border: 1px solid var(--ah-color-danger);
   color: var(--ah-color-danger);
+}
+
+div.lifecycle-error {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+div.lifecycle-error p {
+  margin: 0;
 }
 
 .leave-nps {

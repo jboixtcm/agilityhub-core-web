@@ -552,7 +552,7 @@ describe("T-01-21 profile access rows and impersonation", () => {
     await profileClient.login("laura@example.test", "secret-password");
     window.history.pushState(null, "", "/perfil");
     await renderApplication(profileClient);
-    expect(await screen.findByText(/No hem pogut cobrar/u)).toBeVisible();
+    expect(await screen.findByText("Targeta no vàlida")).toBeVisible();
 
     cleanup();
     mockScenario("memberCardInvalid");
@@ -560,7 +560,7 @@ describe("T-01-21 profile access rows and impersonation", () => {
     await receiptsClient.login("laura@example.test", "secret-password");
     window.history.pushState(null, "", "/rebuts");
     await renderApplication(receiptsClient);
-    expect(await screen.findByText(/No hem pogut cobrar/u)).toBeVisible();
+    expect(await screen.findByText("Targeta no vàlida")).toBeVisible();
   });
 
   it("E8-W02 round 3 #5 hides member lifecycle links and reads for an instructor-only profile", async () => {

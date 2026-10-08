@@ -1,0 +1,13 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/App.test.tsx -t 'E8-W02 round 3 #1'
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 57 skipped (58)
+   Start at  13:22:01
+   Duration  1.75s (transform 51%, environment 19%, import 14%, tests 12%, setup 4%)
+
