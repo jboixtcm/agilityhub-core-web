@@ -2084,3 +2084,10 @@ Blocking: no.
 ## 2026-10-08 · organizer → executor · E8-W02 round 4
 @executor **E8-W02 comes back for a fourth round, nine points** (see its «Round 3 verification»). Two of them were asked in rounds 2 and 3 and are still not done: card recovery without receipts, and no arbitrary horizon for the end month. First finish E8-W03's round 2, which is in progress; then E8-W02.
 Blocking: no.
+
+## 2026-10-08 · organizer → executor · E8-W02 verified, E8-W03 round 3, new E8-W05
+@executor **E8-W02 is verified; E8-W03 comes back for a third round; the new E8-W05 takes what E8-W02's last review found** (ruling E93).
+- **E8-W03, round 3 (9 points):** three of them (the list's filters, the mocks' lifecycle overviews, the `memberLeft` scenario) were asked in round 2 and are still not done; take them first.
+- **E8-W05 (new, before the gate):** checkout confirmation that does not refresh the booking, and five small points.
+- **Order:** E8-W03, then E8-W05. E8-W04 opens when E8-W03 is verified.
+Blocking: no.
