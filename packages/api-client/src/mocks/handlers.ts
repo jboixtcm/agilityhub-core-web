@@ -2946,20 +2946,24 @@ export const handlers = [
       return apiError("NOT_FOUND", "Member not found", 404);
     }
     const body = (await request.json()) as PaymentMethodRequest;
-    const iban = body.sepa?.iban?.replaceAll(" ", "");
-    if (body.type === "SEPA_DD" && (iban === undefined || !/^ES\d{22}$/u.test(iban))) {
+    const submittedIban = body.sepa?.iban;
+    const iban = typeof submittedIban === "string" ? submittedIban.replaceAll(" ", "") : submittedIban;
+    if (body.type === "SEPA_DD" && typeof iban === "string" && !/^ES\d{22}$/u.test(iban)) {
       return apiError("INVALID_IBAN", "Invalid IBAN", 400);
     }
-    const paymentMethod = {
-      ...(body.sepa?.holderName === undefined ? {} : { holderName: body.sepa.holderName }),
-      ...(body.type === "SEPA_DD" && iban !== undefined
-        ? { maskedAccount: `···· ···· ···· ···· ${iban.slice(-4)}` }
-        : {}),
-      type: body.type,
-    };
-    censusRecordState.memberOverview.member.paymentMethod = paymentMethod;
-    censusRecordState.memberOverview.member.accountMissing = false;
-    return HttpResponse.json(paymentMethod);
+    const normalizedBody: PaymentMethodRequest = body.type === "SEPA_DD"
+      ? {
+          ...body,
+          sepa: {
+            ...body.sepa,
+            ...(iban === undefined ? {} : { iban }),
+          },
+        }
+      : body;
+    const saved = signupPaymentMethod(censusRecordState.memberOverview.member, normalizedBody);
+    censusRecordState.memberOverview.member.paymentMethod = saved.paymentMethod;
+    censusRecordState.memberOverview.member.accountMissing = saved.accountMissing;
+    return HttpResponse.json(saved.paymentMethod);
   }),
   http.post("*/api/v1/members/:id/booking-block", async ({ params, request }) => {
     const erased = erasedMemberRefusal(String(params.id));

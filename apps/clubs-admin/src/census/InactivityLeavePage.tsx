@@ -1,5 +1,5 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
-import { fmtDateTime, fmtPlainDate, normalizeLocale, useClubFormats } from "@agilityhub/i18n";
+import { clubLocalInstant, fmtDateTime, fmtPlainDate, normalizeLocale, useClubFormats } from "@agilityhub/i18n";
 import { Badge, Button, Tabs, UniversalList, type UniversalFilter, type UniversalFilterOperator, type UniversalFilterValue, type UniversalListColumn, type UniversalListFilterColumn, type UniversalListLabels, type UniversalListSavedView, type UniversalListState, useBranding } from "@agilityhub/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -139,32 +139,41 @@ function useQueueFilterRows<Row extends InactivityRow | LeaveRow>(client: ApiCli
   const [rows, setRows] = useState<Row[]>([]);
   useEffect(() => {
     if (!enabled) return undefined;
-    let current = true;
-    const query = kind === "inactivity"
-      ? {
-          fields: "member,fromMonth,toMonth,state,origin,requestedAt",
-          page: 0,
-          size: 1000 as const,
-          sort: ["fromMonth,asc"],
-        }
-      : {
-          fields: "member,requestedDate,effectiveDate,reasonKey,source,state,nps,requestedAt",
-          page: 0,
-          size: 1000 as const,
-          sort: ["requestedAt,asc"],
-        };
-    const result = kind === "inactivity"
-      ? client.GET("/inactivity-periods", { params: { query } })
-      : client.GET("/leave-requests", { params: { query } });
-    void result.then(
-      (response) => {
-        if (current) setRows((response.data?.items ?? []) as Row[]);
-      },
-      () => {
-        if (current) setRows([]);
-      },
-    );
-    return () => { current = false; };
+    const requestState = { current: true };
+    const readPage = async (page: number) => {
+      const query = kind === "inactivity"
+        ? {
+            fields: "member,fromMonth,toMonth,state,origin,requestedAt",
+            page,
+            size: 1000 as const,
+            sort: ["fromMonth,asc"],
+          }
+        : {
+            fields: "member,requestedDate,effectiveDate,reasonKey,source,state,nps,requestedAt",
+            page,
+            size: 1000 as const,
+            sort: ["requestedAt,asc"],
+          };
+      const response = kind === "inactivity"
+        ? await client.GET("/inactivity-periods", { params: { query } })
+        : await client.GET("/leave-requests", { params: { query } });
+      return {
+        items: (response.data?.items ?? []) as Row[],
+        totalPages: response.data?.totalPages ?? 0,
+      };
+    };
+    void (async () => {
+      try {
+        const first = await readPage(0);
+        const remaining = await Promise.all(
+          Array.from({ length: Math.max(0, first.totalPages - 1) }, (_, index) => readPage(index + 1)),
+        );
+        if (requestState.current) setRows([first, ...remaining].flatMap((page) => page.items));
+      } catch {
+        if (requestState.current) setRows([]);
+      }
+    })();
+    return () => { requestState.current = false; };
   }, [client, enabled, kind]);
   return rows;
 }
@@ -413,13 +422,29 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
       render: (row) => row.nps ?? "—",
     },
   ];
+  const plainRange = {
+    endLabel: t("admin-census:inactivityLeavePage.to"),
+    startLabel: t("admin-census:inactivityLeavePage.from"),
+    toValue: (start: string, end: string) => `${start},${end}`,
+  };
+  const monthRange = { ...plainRange, inputType: "month" as const };
+  const dateRange = { ...plainRange, inputType: "date" as const };
+  const instantRange = {
+    ...dateRange,
+    toValue: (start: string, end: string) => {
+      const startInstant = clubLocalInstant(`${start}T00:00`, branding.timeZone);
+      const endInstant = clubLocalInstant(`${end}T23:59`, branding.timeZone) + 59_999;
+      return `${new Date(startInstant).toISOString()},${new Date(endInstant).toISOString()}`;
+    },
+  };
+  const numberRange = { ...plainRange, inputType: "number" as const };
   const inactivityFilters: UniversalListFilterColumn[] = [
     { key: "memberId", label: t("admin-census:inactivityLeavePage.member"), type: "relation" },
     { key: "state", label: t("admin-census:inactivityLeavePage.state"), type: "enum" },
-    { key: "fromMonth", label: t("admin-census:inactivityLeavePage.from"), type: "date" },
-    { key: "toMonth", label: t("admin-census:inactivityLeavePage.to"), type: "date" },
+    { key: "fromMonth", label: t("admin-census:inactivityLeavePage.from"), range: monthRange, type: "date" },
+    { key: "toMonth", label: t("admin-census:inactivityLeavePage.to"), range: monthRange, type: "date" },
     { key: "origin", label: t("admin-census:inactivityLeavePage.origin"), type: "enum" },
-    { key: "requestedAt", label: t("admin-census:inactivityLeavePage.requestedAt"), type: "date" },
+    { key: "requestedAt", label: t("admin-census:inactivityLeavePage.requestedAt"), range: instantRange, type: "date" },
   ];
   const leaveFilters: UniversalListFilterColumn[] = [
     { key: "memberId", label: t("admin-census:inactivityLeavePage.member"), type: "relation" },
@@ -428,16 +453,67 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
     {
       key: "requestedDate",
       label: t("admin-census:inactivityLeavePage.requestedDate"),
+      range: dateRange,
       type: "date",
     },
     {
       key: "effectiveDate",
       label: t("admin-census:inactivityLeavePage.effectiveDate"),
+      range: dateRange,
       type: "date",
     },
     { key: "reasonKey", label: t("admin-census:inactivityLeavePage.reason"), type: "enum" },
-    { key: "nps", label: t("admin-census:inactivityLeavePage.nps"), type: "number" },
+    { key: "nps", label: t("admin-census:inactivityLeavePage.nps"), range: numberRange, type: "number" },
   ];
+  const memberLabels = new Map(
+    [...inactivityFilterRows, ...leaveFilterRows].flatMap((row) =>
+      row.member === undefined ? [] : [[row.member.id, row.member.fullName] as const],
+    ),
+  );
+  const formatAppliedValue = (
+    filter: components["schemas"]["Filter"],
+    kind: "inactivity" | "leave",
+  ): string => {
+    if (filter.op === "exists") return operators.exists;
+    const raw = filterValue(filter.value);
+    const formatOne = (value: string): string => {
+      if (filter.field === "memberId") return memberLabels.get(value) ?? "—";
+      if (filter.field === "state") {
+        return kind === "inactivity"
+          ? t(`enums:inactivityState.${value}`)
+          : t(`enums:leaveRequestState.${value}`);
+      }
+      if (filter.field === "origin") return t(`enums:origin.${value}`);
+      if (filter.field === "source") return t(`enums:leaveSource.${value}`);
+      if (filter.field === "reasonKey") return leaveReasons.get(value) ?? "—";
+      if (filter.field === "fromMonth" || filter.field === "toMonth") {
+        return formats.formatMonthTitle(value);
+      }
+      if (filter.field === "requestedAt") {
+        return value.includes("T")
+          ? fmtDateTime(value, locale, branding.timeZone)
+          : fmtPlainDate(value, locale, "short");
+      }
+      if (filter.field === "requestedDate" || filter.field === "effectiveDate") {
+        return fmtPlainDate(value, locale, "short");
+      }
+      return value;
+    };
+    const values = raw.split(",");
+    return values.map(formatOne).join(filter.op === "between" ? " – " : ", ");
+  };
+  const localizedAppliedFilters = (
+    filters: readonly components["schemas"]["Filter"][],
+    kind: "inactivity" | "leave",
+    columns: readonly UniversalListFilterColumn[],
+  ) => filters.map((filter) => ({
+    field: filter.field,
+    fieldLabel: columns.find((column) => column.key === filter.field)?.label ??
+      t("admin-census:inactivityLeavePage.filterField"),
+    operator: filter.op,
+    value: filterValue(filter.value),
+    valueLabel: formatAppliedValue(filter, kind),
+  }));
 
   return (
     <section>
@@ -455,15 +531,11 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
                 {
                   content: (
                     <UniversalList
-                      appliedFilters={(inactivity.data?.appliedFilters ?? []).map((filter) => ({
-                        field: filter.field,
-                        fieldLabel: t(`admin-census:inactivityLeavePage.${filter.field}`, {
-                          defaultValue: filter.field,
-                        }),
-                        operator: filter.op,
-                      value: filterValue(filter.value),
-                      valueLabel: filterValue(filter.value),
-                      }))}
+                      appliedFilters={localizedAppliedFilters(
+                        inactivity.data?.appliedFilters ?? [],
+                        "inactivity",
+                        inactivityFilters,
+                      )}
                       caption={t("admin-census:inactivityLeavePage.inactivity.label")}
                       columns={inactivityColumns}
                       {...(inactivityError === undefined ? {} : { error: inactivityError })}
@@ -498,15 +570,11 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
           {
             content: (
               <UniversalList
-                appliedFilters={(leave.data?.appliedFilters ?? []).map((filter) => ({
-                  field: filter.field,
-                  fieldLabel: t(`admin-census:inactivityLeavePage.${filter.field}`, {
-                    defaultValue: filter.field,
-                  }),
-                  operator: filter.op,
-                  value: filterValue(filter.value),
-                  valueLabel: filterValue(filter.value),
-                }))}
+                appliedFilters={localizedAppliedFilters(
+                  leave.data?.appliedFilters ?? [],
+                  "leave",
+                  leaveFilters,
+                )}
                 caption={t("admin-census:inactivityLeavePage.leave.label")}
                 columns={leaveColumns}
                 {...(leaveError === undefined ? {} : { error: leaveError })}

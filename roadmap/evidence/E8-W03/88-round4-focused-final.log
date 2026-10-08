@@ -1,0 +1,13 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/App.test.tsx src/census/MemberInactivityDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/census/InactivityLeavePage.test.tsx src/census/CensusListPage.test.tsx src/census/CensusRecordPage.test.tsx src/census/MemberPlanDrawer.test.tsx src/census/MemberPaymentMethodDrawer.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  8 passed (8)
+      Tests  107 passed (107)
+   Start at  17:45:57
+   Duration  5.06s (tests 41%, transform 25%, environment 19%, import 10%, setup 6%)
+

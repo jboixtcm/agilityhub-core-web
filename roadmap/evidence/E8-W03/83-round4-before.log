@@ -1,0 +1,2421 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/census/InactivityLeavePage.test.tsx src/census/CensusRecordPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/CensusRecordPage.test.tsx (31 tests | 1 failed) 2590ms
+   ❯ T-03-39 D10 member record (7)
+     × E8-W03 round 4 #2 keeps accountMissing after a holder-only partial SEPA edit 3ms
+ ❯ src/census/InactivityLeavePage.test.tsx (18 tests | 9 failed) 51141ms
+   ❯ T-13-31 inactivity and leave queues (18)
+     × E8-W03 round 4 #1 encodes month/date/NPS ranges and a valueless exists filter 53ms
+     × E8-W03 round 4 #8 follows totalPages when loading whole-queue filter values 10044ms
+     × E8-W03 round 4 #9 localizes applied enum values in ca 10011ms
+     × E8-W03 round 4 #9 localizes applied enum values in es 10022ms
+     × E8-W03 round 4 #9 localizes applied enum values in en 10035ms
+     × E8-W03 round 4 #9 uses the localized field and month in applied-filter chips 10012ms
+     × E8-W03 round 4 #3/#5/#6 keeps lifecycle detail, D10 and D5 projections consistent 127ms
+     × E8-W03 round 4 #4 applies inactivityNoCancelBookings to the approval mutation 4ms
+     × E8-W03 round 4 #7 compares NPS numerically and applies queue sorting before pagination 4ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > T-03-39 D10 member record > E8-W03 round 4 #2 keeps accountMissing after a holder-only partial SEPA edit
+ApiError: Invalid IBAN
+ ❯ Function.fromResponse ../../packages/api-client/src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse ../../packages/api-client/src/client.ts:142:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:219:28
+ ❯ src/census/CensusRecordPage.test.tsx:192:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > E8-W03 round 4 #1 encodes month/date/NPS ranges and a valueless exists filter
+AssertionError: expected [] to have a length of 2 but got +0
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ src/census/InactivityLeavePage.test.tsx:143:27
+    141|       });
+    142|       const monthInputs = [...filterMenu.querySelectorAll<HTMLInputEle…
+    143|       expect(monthInputs).toHaveLength(2);
+       |                           ^
+    144|       const monthStart = monthInputs[0];
+    145|       const monthEnd = monthInputs[1];
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > E8-W03 round 4 #8 follows totalPages when loading whole-queue filter values
+TestingLibraryElementError: Unable to find role="option" and name `/Dídac Vila Costa/u`
+
+Ignored nodes: comments, script, style
+[36m<select>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"61000000-0000-4000-8000-000000000001"[39m
+  [36m>[39m
+    [0mLaura Serra Vidal (1)[0m
+  [36m</option>[39m
+[36m</select>[39m
+
+Ignored nodes: comments, script, style
+[36m<select>[39m
+  [36m<option[39m
+    [33mvalue[39m=[32m"61000000-0000-4000-8000-000000000001"[39m
+  [36m>[39m
+    [0mLaura Serra Vidal (1)[0m
+  [36m</option>[39m
+[36m</select>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/InactivityLeavePage.test.tsx:218:32
+    216|     fireEvent.click(within(filterMenu).getByText(/^Filtra/u, { selecto…
+    217|     const value = within(filterMenu).getByRole("combobox", { name: "Va…
+    218|     expect(await within(value).findByRole("option", { name: new RegExp…
+       |                                ^
+    219|   });
+    220|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > E8-W03 round 4 #9 localizes applied enum values in ca
+TestingLibraryElementError: Unable to find an element with the text: /sol·licitat, aprovat, actiu/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section>[39m
+      [36m<h1>[39m
+        [0mInactivitats i baixes[0m
+      [36m</h1>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Inactivitats i baixes"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_6_-panel-inactivity"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_6_-tab-inactivity"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mInactivitats[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_6_-panel-leave"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_6_-tab-leave"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mBaixes[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_6_-tab-inactivity"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_6_-panel-inactivity"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Inactivitats"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mCerca inactivitats[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Cerca inactivitats"[39m
+                  [33mplaceholder[39m=[32m"Cerca inactivitats"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mFiltra (1): Estat = «REQUESTED,APPROVED,ACTIVE»[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mEstat = «REQUESTED,APPROVED,ACTIVE»[0m
+                    [36m</span>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Elimina el filtre Estat"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mCamp[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"memberId"[39m
+                      [36m>[39m
+                        [0mAbonat[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"state"[39m
+                      [36m>[39m
+                        [0mEstat[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"fromMonth"[39m
+                      [36m>[39m
+                        [0mDes de[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"toMonth"[39m
+                      [36m>[39m
+                        [0mFins a[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"origin"[39m
+                      [36m>[39m
+                        [0mOrigen[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"requestedAt"[39m
+                      [36m>[39m
+                        [0mSol·licitat el[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mOperador[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mva...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section>[39m
+      [36m<h1>[39m
+        [0mInactivitats i baixes[0m
+      [36m</h1>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Inactivitats i baixes"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_6_-panel-inactivity"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_6_-tab-inactivity"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mInactivitats[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_6_-panel-leave"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_6_-tab-leave"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mBaixes[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_6_-tab-inactivity"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_6_-panel-inactivity"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Inactivitats"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mCerca inactivitats[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Cerca inactivitats"[39m
+                  [33mplaceholder[39m=[32m"Cerca inactivitats"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mFiltra (1): Estat = «REQUESTED,APPROVED,ACTIVE»[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mEstat = «REQUESTED,APPROVED,ACTIVE»[0m
+                    [36m</span>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Elimina el filtre Estat"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mCamp[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"memberId"[39m
+                      [36m>[39m
+                        [0mAbonat[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"state"[39m
+                      [36m>[39m
+                        [0mEstat[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"fromMonth"[39m
+                      [36m>[39m
+                        [0mDes de[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"toMonth"[39m
+                      [36m>[39m
+                        [0mFins a[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"origin"[39m
+                      [36m>[39m
+                        [0mOrigen[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"requestedAt"[39m
+                      [36m>[39m
+                        [0mSol·licitat el[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mOperador[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mva...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/InactivityLeavePage.test.tsx:228:25
+    226|     const trilingual = { ...branding, locales: ["ca", "es", "en"] };
+    227|     render(await provider(<InactivityLeavePage client={createApiClient…
+    228|     expect(await screen.findByText(expected, { exact: false })).toBeVi…
+       |                         ^
+    229|     expect(screen.queryByText(/REQUESTED,APPROVED,ACTIVE/u, { exact: f…
+    230|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > E8-W03 round 4 #9 localizes applied enum values in es
+TestingLibraryElementError: Unable to find an element with the text: /solicitado, aprobado, activo/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section>[39m
+      [36m<h1>[39m
+        [0mInactividades y bajas[0m
+      [36m</h1>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Inactividades y bajas"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_7_-panel-inactivity"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_7_-tab-inactivity"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mInactividades[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_7_-panel-leave"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_7_-tab-leave"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mBajas[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_7_-tab-inactivity"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_7_-panel-inactivity"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Inactividades"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mBusca inactividades[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Busca inactividades"[39m
+                  [33mplaceholder[39m=[32m"Busca inactividades"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mFiltra (1): Estado = «REQUESTED,APPROVED,ACTIVE»[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mEstado = «REQUESTED,APPROVED,ACTIVE»[0m
+                    [36m</span>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Elimina el filtro Estado"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mCampo[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"memberId"[39m
+                      [36m>[39m
+                        [0mAbonado[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"state"[39m
+                      [36m>[39m
+                        [0mEstado[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"fromMonth"[39m
+                      [36m>[39m
+                        [0mDesde[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"toMonth"[39m
+                      [36m>[39m
+                        [0mHasta[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"origin"[39m
+                      [36m>[39m
+                        [0mOrigen[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"requestedAt"[39m
+                      [36m>[39m
+                        [0mSolicitado el[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mOperador[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section>[39m
+      [36m<h1>[39m
+        [0mInactividades y bajas[0m
+      [36m</h1>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Inactividades y bajas"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_7_-panel-inactivity"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_7_-tab-inactivity"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mInactividades[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_7_-panel-leave"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_7_-tab-leave"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mBajas[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_7_-tab-inactivity"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_7_-panel-inactivity"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Inactividades"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mBusca inactividades[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Busca inactividades"[39m
+                  [33mplaceholder[39m=[32m"Busca inactividades"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mFiltra (1): Estado = «REQUESTED,APPROVED,ACTIVE»[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mEstado = «REQUESTED,APPROVED,ACTIVE»[0m
+                    [36m</span>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Elimina el filtro Estado"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mCampo[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"memberId"[39m
+                      [36m>[39m
+                        [0mAbonado[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"state"[39m
+                      [36m>[39m
+                        [0mEstado[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"fromMonth"[39m
+                      [36m>[39m
+                        [0mDesde[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"toMonth"[39m
+                      [36m>[39m
+                        [0mHasta[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"origin"[39m
+                      [36m>[39m
+                        [0mOrigen[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"requestedAt"[39m
+                      [36m>[39m
+                        [0mSolicitado el[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mOperador[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/InactivityLeavePage.test.tsx:228:25
+    226|     const trilingual = { ...branding, locales: ["ca", "es", "en"] };
+    227|     render(await provider(<InactivityLeavePage client={createApiClient…
+    228|     expect(await screen.findByText(expected, { exact: false })).toBeVi…
+       |                         ^
+    229|     expect(screen.queryByText(/REQUESTED,APPROVED,ACTIVE/u, { exact: f…
+    230|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > E8-W03 round 4 #9 localizes applied enum values in en
+TestingLibraryElementError: Unable to find an element with the text: /requested, approved, active/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section>[39m
+      [36m<h1>[39m
+        [0mInactivity and leave[0m
+      [36m</h1>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Inactivity and leave"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_8_-panel-inactivity"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_8_-tab-inactivity"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mInactivity[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_8_-panel-leave"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_8_-tab-leave"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mLeave[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_8_-tab-inactivity"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_8_-panel-inactivity"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Inactivity"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mSearch inactivity[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Search inactivity"[39m
+                  [33mplaceholder[39m=[32m"Search inactivity"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mFilter (1): State = «REQUESTED,APPROVED,ACTIVE»[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mState = «REQUESTED,APPROVED,ACTIVE»[0m
+                    [36m</span>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Remove filter State"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mField[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"memberId"[39m
+                      [36m>[39m
+                        [0mMember[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"state"[39m
+                      [36m>[39m
+                        [0mState[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"fromMonth"[39m
+                      [36m>[39m
+                        [0mFrom[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"toMonth"[39m
+                      [36m>[39m
+                        [0mTo[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"origin"[39m
+                      [36m>[39m
+                        [0mOrigin[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"requestedAt"[39m
+                      [36m>[39m
+                        [0mRequested at[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mOperator[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"eq"[3...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section>[39m
+      [36m<h1>[39m
+        [0mInactivity and leave[0m
+      [36m</h1>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Inactivity and leave"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_8_-panel-inactivity"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_8_-tab-inactivity"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mInactivity[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_8_-panel-leave"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_8_-tab-leave"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mLeave[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_8_-tab-inactivity"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_8_-panel-inactivity"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Inactivity"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mSearch inactivity[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Search inactivity"[39m
+                  [33mplaceholder[39m=[32m"Search inactivity"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mFilter (1): State = «REQUESTED,APPROVED,ACTIVE»[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mState = «REQUESTED,APPROVED,ACTIVE»[0m
+                    [36m</span>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Remove filter State"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mField[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"memberId"[39m
+                      [36m>[39m
+                        [0mMember[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"state"[39m
+                      [36m>[39m
+                        [0mState[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"fromMonth"[39m
+                      [36m>[39m
+                        [0mFrom[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"toMonth"[39m
+                      [36m>[39m
+                        [0mTo[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"origin"[39m
+                      [36m>[39m
+                        [0mOrigin[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"requestedAt"[39m
+                      [36m>[39m
+                        [0mRequested at[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mOperator[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"eq"[3...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/InactivityLeavePage.test.tsx:228:25
+    226|     const trilingual = { ...branding, locales: ["ca", "es", "en"] };
+    227|     render(await provider(<InactivityLeavePage client={createApiClient…
+    228|     expect(await screen.findByText(expected, { exact: false })).toBeVi…
+       |                         ^
+    229|     expect(screen.queryByText(/REQUESTED,APPROVED,ACTIVE/u, { exact: f…
+    230|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > E8-W03 round 4 #9 uses the localized field and month in applied-filter chips
+TestingLibraryElementError: Unable to find an element with the text: /Des de = «.*octubre.*2026.*»/iu. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section>[39m
+      [36m<h1>[39m
+        [0mInactivitats i baixes[0m
+      [36m</h1>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Inactivitats i baixes"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_9_-panel-inactivity"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_9_-tab-inactivity"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mInactivitats[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_9_-panel-leave"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_9_-tab-leave"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mBaixes[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_9_-tab-inactivity"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_9_-panel-inactivity"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Inactivitats"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mCerca inactivitats[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Cerca inactivitats"[39m
+                  [33mplaceholder[39m=[32m"Cerca inactivitats"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mFiltra (1): fromMonth = «2026-10»[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mfromMonth = «2026-10»[0m
+                    [36m</span>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Elimina el filtre fromMonth"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mCamp[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"memberId"[39m
+                      [36m>[39m
+                        [0mAbonat[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"state"[39m
+                      [36m>[39m
+                        [0mEstat[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"fromMonth"[39m
+                      [36m>[39m
+                        [0mDes de[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"toMonth"[39m
+                      [36m>[39m
+                        [0mFins a[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"origin"[39m
+                      [36m>[39m
+                        [0mOrigen[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"requestedAt"[39m
+                      [36m>[39m
+                        [0mSol·licitat el[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mOperador[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"eq"[39m
+                      [36m>[39m
+                        [0més[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"ne"[39m
+                      [36m>[39m
+                        [0mno és[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"in"[39m
+                      [36m>[39m
+                        [0mun de[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"nin"[39m
+                      [36m>[39m
+                        [0mcap de[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"exists"[39m
+                      [36m>[39m
+                        [0mexisteix[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mValor[0m
+                    [36m</span>[39m
+                    [36m<select[39m
+                      [33mdisabled[39m=[32m""[39m
+                    [36m/>[39m
+                  [36m</label>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__menu-actions"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                      [33mdisabled[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mAfegeix el filtre[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mNeteja els filtres[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</details>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu"[39m
+              [36m>[39m
+                [36m<summary>[39m
+                  [0mColumnes[0m
+                  [0m [0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<ul[39m
+                    [33mclass[39m=[32m"ah-universal-list__columns"[39m
+                  [36m>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mAbonat[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mDes de[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mFins a[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mEstat[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mOrigen[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mSol·licitat el[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                  [36m</ul>[39m
+                [36m</div>[39m
+              [36m</details>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu"[39m
+              [36m>[39m
+                [36m<summary>[39m
+                  [0mVistes[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel ah-universal-list__views"[39m
+                [36m>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mVistes[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m""[39m
+                      [36m>[39m
+                        [0mSense vista desada[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"view-inactivity-periods-3"[39m
+                      [36m>[39m
+                        [0mPendents d'avui[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mNom de la vista[0m
+                    [36m</span>[39m
+                    [36m<input[39m
+                      [33mmaxlength[39m=[32m"40"[39m
+                      [33mvalue[39m=[32m""[39m
+                    [36m/>[39m
+                  [36m</label>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"ah-universal-list__check-label"[39m
+                  [36m>[39m
+                    [36m<input[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mVista compartida[0m
+                  [36m</label>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"ah-universal-list__check-label"[39m
+                  [36m>[39m
+                    [36m<input[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mdisabled[39m=[32m""[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mVista predeterminada[0m
+                  [36m</label>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__menu-actions"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                      [33mdisabled[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mCrea la vista[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                      [33mdisabled[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mCanvia el nom[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+                      [33mdisabled[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mElimina la vista[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</details>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__table-wrap"[39m
+            [36m>[39m
+              [36m<table>[39m
+                [36m<caption[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mInactivitats[0m
+                [36m</caption>[39m
+                [36m<thead>[39m
+                  [36m<tr>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-label[39m=[32m"Ordena Abonat ascendent"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [0mAbonat[0m
+                      [36m</button>[39m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-label[39m=[32m"Ordena Des de descendent"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [0mDes de[0m
+                        [36m<span[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                        [36m>[39m
+                          [0m↑[0m
+                        [36m</span>[39m
+                      [36m</button>[39m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mFins a[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mOrigen[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-label[39m=[32m"Ordena Sol·licitat el ascendent"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [0mSol·licitat el[0m
+                      [36m</button>[39m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m/>[39m
+                  [36m</tr>[39m
+                [36m</thead>[39m
+                [36m<tbody />[39m
+              [36m</table>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"ah-empty-state"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<h2>[39m
+                  [0mNo hi ha inactivitats[0m
+                [36m</h2>[39m
+                [36m<p>[39m
+                  [0mNo hi ha períodes amb aquests criteris.[0m
+                [36m</p>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mNeteja els filtres[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+            [36m</div>[39m
+            [36m<footer[39m
+              [33mclass[39m=[32m"ah-universal-list__footer"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__bulk"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__pagination"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Pàgina anterior"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+                [36m<span>[39m
+                  [0mPàgina 1 de 1[0m
+                [36m</span>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Pàgina següent"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+                [36m<label>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mFiles per pàgina[0m
+                  [36m</span>[39m
+                  [36m<select[39m
+                    [33maria-label[39m=[32m"Files per pàgina"[39m
+                  [36m>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"20"[39m
+                    [36m>[39m
+                      [0m20 Files per pàgina[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"50"[39m
+                    [36m>[39m
+                      [0m50 Files per pàgina[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"200"[39m
+                    [36m>[39m
+                      [0m200 Files per pàgina[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"1000"[39m
+                    [36m>[39m
+                      [0m1000 Files per pàgina[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+              [36m</div>[39m
+            [36m</footer>[39m
+          [36m</section>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section>[39m
+      [36m<h1>[39m
+        [0mInactivitats i baixes[0m
+      [36m</h1>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Inactivitats i baixes"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_9_-panel-inactivity"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_9_-tab-inactivity"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mInactivitats[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_9_-panel-leave"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_9_-tab-leave"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mBaixes[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_9_-tab-inactivity"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_9_-panel-inactivity"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33maria-label[39m=[32m"Inactivitats"[39m
+            [33mclass[39m=[32m"ah-universal-list"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"ah-universal-list__search"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mCerca inactivitats[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Cerca inactivitats"[39m
+                  [33mplaceholder[39m=[32m"Cerca inactivitats"[39m
+                  [33mtype[39m=[32m"search"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+              [36m>[39m
+                [36m<summary[39m
+                  [33mclass[39m=[32m"ah-universal-list__summary--active"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [0mFiltra (1): fromMonth = «2026-10»[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__active-filter"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mfromMonth = «2026-10»[0m
+                    [36m</span>[39m
+                    [36m<button[39m
+                      [33maria-label[39m=[32m"Elimina el filtre fromMonth"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mCamp[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"memberId"[39m
+                      [36m>[39m
+                        [0mAbonat[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"state"[39m
+                      [36m>[39m
+                        [0mEstat[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"fromMonth"[39m
+                      [36m>[39m
+                        [0mDes de[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"toMonth"[39m
+                      [36m>[39m
+                        [0mFins a[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"origin"[39m
+                      [36m>[39m
+                        [0mOrigen[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"requestedAt"[39m
+                      [36m>[39m
+                        [0mSol·licitat el[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mOperador[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"eq"[39m
+                      [36m>[39m
+                        [0més[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"ne"[39m
+                      [36m>[39m
+                        [0mno és[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"in"[39m
+                      [36m>[39m
+                        [0mun de[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"nin"[39m
+                      [36m>[39m
+                        [0mcap de[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"exists"[39m
+                      [36m>[39m
+                        [0mexisteix[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mValor[0m
+                    [36m</span>[39m
+                    [36m<select[39m
+                      [33mdisabled[39m=[32m""[39m
+                    [36m/>[39m
+                  [36m</label>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__menu-actions"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                      [33mdisabled[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mAfegeix el filtre[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mNeteja els filtres[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</details>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu"[39m
+              [36m>[39m
+                [36m<summary>[39m
+                  [0mColumnes[0m
+                  [0m [0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+                [36m>[39m
+                  [36m<ul[39m
+                    [33mclass[39m=[32m"ah-universal-list__columns"[39m
+                  [36m>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mAbonat[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mDes de[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mFins a[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mEstat[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mOrigen[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                    [36m<li[39m
+                      [33mdraggable[39m=[32m"true"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                      [36m>[39m
+                        [0m↕[0m
+                      [36m</span>[39m
+                      [36m<label>[39m
+                        [36m<input[39m
+                          [33mchecked[39m=[32m""[39m
+                          [33mclass[39m=[32m"ah-checkbox"[39m
+                          [33mtype[39m=[32m"checkbox"[39m
+                        [36m/>[39m
+                        [0mSol·licitat el[0m
+                      [36m</label>[39m
+                    [36m</li>[39m
+                  [36m</ul>[39m
+                [36m</div>[39m
+              [36m</details>[39m
+              [36m<details[39m
+                [33mclass[39m=[32m"ah-universal-list__menu"[39m
+              [36m>[39m
+                [36m<summary>[39m
+                  [0mVistes[0m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                  [36m>[39m
+                    [0m▾[0m
+                  [36m</span>[39m
+                [36m</summary>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-panel ah-universal-list__views"[39m
+                [36m>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mVistes[0m
+                    [36m</span>[39m
+                    [36m<select>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m""[39m
+                      [36m>[39m
+                        [0mSense vista desada[0m
+                      [36m</option>[39m
+                      [36m<option[39m
+                        [33mvalue[39m=[32m"view-inactivity-periods-3"[39m
+                      [36m>[39m
+                        [0mPendents d'avui[0m
+                      [36m</option>[39m
+                    [36m</select>[39m
+                  [36m</label>[39m
+                  [36m<label>[39m
+                    [36m<span>[39m
+                      [0mNom de la vista[0m
+                    [36m</span>[39m
+                    [36m<input[39m
+                      [33mmaxlength[39m=[32m"40"[39m
+                      [33mvalue[39m=[32m""[39m
+                    [36m/>[39m
+                  [36m</label>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"ah-universal-list__check-label"[39m
+                  [36m>[39m
+                    [36m<input[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mVista compartida[0m
+                  [36m</label>[39m
+                  [36m<label[39m
+                    [33mclass[39m=[32m"ah-universal-list__check-label"[39m
+                  [36m>[39m
+                    [36m<input[39m
+                      [33mclass[39m=[32m"ah-checkbox"[39m
+                      [33mdisabled[39m=[32m""[39m
+                      [33mtype[39m=[32m"checkbox"[39m
+                    [36m/>[39m
+                    [0mVista predeterminada[0m
+                  [36m</label>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"ah-universal-list__menu-actions"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                      [33mdisabled[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mCrea la vista[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                      [33mdisabled[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mCanvia el nom[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                    [36m<button[39m
+                      [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+                      [33mdisabled[39m=[32m""[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-button__content"[39m
+                      [36m>[39m
+                        [0mElimina la vista[0m
+                      [36m</span>[39m
+                    [36m</button>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+              [36m</details>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-universal-list__table-wrap"[39m
+            [36m>[39m
+              [36m<table>[39m
+                [36m<caption[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0mInactivitats[0m
+                [36m</caption>[39m
+                [36m<thead>[39m
+                  [36m<tr>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-label[39m=[32m"Ordena Abonat ascendent"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [0mAbonat[0m
+                      [36m</button>[39m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-label[39m=[32m"Ordena Des de descendent"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [0mDes de[0m
+                        [36m<span[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                        [36m>[39m
+                          [0m↑[0m
+                        [36m</span>[39m
+                      [36m</button>[39m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mFins a[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [0mOrigen[0m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-label[39m=[32m"Ordena Sol·licitat el ascendent"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [0mSol·licitat el[0m
+                      [36m</button>[39m
+                    [36m</th>[39m
+                    [36m<th[39m
+                      [33mclass[39m=[32m"ah-universal-list__chevron"[39m
+                      [33mscope[39m=[32m"col"[39m
+                    [36m/>[39m
+                  [36m</tr>[39m
+                [36m</thead>[39m
+                [36m<tbody />[39m
+              [36m</table>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"ah-empty-state"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<h2>[39m
+                  [0mNo hi ha inactivitats[0m
+                [36m</h2>[39m
+                [36m<p>[39m
+                  [0mNo hi ha períodes amb aquests criteris.[0m
+                [36m</p>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mNeteja els filtres[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+            [36m</div>[39m
+            [36m<footer[39m
+              [33mclass[39m=[32m"ah-universal-list__footer"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__bulk"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__pagination"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Pàgina anterior"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+                [36m<span>[39m
+                  [0mPàgina 1 de 1[0m
+                [36m</span>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Pàgina següent"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</button>[39m
+                [36m<label>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mFiles per pàgina[0m
+                  [36m</span>[39m
+                  [36m<select[39m
+                    [33maria-label[39m=[32m"Files per pàgina"[39m
+                  [36m>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"20"[39m
+                    [36m>[39m
+                      [0m20 Files per pàgina[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"50"[39m
+                    [36m>[39m
+                      [0m50 Files per pàgina[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"200"[39m
+                    [36m>[39m
+                      [0m200 Files per pàgina[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"1000"[39m
+                    [36m>[39m
+                      [0m1000 Files per pàgina[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+              [36m</div>[39m
+            [36m</footer>[39m
+          [36m</section>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/InactivityLeavePage.test.tsx:245:25
+    243|     }));
+    244|     render(await provider(<InactivityLeavePage client={createApiClient…
+    245|     expect(await screen.findByText(/Des de = «.*octubre.*2026.*»/iu, {…
+       |                         ^
+    246|     expect(screen.queryByText(/fromMonth/u, { exact: false })).toBeNul…
+    247|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > E8-W03 round 4 #3/#5/#6 keeps lifecycle detail, D10 and D5 projections consistent
+AssertionError: expected [] to include 'Joan Antoni Serra'
+ ❯ src/census/InactivityLeavePage.test.tsx:253:56
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > E8-W03 round 4 #4 applies inactivityNoCancelBookings to the approval mutation
+AssertionError: expected [ { …(3) }, { …(3) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "id": "64000000-0000-4000-8000-000000000001",
++     "sessionDate": "2026-10-12",
++     "type": "CLASS",
++   },
++   {
++     "id": "64000000-0000-4000-8000-000000000002",
++     "sessionDate": "2026-10-14",
++     "type": "TRAINING",
++   },
++ ]
+
+ ❯ src/census/InactivityLeavePage.test.tsx:302:38
+    300|     });
+    301|     expect(period.bookingsInside).toBe(2);
+    302|     expect(period.cancelledBookings).toEqual([]);
+       |                                      ^
+    303|   });
+    304|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+
+ FAIL  src/census/InactivityLeavePage.test.tsx > T-13-31 inactivity and leave queues > E8-W03 round 4 #7 compares NPS numerically and applies queue sorting before pagination
+AssertionError: expected [] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   ObjectContaining {
+-     "nps": 8,
+-   },
+- ]
++ []
+
+ ❯ src/census/InactivityLeavePage.test.tsx:307:29
+    305|   it("E8-W03 round 4 #7 compares NPS numerically and applies queue sor…
+    306|     const leaveRows = await requestJson<components["schemas"]["LeaveRe…
+    307|     expect(leaveRows.items).toEqual(expect.arrayContaining([expect.obj…
+       |                             ^
+    308|
+    309|     const periods = await requestJson<components["schemas"]["Inactivit…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  10 failed | 39 passed (49)
+   Start at  17:36:57
+   Duration  53.11s (tests 94%, transform 3%, environment 2%, import 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/census/InactivityLeavePage.test.tsx src/census/CensusRecordPage.test.tsx`
+Exit status 1

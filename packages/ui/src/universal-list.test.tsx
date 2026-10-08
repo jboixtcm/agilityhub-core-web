@@ -55,6 +55,11 @@ describe("T-03-38 universal list filter builder", () => {
     }
     expect(serializeUniversalFilter(filter)).toBe("fullName:contains:Serra:Vidal");
     expect(parseUniversalFilter("fullName:unknown:value")).toBeUndefined();
+    expect(parseUniversalFilter("toMonth:exists:")).toEqual({
+      field: "toMonth",
+      operator: "exists",
+      value: "",
+    });
   });
 });
 
@@ -241,6 +246,86 @@ describe("E5-W05 round 2 #2 · a range filter with no suggested values (ruling E
       }),
     );
     expect(loadFilterValues.mock.calls.map(([field]) => field)).toEqual(["ringId"]);
+  });
+});
+
+describe("E8-W03 round 4 #1 · operator-specific universal filter values", () => {
+  it("sends both range bounds for between and no value for exists", async () => {
+    const onStateChange = vi.fn();
+    const state: UniversalListState = {
+      columns: ["id"],
+      filters: [],
+      page: 0,
+      q: "",
+      size: 50,
+      sort: [],
+    };
+    render(
+      <UniversalList<Row>
+        appliedFilters={[]}
+        caption="Períodes"
+        columns={[{ key: "id", label: "Id", render: (row) => row.id }]}
+        filterColumns={[
+          {
+            key: "toMonth",
+            label: "Fins a",
+            operators: ["eq", "between", "exists"],
+            range: {
+              endLabel: "Mes final",
+              inputType: "month",
+              startLabel: "Mes inicial",
+              toValue: (start, end) => `${start},${end}`,
+            },
+            type: "date",
+          },
+        ]}
+        labels={listLabels}
+        listKey="operator-value-test"
+        loadFilterValues={() =>
+          Promise.resolve([{ count: 1, label: "Octubre 2026", value: "2026-10" }])
+        }
+        onCreateView={() => Promise.reject(new Error("unused"))}
+        onDeleteView={() => Promise.resolve()}
+        onExport={() => undefined}
+        onRenameView={() => Promise.reject(new Error("unused"))}
+        onRetry={() => undefined}
+        onStateChange={onStateChange}
+        rowKey={(row) => row.id}
+        rows={[{ id: "period-1" }]}
+        savedViews={[]}
+        state={state}
+        totalPages={1}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole("combobox", { name: "Valor" })).toBeEnabled();
+    });
+    fireEvent.change(screen.getByRole("combobox", { name: "Operador" }), {
+      target: { value: "between" },
+    });
+    expect(screen.queryByRole("combobox", { name: "Valor" })).toBeNull();
+    fireEvent.change(screen.getByLabelText("Mes inicial"), { target: { value: "2026-10" } });
+    fireEvent.change(screen.getByLabelText("Mes final"), { target: { value: "2026-12" } });
+    fireEvent.click(screen.getByRole("button", { name: "Afegeix el filtre" }));
+    expect(onStateChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        filters: [{ field: "toMonth", operator: "between", value: "2026-10,2026-12" }],
+      }),
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Operador" }), {
+      target: { value: "exists" },
+    });
+    expect(screen.queryByRole("combobox", { name: "Valor" })).toBeNull();
+    const add = screen.getByRole("button", { name: "Afegeix el filtre" });
+    expect(add).toBeEnabled();
+    fireEvent.click(add);
+    expect(onStateChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        filters: [{ field: "toMonth", operator: "exists", value: "" }],
+      }),
+    );
   });
 });
 

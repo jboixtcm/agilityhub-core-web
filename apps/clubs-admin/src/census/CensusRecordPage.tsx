@@ -1422,7 +1422,11 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
           onChanged={(paymentMethod) => {
             setOverview({
               ...overview,
-              member: { ...member, accountMissing: false, paymentMethod },
+              member: {
+                ...member,
+                accountMissing: paymentMethod.type === "SEPA_DD" && paymentMethod.maskedAccount == null,
+                paymentMethod,
+              },
             });
             setFeedback({ message: t("admin-census:member.feedback.payment"), tone: "success" });
           }}

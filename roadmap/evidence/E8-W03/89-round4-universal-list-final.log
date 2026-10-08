@@ -1,0 +1,13 @@
+
+> @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+> vitest run src/universal-list.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+
+ Test Files  1 passed (1)
+      Tests  11 passed (11)
+   Start at  17:45:57
+   Duration  1.30s (environment 55%, tests 24%, setup 14%, transform 5%, import 1%)
+

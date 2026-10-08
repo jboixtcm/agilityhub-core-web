@@ -1,4 +1,4 @@
-import { createApiClient } from "@agilityhub/api-client";
+import { createApiClient, type components } from "@agilityhub/api-client";
 import { mockScenario, resetMemberBillingState } from "@agilityhub/api-client/mocks";
 import brandingFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
@@ -26,9 +26,20 @@ afterEach(() => {
 });
 afterAll(() => { server.close(); });
 
-async function provider(children: ReactNode, providerBranding: Branding = branding) {
-  const i18n = await createI18n({ branding: providerBranding, browserLanguages: ["ca"], initialNamespaces: ["admin-census", "enums", "errors", "shell"], storage: undefined });
+async function provider(children: ReactNode, providerBranding: Branding = branding, language = "ca") {
+  const i18n = await createI18n({ branding: providerBranding, browserLanguages: [language], initialNamespaces: ["admin-census", "enums", "errors", "shell"], storage: undefined });
   return <I18nextProvider i18n={i18n}><BrandingProvider branding={providerBranding}>{children}</BrandingProvider></I18nextProvider>;
+}
+
+async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const headers = new Headers(init?.headers);
+  headers.set("Content-Type", "application/json");
+  const response = await fetch(`${window.location.origin}/api/v1${path}`, {
+    ...init,
+    headers,
+  });
+  expect(response.ok, `${init?.method ?? "GET"} ${path}`).toBe(true);
+  return response.json() as Promise<T>;
 }
 
 describe("T-13-31 inactivity and leave queues", () => {
@@ -106,6 +117,203 @@ describe("T-13-31 inactivity and leave queues", () => {
     }
     fireEvent.change(leaveField, { target: { value: "memberId" } });
     expect(await within(leaveValue).findByRole("option", { name: /Dídac Vila Costa/u })).toBeInTheDocument();
+  });
+
+  it("E8-W03 round 4 #1 encodes month/date/NPS ranges and a valueless exists filter", async () => {
+    const requests: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      const url = new URL(request.url);
+      if (url.pathname.endsWith("/inactivity-periods") || url.pathname.endsWith("/leave-requests")) {
+        requests.push(...url.searchParams.getAll("filter"));
+      }
+    };
+    server.events.on("request:start", listener);
+    try {
+      render(await provider(<InactivityLeavePage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} />));
+      expect(await screen.findByText("Laura Serra Vidal")).toBeVisible();
+
+      let filterMenu = screen.getByText(/^Filtra/u, { selector: "summary" }).closest("details");
+      if (filterMenu === null) throw new TypeError("Missing inactivity filter menu");
+      fireEvent.click(within(filterMenu).getByText(/^Filtra/u, { selector: "summary" }));
+      fireEvent.change(within(filterMenu).getByRole("combobox", { name: "Camp" }), {
+        target: { value: "fromMonth" },
+      });
+      fireEvent.change(within(filterMenu).getByRole("combobox", { name: "Operador" }), {
+        target: { value: "between" },
+      });
+      const monthInputs = [...filterMenu.querySelectorAll<HTMLInputElement>('input[type="month"]')];
+      expect(monthInputs).toHaveLength(2);
+      const monthStart = monthInputs[0];
+      const monthEnd = monthInputs[1];
+      if (monthStart === undefined || monthEnd === undefined) throw new TypeError("Missing month range inputs");
+      fireEvent.change(monthStart, { target: { value: "2026-08" } });
+      fireEvent.change(monthEnd, { target: { value: "2026-10" } });
+      fireEvent.click(within(filterMenu).getByRole("button", { name: "Afegeix el filtre" }));
+      await waitFor(() => { expect(requests).toContain("fromMonth:between:2026-08,2026-10"); });
+      expect(await screen.findByText("Eva Perez Prunell")).toBeVisible();
+
+      fireEvent.change(within(filterMenu).getByRole("combobox", { name: "Camp" }), {
+        target: { value: "toMonth" },
+      });
+      fireEvent.change(within(filterMenu).getByRole("combobox", { name: "Operador" }), {
+        target: { value: "exists" },
+      });
+      expect(within(filterMenu).queryByRole("combobox", { name: "Valor" })).toBeNull();
+      fireEvent.click(within(filterMenu).getByRole("button", { name: "Afegeix el filtre" }));
+      await waitFor(() => { expect(requests).toContain("toMonth:exists:"); });
+      expect(await screen.findByText("Laura Serra Vidal")).toBeVisible();
+
+      fireEvent.click(screen.getByRole("tab", { name: "Baixes" }));
+      filterMenu = screen.getByText(/^Filtra/u, { selector: "summary" }).closest("details");
+      if (filterMenu === null) throw new TypeError("Missing leave filter menu");
+      fireEvent.click(within(filterMenu).getByText(/^Filtra/u, { selector: "summary" }));
+      fireEvent.change(within(filterMenu).getByRole("combobox", { name: "Camp" }), {
+        target: { value: "nps" },
+      });
+      fireEvent.change(within(filterMenu).getByRole("combobox", { name: "Operador" }), {
+        target: { value: "between" },
+      });
+      const npsInputs = [...filterMenu.querySelectorAll<HTMLInputElement>('input[type="number"]')];
+      expect(npsInputs).toHaveLength(2);
+      const npsStart = npsInputs[0];
+      const npsEnd = npsInputs[1];
+      if (npsStart === undefined || npsEnd === undefined) throw new TypeError("Missing NPS range inputs");
+      fireEvent.change(npsStart, { target: { value: "2" } });
+      fireEvent.change(npsEnd, { target: { value: "10" } });
+      fireEvent.click(within(filterMenu).getByRole("button", { name: "Afegeix el filtre" }));
+      await waitFor(() => { expect(requests).toContain("nps:between:2,10"); });
+      expect(await screen.findByText("Montse Tresserra Casas")).toBeVisible();
+    } finally {
+      server.events.removeListener("request:start", listener);
+    }
+  });
+
+  it("E8-W03 round 4 #8 follows totalPages when loading whole-queue filter values", async () => {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const seed = await client.GET("/inactivity-periods", {
+      params: { query: { fields: "member,fromMonth,toMonth,state,origin,requestedAt", page: 0, size: 1000, sort: ["fromMonth,asc"] } },
+    });
+    const first = seed.data?.items[0];
+    const last = seed.data?.items.at(-1);
+    if (first === undefined || last === undefined) throw new TypeError("Missing inactivity queue fixtures");
+    server.use(http.get("*/api/v1/inactivity-periods", ({ request }) => {
+      const url = new URL(request.url);
+      const filtered = url.searchParams.has("filter");
+      const page = Number(url.searchParams.get("page") ?? 0);
+      const items = filtered ? [first] : page === 0 ? [first] : [last];
+      return HttpResponse.json({
+        appliedFilters: filtered ? [{ field: "state", op: "in", value: "REQUESTED,APPROVED,ACTIVE" }] : [],
+        items,
+        page,
+        size: Number(url.searchParams.get("size") ?? 50),
+        totalItems: filtered ? 1 : 2,
+        totalPages: filtered ? 1 : 2,
+      });
+    }));
+
+    render(await provider(<InactivityLeavePage client={client} />));
+    expect(await screen.findByText(first.member?.fullName ?? "Laura Serra Vidal")).toBeVisible();
+    const filterMenu = screen.getByText(/^Filtra/u, { selector: "summary" }).closest("details");
+    if (filterMenu === null) throw new TypeError("Missing inactivity filter menu");
+    fireEvent.click(within(filterMenu).getByText(/^Filtra/u, { selector: "summary" }));
+    const value = within(filterMenu).getByRole("combobox", { name: "Valor" });
+    expect(await within(value).findByRole("option", { name: new RegExp(last.member?.fullName ?? "Dídac Vila Costa", "u") })).toBeInTheDocument();
+  });
+
+  it.each([
+    ["ca", /sol·licitat, aprovat, actiu/u],
+    ["es", /solicitado, aprobado, activo/u],
+    ["en", /requested, approved, active/u],
+  ])("E8-W03 round 4 #9 localizes applied enum values in %s", async (language, expected) => {
+    const trilingual = { ...branding, locales: ["ca", "es", "en"] };
+    render(await provider(<InactivityLeavePage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} />, trilingual, language));
+    expect((await screen.findAllByText(expected, { exact: false }))[0]).toBeVisible();
+    expect(screen.queryByText(/REQUESTED,APPROVED,ACTIVE/u, { exact: false })).toBeNull();
+  });
+
+  it("E8-W03 round 4 #9 uses the localized field and month in applied-filter chips", async () => {
+    server.use(http.get("*/api/v1/inactivity-periods", ({ request }) => {
+      const url = new URL(request.url);
+      return HttpResponse.json({
+        appliedFilters: [{ field: "fromMonth", op: "eq", value: "2026-10" }],
+        items: [],
+        page: Number(url.searchParams.get("page") ?? 0),
+        size: Number(url.searchParams.get("size") ?? 50),
+        totalItems: 0,
+        totalPages: 0,
+      });
+    }));
+    render(await provider(<InactivityLeavePage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} />));
+    expect((await screen.findAllByText(/Des de = «.*octubre.*2026.*»/iu, { exact: false }))[0]).toBeVisible();
+    expect(screen.queryByText(/fromMonth/u, { exact: false })).toBeNull();
+  });
+
+  it("E8-W03 round 4 #3/#5/#6 keeps lifecycle detail, D10 and D5 projections consistent", async () => {
+    const joanOverview = await requestJson<components["schemas"]["MemberOverview"]>("/members/member-joan/overview");
+    expect(joanOverview.member.displayStatus).toMatchObject({ date: "2026-12-12", kind: "LEAVE_SCHEDULED" });
+    const planned = await requestJson<components["schemas"]["ListPageMemberListItem"]>("/members?page=0&size=50&filter=displayStatus:eq:LEAVE_SCHEDULED&sort=leaveDate,asc&fields=fullName,displayStatus,leaveDate,leaveSource");
+    expect(planned.items.map((item) => item.fullName)).toContain("Joan Antoni Serra");
+    expect(planned.items.map((item) => item.fullName)).not.toContain("Montse Tresserra Casas");
+
+    const periodId = "62000000-0000-4000-8000-000000000002";
+    const november = await requestJson<components["schemas"]["InactivityPeriod"]>(`/inactivity-periods/${periodId}`, {
+      body: JSON.stringify({ toMonth: "2026-11", version: 1 }),
+      method: "PATCH",
+    });
+    expect(november.history).toHaveLength(1);
+    expect(november.history[0]).toMatchObject({ source: "ADMIN", toMonth: "2026-11" });
+    let evaOverview = await requestJson<components["schemas"]["MemberOverview"]>("/members/member-eva/overview");
+    expect(evaOverview.member.displayStatus).toMatchObject({ date: "2026-11-30", kind: "INACTIVE_PERIOD" });
+    let evaList = await requestJson<components["schemas"]["ListPageMemberListItem"]>("/members?page=0&size=50&filter=id:eq:member-eva&fields=fullName,displayStatus,inactivityUntil");
+    expect(evaList.items[0]).toMatchObject({ inactivityUntil: "2026-11-30" });
+
+    const february = await requestJson<components["schemas"]["InactivityPeriod"]>(`/inactivity-periods/${periodId}`, {
+      body: JSON.stringify({ toMonth: "2027-02", version: 2 }),
+      method: "PATCH",
+    });
+    expect(february.history).toHaveLength(2);
+    evaOverview = await requestJson<components["schemas"]["MemberOverview"]>("/members/member-eva/overview");
+    expect(evaOverview.member.displayStatus).toMatchObject({ date: "2027-02-28", kind: "INACTIVE_PERIOD" });
+
+    await requestJson<components["schemas"]["InactivityPeriod"]>(`/inactivity-periods/${periodId}/termination`, {
+      body: JSON.stringify({ toMonth: "2026-11" }),
+      method: "POST",
+    });
+    evaOverview = await requestJson<components["schemas"]["MemberOverview"]>("/members/member-eva/overview");
+    expect(evaOverview.member.displayStatus).toMatchObject({ date: "2026-11-30", kind: "INACTIVE_PERIOD" });
+
+    const created = await requestJson<components["schemas"]["InactivityPeriod"]>("/inactivity-periods", {
+      body: JSON.stringify({ fromMonth: "2026-10", memberId: "member-marc", toMonth: "2026-10" }),
+      method: "POST",
+    });
+    expect(created.state).toBe("ACTIVE");
+    const marcOverview = await requestJson<components["schemas"]["MemberOverview"]>("/members/member-marc/overview");
+    expect(marcOverview.member.displayStatus).toMatchObject({ date: "2026-10-31", kind: "INACTIVE_PERIOD" });
+    evaList = await requestJson<components["schemas"]["ListPageMemberListItem"]>("/members?page=0&size=50&filter=id:eq:member-marc&fields=fullName,displayStatus,inactivityUntil");
+    expect(evaList.items[0]).toMatchObject({ inactivityUntil: "2026-10-31" });
+  });
+
+  it("E8-W03 round 4 #4 applies inactivityNoCancelBookings to the approval mutation", async () => {
+    mockScenario("inactivityNoCancelBookings");
+    resetMemberBillingState();
+    const period = await requestJson<components["schemas"]["InactivityPeriod"]>("/inactivity-periods/62000000-0000-4000-8000-000000000001/decision", {
+      body: JSON.stringify({ decision: "APPROVED" }),
+      method: "POST",
+    });
+    expect(period.bookingsInside).toBe(2);
+    expect(period.cancelledBookings).toEqual([]);
+  });
+
+  it("E8-W03 round 4 #7 compares NPS numerically and applies queue sorting before pagination", async () => {
+    const leaveRows = await requestJson<components["schemas"]["LeaveRequestPage"]>("/leave-requests?page=0&size=50&filter=nps:lt:10&sort=requestedDate,asc&fields=member,nps,requestedDate");
+    expect(leaveRows.items).toEqual(expect.arrayContaining([expect.objectContaining({ nps: 8 })]));
+
+    const periods = await requestJson<components["schemas"]["InactivityPeriodPage"]>("/inactivity-periods?page=0&size=50&sort=fromMonth,asc&fields=member,fromMonth");
+    const months = periods.items
+      .map((item) => item.fromMonth)
+      .filter((month): month is string => month !== undefined);
+    expect(months).toEqual([...months].sort((left, right) => left.localeCompare(right)));
+    expect(months[0]).toBe("2026-08");
   });
 
   it("E8-W03 round 2 #8 resolves period to its member and navigates to that exact drawer", async () => {

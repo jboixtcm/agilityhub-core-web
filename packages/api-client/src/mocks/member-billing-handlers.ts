@@ -22,6 +22,18 @@ type DirectLeaveRequest = components["schemas"]["DirectLeaveRequest"];
 type ReactivationRequest = components["schemas"]["ReactivationRequest"];
 type PlanChangeRequest = components["schemas"]["MemberPlanChangeRequest"];
 
+const MOCK_NOW = "2026-10-05T10:00:00Z";
+const MOCK_CURRENT_MONTH = "2026-10";
+
+function monthEnd(month: string): string {
+  const match = /^(\d{4})-(\d{2})$/u.exec(month);
+  if (match === null) throw new TypeError(`Invalid lifecycle month: ${month}`);
+  const year = Number(match[1]);
+  const monthNumber = Number(match[2]);
+  const lastDay = new Date(Date.UTC(year, monthNumber, 0)).getUTCDate();
+  return `${month}-${String(lastDay).padStart(2, "0")}`;
+}
+
 function normalizeOverviewInvoiceStatus(status: string): components["schemas"]["InvoiceStatus"] {
   switch (status) {
     case "FAILED":
@@ -178,7 +190,7 @@ function createLifecycleOverviews(): Map<string, components["schemas"]["MemberOv
         ? leaveDate === null
           ? { kind: "ACTIVE", label: "alta" }
           : { date: leaveDate, kind: "LEAVE_SCHEDULED", label: `baixa prevista ${leaveDate}` }
-        : { date: activePeriod.toMonth == null ? null : `${activePeriod.toMonth}-31`, kind: "INACTIVE_PERIOD", label: "inactiva" },
+        : { date: activePeriod.toMonth == null ? null : monthEnd(activePeriod.toMonth), kind: "INACTIVE_PERIOD", label: "inactiva" },
       fullName: lifecycleMember.fullName,
       id: lifecycleMember.id,
       leaveDate,
@@ -239,6 +251,43 @@ function syncLifecycleProjections(value: string): void {
     request.member.leaveDate = member.leaveDate ?? null;
     request.member.status = member.status;
   }
+}
+
+function recomputeLifecycleMember(value: string): void {
+  const id = lifecycleMemberId(value);
+  const activePeriod = adminPeriods.find(
+    (period) => period.member.id === id && period.state === "ACTIVE",
+  );
+  const plannedLeave = adminLeaves.find(
+    (request) => request.member.id === id && request.state === "APPROVED",
+  );
+  const leaveDate = plannedLeave?.decision?.effectiveDate ?? plannedLeave?.member.leaveDate ?? null;
+  const lifecycle = lifecycleOverviews.get(id);
+  const targets = [lifecycle?.member];
+  if (id === lifecycleMembers[0].id) targets.push(censusRecordState.memberOverview.member);
+  for (const member of targets) {
+    if (member === undefined || member.status === "LEFT") continue;
+    member.leaveDate = leaveDate;
+    if (leaveDate !== null) {
+      member.displayStatus = {
+        date: leaveDate,
+        kind: "LEAVE_SCHEDULED",
+        label: `baixa prevista ${leaveDate}`,
+      };
+      member.status = "ACTIVE";
+    } else if (activePeriod !== undefined) {
+      member.displayStatus = {
+        date: activePeriod.toMonth == null ? null : monthEnd(activePeriod.toMonth),
+        kind: "INACTIVE_PERIOD",
+        label: "inactiva",
+      };
+      member.status = "INACTIVE";
+    } else {
+      member.displayStatus = { kind: "ACTIVE", label: "alta" };
+      member.status = "ACTIVE";
+    }
+  }
+  syncLifecycleProjections(id);
 }
 
 function updateLifecycleMember(value: string, update: (member: components["schemas"]["Member"]) => void): void {
@@ -309,19 +358,35 @@ function queueFilters(url: URL): QueueFilter[] | undefined {
 }
 
 function queueFilterMatches(rawValue: string | number | null | undefined, filter: QueueFilter): boolean {
-  if (filter.op === "exists") return (rawValue !== null && rawValue !== undefined) === (filter.value === "true");
+  if (filter.op === "exists") return rawValue !== null && rawValue !== undefined;
   if (rawValue === null || rawValue === undefined) return false;
-  const value = String(rawValue);
   const choices = filter.value.split(",");
+  if (typeof rawValue === "number") {
+    const compared = choices.map(Number);
+    if (compared.some((choice) => !Number.isFinite(choice))) return false;
+    switch (filter.op) {
+      case "eq": return rawValue === compared[0];
+      case "ne": return rawValue !== compared[0];
+      case "in": return compared.includes(rawValue);
+      case "nin": return !compared.includes(rawValue);
+      case "lt": return compared[0] !== undefined && rawValue < compared[0];
+      case "lte": return compared[0] !== undefined && rawValue <= compared[0];
+      case "gt": return compared[0] !== undefined && rawValue > compared[0];
+      case "gte": return compared[0] !== undefined && rawValue >= compared[0];
+      case "between": return compared[0] !== undefined && compared[1] !== undefined && rawValue >= compared[0] && rawValue <= compared[1];
+      default: return false;
+    }
+  }
+  const value = rawValue;
   switch (filter.op) {
-    case "eq": return value === filter.value;
-    case "ne": return value !== filter.value;
+    case "eq": return value === choices[0];
+    case "ne": return value !== choices[0];
     case "in": return choices.includes(value);
     case "nin": return !choices.includes(value);
-    case "lt": return value < filter.value;
-    case "lte": return value <= filter.value;
-    case "gt": return value > filter.value;
-    case "gte": return value >= filter.value;
+    case "lt": return choices[0] !== undefined && value < choices[0];
+    case "lte": return choices[0] !== undefined && value <= choices[0];
+    case "gt": return choices[0] !== undefined && value > choices[0];
+    case "gte": return choices[0] !== undefined && value >= choices[0];
     case "between": return choices[0] !== undefined && choices[1] !== undefined && value >= choices[0] && value <= choices[1];
     default: return false;
   }
@@ -348,6 +413,7 @@ function leaveFilterValue(item: components["schemas"]["LeaveRequest"], field: st
     case "effectiveDate": return item.decision?.effectiveDate;
     case "reasonKey": return item.reasonKey;
     case "nps": return item.nps;
+    case "requestedAt": return item.requestedAt;
     default: return undefined;
   }
 }
@@ -355,6 +421,51 @@ function leaveFilterValue(item: components["schemas"]["LeaveRequest"], field: st
 function filterQueue<Row>(items: readonly Row[], filters: readonly QueueFilter[], valueOf: (item: Row, field: string) => string | number | null | undefined, allowedFields: readonly string[]): Row[] | undefined {
   if (filters.some((filter) => !allowedFields.includes(filter.field))) return undefined;
   return items.filter((item) => filters.every((filter) => queueFilterMatches(valueOf(item, filter.field), filter)));
+}
+
+function sortQueue<Row>(
+  items: readonly Row[],
+  sorts: readonly string[],
+  valueOf: (item: Row, field: string) => string | number | null | undefined,
+  allowedFields: readonly string[],
+): Row[] | undefined {
+  const parsed = sorts.map((sort) => {
+    const [field, direction, ...rest] = sort.split(",");
+    return field === undefined || direction === undefined || rest.length > 0 ||
+      !allowedFields.includes(field) || (direction !== "asc" && direction !== "desc")
+      ? undefined
+      : { direction, field };
+  });
+  if (parsed.some((sort) => sort === undefined)) return undefined;
+  return [...items].sort((left, right) => {
+    for (const sort of parsed) {
+      if (sort === undefined) continue;
+      const leftValue = valueOf(left, sort.field);
+      const rightValue = valueOf(right, sort.field);
+      const compared = leftValue == null
+        ? rightValue == null ? 0 : 1
+        : rightValue == null
+          ? -1
+          : typeof leftValue === "number" && typeof rightValue === "number"
+            ? leftValue - rightValue
+            : String(leftValue).localeCompare(String(rightValue));
+      if (compared !== 0) return sort.direction === "asc" ? compared : -compared;
+    }
+    return 0;
+  });
+}
+
+function inactivitySortValue(item: components["schemas"]["InactivityPeriod"], field: string) {
+  return field === "memberLastName" ? item.member.fullName : inactivityFilterValue(item, field);
+}
+
+function leaveSortValue(item: components["schemas"]["LeaveRequest"], field: string) {
+  return leaveFilterValue(item, field);
+}
+
+function cancelBookingsOnApproval(): boolean {
+  return currentMockScenario().lifecycle !== "inactivityNoCancelBookings" &&
+    findParameter("inactivity.cancelBookingsOnApproval")?.value !== false;
 }
 
 export const memberBillingHandlers = [
@@ -372,9 +483,11 @@ export const memberBillingHandlers = [
     const normalizedFilters = filters.map((filter) => filter.field === "memberId" ? { ...filter, value: filter.value.split(",").map(lifecycleMemberId).join(",") } : filter);
     const filtered = filterQueue(adminPeriods, normalizedFilters, inactivityFilterValue, ["memberId", "state", "fromMonth", "toMonth", "origin", "requestedAt"]);
     if (filtered === undefined) return error("INVALID_FILTER", 400);
+    const sorted = sortQueue(filtered, url.searchParams.getAll("sort"), inactivitySortValue, ["fromMonth", "requestedAt", "memberLastName"]);
+    if (sorted === undefined) return error("INVALID_SORT", 400);
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 20);
-    const items = filtered.slice(page * size, (page + 1) * size).map((item) => ({
+    const items = sorted.slice(page * size, (page + 1) * size).map((item) => ({
       comments: item.comments,
       decision: item.decision,
       feeSnapshot: item.feeSnapshot,
@@ -384,15 +497,15 @@ export const memberBillingHandlers = [
       origin: item.origin,
       requestedAt: item.requestedAt,
       state: item.state,
-      toMonth: item.toMonth,
+      toMonth: item.toMonth ?? null,
     }));
     return HttpResponse.json({
       appliedFilters: filters.map((filter) => ({ field: filter.field, op: filter.op, value: filter.value })),
       items,
       page,
       size,
-      totalItems: filtered.length,
-      totalPages: Math.ceil(filtered.length / size),
+      totalItems: sorted.length,
+      totalPages: Math.ceil(sorted.length / size),
     });
   }),
   http.get("*/api/v1/inactivity-periods/:id", ({ params }) => {
@@ -416,7 +529,7 @@ export const memberBillingHandlers = [
       cancelledBookings: [],
       comments: body.comments ?? null,
       decision: {
-        at: "2026-10-05T10:00:00Z",
+        at: MOCK_NOW,
         byAccountId: "63000000-0000-4000-8000-000000000099",
         deadlineOverridden: body.overrideDeadline === true,
         decision: "APPROVED",
@@ -438,13 +551,15 @@ export const memberBillingHandlers = [
         ...(member.memberNumber === undefined ? {} : { memberNumber: member.memberNumber }),
       },
       origin: "BACKOFFICE",
-      requestedAt: "2026-10-05T10:00:00Z",
+      requestedAt: MOCK_NOW,
       requestedBy: { accountId: "63000000-0000-4000-8000-000000000099", impersonatedMemberId: null },
-      state: "APPROVED",
+      ...(body.fromMonth <= MOCK_CURRENT_MONTH ? { startedAt: MOCK_NOW } : {}),
+      state: body.fromMonth <= MOCK_CURRENT_MONTH ? "ACTIVE" : "APPROVED",
       toMonth: body.toMonth ?? null,
       version: 1,
     };
     adminPeriods = [created, ...adminPeriods];
+    recomputeLifecycleMember(normalizedMemberId);
     return HttpResponse.json(created, { status: 201 });
   }),
   http.patch("*/api/v1/inactivity-periods/:id", async ({ params, request }) => {
@@ -452,7 +567,21 @@ export const memberBillingHandlers = [
     const item = adminPeriods.find((period) => period.id === String(params.id));
     if (item === undefined) return error("NOT_FOUND", 404);
     if (item.version !== body.version) return error("STALE_VERSION", 409);
-    Object.assign(item, body, { version: item.version + 1 });
+    if (body.fromMonth !== undefined) item.fromMonth = body.fromMonth;
+    if ("toMonth" in body) item.toMonth = body.toMonth ?? null;
+    if ("comments" in body) item.comments = body.comments ?? null;
+    if (body.overrideDeadline === true && item.decision !== null && item.decision !== undefined) {
+      item.decision.deadlineOverridden = true;
+    }
+    item.history.push({
+      at: MOCK_NOW,
+      byAccountId: "63000000-0000-4000-8000-000000000099",
+      fromMonth: item.fromMonth,
+      source: "ADMIN",
+      toMonth: item.toMonth ?? null,
+    });
+    item.version += 1;
+    recomputeLifecycleMember(item.member.id);
     return HttpResponse.json(item);
   }),
   http.post("*/api/v1/inactivity-periods/:id/decision", async ({ params, request }) => {
@@ -460,9 +589,9 @@ export const memberBillingHandlers = [
     const item = adminPeriods.find((period) => period.id === String(params.id));
     if (item === undefined) return error("NOT_FOUND", 404);
     if (item.state !== "REQUESTED") return error("INACTIVITY_INVALID_STATE", 409);
-    item.state = body.decision === "APPROVED" ? (item.fromMonth <= "2026-10" ? "ACTIVE" : "APPROVED") : "DENIED";
+    item.state = body.decision === "APPROVED" ? (item.fromMonth <= MOCK_CURRENT_MONTH ? "ACTIVE" : "APPROVED") : "DENIED";
     item.decision = {
-      at: "2026-10-05T10:00:00Z",
+      at: MOCK_NOW,
       byAccountId: "63000000-0000-4000-8000-000000000099",
       deadlineOverridden: false,
       decision: body.decision,
@@ -473,21 +602,16 @@ export const memberBillingHandlers = [
         ? { firstMonth: { amountMinor: 2000, currency: "EUR" }, followingMonths: { amountMinor: 1000, currency: "EUR" } }
         : null;
       item.bookingsInside ??= 2;
-      const cancelOnApproval = findParameter("inactivity.cancelBookingsOnApproval")?.value !== false;
-      item.cancelledBookings = cancelOnApproval
+      item.cancelledBookings = cancelBookingsOnApproval()
         ? [
             { id: "64000000-0000-4000-8000-000000000001", sessionDate: "2026-10-12", type: "CLASS" },
             { id: "64000000-0000-4000-8000-000000000002", sessionDate: "2026-10-14", type: "TRAINING" },
           ]
         : [];
-      updateLifecycleMember(item.member.id, (member) => {
-        member.displayStatus = item.state === "ACTIVE"
-          ? { date: item.toMonth == null ? null : `${item.toMonth}-31`, kind: "INACTIVE_PERIOD", label: "inactiva" }
-          : { kind: "ACTIVE", label: "alta" };
-        if (item.state === "ACTIVE") member.status = "INACTIVE";
-      });
+      if (item.state === "ACTIVE") item.startedAt = MOCK_NOW;
     }
     item.version += 1;
+    recomputeLifecycleMember(item.member.id);
     return HttpResponse.json(item);
   }),
   http.post("*/api/v1/inactivity-periods/:id/termination", async ({ params, request }) => {
@@ -495,20 +619,17 @@ export const memberBillingHandlers = [
     if (item === undefined) return error("NOT_FOUND", 404);
     const body = (await request.json()) as components["schemas"]["TerminationRequest"];
     item.toMonth = body.toMonth;
-    if (body.toMonth < "2026-10") {
+    if (body.toMonth < MOCK_CURRENT_MONTH) {
       item.state = "FINISHED";
       item.finishReason = "ADMIN";
-      item.finishedAt = "2026-10-05T10:00:00Z";
-      updateLifecycleMember(item.member.id, (member) => {
-        member.displayStatus = { kind: "ACTIVE", label: "alta" };
-        member.status = "ACTIVE";
-      });
+      item.finishedAt = MOCK_NOW;
     } else {
       item.state = "ACTIVE";
       item.finishReason = null;
       item.finishedAt = null;
     }
     item.version += 1;
+    recomputeLifecycleMember(item.member.id);
     return HttpResponse.json(item);
   }),
   http.post("*/api/v1/inactivity-periods/:id/cancellation", ({ params }) => {
@@ -516,9 +637,10 @@ export const memberBillingHandlers = [
     if (item === undefined) return error("NOT_FOUND", 404);
     item.state = "CANCELLED";
     item.cancelReason = "WITHDRAWN";
-    item.cancelledAt = "2026-10-05T10:00:00Z";
+    item.cancelledAt = MOCK_NOW;
     item.cancelledBy = "ADMIN";
     item.version += 1;
+    recomputeLifecycleMember(item.member.id);
     return HttpResponse.json(item);
   }),
   http.get("*/api/v1/leave-requests", ({ request }) => {
@@ -526,11 +648,13 @@ export const memberBillingHandlers = [
     const filters = queueFilters(url);
     if (filters === undefined) return error("INVALID_FILTER", 400);
     const normalizedFilters = filters.map((filter) => filter.field === "memberId" ? { ...filter, value: filter.value.split(",").map(lifecycleMemberId).join(",") } : filter);
-    const filtered = filterQueue(adminLeaves, normalizedFilters, leaveFilterValue, ["memberId", "state", "source", "requestedDate", "effectiveDate", "reasonKey", "nps"]);
+    const filtered = filterQueue(adminLeaves, normalizedFilters, leaveFilterValue, ["memberId", "state", "source", "requestedAt", "requestedDate", "effectiveDate", "reasonKey", "nps"]);
     if (filtered === undefined) return error("INVALID_FILTER", 400);
+    const sorted = sortQueue(filtered, url.searchParams.getAll("sort"), leaveSortValue, ["requestedAt", "requestedDate", "effectiveDate"]);
+    if (sorted === undefined) return error("INVALID_SORT", 400);
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 20);
-    const items = filtered.slice(page * size, (page + 1) * size).map((item) => ({
+    const items = sorted.slice(page * size, (page + 1) * size).map((item) => ({
       comment: item.comment,
       effectiveDate: item.decision?.effectiveDate,
       id: item.id,
@@ -547,8 +671,8 @@ export const memberBillingHandlers = [
       items,
       page,
       size,
-      totalItems: filtered.length,
-      totalPages: Math.ceil(filtered.length / size),
+      totalItems: sorted.length,
+      totalPages: Math.ceil(sorted.length / size),
     });
   }),
   http.get("*/api/v1/leave-requests/:id", ({ params }) => {

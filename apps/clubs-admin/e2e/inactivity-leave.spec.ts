@@ -118,7 +118,7 @@ test.describe("E8-W03 D10 lifecycle drawers", () => {
       .getByRole("combobox", { name: "Vistes" })
       .selectOption({ label: "Baixes previstes" });
     await expect(page.getByRole("columnheader", { name: "Origen de la baixa" })).toBeVisible();
-    await expect(page.getByRole("link", { exact: true, name: "Montse Tresserra Casas" })).toBeVisible();
+    await expect(page.getByRole("link", { exact: true, name: "Joan Antoni Serra" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Elimina la vista" })).toHaveCount(0);
     await capture(page, "D5-baixes-previstes-1280.png");
   });

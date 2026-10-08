@@ -186,6 +186,31 @@ describe("T-03-39 D10 member record", () => {
     expect(await within(drawer).findByText("Període obert")).toBeVisible();
     expect(within(drawer).getByText("actiu", { exact: true })).toBeVisible();
   });
+
+  it("E8-W03 round 4 #2 keeps accountMissing after a holder-only partial SEPA edit", async () => {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const cleared = await client.PATCH("/members/{id}/payment-method", {
+      body: { sepa: { holderName: "Laura Serra Vidal", iban: null }, type: "SEPA_DD" },
+      params: { path: { id: "member-laura" } },
+    });
+    expect(cleared.data?.maskedAccount ?? null).toBeNull();
+
+    await renderRecord("member");
+    expect(await screen.findByText("Compte no informat")).toBeVisible();
+    const row = screen.getByText("Pagament", { selector: "dt" }).closest<HTMLElement>(
+      ".census-record__data-row",
+    );
+    if (row === null) throw new TypeError("Missing payment row");
+    fireEvent.click(within(row).getByRole("button", { name: "Edita" }));
+    const drawer = screen.getByRole("dialog", { name: "Mètode de pagament" });
+    fireEvent.change(within(drawer).getByLabelText("Titular del compte"), {
+      target: { value: "Laura S. Vidal" },
+    });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+
+    expect(await screen.findByText("El mètode de pagament s'ha actualitzat.")).toBeVisible();
+    expect(screen.getByText("Compte no informat")).toBeVisible();
+  });
 });
 
 describe("T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the api's launchUrl", () => {

@@ -87,8 +87,10 @@ export interface UniversalListColumn<Row> {
  */
 export interface UniversalFilterRange {
   endLabel: string;
+  /** Defaults to `date`; lifecycle queues also use whole months and numeric NPS bounds. */
+  inputType?: "date" | "month" | "number";
   startLabel: string;
-  /** The filter's value from both `YYYY-MM-DD` ends, the start not after the end. */
+  /** The filter's value from both ends, with the start not after the end. */
   toValue: (start: string, end: string) => string;
 }
 
@@ -253,7 +255,7 @@ export function parseUniversalFilter(value: string): UniversalFilter | undefined
   const field = value.slice(0, firstSeparator);
   const operator = value.slice(firstSeparator + 1, secondSeparator);
   const filterValue = value.slice(secondSeparator + 1);
-  if (!isFilterOperator(operator) || filterValue === "") {
+  if (!isFilterOperator(operator) || (filterValue === "" && operator !== "exists")) {
     return undefined;
   }
   return { field, operator, value: filterValue };
@@ -372,19 +374,29 @@ export function UniversalList<Row>({
   const [filterValue, setFilterValue] = useState("");
   const [filterValues, setFilterValues] = useState<UniversalFilterValue[]>([]);
   const [filterValuesLoading, setFilterValuesLoading] = useState(
-    firstFilterColumn !== undefined && firstFilterColumn.range === undefined,
+    firstFilterColumn !== undefined &&
+      initialOperator !== "exists" &&
+      !(initialOperator === "between" && firstFilterColumn.range !== undefined),
   );
   const range = selectedFilterColumn?.range;
-  const rangeField = range !== undefined;
+  const rangeActive = filterOperator === "between" && range !== undefined;
+  const valueRequired = filterOperator !== "exists";
+  const suggestedValueActive = valueRequired && !rangeActive;
   const [rangeStart, setRangeStart] = useState("");
   const [rangeEnd, setRangeEnd] = useState("");
+  const rangeOrdered = range?.inputType === "number"
+    ? Number(rangeStart) <= Number(rangeEnd)
+    : rangeStart <= rangeEnd;
   // What [Afegeix el filtre] adds: the chosen value, or both ends of a range in order.
   const pendingValue =
-    range === undefined
+    !valueRequired
+      ? ""
+      : !rangeActive
       ? filterValue
-      : rangeStart !== "" && rangeEnd !== "" && rangeStart <= rangeEnd
+      : rangeStart !== "" && rangeEnd !== "" && rangeOrdered
         ? range.toValue(rangeStart, rangeEnd)
         : "";
+  const canAddFilter = filterField !== "" && (!valueRequired || pendingValue !== "");
   const [searchValue, setSearchValue] = useState(state.q);
   const [ownSelected, setOwnSelected] = useState<Set<string>>(new Set());
   const selected = controlledSelected ?? ownSelected;
@@ -424,8 +436,8 @@ export function UniversalList<Row>({
   }, [onStateChange, searchValue, state]);
 
   useEffect(() => {
-    // A range offers no suggested values: its field is never asked for.
-    if (filterField === "" || rangeField) {
+    // A range and `exists` have their own operator-specific input, so neither asks for values.
+    if (filterField === "" || !suggestedValueActive) {
       return undefined;
     }
     let current = true;
@@ -448,7 +460,7 @@ export function UniversalList<Row>({
     return () => {
       current = false;
     };
-  }, [filterField, loadFilterValues, rangeField]);
+  }, [filterField, loadFilterValues, suggestedValueActive]);
 
   const visibleColumns = useMemo(
     () =>
@@ -492,13 +504,16 @@ export function UniversalList<Row>({
       (definition === undefined ? "eq" : UNIVERSAL_FILTER_OPERATORS[definition.type][0]);
     setFilterField(field);
     setFilterOperator(operator);
-    setFilterValuesLoading(definition?.range === undefined);
+    setFilterValue("");
+    setFilterValuesLoading(
+      operator !== "exists" && !(operator === "between" && definition?.range !== undefined),
+    );
     setRangeStart("");
     setRangeEnd("");
   };
 
   const addFilter = () => {
-    if (filterField === "" || pendingValue === "") {
+    if (!canAddFilter) {
       return;
     }
     const withoutField = state.filters.filter((filter) => filter.field !== filterField);
@@ -664,7 +679,14 @@ export function UniversalList<Row>({
               <select
                 onChange={(event) => {
                   if (isFilterOperator(event.currentTarget.value)) {
-                    setFilterOperator(event.currentTarget.value);
+                    const operator = event.currentTarget.value;
+                    setFilterOperator(operator);
+                    setFilterValue("");
+                    setRangeStart("");
+                    setRangeEnd("");
+                    setFilterValuesLoading(
+                      operator !== "exists" && !(operator === "between" && range !== undefined),
+                    );
                   }
                 }}
                 value={filterOperator}
@@ -681,7 +703,7 @@ export function UniversalList<Row>({
                 ))}
               </select>
             </label>
-            {range === undefined ? (
+            {!valueRequired ? null : !rangeActive ? (
               <label>
                 <span>{labels.filterValue}</span>
                 <select
@@ -712,7 +734,7 @@ export function UniversalList<Row>({
                     onChange={(event) => {
                       setRangeStart(event.currentTarget.value);
                     }}
-                    type="date"
+                    type={range.inputType ?? "date"}
                     value={rangeStart}
                   />
                 </label>
@@ -723,14 +745,14 @@ export function UniversalList<Row>({
                     onChange={(event) => {
                       setRangeEnd(event.currentTarget.value);
                     }}
-                    type="date"
+                    type={range.inputType ?? "date"}
                     value={rangeEnd}
                   />
                 </label>
               </>
             )}
             <div className="ah-universal-list__menu-actions">
-              <Button disabled={pendingValue === ""} onClick={addFilter}>
+              <Button disabled={!canAddFilter} onClick={addFilter}>
                 {labels.addFilter}
               </Button>
               <Button
