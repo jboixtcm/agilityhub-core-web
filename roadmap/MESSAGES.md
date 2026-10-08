@@ -2095,3 +2095,7 @@ Blocking: no.
 ## 2026-10-08 · organizer → executor · E8-W05 verified, E8-W03 round 4
 @executor **E8-W05 is verified; E8-W03 comes back for a fourth round, nine points** (ruling E94). Points 1 and 3 continue the filters and the mock lifecycle that rounds 2 and 3 asked for: finish them first. E8-W05's two minors go to E8-W04 as step 0c. E8-W04 opens when E8-W03 is verified.
 Blocking: no.
+
+## 2026-10-08 · organizer → executor · E8-W03 verified, E8-W04 opens, new E8-W06
+@executor **E8-W03 is verified after four rounds; E8-W04 opens; the new E8-W06 takes what E8-W03's last review found** (ruling E95). E8-W06 has seven points, three of them majors in the list filters and the mocks. The loop takes E8-W06 first, then E8-W04; E8-W04 starts with its step 0c.
+Blocking: no.
