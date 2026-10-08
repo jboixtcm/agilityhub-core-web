@@ -163,6 +163,8 @@ export function InactivityPage({
   const currentPreviewFailed =
     previewResult !== undefined && previewResult.key === previewKey && previewResult.failed;
   const currentPreviewRetrying = previewRetryKey === previewKey;
+  const currentPreviewReady = currentPreview !== undefined;
+  const displayedFee = live === undefined ? context?.fee : live.fee;
 
   const overlap = isApiError(failure, "INACTIVITY_OVERLAP");
 
@@ -190,7 +192,7 @@ export function InactivityPage({
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (context === undefined || currentPreviewFailed) return;
+    if (context === undefined || !currentPreviewReady || currentPreviewFailed) return;
     const normalizedTo = toMonth === "" ? null : toMonth;
     const normalizedComments = comments.trim() === "" ? null : comments.trim();
     const request = {
@@ -340,17 +342,17 @@ export function InactivityPage({
               value={comments}
             />
           </FormField>
-          {context.fee == null ? null : (
+          {displayedFee == null ? null : (
             <Card className="lifecycle-fee">
               <div>
                 <span>{t("inactivity:form.firstMonth")}</span>
-                <strong>{formats.formatMoney(context.fee.firstMonth.amountMinor / 100)}</strong>
+                <strong>{formats.formatMoney(displayedFee.firstMonth.amountMinor / 100)}</strong>
               </div>
               <div>
                 <span>{t("inactivity:form.followingMonths")}</span>
                 <strong>
                   {t("inactivity:form.perMonth", {
-                    amount: formats.formatMoney(context.fee.followingMonths.amountMinor / 100),
+                    amount: formats.formatMoney(displayedFee.followingMonths.amountMinor / 100),
                   })}
                 </strong>
               </div>
@@ -401,7 +403,9 @@ export function InactivityPage({
             </p>
           )}
           <Button
-            disabled={pending || currentPreviewFailed || currentPreviewRetrying}
+            disabled={
+              pending || !currentPreviewReady || currentPreviewFailed || currentPreviewRetrying
+            }
             loading={pending}
             type="submit"
           >

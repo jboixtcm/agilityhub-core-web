@@ -155,6 +155,28 @@ function matchesPath(pathname: string, pattern: string): boolean {
   return new RegExp(`^${expression}/?$`).test(pathname);
 }
 
+function BookingCheckoutRoute({ bookingId, client }: { bookingId: string; client: ApiClient }) {
+  const [bookingRefresh, setBookingRefresh] = useState(0);
+  return (
+    <>
+      <CheckoutReturn
+        client={client}
+        onPaid={() => {
+          setBookingRefresh((current) => current + 1);
+        }}
+        onRetry={() => {
+          window.location.assign("/reservar");
+        }}
+      />
+      <BookingDetailPage
+        bookingId={bookingId}
+        client={client}
+        refresh={bookingRefresh}
+      />
+    </>
+  );
+}
+
 function currentRoute(pathname: string): RouteDefinition | undefined {
   const exact = MOBILE_ROUTES.find(
     (route) => !route.path.includes("*") && matchesPath(pathname, route.path),
@@ -1691,19 +1713,11 @@ function AppContent({
       </RequireAuth>
     ) : route.path === "/reserves/:id" ? (
       <RequireAuth>
-        <>
-          <CheckoutReturn
-            client={apiClient}
-            onRetry={() => {
-              window.location.assign("/reservar");
-            }}
-          />
-          <BookingDetailPage
-            bookingId={safeDecode(pathname.split("/")[2] ?? "")}
-            client={apiClient}
-            key={pathname}
-          />
-        </>
+        <BookingCheckoutRoute
+          bookingId={safeDecode(pathname.split("/")[2] ?? "")}
+          client={apiClient}
+          key={pathname}
+        />
       </RequireAuth>
     ) : route.path === "/espera/:id" ? (
       <RequireAuth>

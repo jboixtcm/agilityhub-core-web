@@ -1,0 +1,13 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/inactivity/InactivityPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  15:54:35
+   Duration  6.25s (tests 83%, transform 8%, environment 4%, import 4%, setup 1%)
+

@@ -160,12 +160,12 @@ export function useBookableClasses(client: ApiClient, dogId: string | null) {
   return useLoader(load);
 }
 
-export function useBooking(client: ApiClient, id: string) {
+export function useBooking(client: ApiClient, id: string, refresh?: unknown) {
   const load = useCallback(
     async () => required((await client.GET("/bookings/{id}", { params: { path: { id } } })).data),
     [client, id],
   );
-  return useLoader(load);
+  return useLoader(load, refresh);
 }
 
 export function useWaitlistEntry(client: ApiClient, id: string) {

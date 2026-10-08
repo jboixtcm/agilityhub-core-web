@@ -527,6 +527,7 @@ function MemberSummary({
   onChange,
   onErased,
   onFeedback,
+  onReload,
   setDialog,
 }: {
   client: ApiClient;
@@ -536,6 +537,7 @@ function MemberSummary({
   onChange: (overview: MemberOverview) => void;
   onErased: () => void;
   onFeedback: (feedback: Feedback) => void;
+  onReload: () => void;
   overview: MemberOverview;
   setDialog: (dialog: MemberDialog) => void;
 }) {
@@ -823,6 +825,9 @@ function MemberSummary({
             client={client}
             dogs={overview.dogs}
             memberId={member.id}
+            onPackAdjusted={() => {
+              onReload();
+            }}
             readOnly={erased}
           />
         ) : null}
@@ -1335,6 +1340,9 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
                 onChange={setOverview}
                 onErased={onErased}
                 onFeedback={setFeedback}
+                onReload={() => {
+                  setReload((value) => value + 1);
+                }}
                 overview={overview}
                 setDialog={setMemberDialog}
               />

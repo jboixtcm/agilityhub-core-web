@@ -70,6 +70,7 @@ let upfront = structuredClone(initialUpfront);
 const checkoutReads = new Map<string, number>();
 
 interface PersistedMemberLifecycle {
+  inactivityCreated: boolean;
   inactivityPeriods: ContextPeriods;
   leaveRequests: LeaveRequests;
 }
@@ -101,7 +102,10 @@ function restoreMemberLifecycle(): void {
     const parsed = JSON.parse(stored) as Partial<PersistedMemberLifecycle>;
     if (Array.isArray(parsed.inactivityPeriods)) {
       inactivity.periods = structuredClone(parsed.inactivityPeriods);
-      memberCreatedInactivity = inactivity.periods.length > 0;
+      memberCreatedInactivity =
+        typeof parsed.inactivityCreated === "boolean"
+          ? parsed.inactivityCreated
+          : inactivity.periods.length > 0;
     }
     if (Array.isArray(parsed.leaveRequests)) {
       leave.requests = structuredClone(parsed.leaveRequests);
@@ -115,6 +119,7 @@ function persistMemberLifecycle(): void {
   memberLifecycleStorage()?.setItem(
     memberLifecycleStorageKey(),
     JSON.stringify({
+      inactivityCreated: memberCreatedInactivity,
       inactivityPeriods: inactivity.periods,
       leaveRequests: leave.requests,
     } satisfies PersistedMemberLifecycle),
@@ -936,6 +941,21 @@ export const memberBillingHandlers = [
     if (body.expiresOn !== undefined) {
       balance.expiresOn = body.expiresOn;
       balance.state = "ACTIVE";
+    }
+    const overviewDogId =
+      balance.dogId === "31000000-0000-4000-8000-000000000002"
+        ? "dog-rock"
+        : balance.dogId;
+    const overviewDog = censusRecordState.memberOverview.dogs.find(
+      (dog) => dog.id === overviewDogId,
+    );
+    if (overviewDog !== undefined) {
+      overviewDog.pack = {
+        expiresOn: balance.expiresOn,
+        id: balance.id,
+        remaining: balance.remaining,
+        total: balance.sessionsTotal,
+      };
     }
     return HttpResponse.json(balance, { status: 201 });
   }),

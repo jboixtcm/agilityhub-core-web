@@ -3,6 +3,7 @@ import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
 
+import { InactivityPage } from "../inactivity/InactivityPage";
 import { e8Branding, e8Client, renderE8, setupE8World } from "../test/e8";
 
 import { LeavePage } from "./LeavePage";
@@ -10,6 +11,20 @@ import { LeavePage } from "./LeavePage";
 setupE8World();
 
 describe("T-13-30 member leave", () => {
+  it("E8-W05 #5: a leave-only reload adds no inactivity period to memberNoInactivity", async () => {
+    const leave = await renderE8(<LeavePage client={e8Client()} />, {
+      scenario: "memberNoInactivity",
+    });
+    fireEvent.change(await screen.findByLabelText("Motiu"), { target: { value: "EXTERNAL" } });
+    fireEvent.click(screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
+    await screen.findByRole("button", { name: "Torna al perfil" });
+    leave.unmount();
+
+    await renderE8(<InactivityPage client={e8Client()} />, { scenario: "memberNoInactivity" });
+    expect(await screen.findByRole("button", { name: "ENVIA LA SOL·LICITUD" })).toBeVisible();
+    expect(screen.queryByRole("button", { name: "MODIFICA" })).not.toBeInTheDocument();
+  });
+
   it("renders the inactivity offer, API reason catalog, NPS 0–10 and full-month help", async () => {
     await renderE8(<LeavePage client={e8Client()} />);
     expect(await screen.findByText(/mantenir la teva entrada vigent/u)).toBeVisible();

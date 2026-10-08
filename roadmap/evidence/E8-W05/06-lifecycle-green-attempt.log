@@ -1,0 +1,2106 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/inactivity/InactivityPage.test.tsx (14 tests | 7 failed) 72253ms
+   ❯ T-13-29 member inactivity (14)
+     × shows the API earliest month for INACTIVITY_DEADLINE_PASSED 10019ms
+     × offers future ends for a historical open ACTIVE period and beyond a long fixed end 10024ms
+     × loads and links to the conflicting live period after INACTIVITY_OVERLAP 10027ms
+     × clears an end month overtaken by a changed start and submits an open end 10025ms
+     × renders a historical ACTIVE period and patches only its changed editable end 10021ms
+     × after 409 STALE_VERSION keeps only the member's own edit on top of the new version 10021ms
+     × keeps a newly created period for the return-to-profile subtitle 10016ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > shows the API earliest month for INACTIVITY_DEADLINE_PASSED
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mPeríode d'inactivitat[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-intro"[39m
+        [36m>[39m
+          [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [0mMes d'inici (obligatori)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [0mMes de finalització (si el saps)[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"inactivity-to"[39m
+            [33mmin[39m=[32m"2026-10"[39m
+            [33mtype[39m=[32m"month"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"lifecycle-open-end"[39m
+          [33mfor[39m=[32m"inactivity-open-end"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mchecked[39m=[32m""[39m
+            [33mclass[39m=[32m"ah-checkbox"[39m
+            [33mid[39m=[32m"inactivity-open-end"[39m
+            [33mtype[39m=[32m"checkbox"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0m— encara no ho sé[0m
+          [36m</span>[39m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-comments"[39m
+          [36m>[39m
+            [0mComentaris[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"inactivity-comments"[39m
+            [33mmaxlength[39m=[32m"500"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-warning"[39m
+        [36m>[39m
+          [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mENVIA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mPeríode d'inactivitat[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-intro"[39m
+        [36m>[39m
+          [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [0mMes d'inici (obligatori)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [0mMes de finalització (si el saps)[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"inactivity-to"[39m
+            [33mmin[39m=[32m"2026-10"[39m
+            [33mtype[39m=[32m"month"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"lifecycle-open-end"[39m
+          [33mfor[39m=[32m"inactivity-open-end"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mchecked[39m=[32m""[39m
+            [33mclass[39m=[32m"ah-checkbox"[39m
+            [33mid[39m=[32m"inactivity-open-end"[39m
+            [33mtype[39m=[32m"checkbox"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0m— encara no ho sé[0m
+          [36m</span>[39m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-comments"[39m
+          [36m>[39m
+            [0mComentaris[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"inactivity-comments"[39m
+            [33mmaxlength[39m=[32m"500"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-warning"[39m
+        [36m>[39m
+          [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mENVIA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/inactivity/InactivityPage.test.tsx:111:25
+    110|           earliestFromMonth: "2026-10",
+    111|           fee: null,
+    112|           periods: [],
+       |    ^
+    113|           proposedFromMonth: "2026-10",
+    114|         }),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > offers future ends for a historical open ACTIVE period and beyond a long fixed end
+AssertionError: expected undefined to deeply equal { toMonth: '2035-01', version: 7 }
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"lifecycle-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"lifecycle-page__bar"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna al perfil"[39m
+            [33mhref[39m=[32m"/perfil"[39m
+          [36m>[39m
+            [0m‹[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mPeríode d'inactivitat[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"lifecycle-form"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-intro"[39m
+          [36m>[39m
+            [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [0mMes d'inici (obligatori)[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mid[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2025-08"[39m
+              [36m>[39m
+                [0mAgost 2025[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10"[39m
+              [36m>[39m
+                [0mOctubre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11"[39m
+              [36m>[39m
+                [0mNovembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12"[39m
+              [36m>[39m
+                [0mDesembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-01"[39m
+              [36m>[39m
+                [0mGener 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-02"[39m
+              [36m>[39m
+                [0mFebrer 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-03"[39m
+              [36m>[39m
+                [0mMarç 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-04"[39m
+              [36m>[39m
+                [0mAbril 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-05"[39m
+              [36m>[39m
+                [0mMaig 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-06"[39m
+              [36m>[39m
+                [0mJuny 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-07"[39m
+              [36m>[39m
+                [0mJuliol 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-08"[39m
+              [36m>[39m
+                [0mAgost 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-09"[39m
+              [36m>[39m
+                [0mSetembre 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-10"[39m
+              [36m>[39m
+                [0mOctubre 2027[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-to"[39m
+            [36m>[39m
+              [0mMes de finalització (si el saps)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"inactivity-to"[39m
+              [33mmin[39m=[32m"2025-08"[39m
+              [33mtype[39m=[32m"month"[39m
+              [33mvalue[39m=[32m"2035-01"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"lifecycle-open-end"[39m
+            [33mfor[39m=[32m"inactivity-open-end"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mchecked[39m=[32m""[39m
+              [33mclass[39m=[32m"ah-checkbox"[39m
+              [33mid[39m=[32m"inactivity-open-end"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+            [36m<span>[39m
+              [0m— encara no ho sé[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-comments"[39m
+            [36m>[39m
+              [0mComentaris[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mid[39m=[32m"inactivity-comments"[39m
+              [33mmaxlength[39m=[32m"500"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-note"[39m
+          [36m>[39m
+            [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-warning"[39m
+          [36m>[39m
+            [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mMODIFICA[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+- Expected:
+{
+  "toMonth": "2035-01",
+  "version": 7,
+}
+
++ Received:
+undefined
+
+ ❯ src/inactivity/InactivityPage.test.tsx:209:25
+    209|       }),
+    210|     );
+    211|     await renderE8(<InactivityPage client={e8Client()} navigate={() =>…
+       |        ^
+    212|     const openEnd = await screen.findByLabelText("Mes de finalització …
+    213|     fireEvent.change(openEnd, { target: { value: "2035-01" } });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > loads and links to the conflicting live period after INACTIVITY_OVERLAP
+TestingLibraryElementError: Unable to find role="link" and name `/Ja tens un període demanat/u`
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mPeríode d'inactivitat[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-intro"[39m
+        [36m>[39m
+          [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [0mMes d'inici (obligatori)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [0mMes de finalització (si el saps)[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"inactivity-to"[39m
+            [33mmin[39m=[32m"2026-10"[39m
+            [33mtype[39m=[32m"month"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"lifecycle-open-end"[39m
+          [33mfor[39m=[32m"inactivity-open-end"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mchecked[39m=[32m""[39m
+            [33mclass[39m=[32m"ah-checkbox"[39m
+            [33mid[39m=[32m"inactivity-open-end"[39m
+            [33mtype[39m=[32m"checkbox"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0m— encara no ho sé[0m
+          [36m</span>[39m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-comments"[39m
+          [36m>[39m
+            [0mComentaris[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"inactivity-comments"[39m
+            [33mmaxlength[39m=[32m"500"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-warning"[39m
+        [36m>[39m
+          [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mENVIA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mPeríode d'inactivitat[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-intro"[39m
+        [36m>[39m
+          [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [0mMes d'inici (obligatori)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [0mMes de finalització (si el saps)[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"inactivity-to"[39m
+            [33mmin[39m=[32m"2026-10"[39m
+            [33mtype[39m=[32m"month"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"lifecycle-open-end"[39m
+          [33mfor[39m=[32m"inactivity-open-end"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mchecked[39m=[32m""[39m
+            [33mclass[39m=[32m"ah-checkbox"[39m
+            [33mid[39m=[32m"inactivity-open-end"[39m
+            [33mtype[39m=[32m"checkbox"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0m— encara no ho sé[0m
+          [36m</span>[39m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-comments"[39m
+          [36m>[39m
+            [0mComentaris[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"inactivity-comments"[39m
+            [33mmaxlength[39m=[32m"500"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-warning"[39m
+        [36m>[39m
+          [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mENVIA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/inactivity/InactivityPage.test.tsx:265:34
+    264|         ),
+    265|       ),
+    266|       http.patch("*/api/v1/me/inactivity-periods/:id", ({ params }) =>…
+       |                         ^
+    267|         patchedId = String(params.id);
+    268|         return HttpResponse.json({ ...conflict, version: 4 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > clears an end month overtaken by a changed start and submits an open end
+AssertionError: expected undefined to match object { fromMonth: '2026-12', toMonth: null }
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"lifecycle-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"lifecycle-page__bar"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna al perfil"[39m
+            [33mhref[39m=[32m"/perfil"[39m
+          [36m>[39m
+            [0m‹[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mPeríode d'inactivitat[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"lifecycle-form"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-intro"[39m
+          [36m>[39m
+            [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [0mMes d'inici (obligatori)[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mid[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10"[39m
+              [36m>[39m
+                [0mOctubre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11"[39m
+              [36m>[39m
+                [0mNovembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12"[39m
+              [36m>[39m
+                [0mDesembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-01"[39m
+              [36m>[39m
+                [0mGener 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-02"[39m
+              [36m>[39m
+                [0mFebrer 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-03"[39m
+              [36m>[39m
+                [0mMarç 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-04"[39m
+              [36m>[39m
+                [0mAbril 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-05"[39m
+              [36m>[39m
+                [0mMaig 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-06"[39m
+              [36m>[39m
+                [0mJuny 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-07"[39m
+              [36m>[39m
+                [0mJuliol 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-08"[39m
+              [36m>[39m
+                [0mAgost 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-09"[39m
+              [36m>[39m
+                [0mSetembre 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-10"[39m
+              [36m>[39m
+                [0mOctubre 2027[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-to"[39m
+            [36m>[39m
+              [0mMes de finalització (si el saps)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"inactivity-to"[39m
+              [33mmin[39m=[32m"2026-12"[39m
+              [33mtype[39m=[32m"month"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"lifecycle-open-end"[39m
+            [33mfor[39m=[32m"inactivity-open-end"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mchecked[39m=[32m""[39m
+              [33mclass[39m=[32m"ah-checkbox"[39m
+              [33mid[39m=[32m"inactivity-open-end"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+            [36m<span>[39m
+              [0m— encara no ho sé[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-comments"[39m
+            [36m>[39m
+              [0mComentaris[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea"[39m
+              [33mid[39m=[32m"inactivity-comments"[39m
+              [33mmaxlength[39m=[32m"500"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-note"[39m
+          [36m>[39m
+            [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-warning"[39m
+          [36m>[39m
+            [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mENVIA LA SOL·LICITUD[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+- Expected:
+{
+  "fromMonth": "2026-12",
+  "toMonth": null,
+}
+
++ Received:
+undefined
+
+ ❯ src/inactivity/InactivityPage.test.tsx:315:22
+    313|       }),
+    314|     );
+    315|     await renderE8(<InactivityPage client={e8Client()} navigate={() =>…
+       |                      ^
+    316|     const start = await screen.findByLabelText("Mes d'inici (obligator…
+    317|     const end = screen.getByLabelText("Mes de finalització (si el saps…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > renders a historical ACTIVE period and patches only its changed editable end
+AssertionError: expected undefined to deeply equal { toMonth: '2027-11', version: 7 }
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"lifecycle-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"lifecycle-page__bar"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna al perfil"[39m
+            [33mhref[39m=[32m"/perfil"[39m
+          [36m>[39m
+            [0m‹[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mPeríode d'inactivitat[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"lifecycle-form"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-intro"[39m
+          [36m>[39m
+            [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [0mMes d'inici (obligatori)[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mid[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2025-08"[39m
+              [36m>[39m
+                [0mAgost 2025[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10"[39m
+              [36m>[39m
+                [0mOctubre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11"[39m
+              [36m>[39m
+                [0mNovembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12"[39m
+              [36m>[39m
+                [0mDesembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-01"[39m
+              [36m>[39m
+                [0mGener 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-02"[39m
+              [36m>[39m
+                [0mFebrer 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-03"[39m
+              [36m>[39m
+                [0mMarç 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-04"[39m
+              [36m>[39m
+                [0mAbril 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-05"[39m
+              [36m>[39m
+                [0mMaig 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-06"[39m
+              [36m>[39m
+                [0mJuny 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-07"[39m
+              [36m>[39m
+                [0mJuliol 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-08"[39m
+              [36m>[39m
+                [0mAgost 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-09"[39m
+              [36m>[39m
+                [0mSetembre 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-10"[39m
+              [36m>[39m
+                [0mOctubre 2027[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-to"[39m
+            [36m>[39m
+              [0mMes de finalització (si el saps)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"inactivity-to"[39m
+              [33mmin[39m=[32m"2025-08"[39m
+              [33mtype[39m=[32m"month"[39m
+              [33mvalue[39m=[32m"2027-11"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"lifecycle-open-end"[39m
+            [33mfor[39m=[32m"inactivity-open-end"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-checkbox"[39m
+              [33mid[39m=[32m"inactivity-open-end"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+            [36m<span>[39m
+              [0m— encara no ho sé[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-comments"[39m
+            [36m>[39m
+              [0mComentaris[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mid[39m=[32m"inactivity-comments"[39m
+              [33mmaxlength[39m=[32m"500"[39m
+            [36m>[39m
+              [0mPeríode històric[0m
+            [36m</textarea>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-note"[39m
+          [36m>[39m
+            [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-warning"[39m
+          [36m>[39m
+            [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mMODIFICA[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+- Expected:
+{
+  "toMonth": "2027-11",
+  "version": 7,
+}
+
++ Received:
+undefined
+
+ ❯ src/inactivity/InactivityPage.test.tsx:401:25
+    399|       }),
+    400|     );
+    401|     await renderE8(<InactivityPage client={e8Client()} navigate={() =>…
+       |                         ^
+    402|     expect(await screen.findByLabelText("Mes d'inici (obligatori)")).t…
+    403|     const end = screen.getByLabelText("Mes de finalització (si el saps…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > after 409 STALE_VERSION keeps only the member's own edit on top of the new version
+TestingLibraryElementError: Unable to find an element with the text: El període ha canviat.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mPeríode d'inactivitat[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-intro"[39m
+        [36m>[39m
+          [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [0mMes d'inici (obligatori)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [0mMes de finalització (si el saps)[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"inactivity-to"[39m
+            [33mmin[39m=[32m"2026-10"[39m
+            [33mtype[39m=[32m"month"[39m
+            [33mvalue[39m=[32m"2027-01"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"lifecycle-open-end"[39m
+          [33mfor[39m=[32m"inactivity-open-end"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mchecked[39m=[32m""[39m
+            [33mclass[39m=[32m"ah-checkbox"[39m
+            [33mid[39m=[32m"inactivity-open-end"[39m
+            [33mtype[39m=[32m"checkbox"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0m— encara no ho sé[0m
+          [36m</span>[39m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-comments"[39m
+          [36m>[39m
+            [0mComentaris[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"inactivity-comments"[39m
+            [33mmaxlength[39m=[32m"500"[39m
+          [36m>[39m
+            [0mDescans de la Duna[0m
+          [36m</textarea>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card lifecycle-fee"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<span>[39m
+              [0mQuota del 1r mes[0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0m20,00 €[0m
+            [36m</strong>[39m
+          [36m</div>[39m
+          [36m<div>[39m
+            [36m<span>[39m
+              [0mMesos següents[0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0m10,00 €/mes[0m
+            [36m</strong>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-warning"[39m
+        [36m>[39m
+          [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mMODIFICA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mRETIRA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mPeríode d'inactivitat[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-intro"[39m
+        [36m>[39m
+          [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [0mMes d'inici (obligatori)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [0mMes de finalització (si el saps)[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"inactivity-to"[39m
+            [33mmin[39m=[32m"2026-10"[39m
+            [33mtype[39m=[32m"month"[39m
+            [33mvalue[39m=[32m"2027-01"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"lifecycle-open-end"[39m
+          [33mfor[39m=[32m"inactivity-open-end"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mchecked[39m=[32m""[39m
+            [33mclass[39m=[32m"ah-checkbox"[39m
+            [33mid[39m=[32m"inactivity-open-end"[39m
+            [33mtype[39m=[32m"checkbox"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0m— encara no ho sé[0m
+          [36m</span>[39m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-comments"[39m
+          [36m>[39m
+            [0mComentaris[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"inactivity-comments"[39m
+            [33mmaxlength[39m=[32m"500"[39m
+          [36m>[39m
+            [0mDescans de la Duna[0m
+          [36m</textarea>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card lifecycle-fee"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<span>[39m
+              [0mQuota del 1r mes[0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0m20,00 €[0m
+            [36m</strong>[39m
+          [36m</div>[39m
+          [36m<div>[39m
+            [36m<span>[39m
+              [0mMesos següents[0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0m10,00 €/mes[0m
+            [36m</strong>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-warning"[39m
+        [36m>[39m
+          [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mMODIFICA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mRETIRA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/inactivity/InactivityPage.test.tsx:450:25
+    450|       }),
+    451|     );
+    452|     await renderE8(<InactivityPage client={e8Client()} navigate={() =>…
+       |        ^
+    453|     const end = await screen.findByLabelText("Mes de finalització (si …
+    454|     fireEvent.change(end, { target: { value: "2027-01" } });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > keeps a newly created period for the return-to-profile subtitle
+AssertionError: expected "vi.fn()" to be called with arguments: [ '/perfil' ]
+
+Number of calls: 0
+
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"lifecycle-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"lifecycle-page__bar"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna al perfil"[39m
+            [33mhref[39m=[32m"/perfil"[39m
+          [36m>[39m
+            [0m‹[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mPeríode d'inactivitat[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"lifecycle-form"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-intro"[39m
+          [36m>[39m
+            [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [0mMes d'inici (obligatori)[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mid[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10"[39m
+              [36m>[39m
+                [0mOctubre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11"[39m
+              [36m>[39m
+                [0mNovembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12"[39m
+              [36m>[39m
+                [0mDesembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-01"[39m
+              [36m>[39m
+                [0mGener 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-02"[39m
+              [36m>[39m
+                [0mFebrer 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-03"[39m
+              [36m>[39m
+                [0mMarç 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-04"[39m
+              [36m>[39m
+                [0mAbril 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-05"[39m
+              [36m>[39m
+                [0mMaig 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-06"[39m
+              [36m>[39m
+                [0mJuny 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-07"[39m
+              [36m>[39m
+                [0mJuliol 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-08"[39m
+              [36m>[39m
+                [0mAgost 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-09"[39m
+              [36m>[39m
+                [0mSetembre 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-10"[39m
+              [36m>[39m
+                [0mOctubre 2027[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-to"[39m
+            [36m>[39m
+              [0mMes de finalització (si el saps)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"inactivity-to"[39m
+              [33mmin[39m=[32m"2026-10"[39m
+              [33mtype[39m=[32m"month"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"lifecycle-open-end"[39m
+            [33mfor[39m=[32m"inactivity-open-end"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mchecked[39m=[32m""[39m
+              [33mclass[39m=[32m"ah-checkbox"[39m
+              [33mid[39m=[32m"inactivity-open-end"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+            [36m<span>[39m
+              [0m— encara no ho sé[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-comments"[39m
+            [36m>[39m
+              [0mComentaris[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea"[39m
+              [33mid[39m=[32m"inactivity-comments"[39m
+              [33mmaxlength[39m=[32m"500"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card lifecycle-fee"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<span>[39m
+                [0mQuota del 1r mes[0m
+              [36m</span>[39m
+              [36m<strong>[39m
+                [0m20,00 €[0m
+              [36m</strong>[39m
+            [36m</div>[39m
+            [36m<div>[39m
+              [36m<span>[39m
+                [0mMesos següents[0m
+              [36m</span>[39m
+              [36m<strong>[39m
+                [0m10,00 €/mes[0m
+              [36m</strong>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-note"[39m
+          [36m>[39m
+            [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-warning"[39m
+          [36m>[39m
+            [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mENVIA LA SOL·LICITUD[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/inactivity/InactivityPage.test.tsx:473:24
+    472|   });
+    473|
+    474|   it("keeps a newly created period for the return-to-profile subtitle"…
+       |                       ^
+    475|     const navigate = vi.fn();
+    476|     const view = await renderE8(<InactivityPage client={e8Client()} na…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  7 failed | 18 passed (25)
+   Start at  15:53:44
+   Duration  73.49s (tests 97%, transform 1%, environment 1%, import 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx`
+Exit status 1

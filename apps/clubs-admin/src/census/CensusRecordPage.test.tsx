@@ -68,6 +68,33 @@ async function renderRecord(
 }
 
 describe("T-03-39 D10 member record", () => {
+  it("E8-W05 #4: a pack adjustment refreshes both billing and the D10 dog row", async () => {
+    await renderRecord("member");
+    expect(await screen.findByText("Pack 10: 6/4 · caduca 12-11")).toBeVisible();
+    const initialBillingPack = (await screen.findByText(/Rock · Pack 10/u)).closest(
+      ".member-billing__pack",
+    );
+    expect(initialBillingPack).toHaveTextContent("6 consumides");
+    expect(initialBillingPack).toHaveTextContent("4 disponibles");
+
+    fireEvent.click(screen.getByRole("button", { name: "Ajusta" }));
+    const dialog = screen.getByRole("dialog", { name: "Ajusta" });
+    fireEvent.change(within(dialog).getByLabelText("Variació de sessions"), {
+      target: { value: "2" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("Motiu"), {
+      target: { value: "Correcció" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
+
+    expect(await screen.findByText("Pack 10: 4/6 · caduca 12-11")).toBeVisible();
+    const refreshedBillingPack = screen.getByText(/Rock · Pack 10/u).closest(
+      ".member-billing__pack",
+    );
+    expect(refreshedBillingPack).toHaveTextContent("4 consumides");
+    expect(refreshedBillingPack).toHaveTextContent("6 disponibles");
+  });
+
   it("renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL", async () => {
     await renderRecord("member");
 

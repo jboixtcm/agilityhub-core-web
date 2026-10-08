@@ -52,6 +52,23 @@ function cardDot(title: HTMLElement) {
 }
 
 describe("T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10)", () => {
+  it("E8-W05 #1: a paid checkout reads the booking again before exposing its confirmed actions", async () => {
+    const reads = rewrite("/bookings/booking-duna-mon3", (body) => {
+      if (reads.calls === 1) {
+        body.displayState = "PAYMENT_PENDING";
+        body.state = "PAYMENT_PENDING";
+      }
+    });
+    await renderApp("/reserves/booking-duna-mon3?checkout=cs_e8_w05");
+
+    expect(await screen.findByText("pendent de pagament")).toBeVisible();
+    expect(screen.queryByRole("button", { name: "ANUL·LA LA RESERVA" })).toBeNull();
+    expect(await screen.findByText("Pagament rebut")).toBeVisible();
+    expect(await screen.findByText("confirmada")).toBeVisible();
+    expect(screen.getByRole("button", { name: "ANUL·LA LA RESERVA" })).toBeVisible();
+    expect(reads.calls).toBeGreaterThan(1);
+  });
+
   it("E5-W05 step 8: shows the mockup card, and a cancellation in time asks first and leaves the green note, which names no week («pots reservar una altra classe.»)", async () => {
     await openBooking();
     expect(screen.getByRole("link", { name: "Torna enrere" })).toHaveAttribute("href", "/inici");

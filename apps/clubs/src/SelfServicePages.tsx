@@ -804,8 +804,13 @@ function DocumentModal({
 export function MyDogsPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
   const { t } = useTranslation("census");
+  const packsEnabled =
+    branding.modules.includes("PACKS") && branding.modules.includes("BILLING");
   const [data, setData] = useState<MeDogs>();
   const [packs, setPacks] = useState<PackBalance[]>([]);
+  const [packFailure, setPackFailure] = useState(false);
+  const [packsReading, setPacksReading] = useState(packsEnabled);
+  const [packReload, setPackReload] = useState(0);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState<{ error?: boolean; text: string }>();
   const [documentUpload, setDocumentUpload] = useState<DocumentUpload | null>(null);
@@ -845,23 +850,33 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
 
   useEffect(() => {
     let active = true;
-    if (!branding.modules.includes("PACKS") || !branding.modules.includes("BILLING")) {
+    if (!packsEnabled) {
       return () => {
         active = false;
       };
     }
     void client.GET("/me/pack-balances").then(
       ({ data: balances }) => {
-        if (active && balances !== undefined) setPacks(balances);
+        if (!active) return;
+        if (balances === undefined) {
+          setPackFailure(true);
+        } else {
+          setPacks(balances);
+          setPackFailure(false);
+        }
+        setPacksReading(false);
       },
       () => {
-        if (active) setPacks([]);
+        if (active) {
+          setPackFailure(true);
+          setPacksReading(false);
+        }
       },
     );
     return () => {
       active = false;
     };
-  }, [branding.modules, client, reload]);
+  }, [client, packReload, packsEnabled, reload]);
 
   return (
     <div className="self-page my-dogs-page">
@@ -907,6 +922,23 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
           />
         ) : (
           <>
+            {packsEnabled && packFailure ? (
+              <div className="self-page__message" data-error role="alert">
+                <p>{t("census:selfService.genericError")}</p>
+                <Button
+                  disabled={packsReading}
+                  loading={packsReading}
+                  onClick={() => {
+                    setPacksReading(true);
+                    setPackReload((current) => current + 1);
+                  }}
+                >
+                  {t("census:list.retry")}
+                </Button>
+              </div>
+            ) : packsEnabled && packsReading && packs.length === 0 ? (
+              <p role="status">{t("census:list.loading")}</p>
+            ) : null}
             {data.dogs.map((dog) =>
               dog.status === "PENDING" ? (
                 <PendingDogCard dog={dog} key={dog.id} />
@@ -917,9 +949,7 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
                   key={dog.id}
                   modules={branding.modules}
                   packs={
-                    branding.modules.includes("PACKS") && branding.modules.includes("BILLING")
-                      ? packs
-                      : []
+                    packsEnabled ? packs : []
                   }
                   onClearMessage={() => {
                     setMessage(undefined);
@@ -950,6 +980,7 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
         }}
         onUploaded={() => {
           setMessage({ text: t("census:myDogs.documentSaved") });
+          if (packsEnabled) setPacksReading(true);
           setReload((current) => current + 1);
         }}
         upload={documentUpload}

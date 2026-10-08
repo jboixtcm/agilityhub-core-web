@@ -1365,6 +1365,57 @@ describe("T-01-26 imported-account onboarding and policy re-consent", () => {
 });
 
 describe("T-03-40 mobile own dogs", () => {
+  it("E8-W05 #6 keeps pack balances on a failed refresh and exposes a pending retry", async () => {
+    let reads = 0;
+    let releaseRetry: (() => void) | undefined;
+    const heldRetry = new Promise<void>((resolve) => {
+      releaseRetry = resolve;
+    });
+    server.use(
+      http.get("*/api/v1/me/pack-balances", async () => {
+        reads += 1;
+        if (reads === 1) return undefined;
+        if (reads === 2) {
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "pack-read" },
+            { status: 500 },
+          );
+        }
+        await heldRetry;
+        return undefined;
+      }),
+    );
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/gossos");
+    await renderApplication(client);
+    expect(await screen.findByText("4 disponibles")).toBeVisible();
+
+    fireEvent.click(screen.getAllByRole("button", { name: "＋ DOC." })[0] as HTMLButtonElement);
+    const dialog = screen.getByRole("dialog", { name: "Afegeix un document de Duna" });
+    fireEvent.change(within(dialog).getByLabelText("Nom del document"), {
+      target: { value: "Cartilla Duna" },
+    });
+    fireEvent.change(within(dialog).getByLabelText("Fitxer"), {
+      target: { files: [new File(["%PDF"], "cartilla.pdf", { type: "application/pdf" })] },
+    });
+    const form = within(dialog).getByRole("button", { name: "PUJA EL DOCUMENT" }).closest("form");
+    if (form === null) throw new TypeError("No document form");
+    fireEvent.submit(form);
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toBeVisible();
+    expect(screen.getByText("4 disponibles")).toBeVisible();
+    const retry = within(alert).getByRole("button", { name: "Torna-ho a provar" });
+    fireEvent.click(retry);
+    expect(retry).toBeDisabled();
+    expect(screen.getByText("4 disponibles")).toBeVisible();
+    releaseRetry?.();
+    await waitFor(() => {
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    });
+  });
+
   it("renders own dogs, saves the note, shows task totals and gates TASKS", async () => {
     const client = authClient();
     await client.login("laura@example.test", "secret-password");

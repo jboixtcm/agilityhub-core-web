@@ -74,10 +74,18 @@ export function BookingBar() {
  * booking's `lateCancelThresholdMinutes`; a MEMBER cannot read `/parameters`); only this page's
  * own cancellation leaves a note, by the `late` of its answer (R-08-10).
  */
-export function BookingDetailPage({ bookingId, client }: { bookingId: string; client: ApiClient }) {
+export function BookingDetailPage({
+  bookingId,
+  client,
+  refresh,
+}: {
+  bookingId: string;
+  client: ApiClient;
+  refresh?: unknown;
+}) {
   const { t } = useTranslation(["booking", "enums", "errors", "common"]);
   const formats = useClubFormats();
-  const booking = useBooking(client, bookingId);
+  const booking = useBooking(client, bookingId, refresh);
   const [dialog, setDialog] = useState<{ late: boolean }>();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();

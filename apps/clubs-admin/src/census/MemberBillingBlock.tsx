@@ -39,11 +39,13 @@ export function MemberBillingBlock({
   client,
   dogs,
   memberId,
+  onPackAdjusted,
   readOnly = false,
 }: {
   client: ApiClient;
   dogs: readonly Dog[];
   memberId: string;
+  onPackAdjusted?: () => void;
   readOnly?: boolean;
 }) {
   const { t } = useTranslation(["admin-census", "enums", "errors"]);
@@ -188,6 +190,7 @@ export function MemberBillingBlock({
       );
       setAdjusting(undefined);
       setReload((value) => value + 1);
+      onPackAdjusted?.();
     } catch (cause) {
       setFailure(cause);
       if (apiFieldErrors(cause).some((entry) => entry.field === "expiresOn")) {

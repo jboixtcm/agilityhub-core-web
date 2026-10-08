@@ -10,7 +10,84 @@ import { InactivityPage } from "./InactivityPage";
 
 setupE8World();
 
+async function readyAction(name: "ENVIA LA SOL·LICITUD" | "MODIFICA") {
+  const action = await screen.findByRole("button", { name });
+  await waitFor(() => {
+    expect(action).toBeEnabled();
+  });
+  return action;
+}
+
 describe("T-13-29 member inactivity", () => {
+  it("E8-W05 #2: submission waits through the preview debounce and its current response", async () => {
+    let previewStarted = false;
+    let releasePreview: (() => void) | undefined;
+    const heldPreview = new Promise<void>((resolve) => {
+      releasePreview = resolve;
+    });
+    server.use(
+      http.get("*/api/v1/me/inactivity-periods/preview", async () => {
+        previewStarted = true;
+        await heldPreview;
+        return HttpResponse.json({
+          bookingsInside: { activities: 0, classes: 0, total: 0, trainings: 0, waitlist: 0 },
+          earliestMonthViolation: false,
+          feeSchedule: [],
+        });
+      }),
+    );
+
+    await renderE8(<InactivityPage client={e8Client()} />);
+    const submit = await screen.findByRole("button", { name: "MODIFICA" });
+    expect(submit).toBeDisabled();
+    await waitFor(() => {
+      expect(previewStarted).toBe(true);
+    });
+    expect(submit).toBeDisabled();
+    releasePreview?.();
+    await waitFor(() => {
+      expect(submit).toBeEnabled();
+    });
+  });
+
+  it("E8-W05 #3: consultation mode renders the selected period's frozen fee", async () => {
+    server.use(
+      http.get("*/api/v1/me/inactivity-periods", () =>
+        HttpResponse.json({
+          deadlineDay: 25,
+          earliestFromMonth: "2026-10",
+          fee: {
+            firstMonth: { amountMinor: 9900, currency: "EUR" },
+            followingMonths: { amountMinor: 8800, currency: "EUR" },
+          },
+          periods: [
+            {
+              comments: null,
+              editable: { cancel: false, fromMonth: false, toMonth: true },
+              fee: {
+                firstMonth: { amountMinor: 2000, currency: "EUR" },
+                followingMonths: { amountMinor: 1000, currency: "EUR" },
+              },
+              fromMonth: "2026-10",
+              id: "period-frozen-fee",
+              state: "ACTIVE",
+              toMonth: null,
+              version: 4,
+            },
+          ],
+          proposedFromMonth: "2026-11",
+        }),
+      ),
+    );
+
+    await renderE8(<InactivityPage client={e8Client()} />);
+    const fee = (await screen.findByText("Quota del 1r mes")).closest(".lifecycle-fee");
+    expect(fee).toHaveTextContent("20,00 €");
+    expect(fee).toHaveTextContent("10,00 €/mes");
+    expect(fee).not.toHaveTextContent("99,00 €");
+    expect(fee).not.toHaveTextContent("88,00 €/mes");
+  });
+
   it("renders consultation mode, the proposed open end, fee and debounced booking warning", async () => {
     await renderE8(<InactivityPage client={e8Client()} />);
     const start = await screen.findByLabelText("Mes d'inici (obligatori)");
@@ -38,7 +115,7 @@ describe("T-13-29 member inactivity", () => {
       ),
     );
     await renderE8(<InactivityPage client={e8Client()} />, { scenario: "memberDeadlinePassed" });
-    fireEvent.click(await screen.findByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
+    fireEvent.click(await readyAction("ENVIA LA SOL·LICITUD"));
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Ja ha passat el dia 25: el primer mes que pots demanar és Novembre 2026.",
     );
@@ -135,7 +212,7 @@ describe("T-13-29 member inactivity", () => {
     const openEnd = await screen.findByLabelText("Mes de finalització (si el saps)");
     fireEvent.change(openEnd, { target: { value: "2035-01" } });
     expect(openEnd).toHaveValue("2035-01");
-    fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    fireEvent.click(await readyAction("MODIFICA"));
     await waitFor(() => {
       expect(patchBody).toEqual({ toMonth: "2035-01", version: 7 });
     });
@@ -192,7 +269,7 @@ describe("T-13-29 member inactivity", () => {
       }),
     );
     await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
-    fireEvent.click(await screen.findByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
+    fireEvent.click(await readyAction("ENVIA LA SOL·LICITUD"));
     const overlap = await screen.findByRole("link", { name: /Ja tens un període demanat/u });
     expect(overlap).toHaveAttribute(
       "href",
@@ -200,7 +277,7 @@ describe("T-13-29 member inactivity", () => {
     );
     expect(await screen.findByRole("button", { name: "MODIFICA" })).toBeVisible();
     expect(screen.getByLabelText("Mes d'inici (obligatori)")).toHaveValue("2026-11");
-    fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    fireEvent.click(await readyAction("MODIFICA"));
     await waitFor(() => {
       expect(patchedId).toBe("period-conflict");
     });
@@ -241,7 +318,7 @@ describe("T-13-29 member inactivity", () => {
     fireEvent.change(end, { target: { value: "2026-11" } });
     fireEvent.change(start, { target: { value: "2026-12" } });
     expect(end).toHaveValue("");
-    fireEvent.click(screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
+    fireEvent.click(await readyAction("ENVIA LA SOL·LICITUD"));
     await waitFor(() => {
       expect(posted).toMatchObject({ fromMonth: "2026-12", toMonth: null });
     });
@@ -327,7 +404,7 @@ describe("T-13-29 member inactivity", () => {
     expect(end).toHaveValue("2027-12");
     expect(screen.getByLabelText("Comentaris")).toBeDisabled();
     fireEvent.change(end, { target: { value: "2027-11" } });
-    fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    fireEvent.click(await readyAction("MODIFICA"));
     await waitFor(() => {
       expect(patchBody).toEqual({ toMonth: "2027-11", version: 7 });
     });
@@ -377,14 +454,14 @@ describe("T-13-29 member inactivity", () => {
     fireEvent.change(end, { target: { value: "2027-01" } });
     // Meanwhile the club changed the start and the comments: version 2.
     current = period(2, "2026-11", "Canvi del club");
-    fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    fireEvent.click(await readyAction("MODIFICA"));
     expect(await screen.findByText("El període ha canviat.")).toBeVisible();
     await waitFor(() => {
       expect(screen.getByLabelText("Mes d'inici (obligatori)")).toHaveValue("2026-11");
     });
     expect(screen.getByLabelText("Comentaris")).toHaveValue("Canvi del club");
     expect(screen.getByLabelText("Mes de finalització (si el saps)")).toHaveValue("2027-01");
-    fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    fireEvent.click(await readyAction("MODIFICA"));
     await waitFor(() => {
       expect(bodies).toHaveLength(2);
     });
@@ -399,7 +476,7 @@ describe("T-13-29 member inactivity", () => {
     const view = await renderE8(<InactivityPage client={e8Client()} navigate={navigate} />, {
       scenario: "memberNoInactivity",
     });
-    fireEvent.click(await screen.findByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
+    fireEvent.click(await readyAction("ENVIA LA SOL·LICITUD"));
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledWith("/perfil");
     });

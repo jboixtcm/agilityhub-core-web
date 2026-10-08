@@ -1,0 +1,1985 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/booking/detail.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx src/App.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/inactivity/InactivityPage.test.tsx (14 tests | 2 failed) 1968ms
+   ❯ T-13-29 member inactivity (14)
+     × E8-W05 #2: submission waits through the preview debounce and its current response 116ms
+     × E8-W05 #3: consultation mode renders the selected period's frozen fee 15ms
+ ❯ src/leave/LeavePage.test.tsx (11 tests | 1 failed) 10406ms
+   ❯ T-13-30 member leave (11)
+     × E8-W05 #5: a leave-only reload adds no inactivity period to memberNoInactivity 10167ms
+ ❯ src/booking/detail.test.tsx (26 tests | 1 failed) 11411ms
+   ❯ T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) (19)
+     × E8-W05 #1: a paid checkout reads the booking again before exposing its confirmed actions 10068ms
+ ❯ src/App.test.tsx (59 tests | 1 failed) 12940ms
+   ❯ T-03-40 mobile own dogs (7)
+     × E8-W05 #6 keeps pack balances on a failed refresh and exposes a pending retry 10037ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-03-40 mobile own dogs > E8-W05 #6 keeps pack balances on a failed refresh and exposes a pending retry
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"self-page my-dogs-page"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"self-page__header"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33maria-label[39m=[32m"Torna al perfil"[39m
+              [33mhref[39m=[32m"/perfil"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m‹[0m
+              [36m</span>[39m
+            [36m</a>[39m
+            [36m<h1>[39m
+              [0mEls meus gossos[0m
+            [36m</h1>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"self-page__body"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"self-page__message"[39m
+              [33mrole[39m=[32m"status"[39m
+            [36m>[39m
+              [0mDocument desat[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card dog-card"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"dog-card__identity"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"dog-photo"[39m
+                  [33mfor[39m=[32m"_r_m_"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCanvia la foto de Duna[0m
+                  [36m</span>[39m
+                  [36m<input[39m
+                    [33maccept[39m=[32m"image/*"[39m
+                    [33mid[39m=[32m"_r_m_"[39m
+                    [33mtype[39m=[32m"file"[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<div>[39m
+                  [36m<h2>[39m
+                    [0mDuna[0m
+                  [36m</h2>[39m
+                  [36m<p>[39m
+                    [0mBorder collie[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0mfemella[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m4 anys[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"dog-card__level"[39m
+                [36m>[39m
+                  [0mNivell C[0m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-note"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mfor[39m=[32m"dog-note-dog-duna"[39m
+                [36m>[39m
+                  [0mNotes als instructors[0m
+                  [0m [0m
+                  [36m<span>[39m
+                    [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+                  [36m</span>[39m
+                [36m</label>[39m
+                [36m<textarea[39m
+                  [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                  [33mid[39m=[32m"dog-note-dog-duna"[39m
+                  [33mmaxlength[39m=[32m"2000"[39m
+                [36m>[39m
+                  [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+                [36m</textarea>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mDESA[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33maria-label[39m=[32m"Tasques"[39m
+                [33mclass[39m=[32m"dog-card__section dog-tasks"[39m
+              [36m>[39m
+                [36m<h3>[39m
+                  [0mTasques[0m
+                [36m</h3>[39m
+                [36m<p>[39m
+                  [0m2 pendents · 1 feta[0m
+                [36m</p>[39m
+                [36m<ul[39m
+                  [33mclass[39m=[32m"dog-tasks__list"[39m
+                [36m>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33maria-checked[39m=[32m"false"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-balance"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m/>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-balance"[39m
+                      [36m>[39m
+                        [0mTreballar l'entrada al balancí[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m10-08 · Laura[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33maria-checked[39m=[32m"false"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-weave"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m/>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-weave"[39m
+                      [36m>[39m
+                        [0mRevisar l'entrada a l'eslàlom[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m12-08 · Marc[0m
+                        [0m · [0m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                        [0m1 adjunt[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                    [33mdata-done[39m=[32m""[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33maria-checked[39m=[32m"true"[39m
+                      [33maria-disabled[39m=[32m"true"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-start"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-start"[39m
+                      [36m>[39m
+                        [0mConsolidar la sortida quieta[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m20-07 · Laura[0m
+                        [0m · feta el 01-08[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                [36m</ul>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"self-link"[39m
+                  [33mhref[39m=[32m"/historic"[39m
+                [36m>[39m
+                  [0mVeure l'historial ›[0m
+                [36m</a>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-documents"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<div>[39m
+                  [36m<div>[39m
+                    [36m<span>[39m
+                      [0mcartilla_Duna_1.jpg[0m
+                    [36m</span>[39m
+                    [36m<span>[39m
+                      [0mcartilla_Duna_2.jpg[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div>[39m
+                    [36m<span>[39m
+                      [0mAssegurança.pdf[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0m＋ DOC.[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card dog-card"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"dog-card__identity"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"dog-photo"[39m
+                  [33mfor[39m=[32m"_r_n_"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCanvia la foto de Rock[0m
+                  [36m</span>[39m
+                  [36m<input[39m
+                    [33maccept[39m=[32m"image/*"[39m
+                    [33mid[39m=[32m"_r_n_"[39m
+                    [33mtype[39m=[32m"file"[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<div>[39m
+                  [36m<h2>[39m
+                    [0mRock[0m
+                  [36m</h2>[39m
+                  [36m<p>[39m
+                    [0mMestís[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0mmascle[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m3 anys[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"dog-card__level"[39m
+                [36m>[39m
+                  [0mNivell D[0m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-note"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mfor[39m=[32m"dog-note-31000000-0000-4000-8000-000000000002"[39m
+                [36m>[39m
+                  [0mNotes als instructors[0m
+                  [0m [0m
+                  [36m<span>[39m
+                    [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+                  [36m</span>[39m
+                [36m</label>[39m
+                [36m<textarea[39m
+                  [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                  [33mid[39m=[32m"dog-note-31000000-0000-4000-8000-000000000002"[39m
+                  [33mmaxlength[39m=[32m"2000"[39m
+                [36m/>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mDESA[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-documents"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<div>[39m
+                  [36m<small>[39m
+                    [0mCap document[0m
+                  [36m</small>[39m
+                [36m</div>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0m＋ DOC.[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"dog-card__free"[39m
+              [36m>[39m
+                [0mPot entrenar sol[0m
+              [36m</span>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"dog-card__license"[39m
+              [36m>[39m
+                [0mFCAG[0m
+                [0m · [0m
+                [0mllicència 3241[0m
+                [0m · Iniciació[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"dog-card__license"[39m
+              [36m>[39m
+                [0mRSCE[0m
+                [0m · [0m
+                [0mllicència 13298[0m
+                [0m · M[0m
+                [0m · 2[0m
+                [0m · 2D[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m"self-button-link self-button-link--secondary"[39m
+              [33mhref[39m=[32m"/gossos/nou"[39m
+            [36m>[39m
+              [0m＋ AFEGEIX UN GOS[0m
+            [36m</a>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"my-dogs-page__footnote"[39m
+            [36m>[39m
+              [0mEl nivell l'assigna el club · Per donar de baixa un dels gossos, comunica-ho al club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"self-page my-dogs-page"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"self-page__header"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33maria-label[39m=[32m"Torna al perfil"[39m
+              [33mhref[39m=[32m"/perfil"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+              [36m>[39m
+                [0m‹[0m
+              [36m</span>[39m
+            [36m</a>[39m
+            [36m<h1>[39m
+              [0mEls meus gossos[0m
+            [36m</h1>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"self-page__body"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"self-page__message"[39m
+              [33mrole[39m=[32m"status"[39m
+            [36m>[39m
+              [0mDocument desat[0m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card dog-card"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"dog-card__identity"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"dog-photo"[39m
+                  [33mfor[39m=[32m"_r_m_"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCanvia la foto de Duna[0m
+                  [36m</span>[39m
+                  [36m<input[39m
+                    [33maccept[39m=[32m"image/*"[39m
+                    [33mid[39m=[32m"_r_m_"[39m
+                    [33mtype[39m=[32m"file"[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<div>[39m
+                  [36m<h2>[39m
+                    [0mDuna[0m
+                  [36m</h2>[39m
+                  [36m<p>[39m
+                    [0mBorder collie[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0mfemella[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m4 anys[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"dog-card__level"[39m
+                [36m>[39m
+                  [0mNivell C[0m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-note"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mfor[39m=[32m"dog-note-dog-duna"[39m
+                [36m>[39m
+                  [0mNotes als instructors[0m
+                  [0m [0m
+                  [36m<span>[39m
+                    [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+                  [36m</span>[39m
+                [36m</label>[39m
+                [36m<textarea[39m
+                  [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                  [33mid[39m=[32m"dog-note-dog-duna"[39m
+                  [33mmaxlength[39m=[32m"2000"[39m
+                [36m>[39m
+                  [0mA veure si treballem una mica el doble a classe. El gos s'atura molt aviat al balancí[0m
+                [36m</textarea>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mDESA[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33maria-label[39m=[32m"Tasques"[39m
+                [33mclass[39m=[32m"dog-card__section dog-tasks"[39m
+              [36m>[39m
+                [36m<h3>[39m
+                  [0mTasques[0m
+                [36m</h3>[39m
+                [36m<p>[39m
+                  [0m2 pendents · 1 feta[0m
+                [36m</p>[39m
+                [36m<ul[39m
+                  [33mclass[39m=[32m"dog-tasks__list"[39m
+                [36m>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33maria-checked[39m=[32m"false"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-balance"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m/>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-balance"[39m
+                      [36m>[39m
+                        [0mTreballar l'entrada al balancí[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m10-08 · Laura[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33maria-checked[39m=[32m"false"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-weave"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m/>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-weave"[39m
+                      [36m>[39m
+                        [0mRevisar l'entrada a l'eslàlom[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m12-08 · Marc[0m
+                        [0m · [0m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clip"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                        [0m1 adjunt[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                  [36m<li[39m
+                    [33mclass[39m=[32m"dog-task"[39m
+                    [33mdata-done[39m=[32m""[39m
+                  [36m>[39m
+                    [36m<button[39m
+                      [33maria-checked[39m=[32m"true"[39m
+                      [33maria-disabled[39m=[32m"true"[39m
+                      [33maria-labelledby[39m=[32m"dog-task-task-duna-start"[39m
+                      [33mclass[39m=[32m"dog-task__check"[39m
+                      [33mrole[39m=[32m"checkbox"[39m
+                      [33mtype[39m=[32m"button"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</button>[39m
+                    [36m<div>[39m
+                      [36m<p[39m
+                        [33mid[39m=[32m"dog-task-task-duna-start"[39m
+                      [36m>[39m
+                        [0mConsolidar la sortida quieta[0m
+                      [36m</p>[39m
+                      [36m<small>[39m
+                        [0m20-07 · Laura[0m
+                        [0m · feta el 01-08[0m
+                      [36m</small>[39m
+                    [36m</div>[39m
+                  [36m</li>[39m
+                [36m</ul>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"self-link"[39m
+                  [33mhref[39m=[32m"/historic"[39m
+                [36m>[39m
+                  [0mVeure l'historial ›[0m
+                [36m</a>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-documents"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<div>[39m
+                  [36m<div>[39m
+                    [36m<span>[39m
+                      [0mcartilla_Duna_1.jpg[0m
+                    [36m</span>[39m
+                    [36m<span>[39m
+                      [0mcartilla_Duna_2.jpg[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<div>[39m
+                    [36m<span>[39m
+                      [0mAssegurança.pdf[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                [36m</div>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0m＋ DOC.[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card dog-card"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"dog-card__identity"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"dog-photo"[39m
+                  [33mfor[39m=[32m"_r_n_"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                  [36m>[39m
+                    [0mCanvia la foto de Rock[0m
+                  [36m</span>[39m
+                  [36m<input[39m
+                    [33maccept[39m=[32m"image/*"[39m
+                    [33mid[39m=[32m"_r_n_"[39m
+                    [33mtype[39m=[32m"file"[39m
+                  [36m/>[39m
+                [36m</label>[39m
+                [36m<div>[39m
+                  [36m<h2>[39m
+                    [0mRock[0m
+                  [36m</h2>[39m
+                  [36m<p>[39m
+                    [0mMestís[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0mmascle[0m
+                    [0m ·[0m
+                    [0m [0m
+                    [0m3 anys[0m
+                  [36m</p>[39m
+                [36m</div>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"dog-card__level"[39m
+                [36m>[39m
+                  [0mNivell D[0m
+                [36m</span>[39m
+              [36m</div>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-note"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mfor[39m=[32m"dog-note-31000000-0000-4000-8000-000000000002"[39m
+                [36m>[39m
+                  [0mNotes als instructors[0m
+                  [0m [0m
+                  [36m<span>[39m
+                    [0m(què vols obtenir del club, aspectes a tenir en compte…)[0m
+                  [36m</span>[39m
+                [36m</label>[39m
+                [36m<textarea[39m
+                  [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                  [33mid[39m=[32m"dog-note-31000000-0000-4000-8000-000000000002"[39m
+                  [33mmaxlength[39m=[32m"2000"[39m
+                [36m/>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                  [33mdisabled[39m=[32m""[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0mDESA[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<section[39m
+                [33mclass[39m=[32m"dog-card__section dog-documents"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-doc"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<div>[39m
+                  [36m<small>[39m
+                    [0mCap document[0m
+                  [36m</small>[39m
+                [36m</div>[39m
+                [36m<button[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [0m＋ DOC.[0m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</section>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"dog-card__free"[39m
+              [36m>[39m
+                [0mPot entrenar sol[0m
+              [36m</span>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"dog-card__license"[39m
+              [36m>[39m
+                [0mFCAG[0m
+                [0m · [0m
+                [0mllicència 3241[0m
+                [0m · Iniciació[0m
+              [36m</p>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"dog-card__license"[39m
+              [36m>[39m
+                [0mRSCE[0m
+                [0m · [0m
+                [0mllicència 13298[0m
+                [0m · M[0m
+                [0m · 2[0m
+                [0m · 2D[0m
+              [36m</p>[39m
+            [36m</div>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m"self-button-link self-button-link--secondary"[39m
+              [33mhref[39m=[32m"/gossos/nou"[39m
+            [36m>[39m
+              [0m＋ AFEGEIX UN GOS[0m
+            [36m</a>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"my-dogs-page__footnote"[39m
+            [36m>[39m
+              [0mEl nivell l'assigna el club · Per donar de baixa un dels gossos, comunica-ho al club[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.test.tsx:1406:32
+    1404|     fireEvent.submit(form);
+    1405|
+    1406|     const alert = await screen.findByRole("alert");
+       |                                ^
+    1407|     expect(alert).toBeVisible();
+    1408|     expect(screen.getByText("4 disponibles")).toBeVisible();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/booking/detail.test.tsx > T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) > E8-W05 #1: a paid checkout reads the booking again before exposing its confirmed actions
+TestingLibraryElementError: Unable to find an element with the text: pagament pendent. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card checkout-return checkout-return--paid"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [0mPagament rebut[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back"[39m
+                [33mhref[39m=[32m"/inici"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mDetall de la reserva[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card detail-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"detail-card__dot"[39m
+                [33mstyle[39m=[32m"--class-row-ring: #8FCE8F;"[39m
+              [36m/>[39m
+              [36m<strong[39m
+                [33mclass[39m=[32m"detail-card__title"[39m
+              [36m>[39m
+                [0mClasse B+C · amb la Duna[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent de pagament[0m
+              [36m</span>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__when"[39m
+            [36m>[39m
+              [0mDilluns 3 · 18:50–19:50 · Central[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__booked"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mReservada el dijous 30/07 a les 20:14[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card checkout-return checkout-return--paid"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [0mPagament rebut[0m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back"[39m
+                [33mhref[39m=[32m"/inici"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mDetall de la reserva[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card detail-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"detail-card__dot"[39m
+                [33mstyle[39m=[32m"--class-row-ring: #8FCE8F;"[39m
+              [36m/>[39m
+              [36m<strong[39m
+                [33mclass[39m=[32m"detail-card__title"[39m
+              [36m>[39m
+                [0mClasse B+C · amb la Duna[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent de pagament[0m
+              [36m</span>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__when"[39m
+            [36m>[39m
+              [0mDilluns 3 · 18:50–19:50 · Central[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__booked"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mReservada el dijous 30/07 a les 20:14[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/booking/detail.test.tsx:64:25
+     62|     await renderApp("/reserves/booking-duna-mon3?checkout=cs_e8_w05");
+     63|
+     64|     expect(await screen.findByText("pagament pendent")).toBeVisible();
+       |                         ^
+     65|     expect(screen.queryByRole("button", { name: "ANUL·LA LA RESERVA" }…
+     66|     expect(await screen.findByText("Pagament rebut")).toBeVisible();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > E8-W05 #2: submission waits through the preview debounce and its current response
+Error: expect(element).toBeDisabled()
+
+Received element is not disabled:
+  <button
+  class="ah-button ah-button--primary"
+  type="submit"
+/>
+ ❯ src/inactivity/InactivityPage.test.tsx:34:20
+     32|     await renderE8(<InactivityPage client={e8Client()} />);
+     33|     const submit = await screen.findByRole("button", { name: "MODIFICA…
+     34|     expect(submit).toBeDisabled();
+       |                    ^
+     35|     await waitFor(() => {
+     36|       expect(previewStarted).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > E8-W05 #3: consultation mode renders the selected period's frozen fee
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  20,00 €
+Received:
+  Quota del 1r mes99,00 €Mesos següents88,00 €/mes
+ ❯ src/inactivity/InactivityPage.test.tsx:77:17
+     75|     await renderE8(<InactivityPage client={e8Client()} />);
+     76|     const fee = (await screen.findByText("Quota del 1r mes")).closest(…
+     77|     expect(fee).toHaveTextContent("20,00 €");
+       |                 ^
+     78|     expect(fee).toHaveTextContent("10,00 €/mes");
+     79|     expect(fee).not.toHaveTextContent("99,00 €");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/leave/LeavePage.test.tsx > T-13-30 member leave > E8-W05 #5: a leave-only reload adds no inactivity period to memberNoInactivity
+TestingLibraryElementError: Unable to find role="button" and name "ENVIA LA SOL·LICITUD"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mPeríode d'inactivitat[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-intro"[39m
+        [36m>[39m
+          [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [0mMes d'inici (obligatori)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [0mMes de finalització (si el saps)[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"inactivity-to"[39m
+            [33mmin[39m=[32m"2026-10"[39m
+            [33mtype[39m=[32m"month"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"lifecycle-open-end"[39m
+          [33mfor[39m=[32m"inactivity-open-end"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mchecked[39m=[32m""[39m
+            [33mclass[39m=[32m"ah-checkbox"[39m
+            [33mid[39m=[32m"inactivity-open-end"[39m
+            [33mtype[39m=[32m"checkbox"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0m— encara no ho sé[0m
+          [36m</span>[39m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-comments"[39m
+          [36m>[39m
+            [0mComentaris[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"inactivity-comments"[39m
+            [33mmaxlength[39m=[32m"500"[39m
+          [36m>[39m
+            [0mDescans de la Duna[0m
+          [36m</textarea>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card lifecycle-fee"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<span>[39m
+              [0mQuota del 1r mes[0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0m20,00 €[0m
+            [36m</strong>[39m
+          [36m</div>[39m
+          [36m<div>[39m
+            [36m<span>[39m
+              [0mMesos següents[0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0m10,00 €/mes[0m
+            [36m</strong>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-warning"[39m
+        [36m>[39m
+          [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mMODIFICA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mRETIRA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mPeríode d'inactivitat[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-intro"[39m
+        [36m>[39m
+          [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [0mMes d'inici (obligatori)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [0mMes de finalització (si el saps)[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"inactivity-to"[39m
+            [33mmin[39m=[32m"2026-10"[39m
+            [33mtype[39m=[32m"month"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"lifecycle-open-end"[39m
+          [33mfor[39m=[32m"inactivity-open-end"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mchecked[39m=[32m""[39m
+            [33mclass[39m=[32m"ah-checkbox"[39m
+            [33mid[39m=[32m"inactivity-open-end"[39m
+            [33mtype[39m=[32m"checkbox"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0m— encara no ho sé[0m
+          [36m</span>[39m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-comments"[39m
+          [36m>[39m
+            [0mComentaris[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"inactivity-comments"[39m
+            [33mmaxlength[39m=[32m"500"[39m
+          [36m>[39m
+            [0mDescans de la Duna[0m
+          [36m</textarea>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card lifecycle-fee"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<span>[39m
+              [0mQuota del 1r mes[0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0m20,00 €[0m
+            [36m</strong>[39m
+          [36m</div>[39m
+          [36m<div>[39m
+            [36m<span>[39m
+              [0mMesos següents[0m
+            [36m</span>[39m
+            [36m<strong>[39m
+              [0m10,00 €/mes[0m
+            [36m</strong>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-warning"[39m
+        [36m>[39m
+          [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mMODIFICA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mRETIRA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/leave/LeavePage.test.tsx:24:25
+     22|
+     23|     await renderE8(<InactivityPage client={e8Client()} />, { scenario:…
+     24|     expect(await screen.findByRole("button", { name: "ENVIA LA SOL·LIC…
+       |                         ^
+     25|     expect(screen.queryByRole("button", { name: "MODIFICA" })).not.toB…
+     26|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  5 failed | 105 passed (110)
+   Start at  15:50:59
+   Duration  14.76s (tests 85%, transform 6%, environment 5%, import 2%, setup 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/booking/detail.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx src/App.test.tsx`
+Exit status 1
