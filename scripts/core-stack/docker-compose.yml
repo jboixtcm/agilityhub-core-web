@@ -19,6 +19,8 @@ x-core-environment: &core-environment
   OIDC_CLUBS_ADMIN_LOGOUT_URI: https://admin.example.test/
   CORS_PLATFORM_HOSTS: id.example.test
   SHARED_SCHEDULING_ENABLED: "true"
+  BILLING_BANK_KEY: ${BILLING_BANK_KEY:?BILLING_BANK_KEY is required}
+  BILLING_SECRETS_KEY: ${BILLING_SECRETS_KEY:?BILLING_SECRETS_KEY is required}
   LOGGING_LEVEL_ROOT: WARN
   SPRING_MAIN_BANNER_MODE: "off"
 
@@ -55,8 +57,10 @@ services:
     command:
       - |
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-canic.yaml
+        java -jar /app/app.jar --core.command=club:apply /app/seeds/club-fifo.yaml
         java -jar /app/app.jar --core.command=club:apply /app/seeds/club-minim.yaml
         java -jar /app/app.jar --core.command=seed:demo --club=canic --seed=42 --week-start=${SEED_WEEK_START:-${E4_WEEK_START:?E4_WEEK_START is required}}
+        java -jar /app/app.jar --core.command=seed:demo --club=fifo --seed=42 --week-start=${SEED_WEEK_START:-${E4_WEEK_START:?E4_WEEK_START is required}}
     volumes:
       - export-files:/app/exports
     healthcheck:
@@ -72,11 +76,11 @@ services:
     command:
       - |
         mongosh --quiet mongodb://mongo:27017/agilityhub_e1_web --eval '
-          const result = db.clubs.updateOne(
-            {slug: "canic"},
+          const result = db.clubs.updateMany(
+            {slug: {$$in: ["canic", "fifo"]}},
             {$$set: {status: "ACTIVE", updatedAt: new Date()}}
           );
-          if (result.matchedCount !== 1) { quit(1); }
+          if (result.matchedCount !== 2) { quit(1); }
           const accounts = db.accounts.find({
             email: {$$in: ["member@example.test", "member.2@example.test"]}
           }).toArray();
@@ -136,6 +140,8 @@ services:
       CORE_TEST_FILES: ${CORE_TEST_FILES:-}
       E4_WEEK_START: ${E4_WEEK_START:?E4_WEEK_START is required}
       E5_WEEK_START: ${E5_WEEK_START:-${E4_WEEK_START}}
+      E8_WEEK_START: ${E8_WEEK_START:-${E5_WEEK_START:-${E4_WEEK_START}}}
+      E8_CARD_SETTLEMENT_ONLY: ${E8_CARD_SETTLEMENT_ONLY:-}
       # E7-W03 round 2: `off` when `e2e-core.sh` gets `no-clock` (POST /test/clock treated as absent).
       CORE_CLOCK_DETECTION: ${CORE_CLOCK_DETECTION:-}
     volumes:

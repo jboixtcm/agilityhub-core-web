@@ -1,0 +1,13 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx src/billing/RemittancesPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  2 passed (2)
+      Tests  60 passed (60)
+   Start at  20:07:34
+   Duration  40.41s (tests 93%, transform 3%, environment 2%, import 1%, setup 1%)
+

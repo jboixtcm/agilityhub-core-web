@@ -1,0 +1,57 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/inactivity/InactivityPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/inactivity/InactivityPage.test.tsx (16 tests | 2 failed) 6613ms
+   ❯ T-13-29 member inactivity (16)
+     × E8-W04 step 0c: a cached range stays blocked while its replacement preview is pending 1176ms
+     × E8-W04 step 0c: consultation mode hides frozen fees when BILLING is disabled 36ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > E8-W04 step 0c: a cached range stays blocked while its replacement preview is pending
+Error: expect(element).toBeDisabled()
+
+Received element is not disabled:
+  <button
+  class="ah-button ah-button--primary"
+  type="submit"
+/>
+ ❯ src/inactivity/InactivityPage.test.tsx:51:20
+     49|       expect(previewCalls).toBe(3);
+     50|     });
+     51|     expect(submit).toBeDisabled();
+       |                    ^
+     52|     releaseReplacement?.();
+     53|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > E8-W04 step 0c: consultation mode hides frozen fees when BILLING is disabled
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <span>
+  Quota del 1r mes
+</span> instead
+ ❯ src/inactivity/InactivityPage.test.tsx:68:56
+     66|     });
+     67|     await screen.findByLabelText("Mes d'inici (obligatori)");
+     68|     expect(screen.queryByText("Quota del 1r mes")).not.toBeInTheDocume…
+       |                                                        ^
+     69|   });
+     70|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 14 passed (16)
+   Start at  20:00:12
+   Duration  9.24s (tests 73%, transform 10%, environment 10%, import 5%, setup 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/inactivity/InactivityPage.test.tsx`
+Exit status 1

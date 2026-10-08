@@ -1,0 +1,240 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx src/billing/RemittancesPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/RemittancesPage.test.tsx (0 test)
+ ❯ src/billing/BillingPage.test.tsx (49 tests | 1 failed) 49298ms
+   ❯ T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) (4)
+     × E8-W04 6b: a drawer payment drops a selected receipt even when the Pendents filter removes its row 10137ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/RemittancesPage.test.tsx [ src/billing/RemittancesPage.test.tsx ]
+Error: Transform failed with 1 error:
+
+[31m[PARSE_ERROR] [0mParenthesized expressions may not have a trailing comma.
+    [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m src/billing/RemittancesPage.test.tsx:93:23 [38;5;246m][0m
+    [38;5;246m│[0m
+ [38;5;246m93 │[0m [38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m [0m[38;5;249m<[0m[38;5;249m/[0m[38;5;249mI[0m[38;5;249m1[0m[38;5;249m8[0m[38;5;249mn[0m[38;5;249me[0m[38;5;249mx[0m[38;5;249mt[0m[38;5;249mP[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mv[0m[38;5;249mi[0m[38;5;249md[0m[38;5;249me[0m[38;5;249mr[0m[38;5;249m>[0m,
+ [38;5;240m   │[0m                       ┬  
+ [38;5;240m   │[0m                       ╰── 
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: Remove the trailing comma here
+[38;5;246m────╯[0m
+
+  Plugin: vite:oxc
+  File: /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/billing/RemittancesPage.test.tsx
+ ❯ transformWithOxc ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:4103:19
+ ❯ TransformPluginContext.transform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:4174:26
+ ❯ EnvironmentPluginContainer.transform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:30932:51
+ ❯ loadAndTransform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:20671:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) > E8-W04 6b: a drawer payment drops a selected receipt even when the Pendents filter removes its row
+AssertionError: expected <span …(2)></span> to be null
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"billing-header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSetembre 2026[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Canvi de mes"[39m
+            [33mclass[39m=[32m"billing-stepper"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Mes anterior"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m‹ mes[0m
+            [36m</button>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m·[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Mes següent"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mmes ›[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"billing-header__spacer"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m1 · SIMULA EL MES[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-describedby[39m=[32m"billing-generate-why"[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0m2 · GENERA REMESA SEPA (XML)[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mid[39m=[32m"billing-generate-why"[39m
+            [36m>[39m
+              [0mEls rebuts d'aquest mes ja s'han generat.[0m
+            [36m</span>[39m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Rebut manual"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+            [33mtitle[39m=[32m"Rebut manual"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-feedback"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card billing-simulation"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"billing-simulation__head"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mPas 1 — Simulació: incidències primer[0m
+              [36m</h2>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m2[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0m2 incidències[0m
+                [36m</span>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"billing-members"[39m
+            [36m>[39m
+              [36m<tbody>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"row"[39m
+                  [36m>[39m
+                    [0mJoan Vila[0m
+                  [36m</th>[39m
+                  [36m<td>[39m
+                    [0msense compte bancari informat[0m
+                  [36m</td>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"billing-members__action"[39m
+                  [36m>[39m
+                    [36m<a[39m
+                      [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                      [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000901"[39m
+                    [36m>[39m
+                      [0mObre fitxa[0m
+                    [36m</a>[39m
+                  [36m</td>[39m
+                [36m</tr>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"row"[39m
+                  [36m>[39m
+                    [0mPau Riera[0m
+                  [36m</th>[39m
+                  [36m<td>[39m
+                    [0msense tarifa assignada[0m
+                  [36m</td>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"billing-members__action"[39m
+                  [36m>[39m
+                    [36m<a[39m
+             ...
+
+- Expected:
+null
+
++ Received:
+<span
+  class="billing-toolbar__count"
+  role="status"
+>
+  1 seleccionat
+</span>
+
+ ❯ src/billing/BillingPage.test.tsx:703:51
+    701|     expect(await within(drawer).findByText("Rebut marcat com a cobrat.…
+    702|     await waitFor(() => {
+    703|       expect(screen.queryByText("1 seleccionat")).toBeNull();
+       |                                                   ^
+    704|       expect(screen.getByRole("button", { name: "Marcar cobrat (selecc…
+    705|     });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  1 failed | 48 passed (49)
+   Start at  20:05:42
+   Duration  51.40s (tests 94%, environment 3%, transform 1%, setup 1%, import 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/billing/BillingPage.test.tsx src/billing/RemittancesPage.test.tsx`
+Exit status 1

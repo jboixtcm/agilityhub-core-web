@@ -1,0 +1,406 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx src/billing/RemittancesPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/RemittancesPage.test.tsx (11 tests | 1 failed) 10873ms
+   ❯ S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12) (11)
+     × E8-W01 round 2 #5: a bare route waits for saved views and applies the default before writing list state into the URL 10167ms
+ ❯ src/billing/BillingPage.test.tsx (49 tests | 1 failed) 49381ms
+   ❯ T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) (4)
+     × E8-W04 6b: a drawer payment drops a selected receipt even when the Pendents filter removes its row 10162ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) > E8-W04 6b: a drawer payment drops a selected receipt even when the Pendents filter removes its row
+AssertionError: expected <span …(2)></span> to be null
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"billing-header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSetembre 2026[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Canvi de mes"[39m
+            [33mclass[39m=[32m"billing-stepper"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Mes anterior"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m‹ mes[0m
+            [36m</button>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m·[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Mes següent"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mmes ›[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"billing-header__spacer"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m1 · SIMULA EL MES[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-describedby[39m=[32m"billing-generate-why"[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0m2 · GENERA REMESA SEPA (XML)[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mid[39m=[32m"billing-generate-why"[39m
+            [36m>[39m
+              [0mEls rebuts d'aquest mes ja s'han generat.[0m
+            [36m</span>[39m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Rebut manual"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+            [33mtitle[39m=[32m"Rebut manual"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-feedback"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card billing-simulation"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"billing-simulation__head"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mPas 1 — Simulació: incidències primer[0m
+              [36m</h2>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m2[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0m2 incidències[0m
+                [36m</span>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"billing-members"[39m
+            [36m>[39m
+              [36m<tbody>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"row"[39m
+                  [36m>[39m
+                    [0mJoan Vila[0m
+                  [36m</th>[39m
+                  [36m<td>[39m
+                    [0msense compte bancari informat[0m
+                  [36m</td>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"billing-members__action"[39m
+                  [36m>[39m
+                    [36m<a[39m
+                      [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+                      [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+                      [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000901"[39m
+                    [36m>[39m
+                      [0mObre fitxa[0m
+                    [36m</a>[39m
+                  [36m</td>[39m
+                [36m</tr>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"row"[39m
+                  [36m>[39m
+                    [0mPau Riera[0m
+                  [36m</th>[39m
+                  [36m<td>[39m
+                    [0msense tarifa assignada[0m
+                  [36m</td>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"billing-members__action"[39m
+                  [36m>[39m
+                    [36m<a[39m
+             ...
+
+- Expected:
+null
+
++ Received:
+<span
+  class="billing-toolbar__count"
+  role="status"
+>
+  1 seleccionat
+</span>
+
+ ❯ src/billing/BillingPage.test.tsx:703:51
+    701|     expect(await within(drawer).findByText("Rebut marcat com a cobrat.…
+    702|     await waitFor(() => {
+    703|       expect(screen.queryByText("1 seleccionat")).toBeNull();
+       |                                                   ^
+    704|       expect(screen.getByRole("button", { name: "Marcar cobrat (selecc…
+    705|     });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/billing/RemittancesPage.test.tsx > S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12) > E8-W01 round 2 #5: a bare route waits for saved views and applies the default before writing list state into the URL
+AssertionError: expected [] to deeply equal [ 'status:eq:ROLLED_BACK' ]
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"billing-header"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"billing-header__back"[39m
+            [33mhref[39m=[32m"/facturacio"[39m
+          [36m>[39m
+            [0m‹ Facturació[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mRemeses[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-feedback"[39m
+        [36m/>[39m
+        [36m<section[39m
+          [33maria-label[39m=[32m"Remeses SEPA"[39m
+          [33mclass[39m=[32m"ah-universal-list"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-universal-list__toolbar"[39m
+          [36m>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu ah-universal-list__filter-menu"[39m
+            [36m>[39m
+              [36m<summary[39m
+                [33mclass[39m=[32m""[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-filter"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [0mFiltre[0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-universal-list__menu-panel"[39m
+              [36m>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mColumna[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"period"[39m
+                    [36m>[39m
+                      [0mMes[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"status"[39m
+                    [36m>[39m
+                      [0mEstat[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mOperador[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"eq"[39m
+                    [36m>[39m
+                      [0més igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"ne"[39m
+                    [36m>[39m
+                      [0mno és igual a[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"in"[39m
+                    [36m>[39m
+                      [0més un de[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"nin"[39m
+                    [36m>[39m
+                      [0mno és cap de[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"exists"[39m
+                    [36m>[39m
+                      [0mté valor[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<label>[39m
+                  [36m<span>[39m
+                    [0mValor[0m
+                  [36m</span>[39m
+                  [36m<select>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"2026-09"[39m
+                    [36m>[39m
+                      [0mSetembre 2026 (1)[0m
+                    [36m</option>[39m
+                    [36m<option[39m
+                      [33mvalue[39m=[32m"2026-08"[39m
+                    [36m>[39m
+                      [0mAgost 2026 (2)[0m
+                    [36m</option>[39m
+                  [36m</select>[39m
+                [36m</label>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"ah-universal-list__menu-actions"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [0mAfegeix el filtre[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [0mNeteja[0m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</details>[39m
+            [36m<details[39m
+              [33mclass[39m=[32m"ah-universal-list__menu"[39m
+            [36m>[39m
+              [36m<summary>[39m
+                [0mColumnes[0m
+                [0m [0m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m▾[0m
+                [36m</span>[39m
+              [36m</summary>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"...
+
+- Expected
++ Received
+
+- [
+-   "status:eq:ROLLED_BACK",
+- ]
++ []
+
+ ❯ src/billing/RemittancesPage.test.tsx:149:76
+    147|     await renderPage("", true);
+    148|     await waitFor(() => {
+    149|       expect(new URLSearchParams(window.location.search).getAll("filte…
+       |                                                                            ^
+    150|         "status:eq:ROLLED_BACK",
+    151|       ]);
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 58 passed (60)
+   Start at  20:06:18
+   Duration  51.10s (tests 95%, transform 2%, environment 2%, import 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/billing/BillingPage.test.tsx src/billing/RemittancesPage.test.tsx`
+Exit status 1

@@ -297,7 +297,10 @@ export function BillingPage({
               ? runStatus
               : undefined;
         // The cards settled (R-12-13): the month's chips and the receipts are read again.
-        const settled = previousStatus === "CHARGING" && next.status !== "CHARGING";
+        const settled =
+          (previousStatus === "CHARGING" || runStatus === "CHARGING") &&
+          next.status !== "CHARGING" &&
+          next.status !== "GENERATED";
         lastRunStatus.current = { id: next.id, status: next.status };
         setRunDetail(next);
         setRunReadError(undefined);
@@ -1286,7 +1289,15 @@ export function BillingPage({
           // Another receipt is another drawer: nothing of the previous one (state, late answers).
           key={invoiceId}
           keys={keys}
-          onChanged={refreshAll}
+          onChanged={() => {
+            setSelected((current) => {
+              if (!current.has(invoiceId)) return current;
+              const next = new Set(current);
+              next.delete(invoiceId);
+              return next;
+            });
+            refreshAll();
+          }}
           onClose={() => {
             setInvoiceId(undefined);
           }}

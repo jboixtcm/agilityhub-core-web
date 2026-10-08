@@ -10,6 +10,7 @@ import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
+import { StrictMode } from "react";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -69,7 +70,7 @@ afterAll(() => {
   server.close();
 });
 
-async function renderPage(search = "") {
+async function renderPage(search = "", strict = false) {
   window.history.replaceState(null, "", `/facturacio/remeses${search}`);
   const i18n = await createI18n({
     branding,
@@ -78,7 +79,7 @@ async function renderPage(search = "") {
     storage: undefined,
   });
   const onNavigate = vi.fn();
-  render(
+  const page = (
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={branding}>
         <RemittancesPage
@@ -89,8 +90,9 @@ async function renderPage(search = "") {
           onNavigate={onNavigate}
         />
       </BrandingProvider>
-    </I18nextProvider>,
+    </I18nextProvider>
   );
+  render(strict ? <StrictMode>{page}</StrictMode> : page);
   await screen.findByRole("heading", { level: 1, name: "Remeses" });
   return { onNavigate };
 }
@@ -142,7 +144,7 @@ describe("S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system
       }),
     );
 
-    await renderPage();
+    await renderPage("", true);
     await waitFor(() => {
       expect(new URLSearchParams(window.location.search).getAll("filter")).toEqual([
         "status:eq:ROLLED_BACK",

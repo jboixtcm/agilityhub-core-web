@@ -202,7 +202,7 @@ function billingMembers(): BillingMember[] {
       amountMinor: 6000,
       concept: "Quota Abonat",
       fullName: "Joan Vila",
-      id: uuid(1, 4),
+      id: "61000000-0000-4000-8000-000000000011",
       lastName: "Vila",
       memberNumber: 121,
       method: "MANUAL",
@@ -212,7 +212,7 @@ function billingMembers(): BillingMember[] {
       amountMinor: 6000,
       concept: "Quota Abonat",
       fullName: "Roser Camps",
-      id: uuid(1, 5),
+      id: "61000000-0000-4000-8000-000000000012",
       lastName: "Camps",
       memberNumber: 122,
       method: "MANUAL",
@@ -250,21 +250,37 @@ function billingMembers(): BillingMember[] {
 }
 
 const INCIDENTS: readonly BillingIncident[] = [
-  { code: "NO_BANK_ACCOUNT", memberId: uuid(1, 901), memberName: "Joan Vila" },
-  { code: "NO_PRICE", memberId: uuid(1, 902), memberName: "Pau Riera" },
+  {
+    code: "NO_BANK_ACCOUNT",
+    memberId: "61000000-0000-4000-8000-000000000011",
+    memberName: "Joan Vila",
+  },
+  { code: "NO_PRICE", memberId: "61000000-0000-4000-8000-000000000013", memberName: "Pau Riera" },
 ];
 const MANUAL_ONLY_INCIDENTS: readonly BillingIncident[] = [
-  { code: "NO_PRICE", memberId: uuid(1, 902), memberName: "Pau Riera" },
+  { code: "NO_PRICE", memberId: "61000000-0000-4000-8000-000000000013", memberName: "Pau Riera" },
   { code: "PROVIDER_DISABLED", memberId: uuid(1, 903), memberName: "Andreu Coll" },
 ];
 const STRIPE_INCIDENTS: readonly BillingIncident[] = [
-  { code: "CARD_INVALID", memberId: uuid(1, 904), memberName: "Joan Vila" },
-  { code: "NO_PRICE", memberId: uuid(1, 902), memberName: "Pau Riera" },
+  {
+    code: "CARD_INVALID",
+    memberId: "61000000-0000-4000-8000-000000000011",
+    memberName: "Joan Vila",
+  },
+  { code: "NO_PRICE", memberId: "61000000-0000-4000-8000-000000000013", memberName: "Pau Riera" },
 ];
 /** «Actius amb pagament en efectiu» of the mockup, with their planned leave (S13). */
 const CASH_MEMBERS: readonly CashMember[] = [
-  { memberId: uuid(1, 4), memberName: "Joan Vila", plannedLeaveDate: "2026-12-31" },
-  { memberId: uuid(1, 5), memberName: "Roser Camps", plannedLeaveDate: "2027-06-30" },
+  {
+    memberId: "61000000-0000-4000-8000-000000000011",
+    memberName: "Joan Vila",
+    plannedLeaveDate: "2026-12-31",
+  },
+  {
+    memberId: "61000000-0000-4000-8000-000000000012",
+    memberName: "Roser Camps",
+    plannedLeaveDate: "2027-06-30",
+  },
 ];
 
 // ---------------------------------------------------------------------------------------------

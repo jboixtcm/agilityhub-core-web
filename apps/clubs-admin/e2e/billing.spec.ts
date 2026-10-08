@@ -167,6 +167,27 @@ test.describe("E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW)", () => {
     });
   });
 
+  test("E8-W04 6b: incident and cash-member links open their real D10 mock records", async ({
+    page,
+  }) => {
+    await signIn(page, "admin");
+    await openMonth(page, "2026-09", "Setembre 2026");
+    const simulation = page.locator(".billing-simulation");
+    const [incidents, cash] = await simulation.getByRole("table").all();
+    if (incidents === undefined || cash === undefined)
+      throw new TypeError("Two billing tables expected");
+
+    await incidents.getByRole("link", { name: "Obre fitxa de Pau Riera" }).click();
+    await expect(page).toHaveURL(/\/abonats\/61000000-0000-4000-8000-000000000013$/u);
+    await expect(page.getByRole("heading", { name: "Pau Riera" })).toBeVisible();
+
+    await openMonth(page, "2026-09", "Setembre 2026");
+    const cashAgain = page.locator(".billing-simulation").getByRole("table").nth(1);
+    await cashAgain.getByRole("link", { name: "Obre fitxa de Roser Camps" }).click();
+    await expect(page).toHaveURL(/\/abonats\/61000000-0000-4000-8000-000000000012$/u);
+    await expect(page.getByRole("heading", { name: "Roser Camps" })).toBeVisible();
+  });
+
   test("T-12-25 the strong confirmation: the next month is simulated, then «Es generaran 168 rebuts…» generates it", async ({
     page,
   }) => {

@@ -52,20 +52,90 @@ export const leaveContextFixture: components["schemas"]["MeLeaveContext"] = {
 };
 
 export const lifecycleMembers = [
-  { alias: "member-laura", fullName: "Laura Serra Vidal", id: "61000000-0000-4000-8000-000000000001", memberNumber: 87 },
-  { alias: "member-eva", fullName: "Eva Perez Prunell", id: "61000000-0000-4000-8000-000000000002", memberNumber: 90 },
-  { alias: "member-montse", fullName: "Montse Tresserra Casas", id: "61000000-0000-4000-8000-000000000003", memberNumber: 92 },
-  { alias: "member-joan", fullName: "Joan Antoni Serra", id: "61000000-0000-4000-8000-000000000004", memberNumber: 112 },
-  { alias: "member-marc", fullName: "Marc Prats García", id: "61000000-0000-4000-8000-000000000005", memberNumber: 88 },
-  { alias: "member-anna", fullName: "Anna Ballart Consul", id: "61000000-0000-4000-8000-000000000006", memberNumber: 89 },
-  { alias: "member-aina", fullName: "Aina Roca Soler", id: "61000000-0000-4000-8000-000000000007", memberNumber: 93 },
-  { alias: "member-biel", fullName: "Biel Puig Miró", id: "61000000-0000-4000-8000-000000000008", memberNumber: 94 },
-  { alias: "member-clara", fullName: "Clara Font Pons", id: "61000000-0000-4000-8000-000000000009", memberNumber: 95 },
-  { alias: "member-didac", fullName: "Dídac Vila Costa", id: "61000000-0000-4000-8000-000000000010", memberNumber: 96 },
+  {
+    alias: "member-laura",
+    fullName: "Laura Serra Vidal",
+    id: "61000000-0000-4000-8000-000000000001",
+    memberNumber: 87,
+  },
+  {
+    alias: "member-eva",
+    fullName: "Eva Perez Prunell",
+    id: "61000000-0000-4000-8000-000000000002",
+    memberNumber: 90,
+  },
+  {
+    alias: "member-montse",
+    fullName: "Montse Tresserra Casas",
+    id: "61000000-0000-4000-8000-000000000003",
+    memberNumber: 92,
+  },
+  {
+    alias: "member-joan",
+    fullName: "Joan Antoni Serra",
+    id: "61000000-0000-4000-8000-000000000004",
+    memberNumber: 112,
+  },
+  {
+    alias: "member-marc",
+    fullName: "Marc Prats García",
+    id: "61000000-0000-4000-8000-000000000005",
+    memberNumber: 88,
+  },
+  {
+    alias: "member-anna",
+    fullName: "Anna Ballart Consul",
+    id: "61000000-0000-4000-8000-000000000006",
+    memberNumber: 89,
+  },
+  {
+    alias: "member-aina",
+    fullName: "Aina Roca Soler",
+    id: "61000000-0000-4000-8000-000000000007",
+    memberNumber: 93,
+  },
+  {
+    alias: "member-biel",
+    fullName: "Biel Puig Miró",
+    id: "61000000-0000-4000-8000-000000000008",
+    memberNumber: 94,
+  },
+  {
+    alias: "member-clara",
+    fullName: "Clara Font Pons",
+    id: "61000000-0000-4000-8000-000000000009",
+    memberNumber: 95,
+  },
+  {
+    alias: "member-didac",
+    fullName: "Dídac Vila Costa",
+    id: "61000000-0000-4000-8000-000000000010",
+    memberNumber: 96,
+  },
+  {
+    alias: "member-joan-vila",
+    fullName: "Joan Vila",
+    id: "61000000-0000-4000-8000-000000000011",
+    memberNumber: 121,
+  },
+  {
+    alias: "member-roser",
+    fullName: "Roser Camps",
+    id: "61000000-0000-4000-8000-000000000012",
+    memberNumber: 122,
+  },
+  {
+    alias: "member-pau",
+    fullName: "Pau Riera",
+    id: "61000000-0000-4000-8000-000000000013",
+    memberNumber: 123,
+  },
 ] as const;
 
 export function lifecycleMemberId(value: string): string {
-  return lifecycleMembers.find((member) => member.alias === value || member.id === value)?.id ?? value;
+  return (
+    lifecycleMembers.find((member) => member.alias === value || member.id === value)?.id ?? value
+  );
 }
 
 function adminPeriod(index: number): components["schemas"]["InactivityPeriod"] {
@@ -76,21 +146,38 @@ function adminPeriod(index: number): components["schemas"]["InactivityPeriod"] {
     cancelledBookings: [],
     comments: index === 0 ? "Descans de la Duna" : active ? "Període obert" : null,
     decision: active
-      ? { at: "2026-08-25T10:00:00Z", byAccountId: "63000000-0000-4000-8000-000000000099", deadlineOverridden: false, decision: "APPROVED", note: null }
+      ? {
+          at: "2026-08-25T10:00:00Z",
+          byAccountId: "63000000-0000-4000-8000-000000000099",
+          deadlineOverridden: false,
+          decision: "APPROVED",
+          note: null,
+        }
       : null,
     editable: active
       ? { cancel: false, fromMonth: false, toMonth: true }
       : { cancel: true, fromMonth: true, toMonth: true },
     feeSnapshot: active
-      ? { firstMonth: { amountMinor: 2000, currency: "EUR" }, followingMonths: { amountMinor: 1000, currency: "EUR" } }
+      ? {
+          firstMonth: { amountMinor: 2000, currency: "EUR" },
+          followingMonths: { amountMinor: 1000, currency: "EUR" },
+        }
       : null,
-    fromMonth: index === 0 ? "2026-10" : active ? "2026-08" : `2027-${String((index % 9) + 1).padStart(2, "0")}`,
+    fromMonth:
+      index === 0
+        ? "2026-10"
+        : active
+          ? "2026-08"
+          : `2027-${String((index % 9) + 1).padStart(2, "0")}`,
     history: [],
     id: `62000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
     member: { fullName: member.fullName, id: member.id, memberNumber: member.memberNumber },
     origin: index % 2 === 0 ? "APP" : "BACKOFFICE",
     requestedAt: `2026-08-${String(index + 1).padStart(2, "0")}T09:00:00Z`,
-    requestedBy: { accountId: `63000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`, impersonatedMemberId: null },
+    requestedBy: {
+      accountId: `63000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
+      impersonatedMemberId: null,
+    },
     startedAt: active ? "2026-08-01T00:00:00Z" : null,
     state: index === 0 ? "REQUESTED" : active ? "ACTIVE" : "FINISHED",
     toMonth: index === 0 ? "2026-12" : active ? null : "2027-03",
@@ -98,17 +185,26 @@ function adminPeriod(index: number): components["schemas"]["InactivityPeriod"] {
   };
 }
 
-export const adminInactivityPeriods: components["schemas"]["InactivityPeriod"][] =
-  Array.from({ length: 10 }, (_, index) => adminPeriod(index));
+export const adminInactivityPeriods: components["schemas"]["InactivityPeriod"][] = Array.from(
+  { length: 10 },
+  (_, index) => adminPeriod(index),
+);
 
 function adminLeave(index: number): components["schemas"]["LeaveRequest"] {
   const member = lifecycleMembers[index] ?? lifecycleMembers[0];
   return {
     cancelledBookings: [],
     comment: index === 2 ? "Canvi de ciutat" : null,
-    decision: index === 3
-      ? { at: "2026-10-05T10:00:00Z", byAccountId: "63000000-0000-4000-8000-000000000099", decision: "APPROVED", effectiveDate: "2026-12-12", note: null }
-      : null,
+    decision:
+      index === 3
+        ? {
+            at: "2026-10-05T10:00:00Z",
+            byAccountId: "63000000-0000-4000-8000-000000000099",
+            decision: "APPROVED",
+            effectiveDate: "2026-12-12",
+            note: null,
+          }
+        : null,
     id: `65000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
     member: {
       fullName: member.fullName,
@@ -125,7 +221,10 @@ function adminLeave(index: number): components["schemas"]["LeaveRequest"] {
     reason: index === 2 ? "Motius externs" : null,
     reasonKey: index === 2 ? "EXTERNAL" : null,
     requestedAt: `2026-08-${String(index + 1).padStart(2, "0")}T11:00:00Z`,
-    requestedBy: { accountId: `63000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`, impersonatedMemberId: null },
+    requestedBy: {
+      accountId: `63000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
+      impersonatedMemberId: null,
+    },
     requestedDate: index === 2 ? "2026-08-31" : index === 3 ? "2026-12-12" : "2026-11-30",
     source: index === 3 ? "PACK_EXPIRED" : index % 2 === 0 ? "MEMBER" : "ADMIN",
     state: index === 2 ? "PENDING" : index === 3 ? "APPROVED" : "DENIED",
@@ -133,5 +232,7 @@ function adminLeave(index: number): components["schemas"]["LeaveRequest"] {
   };
 }
 
-export const adminLeaveRequests: components["schemas"]["LeaveRequest"][] =
-  Array.from({ length: 10 }, (_, index) => adminLeave(index));
+export const adminLeaveRequests: components["schemas"]["LeaveRequest"][] = Array.from(
+  { length: 10 },
+  (_, index) => adminLeave(index),
+);

@@ -921,13 +921,15 @@ export const memberBillingHandlers = [
     if (refused !== undefined) return refused;
     if (currentMockScenario().memberBilling === "packPlan") return error("INACTIVITY_NOT_APPLICABLE", 422);
     restoreMemberLifecycle();
+    const billingEnabled = currentMockScenario().branding.modules.includes("BILLING");
     return HttpResponse.json({
       ...inactivity,
-      fee: currentMockScenario().branding.modules.includes("BILLING") ? inactivity.fee : null,
-      periods:
+      fee: billingEnabled ? inactivity.fee : null,
+      periods: (
         currentMockScenario().memberBilling === "noInactivity" && !memberCreatedInactivity
           ? []
-          : inactivity.periods,
+          : inactivity.periods
+      ).map((period) => (billingEnabled ? period : { ...period, fee: null })),
     });
   }),
   http.get("*/api/v1/me/inactivity-periods/preview", () => {

@@ -54,6 +54,14 @@ if ! next_monday="$(date -j -v+"${days_to_monday}"d -f %F "$club_today" +%F 2>/d
 fi
 export E5_WEEK_START="${E5_WEEK_START:-$next_monday}"
 echo "E5_WEEK_START=$E5_WEEK_START (the club-local Monday after today, Europe/Madrid)"
+# E8-T06's billing seed needs the whole scenario week in the future. Its smoke chooses the Monday
+# after E5's week, so leave/inactivity and the pack booking remain eligible when this stage runs.
+days_to_e8_monday="$(( 15 - $(TZ=Europe/Madrid date +%u) ))"
+if ! e8_monday="$(date -j -v+"${days_to_e8_monday}"d -f %F "$club_today" +%F 2>/dev/null)"; then
+  e8_monday="$(date -d "$club_today + $days_to_e8_monday days" +%F)"
+fi
+export E8_WEEK_START="${E8_WEEK_START:-$e8_monday}"
+echo "E8_WEEK_START=$E8_WEEK_START (the second club-local Monday after today, Europe/Madrid)"
 # The seed's `--week-start` of a stage (`docker-compose.yml`): E4's Monday unless a stage says so.
 export SEED_WEEK_START="$E4_WEEK_START"
 
@@ -63,7 +71,14 @@ mkdir -p "$evidence_directory"
 docker run --rm --entrypoint /bin/cat "$core_image" /app/seeds/demo-canic.yaml \
   >"$evidence_directory/demo-canic.yaml" || echo "could not read /app/seeds/demo-canic.yaml" >&2
 echo "demo seed: $evidence_directory/demo-canic.yaml ($(wc -l <"$evidence_directory/demo-canic.yaml" | tr -d ' ') lines)"
+docker run --rm --entrypoint /bin/cat "$core_image" /app/seeds/demo-fifo.yaml \
+  >"$evidence_directory/demo-fifo.yaml" || echo "could not read /app/seeds/demo-fifo.yaml" >&2
+echo "fifo demo seed: $evidence_directory/demo-fifo.yaml ($(wc -l <"$evidence_directory/demo-fifo.yaml" | tr -d ' ') lines)"
 export E1_CORE_PASSWORD="${E1_CORE_PASSWORD:-$(openssl rand -hex 24)}"
+# Runtime-only vault keys for the fictional bank/card fixtures. They are forwarded to Core but
+# never echoed or written to evidence.
+export BILLING_BANK_KEY="${BILLING_BANK_KEY:-$(openssl rand -base64 32)}"
+export BILLING_SECRETS_KEY="${BILLING_SECRETS_KEY:-$(openssl rand -base64 32)}"
 export CORE_EVIDENCE_SUBDIRECTORY="$evidence_subdirectory"
 export COMPOSE_PROJECT_NAME="$core_project_name"
 
@@ -113,6 +128,35 @@ run_core_suite() {
   # reporter under CI=1), and the unattended runs never had a TTY. The service runs under an init
   # (`init: true`, `docker-compose.yml`), so the signal `run` forwards reaches Playwright.
   docker compose -f "$compose_file" --profile e2e run --rm --no-deps -T playwright
+}
+
+run_playwright_only() {
+  docker compose -f "$compose_file" --profile e2e run --rm --no-deps -T playwright
+}
+
+# The local core deliberately keeps FakePaymentProvider asynchronous. Settle the provider intent
+# between two browser passes, through the same application command used by api E8-T06; neither the
+# intent nor a credential is printed. The second pass proves the paid state through the UI.
+settle_e8_fake_card() {
+  local provider_ref
+  provider_ref="$(docker compose -f "$compose_file" exec -T mongo mongosh --quiet \
+    mongodb://localhost:27017/agilityhub_e1_web --eval '
+      const club = db.clubs.findOne({slug: "fifo"});
+      const row = club == null ? null : db.collections.findOne(
+        {clubId: club._id, provider: "STRIPE", status: "SUBMITTED", providerRef: {$ne: null}},
+        {providerRef: 1}, {sort: {createdAt: -1}}
+      );
+      if (row == null) { quit(1); }
+      print(row.providerRef);
+    ' | tail -n 1)"
+  if [[ -z "$provider_ref" ]]; then
+    echo "E8 fake card: no submitted provider intent found" >&2
+    return 1
+  fi
+  docker compose -f "$compose_file" run --rm --no-deps -T --entrypoint java core \
+    -jar /app/app.jar --core.command=billing:fake-webhook payment_intent.succeeded "$provider_ref" --club=fifo \
+    >/dev/null
+  echo "E8 fake card: payment_intent.succeeded delivered (provider reference redacted)"
 }
 
 # E5-W05 round 2 (review #8): a stage that a signal ended (130 after SIGINT, 143 after SIGTERM)
@@ -317,10 +361,32 @@ if [[ "$staged" == true ]]; then
   export SEED_WEEK_START="$E5_WEEK_START"
   run_stage e7
   save_e7_notifications
+  cleanup
+  # E8-W04: billing, remittances, packs, inactivity and leave use both the Cànic and fictional
+  # Stripe-enabled FIFO tenants. The normal pass submits the fake card charge; an application CLI
+  # delivery settles it, then the settlement-only pass verifies PAID without reseeding.
+  export CORE_TEST_FILES="e8-core.spec.ts"
+  export SEED_WEEK_START="$E8_WEEK_START"
+  export E8_CARD_SETTLEMENT_ONLY=""
+  run_stage e8
+  if ((status == 0)); then
+    if [[ -n "${STRIPE_TEST_SECRET_KEY:-}" ]]; then
+      echo "E8 real Stripe key detected; the browser harness refuses to print or persist it" >&2
+      echo "Use api bin/e8-smoke for the signed real-Stripe delivery; continuing with the local fake provider" >&2
+    fi
+    settle_e8_fake_card || status=1
+    if ((status == 0)); then
+      export E8_CARD_SETTLEMENT_ONLY="1"
+      run_playwright_only || status=$?
+    fi
+  fi
 else
   export CORE_TEST_FILES="$2"
   if [[ "$2" == *e5-core* || "$2" == *e6-core* || "$2" == *e7-core* ]]; then
     export SEED_WEEK_START="$E5_WEEK_START"
+  fi
+  if [[ "$2" == *e8-core* ]]; then
+    export SEED_WEEK_START="$E8_WEEK_START"
   fi
   run_stage files
   if [[ "$2" == *e6-core* ]]; then

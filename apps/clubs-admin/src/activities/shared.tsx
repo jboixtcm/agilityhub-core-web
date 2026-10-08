@@ -168,6 +168,7 @@ export function useSavedViews(
   onDefault: (view: UniversalListSavedView) => void,
 ) {
   const [views, setViews] = useState<SavedView[]>([]);
+  const [resolved, setResolved] = useState(false);
   useEffect(() => {
     let current = true;
     void client.GET("/saved-views", { params: { query: { listKey: listKey } } }).then(
@@ -179,8 +180,11 @@ export function useSavedViews(
         if (view !== undefined && new URLSearchParams(window.location.search).size === 0) {
           onDefault(toSavedView(view));
         }
+        setResolved(true);
       },
-      () => undefined,
+      () => {
+        if (current) setResolved(true);
+      },
     );
     return () => {
       current = false;
@@ -237,6 +241,7 @@ export function useSavedViews(
       setViews((current) => current.map((item) => (item.id === view.id ? updated : item)));
       return toSavedView(updated);
     },
+    resolved,
     views: views.map(toSavedView),
   };
 }

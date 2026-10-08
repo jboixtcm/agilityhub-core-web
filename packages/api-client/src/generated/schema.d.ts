@@ -680,7 +680,7 @@ export interface paths {
         };
         /**
          * exportAccounting
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-26 «Exporta per a comptabilitat» (S14 engine, listKey = accounting): one row per invoice line (number, date, month, member number, name, holder's tax id, concept, base, tax %, tax, total, method, status, collection date, remittance, mandate or PaymentIntent reference), UTF-8 with BOM, `;`, decimals per the admin's locale. 200 file (facturacio-YYYY-MM.csv) or 202 ExportAccepted for a large one; DATA_EXPORTED audit. format defaults to billing.accountingExportFormat. Contract only; returns 501 NOT_IMPLEMENTED after the tenant, role, module and resource guards (E8-T01). Tenant comes from the JWT.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-26 «Exporta per a comptabilitat» (S14 engine, listKey = accounting): one row per invoice line (number, date, month, member number, name, holder's tax id, concept, base, tax %, tax, total, method, status, collection date, remittance, mandate or PaymentIntent reference), UTF-8 with BOM, `;`, decimals per the admin's locale. 200 file or 202 ExportAccepted for a large one; DATA_EXPORTED audit. format defaults to billing.accountingExportFormat. Tenant comes from the JWT; another club's resource → 404.
          */
         get: operations["exportAccounting"];
         put?: never;
@@ -8278,7 +8278,7 @@ export interface components {
             expiresAt?: string;
             fileName?: string;
             /** @enum {string} */
-            format: "XLSX" | "PDF" | "ZIP";
+            format: "XLSX" | "PDF" | "ZIP" | "CSV";
             /** Format: uuid */
             id: string;
             /** @enum {string} */

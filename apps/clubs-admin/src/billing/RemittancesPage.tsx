@@ -127,18 +127,25 @@ export function RemittancesPage({
     return value !== null && /^\d{4}-(0[1-9]|1[0-2])$/u.test(value) ? value : undefined;
   });
   const backPath = month === undefined ? "/facturacio" : `/facturacio?mes=${month}`;
-  // A bare route stays bare until `useSavedViews` resolves its default. Otherwise this effect adds
-  // fields/page first and the hook correctly treats the URL as an explicit, shareable list state.
-  const urlWritten = useRef(window.location.search !== "");
+  const applyView = useCallback((view: UniversalListSavedView) => {
+    setState((current) => ({
+      ...current,
+      columns: view.columns,
+      filters: view.filters,
+      page: 0,
+      sort: view.sort,
+    }));
+  }, []);
+  const savedViews = useSavedViews(client, "remittances", applyView);
+  // A bare route stays bare until `useSavedViews` resolves its default. The explicit resolution
+  // flag survives React StrictMode's effect replay; a one-shot ref did not.
+  const explicitListState = useRef(window.location.search !== "");
   useEffect(() => {
-    if (!urlWritten.current) {
-      urlWritten.current = true;
-      return;
-    }
+    if (!explicitListState.current && !savedViews.resolved) return;
     const parameters = universalListSearchParams(state);
     if (month !== undefined) parameters.set("mes", month);
     window.history.replaceState(null, "", `${window.location.pathname}?${parameters.toString()}`);
-  }, [month, state]);
+  }, [month, savedViews.resolved, state]);
 
   const key = JSON.stringify({ reload, state });
   useEffect(() => {
@@ -179,17 +186,6 @@ export function RemittancesPage({
   }, [client, key, state]);
   const data = result?.key === key ? result.data : undefined;
   const error = result?.key === key ? result.error : undefined;
-
-  const applyView = useCallback((view: UniversalListSavedView) => {
-    setState((current) => ({
-      ...current,
-      columns: view.columns,
-      filters: view.filters,
-      page: 0,
-      sort: view.sort,
-    }));
-  }, []);
-  const savedViews = useSavedViews(client, "remittances", applyView);
 
   // The months that have remittances (no filter-values route for `GET /remittances`).
   const periods = useRef<Promise<string[]>>(undefined);

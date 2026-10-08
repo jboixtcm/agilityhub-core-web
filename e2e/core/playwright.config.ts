@@ -45,6 +45,8 @@ export default defineConfig({
     webServer("clubs", 4173, "app.example.test", "http://app.example.test"),
     webServer("clubs-admin", 4174, "admin.example.test", "http://admin.example.test"),
     webServer("id", 4175, "id.example.test", "https://id.example.test"),
+    webServer("clubs", 4176, "fifo.example.test", "http://fifo.example.test"),
+    webServer("clubs-admin", 4177, "fifo.example.test", "http://fifo.example.test"),
   ],
   workers: 1,
 });

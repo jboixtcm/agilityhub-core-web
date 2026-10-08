@@ -4,7 +4,7 @@ import { http, HttpResponse } from "msw";
 import { describe, expect, it, vi } from "vitest";
 
 import { ProfileLifecycleSection } from "../profile/ProfileLifecycleSection";
-import { e8Client, renderE8, setupE8World } from "../test/e8";
+import { e8Branding, e8Client, renderE8, setupE8World } from "../test/e8";
 
 import { InactivityPage } from "./InactivityPage";
 
@@ -19,6 +19,55 @@ async function readyAction(name: "ENVIA LA SOL·LICITUD" | "MODIFICA") {
 }
 
 describe("T-13-29 member inactivity", () => {
+  it("E8-W04 step 0c: a cached range stays blocked while its replacement preview is pending", async () => {
+    let previewCalls = 0;
+    let releaseReplacement: (() => void) | undefined;
+    const heldReplacement = new Promise<void>((resolve) => {
+      releaseReplacement = resolve;
+    });
+    server.use(
+      http.get("*/api/v1/me/inactivity-periods/preview", async () => {
+        previewCalls += 1;
+        if (previewCalls > 1) await heldReplacement;
+        return HttpResponse.json({
+          bookingsInside: { activities: 0, classes: 0, total: 0, trainings: 0, waitlist: 0 },
+          earliestMonthViolation: false,
+          feeSchedule: [],
+        });
+      }),
+    );
+
+    await renderE8(<InactivityPage client={e8Client()} />);
+    const submit = await readyAction("MODIFICA");
+    const end = screen.getByLabelText("Mes de finalització (si el saps)");
+    fireEvent.change(end, { target: { value: "2026-11" } });
+    await waitFor(() => {
+      expect(previewCalls).toBe(2);
+    });
+    fireEvent.change(end, { target: { value: "" } });
+    await waitFor(() => {
+      expect(previewCalls).toBe(3);
+    });
+    expect(submit).toBeDisabled();
+    releaseReplacement?.();
+    await waitFor(() => {
+      expect(submit).toBeEnabled();
+    });
+  });
+
+  it("E8-W04 step 0c: consultation mode hides frozen fees when BILLING is disabled", async () => {
+    const billingOffBranding = {
+      ...e8Branding,
+      modules: e8Branding.modules.filter((module) => module !== "BILLING"),
+    };
+    await renderE8(<InactivityPage client={e8Client()} />, {
+      branding: billingOffBranding,
+      scenario: "billingOff",
+    });
+    await screen.findByLabelText("Mes d'inici (obligatori)");
+    expect(screen.queryByText("Quota del 1r mes")).not.toBeInTheDocument();
+  });
+
   it("E8-W05 #2: submission waits through the preview debounce and its current response", async () => {
     let previewStarted = false;
     let releasePreview: (() => void) | undefined;

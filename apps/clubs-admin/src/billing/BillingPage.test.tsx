@@ -682,6 +682,26 @@ describe("T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-1
     expect(bulk?.invoiceIds).toHaveLength(1);
     expect(bulk?.invoiceIds).not.toContain(paidId);
   });
+
+  it("E8-W04 6b: a drawer payment drops a selected receipt even when the Pendents filter removes its row", async () => {
+    await renderPage();
+    const chips = within(screen.getByRole("group", { name: "Estat dels rebuts" }));
+    fireEvent.click(chips.getByRole("button", { name: "Pendents (4)" }));
+    const row = await invoiceRow("2026-0915");
+    fireEvent.click(within(row).getByRole("checkbox", { name: "Selecciona el rebut 2026-0915" }));
+    const drawer = await openDrawer("2026-0915");
+    fireEvent.click(within(drawer).getByRole("button", { name: "Marca cobrat" }));
+    fireEvent.click(
+      within(await screen.findByRole("dialog", { name: "Marca cobrat" })).getByRole("button", {
+        name: "Marca cobrat",
+      }),
+    );
+    expect(await within(drawer).findByText("Rebut marcat com a cobrat.")).toBeVisible();
+    await waitFor(() => {
+      expect(screen.queryByText("1 seleccionat")).toBeNull();
+      expect(screen.getByRole("button", { name: "Marcar cobrat (selecció)" })).toBeDisabled();
+    });
+  });
 });
 
 describe("T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20)", () => {
@@ -1295,6 +1315,52 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     });
     await waitFor(() => {
       expect(runReads).toBeGreaterThanOrEqual(2);
+      expect(requests("GET", "/billing/periods/2026-09").length).toBeGreaterThan(1);
+    });
+    await waitFor(() => {
+      expect(screen.queryByText("Cobrant les targetes…")).toBeNull();
+    });
+  }, 20_000);
+
+  it("E8-W04 6b: a CHARGING period refreshes after detail moves GENERATED to COMPLETED", async () => {
+    mockScenario("billingStripe");
+    const api = client();
+    const period = await api.GET("/billing/periods/{period}", {
+      params: { path: { period: "2026-09" } },
+    });
+    const run = period.data?.run;
+    if (run === undefined || run === null) throw new TypeError("No Stripe run");
+    await api.POST("/billing/runs/{id}/card-charges", {
+      params: { header: { "Idempotency-Key": crypto.randomUUID() }, path: { id: run.id } },
+    });
+    sent.length = 0;
+    let reads = 0;
+    let detailCompleted = false;
+    server.use(
+      http.get("*/api/v1/billing/periods/2026-09", () =>
+        HttpResponse.json({
+          ...period.data,
+          run: { ...run, status: detailCompleted ? "COMPLETED" : "CHARGING" },
+        }),
+      ),
+      http.get("*/api/v1/billing/runs/:id", () => {
+        reads += 1;
+        const stored = billingState.world.runs.find((item) => item.run.id === run.id)?.run;
+        if (stored === undefined) throw new TypeError("Stored Stripe run missing");
+        if (reads === 1) return HttpResponse.json({ ...stored, status: "GENERATED" });
+        detailCompleted = true;
+        stored.status = "COMPLETED";
+        return HttpResponse.json(stored);
+      }),
+    );
+
+    await renderPage({ scenario: "billingStripe" });
+    expect(await screen.findByText("Cobrant les targetes…")).toBeVisible();
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 5_200));
+    });
+    await waitFor(() => {
+      expect(reads).toBeGreaterThanOrEqual(2);
       expect(requests("GET", "/billing/periods/2026-09").length).toBeGreaterThan(1);
     });
     await waitFor(() => {

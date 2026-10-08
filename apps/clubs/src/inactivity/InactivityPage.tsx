@@ -12,9 +12,11 @@ import {
   EmptyState,
   FormField,
   Input,
+  isModuleEnabled,
   Select,
   Skeleton,
   Textarea,
+  useBranding,
   useToast,
 } from "@agilityhub/ui";
 import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
@@ -53,6 +55,7 @@ export function InactivityPage({
 }) {
   const { t } = useTranslation(["inactivity", "billing"]);
   const formats = useClubFormats();
+  const branding = useBranding();
   const toast = useToast();
   const keys = useSubmissionKeys();
   const [context, setContext] = useState<Context>();
@@ -164,7 +167,16 @@ export function InactivityPage({
     previewResult !== undefined && previewResult.key === previewKey && previewResult.failed;
   const currentPreviewRetrying = previewRetryKey === previewKey;
   const currentPreviewReady = currentPreview !== undefined;
-  const displayedFee = live === undefined ? context?.fee : live.fee;
+  const displayedFee = isModuleEnabled(branding.modules, "BILLING")
+    ? live === undefined
+      ? context?.fee
+      : live.fee
+    : undefined;
+
+  const invalidatePreview = () => {
+    setPreviewResult(undefined);
+    setPreviewRetryKey(undefined);
+  };
 
   const overlap = isApiError(failure, "INACTIVITY_OVERLAP");
 
@@ -296,6 +308,7 @@ export function InactivityPage({
               id="inactivity-from"
               onChange={(event) => {
                 const next = event.currentTarget.value;
+                invalidatePreview();
                 setFromMonth(next);
                 setToMonth((current) => (current !== "" && current < next ? "" : current));
               }}
@@ -314,6 +327,7 @@ export function InactivityPage({
               id="inactivity-to"
               min={fromMonth}
               onChange={(event) => {
+                invalidatePreview();
                 setToMonth(event.currentTarget.value);
               }}
               type="month"
@@ -326,6 +340,7 @@ export function InactivityPage({
               disabled={live !== undefined && !live.editable.toMonth}
               id="inactivity-open-end"
               onChange={(event) => {
+                invalidatePreview();
                 setToMonth(event.currentTarget.checked ? "" : fromMonth);
               }}
             />
