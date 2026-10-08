@@ -2774,19 +2774,7 @@ export const handlers = [
     if (lifecycleOverview === undefined) return apiError("NOT_FOUND", "Member not found", 404);
     // S03 T-03-34 (R-03-30): with BILLING off the api sends no invoices, next invoice or
     // payment method.
-    const baseOverview = lifecycleOverview;
-    const overview =
-      currentMockScenario().lifecycle === "memberLeft"
-        ? {
-            ...baseOverview,
-            member: {
-              ...baseOverview.member,
-              displayStatus: { kind: "LEFT", label: "baixa" },
-              leaveDate: null,
-              status: "LEFT" as const,
-            },
-          }
-        : baseOverview;
+    const overview = lifecycleOverview;
     if (currentMockScenario().branding.modules.includes("BILLING")) {
       return HttpResponse.json(overview);
     }

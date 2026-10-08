@@ -69,19 +69,30 @@ describe("E8-W03 round 2 member plan change", () => {
     });
   });
 
-  it("#2 shows the 40% rule only for a qualifying ten-session pack", async () => {
+  it("E8-W03 round 3 #5 reads the discount threshold and percentage from the catalog", async () => {
+    server.use(
+      http.get("*/api/v1/parameters/:key", ({ params }) =>
+        HttpResponse.json({
+          key: params.key,
+          value: params.key === "billing.packToMemberMinSessions" ? 6 : 35,
+          version: 1,
+        }),
+      ),
+    );
     const member = await loadMember();
-    await renderDrawer({ ...member, planId: "plan-pack-10" });
-    let drawer = await screen.findByRole("dialog", { name: "Modalitat" });
-    await within(drawer).findByRole("option", { name: "Abonat" });
-    fireEvent.change(within(drawer).getByLabelText("Modalitat nova"), { target: { value: "plan-member" } });
-    expect(await within(drawer).findByText(/40 %/u)).toBeVisible();
-
-    cleanup();
     await renderDrawer({ ...member, planId: "plan-pack-6" });
-    drawer = await screen.findByRole("dialog", { name: "Modalitat" });
+    const drawer = await screen.findByRole("dialog", { name: "Modalitat" });
     await within(drawer).findByRole("option", { name: "Abonat" });
     fireEvent.change(within(drawer).getByLabelText("Modalitat nova"), { target: { value: "plan-member" } });
-    expect(within(drawer).queryByText(/40 %/u)).not.toBeInTheDocument();
+    expect(await within(drawer).findByText(/6 sessions.*35 %/u)).toBeVisible();
+    expect(within(drawer).queryByText(/10 sessions|40 %/u)).not.toBeInTheDocument();
+  });
+
+  it("E8-W03 round 3 #9 does not expose a dead second-dog link", async () => {
+    const member = await loadMember();
+    await renderDrawer(member);
+    const drawer = await screen.findByRole("dialog", { name: "Modalitat" });
+    await within(drawer).findByRole("option", { name: "Abonat" });
+    expect(within(drawer).queryByRole("link")).not.toBeInTheDocument();
   });
 });

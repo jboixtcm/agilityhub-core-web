@@ -24,6 +24,8 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
   const [planId, setPlanId] = useState("");
   const [priceId, setPriceId] = useState("");
   const [effectiveMonth, setEffectiveMonth] = useState("");
+  const [discountPercent, setDiscountPercent] = useState<number>();
+  const [minimumPackSessions, setMinimumPackSessions] = useState<number>();
   const [failure, setFailure] = useState<unknown>();
   const [loading, setLoading] = useState(open);
   const [pending, setPending] = useState(false);
@@ -32,10 +34,17 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
   useEffect(() => {
     if (!open) return undefined;
     let current = true;
-    void client.GET("/plans", { params: { query: { includeInactive: false } } }).then(
-      (result) => {
+    void Promise.all([
+      client.GET("/plans", { params: { query: { includeInactive: false } } }),
+      client.GET("/parameters/{key}", { params: { path: { key: "billing.packToMemberEntryDiscountPercent" } } }),
+      client.GET("/parameters/{key}", { params: { path: { key: "billing.packToMemberMinSessions" } } }),
+    ]).then(
+      ([result, discount, minimum]) => {
         if (current) {
           setPlans((result.data?.items ?? []) as Plan[]);
+          setDiscountPercent(typeof discount.data?.value === "number" ? discount.data.value : undefined);
+          setMinimumPackSessions(typeof minimum.data?.value === "number" ? minimum.data.value : undefined);
+          setFailure(undefined);
           setLoading(false);
         }
       },
@@ -65,7 +74,12 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
 
   const current = plans.find((plan) => plan.id === member.planId);
   const selected = plans.find((plan) => plan.id === planId);
-  const packToMonthly = current?.type === "PACK" && (current.pack?.sessions ?? 0) >= 10 && selected?.type === "MONTHLY";
+  const packToMonthly =
+    current?.type === "PACK" &&
+    minimumPackSessions !== undefined &&
+    discountPercent !== undefined &&
+    (current.pack?.sessions ?? 0) >= minimumPackSessions &&
+    selected?.type === "MONTHLY";
   const error = useMemo(() => {
     if (failure === undefined) return undefined;
     return isApiError(failure)
@@ -132,10 +146,9 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
             <FormField id="member-plan-effective-month" label={t("admin-census:plan.effectiveMonth")}>
               <Input id="member-plan-effective-month" onChange={(event) => { setEffectiveMonth(event.currentTarget.value); }} type="month" value={effectiveMonth} />
             </FormField>
-            {packToMonthly ? <p>{t("admin-census:plan.packDiscountRule")}</p> : null}
+            {packToMonthly ? <p>{t("admin-census:plan.packDiscountRule", { discountPercent, minSessions: minimumPackSessions })}</p> : null}
             <Button disabled={planId === "" || priceId === ""} loading={pending} type="submit">{t("admin-census:common.save")}</Button>
           </form>
-          <a href={`/abonats/${member.id}?accio=afegir-gos`}>{t("admin-census:plan.addDog")}</a>
           {error === undefined ? null : <p role="alert">{error}</p>}
         </>
       )}

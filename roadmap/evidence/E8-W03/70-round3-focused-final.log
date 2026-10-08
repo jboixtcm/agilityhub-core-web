@@ -1,0 +1,310 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/App.test.tsx src/census/MemberInactivityDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/census/InactivityLeavePage.test.tsx src/census/CensusListPage.test.tsx src/census/MemberPlanDrawer.test.tsx src/census/MemberPaymentMethodDrawer.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/census/MemberLeaveDrawer.test.tsx (15 tests | 1 failed) 10626ms
+   ❯ T-13-31 admin leave lifecycle (12)
+     × E8-W03 round 3 #4 keeps direct-leave, cancellation and reactivation errors inside their active modal 10136ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/MemberLeaveDrawer.test.tsx > T-13-31 admin leave lifecycle > E8-W03 round 3 #4 keeps direct-leave, cancellation and reactivation errors inside their active modal
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_r_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_r_"[39m
+    [36m>[39m
+      [0mReactiva l'abonat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mLa reactivació no cobra entrada. Els gossos continuaran inactius fins que es reactivin un per un des de la seva fitxa.[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"reactivation-plan"[39m
+        [36m>[39m
+          [0mModalitat[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"reactivation-plan"[39m
+          [33mrequired[39m=[32m""[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-member"[39m
+          [36m>[39m
+            [0mAbonat[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-family"[39m
+          [36m>[39m
+            [0mAbonat · 2 gossos[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-6"[39m
+          [36m>[39m
+            [0mPack 6[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-10"[39m
+          [36m>[39m
+            [0mPack 10[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-therapy"[39m
+          [36m>[39m
+            [0mTeràpia[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"reactivation-price"[39m
+        [36m>[39m
+          [0mTarifa[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"reactivation-price"[39m
+          [33mrequired[39m=[32m""[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"reactivation-invoice-date"[39m
+        [36m>[39m
+          [0mData del proper rebut[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"reactivation-invoice-date"[39m
+          [33mmin[39m=[32m"2026-10-08"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"date"[39m
+          [33mvalue[39m=[32m"2026-11-01"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mReactiva l'abonat[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+
+Ignored nodes: comments, script, style
+[36m<section[39m
+  [33maria-labelledby[39m=[32m"_r_r_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-modal"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_r_"[39m
+    [36m>[39m
+      [0mReactiva l'abonat[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"census-record__form"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mLa reactivació no cobra entrada. Els gossos continuaran inactius fins que es reactivin un per un des de la seva fitxa.[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"reactivation-plan"[39m
+        [36m>[39m
+          [0mModalitat[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"reactivation-plan"[39m
+          [33mrequired[39m=[32m""[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-member"[39m
+          [36m>[39m
+            [0mAbonat[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-family"[39m
+          [36m>[39m
+            [0mAbonat · 2 gossos[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-6"[39m
+          [36m>[39m
+            [0mPack 6[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-pack-10"[39m
+          [36m>[39m
+            [0mPack 10[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"plan-therapy"[39m
+          [36m>[39m
+            [0mTeràpia[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"reactivation-price"[39m
+        [36m>[39m
+          [0mTarifa[0m
+        [36m</label>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"ah-input ah-select"[39m
+          [33mid[39m=[32m"reactivation-price"[39m
+          [33mrequired[39m=[32m""[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m""[39m
+          [36m>[39m
+            [0mTria una opció[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-form-field"[39m
+      [36m>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"ah-form-field__label"[39m
+          [33mfor[39m=[32m"reactivation-invoice-date"[39m
+        [36m>[39m
+          [0mData del proper rebut[0m
+        [36m</label>[39m
+        [36m<input[39m
+          [33mclass[39m=[32m"ah-input"[39m
+          [33mid[39m=[32m"reactivation-invoice-date"[39m
+          [33mmin[39m=[32m"2026-10-08"[39m
+          [33mrequired[39m=[32m""[39m
+          [33mtype[39m=[32m"date"[39m
+          [33mvalue[39m=[32m"2026-11-01"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+        [33mtype[39m=[32m"submit"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"ah-button__content"[39m
+        [36m>[39m
+          [0mReactiva l'abonat[0m
+        [36m</span>[39m
+      [36m</button>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</section>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/MemberLeaveDrawer.test.tsx:138:32
+    136|     fireEvent.change(await within(modal).findByLabelText("Tarifa"), { …
+    137|     fireEvent.click(within(modal).getByRole("button", { name: "Reactiv…
+    138|     expect(await within(modal).findByRole("alert")).toHaveTextContent(…
+       |                                ^
+    139|   });
+    140|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  1 failed | 66 passed (67)
+   Start at  15:01:34
+   Duration  12.51s (tests 55%, transform 18%, environment 16%, import 8%, setup 4%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/App.test.tsx src/census/MemberInactivityDrawer.test.tsx src/census/MemberLeaveDrawer.test.tsx src/census/InactivityLeavePage.test.tsx src/census/CensusListPage.test.tsx src/census/MemberPlanDrawer.test.tsx src/census/MemberPaymentMethodDrawer.test.tsx`
+Exit status 1

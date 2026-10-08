@@ -168,6 +168,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
   }, [failure, t]);
   const plannedSource = rows.find((row) => row.effectiveDate === member.leaveDate)?.source;
   const today = clubToday(branding.timeZone);
+  const modalOpen = confirmCancel || confirmDirect || reactivationOpen;
 
   return (
     <Drawer closeLabel={t("admin-census:common.close")} onClose={onClose} open={open} title={t("admin-census:leave.title")}>
@@ -177,6 +178,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
       ) : member.status === "LEFT" ? (
         <Button
           onClick={() => {
+            setFailure(undefined);
             setReactivationOpen(true);
           }}
         >
@@ -195,6 +197,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
               <Button
                 disabled={pending}
                 onClick={() => {
+                  setFailure(undefined);
                   setConfirmCancel(true);
                 }}
                 variant="secondary"
@@ -283,6 +286,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
               className="census-record__form"
               onSubmit={(event) => {
                 event.preventDefault();
+                setFailure(undefined);
                 setConfirmDirect(true);
               }}
             >
@@ -333,7 +337,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
           )}
         </>
       )}
-      {erased || errorMessage === undefined || isApiError(failure, "LEAVE_DATE_INVALID") ? null : <p role="alert">{errorMessage}</p>}
+      {erased || modalOpen || errorMessage === undefined || isApiError(failure, "LEAVE_DATE_INVALID") ? null : <p role="alert">{errorMessage}</p>}
       {success === undefined ? null : (
         <Toast
           dismissLabel={t("admin-census:common.close")}
@@ -352,6 +356,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
         title={t("admin-census:leave.confirm")}
       >
         <p>{t("admin-census:leave.directWarning")}</p>
+        {errorMessage === undefined ? null : <p role="alert">{errorMessage}</p>}
         <div className="census-record__dialog-actions">
           <Button onClick={() => { setConfirmDirect(false); }} variant="ghost">{t("admin-census:common.cancel")}</Button>
           <Button loading={pending} onClick={() => {
@@ -382,6 +387,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
         title={t("admin-census:leave.cancelPlanned")}
       >
         <p>{t("admin-census:leave.cancelPlannedConfirm")}</p>
+        {errorMessage === undefined ? null : <p role="alert">{errorMessage}</p>}
         <div className="census-record__dialog-actions">
           <Button
             onClick={() => {
@@ -438,6 +444,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
           }}
         >
           <p>{t("admin-census:reactivation.description")}</p>
+          {errorMessage === undefined ? null : <p role="alert">{errorMessage}</p>}
           {billing ? (
             <>
               <FormField id="reactivation-plan" label={t("admin-census:reactivation.plan")}>

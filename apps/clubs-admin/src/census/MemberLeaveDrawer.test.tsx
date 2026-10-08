@@ -90,6 +90,56 @@ describe("T-13-31 admin leave lifecycle", () => {
     expect(await screen.findByText("S'han anul·lat 1 reserva")).toBeVisible();
   });
 
+  it("E8-W03 round 3 #4 keeps direct-leave, cancellation and reactivation errors inside their active modal", async () => {
+    const member = await loadMember();
+    server.use(
+      http.post("*/api/v1/members/:id/leave", () =>
+        HttpResponse.json({ code: "LEAVE_DATE_INVALID", details: {}, message: "invalid", traceId: "test" }, { status: 422 }),
+      ),
+    );
+    await renderDrawer(member);
+    let drawer = await screen.findByRole("dialog", { name: "Baixa (amb data)" });
+    fireEvent.change(within(drawer).getByLabelText("Data d'efecte"), { target: { value: "2026-11-30" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Programa la baixa" }));
+    let modal = screen.getAllByRole("dialog", { name: "Programa la baixa" }).at(-1);
+    if (modal === undefined) throw new TypeError("Missing direct-leave confirmation");
+    fireEvent.click(within(modal).getByRole("button", { name: "Programa la baixa" }));
+    expect(await within(modal).findByRole("alert")).toHaveTextContent("La data demanada ja ha passat");
+
+    cleanup();
+    server.resetHandlers();
+    mockScenario("admin");
+    server.use(
+      http.delete("*/api/v1/members/:id/planned-leave", () =>
+        HttpResponse.json({ code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" }, { status: 500 }),
+      ),
+    );
+    await renderDrawer({ ...member, leaveDate: "2026-12-12" });
+    drawer = await screen.findByRole("dialog", { name: "Baixa (amb data)" });
+    fireEvent.click(await within(drawer).findByRole("button", { name: "Anul·la la baixa prevista" }));
+    modal = screen.getByRole("dialog", { name: "Anul·la la baixa prevista" });
+    fireEvent.click(within(modal).getByRole("button", { name: "Anul·la la baixa prevista" }));
+    expect(await within(modal).findByRole("alert")).toHaveTextContent("S'ha produït un error inesperat");
+
+    cleanup();
+    server.resetHandlers();
+    mockScenario("admin");
+    server.use(
+      http.post("*/api/v1/members/:id/reactivation", () =>
+        HttpResponse.json({ code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" }, { status: 500 }),
+      ),
+    );
+    await renderDrawer({ ...member, status: "LEFT", nextInvoiceDate: "2026-11-01" });
+    fireEvent.click(await screen.findByRole("button", { name: "Reactiva l'abonat" }));
+    modal = screen.getByRole("dialog", { name: "Reactiva l'abonat" });
+    fireEvent.change(within(modal).getByLabelText("Modalitat"), { target: { value: "plan-member" } });
+    const failedPrice = within(modal).getByLabelText("Tarifa");
+    await within(failedPrice).findByRole("option", { name: /60,00.*€/u });
+    fireEvent.change(failedPrice, { target: { value: "price-member" } });
+    fireEvent.click(within(modal).getByRole("button", { name: "Reactiva l'abonat" }));
+    expect(await within(modal).findByRole("alert")).toHaveTextContent("S'ha produït un error inesperat");
+  });
+
   it("E8-W03 round 2 #7 reports detail and reactivation plan-read failures", async () => {
     const member = await loadMember();
     const pending = {
@@ -129,8 +179,9 @@ describe("T-13-31 admin leave lifecycle", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Reactiva l'abonat" }));
     const modal = screen.getByRole("dialog", { name: "Reactiva l'abonat" });
     fireEvent.change(within(modal).getByLabelText("Modalitat"), { target: { value: "plan-member" } });
-    fireEvent.change(await within(modal).findByLabelText("Tarifa"), { target: { value: "price-member" } });
-    expect(within(modal).getByRole("option", { name: /60,00.*€/u })).toBeVisible();
+    const price = within(modal).getByLabelText("Tarifa");
+    await within(price).findByRole("option", { name: /60,00.*€/u });
+    fireEvent.change(price, { target: { value: "price-member" } });
     fireEvent.click(within(modal).getByRole("button", { name: "Reactiva l'abonat" }));
     await waitFor(() => { expect(writes).toEqual([{ nextInvoiceDate: "2026-11-01", planId: "plan-member", priceId: "price-member" }]); });
   });
@@ -161,6 +212,39 @@ describe("T-13-31 admin leave lifecycle", () => {
     expect(approved.data).toMatchObject({ cancelledBookings: [{ type: "CLASS" }], state: "APPROVED" });
     const overview = await client.GET("/members/{id}/overview", { params: { path: { id: "member-montse" } } });
     expect(overview.data?.member).toMatchObject({ displayStatus: { kind: "LEAVE_SCHEDULED" }, leaveDate: "2026-11-30" });
+  });
+
+  it("E8-W03 round 3 #6 derives seeded overviews and keeps planned-leave cancellation projections in sync", async () => {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const inactive = await client.GET("/members/{id}/overview", { params: { path: { id: "member-eva" } } });
+    expect(inactive.data?.member).toMatchObject({ displayStatus: { kind: "INACTIVE_PERIOD" }, status: "INACTIVE" });
+
+    const planned = await client.GET("/members/{id}/overview", { params: { path: { id: "member-joan" } } });
+    expect(planned.data?.member).toMatchObject({ displayStatus: { kind: "LEAVE_SCHEDULED" }, leaveDate: "2026-12-12" });
+    await client.DELETE("/members/{id}/planned-leave", {
+      params: { header: { "Idempotency-Key": "67000000-0000-4000-8000-000000000006" }, path: { id: "member-joan" } },
+    });
+    const refreshed = await client.GET("/members/{id}/overview", { params: { path: { id: "member-joan" } } });
+    expect(refreshed.data?.member).toMatchObject({ displayStatus: { kind: "ACTIVE" }, leaveDate: null });
+    const requests = await client.GET("/leave-requests", {
+      params: { query: { fields: "member,effectiveDate,state", filter: ["memberId:eq:member-joan"], page: 0, size: 20, sort: ["requestedAt,asc"] } },
+    });
+    expect(requests.data?.items).toEqual([expect.objectContaining({ state: "CANCELLED" })]);
+  });
+
+  it("E8-W03 round 3 #7 keeps a member ACTIVE after the memberLeft scenario reactivation is reread", async () => {
+    mockScenario("memberLeft");
+    resetMemberBillingState();
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const before = await client.GET("/members/{id}/overview", { params: { path: { id: "member-laura" } } });
+    expect(before.data?.member.status).toBe("LEFT");
+    await client.POST("/members/{id}/reactivation", {
+      body: { nextInvoiceDate: "2026-11-01", planId: "plan-member", priceId: "price-member" },
+      headers: { "Idempotency-Key": "67000000-0000-4000-8000-000000000007" },
+      params: { path: { id: "member-laura" } },
+    });
+    const after = await client.GET("/members/{id}/overview", { params: { path: { id: "member-laura" } } });
+    expect(after.data?.member).toMatchObject({ displayStatus: { kind: "ACTIVE" }, leaveDate: null, status: "ACTIVE" });
   });
 });
 

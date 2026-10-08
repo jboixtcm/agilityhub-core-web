@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Harden the E8-W03 lifecycle workflows with complete queue facets, retry-safe inactivity edits, modal-local leave errors, parameter-driven plan discounts, stateful lifecycle mocks and reload-safe reactivation.
+
 ### Added
 
 - Add the D10 inactivity, dated-leave, reactivation, payment-method and plan drawers; the ADMIN-only lifecycle queues; the D5 lifecycle columns and protected «Baixes previstes» view; catalog-driven D8/D11 billing values; translated stateful mocks, tests and desktop evidence (E8-W03).

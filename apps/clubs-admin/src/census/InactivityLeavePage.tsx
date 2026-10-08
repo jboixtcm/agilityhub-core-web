@@ -1,6 +1,6 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
 import { fmtDateTime, fmtPlainDate, normalizeLocale, useClubFormats } from "@agilityhub/i18n";
-import { Badge, Tabs, UniversalList, type UniversalFilter, type UniversalFilterOperator, type UniversalListColumn, type UniversalListFilterColumn, type UniversalListLabels, type UniversalListSavedView, type UniversalListState, useBranding } from "@agilityhub/ui";
+import { Badge, Button, Tabs, UniversalList, type UniversalFilter, type UniversalFilterOperator, type UniversalFilterValue, type UniversalListColumn, type UniversalListFilterColumn, type UniversalListLabels, type UniversalListSavedView, type UniversalListState, useBranding } from "@agilityhub/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -135,6 +135,51 @@ function useQueue<Row extends InactivityRow | LeaveRow>(client: ApiClient, kind:
   };
 }
 
+function useQueueFilterRows<Row extends InactivityRow | LeaveRow>(client: ApiClient, kind: "inactivity" | "leave", enabled = true) {
+  const [rows, setRows] = useState<Row[]>([]);
+  useEffect(() => {
+    if (!enabled) return undefined;
+    let current = true;
+    const query = kind === "inactivity"
+      ? {
+          fields: "member,fromMonth,toMonth,state,origin,requestedAt",
+          page: 0,
+          size: 1000 as const,
+          sort: ["fromMonth,asc"],
+        }
+      : {
+          fields: "member,requestedDate,effectiveDate,reasonKey,source,state,nps,requestedAt",
+          page: 0,
+          size: 1000 as const,
+          sort: ["requestedAt,asc"],
+        };
+    const result = kind === "inactivity"
+      ? client.GET("/inactivity-periods", { params: { query } })
+      : client.GET("/leave-requests", { params: { query } });
+    void result.then(
+      (response) => {
+        if (current) setRows((response.data?.items ?? []) as Row[]);
+      },
+      () => {
+        if (current) setRows([]);
+      },
+    );
+    return () => { current = false; };
+  }, [client, enabled, kind]);
+  return rows;
+}
+
+function facet<Row>(rows: readonly Row[], valueOf: (row: Row) => string | number | null | undefined, labelOf: (value: string) => string = (value) => value): UniversalFilterValue[] {
+  const counts = new Map<string, number>();
+  for (const row of rows) {
+    const raw = valueOf(row);
+    if (raw === null || raw === undefined || raw === "") continue;
+    const value = String(raw);
+    counts.set(value, (counts.get(value) ?? 0) + 1);
+  }
+  return [...counts].sort(([left], [right]) => left.localeCompare(right)).map(([value, count]) => ({ count, label: labelOf(value), value }));
+}
+
 export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient; onNavigate?: (path: string) => void }) {
   const branding = useBranding();
   const formats = useClubFormats();
@@ -145,11 +190,15 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
   const [leaveState, setLeaveState] = useState(LEAVE_DEFAULT);
   const inactivity = useQueue<InactivityRow>(client, "inactivity", inactivityState, inactivityEnabled);
   const leave = useQueue<LeaveRow>(client, "leave", leaveState);
+  const inactivityFilterRows = useQueueFilterRows<InactivityRow>(client, "inactivity", inactivityEnabled);
+  const leaveFilterRows = useQueueFilterRows<LeaveRow>(client, "leave");
   const inactivityViews = useSavedViews(client, "inactivity-periods");
   const leaveViews = useSavedViews(client, "leave-requests");
   const [leaveReasons, setLeaveReasons] = useState<Map<string, string>>(new Map());
   const locale = normalizeLocale(i18n.resolvedLanguage ?? branding.defaultLocale);
   const resolvedPeriod = useRef<string | undefined>(undefined);
+  const [periodNavigationFailure, setPeriodNavigationFailure] = useState<unknown>();
+  const [periodResolveAttempt, setPeriodResolveAttempt] = useState(0);
 
   useEffect(() => {
     let current = true;
@@ -176,32 +225,41 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
   useEffect(() => {
     const periodId = new URLSearchParams(window.location.search).get("period");
     if (periodId === null || resolvedPeriod.current === periodId) return undefined;
-    resolvedPeriod.current = periodId;
     let current = true;
-    void client.GET("/inactivity-periods/{id}", { params: { path: { id: periodId } } }).then((result) => {
-      if (!current || result.data === undefined) return;
-      const path = `/abonats/${result.data.member.id}?calaix=inactivitat&period=${periodId}`;
-      if (onNavigate === undefined) window.location.assign(path);
-      else onNavigate(path);
-    });
+    setPeriodNavigationFailure(undefined);
+    void client.GET("/inactivity-periods/{id}", { params: { path: { id: periodId } } }).then(
+      (result) => {
+        if (!current || result.data === undefined) return;
+        const path = `/abonats/${result.data.member.id}?calaix=inactivitat&period=${periodId}`;
+        resolvedPeriod.current = periodId;
+        if (onNavigate === undefined) window.location.assign(path);
+        else onNavigate(path);
+      },
+      (cause: unknown) => {
+        if (current) setPeriodNavigationFailure(cause);
+      },
+    );
     return () => { current = false; };
-  }, [client, onNavigate]);
+  }, [client, onNavigate, periodResolveAttempt]);
 
   // UniversalList's loader contract is asynchronous even though these values come from the page.
   // eslint-disable-next-line @typescript-eslint/require-await
   const loadInactivityFilterValues = useCallback(async (field: string) => {
-    const rows = inactivity.data?.items ?? [];
+    const rows = inactivityFilterRows;
     if (field === "memberId") {
       const members = new Map(rows.flatMap((row) => row.member === undefined ? [] : [[row.member.id, row.member.fullName] as const]));
       return [...members].map(([value, label]) => ({ count: rows.filter((row) => row.member?.id === value).length, label, value }));
     }
     if (field === "state") return (["REQUESTED", "APPROVED", "ACTIVE", "FINISHED", "DENIED", "CANCELLED"] as const).map((value) => ({ count: rows.filter((row) => row.state === value).length, label: t(`enums:inactivityState.${value}`), value }));
     if (field === "origin") return (["APP", "BACKOFFICE"] as const).map((value) => ({ count: rows.filter((row) => row.origin === value).length, label: t(`enums:origin.${value}`), value }));
+    if (field === "fromMonth") return facet(rows, (row) => row.fromMonth, (value) => formats.formatMonthTitle(value));
+    if (field === "toMonth") return facet(rows, (row) => row.toMonth, (value) => formats.formatMonthTitle(value));
+    if (field === "requestedAt") return facet(rows, (row) => row.requestedAt, (value) => fmtDateTime(value, locale, branding.timeZone));
     return [];
-  }, [inactivity.data?.items, t]);
+  }, [branding.timeZone, formats, inactivityFilterRows, locale, t]);
   // eslint-disable-next-line @typescript-eslint/require-await
   const loadLeaveFilterValues = useCallback(async (field: string) => {
-    const rows = leave.data?.items ?? [];
+    const rows = leaveFilterRows;
     if (field === "memberId") {
       const members = new Map(rows.flatMap((row) => row.member === undefined ? [] : [[row.member.id, row.member.fullName] as const]));
       return [...members].map(([value, label]) => ({ count: rows.filter((row) => row.member?.id === value).length, label, value }));
@@ -209,8 +267,11 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
     if (field === "state") return (["PENDING", "APPROVED", "DENIED", "CANCELLED"] as const).map((value) => ({ count: rows.filter((row) => row.state === value).length, label: t(`enums:leaveRequestState.${value}`), value }));
     if (field === "source") return (["MEMBER", "ADMIN", "PACK_EXPIRED", "MIGRATED"] as const).map((value) => ({ count: rows.filter((row) => row.source === value).length, label: t(`enums:leaveSource.${value}`), value }));
     if (field === "reasonKey") return [...leaveReasons].map(([value, label]) => ({ count: rows.filter((row) => row.reasonKey === value).length, label, value }));
+    if (field === "requestedDate") return facet(rows, (row) => row.requestedDate, (value) => fmtPlainDate(value, locale, "short"));
+    if (field === "effectiveDate") return facet(rows, (row) => row.effectiveDate, (value) => fmtPlainDate(value, locale, "short"));
+    if (field === "nps") return facet(rows, (row) => row.nps);
     return [];
-  }, [leave.data?.items, leaveReasons, t]);
+  }, [leaveFilterRows, leaveReasons, locale, t]);
 
   const operators: Record<UniversalFilterOperator, string> = useMemo(
     () => ({
@@ -276,6 +337,7 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
   const errorText = (error: unknown) => (error === undefined ? undefined : isApiError(error) ? t(`errors:${error.code}`, { defaultValue: t("admin-census:common.genericError") }) : t("admin-census:common.genericError"));
   const inactivityError = errorText(inactivity.error);
   const leaveError = errorText(leave.error);
+  const periodNavigationError = errorText(periodNavigationFailure);
 
   const inactivityColumns: UniversalListColumn<InactivityRow>[] = [
     {
@@ -380,6 +442,12 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
   return (
     <section>
       <h1>{t("admin-census:inactivityLeavePage.title")}</h1>
+      {periodNavigationError === undefined ? null : (
+        <div role="alert">
+          <p>{periodNavigationError}</p>
+          <Button onClick={() => { setPeriodResolveAttempt((value) => value + 1); }}>{t("admin-census:common.retry")}</Button>
+        </div>
+      )}
       <Tabs
         items={[
           ...(inactivityEnabled

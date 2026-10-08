@@ -123,6 +123,83 @@ describe("T-13-31 admin inactivity lifecycle", () => {
     await waitFor(() => { expect(writes).toEqual([{ toMonth: "2026-11", version: 1 }]); });
   });
 
+  it("E8-W03 round 3 #1 retries an existing-period deadline failure with the admin override", async () => {
+    const writes: unknown[] = [];
+    server.use(
+      http.patch("*/api/v1/inactivity-periods/:id", async ({ request }) => {
+        const body = await request.json();
+        writes.push(body);
+        if ((body as { overrideDeadline?: boolean }).overrideDeadline !== true) {
+          return HttpResponse.json(
+            { code: "INACTIVITY_DEADLINE_PASSED", details: { earliestMonth: "2027-01" }, message: "deadline", traceId: "test" },
+            { status: 422 },
+          );
+        }
+        return HttpResponse.json({
+          cancelledBookings: [], comments: "Període obert", editable: { cancel: false, fromMonth: false, toMonth: true }, feeSnapshot: null,
+          fromMonth: "2026-08", history: [], id: "62000000-0000-4000-8000-000000000002", member: { fullName: "Eva Perez Prunell", id: "61000000-0000-4000-8000-000000000002", memberNumber: 90 },
+          origin: "BACKOFFICE", requestedAt: "2026-08-02T09:00:00Z", requestedBy: { accountId: "63000000-0000-4000-8000-000000000001", impersonatedMemberId: null }, state: "ACTIVE", toMonth: "2026-11", version: 2,
+        });
+      }),
+    );
+    await renderDrawer("member-eva");
+    const drawer = await screen.findByRole("dialog", { name: "Inactivitat" });
+    fireEvent.click(await within(drawer).findByRole("button", { name: "Modifica els mesos" }));
+    fireEvent.change(within(drawer).getByLabelText(/Mes final/u), { target: { value: "2026-11" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    expect(await within(drawer).findByText(/primer mes possible és 2027-01/u)).toBeVisible();
+    fireEvent.click(within(drawer).getByRole("checkbox", { name: "Salta el termini del dia 25" }));
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(writes).toEqual([
+        { toMonth: "2026-11", version: 1 },
+        { overrideDeadline: true, toMonth: "2026-11", version: 1 },
+      ]);
+    });
+  });
+
+  it("E8-W03 round 3 #3 keeps a failed creation draft and retries the same form", async () => {
+    let attempts = 0;
+    const writes: unknown[] = [];
+    server.use(
+      http.get("*/api/v1/inactivity-periods", () =>
+        HttpResponse.json({ appliedFilters: [], items: [], page: 0, size: 20, totalItems: 0, totalPages: 0 }),
+      ),
+      http.post("*/api/v1/inactivity-periods", async ({ request }) => {
+        attempts += 1;
+        writes.push(await request.json());
+        return attempts === 1
+          ? HttpResponse.json({ code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" }, { status: 500 })
+          : HttpResponse.json({}, { status: 201 });
+      }),
+    );
+    await renderDrawer();
+    const drawer = await screen.findByRole("dialog", { name: "Inactivitat" });
+    fireEvent.change(await within(drawer).findByLabelText("Mes d'inici"), { target: { value: "2026-11" } });
+    fireEvent.change(within(drawer).getByLabelText("Comentaris"), { target: { value: "Conserva aquest esborrany" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Crea i aprova" }));
+    expect(await within(drawer).findByRole("alert")).toHaveTextContent("S'ha produït un error inesperat");
+    expect(within(drawer).getByLabelText("Mes d'inici")).toHaveValue("2026-11");
+    expect(within(drawer).getByLabelText("Comentaris")).toHaveValue("Conserva aquest esborrany");
+    fireEvent.click(within(drawer).getByRole("button", { name: "Crea i aprova" }));
+    await waitFor(() => { expect(writes).toHaveLength(2); });
+  });
+
+  it("E8-W03 round 3 #4 shows an approval failure inside its confirmation modal", async () => {
+    server.use(
+      http.post("*/api/v1/inactivity-periods/:id/decision", () =>
+        HttpResponse.json({ code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "test" }, { status: 500 }),
+      ),
+    );
+    await renderDrawer();
+    const drawer = await screen.findByRole("dialog", { name: "Inactivitat" });
+    fireEvent.click(await within(drawer).findByRole("button", { name: "Aprova" }));
+    const approval = screen.getByRole("dialog", { name: "Aprova el període" });
+    fireEvent.click(within(approval).getByRole("button", { name: "Aprova" }));
+    expect(await within(approval).findByRole("alert")).toHaveTextContent("S'ha produït un error inesperat");
+    expect(approval).toBeVisible();
+  });
+
   it("E8-W03 round 2 #12 terminates an active period and reports approval cancellations", async () => {
     const terminations: unknown[] = [];
     server.use(

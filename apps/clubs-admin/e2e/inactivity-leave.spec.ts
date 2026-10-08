@@ -91,8 +91,17 @@ test.describe("E8-W03 D10 lifecycle drawers", () => {
     await page.getByRole("button", { name: "Reactiva l'abonat" }).click();
     const drawer = page.getByRole("dialog", { name: "Baixa (amb data)" });
     await drawer.getByRole("button", { name: "Reactiva l'abonat" }).click();
-    await expect(page.getByRole("dialog", { name: "Reactiva l'abonat" })).toBeVisible();
+    const reactivation = page.getByRole("dialog", { name: "Reactiva l'abonat" });
+    await expect(reactivation).toBeVisible();
     await capture(page, "D10-reactivacio-1280.png");
+    await reactivation.getByLabel("Modalitat").selectOption("plan-member");
+    await reactivation.getByLabel("Tarifa").selectOption("price-member");
+    await reactivation.getByLabel("Data del proper rebut").fill("2026-11-01");
+    await reactivation.getByRole("button", { name: "Reactiva l'abonat" }).click();
+    await expect(reactivation).toBeHidden();
+    await page.reload();
+    await expect(page.getByRole("button", { name: "Inactivitat" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Baixa (amb data)" })).toBeVisible();
   });
 
   test("T-13-22 captures the lifecycle queues and the system leave view", async ({ page }) => {

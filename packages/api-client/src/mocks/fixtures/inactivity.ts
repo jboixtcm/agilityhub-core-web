@@ -106,7 +106,9 @@ function adminLeave(index: number): components["schemas"]["LeaveRequest"] {
   return {
     cancelledBookings: [],
     comment: index === 2 ? "Canvi de ciutat" : null,
-    decision: null,
+    decision: index === 3
+      ? { at: "2026-10-05T10:00:00Z", byAccountId: "63000000-0000-4000-8000-000000000099", decision: "APPROVED", effectiveDate: "2026-12-12", note: null }
+      : null,
     id: `65000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
     member: {
       fullName: member.fullName,

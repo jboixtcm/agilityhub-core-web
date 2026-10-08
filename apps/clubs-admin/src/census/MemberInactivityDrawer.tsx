@@ -30,7 +30,9 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
   const [editing, setEditing] = useState(false);
   const [confirmApprove, setConfirmApprove] = useState(false);
   const [success, setSuccess] = useState<string>();
+  const [readFailure, setReadFailure] = useState<unknown>();
   const [failure, setFailure] = useState<unknown>();
+  const [modalFailure, setModalFailure] = useState<unknown>();
   const [reload, setReload] = useState(0);
   const [erased, setErased] = useState(false);
   const [notApplicable, setNotApplicable] = useState(false);
@@ -96,11 +98,14 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
           setCancelBookings(cancellationParameter.data.value);
         }
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        if (current) setLoading(false);
+        if (current) {
+          setReadFailure(undefined);
+          setLoading(false);
+        }
       } catch (error: unknown) {
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (current) {
-          setFailure(error);
+          setReadFailure(error);
           if (isApiError(error, "INACTIVITY_NOT_APPLICABLE")) setNotApplicable(true);
           if (isApiError(error, "MEMBER_ERASED")) {
             setErased(true);
@@ -119,16 +124,18 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
     if (!open) keys.drop(memberId);
   }, [keys, memberId, open]);
 
-  const submit = async (signature: string, write: (key: string) => Promise<unknown>, onSuccess?: (result: unknown) => void) => {
+  const submit = async (signature: string, write: (key: string) => Promise<unknown>, onSuccess?: (result: unknown) => void, errorInModal = false) => {
     setPending(true);
     setFailure(undefined);
+    setModalFailure(undefined);
     try {
       const result = await keys.send(signature, write, memberId);
       onSuccess?.(result);
       setReload((value) => value + 1);
       onChanged();
     } catch (error) {
-      setFailure(error);
+      if (errorInModal) setModalFailure(error);
+      else setFailure(error);
       if (isApiError(error, "STALE_VERSION")) setReload((value) => value + 1);
       if (isApiError(error, "MEMBER_ERASED")) {
         setErased(true);
@@ -159,29 +166,38 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
     }
   };
   const errorMessage = useMemo(() => {
-    if (failure === undefined) return undefined;
-    if (isApiError(failure, "INACTIVITY_DEADLINE_PASSED")) {
-      const earliestMonth = detail(failure, "earliestMonth");
+    const visibleFailure = failure ?? readFailure;
+    if (visibleFailure === undefined) return undefined;
+    if (isApiError(visibleFailure, "INACTIVITY_DEADLINE_PASSED")) {
+      const earliestMonth = detail(visibleFailure, "earliestMonth");
       return t("admin-census:inactivity.errors.deadline", {
         month: typeof earliestMonth === "string" ? earliestMonth : "",
       });
     }
-    if (isApiError(failure, "INACTIVITY_OVERLAP")) return t("admin-census:inactivity.errors.overlap");
-    if (isApiError(failure, "INACTIVITY_NOT_APPLICABLE")) return t("admin-census:inactivity.notApplicable");
-    return isApiError(failure) ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") }) : t("admin-census:common.genericError");
-  }, [failure, t]);
-  const recoverableFormFailure =
-    isApiError(failure, "INACTIVITY_DEADLINE_PASSED") ||
-    isApiError(failure, "INACTIVITY_OVERLAP") ||
-    isApiError(failure, "INACTIVITY_INVALID_RANGE") ||
-    isApiError(failure, "STALE_VERSION");
+    if (isApiError(visibleFailure, "INACTIVITY_OVERLAP")) return t("admin-census:inactivity.errors.overlap");
+    if (isApiError(visibleFailure, "INACTIVITY_NOT_APPLICABLE")) return t("admin-census:inactivity.notApplicable");
+    return isApiError(visibleFailure) ? t(`errors:${visibleFailure.code}`, { defaultValue: t("admin-census:common.genericError") }) : t("admin-census:common.genericError");
+  }, [failure, readFailure, t]);
+  const modalErrorMessage = useMemo(() => {
+    if (modalFailure === undefined) return undefined;
+    return isApiError(modalFailure)
+      ? t(`errors:${modalFailure.code}`, { defaultValue: t("admin-census:common.genericError") })
+      : t("admin-census:common.genericError");
+  }, [modalFailure, t]);
+  const closeDrawer = () => {
+    setFailure(undefined);
+    setReadFailure(undefined);
+    setModalFailure(undefined);
+    setConfirmApprove(false);
+    onClose();
+  };
 
   return (
-    <Drawer closeLabel={t("admin-census:common.close")} onClose={onClose} open={open} title={t("admin-census:inactivity.title")}>
+    <Drawer closeLabel={t("admin-census:common.close")} onClose={closeDrawer} open={open} title={t("admin-census:inactivity.title")}>
       {loading ? <p role="status">{t("admin-census:common.loading")}</p> : null}
       {erased ? (
         <><p role="alert">{t("errors:MEMBER_ERASED")}</p><Button onClick={onClose} variant="ghost">{t("admin-census:common.cancel")}</Button></>
-      ) : notApplicable || isApiError(failure, "INACTIVITY_NOT_APPLICABLE") ? (
+      ) : notApplicable || isApiError(readFailure, "INACTIVITY_NOT_APPLICABLE") ? (
         <p role="alert">{t("admin-census:inactivity.notApplicable")}</p>
       ) : (
         <>
@@ -283,7 +299,7 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
             </Button>
           ) : null}
 
-          {!loading && (failure === undefined || recoverableFormFailure) && (period === undefined || editing) ? (
+          {!loading && readFailure === undefined && (period === undefined || editing) ? (
             <form
               className="census-record__form"
               onSubmit={(event) => {
@@ -301,10 +317,11 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
                     }),
                   );
                 } else {
-                  const body: components["schemas"]["InactivityPatchRequest"] = {
+                  const body: components["schemas"]["AdminInactivityPatchRequest"] = {
                     ...(period.editable.fromMonth ? { fromMonth } : {}),
                     ...(period.editable.toMonth ? { toMonth: toMonth === "" ? null : toMonth } : {}),
                     ...(period.state === "ACTIVE" ? {} : { comments: comments.trim() === "" ? null : comments }),
+                    ...(overrideDeadline ? { overrideDeadline: true } : {}),
                     version: period.version,
                   };
                   void submitUnkeyed(() =>
@@ -351,7 +368,7 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
                   value={comments}
                 />
               </FormField>
-              {period === undefined ? <label className="census-record__check-row">
+              <label className="census-record__check-row">
                 <Checkbox
                   checked={overrideDeadline}
                   onChange={(event) => {
@@ -360,7 +377,7 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
                   }}
                 />
                 {t("admin-census:inactivity.overrideDeadline", { day: deadlineDay })}
-              </label> : null}
+              </label>
               <Button loading={pending} type="submit">
                 {period === undefined ? t("admin-census:inactivity.createApprove") : t("admin-census:common.save")}
               </Button>
@@ -435,6 +452,7 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
       <Modal
         closeLabel={t("admin-census:common.close")}
         onClose={() => {
+          setModalFailure(undefined);
           setConfirmApprove(false);
         }}
         open={!erased && confirmApprove}
@@ -447,9 +465,11 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
               : t("admin-census:inactivity.approveConfirmCancelCount", { count: period.bookingsInside })
             : t("admin-census:inactivity.approveConfirmKeep")}
         </p>
+        {modalErrorMessage === undefined ? null : <p role="alert">{modalErrorMessage}</p>}
         <div className="census-record__dialog-actions">
           <Button
             onClick={() => {
+              setModalFailure(undefined);
               setConfirmApprove(false);
             }}
             variant="ghost"
@@ -479,6 +499,7 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
                       : t("admin-census:inactivity.noCancellationToast", { count: data?.bookingsInside ?? 0 }),
                   );
                 },
+                true,
               );
             }}
           >

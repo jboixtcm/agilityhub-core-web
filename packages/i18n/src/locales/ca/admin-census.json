@@ -93,8 +93,7 @@
     "newPlan": "Modalitat nova",
     "price": "Tarifa",
     "effectiveMonth": "Mes d'efecte (opcional)",
-    "packDiscountRule": "En passar d'un pack de 10 sessions o més a una quota mensual, l'entrada té un 40 % de descompte. L'import l'ha de calcular l'API.",
-    "addDog": "Afegeix un segon gos des de la seva alta"
+    "packDiscountRule": "En passar d'un pack de {minSessions} sessions o més a una quota mensual, l'entrada té un {discountPercent} % de descompte. L'import l'ha de calcular l'API."
   },
   "inactivityLeavePage": {
     "title": "Inactivitats i baixes",

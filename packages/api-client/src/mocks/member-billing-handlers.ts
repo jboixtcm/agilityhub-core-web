@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
-import { censusRecordState, ERASED_MEMBER_ID, erasedMemberOverview } from "./fixtures/census";
+import { censusMembers, censusRecordState, ERASED_MEMBER_ID, erasedMemberOverview, resetCensusRecordState } from "./fixtures/census";
 import { adminInactivityPeriods, adminLeaveRequests, inactivityContextFixture, inactivityPreviewFixture, leaveContextFixture, lifecycleMemberId, lifecycleMembers } from "./fixtures/inactivity";
 import { meInvoiceFixtures, packBalanceFixtures } from "./fixtures/member-self-service";
 import { findParameter } from "./fixtures/settings";
@@ -49,6 +49,7 @@ let adminPeriods = structuredClone(adminInactivityPeriods);
 let adminLeaves = structuredClone(adminLeaveRequests);
 let memberCreatedInactivity = false;
 let lifecycleOverviews = createLifecycleOverviews();
+let memberLeftScenarioInitialized = false;
 const initialUpfront: components["schemas"]["UpfrontPayment"][] = [
   {
     amountDue: { amountMinor: 3000, currency: "EUR" },
@@ -87,6 +88,10 @@ function memberLifecycleStorage(): Storage | undefined {
 function memberLifecycleStorageKey(): string {
   const clubId = currentMockScenario().me.membership?.clubId ?? "anonymous";
   return `agilityhub.mock.member-lifecycle:${clubId}:${currentMockScenarioName()}`;
+}
+
+function memberLeftScenarioStorageKey(): string {
+  return `${memberLifecycleStorageKey()}:member-left-status`;
 }
 
 function restoreMemberLifecycle(): void {
@@ -160,21 +165,75 @@ function receiptPdf(invoice: components["schemas"]["MeInvoice"]): Uint8Array {
 function createLifecycleOverviews(): Map<string, components["schemas"]["MemberOverview"]> {
   return new Map(lifecycleMembers.map((lifecycleMember) => {
     const overview = structuredClone(censusRecordState.memberOverview);
+    const activePeriod = adminPeriods.find((period) => period.member.id === lifecycleMember.id && period.state === "ACTIVE");
+    const plannedLeave = adminLeaves.find((request) => request.member.id === lifecycleMember.id && request.state === "APPROVED");
+    const leaveDate = plannedLeave?.member.leaveDate ?? plannedLeave?.decision?.effectiveDate ?? null;
     Object.assign(overview.member, {
-      displayStatus: { kind: "ACTIVE", label: "alta" },
+      displayStatus: activePeriod === undefined
+        ? leaveDate === null
+          ? { kind: "ACTIVE", label: "alta" }
+          : { date: leaveDate, kind: "LEAVE_SCHEDULED", label: `baixa prevista ${leaveDate}` }
+        : { date: activePeriod.toMonth == null ? null : `${activePeriod.toMonth}-31`, kind: "INACTIVE_PERIOD", label: "inactiva" },
       fullName: lifecycleMember.fullName,
       id: lifecycleMember.id,
-      leaveDate: null,
+      leaveDate,
       memberNumber: lifecycleMember.memberNumber,
-      status: "ACTIVE",
+      status: activePeriod === undefined ? "ACTIVE" : "INACTIVE",
     });
     return [lifecycleMember.id, overview];
   }));
 }
 
+function initializeMemberLeftScenario(): void {
+  if (currentMockScenario().lifecycle !== "memberLeft" || memberLeftScenarioInitialized) return;
+  memberLeftScenarioInitialized = true;
+  if (memberLifecycleStorage()?.getItem(memberLeftScenarioStorageKey()) === "ACTIVE") return;
+  const lifecycle = lifecycleOverviews.get(lifecycleMembers[0].id);
+  for (const member of [lifecycle?.member, censusRecordState.memberOverview.member]) {
+    if (member === undefined) continue;
+    member.displayStatus = { kind: "LEFT", label: "baixa" };
+    member.leaveDate = null;
+    member.status = "LEFT";
+  }
+  syncLifecycleProjections(lifecycleMembers[0].id);
+  memberLifecycleStorage()?.setItem(memberLeftScenarioStorageKey(), "LEFT");
+}
+
 export function lifecycleMemberOverview(value: string): components["schemas"]["MemberOverview"] | undefined {
+  initializeMemberLeftScenario();
   if (value === censusRecordState.memberOverview.member.id) return censusRecordState.memberOverview;
   return lifecycleOverviews.get(lifecycleMemberId(value));
+}
+
+function syncLifecycleProjections(value: string): void {
+  const id = lifecycleMemberId(value);
+  const lifecycleMember = lifecycleMembers.find((item) => item.id === id);
+  const member = id === lifecycleMembers[0].id
+    ? censusRecordState.memberOverview.member
+    : lifecycleOverviews.get(id)?.member;
+  if (lifecycleMember === undefined || member === undefined) return;
+  const listMember = censusMembers.find((item) => item.id === lifecycleMember.alias);
+  if (listMember !== undefined) {
+    listMember.displayStatus = structuredClone(member.displayStatus);
+    if (typeof member.leaveDate === "string") {
+      listMember.leaveDate = member.leaveDate;
+    } else {
+      delete listMember.leaveDate;
+    }
+    if (member.displayStatus.kind === "INACTIVE_PERIOD" && typeof member.displayStatus.date === "string") {
+      listMember.inactivityUntil = member.displayStatus.date;
+    } else {
+      delete listMember.inactivityUntil;
+    }
+    listMember.leaveSource = adminLeaves.find((request) => request.member.id === id && request.state === "APPROVED")?.source ?? null;
+    listMember.hasPendingRequest =
+      adminPeriods.some((period) => period.member.id === id && period.state === "REQUESTED") ||
+      adminLeaves.some((request) => request.member.id === id && request.state === "PENDING");
+  }
+  for (const request of adminLeaves.filter((item) => item.member.id === id)) {
+    request.member.leaveDate = member.leaveDate ?? null;
+    request.member.status = member.status;
+  }
 }
 
 function updateLifecycleMember(value: string, update: (member: components["schemas"]["Member"]) => void): void {
@@ -184,16 +243,21 @@ function updateLifecycleMember(value: string, update: (member: components["schem
   if (id === lifecycleMembers[0].id || value === censusRecordState.memberOverview.member.id) {
     update(censusRecordState.memberOverview.member);
   }
+  syncLifecycleProjections(id);
 }
 
 export function resetMemberBillingState(): void {
+  resetCensusRecordState();
   memberLifecycleStorage()?.removeItem(memberLifecycleStorageKey());
+  memberLifecycleStorage()?.removeItem(memberLeftScenarioStorageKey());
   inactivity = structuredClone(inactivityContextFixture);
   leave = structuredClone(leaveContextFixture);
   packs = structuredClone(packBalanceFixtures);
   adminPeriods = structuredClone(adminInactivityPeriods);
   adminLeaves = structuredClone(adminLeaveRequests);
   lifecycleOverviews = createLifecycleOverviews();
+  memberLeftScenarioInitialized = false;
+  lifecycleMembers.forEach((member) => { syncLifecycleProjections(member.id); });
   memberCreatedInactivity = false;
   upfront = structuredClone(initialUpfront);
   checkoutReads.clear();
@@ -223,20 +287,86 @@ function localizedLeave(request: Request) {
   };
 }
 
+interface QueueFilter {
+  field: string;
+  op: string;
+  value: string;
+}
+
+function queueFilters(url: URL): QueueFilter[] | undefined {
+  const filters: QueueFilter[] = [];
+  for (const raw of url.searchParams.getAll("filter")) {
+    const [field, op, ...valueParts] = raw.split(":");
+    if (field === undefined || op === undefined || valueParts.length === 0) return undefined;
+    filters.push({ field, op, value: valueParts.join(":") });
+  }
+  return filters;
+}
+
+function queueFilterMatches(rawValue: string | number | null | undefined, filter: QueueFilter): boolean {
+  if (filter.op === "exists") return (rawValue !== null && rawValue !== undefined) === (filter.value === "true");
+  if (rawValue === null || rawValue === undefined) return false;
+  const value = String(rawValue);
+  const choices = filter.value.split(",");
+  switch (filter.op) {
+    case "eq": return value === filter.value;
+    case "ne": return value !== filter.value;
+    case "in": return choices.includes(value);
+    case "nin": return !choices.includes(value);
+    case "lt": return value < filter.value;
+    case "lte": return value <= filter.value;
+    case "gt": return value > filter.value;
+    case "gte": return value >= filter.value;
+    case "between": return choices[0] !== undefined && choices[1] !== undefined && value >= choices[0] && value <= choices[1];
+    default: return false;
+  }
+}
+
+function inactivityFilterValue(item: components["schemas"]["InactivityPeriod"], field: string): string | number | null | undefined {
+  switch (field) {
+    case "memberId": return item.member.id;
+    case "state": return item.state;
+    case "fromMonth": return item.fromMonth;
+    case "toMonth": return item.toMonth;
+    case "origin": return item.origin;
+    case "requestedAt": return item.requestedAt;
+    default: return undefined;
+  }
+}
+
+function leaveFilterValue(item: components["schemas"]["LeaveRequest"], field: string): string | number | null | undefined {
+  switch (field) {
+    case "memberId": return item.member.id;
+    case "state": return item.state;
+    case "source": return item.source;
+    case "requestedDate": return item.requestedDate;
+    case "effectiveDate": return item.decision?.effectiveDate;
+    case "reasonKey": return item.reasonKey;
+    case "nps": return item.nps;
+    default: return undefined;
+  }
+}
+
+function filterQueue<Row>(items: readonly Row[], filters: readonly QueueFilter[], valueOf: (item: Row, field: string) => string | number | null | undefined, allowedFields: readonly string[]): Row[] | undefined {
+  if (filters.some((filter) => !allowedFields.includes(filter.field))) return undefined;
+  return items.filter((item) => filters.every((filter) => queueFilterMatches(valueOf(item, filter.field), filter)));
+}
+
 export const memberBillingHandlers = [
   http.get("*/api/v1/inactivity-periods", ({ request }) => {
     const refused = moduleOff("INACTIVITY");
     if (refused !== undefined) return refused;
     const url = new URL(request.url);
-    const memberFilter = url.searchParams.getAll("filter").find((value) => value.startsWith("memberId:eq:"));
-    const stateFilter = url.searchParams.getAll("filter").find((value) => value.startsWith("state:"));
-    const states = stateFilter?.split(":").slice(2).join(":").split(",");
-    const requestedMemberId = memberFilter?.slice("memberId:eq:".length);
-    const memberId = requestedMemberId === undefined ? undefined : lifecycleMemberId(requestedMemberId);
+    const filters = queueFilters(url);
+    if (filters === undefined) return error("INVALID_FILTER", 400);
+    const memberFilter = filters.find((filter) => filter.field === "memberId" && filter.op === "eq");
+    const memberId = memberFilter === undefined ? undefined : lifecycleMemberId(memberFilter.value);
     if (memberId !== undefined && currentMockScenario().lifecycle === "memberPackPlan") {
       return error("INACTIVITY_NOT_APPLICABLE", 422);
     }
-    const filtered = adminPeriods.filter((item) => (memberId === undefined || item.member.id === memberId) && (states === undefined || states.includes(item.state)));
+    const normalizedFilters = filters.map((filter) => filter.field === "memberId" ? { ...filter, value: filter.value.split(",").map(lifecycleMemberId).join(",") } : filter);
+    const filtered = filterQueue(adminPeriods, normalizedFilters, inactivityFilterValue, ["memberId", "state", "fromMonth", "toMonth", "origin", "requestedAt"]);
+    if (filtered === undefined) return error("INVALID_FILTER", 400);
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 20);
     const items = filtered.slice(page * size, (page + 1) * size).map((item) => ({
@@ -252,7 +382,7 @@ export const memberBillingHandlers = [
       toMonth: item.toMonth,
     }));
     return HttpResponse.json({
-      appliedFilters: [],
+      appliedFilters: filters.map((filter) => ({ field: filter.field, op: filter.op, value: filter.value })),
       items,
       page,
       size,
@@ -388,11 +518,11 @@ export const memberBillingHandlers = [
   }),
   http.get("*/api/v1/leave-requests", ({ request }) => {
     const url = new URL(request.url);
-    const filters = url.searchParams.getAll("filter");
-    const requestedMemberId = filters.find((value) => value.startsWith("memberId:eq:"))?.slice("memberId:eq:".length);
-    const memberId = requestedMemberId === undefined ? undefined : lifecycleMemberId(requestedMemberId);
-    const state = filters.find((value) => value.startsWith("state:eq:"))?.slice("state:eq:".length);
-    const filtered = adminLeaves.filter((item) => (memberId === undefined || item.member.id === memberId) && (state === undefined || item.state === state));
+    const filters = queueFilters(url);
+    if (filters === undefined) return error("INVALID_FILTER", 400);
+    const normalizedFilters = filters.map((filter) => filter.field === "memberId" ? { ...filter, value: filter.value.split(",").map(lifecycleMemberId).join(",") } : filter);
+    const filtered = filterQueue(adminLeaves, normalizedFilters, leaveFilterValue, ["memberId", "state", "source", "requestedDate", "effectiveDate", "reasonKey", "nps"]);
+    if (filtered === undefined) return error("INVALID_FILTER", 400);
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 20);
     const items = filtered.slice(page * size, (page + 1) * size).map((item) => ({
@@ -408,7 +538,7 @@ export const memberBillingHandlers = [
       state: item.state,
     }));
     return HttpResponse.json({
-      appliedFilters: [],
+      appliedFilters: filters.map((filter) => ({ field: filter.field, op: filter.op, value: filter.value })),
       items,
       page,
       size,
@@ -496,6 +626,20 @@ export const memberBillingHandlers = [
     const member = lifecycleMemberOverview(requestedId)?.member;
     if (member === undefined) return error("NOT_FOUND", 404);
     if (member.leaveDate == null) return error("NO_PLANNED_LEAVE", 409);
+    const leaveDate = member.leaveDate;
+    const normalizedId = lifecycleMemberId(requestedId);
+    for (const request of adminLeaves.filter((item) =>
+      item.member.id === normalizedId &&
+      item.state === "APPROVED" &&
+      (item.decision?.effectiveDate ?? item.member.leaveDate ?? item.requestedDate) === leaveDate
+    )) {
+      request.state = "CANCELLED";
+      request.cancelledAt = "2026-10-05T10:00:00Z";
+      request.cancelledBy = "ADMIN";
+      request.cancelReason = "ADMIN";
+      request.member.leaveDate = null;
+      request.version += 1;
+    }
     updateLifecycleMember(requestedId, (updated) => {
       updated.leaveDate = null;
       updated.displayStatus = { kind: "ACTIVE", label: "alta" };
@@ -507,7 +651,7 @@ export const memberBillingHandlers = [
     if (requestedId === ERASED_MEMBER_ID) return error("MEMBER_ERASED", 409);
     const member = lifecycleMemberOverview(requestedId)?.member;
     if (member === undefined) return error("NOT_FOUND", 404);
-    if (member.status !== "LEFT" && currentMockScenario().lifecycle !== "memberLeft") return error("MEMBER_NOT_LEFT", 409);
+    if (member.status !== "LEFT") return error("MEMBER_NOT_LEFT", 409);
     const body = (await request.json()) as ReactivationRequest;
     updateLifecycleMember(requestedId, (updated) => {
       Object.assign(updated, body, {
@@ -517,6 +661,9 @@ export const memberBillingHandlers = [
         version: updated.version + 1,
       });
     });
+    if (currentMockScenario().lifecycle === "memberLeft" && lifecycleMemberId(requestedId) === lifecycleMembers[0].id) {
+      memberLifecycleStorage()?.setItem(memberLeftScenarioStorageKey(), "ACTIVE");
+    }
     return HttpResponse.json(member);
   }),
   http.post("*/api/v1/members/:id/plan-change", async ({ params, request }) => {
