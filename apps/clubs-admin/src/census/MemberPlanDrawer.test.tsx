@@ -26,7 +26,7 @@ async function loadMember(): Promise<components["schemas"]["Member"]> {
 }
 
 async function renderDrawer(member: components["schemas"]["Member"], onChanged = vi.fn()) {
-  const i18n = await createI18n({ branding, browserLanguages: ["ca"], initialNamespaces: ["admin-census", "errors"], storage: undefined });
+  const i18n = await createI18n({ branding, browserLanguages: ["ca"], initialNamespaces: ["admin-census", "common", "errors"], storage: undefined });
   render(
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={branding}>
@@ -45,6 +45,46 @@ async function renderDrawer(member: components["schemas"]["Member"], onChanged =
 }
 
 describe("E8-W03 round 2 member plan change", () => {
+  it("E8-W06 #6 shows the shared in-progress message and retries with the retained key", async () => {
+    const member = await loadMember();
+    const sentKeys: string[] = [];
+    server.use(http.post("*/api/v1/members/:id/plan-change", ({ request }) => {
+      sentKeys.push(request.headers.get("Idempotency-Key") ?? "");
+      return sentKeys.length === 1
+        ? HttpResponse.json({ code: "IDEMPOTENCY_KEY_REUSED", details: { reason: "IN_PROGRESS" }, message: "still running", traceId: "test" }, { status: 409 })
+        : new HttpResponse(null, { status: 204 });
+    }));
+    await renderDrawer(member);
+    const drawer = await screen.findByRole("dialog", { name: "Modalitat" });
+    await within(drawer).findByRole("option", { name: "Abonat" });
+    fireEvent.change(within(drawer).getByLabelText("Modalitat nova"), { target: { value: "plan-member" } });
+    fireEvent.change(await within(drawer).findByLabelText("Tarifa"), { target: { value: "price-member" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    expect(await within(drawer).findByRole("alert")).toHaveTextContent("L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.");
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+    await waitFor(() => {
+      expect(sentKeys).toHaveLength(2);
+      expect(sentKeys[0]).toBe(sentKeys[1]);
+    });
+  });
+
+  it("E8-W06 #7 formats a JPY plan price without dividing it by 100", async () => {
+    const member = await loadMember();
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const result = await client.GET("/prices", { params: { query: { planId: "plan-member" } } });
+    const price = result.data?.items[0];
+    if (price === undefined) throw new TypeError("Missing price fixture");
+    server.use(http.get("*/api/v1/prices", () => HttpResponse.json({
+      items: [{ ...price, amount: { amountMinor: 6000, currency: "JPY" } }],
+      totalItems: 1,
+    })));
+    await renderDrawer(member);
+    const drawer = await screen.findByRole("dialog", { name: "Modalitat" });
+    await within(drawer).findByRole("option", { name: "Abonat" });
+    fireEvent.change(within(drawer).getByLabelText("Modalitat nova"), { target: { value: "plan-member" } });
+    expect(await within(drawer).findByRole("option", { name: /6\.000.*¥/u })).toBeInTheDocument();
+  });
+
   it("#2 submits the published plan-change mutation and refreshes D10", async () => {
     const member = await loadMember();
     const writes: unknown[] = [];

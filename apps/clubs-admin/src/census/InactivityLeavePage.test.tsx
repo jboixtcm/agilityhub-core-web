@@ -248,6 +248,116 @@ describe("T-13-31 inactivity and leave queues", () => {
     expect(screen.queryByText(/fromMonth/u, { exact: false })).toBeNull();
   });
 
+  it("E8-W06 #2 renders an applied month-range array without crashing", async () => {
+    server.use(http.get("*/api/v1/inactivity-periods", ({ request }) => {
+      const url = new URL(request.url);
+      return HttpResponse.json({
+        appliedFilters: url.searchParams.has("filter")
+          ? [{ field: "fromMonth", op: "between", value: ["2026-10", "2026-12"] }]
+          : [],
+        items: [],
+        page: Number(url.searchParams.get("page") ?? 0),
+        size: Number(url.searchParams.get("size") ?? 50),
+        totalItems: 0,
+        totalPages: 0,
+      });
+    }));
+
+    render(await provider(<InactivityLeavePage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} />));
+    expect((await screen.findAllByText(/Des de = «.*octubre.*2026.*desembre.*2026.*»/iu, { exact: false }))[0]).toBeVisible();
+  });
+
+  it("E8-W06 #2 preserves a saved view's month-range array when applying it", async () => {
+    const filters: string[] = [];
+    server.use(
+      http.get("*/api/v1/saved-views", ({ request }) => {
+        const listKey = new URL(request.url).searchParams.get("listKey");
+        return HttpResponse.json(listKey === "inactivity-periods" ? [{
+          columns: ["member", "fromMonth", "toMonth", "state", "origin", "requestedAt"],
+          filters: [{ field: "fromMonth", op: "between", value: ["2026-10", "2026-12"] }],
+          id: "68000000-0000-4000-8000-000000000001",
+          listKey,
+          name: "Rang de mesos",
+          ownerAccountId: "68000000-0000-4000-8000-000000000002",
+          shared: false,
+          sort: ["fromMonth,asc"],
+          version: 1,
+        }] : []);
+      }),
+      http.get("*/api/v1/inactivity-periods", ({ request }) => {
+        const url = new URL(request.url);
+        filters.push(...url.searchParams.getAll("filter"));
+        return HttpResponse.json({ appliedFilters: [], items: [], page: 0, size: 50, totalItems: 0, totalPages: 0 });
+      }),
+    );
+
+    render(await provider(<InactivityLeavePage client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })} />));
+    fireEvent.click(await screen.findByText("Vistes", { selector: "summary" }));
+    await screen.findByRole("option", { name: "Rang de mesos" });
+    fireEvent.change(screen.getByRole("combobox", { name: "Vistes" }), {
+      target: { value: "68000000-0000-4000-8000-000000000001" },
+    });
+    await waitFor(() => {
+      expect(filters).toContain("fromMonth:between:2026-10,2026-12");
+    });
+  });
+
+  it("E8-W06 #3 direct leave cancels the pending request before D5 is synchronized", async () => {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const created = await client.POST("/members/{id}/leave", {
+      body: { effectiveDate: "2026-12-01", reasonKey: "CLUB_DECISION" },
+      headers: { "Idempotency-Key": "68000000-0000-4000-8000-000000000003" },
+      params: { path: { id: "member-montse" } },
+    });
+    expect(created.data).toMatchObject({ source: "ADMIN", state: "APPROVED" });
+
+    const requests = await client.GET("/leave-requests", {
+      params: { query: { fields: "member,state,source", filter: ["memberId:eq:member-montse"], page: 0, size: 20, sort: ["requestedAt,asc"] } },
+    });
+    expect(requests.data?.items).toEqual(expect.arrayContaining([
+      expect.objectContaining({ source: "MEMBER", state: "CANCELLED" }),
+      expect.objectContaining({ source: "ADMIN", state: "APPROVED" }),
+    ]));
+
+    const members = await client.GET("/members", {
+      params: { query: { fields: "fullName,leaveDate,leaveSource,hasPendingRequest", filter: ["id:eq:member-montse"], page: 0, size: 50, sort: ["lastName,asc"] } },
+    });
+    expect(members.data?.items[0]).toMatchObject({
+      hasPendingRequest: false,
+      leaveDate: "2026-12-01",
+      leaveSource: "ADMIN",
+    });
+  });
+
+  it("E8-W06 #4 applies member-name q search to both lifecycle queues", async () => {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const inactivityQuery = { fields: "member,state", page: 0, q: "Montse", size: 50 as const, sort: ["fromMonth,asc"] };
+    const leaveQuery = { fields: "member,state", page: 0, q: "Montse", size: 50 as const, sort: ["requestedAt,asc"] };
+    const [periods, leaves] = await Promise.all([
+      client.GET("/inactivity-periods", { params: { query: inactivityQuery } }),
+      client.GET("/leave-requests", { params: { query: leaveQuery } }),
+    ]);
+    expect(periods.data?.items.map((item) => item.member?.fullName)).toEqual(["Montse Tresserra Casas"]);
+    expect(leaves.data?.items.map((item) => item.member?.fullName)).toEqual(["Montse Tresserra Casas"]);
+
+    const [noPeriods, noLeaves] = await Promise.all([
+      client.GET("/inactivity-periods", { params: { query: { ...inactivityQuery, q: "NoSuchMemberXYZ" } } }),
+      client.GET("/leave-requests", { params: { query: { ...leaveQuery, q: "NoSuchMemberXYZ" } } }),
+    ]);
+    expect(noPeriods.data?.items).toEqual([]);
+    expect(noLeaves.data?.items).toEqual([]);
+  });
+
+  it("E8-W06 #5 rejects undeclared queue sort keys with 400 INVALID_FILTER", async () => {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    await expect(client.GET("/inactivity-periods", {
+      params: { query: { fields: "member,state", page: 0, size: 50, sort: ["undeclared,asc"] } },
+    })).rejects.toMatchObject({ code: "INVALID_FILTER", status: 400 });
+    await expect(client.GET("/leave-requests", {
+      params: { query: { fields: "member,state", page: 0, size: 50, sort: ["undeclared,asc"] } },
+    })).rejects.toMatchObject({ code: "INVALID_FILTER", status: 400 });
+  });
+
   it("E8-W03 round 4 #3/#5/#6 keeps lifecycle detail, D10 and D5 projections consistent", async () => {
     const joanOverview = await requestJson<components["schemas"]["MemberOverview"]>("/members/member-joan/overview");
     expect(joanOverview.member.displayStatus).toMatchObject({ date: "2026-12-12", kind: "LEAVE_SCHEDULED" });

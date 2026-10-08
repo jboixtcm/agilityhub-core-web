@@ -1,10 +1,10 @@
-import { isApiError, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
+import { isApiError, isInProgress, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Badge, Button, Drawer, FormField, Input, Modal, Select, Textarea, Toast, useBranding } from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { clubToday } from "../billing/shared";
+import { clubToday, formatMoney, useBillingLocale } from "../billing/shared";
 
 type Member = components["schemas"]["Member"];
 type Leave = components["schemas"]["LeaveRequest"];
@@ -30,7 +30,8 @@ function parameterReasons(value: unknown, language: string): { key: string; labe
 export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased, open }: { client: ApiClient; member: Member; onChanged: (member?: Member) => void; onClose: () => void; onErased: () => void; open: boolean }) {
   const branding = useBranding();
   const formats = useClubFormats();
-  const { i18n, t } = useTranslation(["admin-census", "enums", "errors"]);
+  const { i18n, t } = useTranslation(["admin-census", "common", "enums", "errors"]);
+  const billingLocale = useBillingLocale();
   const keys = useSubmissionKeys();
   const [rows, setRows] = useState<LeaveRow[]>([]);
   const [request, setRequest] = useState<Leave>();
@@ -163,6 +164,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
   };
   const errorMessage = useMemo(() => {
     if (failure === undefined) return undefined;
+    if (isInProgress(failure)) return t("common:inProgress");
     if (isApiError(failure, "LEAVE_DATE_INVALID")) return t("admin-census:leave.errors.dateInvalid");
     return isApiError(failure) ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") }) : t("admin-census:common.genericError");
   }, [failure, t]);
@@ -478,7 +480,7 @@ export function MemberLeaveDrawer({ client, member, onChanged, onClose, onErased
                   <option value="">{t("admin-census:common.choose")}</option>
                   {prices.map((price) => (
                     <option key={price.id} value={price.id}>
-                      {formats.formatMoney(price.amount.amountMinor / 100)}
+                      {formatMoney(price.amount, billingLocale)}
                     </option>
                   ))}
                 </Select>

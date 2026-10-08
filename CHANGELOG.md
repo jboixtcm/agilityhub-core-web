@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Complete the E8-W06 lifecycle review follow-ups: operator-aware filter values, array-valued ranges, searchable contract-faithful queues, synchronized direct leave, catalogued sort errors, shared in-progress retry messages, and currency-aware admin amounts.
 - Complete the E8-W03 Round 4 lifecycle review: operator-correct queue filters, localized applied chips, complete paged facets, numerically sorted mocks, calendar month ends, synchronized D5/D10 lifecycle projections, and partial SEPA missing-account preservation.
 - Complete the E8-W02 review follow-ups: paid checkout refreshes its booking, inactivity actions wait for the current preview and show the selected period's fee, D10 refreshes adjusted pack rows, lifecycle mocks preserve no-inactivity scenarios, and pack-read failures keep balances with a retry.
 - Harden the E8-W03 lifecycle workflows with complete queue facets, retry-safe inactivity edits, modal-local leave errors, parameter-driven plan discounts, stateful lifecycle mocks and reload-safe reactivation.

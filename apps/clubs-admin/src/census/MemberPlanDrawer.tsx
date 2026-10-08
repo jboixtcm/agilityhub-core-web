@@ -1,8 +1,9 @@
-import { isApiError, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
-import { useClubFormats } from "@agilityhub/i18n";
+import { isApiError, isInProgress, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
 import { Button, Drawer, FormField, Input, Select } from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { formatMoney, useBillingLocale } from "../billing/shared";
 
 type Member = components["schemas"]["Member"];
 type Plan = components["schemas"]["Plan"];
@@ -16,8 +17,8 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
   onErased: () => void;
   open: boolean;
 }) {
-  const { t } = useTranslation(["admin-census", "errors"]);
-  const formats = useClubFormats();
+  const { t } = useTranslation(["admin-census", "common", "errors"]);
+  const billingLocale = useBillingLocale();
   const keys = useSubmissionKeys();
   const [plans, setPlans] = useState<Plan[]>([]);
   const [prices, setPrices] = useState<Price[]>([]);
@@ -82,6 +83,7 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
     selected?.type === "MONTHLY";
   const error = useMemo(() => {
     if (failure === undefined) return undefined;
+    if (isInProgress(failure)) return t("common:inProgress");
     return isApiError(failure)
       ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") })
       : t("admin-census:common.genericError");
@@ -140,7 +142,7 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
             <FormField id="member-price" label={t("admin-census:plan.price")}>
               <Select id="member-price" onChange={(event) => { setPriceId(event.currentTarget.value); }} required value={priceId}>
                 <option value="">{t("admin-census:common.choose")}</option>
-                {prices.map((price) => <option key={price.id} value={price.id}>{formats.formatMoney(price.amount.amountMinor / 100)}</option>)}
+                {prices.map((price) => <option key={price.id} value={price.id}>{formatMoney(price.amount, billingLocale)}</option>)}
               </Select>
             </FormField>
             <FormField id="member-plan-effective-month" label={t("admin-census:plan.effectiveMonth")}>

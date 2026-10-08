@@ -29,7 +29,7 @@ async function loadMember(): Promise<components["schemas"]["Member"]> {
 }
 
 async function renderDrawer(member: components["schemas"]["Member"], language = "ca", onChanged = vi.fn(), onErased = vi.fn()) {
-  const i18n = await createI18n({ branding: trilingualBranding, browserLanguages: [language], initialNamespaces: ["admin-census", "enums", "errors"], storage: undefined });
+  const i18n = await createI18n({ branding: trilingualBranding, browserLanguages: [language], initialNamespaces: ["admin-census", "common", "enums", "errors"], storage: undefined });
   render(
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={trilingualBranding}>
@@ -41,6 +41,47 @@ async function renderDrawer(member: components["schemas"]["Member"], language = 
 }
 
 describe("T-13-31 admin leave lifecycle", () => {
+  it("E8-W06 #6 shows the shared in-progress message and retries direct leave with the retained key", async () => {
+    const member = await loadMember();
+    const sentKeys: string[] = [];
+    server.use(http.post("*/api/v1/members/:id/leave", ({ request }) => {
+      sentKeys.push(request.headers.get("Idempotency-Key") ?? "");
+      return sentKeys.length === 1
+        ? HttpResponse.json({ code: "IDEMPOTENCY_KEY_REUSED", details: { reason: "IN_PROGRESS" }, message: "still running", traceId: "test" }, { status: 409 })
+        : HttpResponse.json({ cancelledBookings: [] }, { status: 201 });
+    }));
+    await renderDrawer(member);
+    const drawer = await screen.findByRole("dialog", { name: "Baixa (amb data)" });
+    fireEvent.change(within(drawer).getByLabelText("Data d'efecte"), { target: { value: "2026-11-30" } });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Programa la baixa" }));
+    const modal = screen.getAllByRole("dialog", { name: "Programa la baixa" }).at(-1);
+    if (modal === undefined) throw new TypeError("Missing direct-leave confirmation");
+    fireEvent.click(within(modal).getByRole("button", { name: "Programa la baixa" }));
+    expect(await within(modal).findByRole("alert")).toHaveTextContent("L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.");
+    fireEvent.click(within(modal).getByRole("button", { name: "Programa la baixa" }));
+    await waitFor(() => {
+      expect(sentKeys).toHaveLength(2);
+      expect(sentKeys[0]).toBe(sentKeys[1]);
+    });
+  });
+
+  it("E8-W06 #7 formats a JPY reactivation price without dividing it by 100", async () => {
+    const member = await loadMember();
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const result = await client.GET("/prices", { params: { query: { planId: "plan-member" } } });
+    const price = result.data?.items[0];
+    if (price === undefined) throw new TypeError("Missing price fixture");
+    server.use(http.get("*/api/v1/prices", () => HttpResponse.json({
+      items: [{ ...price, amount: { amountMinor: 6000, currency: "JPY" } }],
+      totalItems: 1,
+    })));
+    await renderDrawer({ ...member, status: "LEFT", nextInvoiceDate: "2026-11-01" });
+    fireEvent.click(await screen.findByRole("button", { name: "Reactiva l'abonat" }));
+    const modal = screen.getByRole("dialog", { name: "Reactiva l'abonat" });
+    fireEvent.change(within(modal).getByLabelText("Modalitat"), { target: { value: "plan-member" } });
+    expect(await within(modal).findByRole("option", { name: /6\.000.*¥/u })).toBeInTheDocument();
+  });
+
   it("prefills the effective date for a pending request", async () => {
     const member = await loadMember();
     const pending = {

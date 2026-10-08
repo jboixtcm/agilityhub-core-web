@@ -54,6 +54,13 @@ function moduleOff(module: string) {
   return currentMockScenario().branding.modules.includes(module) ? undefined : error("MODULE_DISABLED", 404, { module });
 }
 
+function normalized(value: string): string {
+  return value
+    .normalize("NFD")
+    .replaceAll(/\p{Diacritic}/gu, "")
+    .toLocaleLowerCase();
+}
+
 let inactivity = structuredClone(inactivityContextFixture);
 let leave = structuredClone(leaveContextFixture);
 let packs = structuredClone(packBalanceFixtures);
@@ -481,10 +488,14 @@ export const memberBillingHandlers = [
       return error("INACTIVITY_NOT_APPLICABLE", 422);
     }
     const normalizedFilters = filters.map((filter) => filter.field === "memberId" ? { ...filter, value: filter.value.split(",").map(lifecycleMemberId).join(",") } : filter);
-    const filtered = filterQueue(adminPeriods, normalizedFilters, inactivityFilterValue, ["memberId", "state", "fromMonth", "toMonth", "origin", "requestedAt"]);
+    const query = normalized((url.searchParams.get("q") ?? "").trim());
+    const searched = query === ""
+      ? adminPeriods
+      : adminPeriods.filter((item) => normalized(item.member.fullName).includes(query));
+    const filtered = filterQueue(searched, normalizedFilters, inactivityFilterValue, ["memberId", "state", "fromMonth", "toMonth", "origin", "requestedAt"]);
     if (filtered === undefined) return error("INVALID_FILTER", 400);
     const sorted = sortQueue(filtered, url.searchParams.getAll("sort"), inactivitySortValue, ["fromMonth", "requestedAt", "memberLastName"]);
-    if (sorted === undefined) return error("INVALID_SORT", 400);
+    if (sorted === undefined) return error("INVALID_FILTER", 400);
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 20);
     const items = sorted.slice(page * size, (page + 1) * size).map((item) => ({
@@ -648,10 +659,14 @@ export const memberBillingHandlers = [
     const filters = queueFilters(url);
     if (filters === undefined) return error("INVALID_FILTER", 400);
     const normalizedFilters = filters.map((filter) => filter.field === "memberId" ? { ...filter, value: filter.value.split(",").map(lifecycleMemberId).join(",") } : filter);
-    const filtered = filterQueue(adminLeaves, normalizedFilters, leaveFilterValue, ["memberId", "state", "source", "requestedAt", "requestedDate", "effectiveDate", "reasonKey", "nps"]);
+    const query = normalized((url.searchParams.get("q") ?? "").trim());
+    const searched = query === ""
+      ? adminLeaves
+      : adminLeaves.filter((item) => normalized(item.member.fullName).includes(query));
+    const filtered = filterQueue(searched, normalizedFilters, leaveFilterValue, ["memberId", "state", "source", "requestedAt", "requestedDate", "effectiveDate", "reasonKey", "nps"]);
     if (filtered === undefined) return error("INVALID_FILTER", 400);
     const sorted = sortQueue(filtered, url.searchParams.getAll("sort"), leaveSortValue, ["requestedAt", "requestedDate", "effectiveDate"]);
-    if (sorted === undefined) return error("INVALID_SORT", 400);
+    if (sorted === undefined) return error("INVALID_FILTER", 400);
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 20);
     const items = sorted.slice(page * size, (page + 1) * size).map((item) => ({
@@ -715,14 +730,6 @@ export const memberBillingHandlers = [
     const overview = lifecycleMemberOverview(requestedId);
     if (overview === undefined) return error("NOT_FOUND", 404);
     const normalizedId = lifecycleMemberId(requestedId);
-    updateLifecycleMember(requestedId, (member) => {
-      member.leaveDate = body.effectiveDate;
-      member.displayStatus = {
-        date: body.effectiveDate,
-        kind: "LEAVE_SCHEDULED",
-        label: `baixa prevista ${body.effectiveDate}`,
-      };
-    });
     const member = overview.member;
     for (const pendingRequest of adminLeaves.filter((item) => item.member.id === normalizedId && item.state === "PENDING")) {
       pendingRequest.state = "CANCELLED";
@@ -747,6 +754,7 @@ export const memberBillingHandlers = [
       version: 1,
     };
     adminLeaves = [created, ...adminLeaves];
+    recomputeLifecycleMember(requestedId);
     return HttpResponse.json(created, { status: 201 });
   }),
   http.delete("*/api/v1/members/:id/planned-leave", ({ params }) => {

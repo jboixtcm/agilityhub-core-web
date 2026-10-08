@@ -250,6 +250,63 @@ describe("E5-W05 round 2 #2 · a range filter with no suggested values (ruling E
 });
 
 describe("E8-W03 round 4 #1 · operator-specific universal filter values", () => {
+  it("E8-W06 #1 reloads suggested values when the operator changes from eq to lt", async () => {
+    const loadFilterValues = vi.fn(() =>
+      Promise.resolve([{ count: 1, label: "Octubre 2026", value: "2026-10" }]),
+    );
+    const state: UniversalListState = {
+      columns: ["id"],
+      filters: [],
+      page: 0,
+      q: "",
+      size: 50,
+      sort: [],
+    };
+    render(
+      <UniversalList<Row>
+        appliedFilters={[]}
+        caption="Períodes"
+        columns={[{ key: "id", label: "Id", render: (row) => row.id }]}
+        filterColumns={[
+          {
+            key: "fromMonth",
+            label: "Des de",
+            operators: ["eq", "lt"],
+            type: "date",
+          },
+        ]}
+        labels={listLabels}
+        listKey="operator-reload-test"
+        loadFilterValues={loadFilterValues}
+        onCreateView={() => Promise.reject(new Error("unused"))}
+        onDeleteView={() => Promise.resolve()}
+        onExport={() => undefined}
+        onRenameView={() => Promise.reject(new Error("unused"))}
+        onRetry={() => undefined}
+        onStateChange={() => undefined}
+        rowKey={(row) => row.id}
+        rows={[{ id: "period-1" }]}
+        savedViews={[]}
+        state={state}
+        totalPages={1}
+      />,
+    );
+
+    const value = await screen.findByRole("combobox", { name: "Valor" });
+    await waitFor(() => {
+      expect(value).toBeEnabled();
+      expect(loadFilterValues).toHaveBeenCalledTimes(1);
+    });
+    fireEvent.change(screen.getByRole("combobox", { name: "Operador" }), {
+      target: { value: "lt" },
+    });
+    await waitFor(() => {
+      expect(value).toBeEnabled();
+      expect(loadFilterValues).toHaveBeenCalledTimes(2);
+    });
+    expect(screen.getByRole("button", { name: "Afegeix el filtre" })).toBeEnabled();
+  });
+
   it("sends both range bounds for between and no value for exists", async () => {
     const onStateChange = vi.fn();
     const state: UniversalListState = {

@@ -30,7 +30,7 @@ async function renderDrawer(memberId = "member-laura", drawerBranding: Branding 
   const i18n = await createI18n({
     branding: drawerBranding,
     browserLanguages: ["ca"],
-    initialNamespaces: ["admin-census", "enums", "errors"],
+    initialNamespaces: ["admin-census", "common", "enums", "errors"],
     storage: undefined,
   });
   render(
@@ -50,6 +50,45 @@ async function renderDrawer(memberId = "member-laura", drawerBranding: Branding 
 }
 
 describe("T-13-31 admin inactivity lifecycle", () => {
+  it("E8-W06 #6 shows the shared in-progress message and retries approval with the retained key", async () => {
+    const sentKeys: string[] = [];
+    server.use(http.post("*/api/v1/inactivity-periods/:id/decision", ({ request }) => {
+      sentKeys.push(request.headers.get("Idempotency-Key") ?? "");
+      return sentKeys.length === 1
+        ? HttpResponse.json({ code: "IDEMPOTENCY_KEY_REUSED", details: { reason: "IN_PROGRESS" }, message: "still running", traceId: "test" }, { status: 409 })
+        : HttpResponse.json({ bookingsInside: 0, cancelledBookings: [] });
+    }));
+    await renderDrawer();
+    const drawer = await screen.findByRole("dialog", { name: "Inactivitat" });
+    fireEvent.click(await within(drawer).findByRole("button", { name: "Aprova" }));
+    const approval = screen.getByRole("dialog", { name: "Aprova el període" });
+    fireEvent.click(within(approval).getByRole("button", { name: "Aprova" }));
+    expect(await within(approval).findByRole("alert")).toHaveTextContent("L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.");
+    fireEvent.click(within(approval).getByRole("button", { name: "Aprova" }));
+    await waitFor(() => {
+      expect(sentKeys).toHaveLength(2);
+      expect(sentKeys[0]).toBe(sentKeys[1]);
+    });
+  });
+
+  it("E8-W06 #7 formats inactivity fees with the money currency's minor units", async () => {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const seed = await client.GET("/inactivity-periods/{id}", {
+      params: { path: { id: "62000000-0000-4000-8000-000000000001" } },
+    });
+    if (seed.data === undefined) throw new TypeError("Missing inactivity fixture");
+    server.use(http.get("*/api/v1/inactivity-periods/:id", () => HttpResponse.json({
+      ...seed.data,
+      feeSnapshot: {
+        firstMonth: { amountMinor: 6000, currency: "JPY" },
+        followingMonths: { amountMinor: 3000, currency: "JPY" },
+      },
+    })));
+    await renderDrawer();
+    const drawer = await screen.findByRole("dialog", { name: "Inactivitat" });
+    expect(await within(drawer).findByText(/6\.000.*¥.*3\.000.*¥/u)).toBeVisible();
+  });
+
   it("shows approve and deny only for a requested period", async () => {
     await renderDrawer();
     const drawer = await screen.findByRole("dialog", { name: "Inactivitat" });

@@ -460,7 +460,7 @@ export function UniversalList<Row>({
     return () => {
       current = false;
     };
-  }, [filterField, loadFilterValues, suggestedValueActive]);
+  }, [filterField, filterOperator, loadFilterValues, suggestedValueActive]);
 
   const visibleColumns = useMemo(
     () =>

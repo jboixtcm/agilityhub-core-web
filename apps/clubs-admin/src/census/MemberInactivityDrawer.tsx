@@ -1,8 +1,10 @@
-import { isApiError, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
+import { isApiError, isInProgress, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Badge, Button, Checkbox, Drawer, FormField, Input, Modal, Textarea, Toast, useBranding } from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { formatMoney, useBillingLocale } from "../billing/shared";
 
 type Period = components["schemas"]["InactivityPeriod"];
 type PeriodRow = components["schemas"]["InactivityPeriodListItem"];
@@ -12,9 +14,10 @@ function detail(error: unknown, key: string): unknown {
 }
 
 export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onChanged, onClose, onErased, open }: { client: ApiClient; initialPeriodId?: string; memberId: string; onChanged: () => void; onClose: () => void; onErased: () => void; open: boolean }) {
-  const { t } = useTranslation(["admin-census", "enums", "errors"]);
+  const { t } = useTranslation(["admin-census", "common", "enums", "errors"]);
   const branding = useBranding();
   const formats = useClubFormats();
+  const billingLocale = useBillingLocale();
   const keys = useSubmissionKeys();
   const [rows, setRows] = useState<PeriodRow[]>([]);
   const [period, setPeriod] = useState<Period>();
@@ -168,6 +171,7 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
   const errorMessage = useMemo(() => {
     const visibleFailure = failure ?? readFailure;
     if (visibleFailure === undefined) return undefined;
+    if (isInProgress(visibleFailure)) return t("common:inProgress");
     if (isApiError(visibleFailure, "INACTIVITY_DEADLINE_PASSED")) {
       const earliestMonth = detail(visibleFailure, "earliestMonth");
       return t("admin-census:inactivity.errors.deadline", {
@@ -180,6 +184,7 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
   }, [failure, readFailure, t]);
   const modalErrorMessage = useMemo(() => {
     if (modalFailure === undefined) return undefined;
+    if (isInProgress(modalFailure)) return t("common:inProgress");
     return isApiError(modalFailure)
       ? t(`errors:${modalFailure.code}`, { defaultValue: t("admin-census:common.genericError") })
       : t("admin-census:common.genericError");
@@ -211,8 +216,8 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
               {!branding.modules.includes("BILLING") || period.feeSnapshot == null ? null : (
                 <p className="census-record__muted">
                   {t("admin-census:inactivity.feeSnapshot", {
-                    first: formats.formatMoney(period.feeSnapshot.firstMonth.amountMinor / 100),
-                    following: formats.formatMoney(period.feeSnapshot.followingMonths.amountMinor / 100),
+                    first: formatMoney(period.feeSnapshot.firstMonth, billingLocale),
+                    following: formatMoney(period.feeSnapshot.followingMonths, billingLocale),
                   })}
                 </p>
               )}

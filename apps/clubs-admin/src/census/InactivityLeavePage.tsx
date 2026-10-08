@@ -32,6 +32,7 @@ function apiFilters(filters: readonly UniversalFilter[]) {
 }
 
 function filterValue(value: unknown): string {
+  if (Array.isArray(value)) return value.map(filterValue).join(",");
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean" ? String(value) : "";
 }
 

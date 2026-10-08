@@ -1,4 +1,4 @@
-import { isApiError, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
+import { isApiError, isInProgress, type ApiClient, type components, useSubmissionKeys } from "@agilityhub/api-client";
 import { Badge, Button, Drawer, FormField, Input, Select } from "@agilityhub/ui";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,7 +23,7 @@ export function MemberPaymentMethodDrawer({
   open: boolean;
   paymentMethod?: Payment | null | undefined;
 }) {
-  const { t } = useTranslation(["admin-census", "enums", "errors"]);
+  const { t } = useTranslation(["admin-census", "common", "enums", "errors"]);
   const keys = useSubmissionKeys();
   const [type, setType] = useState<PaymentType>(paymentMethod?.type ?? "SEPA_DD");
   const [holderName, setHolderName] = useState(paymentMethod?.holderName ?? "");
@@ -59,7 +59,9 @@ export function MemberPaymentMethodDrawer({
 
   const error = failure === undefined
     ? undefined
-    : isApiError(failure, "PAYMENT_PROVIDER_NOT_ENABLED")
+    : isInProgress(failure)
+      ? t("common:inProgress")
+      : isApiError(failure, "PAYMENT_PROVIDER_NOT_ENABLED")
       ? t("admin-census:paymentMethod.providerMissing")
       : isApiError(failure)
         ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") })
