@@ -95,7 +95,7 @@ describe("T-13-29 member inactivity", () => {
   });
 
   it("offers future ends for a historical open ACTIVE period and beyond a long fixed end", async () => {
-    let toMonth: string | null = null;
+    let patchBody: unknown;
     server.use(
       http.get("*/api/v1/me/inactivity-periods", () =>
         HttpResponse.json({
@@ -110,28 +110,51 @@ describe("T-13-29 member inactivity", () => {
               fromMonth: "2025-08",
               id: "period-historical-open",
               state: "ACTIVE",
-              toMonth,
+              toMonth: null,
               version: 7,
             },
           ],
           proposedFromMonth: "2026-10",
         }),
       ),
+      http.patch("*/api/v1/me/inactivity-periods/:id", async ({ request }) => {
+        patchBody = await request.json();
+        return HttpResponse.json({
+          comments: null,
+          editable: { cancel: false, fromMonth: false, toMonth: true },
+          fee: null,
+          fromMonth: "2025-08",
+          id: "period-historical-open",
+          state: "ACTIVE",
+          toMonth: "2035-01",
+          version: 8,
+        });
+      }),
     );
-    const open = await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
-    const openEnd = await screen.findByLabelText("Mes de finalització (si el saps)");
-    expect(within(openEnd).getByRole("option", { name: "Octubre 2027" })).toBeVisible();
-    open.unmount();
-
-    toMonth = "2027-12";
     await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
-    const fixedEnd = await screen.findByLabelText("Mes de finalització (si el saps)");
-    expect(within(fixedEnd).getByRole("option", { name: "Desembre 2028" })).toBeVisible();
+    const openEnd = await screen.findByLabelText("Mes de finalització (si el saps)");
+    fireEvent.change(openEnd, { target: { value: "2035-01" } });
+    expect(openEnd).toHaveValue("2035-01");
+    fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    await waitFor(() => {
+      expect(patchBody).toEqual({ toMonth: "2035-01", version: 7 });
+    });
   });
 
   it("loads and links to the conflicting live period after INACTIVITY_OVERLAP", async () => {
     let reads = 0;
-    const live = {
+    let patchedId: string | undefined;
+    const older = {
+      comments: "Període anterior",
+      editable: { cancel: true, fromMonth: true, toMonth: true },
+      fee: null,
+      fromMonth: "2026-10",
+      id: "period-older",
+      state: "APPROVED" as const,
+      toMonth: "2026-10",
+      version: 2,
+    };
+    const conflict = {
       comments: "Període existent",
       editable: { cancel: true, fromMonth: true, toMonth: true },
       fee: null,
@@ -148,7 +171,7 @@ describe("T-13-29 member inactivity", () => {
           deadlineDay: 25,
           earliestFromMonth: "2026-10",
           fee: null,
-          periods: reads === 1 ? [] : [live],
+          periods: reads === 1 ? [] : [older, conflict],
           proposedFromMonth: "2026-10",
         });
       }),
@@ -156,13 +179,17 @@ describe("T-13-29 member inactivity", () => {
         HttpResponse.json(
           {
             code: "INACTIVITY_OVERLAP",
-            details: { hint: "EXTEND", periodId: live.id },
+            details: { hint: "EXTEND", periodId: conflict.id },
             message: "INACTIVITY_OVERLAP",
             traceId: "overlap-test",
           },
           { status: 409 },
         ),
       ),
+      http.patch("*/api/v1/me/inactivity-periods/:id", ({ params }) => {
+        patchedId = String(params.id);
+        return HttpResponse.json({ ...conflict, version: 4 });
+      }),
     );
     await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
     fireEvent.click(await screen.findByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
@@ -170,6 +197,86 @@ describe("T-13-29 member inactivity", () => {
     expect(overlap).toHaveAttribute("href", "/inactivitat");
     expect(await screen.findByRole("button", { name: "MODIFICA" })).toBeVisible();
     expect(screen.getByLabelText("Mes d'inici (obligatori)")).toHaveValue("2026-11");
+    fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    await waitFor(() => {
+      expect(patchedId).toBe("period-conflict");
+    });
+  });
+
+  it("clears an end month overtaken by a changed start and submits an open end", async () => {
+    let posted: unknown;
+    server.use(
+      http.get("*/api/v1/me/inactivity-periods", () =>
+        HttpResponse.json({
+          deadlineDay: 25,
+          earliestFromMonth: "2026-10",
+          fee: null,
+          periods: [],
+          proposedFromMonth: "2026-10",
+        }),
+      ),
+      http.post("*/api/v1/me/inactivity-periods", async ({ request }) => {
+        posted = await request.json();
+        return HttpResponse.json(
+          {
+            comments: null,
+            editable: { cancel: true, fromMonth: true, toMonth: true },
+            fee: null,
+            fromMonth: "2026-12",
+            id: "period-new",
+            state: "REQUESTED",
+            toMonth: null,
+            version: 1,
+          },
+          { status: 201 },
+        );
+      }),
+    );
+    await renderE8(<InactivityPage client={e8Client()} navigate={() => undefined} />);
+    const start = await screen.findByLabelText("Mes d'inici (obligatori)");
+    const end = screen.getByLabelText("Mes de finalització (si el saps)");
+    fireEvent.change(end, { target: { value: "2026-11" } });
+    fireEvent.change(start, { target: { value: "2026-12" } });
+    expect(end).toHaveValue("");
+    fireEvent.click(screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
+    await waitFor(() => {
+      expect(posted).toMatchObject({ fromMonth: "2026-12", toMonth: null });
+    });
+  });
+
+  it("clears an old booking warning and reports a failed replacement preview", async () => {
+    server.use(
+      http.get("*/api/v1/me/inactivity-periods", () =>
+        HttpResponse.json({
+          deadlineDay: 25,
+          earliestFromMonth: "2026-10",
+          fee: null,
+          periods: [],
+          proposedFromMonth: "2026-10",
+        }),
+      ),
+      http.get("*/api/v1/me/inactivity-periods/preview", ({ request }) => {
+        const end = new URL(request.url).searchParams.get("toMonth");
+        return end === "2026-12"
+          ? HttpResponse.json(
+              { code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "preview" },
+              { status: 500 },
+            )
+          : HttpResponse.json({
+              bookingsInside: { activities: 0, classes: 1, total: 1, trainings: 0, waitlist: 0 },
+              earliestMonthViolation: false,
+              feeSchedule: [],
+            });
+      }),
+    );
+    await renderE8(<InactivityPage client={e8Client()} />);
+    const end = await screen.findByLabelText("Mes de finalització (si el saps)");
+    expect(await screen.findByText(/Ara tens 1 reserva dins del període/u)).toBeVisible();
+    fireEvent.change(end, { target: { value: "2026-12" } });
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No s'ha pogut desar la sol·licitud.",
+    );
+    expect(screen.queryByText(/Ara tens 1 reserva dins del període/u)).not.toBeInTheDocument();
   });
 
   it("renders a historical ACTIVE period and patches only its changed editable end", async () => {

@@ -96,6 +96,16 @@ test.describe("E8-W02 member billing, packs and lifecycle", () => {
     await expect(page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" })).toBeVisible();
     await expect(page.getByText(/Ara tens 1 reserva dins del període/u)).toBeVisible();
     await shot(page, "14-inactivitat-375.png");
+    await page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }).click();
+    await page.waitForURL("**/perfil");
+    await expect(page.getByRole("link", { name: /pendent d'aprovació/u })).toBeVisible();
+
+    await page.goto(`${clubsUrl}/baixa`);
+    await page.getByLabel("Motiu").selectOption("EXTERNAL");
+    await page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }).click();
+    await page.getByRole("button", { name: "Torna al perfil" }).click();
+    await page.waitForURL("**/perfil");
+    await expect(page.getByRole("link", { name: /baixa sol·licitada/u })).toBeVisible();
   });
 
   test("T-12-26 renders the invalid-card banner", async ({ page }) => {

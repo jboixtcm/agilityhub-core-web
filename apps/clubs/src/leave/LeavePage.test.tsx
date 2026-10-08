@@ -18,7 +18,12 @@ describe("T-13-30 member leave", () => {
       "/inactivitat",
     );
     expect(screen.getByText("Avui, 11 d’agost del 2026")).toBeVisible();
-    expect(screen.getByRole("option", { name: "Ja he après tot el que volia" })).toBeVisible();
+    expect(screen.getByRole("option", { name: "Ja he après tot el que volia" })).toHaveValue(
+      "LEARNED_ENOUGH",
+    );
+    expect(screen.getByRole("option", { name: "Condicionants meus aliens al club" })).toHaveValue(
+      "EXTERNAL",
+    );
     const group = screen.getByRole("group", {
       name: "De 0 a 10, amb quina probabilitat ens recomanaries?",
     });
@@ -27,13 +32,34 @@ describe("T-13-30 member leave", () => {
   });
 
   it("sends the selected catalog reason and shows the review footer", async () => {
+    let submitted: unknown;
+    server.events.on("request:start", async ({ request }) => {
+      if (request.method === "POST" && new URL(request.url).pathname === "/api/v1/me/leave-requests") {
+        submitted = await request.clone().json();
+      }
+    });
     await renderE8(<LeavePage client={e8Client()} />);
-    fireEvent.change(await screen.findByLabelText("Motiu"), { target: { value: "NO_TIME" } });
+    fireEvent.change(await screen.findByLabelText("Motiu"), { target: { value: "EXTERNAL" } });
     fireEvent.click(screen.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }));
     const back = await screen.findByRole("button", { name: "Torna al perfil" });
+    expect(submitted).toMatchObject({ reasonKey: "EXTERNAL" });
     expect(back.closest(".leave-sent")).toHaveTextContent(
       "El club la revisarà i et confirmarà la data d'efecte.",
     );
+  });
+
+  it("rejects a leave reason outside the published catalog", async () => {
+    await expect(
+      e8Client().POST("/me/leave-requests", {
+        body: {
+          comment: null,
+          nps: null,
+          reasonKey: "UNKNOWN",
+          requestedDate: "2026-08-11",
+        },
+        params: { header: { "Idempotency-Key": "leave-unknown-reason" } },
+      }),
+    ).rejects.toMatchObject({ code: "LEAVE_REASON_UNKNOWN", details: {}, status: 400 });
   });
 
   it("withdraws a pending request and returns to the profile", async () => {

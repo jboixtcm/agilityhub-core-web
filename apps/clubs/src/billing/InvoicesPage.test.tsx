@@ -30,12 +30,16 @@ describe("T-12-26 member receipts", () => {
 
   it("shows the masked method in detail and requests the PDF document", async () => {
     const requested: string[] = [];
+    let openedBlob: Blob | undefined;
     const client = e8Client();
     vi.stubGlobal(
       "open",
       vi.fn(() => null),
     );
-    vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:test");
+    vi.spyOn(URL, "createObjectURL").mockImplementation((blob) => {
+      openedBlob = blob;
+      return "blob:test";
+    });
     server.events.on("request:start", ({ request }) =>
       requested.push(new URL(request.url).pathname),
     );
@@ -48,7 +52,14 @@ describe("T-12-26 member receipts", () => {
       expect(requested).toContain(
         "/api/v1/me/invoices/51000000-0000-4000-8000-000000000001/document",
       );
+      expect(openedBlob).toBeInstanceOf(Blob);
     });
+    const pdf = new TextDecoder().decode(await openedBlob?.arrayBuffer());
+    expect(openedBlob?.type).toBe("application/pdf");
+    expect(pdf).toContain("%PDF-1.4");
+    expect(pdf).toContain("(Rebut 2026-0912)");
+    expect(pdf).toContain("(Quota setembre 2026)");
+    expect(pdf.trimEnd()).toEndWith("%%EOF");
   });
 
   it("shows a fully refunded PAID receipt as refunded in its detail", async () => {
@@ -104,6 +115,124 @@ describe("T-12-26 member receipts", () => {
     await waitFor(() => {
       expect(posted).toContain("/api/v1/me/card-setup");
     });
+  });
+
+  it("shows card recovery from paymentMethod.invalid with no receipts on receipts and profile", async () => {
+    server.use(
+      http.get("*/api/v1/me/invoices", () =>
+        HttpResponse.json({ items: [], page: 0, size: 20, totalItems: 0, totalPages: 0 }),
+      ),
+    );
+    const receipts = await renderE8(
+      <InvoicesPage client={e8Client()} paymentMethod={{ invalid: true, type: "CARD" }} />,
+    );
+    expect(await screen.findByText("Targeta no vàlida")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Actualitza la targeta" })).toBeVisible();
+    receipts.unmount();
+
+    await renderE8(
+      <ProfileLifecycleSection
+        client={e8Client()}
+        logoutDisabled={false}
+        onLogout={() => undefined}
+        paymentMethod={{ invalid: true, type: "CARD" }}
+      />,
+    );
+    expect(await screen.findByText("Targeta no vàlida")).toBeVisible();
+    expect(screen.getByRole("button", { name: "Actualitza la targeta" })).toBeVisible();
+  });
+
+  it("keeps card recovery visible when the receipt read fails", async () => {
+    server.use(
+      http.get("*/api/v1/me/invoices", () =>
+        HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "failed", traceId: "receipts" },
+          { status: 500 },
+        ),
+      ),
+    );
+    const receipts = await renderE8(
+      <InvoicesPage client={e8Client()} paymentMethod={{ invalid: true, type: "CARD" }} />,
+    );
+    expect(await screen.findByText("Targeta no vàlida")).toBeVisible();
+    receipts.unmount();
+
+    await renderE8(
+      <ProfileLifecycleSection
+        client={e8Client()}
+        logoutDisabled={false}
+        onLogout={() => undefined}
+        paymentMethod={{ invalid: true, type: "CARD" }}
+      />,
+    );
+    expect(await screen.findByText("Targeta no vàlida")).toBeVisible();
+  });
+
+  it("does not infer an invalid card from a historical failure when the latest receipt succeeded", async () => {
+    const receipt = (id: string, period: string, status: "FAILED" | "PAID") => ({
+      displayNumber: id,
+      familyGroup: false,
+      id,
+      issueDate: `${period}-01`,
+      lines: [
+        {
+          description: `Quota ${period}`,
+          origin: "MONTHLY_FEE",
+          total: { amountMinor: 6000, currency: "EUR" },
+        },
+      ],
+      paidAt: status === "PAID" ? `${period}-05T09:00:00Z` : null,
+      paymentMethod: {
+        channel: null,
+        holderName: "Laura Serra Vidal",
+        last4: "4242",
+        mandateRef: null,
+        maskedAccount: "···· 4242",
+        type: "CARD",
+      },
+      period,
+      refundedTotal: { amountMinor: 0, currency: "EUR" },
+      status,
+      total: { amountMinor: 6000, currency: "EUR" },
+    });
+    server.use(
+      http.get("*/api/v1/me/invoices", () =>
+        HttpResponse.json({
+          items: [receipt("latest-paid", "2026-09", "PAID"), receipt("older-failed", "2026-08", "FAILED")],
+          page: 0,
+          size: 20,
+          totalItems: 2,
+          totalPages: 1,
+        }),
+      ),
+    );
+    await renderE8(<InvoicesPage client={e8Client()} />);
+    await screen.findByRole("link", { name: /Setembre 2026/u });
+    expect(screen.queryByRole("button", { name: "Actualitza la targeta" })).not.toBeInTheDocument();
+  });
+
+  it("shows the shared module-off state in the receipt list and detail", async () => {
+    const moduleOff = () =>
+      HttpResponse.json(
+        {
+          code: "MODULE_DISABLED",
+          details: { module: "BILLING" },
+          message: "MODULE_DISABLED",
+          traceId: "billing-off",
+        },
+        { status: 404 },
+      );
+    server.use(
+      http.get("*/api/v1/me/invoices", moduleOff),
+      http.get("*/api/v1/me/invoices/:id", moduleOff),
+    );
+    const list = await renderE8(<InvoicesPage client={e8Client()} />);
+    expect(await screen.findByText("Aquest mòdul està desactivat.")).toBeVisible();
+    expect(screen.queryByText("Encara no tens cap rebut.")).not.toBeInTheDocument();
+    list.unmount();
+
+    await renderE8(<InvoicesPage client={e8Client()} invoiceId="receipt-off" />);
+    expect(await screen.findByText("Aquest mòdul està desactivat.")).toBeVisible();
   });
 
   it("hides the profile receipt row when BILLING is off", async () => {

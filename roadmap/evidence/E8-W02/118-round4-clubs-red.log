@@ -1,0 +1,1923 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/billing/InvoicesPage.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+ ❯ src/leave/LeavePage.test.tsx (10 tests | 3 failed) 10389ms
+   ❯ T-13-30 member leave (10)
+     × renders the inactivity offer, API reason catalog, NPS 0–10 and full-month help 128ms
+     × sends the selected catalog reason and shows the review footer 10042ms
+     × rejects a leave reason outside the published catalog 11ms
+ ❯ src/inactivity/InactivityPage.test.tsx (12 tests | 4 failed) 21941ms
+   ❯ T-13-29 member inactivity (12)
+     × offers future ends for a historical open ACTIVE period and beyond a long fixed end 16ms
+     × loads and links to the conflicting live period after INACTIVITY_OVERLAP 26ms
+     × clears an end month overtaken by a changed start and submits an open end 10022ms
+     × clears an old booking warning and reports a failed replacement preview 10329ms
+ ❯ src/billing/InvoicesPage.test.tsx (11 tests | 5 failed) 40400ms
+   ❯ T-12-26 member receipts (11)
+     × shows the masked method in detail and requests the PDF document 10024ms
+     × shows card recovery from paymentMethod.invalid with no receipts on receipts and profile 10009ms
+     × keeps card recovery visible when the receipt read fails 10007ms
+     × does not infer an invalid card from a historical failure when the latest receipt succeeded 21ms
+     × shows the shared module-off state in the receipt list and detail 10009ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/InvoicesPage.test.tsx > T-12-26 member receipts > shows the masked method in detail and requests the PDF document
+AssertionError: expected Blob { size: 8, type: 'application/pdf' } to be an instance of Blob
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"billing-page__bar"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna al perfil"[39m
+            [33mhref[39m=[32m"/rebuts"[39m
+          [36m>[39m
+            [0m‹[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mDetall del rebut[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card receipt-detail"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"receipt-detail__heading"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0m2026-0912[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+            [36m>[39m
+              [0mimpagat[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<p>[39m
+            [0mSetembre 2026[0m
+          [36m</p>[39m
+          [36m<table>[39m
+            [36m<caption[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mConceptes[0m
+            [36m</caption>[39m
+            [36m<thead>[39m
+              [36m<tr>[39m
+                [36m<th>[39m
+                  [0mConcepte[0m
+                [36m</th>[39m
+                [36m<th>[39m
+                  [0mImport[0m
+                [36m</th>[39m
+              [36m</tr>[39m
+            [36m</thead>[39m
+            [36m<tbody>[39m
+              [36m<tr>[39m
+                [36m<td>[39m
+                  [0mQuota setembre 2026[0m
+                [36m</td>[39m
+                [36m<td>[39m
+                  [0m60,00 €[0m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tbody>[39m
+            [36m<tfoot>[39m
+              [36m<tr>[39m
+                [36m<th>[39m
+                  [0mTotal[0m
+                [36m</th>[39m
+                [36m<td>[39m
+                  [0m60,00 €[0m
+                [36m</td>[39m
+              [36m</tr>[39m
+            [36m</tfoot>[39m
+          [36m</table>[39m
+          [36m<p>[39m
+            [36m<strong>[39m
+              [0mMètode de pagament[0m
+            [36m</strong>[39m
+            [36m<br />[39m
+            [0mDomiciliació[0m
+            [0m · ···· 2231[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mDescarrega el justificant[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m/>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/billing/InvoicesPage.test.tsx:55:26
+     53|         "/api/v1/me/invoices/51000000-0000-4000-8000-000000000001/docu…
+     54|       );
+     55|       expect(openedBlob).toBeInstanceOf(Blob);
+       |                          ^
+     56|     });
+     57|     const pdf = new TextDecoder().decode(await openedBlob?.arrayBuffer…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/billing/InvoicesPage.test.tsx > T-12-26 member receipts > shows card recovery from paymentMethod.invalid with no receipts on receipts and profile
+TestingLibraryElementError: Unable to find an element with the text: Targeta no vàlida. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"ah-empty-state"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<h2>[39m
+          [0mEncara no tens cap rebut.[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [0mEncara no tens cap rebut.[0m
+        [36m</p>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"ah-empty-state"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<h2>[39m
+          [0mEncara no tens cap rebut.[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [0mEncara no tens cap rebut.[0m
+        [36m</p>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/InvoicesPage.test.tsx:129:25
+    127|       <InvoicesPage client={e8Client()} paymentMethod={{ invalid: true…
+    128|     );
+    129|     expect(await screen.findByText("Targeta no vàlida")).toBeVisible();
+       |                         ^
+    130|     expect(screen.getByRole("button", { name: "Actualitza la targeta" …
+    131|     receipts.unmount();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  src/billing/InvoicesPage.test.tsx > T-12-26 member receipts > keeps card recovery visible when the receipt read fails
+TestingLibraryElementError: Unable to find an element with the text: Targeta no vàlida. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"ah-empty-state"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<h2>[39m
+          [0mNo s'han pogut carregar els rebuts.[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [0mNo s'han pogut carregar els rebuts.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTorna-ho a provar[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"ah-empty-state"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<h2>[39m
+          [0mNo s'han pogut carregar els rebuts.[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [0mNo s'han pogut carregar els rebuts.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mTorna-ho a provar[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/InvoicesPage.test.tsx:157:25
+    155|       <InvoicesPage client={e8Client()} paymentMethod={{ invalid: true…
+    156|     );
+    157|     expect(await screen.findByText("Targeta no vàlida")).toBeVisible();
+       |                         ^
+    158|     receipts.unmount();
+    159|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  src/billing/InvoicesPage.test.tsx > T-12-26 member receipts > does not infer an invalid card from a historical failure when the latest receipt succeeded
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <button
+  class="ah-button ah-button--secondary"
+  type="button"
+>
+  <span
+    class="ah-button__content"
+  >
+    Actualitza la targeta
+  </span>
+</button> instead
+ ❯ src/billing/InvoicesPage.test.tsx:211:81
+    209|     await renderE8(<InvoicesPage client={e8Client()} />);
+    210|     await screen.findByRole("link", { name: /Setembre 2026/u });
+    211|     expect(screen.queryByRole("button", { name: "Actualitza la targeta…
+       |                                                                                 ^
+    212|   });
+    213|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  src/billing/InvoicesPage.test.tsx > T-12-26 member receipts > shows the shared module-off state in the receipt list and detail
+TestingLibraryElementError: Unable to find an element with the text: Aquest mòdul està desactivat.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"ah-empty-state"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<h2>[39m
+          [0mEncara no tens cap rebut.[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [0mEncara no tens cap rebut.[0m
+        [36m</p>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"billing-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"billing-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mRebuts[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"ah-empty-state"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<h2>[39m
+          [0mEncara no tens cap rebut.[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [0mEncara no tens cap rebut.[0m
+        [36m</p>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/InvoicesPage.test.tsx:230:25
+    228|     );
+    229|     const list = await renderE8(<InvoicesPage client={e8Client()} />);
+    230|     expect(await screen.findByText("Aquest mòdul està desactivat.")).t…
+       |                         ^
+    231|     expect(screen.queryByText("Encara no tens cap rebut.")).not.toBeIn…
+    232|     list.unmount();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  src/leave/LeavePage.test.tsx > T-13-30 member leave > renders the inactivity offer, API reason catalog, NPS 0–10 and full-month help
+Error: expect(element).toHaveValue(LEARNED_ENOUGH)
+
+Expected the element to have value:
+  LEARNED_ENOUGH
+Received:
+  LEARNT_ENOUGH
+ ❯ src/leave/LeavePage.test.tsx:21:82
+     19|     );
+     20|     expect(screen.getByText("Avui, 11 d’agost del 2026")).toBeVisible(…
+     21|     expect(screen.getByRole("option", { name: "Ja he après tot el que …
+       |                                                                                  ^
+     22|       "LEARNED_ENOUGH",
+     23|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  src/leave/LeavePage.test.tsx > T-13-30 member leave > sends the selected catalog reason and shows the review footer
+TestingLibraryElementError: Unable to find role="button" and name "Torna al perfil"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mSol·licitar la baixa[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card leave-offer"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0mSi tens previst tornar més endavant, recorda que pots demanar un període d'inactivitat (predefinit o obert) i mantenir la teva entrada vigent i el teu import de quota actual per quan tornis.[0m
+        [36m</p>[39m
+        [36m<p>[39m
+          [0mLa quota és de 20,00 € el primer mes i 10,00 € els següents.[0m
+        [36m</p>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mhref[39m=[32m"/inactivitat"[39m
+        [36m>[39m
+          [0mVULL DEMANAR INACTIVITAT[0m
+        [36m</a>[39m
+      [36m</div>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"leave-date"[39m
+          [36m>[39m
+            [0mData en què vols la baixa[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"leave-date"[39m
+            [33mmin[39m=[32m"2026-08-11"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"date"[39m
+            [33mvalue[39m=[32m"2026-08-11"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field__help"[39m
+          [36m>[39m
+            [0mAvui, 11 d’agost del 2026[0m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mSi tries un dia d'un mes posterior a l'actual, aquell mes es cobrarà íntegrament.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"leave-reason"[39m
+          [36m>[39m
+            [0mMotiu[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"leave-reason"[39m
+            [33mrequired[39m=[32m""[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTria un motiu[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"LEARNT_ENOUGH"[39m
+            [36m>[39m
+              [0mJa he après tot el que volia[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"NO_TIME"[39m
+            [36m>[39m
+              [0mNo trobo temps per anar-hi[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"NOT_EXPECTED"[39m
+            [36m>[39m
+              [0mNo és el que esperava[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"PERSONAL"[39m
+            [36m>[39m
+              [0mCondicionants meus aliens al club[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"OTHER"[39m
+            [36m>[39m
+              [0mAltres[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<fieldset[39m
+          [33mclass[39m=[32m"leave-nps"[39m
+        [36m>[39m
+          [36m<legend>[39m
+            [0mDe 0 a 10, amb quina probabilitat ens recomanaries?[0m
+          [36m</legend>[39m
+          [36m<div>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m3[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m4[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m5[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m6[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m7[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m8[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m9[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m10[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</fieldset>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"leave-comment"[39m
+          [36m>[39m
+            [0mQuè podríem millorar perquè el club s'adaptés més a les teves necessitats?[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"leave-comment"[39m
+            [33mmaxlength[39m=[32m"2000"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mENVIA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-footer"[39m
+        [36m>[39m
+          [0mEl club la revisarà i et confirmarà la data d'efecte.[0m
+        [36m</p>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mSol·licitar la baixa[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-card leave-offer"[39m
+      [36m>[39m
+        [36m<p>[39m
+          [0mSi tens previst tornar més endavant, recorda que pots demanar un període d'inactivitat (predefinit o obert) i mantenir la teva entrada vigent i el teu import de quota actual per quan tornis.[0m
+        [36m</p>[39m
+        [36m<p>[39m
+          [0mLa quota és de 20,00 € el primer mes i 10,00 € els següents.[0m
+        [36m</p>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+          [33mhref[39m=[32m"/inactivitat"[39m
+        [36m>[39m
+          [0mVULL DEMANAR INACTIVITAT[0m
+        [36m</a>[39m
+      [36m</div>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"leave-date"[39m
+          [36m>[39m
+            [0mData en què vols la baixa[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"leave-date"[39m
+            [33mmin[39m=[32m"2026-08-11"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mtype[39m=[32m"date"[39m
+            [33mvalue[39m=[32m"2026-08-11"[39m
+          [36m/>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field__help"[39m
+          [36m>[39m
+            [0mAvui, 11 d’agost del 2026[0m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mSi tries un dia d'un mes posterior a l'actual, aquell mes es cobrarà íntegrament.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"leave-reason"[39m
+          [36m>[39m
+            [0mMotiu[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"leave-reason"[39m
+            [33mrequired[39m=[32m""[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0mTria un motiu[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"LEARNT_ENOUGH"[39m
+            [36m>[39m
+              [0mJa he après tot el que volia[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"NO_TIME"[39m
+            [36m>[39m
+              [0mNo trobo temps per anar-hi[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"NOT_EXPECTED"[39m
+            [36m>[39m
+              [0mNo és el que esperava[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"PERSONAL"[39m
+            [36m>[39m
+              [0mCondicionants meus aliens al club[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"OTHER"[39m
+            [36m>[39m
+              [0mAltres[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<fieldset[39m
+          [33mclass[39m=[32m"leave-nps"[39m
+        [36m>[39m
+          [36m<legend>[39m
+            [0mDe 0 a 10, amb quina probabilitat ens recomanaries?[0m
+          [36m</legend>[39m
+          [36m<div>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m0[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m3[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m4[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m5[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m6[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m7[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m8[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m9[0m
+            [36m</button>[39m
+            [36m<button[39m
+              [33maria-pressed[39m=[32m"false"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m10[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</fieldset>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"leave-comment"[39m
+          [36m>[39m
+            [0mQuè podríem millorar perquè el club s'adaptés més a les teves necessitats?[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"leave-comment"[39m
+            [33mmaxlength[39m=[32m"2000"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mENVIA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-footer"[39m
+        [36m>[39m
+          [0mEl club la revisarà i et confirmarà la data d'efecte.[0m
+        [36m</p>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/leave/LeavePage.test.tsx:44:31
+     42|     fireEvent.change(await screen.findByLabelText("Motiu"), { target: …
+     43|     fireEvent.click(screen.getByRole("button", { name: "ENVIA LA SOL·L…
+     44|     const back = await screen.findByRole("button", { name: "Torna al p…
+       |                               ^
+     45|     expect(submitted).toMatchObject({ reasonKey: "EXTERNAL" });
+     46|     expect(back.closest(".leave-sent")).toHaveTextContent(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  src/leave/LeavePage.test.tsx > T-13-30 member leave > rejects a leave reason outside the published catalog
+AssertionError: promise resolved "{ data: { comment: null, …(5) }, …(1) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "data": {
++     "comment": null,
++     "id": "55000000-0000-4000-8000-000000000002",
++     "nps": null,
++     "reasonKey": "UNKNOWN",
++     "requestedDate": "2026-08-11",
++     "state": "PENDING",
++   },
++   "response": FetchResponse {
++     Symbol(state): {
++       "aborted": false,
++       "body": {
++         "length": null,
++         "source": null,
++         "stream": ReadableStream {
++           "constructor": [Function ReadableStream],
++           Symbol(kType): "ReadableStream",
++           Symbol(kState): {
++             "controller": ReadableByteStreamController {
++               Symbol(kType): "ReadableByteStreamController",
++               Symbol(kState): {
++                 "autoAllocateChunkSize": undefined,
++                 "byobRequest": null,
++                 "cancelAlgorithm": undefined,
++                 "closeRequested": false,
++                 "highWaterMark": 0,
++                 "pendingPullIntos": [],
++                 "pullAgain": false,
++                 "pullAlgorithm": undefined,
++                 "pulling": false,
++                 "queue": [],
++                 "queueTotalSize": 0,
++                 "started": true,
++                 "stream": [Circular],
++               },
++             },
++             "disturbed": true,
++             "reader": ReadableStreamDefaultReader {
++               Symbol(kType): "ReadableStreamDefaultReader",
++               Symbol(kState): {
++                 "close": {
++                   "promise": Promise {},
++                   "reject": [Function anonymous],
++                   "resolve": [Function anonymous],
++                 },
++                 "readRequests": [],
++                 "stream": [Circular],
++               },
++             },
++             "state": "closed",
++             "storedError": undefined,
++             "transfer": {
++               "port1": undefined,
++               "port2": undefined,
++               "promise": undefined,
++               "writable": undefined,
++             },
++           },
++           Symbol(nodejs.webstream.isClosedPromise): {
++             "promise": Promise {},
++             "reject": [Function anonymous],
++             "resolve": [Function anonymous],
++           },
++         },
++       },
++       "cacheState": "",
++       "headersList": HeadersList {
++         "cookies": null,
++         Symbol(headers map): Map {
++           "content-type" => {
++             "name": "Content-Type",
++             "value": "application/json",
++           },
++           "content-length" => {
++             "name": "Content-Length",
++             "value": "140",
++           },
++         },
++         Symbol(headers map sorted): null,
++       },
++       "rangeRequested": false,
++       "requestIncludesCredentials": false,
++       "status": 201,
++       "statusText": "Created",
++       "timingAllowPassed": false,
++       "timingInfo": null,
++       "type": "default",
++       "urlList": [
++         "http://localhost:3000/api/v1/me/leave-requests",
++       ],
++     },
++     Symbol(headers): Headers {},
++   },
+  }
+
+ ❯ src/leave/LeavePage.test.tsx:62:6
+     60|         params: { header: { "Idempotency-Key": "leave-unknown-reason" …
+     61|       }),
+     62|     ).rejects.toMatchObject({ code: "LEAVE_REASON_UNKNOWN", details: {…
+       |      ^
+     63|   });
+     64|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > offers future ends for a historical open ACTIVE period and beyond a long fixed end
+Error: expect(element).toHaveValue(2035-01)
+
+Expected the element to have value:
+  2035-01
+Received:
+
+ ❯ src/inactivity/InactivityPage.test.tsx:137:21
+    135|     const openEnd = await screen.findByLabelText("Mes de finalització …
+    136|     fireEvent.change(openEnd, { target: { value: "2035-01" } });
+    137|     expect(openEnd).toHaveValue("2035-01");
+       |                     ^
+    138|     fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    139|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > loads and links to the conflicting live period after INACTIVITY_OVERLAP
+Error: expect(element).toHaveValue(2026-11)
+
+Expected the element to have value:
+  2026-11
+Received:
+  2026-10
+ ❯ src/inactivity/InactivityPage.test.tsx:199:63
+    197|     expect(overlap).toHaveAttribute("href", "/inactivitat");
+    198|     expect(await screen.findByRole("button", { name: "MODIFICA" })).to…
+    199|     expect(screen.getByLabelText("Mes d'inici (obligatori)")).toHaveVa…
+       |                                                               ^
+    200|     fireEvent.click(screen.getByRole("button", { name: "MODIFICA" }));
+    201|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/12]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > clears an end month overtaken by a changed start and submits an open end
+AssertionError: expected { fromMonth: '2026-12', …(2) } to match object { fromMonth: '2026-12', toMonth: null }
+(1 matching property omitted from actual)
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"lifecycle-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"lifecycle-page__bar"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna al perfil"[39m
+            [33mhref[39m=[32m"/perfil"[39m
+          [36m>[39m
+            [0m‹[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mPeríode d'inactivitat[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"lifecycle-form"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-intro"[39m
+          [36m>[39m
+            [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [0mMes d'inici (obligatori)[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mid[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10"[39m
+              [36m>[39m
+                [0mOctubre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11"[39m
+              [36m>[39m
+                [0mNovembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12"[39m
+              [36m>[39m
+                [0mDesembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-01"[39m
+              [36m>[39m
+                [0mGener 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-02"[39m
+              [36m>[39m
+                [0mFebrer 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-03"[39m
+              [36m>[39m
+                [0mMarç 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-04"[39m
+              [36m>[39m
+                [0mAbril 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-05"[39m
+              [36m>[39m
+                [0mMaig 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-06"[39m
+              [36m>[39m
+                [0mJuny 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-07"[39m
+              [36m>[39m
+                [0mJuliol 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-08"[39m
+              [36m>[39m
+                [0mAgost 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-09"[39m
+              [36m>[39m
+                [0mSetembre 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-10"[39m
+              [36m>[39m
+                [0mOctubre 2027[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-to"[39m
+            [36m>[39m
+              [0mMes de finalització (si el saps)[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mid[39m=[32m"inactivity-to"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0m— encara no ho sé[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12"[39m
+              [36m>[39m
+                [0mDesembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-01"[39m
+              [36m>[39m
+                [0mGener 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-02"[39m
+              [36m>[39m
+                [0mFebrer 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-03"[39m
+              [36m>[39m
+                [0mMarç 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-04"[39m
+              [36m>[39m
+                [0mAbril 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-05"[39m
+              [36m>[39m
+                [0mMaig 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-06"[39m
+              [36m>[39m
+                [0mJuny 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-07"[39m
+              [36m>[39m
+                [0mJuliol 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-08"[39m
+              [36m>[39m
+                [0mAgost 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-09"[39m
+              [36m>[39m
+                [0mSetembre 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-10"[39m
+              [36m>[39m
+                [0mOctubre 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-11"[39m
+              [36m>[39m
+                [0mNovembre 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-12"[39m
+              [36m>[39m
+                [0mDesembre 2027[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-comments"[39m
+            [36m>[39m
+              [0mComentaris[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea"[39m
+              [33mid[39m=[32m"inactivity-comments"[39m
+              [33mmaxlength[39m=[32m"500"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-note"[39m
+          [36m>[39m
+            [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-warning"[39m
+          [36m>[39m
+            [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mENVIA LA SOL·LICITUD[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-toast ah-tone--success"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mLa sol·licitud s'ha desat.[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"close"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+- Expected
++ Received
+
+  {
+    "fromMonth": "2026-12",
+-   "toMonth": null,
++   "toMonth": "2026-11",
+  }
+
+ ❯ src/inactivity/InactivityPage.test.tsx:243:22
+    241|     fireEvent.click(screen.getByRole("button", { name: "ENVIA LA SOL·L…
+    242|     await waitFor(() => {
+    243|       expect(posted).toMatchObject({ fromMonth: "2026-12", toMonth: nu…
+       |                      ^
+    244|     });
+    245|   });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/12]⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > clears an old booking warning and reports a failed replacement preview
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mPeríode d'inactivitat[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-intro"[39m
+        [36m>[39m
+          [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [0mMes d'inici (obligatori)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [0mMes de finalització (si el saps)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0m— encara no ho sé[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-comments"[39m
+          [36m>[39m
+            [0mComentaris[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"inactivity-comments"[39m
+            [33mmaxlength[39m=[32m"500"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-warning"[39m
+        [36m>[39m
+          [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mENVIA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"lifecycle-page"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"lifecycle-page__bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Torna al perfil"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [0m‹[0m
+        [36m</a>[39m
+        [36m<h1>[39m
+          [0mPeríode d'inactivitat[0m
+        [36m</h1>[39m
+      [36m</header>[39m
+      [36m<form[39m
+        [33mclass[39m=[32m"lifecycle-form"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-intro"[39m
+        [36m>[39m
+          [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [0mMes d'inici (obligatori)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-from"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [0mMes de finalització (si el saps)[0m
+          [36m</label>[39m
+          [36m<select[39m
+            [33mclass[39m=[32m"ah-input ah-select"[39m
+            [33mid[39m=[32m"inactivity-to"[39m
+          [36m>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m""[39m
+            [36m>[39m
+              [0m— encara no ho sé[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-10"[39m
+            [36m>[39m
+              [0mOctubre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-11"[39m
+            [36m>[39m
+              [0mNovembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2026-12"[39m
+            [36m>[39m
+              [0mDesembre 2026[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-01"[39m
+            [36m>[39m
+              [0mGener 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-02"[39m
+            [36m>[39m
+              [0mFebrer 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-03"[39m
+            [36m>[39m
+              [0mMarç 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-04"[39m
+            [36m>[39m
+              [0mAbril 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-05"[39m
+            [36m>[39m
+              [0mMaig 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-06"[39m
+            [36m>[39m
+              [0mJuny 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-07"[39m
+            [36m>[39m
+              [0mJuliol 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-08"[39m
+            [36m>[39m
+              [0mAgost 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-09"[39m
+            [36m>[39m
+              [0mSetembre 2027[0m
+            [36m</option>[39m
+            [36m<option[39m
+              [33mvalue[39m=[32m"2027-10"[39m
+            [36m>[39m
+              [0mOctubre 2027[0m
+            [36m</option>[39m
+          [36m</select>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"inactivity-comments"[39m
+          [36m>[39m
+            [0mComentaris[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"inactivity-comments"[39m
+            [33mmaxlength[39m=[32m"500"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-note"[39m
+        [36m>[39m
+          [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"lifecycle-warning"[39m
+        [36m>[39m
+          [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+        [36m</p>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mENVIA LA SOL·LICITUD[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</form>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/inactivity/InactivityPage.test.tsx:276:25
+    274|     expect(await screen.findByText(/Ara tens 1 reserva dins del períod…
+    275|     fireEvent.change(end, { target: { value: "2026-12" } });
+    276|     expect(await screen.findByRole("alert")).toHaveTextContent(
+       |                         ^
+    277|       "No s'ha pogut desar la sol·licitud.",
+    278|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/12]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  12 failed | 21 passed (33)
+   Start at  09:23:21
+   Duration  42.03s (tests 94%, environment 2%, transform 2%, import 1%, setup 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run src/billing/InvoicesPage.test.tsx src/inactivity/InactivityPage.test.tsx src/leave/LeavePage.test.tsx`
+Exit status 1
