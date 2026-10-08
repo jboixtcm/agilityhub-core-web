@@ -1,0 +1,1516 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 10 packages
+   • Remote caching disabled
+
+clubs-admin:lint: cache miss, executing f3191b3121c7de71
+@agilityhub/api-client:test: cache miss, executing a1921f35bfc93da1
+@agilityhub/course-core:typecheck: cache hit, replaying logs 61edc282ad1bbb2a
+@agilityhub/course-core:lint: cache hit, replaying logs e1967c3b8013c83f
+@agilityhub/auth:lint: cache hit, replaying logs 2925197e67cefb4b
+id:lint: cache hit, replaying logs b97c217d91c5d1c4
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+clubs:lint: cache hit, replaying logs 2a2b27faeff5d48b
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:lint: > @agilityhub/course-core@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:lint: 
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/course-core:test: cache hit, replaying logs 34116acf0470d929
+@agilityhub/ui:lint: cache miss, executing 023c077ab4917748
+@agilityhub/config:typecheck: cache hit, replaying logs 6860c83ceac65ae7
+@agilityhub/auth:lint: 
+@agilityhub/i18n:lint: cache hit, replaying logs e4b64e56059de4a4
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: 
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+@agilityhub/config:typecheck: 
+@agilityhub/course-core:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  [32m✓[39m tests/coords.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-primitives.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-id.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/shared-types:lint: cache hit, replaying logs a946566fb9efb741
+@agilityhub/course-core:test:  [32m✓[39m tests/wrapper.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/api-client:typecheck: cache miss, executing 3c8fa172991bc245
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:lint: > eslint src tests scripts --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+@agilityhub/course-core:test:  [32m✓[39m tests/calibration.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/ui:typecheck: cache hit, replaying logs 273c31c16468a6e7
+@agilityhub/course-core:build: cache hit, replaying logs e18b31668a225399
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-colors-txt.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/apriltag-36h11.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/ring.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-svg.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-transform.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/placement.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/course-core:test:  [32m✓[39m tests/units.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/summarize-course.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-txt.test.ts [2m([22m[2m113 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-writer.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-rules.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-fixtures.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/course-data-json-schema.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m Test Files [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+@agilityhub/course-core:test: [2m      Tests [22m [1m[32m364 passed[39m[22m[90m (364)[39m
+@agilityhub/course-core:test: [2m   Start at [22m 16:01:14
+@agilityhub/course-core:test: [2m   Duration [22m 1.25s[2m (transform 79%, import 15%, tests 4%, worker 2%)[22m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/ui:test: cache hit, replaying logs bbff023eb7e17527
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/course-core:test: [2m  Transform [22m [33mtransforming modules took 5.41s[39m[2m · 79% of tracked time, re-done on every run[22m
+@agilityhub/ui:test: 
+@agilityhub/api-client:lint: cache miss, executing 22918b2a0ba7cafc
+@agilityhub/course-core:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/course-core:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/course-core:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  ✓ src/on-primary.test.ts (3 tests) 86ms
+@agilityhub/config:lint: cache hit, replaying logs 42ac5d636417f38d
+@agilityhub/ui:test:  ✓ src/attendance-contrast.test.ts (34 tests) 8ms
+@agilityhub/ui:test:  ✓ src/icons/Icon.test.tsx (1 test) 122ms
+@agilityhub/ui:test:  ✓ src/branding.test.tsx (5 tests) 50ms
+@agilityhub/ui:test:  ✓ src/schedule-grid.test.tsx (3 tests) 473ms
+@agilityhub/ui:test:    ✓ ScheduleGrid (3)
+@agilityhub/ui:test:      ✓ stacks cells per slot, exposes day buttons and tints cells through --schedule-color 406ms
+@agilityhub/ui:test:  ✓ src/limited-markdown.test.tsx (1 test) 215ms
+@agilityhub/ui:test:  ✓ src/index.test.ts (2 tests) 3ms
+@agilityhub/ui:test:  ✓ src/attendance-sheet.test.tsx (4 tests) 237ms
+@agilityhub/ui:test: stderr | src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > renders the api's «Sense» column as delivered and never adds one of its own
+@agilityhub/ui:test: [DayGrid] cells without a matching column are not drawn: cls-1 (ringId null)
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  ✓ src/day-grid.test.tsx (10 tests) 514ms
+@agilityhub/ui:test:  ✓ src/slot-grid.test.tsx (9 tests) 506ms
+@agilityhub/ui:test:  ✓ src/rich-text.test.tsx (13 tests) 497ms
+@agilityhub/ui:test:  ✓ src/attendance.test.tsx (16 tests) 472ms
+@agilityhub/ui:test:  ✓ src/components.test.tsx (31 tests) 801ms
+@agilityhub/ui:test:  ✓ src/universal-list.test.tsx (10 tests) 841ms
+@agilityhub/ui:test:    ✓ E5-W05 round 2 #2 · a range filter with no suggested values (ruling E80) (1)
+@agilityhub/ui:test:      ✓ offers two dates instead of the value list, never asks for the field's values, and adds the range's own value 491ms
+@agilityhub/ui:test:  ✓ src/tasks-panel.test.tsx (14 tests) 1326ms
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  Test Files  15 passed (15)
+@agilityhub/ui:test:       Tests  156 passed (156)
+@agilityhub/ui:test:    Start at  08:37:29
+@agilityhub/ui:test:    Duration  5.18s (environment 59%, setup 17%, tests 11%, transform 11%, import 1%, worker 1%)
+@agilityhub/ui:test: 
+@agilityhub/shared-types:test: cache hit, replaying logs 0d5094aa59df2bb0
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/i18n:test: cache hit, replaying logs 9abd87ebb79605b5
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: > @agilityhub/shared-types@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: > vitest run
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types[39m
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: > @agilityhub/i18n@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: > vitest run
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test:  [32m✓[39m tests/build-session-export.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+@agilityhub/shared-types:test:  [32m✓[39m tests/json-schemas.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+@agilityhub/shared-types:test: [2m      Tests [22m [1m[32m38 passed[39m[22m[90m (38)[39m
+@agilityhub/shared-types:test: [2m   Start at [22m 16:01:24
+@agilityhub/shared-types:typecheck: cache hit, replaying logs c4cd70d7e3ccd8fa
+@agilityhub/shared-types:test: [2m   Duration [22m 740ms[2m (transform 70%, import 21%, tests 8%, worker 1%)[22m
+@agilityhub/shared-types:test: 
+@agilityhub/i18n:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  ✓ src/masking.test.ts (9 tests) 3ms
+@agilityhub/i18n:test:  ✓ src/locale.test.ts (3 tests) 3ms
+@agilityhub/i18n:test:  ✓ src/activities.test.ts (5 tests) 33ms
+@agilityhub/i18n:test:  ✓ src/format.test.ts (99 tests) 75ms
+@agilityhub/i18n:test:  ✓ src/index.test.ts (4 tests) 31ms
+@agilityhub/i18n:test: 
+@agilityhub/i18n:test:  Test Files  5 passed (5)
+@agilityhub/i18n:test:       Tests  120 passed (120)
+@agilityhub/i18n:test:    Start at  08:37:36
+@agilityhub/i18n:test:    Duration  696ms (transform 74%, import 15%, tests 10%, worker 1%)
+@agilityhub/i18n:test: 
+@agilityhub/i18n:typecheck: cache hit, replaying logs 75b021a0a2b35b6b
+clubs-admin:build: cache miss, executing ddae795fd4f9dc74
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+@agilityhub/i18n:typecheck: 
+@agilityhub/i18n:typecheck: > @agilityhub/i18n@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:typecheck: > tsc --noEmit
+@agilityhub/i18n:typecheck: 
+id:build: cache miss, executing 9675c3bc88d71885
+clubs:build: cache miss, executing 736111d941671f17
+@agilityhub/shared-types:build: cache hit, replaying logs a211f3de2fb8a1b3
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+id:build: 
+id:build: > id@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+clubs-admin:lint: 
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  ✓ src/mocks/auth-handoff.test.ts (2 tests) 1922ms
+@agilityhub/api-client:test:    ✓ T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads (2)
+@agilityhub/api-client:test:      ✓ redeem code 1, reload, redeem code 2, then code 1 again → refused (the whole redemption history stays spent) 1721ms
+@agilityhub/api-client:test:  ✓ src/mocks/day-grid-handlers.test.ts (16 tests) 458ms
+@agilityhub/api-client:test:  ✓ src/mocks/signup-handlers.test.ts (32 tests) 550ms
+@agilityhub/api-client:test:  ✓ src/mocks/messaging-handlers.test.ts (19 tests) 569ms
+@agilityhub/api-client:test:  ✓ src/mocks/notification-handlers.test.ts (11 tests) 667ms
+@agilityhub/api-client:test:  ✓ src/mocks/agenda-handlers.test.ts (16 tests) 614ms
+@agilityhub/api-client:test:  ✓ src/mocks/followup-handlers.test.ts (21 tests) 625ms
+@agilityhub/api-client:test:  ✓ src/mocks/census-handlers.test.ts (104 tests) 768ms
+@agilityhub/api-client:test:  ✓ src/mocks/attendance-handlers.test.ts (18 tests) 935ms
+@agilityhub/api-client:test:  ✓ src/mocks/training-handlers.test.ts (11 tests) 985ms
+@agilityhub/api-client:test:  ✓ src/preferences-saver.test.ts (20 tests) 227ms
+@agilityhub/api-client:test:  ✓ src/branding-cache.test.ts (5 tests) 408ms
+@agilityhub/api-client:test:  ✓ src/mocks/calendar-handlers.test.ts (15 tests) 1149ms
+@agilityhub/api-client:test:  ✓ src/api-error.test.ts (5 tests) 3ms
+@agilityhub/api-client:test:  ✓ src/attendance-sheet.test.ts (5 tests) 40ms
+@agilityhub/api-client:test:  ✓ src/submission-key.test.ts (15 tests) 7ms
+@agilityhub/api-client:test:  ✓ src/mocks/list-fields.test.ts (8 tests) 14ms
+@agilityhub/api-client:test:  ✓ src/uploads.test.ts (4 tests) 172ms
+@agilityhub/api-client:test:  ✓ src/club-pages.test.ts (1 test) 59ms
+@agilityhub/api-client:test:  ✓ src/exports.test.ts (16 tests) 122ms
+@agilityhub/api-client:test:  ✓ src/mocks/activity-handlers.test.ts (27 tests) 1697ms
+@agilityhub/api-client:test:  ✓ src/mocks/list-exports.test.ts (19 tests) 494ms
+@agilityhub/api-client:test:  ✓ src/index.test.ts (21 tests) 657ms
+@agilityhub/api-client:test:  ✓ src/mocks/club-settings-handlers.test.ts (1 test) 43ms
+@agilityhub/api-client:test:  ✓ src/mocks/booking-handlers.test.ts (30 tests) 2086ms
+@agilityhub/api-client:test:  ✓ src/mocks/billing-handlers.test.ts (53 tests) 2564ms
+@agilityhub/api-client:test:  ✓ src/mocks/fixtures.contract.test.ts (85 tests) 2448ms
+@agilityhub/api-client:test:  ✓ src/mocks/mock-worlds.budget.test.ts (24 tests) 3950ms
+@agilityhub/api-client:test:    ✓ E3-W10 build-time budget of the MSW mock worlds (24)
+@agilityhub/api-client:test:      ✓ imports the mock modules afresh within the start-up budget 1830ms
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 242 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-CIhKnQD-.css                           52.05 kB │ gzip:   9.48 kB
+id:build: dist/assets/common-BpH9cuss.js                            2.30 kB │ gzip:   1.09 kB
+id:build: dist/assets/common-D5M4a98u.js                            2.39 kB │ gzip:   1.18 kB
+id:build: dist/assets/common-DLazKDt-.js                            2.45 kB │ gzip:   1.20 kB
+id:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+id:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+id:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+id:build: dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+id:build: dist/assets/errors-Bvp7svDM.js                           23.31 kB │ gzip:   7.57 kB
+id:build: dist/assets/errors-QdWmQXin.js                           23.32 kB │ gzip:   7.54 kB
+id:build: dist/assets/index-BZ8Jzamd.js                           327.49 kB │ gzip: 100.92 kB
+id:build: 
+id:build: ✓ built in 378ms
+@agilityhub/auth:test: cache miss, executing d360019e89ee1221
+@agilityhub/auth:typecheck: cache miss, executing 473b4c724de4a47b
+@agilityhub/auth:test: 
+@agilityhub/auth:test: > @agilityhub/auth@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: > vitest run
+@agilityhub/auth:test: 
+@agilityhub/auth:typecheck: 
+@agilityhub/auth:typecheck: > @agilityhub/auth@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:typecheck: > tsc --noEmit
+@agilityhub/auth:typecheck: 
+@agilityhub/api-client:test:  ✓ src/mocks/backoffice-handlers.test.ts (47 tests) 6982ms
+@agilityhub/api-client:test:    ✓ E5-W05 round 2 · the staff registrants' level is the dog's own, and follows levels.enabled (S08 §6) (2)
+@agilityhub/api-client:test:      ✓ E5-W05 round 3 #4: in every class of the calendar and day-grid worlds each registrant's level is one the class allows (S08 R-08-04), no dog is listed twice, and the rows match the class's counters 489ms
+@agilityhub/api-client:test:    ✓ E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19) (7)
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 10 at 8:12 (D1 and D10, S15's example day) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 462ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dc 12 at 10:00 (D4) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 396ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 7:10 (the ring-usage register) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 323ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 21:00 (screen 23's drawer) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 404ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dg 2 at 20:30 (the member world) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice 336ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 round 2 #3 (R-08-02, R-08-03): after Tuesday's 18:50 class is cancelled, still no dog of the calendar or the day grid is booked over its week's limit, and every class lists its counters' registrants 723ms
+@agilityhub/api-client:test:    ✓ E7-W07 round 2 #5b · the staff rows were booked, and the waiting entries joined, before now (S08 R-08-01) (4)
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 round 2 #5b (R-08-01): at dl 10 at 8:12 (D1 and D10, S15's example day) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened 359ms
+@agilityhub/api-client:test:      ✓ T-08-03 E7-W07 round 2 #5b (R-08-01): at dg 2 at 20:30 (the member world) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened 313ms
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test:  Test Files  29 passed (29)
+@agilityhub/api-client:test:       Tests  651 passed (651)
+@agilityhub/api-client:test:    Start at  08:38:02
+@agilityhub/api-client:test:    Duration  9.30s (tests 45%, import 33%, transform 21%)
+@agilityhub/api-client:test: 
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  ✓ src/session.test.tsx (5 tests) 259ms
+@agilityhub/auth:test:  ✓ src/auth-client.test.ts (27 tests) 1003ms
+@agilityhub/auth:test:    ✓ T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie (3)
+@agilityhub/auth:test:      ✓ /me keeps failing: the exchange rejects but the tab keeps that session, restores never read the cookie (also after a reload), and retryHandoff enters it 309ms
+@agilityhub/auth:test: 
+@agilityhub/auth:test:  Test Files  2 passed (2)
+@agilityhub/auth:test:       Tests  32 passed (32)
+@agilityhub/auth:test:    Start at  08:38:11
+@agilityhub/auth:test:    Duration  2.22s (environment 38%, tests 35%, transform 17%, import 10%)
+@agilityhub/auth:test: 
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: transforming...
+clubs-admin:test: cache miss, executing a3ea31116f549d17
+clubs-admin:typecheck: cache miss, executing 7921b32067a396a2
+id:typecheck: cache miss, executing f302a75c15566489
+clubs:test: cache miss, executing c007b3d37c011bdf
+id:test: cache miss, executing fbd9235678e3be05
+clubs:typecheck: cache miss, executing 8758ff89357d21c4
+clubs:build: ✓ 297 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/index.html                                           2.71 kB │ gzip:   0.93 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+clubs:build: dist/assets/index-CKretKmW.css                          119.60 kB │ gzip:  18.88 kB
+clubs:build: dist/assets/notifications-ChKXsAvB.js                     0.75 kB │ gzip:   0.47 kB
+clubs:build: dist/assets/notifications-dxKZmlHL.js                     0.75 kB │ gzip:   0.43 kB
+clubs:build: dist/assets/notifications-BP8GtpgC.js                     0.75 kB │ gzip:   0.47 kB
+clubs:build: dist/assets/billing-DWBhiDbd.js                           1.08 kB │ gzip:   0.56 kB
+clubs:build: dist/assets/virtual_pwa-register-oafIZBMK.js              1.12 kB │ gzip:   0.59 kB
+clubs:build: dist/assets/billing-B6V-PX67.js                           1.16 kB │ gzip:   0.63 kB
+clubs:build: dist/assets/billing-BQ2jiST1.js                           1.18 kB │ gzip:   0.64 kB
+clubs:build: dist/assets/history-B1Xz7N4l.js                           1.27 kB │ gzip:   0.65 kB
+clubs:build: dist/assets/history-D5FndTjo.js                           1.32 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/admin-training-DDv2dFuD.js                    1.35 kB │ gzip:   0.63 kB
+clubs:build: dist/assets/history-Bs5JKpAd.js                           1.35 kB │ gzip:   0.69 kB
+clubs:build: dist/assets/admin-training-Du9KAoeO.js                    1.42 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/admin-training-CtWdBvS6.js                    1.44 kB │ gzip:   0.69 kB
+clubs:build: dist/assets/training-CYuCURIa.js                          1.57 kB │ gzip:   0.80 kB
+clubs:build: dist/assets/home-CLVBc5a3.js                              1.59 kB │ gzip:   0.79 kB
+clubs:build: dist/assets/training-DhvOYmdN.js                          1.62 kB │ gzip:   0.85 kB
+clubs:build: dist/assets/training-B5riWOVN.js                          1.63 kB │ gzip:   0.86 kB
+clubs:build: dist/assets/leave-BJCFfMEA.js                             1.64 kB │ gzip:   0.83 kB
+clubs:build: dist/assets/home-DIaHUeYG.js                              1.65 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/home-vQT0WHAi.js                              1.67 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/leave-CNFxa8RY.js                             1.75 kB │ gzip:   0.94 kB
+clubs:build: dist/assets/leave-DLQuaFFq.js                             1.76 kB │ gzip:   0.94 kB
+clubs:build: dist/assets/activities-_j5UPNJ2.js                        1.79 kB │ gzip:   0.83 kB
+clubs:build: dist/assets/activities-D_fvQi10.js                        1.86 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/activities-BKuUowmB.js                        1.88 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/inactivity-CEJ_pBLV.js                        1.93 kB │ gzip:   0.93 kB
+clubs:build: dist/assets/inactivity-D-XcB9K7.js                        2.02 kB │ gzip:   1.02 kB
+clubs:build: dist/assets/inactivity-C2S9AsN6.js                        2.04 kB │ gzip:   1.02 kB
+clubs:build: dist/assets/admin-dashboard-VZhOZ68T.js                   2.07 kB │ gzip:   1.02 kB
+clubs:build: dist/assets/admin-dashboard-MI69Hia9.js                   2.13 kB │ gzip:   1.10 kB
+clubs:build: dist/assets/admin-dashboard-DNVY2TkD.js                   2.18 kB │ gzip:   1.11 kB
+clubs:build: dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+clubs:build: dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+clubs:build: dist/assets/admin-messaging-Deb_qeG3.js                   4.53 kB │ gzip:   1.87 kB
+clubs:build: dist/assets/admin-messaging-BzpSHSUj.js                   4.70 kB │ gzip:   2.01 kB
+clubs:build: dist/assets/admin-messaging-dXGlHtst.js                   4.79 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/booking-C2JFywZY.js                           4.84 kB │ gzip:   1.84 kB
+clubs:build: dist/assets/auth-C10lCXDJ.js                              5.05 kB │ gzip:   2.14 kB
+clubs:build: dist/assets/booking-BnHoP-fw.js                           5.18 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/booking-oFemWAlT.js                           5.19 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/admin-catalogs-p29fM8xq.js                    5.41 kB │ gzip:   2.01 kB
+clubs:build: dist/assets/auth-Uy3Y-og8.js                              5.63 kB │ gzip:   2.37 kB
+clubs:build: dist/assets/signup-BkgU37Eh.js                            5.63 kB │ gzip:   2.54 kB
+clubs:build: dist/assets/workbox-window.prod.es5-Bd17z0YL.js           5.65 kB │ gzip:   2.20 kB
+clubs:build: dist/assets/admin-catalogs-dZtpqy8S.js                    5.67 kB │ gzip:   2.23 kB
+clubs:build: dist/assets/admin-audit-DY0X8EOb.js                       5.68 kB │ gzip:   2.37 kB
+clubs:build: dist/assets/auth-DU3LoyRH.js                              5.70 kB │ gzip:   2.38 kB
+clubs:build: dist/assets/admin-catalogs-D4wG5vIy.js                    5.87 kB │ gzip:   2.26 kB
+clubs:build: dist/assets/signup-Bi4UbtBk.js                            5.88 kB │ gzip:   2.80 kB
+clubs:build: dist/assets/signup-DQ9RZKro.js                            5.97 kB │ gzip:   2.82 kB
+clubs:build: dist/assets/admin-activities-Cmq1QEmn.js                  6.01 kB │ gzip:   2.42 kB
+clubs:build: dist/assets/admin-activities-p-Yew4Zm.js                  6.17 kB │ gzip:   2.62 kB
+clubs:build: dist/assets/admin-audit-BH-XD2BI.js                       6.19 kB │ gzip:   2.60 kB
+clubs:build: dist/assets/admin-audit-CaX7fz6F.js                       6.30 kB │ gzip:   2.62 kB
+clubs:build: dist/assets/admin-activities-7OuSwNid.js                  6.38 kB │ gzip:   2.68 kB
+clubs:build: dist/assets/census-RqqsMOYU.js                            6.71 kB │ gzip:   2.61 kB
+clubs:build: dist/assets/census-DIp1-dNM.js                            7.06 kB │ gzip:   2.88 kB
+clubs:build: dist/assets/census-D0gmUnA-.js                            7.26 kB │ gzip:   2.93 kB
+clubs:build: dist/assets/admin-scheduling-nhXWwjRG.js                  8.23 kB │ gzip:   3.04 kB
+clubs:build: dist/assets/enums-BHaqmDfV.js                             8.53 kB │ gzip:   3.49 kB
+clubs:build: dist/assets/admin-scheduling-DeLeUPtJ.js                  8.64 kB │ gzip:   3.30 kB
+clubs:build: dist/assets/admin-scheduling-BhSriSnV.js                  8.64 kB │ gzip:   3.31 kB
+clubs:build: dist/assets/enums-u7AAHUFV.js                             8.80 kB │ gzip:   3.61 kB
+clubs:build: dist/assets/enums-DHePGg_n.js                             8.84 kB │ gzip:   3.60 kB
+clubs:build: dist/assets/instructor-Drv5FS73.js                        8.95 kB │ gzip:   3.24 kB
+clubs:build: dist/assets/instructor-C9Nzp3I-.js                        9.33 kB │ gzip:   3.45 kB
+clubs:build: dist/assets/instructor-DOywIQyk.js                        9.43 kB │ gzip:   3.47 kB
+clubs:build: dist/assets/admin-billing-DQhNxjJC.js                     9.85 kB │ gzip:   3.47 kB
+clubs:build: dist/assets/admin-billing-CiMS4hmI.js                    10.05 kB │ gzip:   3.79 kB
+clubs:build: dist/assets/admin-billing-3RxbqpcH.js                    10.27 kB │ gzip:   3.82 kB
+clubs:build: dist/assets/admin-census-CfzCF8Xd.js                     17.43 kB │ gzip:   6.53 kB
+clubs:build: dist/assets/admin-census-Bw4dOq0T.js                     18.47 kB │ gzip:   7.02 kB
+clubs:build: dist/assets/admin-census-B4-sXGBc.js                     18.88 kB │ gzip:   7.11 kB
+clubs:build: dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+clubs:build: dist/assets/admin-settings-BGWZWGcY.js                   23.15 kB │ gzip:   8.03 kB
+clubs:build: dist/assets/errors-Bvp7svDM.js                           23.31 kB │ gzip:   7.57 kB
+clubs:build: dist/assets/errors-QdWmQXin.js                           23.32 kB │ gzip:   7.54 kB
+clubs:build: dist/assets/admin-settings-Djo9n4mk.js                   24.88 kB │ gzip:   8.71 kB
+clubs:build: dist/assets/admin-settings-DfNEfLE4.js                   25.34 kB │ gzip:   8.72 kB
+clubs:build: dist/assets/index-PaaETPbq.js                           676.50 kB │ gzip: 194.16 kB
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs:build: 
+clubs:build: ✓ built in 369ms
+id:typecheck: 
+id:typecheck: > id@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:typecheck: > tsc --noEmit
+id:typecheck: 
+clubs-admin:typecheck: 
+clubs-admin:typecheck: > clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:typecheck: > tsc --noEmit
+clubs-admin:typecheck: 
+clubs-admin:test: 
+clubs-admin:test: > clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:test: > vitest run
+clubs-admin:test: 
+clubs:typecheck: 
+clubs:typecheck: > clubs@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:typecheck: > tsc --noEmit
+clubs:typecheck: 
+clubs:test: 
+clubs:test: > clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:test: > vitest run
+clubs:test: 
+id:test: 
+id:test: > id@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:test: > vitest run
+id:test: 
+clubs-admin:test: 
+clubs-admin:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:test: 
+id:test: 
+id:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:test: 
+clubs:test: 
+clubs:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:test: 
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: Building src/sw.ts service worker ("es" format)...
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: 
+clubs:build:  WARN  inlineDynamicImports option is deprecated, please use codeSplitting: false instead.
+clubs:build: 
+clubs:build: transforming...
+clubs:build: ✓ 60 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/sw.mjs  17.90 kB │ gzip: 6.01 kB
+clubs:build: 
+clubs:build: ✓ built in 348ms
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      injectManifest
+clubs:build: format:   es
+clubs:build: precache  83 entries (1275.14 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+id:test:  ✓ src/App.test.tsx (9 tests) 1120ms
+id:test:    ✓ T-01-22 apps/id (9)
+id:test:      ✓ resumes a server-side OIDC flow after password login 316ms
+id:test: 
+id:test:  Test Files  1 passed (1)
+id:test:       Tests  9 passed (9)
+id:test:    Start at  08:38:15
+id:test:    Duration  8.63s (environment 46%, transform 29%, tests 14%, setup 8%, import 3%)
+id:test: 
+id:test:   Transform  transforming modules took 2.34s · 29% of tracked time, re-done on every run
+id:test:              persist transforms across runs with fsModuleCache: true
+id:test:              learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+id:test: 
+clubs:test:  ✓ src/inactivity/InactivityPage.test.tsx (10 tests) 3618ms
+clubs:test:    ✓ T-13-29 member inactivity (10)
+clubs:test:      ✓ renders consultation mode, the proposed open end, fee and debounced booking warning 503ms
+clubs:test:      ✓ covers zero, singular and plural booking previews after the selected months change 1029ms
+clubs:test:      ✓ offers future ends for a historical open ACTIVE period and beyond a long fixed end 523ms
+clubs:test:      ✓ loads and links to the conflicting live period after INACTIVITY_OVERLAP 367ms
+clubs:test:      ✓ after 409 STALE_VERSION keeps only the member's own edit on top of the new version 383ms
+clubs:test:  ✓ src/today/TodayPage.test.tsx (18 tests) 3671ms
+clubs:test:    ✓ T-06-29 screen 10 «Classes del dia» (18)
+clubs:test:      ✓ draws the mockup grid with identical ring columns, the date header and the week chips 349ms
+clubs:test:      ✓ falls back to the club-local today and rewrites the address for ?date=hola 308ms
+clubs:test:      ✓ R-06-14 in Pacific/Kiritimati: requested date, header and chips name the club's calendar day 341ms
+clubs:test:      ✓ R-06-14 in Europe/Madrid: requested date, header and chips name the club's calendar day 325ms
+clubs-admin:test: Not implemented: navigation to another Document
+clubs:test:  ✓ src/history/history.test.tsx (17 tests) 4357ms
+clubs:test:    ✓ T-10-31 screen 25 «Històric» (S10 §2, R-10-14) (11)
+clubs:test:      ✓ mockup 25: the three dogs with «Tots» pressed by default, the four type chips, the window caption and the seven rows with their exact badges and lines 907ms
+clubs:test:      ✓ an impersonated session reads 25 with the banner; an instructor-only session does not get the page 465ms
+clubs:test:      ✓ T-10-32 (25): es and en read the rows with no missing key (the titles are the api's) 362ms
+clubs:test:  ✓ src/activities/activities.test.tsx (30 tests) 5629ms
+clubs:test:    ✓ T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 (19)
+clubs:test:      ✓ draws the 04 block with the exact badges; the full row with waitlist stays tappable 350ms
+clubs:test:      ✓ FULL_WAITLIST: the waitlist dialog → toast «Ets a la llista d'espera» → [SURT DE LA LLISTA D'ESPERA] 845ms
+clubs:test:      ✓ registered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text 640ms
+clubs:test:      ✓ R-07-14 a failed block shows the error with a retry; only MODULE_DISABLED hides it 345ms
+clubs:test:    ✓ T-07-30 E4-W08 app detail follow-ups of the E4-W04 round-2 review (6)
+clubs:test:      ✓ R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; 400 VALIDATION_ERROR on reason (details.field, the core's shape) stays on the field 436ms
+clubs:test:      ✓ R-07-09/10 an impersonated cancellation asks for «Motiu» and sends {reason}; 400 VALIDATION_ERROR on reason (details.fieldErrors[]) stays on the field 422ms
+clubs:test:    ✓ T-07-30 E4-W13 step 0 R-07-08 the app shows the live waitlist rank (api E5-T20) (1)
+clubs:test:      ✓ the member's detail shows «en llista d'espera (1)» from waitlistRank once the entries ahead are promoted, although its position is 3 321ms
+clubs:test:    ✓ E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): 13's registration keeps one key per submission (1)
+clubs:test:      ✓ T-07-30 T-07-14 E7-W07 step 4 (CONVENCIONS_API §7, E85): [INSCRIU-M'HI] keeps its Idempotency-Key through a network failure, IN_PROGRESS («L'operació encara està en curs…») and a 503 with the api's body; a 422 BOOKING_BLOCKED retires it, so the same registration sent again takes a new key 433ms
+clubs:test:  ✓ src/booking/home.test.tsx (12 tests) 5152ms
+clubs:test:    ✓ screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) (9)
+clubs:test:      ✓ the greeting and the bell, «Tots» last and pressed, the counters and the rows as the api delivers them 1968ms
+clubs:test:      ✓ E7-W06 step 5 (E6-W04 question 6): each class booking's row of 03 carries data-booking-id, its booking's id; the training, waiting and activity rows carry none 346ms
+clubs:test:      ✓ a dog selected: its rows without « · amb …» and the member's activity still there (the api keeps it), its counters, and «Tots» brings them back 440ms
+clubs:test:      ✓ a dog without reservations, for a member without activity registrations: «Encara no tens cap reserva» and a way to 04 435ms
+clubs:test:      ✓ only one accessible dog: no «Tots», its chip selected and its rows without « · amb …» (V3); nothing unread: the bell is still 353ms
+clubs:test:    ✓ E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) (3)
+clubs:test:      ✓ es: 03 and 04 read in Spanish, with no Catalan article 331ms
+clubs:test:      ✓ a viewer in America/Bogota still reads the club's times (Europe/Madrid): «18:50» and «20:14» 326ms
+clubs:test:  ✓ src/booking/book.test.tsx (11 tests) 5240ms
+clubs:test:    ✓ T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) (11)
+clubs:test:      ✓ Duna: the chips without «Tots», the pack, the intro, the activities and the six rows (mockup 04's, with «ds 8» a normal row: E7-W07 step 6, ruling E85) 1362ms
+clubs:test:      ✓ Rock: «Sense sessions» is inert with an expiring pack; Toby: the block banner and inert rows without a badge 623ms
+clubs:test:      ✓ WAITLIST_OPEN asks first, joins with the selected dog, then the row leaves the list with «Ets a la llista d'espera» 609ms
+clubs:test:      ✓ E7-W06 step 3 (E7-W05 review #2): a join whose reload fails shows 04's error with a retry, never the joined row next to the notice; the retry reads the list again without it 417ms
+clubs:test:      ✓ a refused join keeps its message inside the dialog (409 WAITLIST_LIMIT) 507ms
+clubs:test:      ✓ a hold refused with any other code stays on 04 with its errors: message and the list read again 361ms
+clubs:test:      ✓ the app mounts 04 on /reservar with the «Reservar» tab active 339ms
+clubs-admin:build: vite v8.2.2 building client environment for production...
+clubs-admin:build: transforming...
+clubs:test:  ✓ src/today/OverviewPage.test.tsx (12 tests) 7008ms
+clubs:test:    ✓ T-06-29 screen 23 «Visió global» (9)
+clubs:test:      ✓ shows n/n +e with the planned instructor, training names, the block and the cancelled class 411ms
+clubs:test:      ✓ E5-W05 round 2 #3: the drawer's level chips are the dogs' own levels (Duna «C»), and none in a club with levels.enabled = false 1223ms
+clubs:test:      ✓ E5-W05 steps 1 and 2: the drawer's chips read displayState («feta», «no presentat»), the level chip is levelCode (none when null), and «En espera: {guia} + {gos}» with the FIFO position 486ms
+clubs:test:      ✓ opens the class drawer with the instructor projection of the tapped class 530ms
+clubs:test:      ✓ opens the block drawer and cancels the block (POST /ring-blocks/{id}/cancellation) 356ms
+clubs:test:    ✓ T-06-29 E4-W11 screen 23's class drawer reads the class detail (api E5-T15) (2)
+clubs:test:      ✓ names the instructors (instructorNames[]) and the ring (ring.name) of GET /class-sessions/{id}, not of the tapped cell 346ms
+clubs:test:      ✓ a class without a ring (ring: null) has no «Pista» row; without names, no «Instructor» row 539ms
+clubs:test:    ✓ T-06-29 E4-W14 screen 23's drawer: the instructors' label follows the count, the names are a list (1)
+clubs:test:      ✓ ca «Instructor: Marc» / «Instructors: Marc i Núria»; es «Instructores: Marc y Núria»; en «Instructors: Marc and Núria» 2179ms
+clubs-admin:build: ✓ 323 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/index.html                                             2.65 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs-admin:build: dist/assets/index-DmSYc35g.css                            133.28 kB │ gzip:  20.09 kB
+clubs-admin:build: dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+clubs-admin:build: dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+clubs-admin:build: dist/assets/notifications-BP8GtpgC.js                       0.75 kB │ gzip:   0.47 kB
+clubs-admin:build: dist/assets/billing-DWBhiDbd.js                             1.08 kB │ gzip:   0.56 kB
+clubs-admin:build: dist/assets/billing-B6V-PX67.js                             1.16 kB │ gzip:   0.63 kB
+clubs-admin:build: dist/assets/billing-BQ2jiST1.js                             1.18 kB │ gzip:   0.64 kB
+clubs-admin:build: dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+clubs-admin:build: dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-DDv2dFuD.js                      1.35 kB │ gzip:   0.63 kB
+clubs-admin:build: dist/assets/history-Bs5JKpAd.js                             1.35 kB │ gzip:   0.69 kB
+clubs-admin:build: dist/assets/admin-training-Du9KAoeO.js                      1.42 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-CtWdBvS6.js                      1.44 kB │ gzip:   0.69 kB
+clubs-admin:build: dist/assets/training-CYuCURIa.js                            1.57 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/home-CLVBc5a3.js                                1.59 kB │ gzip:   0.79 kB
+clubs-admin:build: dist/assets/training-DhvOYmdN.js                            1.62 kB │ gzip:   0.85 kB
+clubs-admin:build: dist/assets/training-B5riWOVN.js                            1.63 kB │ gzip:   0.86 kB
+clubs-admin:build: dist/assets/leave-BJCFfMEA.js                               1.64 kB │ gzip:   0.83 kB
+clubs-admin:build: dist/assets/home-DIaHUeYG.js                                1.65 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/home-vQT0WHAi.js                                1.67 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/leave-CNFxa8RY.js                               1.75 kB │ gzip:   0.94 kB
+clubs-admin:build: dist/assets/leave-DLQuaFFq.js                               1.76 kB │ gzip:   0.94 kB
+clubs-admin:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs-admin:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/inactivity-CEJ_pBLV.js                          1.93 kB │ gzip:   0.93 kB
+clubs-admin:build: dist/assets/inactivity-D-XcB9K7.js                          2.02 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/inactivity-C2S9AsN6.js                          2.04 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/admin-dashboard-VZhOZ68T.js                     2.07 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/admin-dashboard-MI69Hia9.js                     2.13 kB │ gzip:   1.10 kB
+clubs-admin:build: dist/assets/admin-dashboard-DNVY2TkD.js                     2.18 kB │ gzip:   1.11 kB
+clubs-admin:build: dist/assets/id-cJQwgM2i.js                                  2.89 kB │ gzip:   1.28 kB
+clubs-admin:build: dist/assets/id-Dio3OKNo.js                                  3.04 kB │ gzip:   1.41 kB
+clubs-admin:build: dist/assets/id-Rnv2hXs4.js                                  3.10 kB │ gzip:   1.42 kB
+clubs-admin:build: dist/assets/admin-messaging-Deb_qeG3.js                     4.53 kB │ gzip:   1.87 kB
+clubs-admin:build: dist/assets/admin-messaging-BzpSHSUj.js                     4.70 kB │ gzip:   2.01 kB
+clubs-admin:build: dist/assets/admin-messaging-dXGlHtst.js                     4.79 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/booking-C2JFywZY.js                             4.84 kB │ gzip:   1.84 kB
+clubs-admin:build: dist/assets/auth-C10lCXDJ.js                                5.05 kB │ gzip:   2.14 kB
+clubs-admin:build: dist/assets/booking-BnHoP-fw.js                             5.18 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/booking-oFemWAlT.js                             5.19 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/admin-catalogs-p29fM8xq.js                      5.41 kB │ gzip:   2.01 kB
+clubs-admin:build: dist/assets/auth-Uy3Y-og8.js                                5.63 kB │ gzip:   2.37 kB
+clubs-admin:build: dist/assets/signup-BkgU37Eh.js                              5.63 kB │ gzip:   2.54 kB
+clubs-admin:build: dist/assets/admin-catalogs-dZtpqy8S.js                      5.67 kB │ gzip:   2.23 kB
+clubs-admin:build: dist/assets/admin-audit-DY0X8EOb.js                         5.68 kB │ gzip:   2.37 kB
+clubs-admin:build: dist/assets/auth-DU3LoyRH.js                                5.70 kB │ gzip:   2.38 kB
+clubs-admin:build: dist/assets/admin-catalogs-D4wG5vIy.js                      5.87 kB │ gzip:   2.26 kB
+clubs-admin:build: dist/assets/signup-Bi4UbtBk.js                              5.88 kB │ gzip:   2.80 kB
+clubs-admin:build: dist/assets/signup-DQ9RZKro.js                              5.97 kB │ gzip:   2.82 kB
+clubs-admin:build: dist/assets/admin-activities-Cmq1QEmn.js                    6.01 kB │ gzip:   2.42 kB
+clubs-admin:build: dist/assets/admin-activities-p-Yew4Zm.js                    6.17 kB │ gzip:   2.62 kB
+clubs-admin:build: dist/assets/admin-audit-BH-XD2BI.js                         6.19 kB │ gzip:   2.60 kB
+clubs-admin:build: dist/assets/admin-audit-CaX7fz6F.js                         6.30 kB │ gzip:   2.62 kB
+clubs-admin:build: dist/assets/admin-activities-7OuSwNid.js                    6.38 kB │ gzip:   2.68 kB
+clubs-admin:build: dist/assets/census-RqqsMOYU.js                              6.71 kB │ gzip:   2.61 kB
+clubs-admin:build: dist/assets/census-DIp1-dNM.js                              7.06 kB │ gzip:   2.88 kB
+clubs-admin:build: dist/assets/census-D0gmUnA-.js                              7.26 kB │ gzip:   2.93 kB
+clubs-admin:build: dist/assets/admin-scheduling-nhXWwjRG.js                    8.23 kB │ gzip:   3.04 kB
+clubs-admin:build: dist/assets/enums-BHaqmDfV.js                               8.53 kB │ gzip:   3.49 kB
+clubs-admin:build: dist/assets/admin-scheduling-DeLeUPtJ.js                    8.64 kB │ gzip:   3.30 kB
+clubs-admin:build: dist/assets/admin-scheduling-BhSriSnV.js                    8.64 kB │ gzip:   3.31 kB
+clubs-admin:build: dist/assets/enums-u7AAHUFV.js                               8.80 kB │ gzip:   3.61 kB
+clubs-admin:build: dist/assets/enums-DHePGg_n.js                               8.84 kB │ gzip:   3.60 kB
+clubs-admin:build: dist/assets/instructor-Drv5FS73.js                          8.95 kB │ gzip:   3.24 kB
+clubs-admin:build: dist/assets/instructor-C9Nzp3I-.js                          9.33 kB │ gzip:   3.45 kB
+clubs-admin:build: dist/assets/instructor-DOywIQyk.js                          9.43 kB │ gzip:   3.47 kB
+clubs-admin:build: dist/assets/admin-billing-DQhNxjJC.js                       9.85 kB │ gzip:   3.47 kB
+clubs-admin:build: dist/assets/admin-billing-CiMS4hmI.js                      10.05 kB │ gzip:   3.79 kB
+clubs-admin:build: dist/assets/admin-billing-3RxbqpcH.js                      10.27 kB │ gzip:   3.82 kB
+clubs-admin:build: dist/assets/admin-census-CfzCF8Xd.js                       17.43 kB │ gzip:   6.53 kB
+clubs-admin:build: dist/assets/admin-census-Bw4dOq0T.js                       18.47 kB │ gzip:   7.02 kB
+clubs-admin:build: dist/assets/admin-census-B4-sXGBc.js                       18.88 kB │ gzip:   7.11 kB
+clubs-admin:build: dist/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+clubs-admin:build: dist/assets/admin-settings-BGWZWGcY.js                     23.15 kB │ gzip:   8.03 kB
+clubs-admin:build: dist/assets/errors-Bvp7svDM.js                             23.31 kB │ gzip:   7.57 kB
+clubs-admin:build: dist/assets/errors-QdWmQXin.js                             23.32 kB │ gzip:   7.54 kB
+clubs-admin:build: dist/assets/admin-settings-Djo9n4mk.js                     24.88 kB │ gzip:   8.71 kB
+clubs-admin:build: dist/assets/admin-settings-DfNEfLE4.js                     25.34 kB │ gzip:   8.72 kB
+clubs-admin:build: dist/assets/index-CVmeRo1A.js                           1,253.90 kB │ gzip: 424.20 kB
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: [33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+clubs-admin:build: 
+clubs-admin:build: ✓ built in 1.43s
+clubs:test:  ✓ src/booking/detail.test.tsx (25 tests) 8101ms
+clubs:test:    ✓ T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) (18)
+clubs:test:      ✓ E5-W05 step 8: shows the mockup card, and a cancellation in time asks first and leaves the green note, which names no week («pots reservar una altra classe.») 1639ms
+clubs:test:      ✓ inside the 4 h threshold the dialog warns, and the late note names «4 hores» 514ms
+clubs:test:      ✓ a booking cancelled by a swap, opened later: its state chip only, no «dins el termini» note (review #4) 907ms
+clubs:test:      ✓ a CANCELLED_LATE booking cancelled by MEMBER, opened later: its chip «anul·lada tard» only, no note (review #4) 330ms
+clubs:test:      ✓ E5-W04 step 0 (R-08-10, api E5-T25): at 2026-08-03T16:00:00+02:00 with `cancellableInTimeUntil` 2026-08-03T16:00:00Z the dialog warns: false 407ms
+clubs:test:      ✓ E7-W06 step 3 (E7-W05 review #2): a cancellation whose reload fails shows 07's error with a retry, never the old «confirmada» card; the retry shows the cancelled booking and its note 381ms
+clubs:test:    ✓ T-08-39 the waiting entry (/espera/:id, R-08-16) (7)
+clubs:test:      ✓ the card with «en llista d'espera», no position in ALL_AT_ONCE, and «SURT DE LA LLISTA D'ESPERA» back to 03 369ms
+clubs:test:      ✓ E5-W05 step 10: a NOTIFIED entry reads «plaça alliberada» with [AGAFA LA PLAÇA]; an ACTIVE one keeps «en llista d'espera» without it 319ms
+clubs-admin:test:  ✓ src/audit/AuditPage.test.tsx (9 tests) 8622ms
+clubs-admin:test:    ✓ T-14-26 member audit and exports (8)
+clubs-admin:test:      ✓ filters by action and opens the masked before/after change drawer 1954ms
+clubs-admin:test:      ✓ E3-W07 step 0 labels a readmission submitted from the public form (SIGNUP_SUBMITTED, PUBLIC) 481ms
+clubs-admin:test:      ✓ E4-W15 step 8 (E4-W13 report, question 4): «Entitat» and «Actor» ask for the keys they fall back to, entityType and actorRole 712ms
+clubs-admin:test:      ✓ opens the exports drawer for a queued job and exposes its READY download 2487ms
+clubs-admin:test:      ✓ shows the catalogued EXPORT_LIMIT explanation in the exports drawer 982ms
+clubs-admin:test:      ✓ routes a queued members list export into the global drawer 909ms
+clubs-admin:test:      ✓ routes a queued dogs list export into the global drawer 936ms
+clubs-admin:test:  ✓ src/census/NotificationPreferencesBlock.test.tsx (22 tests) 10864ms
+clubs-admin:test:    ✓ T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04) (22)
+clubs-admin:test:      ✓ renders D10's wording: the four categories (the fourth CLUB_NEWS row), the App tick always on, «+SMS», the reminder «Mai» with the six options, the push toggle and «Avisos enviats ›» 382ms
+clubs-admin:test:      ✓ each change shows at once and the changes of 300 ms travel as one partial PUT 449ms
+clubs-admin:test:      ✓ a refused save (422 INVALID_REMINDER_OPTION) puts back what the api holds and says why 345ms
+clubs-admin:test:      ✓ E7-W06 review #4: a save answered 409 MEMBER_ERASED (the member erased while D10 is open) ends the block with errors:MEMBER_ERASED — no controls left to change again 390ms
+clubs-admin:test:      ✓ E7-W01 round 2 #5: leaving the page sends every unsaved change with keepalive — the one on its way too — and the next visit sends it again 841ms
+clubs-admin:test:      ✓ E7-W04 step 3 (R-11-04): PERSONAL = false on its way, set back to true and the page left, the answers in reverse order — true is saved, and the recovery entry stays until it is 456ms
+clubs-admin:test:      ✓ E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it 956ms
+clubs-admin:test:      ✓ E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx 486ms
+clubs-admin:test:      ✓ E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved 520ms
+clubs-admin:test:      ✓ E7-W05 step 5 (R-11-04): the departure's keepalive PUT is held across pagehide(persisted) and pageshow(persisted) — the kept change goes again as a normal save once it settles, and the outbox clears only when that save is answered 633ms
+clubs-admin:test:      ✓ E7-W06 (E7-W05 review #4): back from the back-forward cache with nothing unsaved, the record saves the change a newer visit left in the outbox instead of taking it over and ignoring it 349ms
+clubs-admin:test:      ✓ E7-W07 step 2 (E7-W06 review #3, ruling E85: option a; R-11-04): overlapping PUTs and the last one lost — the record reads GET again (the api holds off), shows the member's «on» as a pending change with «Desant…», sends it again, and its 2xx saves it and frees the outbox 871ms
+clubs-admin:test:      ✓ E7-W07 step 2 (ruling E85: option a): the retry is lost too and the admin leaves right after — the departure carries «on» with keepalive and keeps it, and the next visit within 5 minutes of leaving shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too — «on» stays shown and kept, and the admin's next change sends it 1918ms
+clubs-admin:test:      ✓ E7-W07 round 2 #2 (review #2; S14 §5, T-14-19): with the overlapping-save sequence, the resend answered 409 MEMBER_ERASED is final — the block says so, and no other PUT or GET follows, nothing is sent on departure, and the outbox entry goes 1315ms
+clubs:test:  ✓ src/training/TrainingDetailPage.test.tsx (8 tests) 3944ms
+clubs:test:    ✓ S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) (6)
+clubs:test:      ✓ a future booking: title, state, line, who booked it, and the cancellation back to 03 1532ms
+clubs:test:      ✓ cancelled by the club: its state, and nothing to do 337ms
+clubs:test:      ✓ 422 TRAINING_CANCEL_TOO_LATE: the threshold and the minutes left, from the details, in the dialog 385ms
+clubs:test:      ✓ 409 INVALID_STATE: the message and the booking read again (cancelled elsewhere) 323ms
+clubs:test:    ✓ E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): the training cancellation follows the shared submission-key rule (1)
+clubs:test:      ✓ T-09-25 E7-W07 step 4 (CONVENCIONS_API §7, E85): [ANUL·LA] sends an Idempotency-Key, keeps it through IN_PROGRESS («L'operació encara està en curs…») and a 503 with the api's body, and a 422 TRAINING_CANCEL_TOO_LATE retires it, so the same cancellation sent again takes a new key 741ms
+clubs:test:  ✓ src/notifications/locales.test.tsx (6 tests) 3495ms
+clubs:test:    ✓ E7-W02 round 2 #6 · screens 11, 12 and the unsubscribe page in es and en (Definition of Done) (6)
+clubs:test:      ✓ E7-W02 round 2 #6 (es): the feed, its actions and a club without SMS 1738ms
+clubs:test:      ✓ E7-W02 round 2 #6 (en): the feed, its actions and a club without SMS 737ms
+clubs:test:      ✓ E7-W02 round 2 #6 (es): 12's «Avisos», the reminder options and a refused permission 405ms
+clubs:test:  ✓ src/payments/CheckoutReturn.test.tsx (4 tests) 1186ms
+clubs:test:    ✓ E8-W02 round 2 checkout return (4)
+clubs:test:      ✓ sends the signup capability only for an anonymous signup return 635ms
+clubs:test:      ✓ a parent re-render with a new inline onPaid neither restarts the poll nor reads again 476ms
+clubs:test: Not implemented: navigation to another Document
+clubs:test:  ✓ src/leave/LeavePage.test.tsx (9 tests) 2331ms
+clubs:test:    ✓ T-13-30 member leave (9)
+clubs:test:      ✓ renders the inactivity offer, API reason catalog, NPS 0–10 and full-month help 837ms
+clubs:test:      ✓ sends the selected catalog reason and shows the review footer 413ms
+clubs:test:      ✓ withdraws a pending request and returns to the profile 528ms
+clubs:test:  ✓ src/training/i18n.test.tsx (4 tests) 1917ms
+clubs:test:    ✓ T-09-41 training and instructor vocabulary, locales and club time zone (4)
+clubs:test:      ✓ has no forbidden term nor requirement code in training, instructor and enums (ca/es/en) 385ms
+clubs:test:      ✓ formats in the club's zone, never the viewer's: an October 06:30Z slot reads «8:30» 1499ms
+clubs:test: Not implemented: navigation to another Document
+clubs:test:  ✓ src/InfoPage.test.tsx (5 tests) 1384ms
+clubs:test:    ✓ T-05-CP-07 screen 30 Info (2)
+clubs:test:      ✓ shows FAQ, rules and other active pages only 960ms
+clubs:test:  ✓ src/billing/InvoicesPage.test.tsx (7 tests) 1737ms
+clubs:test:    ✓ T-12-26 member receipts (7)
+clubs:test:      ✓ lists frozen descriptions, localized amounts and the family-group receipt 985ms
+clubs:test:  ✓ src/booking/confirm.test.tsx (22 tests) 11709ms
+clubs:test:    ✓ T-08-36 the 30 s hold counts on the api clock, not the device's (R-08-07) (2)
+clubs:test:      ✓ a device clock 5 min ahead still starts at 0:30, reaches 0 at the right instant, then the red note returns to 04 1284ms
+clubs:test:      ✓ 409 SEAT_HOLD_EXPIRED on the confirmation shows the same red note 950ms
+clubs:test:    ✓ T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) (4)
+clubs:test:      ✓ single selection among the swappable bookings, the button names both days, then the swap is confirmed 1066ms
+clubs:test:      ✓ E7-W07 round 2 #5a: the done one inert — the bookingLimitDone world at the clock (Sunday 2 at 20:30): Sunday 2's class has begun, so it is listed but cannot be chosen, and Monday 3 is the swap (2 of 2) 456ms
+clubs:test:      ✓ «CANCEL·LAR LA NOVA RESERVA» releases the hold (DELETE) and goes back to 04 869ms
+clubs:test:      ✓ the back gesture leaves the page and releases the hold too 611ms
+clubs:test:    ✓ 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) (8)
+clubs:test:      ✓ normal: no swap, «CONFIRMAR LA RESERVA», then the calendar links and the booking 628ms
+clubs:test:      ✓ the limit done this week (CURRENT, per dog): the mockup's «Aquesta setmana ja has fet dues classes amb la Duna. … per a la setmana vinent a partir de diumenge 9 a les 20 h», without a countdown 428ms
+clubs:test:      ✓ E5-W05 step 6: the limit of next week reached on a next-week row («dl 10», NEXT, per dog): «La setmana vinent ja tens una classe amb la Duna» and B1's «Podràs reservar aquesta classe a partir de diumenge 9 a les 20 h», the coming opening 347ms
+clubs:test:      ✓ E5-W05 step 6: with `bookings.maxNextWeek = 0` (limit 0, unit DOG) the first sentence counts no class: «Encara no pots reservar classes de la setmana vinent.» and B1's second sentence 440ms
+clubs:test:      ✓ E5-W05 step 6: with `bookings.maxNextWeek = 0` (limit 0, unit MEMBER) the first sentence counts no class: «Encara no pots reservar classes de la setmana vinent.» and B1's second sentence 323ms
+clubs:test:      ✓ «Properament»: «Disponible a partir de diumenge 9 a les 20 h.» 417ms
+clubs:test:      ✓ a seat another hold takes: the retry note, and a retry that gets the seat shows the countdown 614ms
+clubs:test:    ✓ R-08-18 SINGLE_CLASS on 29, and one Idempotency-Key per payload (R-08-08) (4)
+clubs:test:      ✓ PAY_TO_BOOK: «PAGAR I CONFIRMAR (12,00 €)» opens the api's Checkout URL 454ms
+clubs:test:      ✓ CHARGE_ON_ATTENDANCE: the note above the normal button 509ms
+clubs:test:      ✓ a confirmation that fails on the way stays on the page, and its retry sends the same key 530ms
+clubs:test:    ✓ R-08-15 the claim of a NOTIFIED waiting entry (step 5) (2)
+clubs:test:      ✓ [AGAFA LA PLAÇA] holds with the entry, and the confirmation posts the claim with its key 325ms
+clubs:test:      ✓ a claim that lost the seat (409 SEAT_TAKEN) goes back to 04 with its message 350ms
+clubs:test:    ✓ T-08-16 E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): 06/29's booking keeps its key on IN_PROGRESS (2)
+clubs:test:      ✓ E7-W06 step 1: 06's booking stays on the page with its Idempotency-Key on IN_PROGRESS (no return to 04), says «L'operació encara està en curs…», the retry sends the same key, and the same booking after the api's answer takes a new key 425ms
+clubs:test:  ✓ src/instructor/RingBlockPage.test.tsx (11 tests) 11861ms
+clubs:test:    ✓ screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) (9)
+clubs:test:      ✓ «Reserva de pista» first with its four reasons; «Bloqueig» hides them and offers its two 1534ms
+clubs:test:      ✓ every active ring (also those closed to training), the route's ring preselected 335ms
+clubs:test:      ✓ a contiguous selection writes the summary and posts the block, then 23 with its toast 1848ms
+clubs:test:      ✓ 409 RING_BLOCK_CONFLICT marks the conflicting cells, lists the overlaps and reads the grid again 2009ms
+clubs:test:      ✓ 422 RING_HAS_BOOKINGS: the instructor is told to ask the administration, and nothing forces it 784ms
+clubs:test:      ✓ FREE_TRAINING off: only «Bloqueig», and the times are taken without a grid (the api validates) 923ms
+clubs:test:      ✓ E5-W02 round 2 · review #5: without a grid the band's last half hour can be taken (13:30–14:00) 752ms
+clubs:test:      ✓ while the block is sent the button is busy and the grid, kinds and rings are inert 872ms
+clubs:test:      ✓ a time refusal is shown by code (400 INVALID_TIME_RANGE), and a lost answer keeps its key 839ms
+clubs:test:    ✓ T-09-40 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 24's block keeps its key on IN_PROGRESS (2)
+clubs:test:      ✓ E7-W06 step 1: 24's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key 1142ms
+clubs:test:      ✓ E7-W07 step 4 (CONVENCIONS_API §7, E85; R-09-11): a 503 with the api's body keeps 24's key — the retry sends the same one; a 422 RING_NOT_RESERVABLE retires it — the same block sent again takes a new key 816ms
+clubs-admin:test:  ✓ src/instructor/student-record.test.tsx (15 tests) 10431ms
+clubs-admin:test:    ✓ T-10-28 (D13) the desktop student record (S10 §2, R-10-08, R-10-09) (4)
+clubs-admin:test:      ✓ D13 as the mockup: the header chips, four metric cards with their subtitles, the three blocks with the api's tasks, and the «5 darreres classes» table 1255ms
+clubs-admin:test:      ✓ no classes in the window reads «—»; TASKS off drops the three blocks, the button and every task read; FREE_TRAINING off drops the training card 448ms
+clubs-admin:test:      ✓ [GESTIONAR TASQUES I NOTES] opens the same editor as 26 in a drawer; a task created there shows in the record's block and counters 1074ms
+clubs-admin:test:    ✓ E6-W02 round 2 (review of 30-09): D13 (4)
+clubs-admin:test:      ✓ #2 (R-10-10): the drawer reaches every task too — «Mostra'n més» reads the second page, and its oldest pending task is completed there 2033ms
+clubs-admin:test:      ✓ #3: a round trip through the history keeps the drawer's drafts — the new task's text and file and an open edit — and the focus comes back to the link 1064ms
+clubs-admin:test:      ✓ #6 T-10-32 (D13): es renders every literal of the record in Spanish, with no missing key 342ms
+clubs-admin:test:    ✓ E6-W05 (review of E6-W02's round 2): D13's drawer (1)
+clubs-admin:test:      ✓ step 3 (AGENTS rule 6): Escape in the delete confirmation closes the confirmation only; the drawer stays open with its unsaved task text and deletes nothing 558ms
+clubs-admin:test:    ✓ E6-W04 step 0d (review of E6-W05): D13's drawer (1)
+clubs-admin:test:      ✓ E6-W04 step 0d: an instructor's mixed selection on an open task attaches the JPEG and says «eina.exe: …» in the drawer 666ms
+clubs-admin:test:    ✓ T-10-28 E7-W06 (E6-W04 question 5 and its report nits): D13's drawer (3)
+clubs-admin:test:      ✓ E7-W06 step 5 (E6-W04 Q5): an instructor's new task with a refused file names it — «eina.exe: …» — in the drawer, and creates nothing 467ms
+clubs-admin:test:      ✓ E7-W06 review #6: a creation abandoned while on its way (the drawer closed) keeps nothing when its answer is lost — the same task and file later are uploaded again and sent with a new key 1095ms
+clubs-admin:test:      ✓ E7-W06 step 6 (E6-W04's report nit): the drawer closed after a refusal reopens without it 402ms
+clubs-admin:test:    ✓ «Alumnes» of the back office (mockups D12–D14, S10 §13-9) (2)
+clubs-admin:test:      ✓ instructors see «Alumnes» in the sidebar; the search reads GET /dogs and opens D13 594ms
+clubs:test:  ✓ src/NotificationsPage.test.tsx (21 tests) 12249ms
+clubs:test:    ✓ T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) (21)
+clubs:test:      ✓ renders mockup 11's six cards as delivered: icon, tone, texts, relative time, «i per SMS», the buttons 1842ms
+clubs:test:      ✓ never prints «i per SMS» without the SMS module, even for an SMS the api lists 818ms
+clubs:test:      ✓ [CANVIA DE CLASSE] opens 04 with the notification's dog 653ms
+clubs:test:      ✓ [AGAFA LA PLAÇA] reuses E5-W01's claim: the entry's seat hold, then the confirmation (06/29) 834ms
+clubs:test:      ✓ [AGAFA LA PLAÇA] reads disabled, with its hint, once the seat is gone (enabled: false) 485ms
+clubs:test:      ✓ E7-W02 round 2 #4 (AGENTS rule 3): with WAITLIST off, a historical N-15 the api still lists is an informative card with no [AGAFA LA PLAÇA] 925ms
+clubs:test:      ✓ a hold refused with 409 SEAT_TAKEN shows E5-W01's message in the card 496ms
+clubs:test:      ✓ an informative card opens its route on tap, without a button; one without an action is inert 490ms
+clubs:test:      ✓ entering calls read-all once, and 03's bell goes quiet 381ms
+clubs:test:      ✓ back on 03 from the browser's page cache, the bell reads GET /me/home again 676ms
+clubs:test:      ✓ E7-W02 round 2 #3: a failed read-all is sent again (bounded retry), and its answer silences the bell 639ms
+clubs:test:      ✓ E7-W02 round 2 #3: inside one document (the module store survives, as in an in-app return), a read-all answered after 03 mounted updates the bell (03 reads GET /me/home again) 682ms
+clubs:test:      ✓ E7-W05 step 3 (S11 §13-8): a read-all left without an answer stays pending in the tab's sessionStorage for this account and club, and a fresh 03 sends it again before it reads GET /me/home — the bell goes quiet 518ms
+clubs:test:      ✓ E7-W05 step 3: another account's or club's pending read-all is not sent from 03 510ms
+clubs:test:      ✓ E7-W05 step 6 (E7-W02 review #3): a quiet refetch of 03 that fails keeps the last rows on screen 491ms
+clubs:test:      ✓ E7-W06 step 3 (E7-W05 review #2): 03's other quiet reload — a read-all answered while 03 is shown — keeps the rows when its GET /me/home fails 398ms
+clubs:test:      ✓ E7-W06 (E7-W05 review #5): while 03 sends a pending read-all again, the bell never shows the stale unread count — neither before the resend's answer nor before the GET /me/home read that follows it 424ms
+clubs-admin:test:  ✓ src/catalogs/JobsCard.test.tsx (30 tests) 12712ms
+clubs-admin:test:    ✓ T-15-32 D11 «Processos automàtics» (S15 §2, R-15-01, R-15-08, R-15-09) (15)
+clubs-admin:test:      ✓ E7-W03 round 2 #6 · S15 §2 «fila absent»: under waitlist.mode = ALL_AT_ONCE the default card lists exactly the core's seven processes 1078ms
+clubs-admin:test:      ✓ with waitlist.mode = FIFO lists the nine published processes of the full club and the eight of the club mínim, each with its cadence and last run 710ms
+clubs-admin:test:      ✓ asks before disabling (S15 §2 literal) and writes PUT /jobs/{name}/switch {enabled: false} only after the confirmation 598ms
+clubs-admin:test:      ✓ R-15-09 [Executa ara] asks, runs {dryRun: false} and shows the run's summary, then reads the list again 457ms
+clubs-admin:test:      ✓ keeps one Idempotency-Key per payload while the outcome is unknown: a retry after a lost answer reuses it 536ms
+clubs-admin:test:      ✓ 409 JOB_ALREADY_RUNNING shows its message inside the confirmation and reads the list again 556ms
+clubs-admin:test:      ✓ opens a process's run history and a run's sheet (effects and errors) 505ms
+clubs-admin:test:      ✓ E5-W03 round 2 · review #1: the run history pages through the api's list, and its filters narrow it 1529ms
+clubs-admin:test:    ✓ E5-W05 step 18 · the run drawer (S15 §2, R-15-21) (2)
+clubs-admin:test:      ✓ E5-W05 step 18: a failed history page keeps the pager and offers a retry, the drawer stays open, and the retry shows page 2 755ms
+clubs-admin:test:      ✓ E5-W05 step 18 (R-15-21, T-15-35): a risk-review run's cancelled class opens in D4 on its week with the class selected, as D1's rows do 553ms
+clubs-admin:test:    ✓ E5-W05 round 2 #7 · a run's Week and Member effects link to D4 and D10 (R-15-21) (3)
+clubs-admin:test:      ✓ E5-W05 round 3 #5 (S15 R-15-11): with a Friday opening, the Week item opens D4 on the ISO week that holds `openedWeekKey` + 1 day (Saturday 8 → Monday 3), and the Member item opens D10 359ms
+clubs-admin:test:      ✓ E5-W05 round 3 #5 (ruling E82, INC-53): when the api's Week item carries `isoWeekStart` in its detail, the link opens that week as it is 327ms
+clubs-admin:test:      ✓ E5-W05 round 2 #7 (assumption A3): a class answer that arrives after the drawer closed navigates nowhere 689ms
+clubs-admin:test:    ✓ E5-W05 step 17 · D11 after a schedule change (R-15-01) (1)
+clubs-admin:test:      ✓ E5-W05 step 17: saving jobs.dailyTime reads GET /jobs again, so «Caducitats» and «Neteja tècnica» show the new time at once 912ms
+clubs-admin:test:    ✓ T-15-32 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): S15's triggers keep their key on IN_PROGRESS (5)
+clubs-admin:test:      ✓ E7-W06 step 1: [Simula] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new [Simula] after the api's answer takes a new key 389ms
+clubs-admin:test:      ✓ E7-W06 step 1: [Executa ara] keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» inside the confirmation, which stays open, the retry sends the same key, and a new run after the api's answer takes a new key 323ms
+clubs:test:  ✓ src/instructor/attendance-rows.test.tsx (1 test) 828ms
+clubs:test:    ✓ T-10-27 E7-W06 step 5 (ruling E82, E6-W04 Q6): stable data attributes on screen 21's rows (1)
+clubs:test:      ✓ E7-W06 step 5: each attendance row carries its booking's id and the state it shows (data-booking-id, data-attendance-state); a tap changes the state, and the saved list keeps it 711ms
+clubs:test:  ✓ src/notifications/sw-logic.test.ts (4 tests) 4ms
+clubs:test:  ✓ src/dog-tasks-contrast.test.ts (4 tests) 12ms
+clubs:test:  ✓ src/today/literals.test.ts (2 tests) 323ms
+clubs:test:  ✓ src/notifications/push.test.ts (13 tests) 362ms
+clubs-admin:test:  ✓ src/catalogs/SettingsPage.test.tsx (9 tests) 14817ms
+clubs-admin:test:    ✓ T-02-13 E4-W06 S05 §2 D11 «Nivells»: the «Progressió» switch (S05 §3 Level.progression, E29) (4)
+clubs-admin:test:      ✓ shows one switch per level with the help text: Teràpia is off, the progression levels on 2535ms
+clubs-admin:test:      ✓ saves a toggle with PATCH /levels/{id} {progression, version} and keeps the saved level 2252ms
+clubs-admin:test:      ✓ shows a refused toggle by its code next to the table and keeps the switch as saved; STALE_VERSION reloads the levels 2070ms
+clubs-admin:test:      ✓ the level form carries «Progressió»: a new level outside the progression is created with progression false; an edit keeps the level's value 3172ms
+clubs-admin:test:    ✓ T-02-13 E4-W14 S05 §2 D11 «Nivells» follow-ups of the E4-W06 review (5)
+clubs-admin:test:      ✓ S05 §2 the «Progressió» help names no club level, in ca, es and en 1285ms
+clubs-admin:test:      ✓ S05 §12 B32 the mock levels include «Pendent», outside the progression (off like Teràpia) 473ms
+clubs-admin:test:      ✓ a second toggle never re-enables a switch whose PATCH is still pending; each row keeps its own error 1734ms
+clubs-admin:test:      ✓ AGENTS rule 6: the catalog row buttons are named after the row's name, not its id 562ms
+clubs-admin:test:      ✓ S05 §2 the help sits inside the «Nivells» card, and «Nou nivell» keeps its icon inline 730ms
+clubs-admin:test:  ✓ src/training/TrainingRegisterPage.test.tsx (16 tests) 15016ms
+clubs-admin:test:    ✓ E5-W03 step 2 · «Entrenaments», the ring-usage register (S09 §2 and §13-8) (8)
+clubs-admin:test:      ✓ tab 1 reads GET /training-bookings with the current week and startsAt,desc, and links the member to D10 (ADMIN) 1575ms
+clubs-admin:test:      ✓ offers the api's values with their counts in the universal filter (E5-W05: GET /training-bookings/filter-values) 989ms
+clubs-admin:test:      ✓ S14 R-14-12 exports the list's filters and columns (ADMIN) and never for an INSTRUCTOR 1089ms
+clubs-admin:test:      ✓ T-08-47/T-09-24 pattern: an undeclared filter shows the list's own INVALID_FILTER message 532ms
+clubs-admin:test:      ✓ tab 2 lists the blocks and ring reservations; [Anul·la el bloqueig] is hidden for an activity's block and cancels the others 821ms
+clubs-admin:test:      ✓ 409 INVALID_STATE on a cancellation shows why and reads the list again; an INSTRUCTOR has no row action 1444ms
+clubs-admin:test:      ✓ E5-W03 round 2 · review #9: the date and relation filters offer only operators that take one value, and the query says so 1880ms
+clubs-admin:test:      ✓ E5-W03 round 2 · review #8: a past block on a deactivated ring names its ring, never its id 978ms
+clubs-admin:test:    ✓ E5-W05 steps 3 and 5 · the register reads E5-T29's fields and the complete filter values (8)
+clubs-admin:test:      ✓ E5-W05 step 3: «Dia i hora» reads «dl 3 · 7:00–7:30» with endsAtLocal, and «Abonat» «{nom complet} · {número}» 373ms
+clubs-admin:test:      ✓ E5-W05 step 3: a member without a number reads the name alone, without « · » 907ms
+clubs-admin:test:      ✓ E5-W05 step 5: with more than 1000 rows, the member filter offers «Nil Fictici Soler», who appears only after row 1000, from GET /training-bookings/filter-values 1242ms
+clubs-admin:test:      ✓ E5-W05 round 2 #1: the blocks tab asks GET /ring-blocks/filter-values once when it settles, and a second ring picked in «Valor» stays selected 1494ms
+clubs-admin:test:      ✓ E5-W05 round 2 #2 (ruling E80): the blocks' «Dia i hora» filter is a range of club dates sent as `between` with the club's day bounds, with no suggested values 805ms
+clubs-admin:test:      ✓ E5-W05 step 5: with more than 1000 blocks, the ring filter offers «Cadells», which appears only after row 1000, from GET /ring-blocks/filter-values 464ms
+clubs:test:  ✓ src/UnsubscribePage.test.tsx (4 tests) 680ms
+clubs:test:    ✓ E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08) (4)
+clubs:test:      ✓ 200: sends the token once and confirms, with a way to the «Avisos» of 12 for a session 449ms
+clubs:test:  ✓ src/App.test.tsx (58 tests) 15297ms
+clubs:test:    ✓ T-02-14 clubs shell (7)
+clubs:test:      ✓ uses the compact mark with the runtime club name 575ms
+clubs:test:      ✓ filters the six-tab mockup navigation by modules and roles 452ms
+clubs:test:    ✓ T-01-18 access screen (2)
+clubs:test:      ✓ uses the exact access actions, focuses an empty email and gates signup 359ms
+clubs:test:      ✓ shows the Retry-After countdown and disables requests 324ms
+clubs:test:    ✓ T-01-19 activation screen (1)
+clubs:test:      ✓ renders gender-aware, reset and invalid-link variants 537ms
+clubs:test:    ✓ T-01-21 profile access rows and impersonation (5)
+clubs:test:      ✓ renders the mockup rows in order without account sessions or backoffice handoff 1060ms
+clubs:test:      ✓ E8-W02 round 3 #1 reads /me.paymentMethod.invalid on profile and receipts without a failed CARD receipt 522ms
+clubs:test:    ✓ T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app (10)
+clubs:test:      ✓ round 2 #1: a redeemed code whose /me keeps failing shows the error with a retry, never the admin's own session; the retry opens 03 with the banner 356ms
+clubs:test:      ✓ step 2: a 401 ends the impersonation with «La sessió com l'abonat ha caducat» and a close button, never a refresh — also after a reload of the tab 318ms
+clubs:test:    ✓ E4-W16 step 12 member-app fixes (2)
+clubs:test:      ✓ (b) «Canviar de perfil · {perfil}» follows the membership's gender (ICU select, as 03b) 538ms
+clubs:test:    ✓ T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) (3)
+clubs:test:      ✓ an instructor-only session gets the usual no-access path: no detail, no /me/activities call 434ms
+clubs:test:      ✓ an impersonated session opens the detail and its cancellation asks for «Motiu» 303ms
+clubs:test:    ✓ T-01-26 imported-account onboarding and policy re-consent (4)
+clubs:test:      ✓ redirects blocking onboarding and permits a policy postponement 367ms
+clubs:test:      ✓ reloads an outdated policy version before accepting it 524ms
+clubs:test:      ✓ renders the screen and pop-up in Catalan, Spanish and English 496ms
+clubs:test:    ✓ T-03-40 mobile own dogs (6)
+clubs:test:      ✓ renders own dogs, saves the note, shows task totals and gates TASKS 542ms
+clubs:test:      ✓ E4-W16 step 6 (INC-22): «＋ DOC.» works again after a first upload, on another dog, with empty fields 414ms
+clubs:test:    ✓ E6-W04 step 0b: screen 13's task checkbox completes the task (POST /tasks/{id}/completion, S10 R-10-10, §6, ruling E74) (8)
+clubs:test:      ✓ E6-W04 step 0b: a pending task's checkbox sends the completion (no body, no key), is busy meanwhile, then shows the task as the api returns it — checked, struck through, «feta per en Biel el 14-08» — and the counter; GET /me/dogs keeps it done 319ms
+clubs:test:  ✓ src/instructor/instructor.test.tsx (44 tests) 15702ms
+clubs:test:    ✓ T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) (7)
+clubs:test:      ✓ mockup 20: the day chips, each class with n/n, the hourglass and its second line, the legend and the block with its reason and note 1095ms
+clubs:test:      ✓ a chip changes the day (?date=); an empty day reads «Cap classe aquest dia»; the instructor chip offers no «Tot el club» and shows another's day 729ms
+clubs:test:    ✓ T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) (14)
+clubs:test:      ✓ mockup 21: the title, n/n, «1 en espera», the instructor, the rows in the api's order, the status lines and the waiting list with its rule 323ms
+clubs:test:      ✓ a tap changes the circle locally with no request; [DESA] sends only the changed items with the current version and a UUID key 722ms
+clubs:test:      ✓ a saved «ha avisat» row is inert; «ha avisat» saved now shows its line from the answer 370ms
+clubs:test:      ✓ 409 STALE_VERSION: the toast, the other's change kept, and only the caller's own edit sent again with the new version 519ms
+clubs:test:      ✓ a refusal is shown by its code and nothing is lost: ATTENDANCE_NOT_OPEN reads the list again 370ms
+clubs:test:      ✓ after a refusal the list is read again and the caller's choices are rebased: a row someone else changed meanwhile is theirs 576ms
+clubs:test:      ✓ a network failure keeps the choice and a retry sends the same payload with the same key 307ms
+clubs:test:    ✓ E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save (3)
+clubs:test:      ✓ after a refused PUT every circle and [DESA] stay locked until the list is read again; a tap or [DESA] meanwhile sends nothing 424ms
+clubs:test:    ✓ T-10-28 (22) screen 22 «Fitxa d'alumne» (S10 R-10-08, R-10-09) (3)
+clubs:test:      ✓ no classes in the window reads «—»; TASKS off drops the three blocks and the button; FREE_TRAINING off drops the training tile 385ms
+clubs:test:    ✓ E6-W01 step 6 the instructor's student search (S10 §2, §13-9) (5)
+clubs:test:      ✓ lists the active dogs as «{guia} + {gos} · {nivell}», asks the api for the typed text after 300 ms and opens 22 1432ms
+clubs:test:      ✓ round 2 #2 (review #2): with 51 matching dogs the first page shows 50 and «Mostra'n més» appends the 51st from the next page 1934ms
+clubs:test:      ✓ round 2 #2 and #4: a failed next page keeps the 50 rows, says why by its code, and «Mostra'n més» asks it again 1601ms
+clubs-admin:test:  ✓ src/census/SendAnnouncementDialog.test.tsx (9 tests) 17207ms
+clubs-admin:test:    ✓ T-11-38 «Enviar comunicat» from D5 and D15 (S11 §2, R-11-13) (9)
+clubs-admin:test:      ✓ D5's selection: the dialog sends `memberIds`, the dryRun drives «S'enviarà a 2 abonats», [ENVIA] waits for the tick, and the page says it was sent 7466ms
+clubs-admin:test:      ✓ D5's current filters: the dialog sends the list's filters and search, and the count is the api's for them (the members GET /members lists) 2610ms
+clubs-admin:test:      ✓ another template clears the tick and asks the dryRun again; NO_RECIPIENTS is said inside the dialog and [ENVIA] stays off 2351ms
+clubs-admin:test:      ✓ one Idempotency-Key per submission: a send that got no answer is retried with its key — also after closing and opening the dialog again — and the api counts it once 2582ms
+clubs-admin:test:      ✓ D15's selection is dogs: the dialog reads their owners and sends to each once («2 gossos · 1 abonat») 1641ms
+clubs:test:  ✓ src/instructor/tasks.test.tsx (34 tests) 17058ms
+clubs:test:    ✓ T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) (10)
+clubs:test:      ✓ mockup 26: the title, the private observations, the three tasks (the done one struck through with «feta per la Laura el 02-08»), the history link, the member's note read-only and [DESA] waiting for a change 1541ms
+clubs:test:      ✓ T-10-25 «＋ Afegir» uploads the video through the signed url (TASK, the signed headers, no bearer) and creates one task with one Idempotency-Key, even on a double tap; 22's counters follow 719ms
+clubs:test:      ✓ the pencil edits the text with the version read; the ✕ asks «Vols eliminar aquesta tasca?» and deletes with its key; ✓ completes (feta per l'Estel) and ↺ reopens 870ms
+clubs:test:      ✓ an edit opened before another instructor's change is sent with its own version: STALE_VERSION (409), and the typed text stays 654ms
+clubs:test:      ✓ errors by code inside the editor: TASK_ALREADY_DONE (422) after a completion the api refuses, then the list read again 508ms
+clubs:test:      ✓ [DESA] saves the observations with the version read and one key; a stale version (tasksStale) keeps the typed text to recover and saves it again on the new version 771ms
+clubs:test:      ✓ a file the api refuses (FILE_TOO_LARGE) is said inside the editor; with the club's limits readable (ADMIN) it is refused before any signed url 352ms
+clubs:test:      ✓ an observation file goes through the DOG_OBSERVATIONS upload and POST /attachments; a clip opens a fresh signed url 495ms
+clubs:test:      ✓ T-10-32 (26): es and en with no missing key 343ms
+clubs:test:    ✓ E6-W02 round 2 (review of 30-09): screen 26 (5)
+clubs:test:      ✓ #1 (CONVENCIONS_API §7, T-10-25): a network failure keeps the submission's key, so its retry creates one task 456ms
+clubs:test:      ✓ #1 (E74): two deliberate submissions with the same text are two tasks, each with its own key 573ms
+clubs:test:      ✓ #2 (R-10-10): with 52 tasks «Mostra'n més» reads the next page into the same list, whose tasks are managed like the rest — the oldest done one reopened, the oldest pending one edited, completed and deleted 3090ms
+clubs:test:      ✓ #4 (AGENTS rule 4): a clip that cannot be opened says why next to it — by its code, or «No s'ha pogut obrir el fitxer.» without an answer — on the list, the member's note and the history drawer 444ms
+clubs:test:    ✓ T-10-28 (26) E6-W05 (reviews of E6-W02's round 2): screen 26 (10)
+clubs:test:      ✓ step 1 (R-10-11): after a refused creation, a retry past the upload's five minutes uploads the file again and creates the task 416ms
+clubs:test:      ✓ step 1: within the five minutes the retry reuses the uploaded file (one upload) 342ms
+clubs:test:      ✓ step 1 (E74): an unanswered creation is retried past the five minutes with its own key and files; the api had created it, so it replays one task 346ms
+clubs:test:      ✓ step 1 (E74): an unanswered creation the api never received is retried as it was; the expired file is refused (409 INVALID_STATE), uploaded again and the task created once 309ms
+clubs:test:      ✓ step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the submission's answer — its retry keeps the key and the files, and one task is created 439ms
+clubs:test:      ✓ E7-W06 review #3 (CONVENCIONS_API §7, E79): a gateway's 504 without the api's body is no answer — the retry keeps the key and the files, and one task is created 422ms
+clubs:test:      ✓ T-10-25 T-10-15 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the key — the retry sends the same key and files; a 422 DOG_NOT_ACTIVE retires it — the next submission of the same text is a new one with a new key, and one task is created 391ms
+clubs:test:      ✓ E7-W05 step 4 (CONVENCIONS_API §7, E80): a task whose first request is still running says so with the shared in-progress text, never the key's technical one, and its retry creates one task 320ms
+clubs:test:      ✓ step 2: a mixed selection keeps the refused file's message while the accepted one uploads — on the observations and on an open task 370ms
+clubs:test:    ✓ E6-W04 step 0d (review of E6-W05): screen 26 (4)
+clubs:test:      ✓ E6-W04 step 0d: an instructor's mixed selection (a JPEG and an executable) attaches the JPEG and says «prog.exe: …» — on the observations and on an open task 337ms
+clubs:test:    ✓ T-10-28 (26) E7-W06 (E6-W04 question 5 and its report nits): screen 26's new-task form (4)
+clubs:test:      ✓ E7-W06 step 5 (E6-W04 Q5): an instructor's new task with refused files names each one — «prog.exe: …», «vídeo_llarg.mp4: …» — creates nothing and keeps the form; without them the same form creates the task with the file already uploaded 312ms
+clubs:test:      ✓ E7-W06 step 6 (E6-W04's report nit): a creation whose answer was lost and whose text was then edited is abandoned — its key is dropped, so the first text written again later is a new task with a new key 312ms
+clubs:test:  ✓ src/training/TrainingPage.test.tsx (28 tests) 17180ms
+clubs:test:    ✓ T-09-37 screen 08 exists only with a dog allowed to train alone (3)
+clubs:test:      ✓ without eligible dogs the tab is absent and /entrenaments goes back to 03 1600ms
+clubs:test:      ✓ with Rock and Toby the tab exists and Rock (defaultDogId) is the selected chip 587ms
+clubs:test:      ✓ FREE_TRAINING off: no tab, and the route shows nothing of the module 505ms
+clubs:test:    ✓ T-09-38 screen 08 grid, «Qualsevol» and the confirmation (4)
+clubs:test:      ✓ draws the api's cells: free outlined and pressable, struck, «classe» dimmed 981ms
+clubs:test:      ✓ «Qualsevol» with two free rings asks which one, Muntanya first, and books with it 1326ms
+clubs:test:      ✓ the counter card reads the selected day's week and follows the dog 577ms
+clubs:test:    ✓ T-09-39 screen 08 at the weekly limit (R-09-05) (2)
+clubs:test:      ✓ with cancellable sessions: no button, the message and a link to each 455ms
+clubs:test:      ✓ without any cancellable session: the short message 364ms
+clubs:test:    ✓ screen 08 refusals by code (S09 §6, R-09-06) (5)
+clubs:test:      ✓ 409 SLOT_TAKEN: the message, the grid read again and the api's free rings offered 861ms
+clubs:test:      ✓ 409 TRAINING_LIMIT_REACHED on a stale counter: the R-09-05 message from the details 668ms
+clubs:test:      ✓ 422 codes show their message by code, never the api's text 627ms
+clubs:test:      ✓ while the booking is sent the button is busy and the grid, days and dogs are inert 779ms
+clubs:test:      ✓ a lost answer keeps its Idempotency-Key for the retry; an answer drops it 868ms
+clubs:test:    ✓ E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03) (3)
+clubs:test:      ✓ E5-W05 step 11: another member books the chosen slot; the focus refresh clears the choice and [Confirma] is disabled 779ms
+clubs:test:      ✓ E5-W05 step 11: with «Qualsevol», the chosen ring taken meanwhile clears the choice and its chooser 657ms
+clubs:test:      ✓ E5-W05 round 2 #13: a refresh that clears the choice a SLOT_TAKEN offered also clears that message 658ms
+clubs:test:    ✓ E5-W05 step 12: the offline copy blocks the booking (E5-W02 round-2 review #2, S09 §2) (2)
+clubs:test:      ✓ E5-W05 step 12: a NETWORK answer while navigator.onLine is true: «pot no estar al dia», [Confirma] disabled, and the retry reads again 725ms
+clubs:test:      ✓ E5-W05 step 12: the counter's offline copy blocks the booking too 610ms
+clubs:test:    ✓ screen 08 without network (S09 §2 «sense connexió») (1)
+clubs:test:      ✓ keeps the last grid marked «pot no estar al dia» and blocks the booking 331ms
+clubs:test:    ✓ E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) (3)
+clubs:test:      ✓ rights granted while away: the tab appears when the app regains focus 301ms
+clubs:test:      ✓ a MODULE_DISABLED from any training read asks the rights again, and the tab goes 351ms
+clubs:test:    ✓ T-09-38 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 08's booking keeps its key on IN_PROGRESS (1)
+clubs:test:      ✓ E7-W06 step 1: 08's training booking keeps its Idempotency-Key and its choice on IN_PROGRESS, says «L'operació encara està en curs…» (the shared errorText), the retry sends the same key, and the same booking after the api's answer takes a new key 630ms
+clubs:test:    ✓ E7-W07 step 4 (CONVENCIONS_API §7, E85): 08's booking follows the shared submission-key rule (1)
+clubs:test:      ✓ T-09-38 T-09-16 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps 08's Idempotency-Key and its choice, so the retry sends the same key; a 422 DOG_ALREADY_BOOKED retires it, so the same booking sent again takes a new key 594ms
+clubs-admin:test:  ✓ src/census/CensusRecordPage.test.tsx (29 tests) 16971ms
+clubs-admin:test:    ✓ T-03-39 D10 member record (5)
+clubs-admin:test:      ✓ renders the approved badges, masked account, consent warning, dog rights, and WhatsApp URL 2338ms
+clubs-admin:test:      ✓ blocks and unblocks new bookings with the required reason 1749ms
+clubs-admin:test:      ✓ maps STALE_VERSION when another administrator edited the member 1137ms
+clubs-admin:test:      ✓ E8-W03 round 2 #18 refreshes dashboard counters after a lifecycle write 908ms
+clubs-admin:test:      ✓ E8-W03 round 2 #8 opens the exact period carried by queue navigation 598ms
+clubs-admin:test:    ✓ T-01-11 E4-W16 step 1 (INC-15, E47): «Entra com l'abonat» opens the api's launchUrl (2)
+clubs-admin:test:      ✓ opens exactly the launchUrl with the one-time code, in a new tab, and never writes the token into a URL 677ms
+clubs-admin:test:      ✓ a response without launchUrl is an error in the dialog and opens nothing (no same-origin guess) 709ms
+clubs-admin:test:    ✓ E7-W01 round 2 #4: D10's «Preferències d'avisos» reads its own route (1)
+clubs-admin:test:      ✓ an overview without the preferences (the free-form field the api may shape otherwise) still shows the block, from GET /members/{id}/notification-preferences 522ms
+clubs-admin:test:    ✓ T-14-19 E7-W06 step 5 (ruling E82, E6-W04 Q3): D10 of an erased member (S14 §5, R-14-15) (2)
+clubs-admin:test:      ✓ E7-W06 step 5: an erased member's «Preferències d'avisos» say MEMBER_ERASED as final — its own message, no «Torna-ho a provar» — and ask nothing the api refuses with 409 395ms
+clubs-admin:test:    ✓ E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes of an erased member are final (8)
+clubs-admin:test:      ✓ E7-W07 step 3 (S14 §5, T-14-19): «Edita» the member (PATCH /members/{id}) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 1106ms
+clubs-admin:test:      ✓ E7-W07 step 3 (S14 §5, T-14-19): «Pagament» › «Edita» (PATCH /members/{id}/payment-method) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 731ms
+clubs-admin:test:      ✓ E7-W07 step 3 (S14 §5, T-14-19): «Rols d'accés» › «Edita» (PUT /members/{id}/roles) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 586ms
+clubs-admin:test:      ✓ E7-W07 step 3 (S14 §5, T-14-19): «Bloqueja les reserves» (POST /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 538ms
+clubs-admin:test:      ✓ E7-W07 step 3 (S14 §5, T-14-19): «Desbloqueja les reserves» (DELETE /members/{id}/booking-block) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 498ms
+clubs-admin:test:      ✓ E7-W07 step 3 (S14 §5, T-14-19): «Reenvia accés» (POST /members/{id}/access-resend) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 518ms
+clubs-admin:test:      ✓ E7-W07 step 3 (S14 §5, T-14-19): «Entra com l'abonat» (POST /members/{id}/impersonation-token) on a record read before the erasure, answered 409 MEMBER_ERASED, says the member was erased, offers no resend of the request and shows nothing saved 488ms
+clubs-admin:test:    ✓ T-03-39 E4-W17 step 9 (AGENTS rule 1): D10's «Pagament» row names a cash member's method (1)
+clubs-admin:test:      ✓ reads «Efectiu» in ca, «Efectivo» in es and «Cash» in en, never the raw MANUAL 698ms
+clubs-admin:test:    ✓ T-03-39 E4-W15 step 8 D10 on the real core (E4-W13 report, question 4) (3)
+clubs-admin:test:      ✓ names a pending document by its type's label, as D2 does, and a type the club no longer lists as «Document pendent» 318ms
+clubs-admin:test:    ✓ T-03-38 dog record (2)
+clubs-admin:test:      ✓ shows the complete dog record and changes level without a booking warning 341ms
+clubs-admin:test:  ✓ src/followup/followup.test.tsx (29 tests) 15993ms
+clubs-admin:test:    ✓ T-10-30 D14 «Seguiment alumnes» (S10 §2, R-10-13) (8)
+clubs-admin:test:      ✓ mockup D14 for an ADMIN: «5 pendents de llegir», the columns, the five rows highlighted and in the api's order, the authors by gender and the completed task 1163ms
+clubs-admin:test:      ✓ E7-W06 step 5 (E6-W04 question 6): each row carries data-followup-id and data-unread, the api's id and its unread mark 307ms
+clubs-admin:test:      ✓ for the instructor the api's order puts the three unread rows first (her own tasks are not unread) and the counter reads 3 313ms
+clubs-admin:test:      ✓ the three chips map to filter=kind:eq:TASK, kind:eq:MEMBER_NOTE and no kind filter 874ms
+clubs-admin:test:      ✓ «Marcar-ho tot com a llegit» calls read-all with its key, puts the counter at 0 and reads the list again 596ms
+clubs-admin:test:      ✓ a row click calls read for that row, drops its highlight and the counter at once, and opens D13 (the dog's record) 832ms
+clubs-admin:test:      ✓ 400 INVALID_FILTER shows the list's own message; levels.enabled off drops the «Nivell» column 305ms
+clubs-admin:test:    ✓ E6-W03 round 2: D14's reads (R-10-13) and its filter values (5)
+clubs-admin:test:      ✓ #1 (review #2): a refused read puts the row back unread and the counter back, and says why with a retry that sends it again 1016ms
+clubs-admin:test:      ✓ #1: the read belongs to the shell, so its failure is said on D13, where the user already is 471ms
+clubs-admin:test:      ✓ #1: a read that got no answer says so, and its retry keeps the key 780ms
+clubs-admin:test:      ✓ #3 (review #4): a note updated while D14 is open still shows «llegit»; a click on its row sends the read 1066ms
+clubs-admin:test:      ✓ #5 (review #1): «Tipus» and «Pendent de llegir» offer the contract's values with the api's counts, also when the first page holds only unread notes 1044ms
+clubs-admin:test:    ✓ E6-W04 step 0c: D14's relation filters and search (GET /followup/filter-values and q, api E6-T06, ruling E75) (3)
+clubs-admin:test:      ✓ E6-W04 step 0c: «Abonat», «Gos» and «Creador» offer the api's values with their counts over the whole set — also the members, dogs and authors only rows beyond the first page have — and a creator picked is named in the chip 1872ms
+clubs-admin:test:      ✓ E6-W04 step 0c: the search box sends q to GET /followup and the rows narrow to what the api finds in the member, the dog, the author and the task's whole text; the filter values follow the search 1160ms
+clubs-admin:test:    ✓ E6-W05 (review of E6-W03's round 2): D14's counter and rows after a failed read (2)
+clubs-admin:test:      ✓ step 5 (R-10-13): offline, a failed read whose counter refresh fails too puts the counter back at its value, a failed retry does not lower it, and the api's count wins when it answers (E6-W04 step 0d: a count other than the restored one) 567ms
+clubs-admin:test:      ✓ step 6 (R-10-13): a failed read, back to D14, a successful retry — the row loses its highlight and the counter drops 472ms
+clubs-admin:test:    ✓ T-10-30 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D14's keyed writes keep their key on IN_PROGRESS (5)
+clubs-admin:test:      ✓ E7-W06 step 1: D14's read-all keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and a new read-all after the api's answer takes a new key 452ms
+clubs-admin:test:      ✓ E7-W06 review #5: an unanswered read-all keeps its key for 5 minutes only — a read-all asked for later is a new one, which moves readAllAt on instead of replaying the old answer 329ms
+clubs-admin:test:      ✓ E7-W06 step 1: D14's row read keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» with its retry, the retry sends the same key, and the next read of that row after the api's answer takes a new key 544ms
+clubs-admin:test:      ✓ T-10-30 E7-W07 step 4 (CONVENCIONS_API §7, E85): D14's read-all keeps its key after a 503 with the api's body — the retry sends the same one — and a 404 MODULE_DISABLED retires it — the next read-all is a new submission 394ms
+clubs-admin:test:      ✓ T-10-30 E7-W07 step 4 (CONVENCIONS_API §7, E85; A3): D14's row read keeps its key after a 503 with the api's body for 5 minutes at most, like the read-all — a later read of that row is a new one 367ms
+clubs-admin:test:  ✓ src/training/RingBlockCard.test.tsx (8 tests) 3943ms
+clubs-admin:test:    ✓ D12 card «Reservar o bloquejar pista (sense alumne)» (S09 §2 row D12, R-09-11) (7)
+clubs-admin:test:      ✓ the mockup's controls: kinds, «motiu: …», day and times, ring, RESERVA 943ms
+clubs-admin:test:      ✓ offers only the free half hours of the ring and their runs, and posts the block 587ms
+clubs-admin:test:      ✓ an instructor with live bookings in the way is told to ask the administration 475ms
+clubs-admin:test:      ✓ E5-W02 round 2 · review #2: after the refreshed grid the ADMIN still confirms 17:30–18:00 and resends it with cancelBookings (R-09-13) 532ms
+clubs-admin:test:      ✓ E5-W02 round 2 · review #2: an ADMIN may pick a half hour held by a live training and force it (R-09-13) 483ms
+clubs-admin:test:      ✓ E5-W02 round 2 · review #5: without a grid every half hour of the day can be taken, the last one included 325ms
+clubs-admin:test:    ✓ T-09-20 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's ring card keeps its key on IN_PROGRESS (1)
+clubs-admin:test:      ✓ E7-W06 step 1: D12's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key 475ms
+clubs-admin:test:  ✓ src/instructor/week-agenda.test.tsx (20 tests) 17644ms
+clubs-admin:test:    ✓ T-10-29 D12 «Agenda de la setmana» (S10 §2, R-10-15) (7)
+clubs-admin:test:      ✓ mockup D12: «‹ Setmana actual › del 10 al 15 d'agost», dl–ds, the rows at their hour lines, a training at half height, the block with its reason and note, the classes as delivered 2296ms
+clubs-admin:test:      ✓ the filters change the query without hiding trainings or blocks; the arrows move ±7 days through ?setmana= 1685ms
+clubs-admin:test:      ✓ a click on a class opens its list under the grid: the header, the names linked to D13, the level, the tasks, the status lines and the waiting list 798ms
+clubs-admin:test:      ✓ the badge cycles «— → present → avisat → no presentat → —» and stops on a final row; [DESA LA LLISTA] sends only the changed rows with the current version and a new key 2008ms
+clubs-admin:test:      ✓ 409 STALE_VERSION: the toast, the other person's change kept, and only the caller's edit sent again with the new version 1833ms
+clubs-admin:test:      ✓ the PDF asks for the same query with format=pdf and Accept: application/pdf, downloads agenda-{startDate}.pdf, and is busy meanwhile 522ms
+clubs-admin:test:      ✓ a failed PDF says why by its code, and the page stays as it was 666ms
+clubs-admin:test:    ✓ E6-W03 step 11 on D12 (E6-W01 round-2 review #1, R-10-03, R-10-04): the draft after a refusal (1)
+clubs-admin:test:      ✓ a PUT refused with 422 ATTENDANCE_WINDOW_CLOSED whose re-read is closed leaves no choice behind, the badges inert and [DESA LA LLISTA] disabled 1529ms
+clubs-admin:test:    ✓ E6-W03 step 4 the panel survives the way to D13 and back (?setmana= and the choices) (1)
+clubs-admin:test:      ✓ a name opens D13 with a normal navigation; back on /agenda the week, the class and the unsaved choice are there, rebased on the list read again 890ms
+clubs-admin:test:    ✓ E6-W03 D12 after a write: what the grid shows and what the panel keeps (3)
+clubs-admin:test:      ✓ a save reads the week again: the class's «passar llista pendent» mark goes, and the panel stays with «Llista desada» 734ms
+clubs-admin:test:      ✓ an unsaved choice survives opening another class and coming back 706ms
+clubs-admin:test:      ✓ a reservation made with the ring card reads the week again and shows in the grid 402ms
+clubs-admin:test:    ✓ E6-W03 step 7 modules and impersonation on D12 (S10 §9) (2)
+clubs-admin:test:      ✓ FREE_TRAINING off: no training cells and no «Reserva = …» in the legend; WAITLIST off: no «espera» and no «En espera:» 509ms
+clubs-admin:test:      ✓ an impersonated session reaching /agenda reads «No es permet la suplantació.»; an empty week reads its empty state 340ms
+clubs-admin:test:    ✓ E6-W04 step 0c: D12's legend reads the half height's minutes from the api (InstructorWeek.trainingSlotMinutes, api E6-T06, ruling E75) (2)
+clubs-admin:test:      ✓ E6-W04 step 0c: the club's 30 minutes as the mock answers them, and 45 when the api says 45 — «(mitja alçada: 45 min)», never the mockup's literal 316ms
+clubs-admin:test:      ✓ E6-W04 step 0c: trainingSlotMinutes null leaves the minutes out — «(mitja alçada)» — in ca, es and en 575ms
+clubs-admin:test:    ✓ T-10-32 (D12) the three locales, with no missing key (2)
+clubs-admin:test:      ✓ es 376ms
+clubs-admin:test:      ✓ en 453ms
+clubs-admin:test:    ✓ T-10-29 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's sheet keeps its key on IN_PROGRESS (1)
+clubs-admin:test:      ✓ E7-W06 step 1: D12's attendance save keeps its Idempotency-Key and the choice on IN_PROGRESS, says «L'operació encara està en curs…» without reading the list again, the retry sends the same key, and the same save after the api's answer takes a new key 832ms
+clubs:test: Not implemented: navigation to another Document
+clubs:test: Not implemented: navigation to another Document
+clubs:test:  ✓ src/profile/NoticesCard.test.tsx (27 tests) 18050ms
+clubs:test:    ✓ T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) (27)
+clubs:test:      ✓ the fixed green tick under «App», the four e-mail switches with the product defaults and «+SMS» 1708ms
+clubs:test:      ✓ hides «+SMS» in a club without SMS (R-11-17) 449ms
+clubs:test:      ✓ the reminder select lists «Mai» and the club's options 404ms
+clubs:test:      ✓ each change shows at once and is saved as a partial PUT after the 300 ms pause 1659ms
+clubs:test:      ✓ rolls a refused change back with its message (422 INVALID_REMINDER_OPTION) 663ms
+clubs:test:      ✓ keeps a newer choice when an older save answers late (the answer rebases the member's edits) 778ms
+clubs:test:      ✓ E7-W02 round 2 #1: leaving 12 while a PUT is on its way sends the waiting change at once, and the latest choice (120) is what the api keeps even when the older PUT answers last 508ms
+clubs:test:      ✓ E7-W02 round 2 #1: a change kept across a reload is sent again on the next visit of the same account and club only 1001ms
+clubs:test:      ✓ E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it 1110ms
+clubs:test:      ✓ E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx 743ms
+clubs:test:      ✓ E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved 839ms
+clubs:test:      ✓ E7-W05 step 2 (R-11-04): back from the back-forward cache, 12 saves again — pagehide with a change pending, pageshow(persisted), an edit while that PUT is out, leave: the edit is saved 709ms
+clubs:test:      ✓ E7-W05 step 6 (E7-W02 review #4): an older visit's success never erases the entry a newer visit left in the outbox 892ms
+clubs:test:      ✓ E7-W06 (E7-W05 review #4): back from the back-forward cache with nothing unsaved, 12 saves the change a newer visit left in the outbox instead of taking it over and ignoring it 472ms
+clubs:test:      ✓ E7-W07 step 2 (E7-W06 review #3, ruling E85: option a; R-11-04): overlapping PUTs and the last one lost — 12 reads GET again (the api holds 1 h), shows the member's «2 h abans» as a pending change with «Desant…», sends it again, and its 2xx saves it and frees the outbox 925ms
+clubs:test:      ✓ E7-W07 step 2 (ruling E85: option a): the retry is lost too and the member leaves right after — the departure carries «2 h abans» and keeps it, so the next visit within 5 minutes of leaving shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too — «2 h abans» stays shown and kept, and the member's next change sends it 2069ms
+clubs:test:      ✓ E7-W05 step 6 (E7-W02 review #5): an impersonated session never shows the browser-permission note (it never asks for push) 398ms
+clubs:test:      ✓ E7-W02 round 2 #5: a permission already refused shows the explanation on arrival (read at mount, never asked), and a change still saves 495ms
+clubs:test:      ✓ an iPhone outside the installed app gets the install hint and no permission prompt 410ms
+clubs:test:      ✓ «Aprèn amb AgilityHub ›» after «Els meus gossos» only with LEARN_LINK 323ms
+clubs:test:      ✓ an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription 550ms
+clubs-admin:test:  ✓ src/billing/RemittancesPage.test.tsx (11 tests) 3051ms
+clubs-admin:test:    ✓ S12 §2 «D6 (remeses)» /facturacio/remeses (no mockup: design system, §13-12) (11)
+clubs-admin:test:      ✓ E8-W01 round 2 #5: a bare route waits for saved views and applies the default before writing list state into the URL 547ms
+clubs-admin:test:      ✓ lists the remittances newest first with month, creation, receipts, amount, collection date and status; no free-text search 314ms
+clubs-admin:test:      ✓ R-12-15 [Marca com a enviada al banc]: a confirmation warns the rollback becomes impossible, then POST …/submission {submittedAt} with a key; the row reads «enviada al banc» 378ms
+clubs-admin:test:      ✓ filters by status through the universal filter (`filter=status:eq:…`) 314ms
+clubs-admin:test:  ✓ src/dashboard/DashboardPage.test.tsx (20 tests) 2800ms
+clubs-admin:test:    ✓ T-14-25 D1 dashboard (4)
+clubs-admin:test:      ✓ renders the server aggregate, all risk rows, pending signups, and accessible chart 811ms
+clubs-admin:test:  ✓ src/census/CensusListPage.test.tsx (5 tests) 6893ms
+clubs-admin:test:    ✓ T-03-38 D5 universal member list (4)
+clubs-admin:test:      ✓ renders applied filters and preserves selection when page size changes 1869ms
+clubs-admin:test:      ✓ E4-W12 step 5: a fresh /abonats applies only the status chip «Alta», so a club whose plan ids differ from the fixture's lists its members 383ms
+clubs-admin:test:      ✓ toggles visible columns and synchronizes the ordered fields to the URL 944ms
+clubs-admin:test:      ✓ T-13-22 offers the leave columns and keeps the system leave view non-deletable 1330ms
+clubs-admin:test:    ✓ T-03-42 D15 translated dog list (1)
+clubs-admin:test:      ✓ renders the approved columns and dog record links 2363ms
+clubs-admin:test:  ✓ src/App.test.tsx (20 tests) 2086ms
+clubs-admin:test:    ✓ E3-W07 step 9 menu counters (S14 R-14-08) (2)
+clubs-admin:test:      ✓ reads the counters once for an ADMIN, again on focus, and not on every navigation 322ms
+clubs-admin:test:  ✓ src/dashboard/RiskReviewCard.test.tsx (12 tests) 2479ms
+clubs-admin:test:    ✓ T-15-33 D1 «Revisió de classes en risc» from S15 §6 form A (5)
+clubs-admin:test:      ✓ renders the four statuses with the mockup's exact literals and «4 avisos» 502ms
+clubs-admin:test:    ✓ T-15-33 E5-W03 round 2 · review #5: a D1 row opens D4 on that class (the example day's calendar world) (4)
+clubs-admin:test:      ✓ «Cadells · avui 9:30 · Cadells» → D4 «anul·lades», that week, that class selected 399ms
+clubs-admin:test:      ✓ «Nivell D · avui 17:40 · Petita» → D4 «anul·lades», that week, that class selected 302ms
+clubs-admin:test:      ✓ «F i G · demà 20:00 · Carretera» → D4 «actives», that week, that class selected 384ms
+clubs-admin:test:      ✓ «Cadells · dc 9:30 · Cadells» → D4 «actives», that week, that class selected 364ms
+clubs-admin:test:  ✓ src/messaging/AnnouncementsPage.test.tsx (15 tests) 20725ms
+clubs-admin:test:    ✓ T-11-37 D9 «Comunicats i plantilles» (S11 §2, R-11-12) (14)
+clubs-admin:test:      ✓ mockup D9: the four counts, a category row filters the list, and N-28 opens with its title, category chip, icons, «idioma: CA (amb versió ES)», the body with the variables' labels and the variable chips 2400ms
+clubs-admin:test:      ✓ the language select switches the title and the body; a variable chip inserts its label at the caret and [DESA] saves the code keys with the version read 1933ms
+clubs-admin:test:      ✓ the matrix: a cell outside caps is an inert «—», one inside toggles; the Push column is informative; SMS and Push columns follow the modules 2335ms
+clubs-admin:test:      ✓ [Vista prèvia] renders the unsaved draft per language with the SMS counter and the truncation note, and «Envia'm una prova» says it was sent 1012ms
+clubs-admin:test:      ✓ R-11-01 in [Vista prèvia]: a language without its own text is previewed with the club's default language, as a member of that language would receive it 651ms
+clubs-admin:test:      ✓ [DESA] on its way: the texts, chips and cells are read-only until the api answers, so nothing typed meanwhile is dropped by the answer 1529ms
+clubs-admin:test:      ✓ E7-W01 round 2 #3: a late save answer never replaces another template — save A, open B, reopen A and write again, back to B, then A's answer: B stays shown and editable, and A's newer draft is kept 2327ms
+clubs-admin:test:      ✓ E7-W04 step 5 (R-11-12): two completed saves of one template whose answers arrive in reverse order — the newer version stays, no draft is lost, and the next save carries the newer version 2286ms
+clubs-admin:test:      ✓ E7-W05 step 5 (R-11-12): a GET /message-templates/{id} read with the older version that answers after a newer save's answer never brings the older version back — the saved text stays and the next save carries the newer version 1218ms
+clubs-admin:test:      ✓ E7-W05 step 6 (E7-W04 review #4, R-11-12): an older save answer leaves the detail alone but drops the draft it carried — save E1 (answered late), reopen, [Desactiva] (newer version), then E1's answer: nothing stays «sense desar» 1293ms
+clubs-admin:test:      ✓ a stale PUT says «Algú ha modificat aquesta plantilla; recarrega-la»; [Recarrega] reads it again and keeps the admin's edits — the text and the one matrix cell they clicked — saved on the new version 1073ms
+clubs-admin:test:      ✓ the secondary actions as the api allows them: «Restaura el text per defecte» only when customized, no [Desactiva] on a mandatory template, «Elimina» only on the club's own 1136ms
+clubs-admin:test:      ✓ errors by code where they belong: a missing required variable (VALIDATION_ERROR missingVariables), a broken [[…]] (400 TEMPLATE_SYNTAX_ERROR) and an unknown one (400 TEMPLATE_UNKNOWN_VARIABLE) under the text, which they describe 781ms
+clubs-admin:test:      ✓ «＋ Nova plantilla» creates a CUSTOM template of the chosen category and opens it; the admin's unsaved edits stay with their template while another one is open 679ms
+clubs-admin:test:  ✓ src/census/MemberBookingsCard.test.tsx (6 tests) 1727ms
+clubs-admin:test:    ✓ E5-W05 step 4 · D10's «Classes» table names each class and its ring (E5-T29) (1)
+clubs-admin:test:      ✓ E5-W05 step 4: each row reads the class's description and its ring (dot in the ring's colour and name), as E5-W03 step 3 asks 507ms
+clubs-admin:test:    ✓ E5-W03 step 3 · D10 «Reserves» (S08 §2, S09 §2, R-08-19) (5)
+clubs-admin:test:      ✓ E5-W03 round 2 · review #4: «Mostra'n més» pages through the member's class bookings, never asking for 1000 653ms
+clubs-admin:test:  ✓ src/audit/list-exports.test.tsx (30 tests) 20163ms
+clubs-admin:test:    ✓ T-14-26 R-14-12 E4-W07 D5 members «Excel · PDF» → Excel (4)
+clubs-admin:test:      ✓ 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters 2010ms
+clubs-admin:test:      ✓ 202: opens the exports drawer with the queued job and saves nothing 1171ms
+clubs-admin:test:      ✓ 422 EXPORT_LIMIT: shows the drawer's notice 1060ms
+clubs-admin:test:      ✓ 422 EXPORT_TOO_LARGE: shows errors:EXPORT_TOO_LARGE next to the button 1024ms
+clubs-admin:test:    ✓ T-14-26 R-14-12 E4-W07 D5 members «Exportar selecció» (4)
+clubs-admin:test:      ✓ 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters 1293ms
+clubs-admin:test:      ✓ 202: opens the exports drawer with the queued job and saves nothing 1258ms
+clubs-admin:test:      ✓ 422 EXPORT_LIMIT: shows the drawer's notice 1316ms
+clubs-admin:test:      ✓ 422 EXPORT_TOO_LARGE: shows errors:EXPORT_TOO_LARGE next to the button 1087ms
+clubs-admin:test:    ✓ T-14-26 R-14-12 E4-W07 D15 dogs «Excel · PDF» → PDF (4)
+clubs-admin:test:      ✓ 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters 683ms
+clubs-admin:test:      ✓ 202: opens the exports drawer with the queued job and saves nothing 709ms
+clubs-admin:test:      ✓ 422 EXPORT_LIMIT: shows the drawer's notice 573ms
+clubs-admin:test:      ✓ 422 EXPORT_TOO_LARGE: shows errors:EXPORT_TOO_LARGE next to the button 576ms
+clubs-admin:test:    ✓ T-14-26 R-14-12 E4-W07 member audit «Excel · PDF» → Excel (4)
+clubs-admin:test:      ✓ 200: saves the api's file byte for byte, with its Content-Type and the Content-Disposition name, and sends the list's parameters 564ms
+clubs-admin:test:      ✓ 202: opens the exports drawer with the queued job and saves nothing 497ms
+clubs-admin:test:      ✓ 422 EXPORT_LIMIT: shows the drawer's notice 450ms
+clubs-admin:test:      ✓ 422 EXPORT_TOO_LARGE: shows errors:EXPORT_TOO_LARGE next to the button 436ms
+clubs-admin:test:    ✓ T-14-26 R-14-12 E4-W07 one export at a time (4)
+clubs-admin:test:      ✓ R-03-24 «Exportar selecció» still exports the selected rows after a new search hides them 793ms
+clubs-admin:test:    ✓ T-14-26 R-14-12 E4-W16 step 5 (INC-21): a queued export is downloaded from the drawer (2)
+clubs-admin:test:      ✓ the READY row reads GET /exports/{id} and fetches the api's signed route with the bearer, saved byte for byte 1466ms
+clubs-admin:test:      ✓ a signed S3 url opens as it is, and a failed download is shown inside the drawer 1340ms
+clubs:test:  ✓ src/SignupPage.test.tsx (104 tests) 21820ms
+clubs:test:    ✓ T-04-29 signup person and draft (7)
+clubs:test:      ✓ persists a current draft, expires it after 24 hours and maps identity states 985ms
+clubs:test:      ✓ keeps the draft and refetches localized configuration after a language change 574ms
+clubs:test:      ✓ masks and validates the browser-independent birth date control 842ms
+clubs:test:      ✓ M2 checks the ES postal code and a past birth date from 1900 before any request 744ms
+clubs:test:      ✓ GENERIC profile: the first document type of the profile and an editable prefix 774ms
+clubs:test:    ✓ T-04-30 signup dog, uploads, plans and module gates (5)
+clubs:test:      ✓ uploads sequentially named vaccination pages and renders API plans 485ms
+clubs:test:      ✓ validates and normalises the chip per country profile and the birth month 746ms
+clubs:test:      ✓ keeps fields typed while an upload is in flight 331ms
+clubs:test:    ✓ T-04-31 signup family lookup (3)
+clubs:test:      ✓ continues empty, resolves the fixture family and supports a pending lookup 648ms
+clubs:test:      ✓ keeps the dog draft when returning from the family step 329ms
+clubs:test:    ✓ T-04-32 signup payment, checkout and add-dog mode (12)
+clubs:test:      ✓ renders API totals and payment conditions and submits only after privacy consent 354ms
+clubs:test:      ✓ shows each payment text only under its method (T-04-32, M7 web half) 376ms
+clubs:test:      ✓ redirects through checkout when Stripe is enabled 315ms
+clubs:test:      ✓ omits planId and planIdRequested when the club has no signup plans (R-04-09) 366ms
+clubs:test:    ✓ B1 identity document at submission (R-04-01) (3)
+clubs:test:      ✓ submits a DNI applicant with the identity-check document 364ms
+clubs:test:    ✓ M1 stable retries (CONVENCIONS_API §7, R-04-26/27) (5)
+clubs:test:      ✓ changing a payload field after a failure uses a new key 409ms
+clubs:test:      ✓ E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the signup's key — the retry sends the same one — and a 422 PAYMENT_PROVIDER_NOT_ENABLED retires it — the same payload sent again is a new submission 435ms
+clubs:test:    ✓ E3-W06 round 2 (9)
+clubs:test:      ✓ #5 the birth date is checked against the club's today, not the browser's 313ms
+clubs:test:    ✓ E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review (5)
+clubs:test:      ✓ #1 a slow full page load: the departing page never renders nor consumes the destination's error 426ms
+clubs:test: 
+clubs:test:  Test Files  30 passed (30)
+clubs:test:       Tests  555 passed (555)
+clubs:test:    Start at  08:38:15
+clubs:test:    Duration  31.53s (tests 49%, environment 21%, transform 19%, import 6%, setup 4%)
+clubs:test: 
+clubs:test:     Isolate  30 workers spawned · ~3.43s startup each (spawn + environment, per file)
+clubs:test:              at least ~2.62s faster with isolate: false — reuses workers across files instead of one per file
+clubs:test: 
+clubs-admin:test: Not implemented: navigation to another Document
+clubs-admin:test: Not implemented: navigation to another Document
+clubs-admin:test:  ✓ src/census/MemberInactivityDrawer.test.tsx (11 tests) 1679ms
+clubs-admin:test:    ✓ T-13-31 admin inactivity lifecycle (11)
+clubs-admin:test:      ✓ shows approve and deny only for a requested period 385ms
+clubs-admin:test:      ✓ E8-W03 round 2 #12 terminates an active period and reports approval cancellations 338ms
+clubs-admin:test:  ✓ src/census/MemberBillingBlock.test.tsx (9 tests) 1601ms
+clubs-admin:test:    ✓ D10 member billing block (9)
+clubs-admin:test:      ✓ loads recent receipts, upfront payments and the dog pack 303ms
+clubs-admin:test:  ✓ src/planning/ClassRegistrantsPanel.test.tsx (11 tests) 1535ms
+clubs-admin:test:    ✓ E5-W03 step 1 · the registrants panel of a class (S08 §6, R-08-12, R-08-16) (7)
+clubs-admin:test:      ✓ lists every booking as the api orders it, with its state, and the D12 «En espera: …» line 418ms
+clubs-admin:test:  ✓ src/messaging/NotificationLogPage.test.tsx (6 tests) 1670ms
+clubs-admin:test:    ✓ E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10) (6)
+clubs-admin:test:      ✓ lists the club's notifications newest first: date, code, category, recipient, one chip per delivery with its status, read 571ms
+clubs-admin:test:      ✓ ?filter=memberId:eq:… (D10's link) reads only that member's notifications, and a row opens its detail with every delivery and the destinations masked 334ms
+clubs-admin:test:      ✓ E7-W01 round 2 #1: the default XLSX and PDF exports ask for the export's own columns (createdAt, code, recipient, channels, readAt), and the file comes 473ms
+clubs-admin:test:  ✓ src/catalogs/JobsCardCounters.test.tsx (9 tests) 1523ms
+clubs-admin:test:    ✓ T-15-27 E7-W07 step 8 (E7-W06's report; S15 R-15-19): D11 names every counter of the cleanup (3)
+clubs-admin:test:      ✓ T-15-27 E7-W07 step 8 (ca): the last run of «Neteja tècnica» says each cleanup counter by its label, never its raw key 409ms
+clubs-admin:test:  ✓ src/census/MemberLeaveDrawer.test.tsx (12 tests) 1458ms
+clubs-admin:test:    ✓ T-13-31 admin leave lifecycle (9)
+clubs-admin:test:      ✓ prefills the effective date for a pending request 452ms
+clubs-admin:test:  ✓ src/planning/TemplateDayPage.test.tsx (7 tests) 1115ms
+clubs-admin:test:    ✓ T-06-27 D3b day view per ring / per instructor (7)
+clubs-admin:test:      ✓ shows only the rings used that day in catalog order, plus «Sense» when a class has no ring 572ms
+clubs-admin:test:  ✓ src/catalogs/ParameterSettings.test.tsx (2 tests) 992ms
+clubs-admin:test:    ✓ T-02-13 D11 parameter rows (2)
+clubs-admin:test:      ✓ keeps module-less parameters that the core sends with module null 628ms
+clubs-admin:test:      ✓ E4-W13 step 0 (api E5-T20): «Alta i consentiments» shows signup.onboardingFields and legal.maxPostpones; the learn keys, in the core's system block, show nowhere 361ms
+clubs-admin:test: Not implemented: navigation to another Document
+clubs-admin:test:  ✓ src/planning/description.test.ts (7 tests) 101ms
+clubs-admin:test:  ✓ src/census/InactivityLeavePage.test.tsx (6 tests) 1446ms
+clubs-admin:test:    ✓ T-13-31 inactivity and leave queues (6)
+clubs-admin:test:      ✓ uses both tabs and the contract default filters and sorts 408ms
+clubs-admin:test:      ✓ E8-W03 round 2 #3 loads real filter values and saved views 431ms
+clubs-admin:test:      ✓ E8-W03 round 2 #9 always projects member even when its visible column is hidden 310ms
+clubs-admin:test:  ✓ src/catalogs/PlansPage.test.tsx (2 tests) 995ms
+clubs-admin:test:    ✓ E4-W16 step 8 (INC-28, S05 §12, §13-5): D8 «Nou preu» proposes the plan's tax, never a country constant (2)
+clubs-admin:test:      ✓ proposes the current price's taxPercent — 0 at a club without VAT — and sends the value shown 635ms
+clubs-admin:test:      ✓ a plan whose current price carries 10 % proposes 10, and a plan without prices proposes 0 358ms
+clubs-admin:test:  ✓ src/in-progress-text.test.tsx (2 tests) 73ms
+clubs-admin:test:  ✓ src/planning/calendar-shared.test.ts (8 tests) 135ms
+clubs-admin:test:  ✓ src/catalogs/ClubPagesCard.test.tsx (2 tests) 934ms
+clubs-admin:test:    ✓ T-05-CP-07 club page editor (2)
+clubs-admin:test:      ✓ warns about provisional text and confirms the next consent version before publishing 738ms
+clubs-admin:test:  ✓ src/census/MemberPlanDrawer.test.tsx (2 tests) 867ms
+clubs-admin:test:    ✓ E8-W03 round 2 member plan change (2)
+clubs-admin:test:      ✓ #2 submits the published plan-change mutation and refreshes D10 635ms
+clubs-admin:test:  ✓ src/census/MemberPaymentMethodDrawer.test.tsx (1 test) 354ms
+clubs-admin:test:    ✓ E8-W03 round 2 #16 shows Save after switching away from a generated card link 351ms
+clubs-admin:test:  ✓ src/planning/CalendarDayPage.test.tsx (2 tests) 456ms
+clubs-admin:test:    ✓ T-06-28 D4 day view (/calendari/dia/:date, form D) (2)
+clubs-admin:test:      ✓ takes the api's «Sense» column as delivered and never adds its own 371ms
+clubs-admin:test:  ✓ src/instructor/week-agenda-rows.test.tsx (1 test) 566ms
+clubs-admin:test:    ✓ T-10-29 E7-W06 step 5 (ruling E82, E6-W04 Q6): stable data attributes on D12's attendance rows (1)
+clubs-admin:test:      ✓ E7-W06 step 5: each row carries its booking's id and the state its badge shows (data-booking-id, data-attendance-state), the api's, and a cycled badge changes it 563ms
+clubs-admin:test:  ✓ src/planning/calendar-literals.test.ts (2 tests) 30ms
+clubs-admin:test:  ✓ src/dashboard/SignupReviewPage.test.tsx (95 tests) 24502ms
+clubs-admin:test:    ✓ T-04-33 D2 signup validation (22)
+clubs-admin:test:      ✓ shows the mockup: DNI and phone in full, signed documents, consent warning, level, invoice and Stripe payment 1318ms
+clubs-admin:test:      ✓ E4-W12 step 1: a dog with 3 documents and empty notes shows «—» beside «Notes als instructors» and no attachment chip 422ms
+clubs-admin:test:      ✓ shows the required next-invoice date from the proposed MONTHLY plan when the pending member has no plan yet 411ms
+clubs-admin:test:      ✓ R-04-24 warns on the age badge only when pendingDays > warnDays, read from the signup view 376ms
+clubs-admin:test:      ✓ T-04-16 validates a FOUND claim whose holder has no group yet without familyGroupId (the api creates the group) 322ms
+clubs-admin:test:      ✓ requires explicit confirmation when a manual upfront payment is zero 454ms
+clubs-admin:test:    ✓ E3-W07 step 1 · M12 each dog is saved with its own version (R-04-19) (3)
+clubs-admin:test:      ✓ edits the member and the dog in one save: the dog PATCH carries the dog's version, not the member's 848ms
+clubs-admin:test:      ✓ add-dog: the person is read-only and the new dog is saved with its version 0 while the member is at 7 (R-04-25) 541ms
+clubs-admin:test:      ✓ after a partial save (the member saved, the dog failed) reloads, shows the error in the drawer and retries only the dog 894ms
+clubs-admin:test:    ✓ E3-W07 async drawer: nothing typed during a save is lost (1)
+clubs-admin:test:      ✓ locks the fields while the save is in flight 680ms
+clubs-admin:test:    ✓ E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2) (11)
+clubs-admin:test:      ✓ NEXT_INVOICE_DATE_REQUIRED (422, bare as the api sends it) is shown on its field 304ms
+clubs-admin:test:      ✓ maps the mock's own answers too: a missing level and a missing date 497ms
+clubs-admin:test:    ✓ E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03) (4)
+clubs-admin:test:      ✓ editing the first email keeps the second, and the untouched phones are not sent 315ms
+clubs-admin:test:      ✓ offers gender (three values), the notes, holderTaxId and the requested plan read-only 585ms
+clubs-admin:test:      ✓ adds a dog document forwarding the signed upload headers, and removes one 871ms
+clubs-admin:test:    ✓ E3-W07 step 4 · M15 the plan and family decisions (R-04-13, T-04-33) (4)
+clubs-admin:test:      ✓ lists planOptions with their periodicity and runs dryRun on a change to Pack 6: lines, date and body updated 374ms
+clubs-admin:test:      ✓ a NOT_FOUND_PENDING claim shows what the applicant typed and is resolved by attaching the holder's group 654ms
+clubs-admin:test:    ✓ E3-W07 round 2 · 2 a quote belongs to its plan, price and signup version (S04 §2 D2) (3)
+clubs-admin:test:      ✓ a reload after a full payment shows no editable amount (the old quote is discarded) 356ms
+clubs-admin:test:    ✓ T-04-14 T-04-20 T-04-33 E3-W11 step 2 · the drawer's payment methods come from the D2 view (review #2, R-04-10, R-04-19) (6)
+clubs-admin:test:      ✓ the applicant's card, not assignable any more, is shown preselected but cannot be chosen again 317ms
+clubs-admin:test:    ✓ E3-W07 round 2 · 3 the drawer can change the payment method (R-04-19, R-04-10) (4)
+clubs-admin:test:      ✓ moves a cash applicant to direct debit with IBAN and holder, among the view's methods 305ms
+clubs-admin:test:      ✓ moves a direct-debit applicant to cash: only the type is sent, and D2 reads «Efectiu» 326ms
+clubs-admin:test:    ✓ E3-W08 step 6: a readmission on D2 (S04 R-04-06, E38) (9)
+clubs-admin:test:      ✓ round 2 #1: during a readmission, editing phone 2 keeps the submitted phone 1 in the PATCH 337ms
+clubs-admin:test:      ✓ the DNI/NIE is read-only while the readmission waits, and says how to correct it 325ms
+clubs-admin:test:    ✓ T-04-12 E4-W13 D2 for the reused dog of a readmission (S04 R-04-06, R-04-19, E38; api E3-T17, E5-T19) (13)
+clubs-admin:test:      ✓ step 2: adding a file sends the signed upload, then the type's kept fileKeys plus the new one; kept files offer no rename 472ms
+clubs-admin:test:      ✓ step 2: a 409 READMISSION_PENDING that still arrives shows the new literal inside the drawer, for a field save and for a file 327ms
+clubs-admin:test:      ✓ step 2: a removed file's key (400 FILE_NOT_FOUND, api E5-T21) shows the error in the drawer and re-reads the view 333ms
+clubs-admin:test:      ✓ step 3: the reused dog's chip is read-only while the readmission waits, with the literal as its hint, and never sent 390ms
+clubs-admin:test:      ✓ round 2 R-04-06 R-04-19: withdrawing Kiwi's submitted card shows the record's card again, which offers no [Retira] and is no change; the insurance withdrawn too leaves no documents change 462ms
+clubs-admin:test:  ✓ src/census/dog-owners.test.ts (2 tests) 83ms
+clubs-admin:test:  ✓ src/catalogs/derived-settings.test.ts (2 tests) 5ms
+clubs-admin:test:  ✓ src/planning/plain-dates.test.ts (9 tests) 21ms
+clubs-admin:test:  ✓ src/planning/TemplatesPage.test.tsx (32 tests) 28493ms
+clubs-admin:test:    ✓ T-06-26 D3 weekly templates (13)
+clubs-admin:test:      ✓ prefills band and day from an empty cell, fills the description by levels, keeps the manual text and asks for another class in the band 4545ms
+clubs-admin:test:      ✓ saves every change of a full cell at once with the template version 3414ms
+clubs-admin:test:      ✓ queues two quick changes of a full cell and sends each PATCH with the latest version 2093ms
+clubs-admin:test:      ✓ reloads the template and remounts the card on STALE_VERSION 2120ms
+clubs-admin:test:      ✓ puts the form back to the saved class when a PATCH fails 1113ms
+clubs-admin:test:      ✓ shows a failed load of the weeks and the coverage with [Torna-ho a provar] instead of a loading table 1014ms
+clubs-admin:test:      ✓ shows each band error on the field that caused it 712ms
+clubs-admin:test:      ✓ marks the inconsistency on the cells and in the footer note and blocks the generation 865ms
+clubs-admin:test:      ✓ confirms «Es generaran com a esborrany les classes de la setmana del …» and generates the proposed week 709ms
+clubs-admin:test:      ✓ hides every action from INSTRUCTOR and keeps the cells inert (A22 c) 330ms
+clubs-admin:test:      ✓ R-06-15 hides levels and coverage with levels.enabled = false and requires a manual description 302ms
+clubs-admin:test:    ✓ T-06-26 E4-W06 D3 edit-mode leftovers of the E4-W01 round-2 review (3)
+clubs-admin:test:      ✓ R-06-02 #3 «Treu de la plantilla» waits for the level PATCH queued before it: the DELETE never overtakes it 559ms
+clubs-admin:test:      ✓ S06 §3 #4 without the opening hours, OUTSIDE_OPENING_HOURS lands on the time the admin moved; a new band gets it without a field 800ms
+clubs-admin:test:      ✓ R-06-02 #7 a failed chip PATCH puts back only the chips: the text still being typed in «Descripció» and «Límit» stays 503ms
+clubs-admin:test:    ✓ T-06-26 E4-W14 D3 coverage of the progression levels (E4-W06 review #8) (2)
+clubs-admin:test:      ✓ R-06-06 the coverage table lists only the progression levels: Teràpia and Pendent never, Cadells not once it leaves the progression 419ms
+clubs-admin:test:    ✓ T-06-26 E4-W14 D3 the removal queue (E4-W06 review #3 and #4) (4)
+clubs-admin:test:      ✓ R-06-02 «Esborra la franja» (removeBand) waits in the queue for the level PATCH before it; then the drawer closes 1024ms
+clubs-admin:test:      ✓ R-06-02 a band removal never drops a class change queued after it: the PATCH is sent once the DELETE answers 1120ms
+clubs-admin:test:      ✓ R-06-02 a failed «Treu de la plantilla» keeps the change queued after it: its PATCH is sent 593ms
+clubs-admin:test:      ✓ R-06-02 #7 a change dropped after a failed PATCH is never left on screen: its chip goes back and the first error stays 713ms
+clubs-admin:test:    ✓ T-06-26 E4-W14 round 2 D3 the queue drops only the removed or refused class's changes (review #2) (3)
+clubs-admin:test:      ✓ R-06-02 class B's chip change, queued behind class A's removal, is saved with the template's new version 970ms
+clubs-admin:test:      ✓ R-06-02 class B's change queued behind class A's refused PATCH is sent; A's error goes to the page, since A's form is gone 647ms
+clubs-admin:test:      ✓ R-06-02 a change of class A queued after A's own removal is dropped with a message: the class no longer exists 447ms
+clubs-admin:test:    ✓ T-06-26 E4-W10 D3 closed days (S06 R-06-01, S02 R-02-09) (2)
+clubs-admin:test:      ✓ R-06-01 R-02-09 a template whose kind has a closed day takes no band: the drawer says which day and sends nothing; the Saturday template still takes one 576ms
+clubs-admin:test:      ✓ S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] instead of assuming 07:00–22:00; after the retry the closed Monday is named again 522ms
+clubs-admin:test:    ✓ T-06-26 E4-W11 D3 follow-ups of the E4-W10 review (2)
+clubs-admin:test:      ✓ R-06-01 R-02-09 the closed days read as a label with the days joined as a list: «Dies de tancament: dilluns i dimarts. …» 512ms
+clubs-admin:test:    ✓ T-06-22 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D3's week generation keeps its key on IN_PROGRESS (2)
+clubs-admin:test:      ✓ E7-W06 step 1: D3's generation modal stays open with its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…» in the modal, the retry sends the same key, and the same generation after the api's answer takes a new key 452ms
+clubs-admin:test:    ✓ E7-W07 step 4 (CONVENCIONS_API §7, E85): D3's week generation follows the shared submission-key rule (1)
+clubs-admin:test:      ✓ T-06-26 T-06-22 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the generation modal open with its Idempotency-Key, so the retry sends the same key; a 422 TEMPLATE_KIND_MISMATCH retires it, so the same generation sent again takes a new key 359ms
+clubs-admin:test:  ✓ src/planning/CalendarPage.test.tsx (47 tests) 28422ms
+clubs-admin:test:    ✓ E3-W07 step 9 a D1 risk row opens D4 on its class (1)
+clubs-admin:test:      ✓ selects the class of `?classe=` in the week of `?setmana=` 1742ms
+clubs-admin:test:    ✓ T-06-28 D4 / D4b / D4c class calendar (front half, MSW) (24)
+clubs-admin:test:      ✓ opens «Esborrany» on the first week with drafts, with the validation card and its count 1878ms
+clubs-admin:test:      ✓ [VALIDAR LA SETMANA] turns every draft of the week active at once 1581ms
+clubs-admin:test:      ✓ cancels an active class with registrants through D4c: four rows, text required, «ANUL·LA I AVISA ELS 4 ALUMNES» 1924ms
+clubs-admin:test:      ✓ [ELIMINA] of an active class goes through the same D4c modal 1849ms
+clubs-admin:test:      ✓ R-06-09 saves the diff with the version; STALE_VERSION keeps its message after the refetch remounts the card 2583ms
+clubs-admin:test:      ✓ R-06-09 keeps the INVALID_STATE message of the «Exempta…» toggle after the refetch 770ms
+clubs-admin:test:      ✓ R-06-05 moving a class onto training bookings asks first and resends with cancelBookings 1021ms
+clubs-admin:test:      ✓ R-06-10 D4c with only a waitlist: no «0 alumnes», a waitlist intro and button 586ms
+clubs-admin:test:      ✓ R-06-11 the block drawer starts on the club-local today and a Saturday date offers Saturday's hours only 441ms
+clubs-admin:test:      ✓ R-06-09 [Crear classe] clamps its start and end times to a Saturday's hours 471ms
+clubs-admin:test:      ✓ R-06-11 a new ring after RING_HAS_BOOKINGS drops the confirmation: no cancelBookings for a ring not shown 752ms
+clubs-admin:test:      ✓ R-06-09 [Crear classe]: a new time or ring after RING_HAS_BOOKINGS drops the confirmation 957ms
+clubs-admin:test:      ✓ R-06-09 [Crear classe]: a RING_HAS_BOOKINGS answer that arrives after a ring change is dropped 1008ms
+clubs-admin:test:      ✓ R-06-11 the block drawer locks ring, date and times until a delayed RING_HAS_BOOKINGS arrives 666ms
+clubs-admin:test:      ✓ R-06-09 keeps every editor disabled from [ACCEPTA] until the saved version is shown 759ms
+clubs-admin:test:      ✓ shows a RESERVATION block as it is when FREE_TRAINING was turned off later 327ms
+clubs-admin:test:      ✓ R-06-15 with levels.enabled=false the card has no «Nivells» chip 302ms
+clubs-admin:test:      ✓ R-06-15 INSTRUCTOR (no /parameters) sees «Nivells» only on a class with levels 336ms
+clubs-admin:test:      ✓ R-06-11 lists the RING_BLOCK_CONFLICT conflicts inside the block drawer 893ms
+clubs-admin:test:      ✓ INSTRUCTOR reads the calendar without actions and with inert chips (A22 c) 488ms
+clubs-admin:test:    ✓ T-06-28 E4-W09 D4 follow-ups of the E4-W02 round-4 review (7)
+clubs-admin:test:      ✓ S06 §3 R-06-09 an opening at 07:05 with 10-minute slots: «Hora» and [Crear classe] offer 07:10 first, and the class is sent on slot boundaries 1194ms
+clubs-admin:test:      ✓ R-06-11 T-06-32 an opening at 07:05: [Bloqueja pista] offers 07:10–07:40 first and saves on slot boundaries 397ms
+clubs-admin:test:      ✓ R-06-09 after STALE_VERSION every editor stays locked until the refetched version is shown, so no edit is lost 716ms
+clubs-admin:test:      ✓ R-06-09 a conflict refetch that fails unlocks the card with the admin's edit kept 389ms
+clubs-admin:test:      ✓ R-02-09 Sunday absent from club.openingHours is closed: the card and [Crear classe] offer no times there, say so and do not submit 315ms
+clubs-admin:test:    ✓ T-06-28 E4-W10 D4 follow-ups of the E4-W09 review (2)
+clubs-admin:test:      ✓ S06 §3 a failed GET /club/opening-hours shows its error with [Torna-ho a provar] and offers no times until it loads 408ms
+clubs-admin:test:  ✓ src/activities/ActivitiesPage.test.tsx (50 tests) 29192ms
+clubs-admin:test:    ✓ T-07-29 D7 activities (list, maintenance, publication, cancellation) (23)
+clubs-admin:test:      ✓ draws the four mockup rows with the R-07-13 dates, rings, registrations and state chips 1627ms
+clubs-admin:test:      ✓ «Nova activitat» creates a draft with title and type and opens its maintenance 2038ms
+clubs-admin:test:      ✓ shows the mockup maintenance of «Torneig d'Estiu 2026» with the ring, level and waitlist chips 1263ms
+clubs-admin:test:      ✓ disables the ring chips of an activity outside the club («— (fora del club)») 956ms
+clubs-admin:test:      ✓ R-07-14 hides «Nivells» with levels.enabled=false and «Llista d'espera» without WAITLIST 1397ms
+clubs-admin:test:      ✓ R-07-03 [DESA] sends only the allow-listed rich text of the editor, with the version 1169ms
+clubs-admin:test:      ✓ R-07-05 [PUBLICA] with conflicts opens the dialog with the conflicts and the required notice text 1443ms
+clubs-admin:test:      ✓ R-07-04 a draft without the registration period answers ACTIVITY_INCOMPLETE on the fields 1173ms
+clubs-admin:test:      ✓ R-07-06 [CANCEL·LA L'ACTIVITAT] opens the modal with «CANCEL·LA I AVISA ELS 22 INSCRITS» disabled without text 982ms
+clubs-admin:test:      ✓ INSTRUCTOR reads D7 without actions, export or internal notes 354ms
+clubs-admin:test:      ✓ lists the registrants with the FIFO waitlist positions 311ms
+clubs-admin:test:      ✓ R-07-04 after an upload [DESA] sends only the admin's own edits with the fresh version 1188ms
+clubs-admin:test:      ✓ R-07-05 a RING_BLOCK conflict is not forceable: no option for it and [PUBLICA I APLICA] disabled with the reason 1010ms
+clubs-admin:test:      ✓ R-07-05 the conflict dialog never hangs: a repeated 409 and other errors show inside it 614ms
+clubs-admin:test:      ✓ R-07-04/05 save mode: a resync conflict opens «DESA I APLICA»; STALE_VERSION closes it, refetches and says so 912ms
+clubs-admin:test:      ✓ E4-W17 step 5 (R-07-04): [DESA] on the published Torneig with both times cleared marks both «Cal per publicar», with «Falten dades…» 739ms
+clubs-admin:test:      ✓ E4-W16 step 9 (INC-29, R-07-04): [DESA] on STALE_VERSION keeps the admin's edits, rich text included, on the fresh copy and saves them with the fresh version 982ms
+clubs-admin:test:      ✓ the plain publish confirm is pending once, keeps one key per payload and turns ADMIN_TEXT_REQUIRED into the text 614ms
+clubs-admin:test:      ✓ [DESPUBLICA] answers ACTIVITY_HAS_REGISTRATIONS with registrants and unpublishes without them 777ms
+clubs-admin:test:      ✓ [ELIMINA] cancels the draft with reason DELETED and returns to the list 385ms
+clubs-admin:test:      ✓ R-07-02 DUPLICATE_SLUG and SLUG_LOCKED land on the slug field 700ms
+clubs-admin:test:      ✓ registrants: «cancel·lada pel club» after a cancellation; an INSTRUCTOR reads plain text 429ms
+clubs-admin:test:    ✓ E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): D7's publication and cancellation follow the shared submission-key rule (2)
+clubs-admin:test:      ✓ T-07-29 T-07-10 E7-W07 step 4 (CONVENCIONS_API §7, E85): [PUBLICA] keeps its Idempotency-Key through IN_PROGRESS and a 503 with the api's body, and a 422 ACTIVITY_IN_PAST retires it, so the same publication sent again takes a new key 785ms
+clubs-admin:test:      ✓ T-07-29 T-07-13 E7-W07 step 4 (CONVENCIONS_API §7, E85): [CANCEL·LA I AVISA…] keeps its Idempotency-Key through a network failure and a 503 with the api's body, and a 422 ADMIN_TEXT_REQUIRED retires it, so the same notice sent again takes a new key 787ms
+clubs-admin:test:    ✓ T-07-29 E4-W08 D7 follow-ups of the E4-W04 round-2 review (6)
+clubs-admin:test:      ✓ R-07-04 the rich text is read-only while [DESA] is pending, and nothing typed is lost 715ms
+clubs-admin:test:      ✓ R-07-05 away from the club the hours cover the whole day: 6:00 when the club opens at 7:00 922ms
+clubs-admin:test:      ✓ R-07-06 ADMIN_TEXT_REQUIRED after an empty preview fetches it again and asks for the notice text 384ms
+clubs-admin:test:    ✓ T-07-29 E4-W10 D7 follow-ups of the E4-W08 and E4-W09 reviews (3)
+clubs-admin:test:      ✓ S07 §6 CONVENCIONS_API §4 the member filter reads every page: with 1,001 distinct registrants the member on the second page can be selected 1289ms
+clubs-admin:test:      ✓ R-07-05 R-02-09 at the club with linked rings, a closed day shows «El club està tancat aquest dia» and offers no times; an open day or away from the club offers them 460ms
+clubs-admin:test:  ✓ src/billing/BillingPage.test.tsx (47 tests) 56836ms
+clubs-admin:test:    ✓ T-12-25 D6 «Facturació»: the month as the mockup draws it (S12 §2) (3)
+clubs-admin:test:      ✓ T-12-25: header, incidents first with their labels and «Obre fitxa» links, the cash members, the KPIs and the chips 4447ms
+clubs-admin:test:      ✓ T-12-25: the month steppers rewrite ?mes= and read that month; a month without a simulation offers [1 · SIMULA EL MES], which shows its incidents 2829ms
+clubs-admin:test:      ✓ T-12-25: a month more than three months ahead is refused by the api with a toast, not on a field 443ms
+clubs-admin:test:    ✓ T-12-25 the strong confirmation and the generation (R-12-11, R-12-06) (5)
+clubs-admin:test:      ✓ R-12-29 (CONVENCIONS_API §7, E85): an unanswered generation (503) keeps its Idempotency-Key, so the retry is the same submission; the answer then retires it 1234ms
+clubs-admin:test:      ✓ CONVENCIONS_API §7 (E80): 409 IDEMPOTENCY_KEY_REUSED {IN_PROGRESS} reads the shared «encara està en curs» text inside the modal 1698ms
+clubs-admin:test:      ✓ T-12-25: «Es generaran 168 rebuts…» from the simulation's KPIs, then POST /billing/runs with one Idempotency-Key, «168 rebuts generats» 1543ms
+clubs-admin:test:      ✓ T-12-25 / R-12-07 billingStale: 409 SIMULATION_STALE turns the modal into «Torna a simular el mes» with [Simula de nou] 783ms
+clubs-admin:test:      ✓ T-12-25: 422 COLLECTION_DATE_TOO_SOON shows the api's dates inside the modal (two business days, T-12-29b) 556ms
+clubs-admin:test:    ✓ T-12-25 [Retrocedeix la remesa] only when the api says so (R-12-14) (3)
+clubs-admin:test:      ✓ T-12-25: absent once the remittance is submitted (rollbackable false), present while rollbackable 1453ms
+clubs-admin:test:      ✓ T-12-25: the rollback button stays disabled until «RETROCEDIR» is typed exactly; then 200 «168 rebuts anul·lats» and the month reads rolled back 969ms
+clubs-admin:test:      ✓ T-12-25 billingRollbackBlocked: 409 RUN_NOT_ROLLBACKABLE lists the api's reasons in the modal and the button goes 924ms
+clubs-admin:test:    ✓ T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) (3)
+clubs-admin:test:      ✓ T-12-25: the chips filter the list by status on top of the month and show the api's counts 820ms
+clubs-admin:test:      ✓ T-12-25: a selection enables [Marcar cobrat (selecció)]; remitted rows cannot be selected; the bulk payment marks them paid 1266ms
+clubs-admin:test:      ✓ E8-W01 round 2 #4: a receipt paid in its drawer leaves the held selection before pagination, so a later bulk payment never resends its id 2288ms
+clubs-admin:test:    ✓ T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20) (6)
+clubs-admin:test:      ✓ T-12-25: PENDING cash, COLLECTING and FAILED direct debits, a PAID and a CANCELLED receipt 2092ms
+clubs-admin:test:      ✓ T-12-25: [Marca cobrat] sends the paid date, the channel and the receipt's version; the drawer and the list read PAID 758ms
+clubs-admin:test:      ✓ T-12-25: 409 STALE_VERSION reads «El rebut ha canviat. Torna a obrir-lo.» in the drawer and the receipt is read again 418ms
+clubs-admin:test:      ✓ E8-W01 round 2 #6: a failed drawer refetch stays beside the cached receipt, unlocks its actions and recovers through [Torna-ho a provar] 454ms
+clubs-admin:test:      ✓ T-12-25: [Descarrega el justificant] opens the PDF in a new tab without parsing it 310ms
+clubs-admin:test:    ✓ T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R-12-28) (3)
+clubs-admin:test:      ✓ T-12-32 billingManualOnly: «2 · GENERA ELS REBUTS»; the run issues every receipt by hand and makes no remittance 328ms
+clubs-admin:test:      ✓ T-12-32 billingStripe: «2 · GENERA ELS REBUTS I COBRA LES TARGETES», the card KPI, [COBRA LES TARGETES] → 202, the 5 s poll while CHARGING and «impagat (targeta)» 6095ms
+clubs-admin:test:    ✓ E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides (11)
+clubs-admin:test:      ✓ R-12-07: the run's skipped members are not repeated under the incidents; «Omesos de la generació» lists only the others 375ms
+clubs-admin:test:      ✓ T-12-25 / E87: a receipt cancelled by a rollback lists only under CANCELLED, reads «anul·lat · retrocés» and its drawer offers no action but the PDF 326ms
+clubs-admin:test:      ✓ R-12-13 / R-12-18: a withdrawn card reads «sense targeta vàlida» (never NO_PAYMENT_METHOD); [Reintenta amb targeta] → 409 MAX_ATTEMPTS shows the api's attempts 349ms
+clubs-admin:test:      ✓ R-12-20: a refund over what was paid → 422 REFUND_EXCEEDS_PAID inside the refund modal 354ms
+clubs-admin:test:      ✓ R-12-19: 422 CURRENCY_MISMATCH reads inside the manual receipt modal 757ms
+clubs-admin:test:      ✓ R-12-13: the poll stops after two minutes of CHARGING with [Actualitza], which polls again 10926ms
+clubs-admin:test:      ✓ E8-W01 round 2 #3: a CHARGING period starts bounded monitoring when the first run read fails, shows retry and settles on a later poll 5616ms
+clubs-admin:test:    ✓ E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt (7)
+clubs-admin:test:      ✓ R-12-19: a new search drops the chosen member, so the receipt never goes to a member the list no longer shows 849ms
+clubs-admin:test:      ✓ E8-W01 round 2 #2: the manual adjustment search has no ACTIVE filter, shows a LEFT member's display status and creates their receipt 650ms
+clubs-admin:test:      ✓ E8-W01 round 2 #2: 409 MEMBER_ERASED is mapped to the manual receipt's member field 776ms
+clubs-admin:test:      ✓ R-12-19: the api's 400 on a line's member (lines[0].description) sits on that line, and on includeInNextRun under its checkbox, with no second generic alert 814ms
+clubs-admin:test:    ✓ R-12-19 and R-12-26: the manual receipt and the accounting export (2)
+clubs-admin:test:      ✓ R-12-19: [Rebut manual] finds the member, sends the lines in minor units, and the api's numbering blocks the rollback (MANUAL_INVOICE_AFTER) 939ms
+clubs-admin:test: 
+clubs-admin:test:  Test Files  46 passed (46)
+clubs-admin:test:       Tests  701 passed (701)
+clubs-admin:test:    Start at  08:38:15
+clubs-admin:test:    Duration  67.85s (tests 62%, environment 15%, transform 14%, import 6%, setup 3%)
+clubs-admin:test: 
+clubs-admin:test:     Isolate  46 workers spawned · ~2.33s startup each (spawn + environment, per file)
+clubs-admin:test:              at least ~3.97s faster with isolate: false — reuses workers across files instead of one per file
+clubs-admin:test: 
+
+ Tasks:    34 successful, 34 total
+Cached:    18 cached, 34 total
+  Time:    1m21.442s 
+

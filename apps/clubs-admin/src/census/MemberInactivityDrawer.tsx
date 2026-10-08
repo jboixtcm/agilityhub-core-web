@@ -440,7 +440,13 @@ export function MemberInactivityDrawer({ client, initialPeriodId, memberId, onCh
         open={!erased && confirmApprove}
         title={t("admin-census:inactivity.approveConfirmTitle")}
       >
-        <p>{cancelBookings ? t("admin-census:inactivity.approveConfirmCancel") : t("admin-census:inactivity.approveConfirmKeep")}</p>
+        <p>
+          {cancelBookings
+            ? period?.bookingsInside == null
+              ? t("admin-census:inactivity.approveConfirmCancel")
+              : t("admin-census:inactivity.approveConfirmCancelCount", { count: period.bookingsInside })
+            : t("admin-census:inactivity.approveConfirmKeep")}
+        </p>
         <div className="census-record__dialog-actions">
           <Button
             onClick={() => {

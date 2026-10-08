@@ -53,7 +53,10 @@ test.describe("E8-W03 D10 lifecycle drawers", () => {
     const approval = page.getByRole("dialog", { name: "Aprova el període" });
     await approval.getByRole("button", { name: "Aprova" }).click();
     await expect(approval).toBeHidden();
-    await drawer.getByRole("button", { exact: true, name: "Cancel·la" }).click();
+
+    await page.reload();
+    drawer = page.getByRole("dialog", { name: "Inactivitat" });
+    await drawer.getByRole("button", { name: "Denega" }).click();
     await expect(drawer.getByRole("heading", { name: "Nou període d'inactivitat" })).toBeVisible();
     await capture(page, "D10-calaix-inactivitat-nou-1280.png");
 
@@ -63,6 +66,9 @@ test.describe("E8-W03 D10 lifecycle drawers", () => {
     await capture(page, "D10-calaix-baixa-1280.png");
     await drawer.getByLabel("Data d'efecte").fill("2026-12-12");
     await drawer.getByRole("button", { name: "Programa la baixa" }).click();
+    const leaveConfirmation = page.getByRole("dialog", { name: "Programa la baixa" });
+    await leaveConfirmation.getByRole("button", { name: "Programa la baixa" }).click();
+    await expect(leaveConfirmation).toBeHidden();
     await expect(drawer.getByRole("heading", { name: /Baixa prevista el/u })).toBeVisible();
     await capture(page, "D10-baixa-prevista-1280.png");
 

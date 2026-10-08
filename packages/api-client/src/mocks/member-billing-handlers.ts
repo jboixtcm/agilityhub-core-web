@@ -185,7 +185,8 @@ export const memberBillingHandlers = [
     const normalizedMemberId = lifecycleMemberId(body.memberId);
     const existing = adminPeriods.find((period) => period.member.id === normalizedMemberId && ["REQUESTED", "APPROVED", "ACTIVE"].includes(period.state));
     if (existing !== undefined) return error("INACTIVITY_OVERLAP", 409, { hint: "EXTEND", periodId: existing.id });
-    const member = censusRecordState.memberOverview.member;
+    const member = lifecycleMemberOverview(body.memberId)?.member;
+    if (member === undefined) return error("NOT_FOUND", 404);
     const created: components["schemas"]["InactivityPeriod"] = {
       cancelledBookings: [],
       comments: body.comments ?? null,
@@ -383,7 +384,7 @@ export const memberBillingHandlers = [
     const created: components["schemas"]["LeaveRequest"] = {
       ...seed,
       comment: body.note ?? null,
-      decision: { at: "2026-10-05T10:00:00Z", byAccountId: "account-admin", decision: "APPROVED", effectiveDate: body.effectiveDate, note: body.note ?? null },
+      decision: { at: "2026-10-05T10:00:00Z", byAccountId: "63000000-0000-4000-8000-000000000099", decision: "APPROVED", effectiveDate: body.effectiveDate, note: body.note ?? null },
       cancelledBookings: [{ id: "64000000-0000-4000-8000-000000000004", sessionDate: body.effectiveDate, type: "CLASS" }],
       id: `65000000-0000-4000-8000-${String(adminLeaves.length + 1).padStart(12, "0")}`,
       member: { fullName: member.fullName, id: normalizedId, leaveDate: body.effectiveDate, leftAt: null, leftReason: null, ...(member.memberNumber === undefined ? {} : { memberNumber: member.memberNumber }), status: "ACTIVE" },

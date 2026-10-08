@@ -57,6 +57,9 @@ export const MEMBER_LIST_FIELDS = [
   "phones",
   "address",
   "status",
+  "leaveSource",
+  "inactivityUntil",
+  "hasPendingRequest",
 ] as const;
 
 /** `x-fields` of `GET /dogs` in the adopted snapshot (api E5-T22). */

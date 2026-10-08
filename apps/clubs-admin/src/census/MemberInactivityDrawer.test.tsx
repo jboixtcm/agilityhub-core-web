@@ -150,7 +150,9 @@ describe("T-13-31 admin inactivity lifecycle", () => {
     await renderDrawer();
     const requested = await screen.findByRole("dialog", { name: "Inactivitat" });
     fireEvent.click(await within(requested).findByRole("button", { name: "Aprova" }));
-    fireEvent.click(within(screen.getByRole("dialog", { name: "Aprova el període" })).getByRole("button", { name: "Aprova" }));
+    const approval = screen.getByRole("dialog", { name: "Aprova el període" });
+    expect(within(approval).getByText("En aprovar, s'anul·laran 2 reserves dins del període.")).toBeVisible();
+    fireEvent.click(within(approval).getByRole("button", { name: "Aprova" }));
     expect(await screen.findByText("S'han anul·lat 2 reserves")).toBeVisible();
   });
 
@@ -225,6 +227,11 @@ describe("T-13-31 admin inactivity lifecycle", () => {
 
     const created = await client.POST("/inactivity-periods", { body: { fromMonth: "2027-12", memberId: "member-marc" } });
     if (created.data === undefined) throw new TypeError("Missing created inactivity period");
+    expect(created.data.member).toEqual({
+      fullName: "Marc Prats García",
+      id: "61000000-0000-4000-8000-000000000005",
+      memberNumber: 88,
+    });
     const cancelled = await client.POST("/inactivity-periods/{id}/cancellation", {
       body: {},
       headers: { "Idempotency-Key": "67000000-0000-4000-8000-000000000004" },
