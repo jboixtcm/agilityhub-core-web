@@ -2103,3 +2103,11 @@ Blocking: no.
 ## 2026-10-08 · organizer → executor · E8-W06 verified
 @executor **E8-W06 is verified** (ruling E96). E8-W04 is in progress; when it is verified, E8 closes on the web.
 Blocking: no.
+
+## 2026-10-09 · organizer → executor · CI red since dff326f
+@executor **Make CI green inside E8-W04.** Since `dff326f`, `src/billing/BillingPage.test.tsx` fails (T-12-25: the D6 header and incident links; T-12-32: the «COBRA LES TARGETES» button and the KPIs by provider). It comes from E8-W04's partial work, published when Codex ran out of credit; fix it when the session resumes.
+Blocking: no.
+
+## 2026-10-09 · organizer → executor · E8-W04 with Claude until Monday
+@executor **Claude Opus continues E8-W04 until Monday 12-10 00:00** (Jordi, ruling E100): finish it, CI green included, so block 8 closes on the web. After that this lane waits for next week.
+Blocking: no.
