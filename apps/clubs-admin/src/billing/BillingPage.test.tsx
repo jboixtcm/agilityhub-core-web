@@ -19,6 +19,7 @@ import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { BillingPage } from "./BillingPage";
+import { ExportJobsProvider } from "../audit/ExportsDrawer";
 import { invoiceActions } from "./InvoiceDrawer";
 import { invoiceStatusView } from "./shared";
 
@@ -99,7 +100,9 @@ async function renderPage({
   render(
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={branding}>
-        <BillingPage client={client()} onNavigate={onNavigate} />
+        <ExportJobsProvider client={client()}>
+          <BillingPage client={client()} onNavigate={onNavigate} />
+        </ExportJobsProvider>
       </BrandingProvider>
     </I18nextProvider>,
   );
@@ -1243,6 +1246,9 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     await waitFor(() => {
       expect(screen.queryByRole("dialog")).toBeNull();
     });
+    const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
+    expect(drawer).toHaveTextContent("Preparant l'exportació…");
+    expect(drawer).toHaveTextContent(/accounting|facturacio/iu);
     const [exported] = requests("GET", "/billing/exports");
     expect(exported?.url.searchParams.get("format")).toBe("xlsx");
     expect(saved).toEqual([]);

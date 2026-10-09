@@ -184,6 +184,8 @@ describe("T-03-38 D5 universal member list", () => {
       target: { value: systemView.value },
     });
     expect(screen.queryByRole("button", { name: "Elimina la vista" })).not.toBeInTheDocument();
+    expect(await screen.findByText("Filtre (1): Estat visible = «baixa prevista»")).toBeVisible();
+    expect(screen.queryByText(/LEAVE_SCHEDULED/u)).not.toBeInTheDocument();
     expect(await screen.findByRole("columnheader", { name: "Origen de la baixa" })).toBeVisible();
     expect(memberRequests.some((fields) => fields?.split(",").includes("leaveSource") === true)).toBe(true);
     expect(memberRequests.some((fields) => fields?.split(",").includes("inactivityUntil") === true)).toBe(true);

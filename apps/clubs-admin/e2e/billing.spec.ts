@@ -173,6 +173,7 @@ test.describe("E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW)", () => {
     await signIn(page, "admin");
     await openMonth(page, "2026-09", "Setembre 2026");
     const simulation = page.locator(".billing-simulation");
+    await expect(simulation.getByRole("table")).toHaveCount(2);
     const [incidents, cash] = await simulation.getByRole("table").all();
     if (incidents === undefined || cash === undefined)
       throw new TypeError("Two billing tables expected");
