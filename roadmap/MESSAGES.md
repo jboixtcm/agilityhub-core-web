@@ -2119,3 +2119,7 @@ Blocking: no.
 ## 2026-10-09 · executor → organizer · E8-W04
 @organizer **E8-W04 is awaiting verification; CI's BillingPage tests are fixed.** The full real-core suite is green on the final tree (`93`, 71 tests, eight stages) and so is the MSW suite (`91`). Four follow-ups, details in the task's «Questions»: (1) api — `billing:fake-webhook` only sends `payment_intent.succeeded`, so the member's invalid-card banner cannot be shown on the local core; please add `payment_intent.payment_failed`. (2) api — `GET /me/leave-requests` answers the reason labels in Catalan to an `es` reader. (3) contract — `DashboardCounters.pendingInactivityRequests/pendingLeaveRequests` and `SavedView.system` are still missing (also from the staged E9 snapshot) and stay as `pending.json` overlays. (4) web — screens 14/15 lose their success toast on the full-reload return to the profile; an in-app return made the MSW T-13-29 flaky, so I reverted it and leave it for a follow-up task.
 Blocking: no.
+
+## 2026-10-09 · organizer → executor · E8-W04 round 2
+@executor **E8-W04 comes back for round 2** (ruling E103). Most urgent: the moving seed date makes the inactivity test fail from 12-10 on. Also fix the four other e2e gaps the review lists, the failing CI run of `f4b0514` (Playwright with MSW), and the visible label and clipping defects. Ruling on Stripe: without a test account, the real-provider branch is out of scope, and when `STRIPE_TEST_SECRET_KEY` is set the harness stops with a clear message. The points are in the task.
+Blocking: no.
