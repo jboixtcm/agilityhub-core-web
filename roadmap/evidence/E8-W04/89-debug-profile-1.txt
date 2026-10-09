@@ -1,0 +1,51 @@
+http://127.0.0.1:4173/perfil
+Club Agility Cànic
+Idioma
+Català
+Castellà
+Anglès
+El meu perfil
+BR
+Biel Roca
+Toca el teu nom per veure i editar totes les teves dades
+Els meus gossos
+Aprèn amb AgilityHub
+Canvia la contrasenya
+AVISOS
+App
+Correu
+Operativa (reserves i canvis que has fet tu)
+Comunicats personals per a tu
+Canvis en reserves que has fet (fets pel club)
++SMS
+Comunicats del club
+Recordatori de classe
+Mai
+1 h abans
+2 h abans
+4 h abans
+6 h abans
+12 h abans
+24 h abans
+Vull rebre notificacions al mòbil quan hi hagi comunicats del club
+
+Activa les notificacions al navegador per rebre-les al mòbil
+
+Idioma
+Català
+Castellà
+Anglès
+Els avisos nous et arribaran en aquest idioma
+Rebuts
+Sol·licitar període d'inactivitat
+pendent d'aprovació · Octubre 2026
+Sol·licitar la baixa
+baixa sol·licitada el 11/08/2026
+Tanca la sessió
+Inici
+Reservar
+Entrenaments
+Avui
+Perfil
+Info
+La sol·licitud s'ha enviat.

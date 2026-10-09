@@ -6,7 +6,7 @@
   "retry": "Volver a intentarlo",
   "empty": "Todavía no tienes ningún recibo.",
   "familyGroup": "Grupo familiar",
-  "list": { "more": "Cargar más", "receipt": "Recibo {number}", "refunded": "reembolsado" },
+  "list": { "more": "Cargar más", "receipt": "Recibo {number}" },
   "detail": {
     "title": "Detalle del recibo",
     "lines": "Conceptos",

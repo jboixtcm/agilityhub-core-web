@@ -131,7 +131,6 @@
   "status": {
     "charging": "cobrant",
     "pendingManual": "pendent · marca cobrat",
-    "refunded": "reemborsat",
     "failedManual": "impagat (manual)",
     "failedCard": "impagat (targeta)",
     "rolledBack": "anul·lat · retrocés"

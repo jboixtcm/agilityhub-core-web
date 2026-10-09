@@ -131,7 +131,6 @@
   "status": {
     "charging": "cobrando",
     "pendingManual": "pendiente · marcar cobrado",
-    "refunded": "reembolsado",
     "failedManual": "impagado (manual)",
     "failedCard": "impagado (tarjeta)",
     "rolledBack": "anulado · retroceso"

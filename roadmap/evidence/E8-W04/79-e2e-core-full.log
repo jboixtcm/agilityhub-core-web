@@ -1,0 +1,716 @@
+heavy.sh: 16:07 waiting for the host lock, held by: 15:30 agilityhub-core-api-c: ./mvnw -q -Pmutation -DtargetClasses=com.agilityhub.core.clubs.bookings.application.BookingEvents,com.agilityhub.core.clubs.bookings.application.BookingEvents$*,com.agilityhub.core.clubs.bookings.application.BookingNotificationFacts,com.agilityhub.core.clubs.bookings.application.BookingNotificationFacts$*,com.agilityhub.core.clubs.bookings.application.BookingOwners,com.agilityhub.core.clubs.bookings.application.BookingOwners$*,com.agilityhub.core.clubs.bookings.application.BookingQueryService,com.agilityhub.core.clubs.bookings.application.BookingQueryService$*,com.agilityhub.core.clubs.bookings.application.BookingTransactions,com.agilityhub.core.clubs.bookings.application.BookingTransactions$*,com.agilityhub.core.clubs.bookings.application.BookingViews,com.agilityhub.core.clubs.bookings.application.BookingViews$*,com.agilityhub.core.clubs.bookings.application.BookingsAutoConfiguration,com.agilityhub.core.clubs.bookings.application.BookingsAutoConfiguration$*,com.agilityhub.core.clubs.bookings.application.CensusBookingCancellations,com.agilityhub.core.clubs.bookings.application.CensusBookingCancellations$*,com.agilityhub.core.clubs.bookings.application.CensusInactivityAdapter,com.agilityhub.core.clubs.bookings.application.CensusInactivityAdapter$*,com.agilityhub.core.clubs.bookings.application.ClaimNoShowCommand,com.agilityhub.core.clubs.bookings.application.ClaimNoShowCommand$*,com.agilityhub.core.clubs.bookings.application.ClassBookingsAdapter,com.agilityhub.core.clubs.bookings.application.ClassBookingsAdapter$*,com.agilityhub.core.clubs.bookings.application.ClassReminders,com.agilityhub.core.clubs.bookings.application.ClassReminders$*,com.agilityhub.core.clubs.bookings.application.DemoAttendanceSeeder,com.agilityhub.core.clubs.bookings.application.DemoAttendanceSeeder$*,com.agilityhub.core.clubs.bookings.application.DemoBillingBookingsSeeder,com.agilityhub.core.clubs.bookings.application.DemoBillingBookingsSeeder$*,com.agilityhub.core.clubs.bookings.application.DemoBookingSeeder,com.agilityhub.core.clubs.bookings.application.DemoBookingSeeder$*,com.agilityhub.core.clubs.bookings.application.DemoMembers,com.agilityhub.core.clubs.bookings.application.DemoMembers$*,com.agilityhub.core.clubs.bookings.application.DemoScenarioSeeder,com.agilityhub.core.clubs.bookings.application.DemoScenarioSeeder$*,com.agilityhub.core.clubs.bookings.application.HistoryQuery,com.agilityhub.core.clubs.bookings.application.HistoryQuery$* -DtargetTests=com.agilityhub.core.cli.*,com.agilityhub.core.clubs.*,com.agilityhub.core.configuration.*,com.agilityhub.core.courses.*,com.agilityhub.core.identity.*,com.agilityhub.core.migration.*,com.agilityhub.core.payments.*,com.agilityhub.core.platform.*,com.agilityhub.core.shared.api.*,com.agilityhub.core.shared.application.*,com.agilityhub.core.shared.persistence.*,com.agilityhub.core.shared.domain.ErrorCatalogContractTest,com.agilityhub.core.shared.domain.LocalizedTextTest,com.agilityhub.core.shared.domain.MoneyTest,com.agilityhub.core.support.* -DmutationUnitSize=50 -DreportsDirectory=target/pit-reports-batch10 test-compile org.pitest:pitest-maven:mutationCoverage
+heavy.sh: the lock is still held after 45 min by: 15:30 agilityhub-core-api-c: ./mvnw -q -Pmutation -DtargetClasses=com.agilityhub.core.clubs.bookings.application.BookingEvents,com.agilityhub.core.clubs.bookings.application.BookingEvents$*,com.agilityhub.core.clubs.bookings.application.BookingNotificationFacts,com.agilityhub.core.clubs.bookings.application.BookingNotificationFacts$*,com.agilityhub.core.clubs.bookings.application.BookingOwners,com.agilityhub.core.clubs.bookings.application.BookingOwners$*,com.agilityhub.core.clubs.bookings.application.BookingQueryService,com.agilityhub.core.clubs.bookings.application.BookingQueryService$*,com.agilityhub.core.clubs.bookings.application.BookingTransactions,com.agilityhub.core.clubs.bookings.application.BookingTransactions$*,com.agilityhub.core.clubs.bookings.application.BookingViews,com.agilityhub.core.clubs.bookings.application.BookingViews$*,com.agilityhub.core.clubs.bookings.application.BookingsAutoConfiguration,com.agilityhub.core.clubs.bookings.application.BookingsAutoConfiguration$*,com.agilityhub.core.clubs.bookings.application.CensusBookingCancellations,com.agilityhub.core.clubs.bookings.application.CensusBookingCancellations$*,com.agilityhub.core.clubs.bookings.application.CensusInactivityAdapter,com.agilityhub.core.clubs.bookings.application.CensusInactivityAdapter$*,com.agilityhub.core.clubs.bookings.application.ClaimNoShowCommand,com.agilityhub.core.clubs.bookings.application.ClaimNoShowCommand$*,com.agilityhub.core.clubs.bookings.application.ClassBookingsAdapter,com.agilityhub.core.clubs.bookings.application.ClassBookingsAdapter$*,com.agilityhub.core.clubs.bookings.application.ClassReminders,com.agilityhub.core.clubs.bookings.application.ClassReminders$*,com.agilityhub.core.clubs.bookings.application.DemoAttendanceSeeder,com.agilityhub.core.clubs.bookings.application.DemoAttendanceSeeder$*,com.agilityhub.core.clubs.bookings.application.DemoBillingBookingsSeeder,com.agilityhub.core.clubs.bookings.application.DemoBillingBookingsSeeder$*,com.agilityhub.core.clubs.bookings.application.DemoBookingSeeder,com.agilityhub.core.clubs.bookings.application.DemoBookingSeeder$*,com.agilityhub.core.clubs.bookings.application.DemoMembers,com.agilityhub.core.clubs.bookings.application.DemoMembers$*,com.agilityhub.core.clubs.bookings.application.DemoScenarioSeeder,com.agilityhub.core.clubs.bookings.application.DemoScenarioSeeder$*,com.agilityhub.core.clubs.bookings.application.HistoryQuery,com.agilityhub.core.clubs.bookings.application.HistoryQuery$* -DtargetTests=com.agilityhub.core.cli.*,com.agilityhub.core.clubs.*,com.agilityhub.core.configuration.*,com.agilityhub.core.courses.*,com.agilityhub.core.identity.*,com.agilityhub.core.migration.*,com.agilityhub.core.payments.*,com.agilityhub.core.platform.*,com.agilityhub.core.shared.api.*,com.agilityhub.core.shared.application.*,com.agilityhub.core.shared.persistence.*,com.agilityhub.core.shared.domain.ErrorCatalogContractTest,com.agilityhub.core.shared.domain.LocalizedTextTest,com.agilityhub.core.shared.domain.MoneyTest,com.agilityhub.core.support.* -DmutationUnitSize=50 -DreportsDirectory=target/pit-reports-batch10 test-compile org.pitest:pitest-maven:mutationCoverage
+heavy.sh: running WITHOUT the lock - if this run fails on timeouts, say so in the report
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E8-W04
+
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-09T00:19:48.527835998Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:2b342f5af3e3ffd77f5c08f5b5c762a2bacf9332973c0a196d22d066d634e779]
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+E4_WEEK_START=2026-10-05 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-12 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-10-19 (the second club-local Monday after today, Europe/Madrid)
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W04/demo-canic.yaml (311 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W04/demo-fifo.yaml (62 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-e8-w04_default Creating 
+ Volume agilityhub-e8-w04_export-files Creating 
+ Network agilityhub-e8-w04_default Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_export-files Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Volume agilityhub-e8-w04_export-files Created 
+ Volume agilityhub-e8-w04_export-files Created 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Network agilityhub-e8-w04_default Created 
+ Network agilityhub-e8-w04_default Created 
+ Container agilityhub-e8-w04-mongo-1 Creating 
+ Container agilityhub-e8-w04-mongo-1 Created 
+ Container agilityhub-e8-w04-seed-1 Creating 
+ Container agilityhub-e8-w04-seed-1 Created 
+ Container agilityhub-e8-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e8-w04-activate-demo-club-1 Created 
+ Container agilityhub-e8-w04-core-1 Creating 
+ Container agilityhub-e8-w04-core-1 Created 
+ Container agilityhub-e8-w04-mongo-1 Starting 
+ Container agilityhub-e8-w04-mongo-1 Started 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-seed-1 Starting 
+ Container agilityhub-e8-w04-seed-1 Started 
+ Container agilityhub-e8-w04-seed-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Exited 
+ Container agilityhub-e8-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Started 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-core-1 Starting 
+ Container agilityhub-e8-w04-core-1 Started 
+ Container agilityhub-e8-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w04-core-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Exited 
+ Container agilityhub-e8-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W04/seed-e1-e2.log (191 lines)
+ Container agilityhub-e8-w04-playwright-run-c82f2df9970c Creating 
+ Container agilityhub-e8-w04-playwright-run-c82f2df9970c Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:32) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +852
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 852, reused 382, downloaded 0, added 0
+Progress: resolved 852, reused 767, downloaded 0, added 0
+Progress: resolved 852, reused 850, downloaded 0, added 180
+Progress: resolved 852, reused 851, downloaded 0, added 408
+Progress: resolved 852, reused 851, downloaded 0, added 542
+Progress: resolved 852, reused 852, downloaded 0, added 734
+Progress: resolved 852, reused 852, downloaded 0, added 831
+Progress: resolved 852, reused 852, downloaded 0, added 841
+Progress: resolved 852, reused 852, downloaded 0, added 850
+Progress: resolved 852, reused 852, downloaded 0, added 851
+Progress: resolved 852, reused 852, downloaded 0, added 852, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 11.4s using pnpm v9.15.9
+[WebServer] (node:115) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:195) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:293) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:391) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:486) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 12 tests using 1 worker
+
+[1/12] e2e/core/e1-core.spec.ts:157:5 › T-01-18 password login reaches the seeded account
+[2/12] e2e/core/e1-core.spec.ts:173:5 › T-01-21 seeded administrator opens the real backoffice
+  1) e2e/core/e1-core.spec.ts:173:5 › T-01-21 seeded administrator opens the real backoffice ───────
+
+    Error: page.goto: Page crashed
+    Call log:
+      - navigating to "http://127.0.0.1:4174/entrar", waiting until "load"
+
+
+      174 |   const context = await desktopContext(browser);
+      175 |   const page = await context.newPage();
+    > 176 |   await page.goto(`${adminUrl}/entrar`);
+          |              ^
+      177 |   await expect(page.getByRole("heading", { name: "Accés al backoffice" })).toBeVisible();
+      178 |   await screenshot(page, "admin-entrar-core-1280.png");
+      179 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+        at /work/e2e/core/e1-core.spec.ts:176:14
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    (no POST /oauth2/token in this test)
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e1-core-T-01-21-seeded-adm-c20d5-r-opens-the-real-backoffice/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e1-core-T-01-21-seeded-adm-c20d5-r-opens-the-real-backoffice/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e1-core-T-01-21-seeded-adm-c20d5-r-opens-the-real-backoffice/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/12] e2e/core/e1-core.spec.ts:189:5 › T-01-20 club session is restored by the core
+[4/12] e2e/core/e1-core.spec.ts:212:5 › T-01-19 magic link is delivered and exchanged end to end
+[5/12] e2e/core/e1-core.spec.ts:234:5 › T-01-26 published seed enters without pending onboarding
+[6/12] e2e/core/e1-core.spec.ts:244:5 › T-01-22 apps/id resumes a real authorize flow through oauth2/session
+[7/12] e2e/core/e1-core.spec.ts:334:5 › T-02-07 E3-W12 step 5 · the public footer of 01 shows /branding's identity and registered office (S02 R-02-02)
+[8/12] e2e/core/e2-core.spec.ts:206:5 › T-03-42 real census flow, booking block and member profile
+  2) e2e/core/e2-core.spec.ts:206:5 › T-03-42 real census flow, booking block and member profile ───
+
+    Error: page.goto: Page crashed
+    Call log:
+      - navigating to "http://127.0.0.1:4174/entrar", waiting until "load"
+
+
+      66 |
+      67 | async function loginAdmin(page: Page): Promise<void> {
+    > 68 |   await page.goto(`${adminUrl}/entrar`);
+         |              ^
+      69 |   await page.getByLabel("Correu electrònic").fill("admin@example.test");
+      70 |   await revealPassword(page);
+      71 |   await page.getByLabel("Contrasenya").fill(corePassword);
+        at loginAdmin (/work/e2e/core/e2-core.spec.ts:68:14)
+        at /work/e2e/core/e2-core.spec.ts:215:9
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    (no POST /oauth2/token in this test)
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e2-core-T-03-42-real-censu-56119-ng-block-and-member-profile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e2-core-T-03-42-real-censu-56119-ng-block-and-member-profile/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e2-core-T-03-42-real-censu-56119-ng-block-and-member-profile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[9/12] e2e/core/e2-core.spec.ts:394:5 › T-05-22/T-05-25 real catalog create, edit and deactivate round trips
+[10/12] e2e/core/e2-core.spec.ts:479:5 › T-02-13/T-14-26 real parameter history, export and audit
+[11/12] e2e/core/e2-core.spec.ts:566:5 › T-05-CP-07 real club page edit renders styled Markdown on screen 30
+[12/12] e2e/core/e2-core.spec.ts:619:5 › T-03-40 E3-W12 step 4 · screen 13 reads GET /me/dogs only: the seed's document types, «Nivell» per dog, no /parameters (S03 §6)
+  2 failed
+    e2e/core/e1-core.spec.ts:173:5 › T-01-21 seeded administrator opens the real backoffice ────────
+    e2e/core/e2-core.spec.ts:206:5 › T-03-42 real census flow, booking block and member profile ────
+  9 did not run
+  1 passed (53.2s)
+
+ Volume agilityhub-e8-w04_export-files Creating 
+ Network agilityhub-e8-w04_default Creating 
+ Network agilityhub-e8-w04_default Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Volume agilityhub-e8-w04_export-files Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Volume agilityhub-e8-w04_export-files Created 
+ Volume agilityhub-e8-w04_export-files Created 
+ Network agilityhub-e8-w04_default Created 
+ Network agilityhub-e8-w04_default Created 
+ Container agilityhub-e8-w04-mongo-1 Creating 
+ Container agilityhub-e8-w04-mongo-1 Created 
+ Container agilityhub-e8-w04-seed-1 Creating 
+ Container agilityhub-e8-w04-seed-1 Created 
+ Container agilityhub-e8-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e8-w04-activate-demo-club-1 Created 
+ Container agilityhub-e8-w04-core-1 Creating 
+ Container agilityhub-e8-w04-core-1 Created 
+ Container agilityhub-e8-w04-mongo-1 Starting 
+ Container agilityhub-e8-w04-mongo-1 Started 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-seed-1 Starting 
+ Container agilityhub-e8-w04-seed-1 Started 
+ Container agilityhub-e8-w04-seed-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Exited 
+ Container agilityhub-e8-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Started 
+ Container agilityhub-e8-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-core-1 Starting 
+ Container agilityhub-e8-w04-core-1 Started 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Waiting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w04-core-1 Waiting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w04-seed-1 Exited 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W04/seed-e4w16.log (191 lines)
+ Container agilityhub-e8-w04-playwright-run-8d9ac15e3f6c Creating 
+ Container agilityhub-e8-w04-playwright-run-8d9ac15e3f6c Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:34) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +852
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 852, reused 546, downloaded 0, added 0
+Progress: resolved 852, reused 850, downloaded 0, added 98
+Progress: resolved 852, reused 851, downloaded 0, added 329
+Progress: resolved 852, reused 851, downloaded 0, added 545
+Progress: resolved 852, reused 852, downloaded 0, added 652
+Progress: resolved 852, reused 852, downloaded 0, added 818
+Progress: resolved 852, reused 852, downloaded 0, added 844
+Progress: resolved 852, reused 852, downloaded 0, added 851
+Progress: resolved 852, reused 852, downloaded 0, added 852
+Progress: resolved 852, reused 852, downloaded 0, added 852, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 9.9s using pnpm v9.15.9
+
+[WebServer] (node:117) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:197) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:295) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:393) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:488) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 5 tests using 1 worker
+
+[1/5] e2e/core/e4w16-core.spec.ts:239:5 › T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through
+  1) e2e/core/e4w16-core.spec.ts:239:5 › T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through 
+
+    Error: Invalid InterceptionId.
+
+    Error: page.waitForResponse: Test ended.
+
+      219 | /** 13 after a full-page load: the restore's refresh, then `GET /me/dogs`. */
+      220 | async function openMyDogs(member: Page): Promise<MeDogsAnswer> {
+    > 221 |   const refresh = member.waitForResponse(
+          |                          ^
+      222 |     (response) =>
+      223 |       response.url().endsWith("/oauth2/token") &&
+      224 |       new URLSearchParams(response.request().postData() ?? "").get("grant_type") ===
+        at openMyDogs (/work/e2e/core/e4w16-core.spec.ts:221:26)
+        at /work/e2e/core/e4w16-core.spec.ts:306:22
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-09T14:56:41.565Z grant_type=refresh_token status=400 cookie=none context=w0c1 page=127.0.0.1:4174/entrar started=2026-10-09T14:56:41.533Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="T-03-40 E4-...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e4w16-core-T-03-40-E4-W16--57da2-he-done-ones-struck-through/error-context.md
+
+    Error Context: test-results/core-e1/e4w16-core-T-03-40-E4-W16--57da2-he-done-ones-struck-through/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e4w16-core-T-03-40-E4-W16--57da2-he-done-ones-struck-through/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e4w16-core-T-03-40-E4-W16--57da2-he-done-ones-struck-through/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/5] e2e/core/e4w16-core.spec.ts:360:5 › T-01-19 E4-W16 step 10 · a RESET link sets the new password once without `current`
+[3/5] e2e/core/e4w16-core.spec.ts:442:5 › T-01-11 E4-W16 step 1 · «Entra com l'abonat» opens the club app through the one-time code, once; E5-W05 step 24 · its banner names the member record, not the account
+[4/5] e2e/core/e4w16-core.spec.ts:604:5 › T-14-26 E4-W16 step 5 · a READY export downloads from the drawer through GET /exports/{id} and the bearer
+[5/5] e2e/core/e4w16-core.spec.ts:659:5 › T-03-34 (front) E4-W16 step 7 · D10 keeps the block, «Inactivitat», «Baixa» and the audit whatever BILLING says
+  1 failed
+    e2e/core/e4w16-core.spec.ts:239:5 › T-03-40 E4-W16 step 11 · screen 13 lists the task rows, the done ones struck through 
+  4 did not run
+
+ Network agilityhub-e8-w04_default Creating 
+ Network agilityhub-e8-w04_default Creating 
+ Volume agilityhub-e8-w04_export-files Creating 
+ Volume agilityhub-e8-w04_export-files Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_export-files Created 
+ Volume agilityhub-e8-w04_export-files Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Network agilityhub-e8-w04_default Created 
+ Network agilityhub-e8-w04_default Created 
+ Container agilityhub-e8-w04-mongo-1 Creating 
+ Container agilityhub-e8-w04-mongo-1 Created 
+ Container agilityhub-e8-w04-seed-1 Creating 
+ Container agilityhub-e8-w04-seed-1 Created 
+ Container agilityhub-e8-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e8-w04-activate-demo-club-1 Created 
+ Container agilityhub-e8-w04-core-1 Creating 
+ Container agilityhub-e8-w04-core-1 Created 
+ Container agilityhub-e8-w04-mongo-1 Starting 
+ Container agilityhub-e8-w04-mongo-1 Started 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-seed-1 Starting 
+ Container agilityhub-e8-w04-seed-1 Started 
+ Container agilityhub-e8-w04-seed-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Exited 
+ Container agilityhub-e8-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Started 
+ Container agilityhub-e8-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-core-1 Starting 
+ Container agilityhub-e8-w04-core-1 Started 
+ Container agilityhub-e8-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w04-core-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Exited 
+ Container agilityhub-e8-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W04/seed-e3.log (191 lines)
+ Container agilityhub-e8-w04-playwright-run-8dd061a6c976 Creating 
+ Container agilityhub-e8-w04-playwright-run-8dd061a6c976 Created 
+tar: ./.roadmap-ci.json.tmp: File removed before we read it
+tar: .: file changed as we read it
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +852
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 852, reused 487, downloaded 0, added 0
+Progress: resolved 852, reused 845, downloaded 0, added 24
+Progress: resolved 852, reused 851, downloaded 0, added 251
+Progress: resolved 852, reused 851, downloaded 0, added 435
+Progress: resolved 852, reused 852, downloaded 0, added 578
+Progress: resolved 852, reused 852, downloaded 0, added 784
+Progress: resolved 852, reused 852, downloaded 0, added 834
+Progress: resolved 852, reused 852, downloaded 0, added 841
+Progress: resolved 852, reused 852, downloaded 0, added 850
+Progress: resolved 852, reused 852, downloaded 0, added 851
+Progress: resolved 852, reused 852, downloaded 0, added 852
+Progress: resolved 852, reused 852, downloaded 0, added 852, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 12.3s using pnpm v9.15.9
+
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 5 tests using 1 worker
+
+[1/5] e2e/core/e3-signup.spec.ts:721:5 › T-02-07 E3-W12 step 5 · the signup's public footer shows /branding's identity and registered office (S02 R-02-02)
+[2/5] e2e/core/e3-signup.spec.ts:737:5 › T-04-34 public signup is validated and enters through the N-02 welcome link
+  1) e2e/core/e3-signup.spec.ts:737:5 › T-04-34 public signup is validated and enters through the N-02 welcome link 
+
+    Error: page.evaluate: Target crashed 
+
+      334 |
+      335 | async function navigateSpa(page: Page, path: string): Promise<void> {
+    > 336 |   await page.evaluate((nextPath) => {
+          |              ^
+      337 |     window.history.pushState(null, "", nextPath);
+      338 |     window.dispatchEvent(new PopStateEvent("popstate"));
+      339 |   }, path);
+        at navigateSpa (/work/e2e/core/e3-signup.spec.ts:336:14)
+        at adminApi (/work/e2e/core/e3-signup.spec.ts:251:9)
+        at /work/e2e/core/e3-signup.spec.ts:989:33
+
+    Error: page.waitForRequest: Test ended.
+
+      246 | /** The admin's bearer and the api base, read from the request D11 makes when it mounts. */
+      247 | async function adminApi(page: Page): Promise<{ authorization: string; base: string }> {
+    > 248 |   const request = page.waitForRequest(
+          |                        ^
+      249 |     (candidate) => candidate.url().endsWith("/api/v1/parameters") && candidate.method() === "GET",
+      250 |   );
+      251 |   await navigateSpa(page, "/parametres");
+        at adminApi (/work/e2e/core/e3-signup.spec.ts:248:24)
+        at /work/e2e/core/e3-signup.spec.ts:989:33
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-09T15:00:35.323Z grant_type=refresh_token status=400 cookie=none context=w0c2 page=127.0.0.1:4173/apuntat-hi started=2026-10-09T15:00:35.317Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="T-04-34...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e3-signup-T-04-34-public-s-a9ba9-rough-the-N-02-welcome-link/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e3-signup-T-04-34-public-s-a9ba9-rough-the-N-02-welcome-link/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e3-signup-T-04-34-public-s-a9ba9-rough-the-N-02-welcome-link/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/5] e2e/core/e3-signup.spec.ts:2085:5 › T-04-34 rejected signup delivers N-03
+[4/5] e2e/core/e3-signup.spec.ts:2092:5 › T-04-34 active member adds a dog and the club validates it
+[5/5] e2e/core/e3-signup.spec.ts:2096:5 › T-04-34 signup.enabled=false shows only the configured closed text
+  1 failed
+    e2e/core/e3-signup.spec.ts:737:5 › T-04-34 public signup is validated and enters through the N-02 welcome link 
+  3 did not run
+  1 passed (1.9m)
+
+{"account":true,"missing":"N-37 recipient.accountId, APP DELIVERED, OPEN_DOG, Neret E3","stored":[{"action":null,"appDelivered":false,"code":"N-02","deliveries":[{"channel":"EMAIL","status":"SENT"}],"flat":null,"recipient":["accountId","email"],"variables":[]},{"action":null,"appDelivered":true,"code":"N-02","deliveries":[{"channel":"APP","status":"DELIVERED"}],"flat":null,"recipient":["accountId","displayName","memberId"],"variables":["audience","club_name","dog_name","dog_name_article","gender","member_first_name","member_last_names","member_name"]}]}
+ Network agilityhub-e8-w04_default Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Network agilityhub-e8-w04_default Creating 
+ Volume agilityhub-e8-w04_export-files Creating 
+ Volume agilityhub-e8-w04_export-files Creating 
+ Volume agilityhub-e8-w04_export-files Created 
+ Volume agilityhub-e8-w04_export-files Created 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Network agilityhub-e8-w04_default Created 
+ Network agilityhub-e8-w04_default Created 
+ Container agilityhub-e8-w04-mongo-1 Creating 
+ Container agilityhub-e8-w04-mongo-1 Created 
+ Container agilityhub-e8-w04-seed-1 Creating 
+ Container agilityhub-e8-w04-seed-1 Created 
+ Container agilityhub-e8-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e8-w04-activate-demo-club-1 Created 
+ Container agilityhub-e8-w04-core-1 Creating 
+ Container agilityhub-e8-w04-core-1 Created 
+ Container agilityhub-e8-w04-mongo-1 Starting 
+ Container agilityhub-e8-w04-mongo-1 Started 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-seed-1 Starting 
+ Container agilityhub-e8-w04-seed-1 Started 
+ Container agilityhub-e8-w04-seed-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Exited 
+ Container agilityhub-e8-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Started 
+ Container agilityhub-e8-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-core-1 Starting 
+ Container agilityhub-e8-w04-core-1 Started 
+ Container agilityhub-e8-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w04-core-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Exited 
+ Container agilityhub-e8-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W04/seed-e4.log (191 lines)
+ Container agilityhub-e8-w04-playwright-run-4ca6d6b8beda Creating 
+ Container agilityhub-e8-w04-playwright-run-4ca6d6b8beda Created 
+tar: .: file changed as we read it
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +852
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 852, reused 326, downloaded 0, added 0
+Progress: resolved 852, reused 683, downloaded 0, added 0
+Progress: resolved 852, reused 849, downloaded 0, added 76
+Progress: resolved 852, reused 851, downloaded 0, added 302
+Progress: resolved 852, reused 851, downloaded 0, added 419
+Progress: resolved 852, reused 851, downloaded 0, added 530
+Progress: resolved 852, reused 852, downloaded 0, added 620
+Progress: resolved 852, reused 852, downloaded 0, added 778
+Progress: resolved 852, reused 852, downloaded 0, added 828
+Progress: resolved 852, reused 852, downloaded 0, added 838
+Progress: resolved 852, reused 852, downloaded 0, added 844
+Progress: resolved 852, reused 852, downloaded 0, added 850
+Progress: resolved 852, reused 852, downloaded 0, added 851
+Progress: resolved 852, reused 852, downloaded 0, added 852
+Progress: resolved 852, reused 852, downloaded 0, added 852, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 15.8s using pnpm v9.15.9
+
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 7 tests using 1 worker
+
+[1/7] e2e/core/e4-core.spec.ts:489:5 › T-06-28 E2E (a) D3: the three seeded templates, «Setmana B» blocked by its inconsistency, «Setmana A» generates the proposed week, D3b per ring
+[2/7] e2e/core/e4-core.spec.ts:624:5 › T-06-28 E2E (b) D4: «Esborrany» opens the seeded draft week, [VALIDAR LA SETMANA], the D4c modal with the 4 registrants (200), «Anul·lades», ring blocks (409 then 201)
+[3/7] e2e/core/e4-core.spec.ts:808:5 › T-06-28 E2E (c) screens 10 and 23: the member never sees the cancelled class nor counts, the validated week is visible; the instructor sees the block, the dimmed class and n/n
+[4/7] e2e/core/e4-core.spec.ts:863:5 › T-07-32 E2E (d) D7: the four seeded activities, the Torneig blocks every ring on D4, a new seminar published over a class with the conflict dialog; D7 exports against the core
+[5/7] e2e/core/e4-core.spec.ts:1108:5 › T-07-32 E2E (e) ca: 04 → detail → register → 03 → cancel in time; the waitlist of the full «Seminari de handling» and the FIFO promotion when the admin adds a place
+[6/7] e2e/core/e4-core.spec.ts:1280:5 › T-07-32 E2E (e) es: the same member flow with the es literals, a second FIFO promotion, then the admin cancels the seminar (200) and the registrant reads «cancel·lada pel club»
+[7/7] e2e/core/e4-core.spec.ts:1450:5 › E4-W05 step 7 · the «Excel · PDF» menus of D5 and D7 with EXPORT_TOO_LARGE and while an export is pending
+  7 passed (2.4m)
+ Network agilityhub-e8-w04_default Creating 
+ Network agilityhub-e8-w04_default Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Volume agilityhub-e8-w04_export-files Creating 
+ Volume agilityhub-e8-w04_export-files Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Volume agilityhub-e8-w04_export-files Created 
+ Volume agilityhub-e8-w04_export-files Created 
+ Network agilityhub-e8-w04_default Created 
+ Network agilityhub-e8-w04_default Created 
+ Container agilityhub-e8-w04-mongo-1 Creating 
+ Container agilityhub-e8-w04-mongo-1 Created 
+ Container agilityhub-e8-w04-seed-1 Creating 
+ Container agilityhub-e8-w04-seed-1 Created 
+ Container agilityhub-e8-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e8-w04-activate-demo-club-1 Created 
+ Container agilityhub-e8-w04-core-1 Creating 
+ Container agilityhub-e8-w04-core-1 Created 
+ Container agilityhub-e8-w04-mongo-1 Starting 
+ Container agilityhub-e8-w04-mongo-1 Started 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-seed-1 Starting 
+ Container agilityhub-e8-w04-seed-1 Started 
+ Container agilityhub-e8-w04-seed-1 Waiting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Starting 
+
+e2e-core: TERM received, cleaning up and exiting

@@ -91,6 +91,8 @@ echo "pnpm store: $CORE_PNPM_STORE_DIRECTORY (package cache only)"
 # container (`run playwright`, a service of that profile) left by an interrupted stage goes with
 # the stack; without the profile `down` does not see that service's containers.
 cleanup() {
+  # Stops E8-W04's fake-card watcher, if one runs (it removes its folder when it sees `stop`).
+  if [[ -d "$evidence_directory/.e8-fake-card" ]]; then touch "$evidence_directory/.e8-fake-card/stop"; fi
   docker compose -f "$compose_file" --profile e2e down --volumes --remove-orphans >/dev/null 2>&1 || true
 }
 # An INT or TERM cleans up and ends the script (130 / 143): the handler exits instead of returning
@@ -153,33 +155,93 @@ run_core_suite() {
   docker compose -f "$compose_file" --profile e2e run --rm --no-deps -T playwright
 }
 
-run_playwright_only() {
-  docker compose -f "$compose_file" --profile e2e run --rm --no-deps -T playwright
-}
-
-# The local core deliberately keeps FakePaymentProvider asynchronous. Settle the provider intent
-# between two browser passes, through the same application command used by api E8-T06; neither the
-# intent nor a credential is printed. The second pass proves the paid state through the UI.
+# The local core deliberately keeps FakePaymentProvider asynchronous. A provider event is delivered
+# through the same application command used by api E8-T06 (`billing:fake-webhook`) for the FIFO
+# club's latest Stripe collection; neither the intent nor a credential is printed.
 settle_e8_fake_card() {
-  local provider_ref
+  local event="$1" provider_ref
   provider_ref="$(docker compose -f "$compose_file" exec -T mongo mongosh --quiet \
     mongodb://localhost:27017/agilityhub_e1_web --eval '
       const club = db.clubs.findOne({slug: "fifo"});
       const row = club == null ? null : db.collections.findOne(
-        {clubId: club._id, provider: "STRIPE", status: "SUBMITTED", providerRef: {$ne: null}},
+        {clubId: club._id, provider: "STRIPE", providerRef: {$ne: null}},
         {providerRef: 1}, {sort: {createdAt: -1}}
       );
       if (row == null) { quit(1); }
       print(row.providerRef);
     ' | tail -n 1)"
   if [[ -z "$provider_ref" ]]; then
-    echo "E8 fake card: no submitted provider intent found" >&2
+    echo "E8 fake card: no provider intent found" >&2
     return 1
   fi
+  # The command's own answer and the core's log lines about it are kept as evidence, with every
+  # provider id (`pi_…`, `evt_…`, `cus_…`, `pm_…`, `ch_…`, `seti_…`, `cs_…`) and the reference redacted.
+  local redact="s/${provider_ref}/[provider-ref]/g; s/(pi|evt|cus|pm|ch|seti|cs|whsec|sk|pk)_[A-Za-z0-9_]+/\\1_[redacted]/g"
+  local delivery_status=0
   docker compose -f "$compose_file" run --rm --no-deps -T --entrypoint java core \
-    -jar /app/app.jar --core.command=billing:fake-webhook payment_intent.succeeded "$provider_ref" --club=fifo \
-    >/dev/null
-  echo "E8 fake card: payment_intent.succeeded delivered (provider reference redacted)"
+    -jar /app/app.jar --core.command=billing:fake-webhook "$event" "$provider_ref" --club=fifo \
+    2>&1 | sed -E "$redact" >"$evidence_directory/e8-fake-webhook-$event.log" || delivery_status=$?
+  docker compose -f "$compose_file" logs --no-color --no-log-prefix --since 10m core 2>&1 \
+    | grep -i -E "webhook|stripe|payment|collection|invoice|charge" | tail -n 60 \
+    | sed -E "$redact" >>"$evidence_directory/e8-fake-webhook-$event.log" || true
+  if ((delivery_status != 0)); then
+    echo "E8 fake card: $event delivery failed ($delivery_status)" >&2
+    return "$delivery_status"
+  fi
+  echo "E8 fake card: $event delivered (provider reference redacted)"
+}
+
+# E8-W04: the card leg runs in ONE browser pass, so D6 is open while the run is CHARGING and must
+# settle by itself (step 6b(a)). The spec asks for each provider event by writing its name to
+# `.e8-fake-card/request` in the evidence folder (bind-mounted in the Playwright container); this
+# watcher, started next to the stage, delivers it and answers `<event> <exit status>` in `done`.
+# Only `payment_intent.succeeded` is accepted: it is the one event the core's command delivers
+# (`Usage: billing:fake-webhook payment_intent.succeeded …`). The folder goes when the stage ends.
+e8_handshake_directory="$evidence_directory/.e8-fake-card"
+watch_e8_fake_card() {
+  local request="$e8_handshake_directory/request" event delivery_status deadline
+  deadline=$((SECONDS + 2700))
+  while ((SECONDS < deadline)) && [[ ! -e "$e8_handshake_directory/stop" ]]; do
+    if [[ -s "$request" ]]; then
+      event="$(tr -d '[:space:]' <"$request")"
+      rm -f "$request"
+      case "$event" in
+        payment_intent.succeeded)
+          delivery_status=0
+          settle_e8_fake_card "$event" || delivery_status=$?
+          ;;
+        *)
+          echo "E8 fake card: refused event request" >&2
+          delivery_status=2
+          ;;
+      esac
+      printf '%s %s\n' "$event" "$delivery_status" >"$e8_handshake_directory/done.tmp"
+      mv "$e8_handshake_directory/done.tmp" "$e8_handshake_directory/done"
+    fi
+    sleep 2
+  done
+  rm -rf "$e8_handshake_directory"
+}
+
+# Stripe test keys are never read by this harness: the browser leg always runs the local fake
+# provider, and the signed real-Stripe delivery is api `bin/e8-smoke`'s.
+warn_e8_stripe_key() {
+  if [[ -n "${STRIPE_TEST_SECRET_KEY:-}" ]]; then
+    echo "E8 real Stripe key detected; the browser harness refuses to print or persist it" >&2
+    echo "Use api bin/e8-smoke for the signed real-Stripe delivery; continuing with the local fake provider" >&2
+  fi
+}
+
+# Runs the e8 stage with the watcher beside it.
+run_e8_with_card_watcher() {
+  rm -rf "$e8_handshake_directory"
+  mkdir -p "$e8_handshake_directory"
+  watch_e8_fake_card &
+  local watcher=$!
+  "$@"
+  touch "$e8_handshake_directory/stop"
+  wait "$watcher" 2>/dev/null || true
+  rm -rf "$e8_handshake_directory"
 }
 
 # E5-W05 round 2 (review #8): a stage that a signal ended (130 after SIGINT, 143 after SIGTERM)
@@ -385,24 +447,13 @@ if [[ "$staged" == true ]]; then
   run_stage e7
   save_e7_notifications
   cleanup
-  # E8-W04: billing, remittances, packs, inactivity and leave use both the Cànic and fictional
-  # Stripe-enabled FIFO tenants. The normal pass submits the fake card charge; an application CLI
-  # delivery settles it, then the settlement-only pass verifies PAID without reseeding.
+  # E8-W04: billing, remittances, packs, inactivity and leave use both the Cànic and the fictional
+  # Stripe-enabled FIFO tenant. The card leg asks the watcher for the fake provider's events while
+  # D6 stays open (no second pass, no reseed).
   export CORE_TEST_FILES="e8-core.spec.ts"
   export SEED_WEEK_START="$E8_WEEK_START"
-  export E8_CARD_SETTLEMENT_ONLY=""
-  run_stage e8
-  if ((status == 0)); then
-    if [[ -n "${STRIPE_TEST_SECRET_KEY:-}" ]]; then
-      echo "E8 real Stripe key detected; the browser harness refuses to print or persist it" >&2
-      echo "Use api bin/e8-smoke for the signed real-Stripe delivery; continuing with the local fake provider" >&2
-    fi
-    settle_e8_fake_card || status=1
-    if ((status == 0)); then
-      export E8_CARD_SETTLEMENT_ONLY="1"
-      run_playwright_only || status=$?
-    fi
-  fi
+  warn_e8_stripe_key
+  run_e8_with_card_watcher run_stage e8
 else
   export CORE_TEST_FILES="$2"
   if [[ "$2" == *e5-core* || "$2" == *e6-core* || "$2" == *e7-core* ]]; then
@@ -410,8 +461,11 @@ else
   fi
   if [[ "$2" == *e8-core* ]]; then
     export SEED_WEEK_START="$E8_WEEK_START"
+    warn_e8_stripe_key
+    run_e8_with_card_watcher run_stage files
+  else
+    run_stage files
   fi
-  run_stage files
   if [[ "$2" == *e6-core* ]]; then
     save_e6_notifications
   fi

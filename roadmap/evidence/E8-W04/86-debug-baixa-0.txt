@@ -1,0 +1,254 @@
+600ms visible
+13ms 200 GET /baixa
+25ms 200 GET /src/main.tsx
+26ms 200 GET /node_modules/.vite/deps/react.js
+26ms 200 GET /node_modules/.vite/deps/react-dom_client.js
+27ms 200 GET /node_modules/.vite/deps/react-i18next.js
+27ms 200 GET /node_modules/.vite/deps/react_jsx-dev-runtime.js
+27ms 200 GET /@vite/client
+28ms 200 GET /node_modules/.vite/deps/rolldown-runtime-DC62tzP2.js
+28ms 200 GET /node_modules/.vite/deps/react-dom.js
+28ms 200 GET /node_modules/.vite/deps/i18next.js
+130ms 200 GET /@react-refresh
+131ms 200 GET /@fs/work/packages/api-client/src/index.ts
+131ms 200 GET /@fs/work/packages/auth/src/index.ts
+134ms 200 GET /@fs/work/packages/i18n/src/index.ts
+134ms 200 GET /@fs/work/node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/client/env.mjs
+135ms 200 GET /src/styles.css
+135ms 200 GET /src/notifications/push.ts
+135ms 200 GET /@fs/work/packages/ui/src/index.ts
+135ms 200 GET /src/App.tsx
+136ms console.debug [vite] connecting...
+137ms 200 GET /@fs/work/packages/api-client/src/api-error.ts
+137ms 200 GET /@fs/work/packages/api-client/src/attendance-sheet.ts
+137ms 200 GET /@fs/work/packages/api-client/src/branding-cache.ts
+137ms 200 GET /@fs/work/packages/api-client/src/club-pages.ts
+137ms 200 GET /@fs/work/packages/api-client/src/class-registrants.ts
+137ms 200 GET /@fs/work/packages/api-client/src/client.ts
+137ms 200 GET /@fs/work/packages/api-client/src/list-fields.ts
+140ms 200 GET /@fs/work/packages/api-client/src/preferences-saver.ts
+140ms 200 GET /@fs/work/packages/api-client/src/followup.ts
+140ms 200 GET /@fs/work/packages/api-client/src/student-search.ts
+140ms 200 GET /@fs/work/packages/api-client/src/query.ts
+140ms 200 GET /@fs/work/packages/api-client/src/submission-key.ts
+140ms 200 GET /@fs/work/packages/api-client/src/exports.ts
+140ms 200 GET /@fs/work/packages/auth/src/refresh-interceptor.ts
+140ms 200 GET /@fs/work/packages/i18n/src/catalog.ts
+141ms 200 GET /@fs/work/packages/auth/src/session.tsx
+141ms 200 GET /@fs/work/packages/api-client/src/ring-blocks.ts
+141ms 200 GET /@fs/work/packages/i18n/src/followup-labels.ts
+141ms 200 GET /@fs/work/packages/auth/src/mock-refresh-token.ts
+141ms 200 GET /@fs/work/packages/auth/src/auth-client.ts
+141ms 200 GET /@fs/work/packages/api-client/src/uploads.ts
+141ms 200 GET /@fs/work/packages/auth/src/onboarding.tsx
+141ms 200 GET /node_modules/.vite/deps/openapi-fetch.js
+141ms 200 GET /node_modules/.vite/deps/@tanstack_react-query.js
+142ms 200 GET /node_modules/.vite/deps/react_jsx-runtime.js
+142ms 200 GET /@fs/work/packages/i18n/src/locale.ts
+143ms 200 GET /@fs/work/packages/i18n/src/setup.ts
+143ms 200 GET /@fs/work/packages/i18n/src/resources.ts
+143ms 200 GET /@fs/work/packages/i18n/src/types.ts
+143ms 200 GET /@fs/work/packages/i18n/src/masking.ts
+143ms 200 GET /@fs/work/packages/i18n/src/format.ts
+155ms console.debug [vite] connected.
+155ms 200 GET /@fs/work/packages/ui/src/attendance.css
+155ms 200 GET /@fs/work/packages/ui/src/registrants-panel.css
+155ms 200 GET /@fs/work/packages/ui/src/limited-markdown.css
+155ms 200 GET /@fs/work/packages/ui/src/day-grid.css
+155ms 200 GET /@fs/work/packages/ui/src/rich-text.css
+156ms 200 GET /@fs/work/packages/ui/src/components.css
+156ms 200 GET /@fs/work/packages/ui/src/schedule-grid.css
+158ms 200 GET /@fs/work/packages/ui/src/slot-grid.css
+158ms 200 GET /@fs/work/packages/ui/src/tasks-panel.css
+159ms 200 GET /@fs/work/packages/ui/src/attendance-sheet.ts
+159ms 200 GET /@fs/work/packages/ui/src/universal-list.css
+159ms 200 GET /@fs/work/packages/ui/src/attendance.tsx
+162ms 200 GET /@fs/work/packages/ui/src/branding.tsx
+165ms 200 GET /@fs/work/packages/ui/src/day-grid.tsx
+165ms 200 GET /@fs/work/packages/ui/src/icons/names.ts
+165ms 200 GET /@fs/work/packages/ui/src/components.tsx
+165ms 200 GET /@fs/work/packages/ui/src/icons/Icon.tsx
+165ms 200 GET /@fs/work/packages/ui/src/limited-markdown.tsx
+165ms 200 GET /@fs/work/packages/ui/src/modules.ts
+165ms 200 GET /@fs/work/packages/ui/src/registrants-panel.tsx
+165ms 200 GET /@fs/work/packages/ui/src/rich-text.ts
+165ms 200 GET /@fs/work/packages/ui/src/schedule-grid.tsx
+165ms 200 GET /@fs/work/packages/ui/src/safe-html.tsx
+166ms 200 GET /@fs/work/packages/ui/src/rich-text-editor.tsx
+166ms 200 GET /@fs/work/packages/ui/src/slot-grid.tsx
+167ms 200 GET /src/activities/HistoryRowsPreview.tsx
+167ms 200 GET /src/activities/shared.ts
+167ms 200 GET /@fs/work/packages/ui/src/tasks-panel.tsx
+167ms 200 GET /src/activities/ActivityDetailPage.tsx
+167ms 200 GET /@fs/work/packages/ui/src/universal-list.tsx
+167ms 200 GET /src/booking/BookingDetailPage.tsx
+167ms 200 GET /src/billing/InvoicesPage.tsx
+167ms 200 GET /src/booking/BookPage.tsx
+171ms 200 GET /src/booking/HomePage.tsx
+171ms 200 GET /src/booking/WaitlistDetailPage.tsx
+171ms 200 GET /src/history/HistoryPage.tsx
+171ms 200 GET /src/inactivity/InactivityPage.tsx
+178ms 200 GET /src/InfoPage.tsx
+178ms 200 GET /src/booking/shared.ts
+179ms 200 GET /src/booking/ConfirmPage.tsx
+181ms 200 GET /src/instructor/AttendancePage.tsx
+182ms 200 GET /src/instructor/DayPage.tsx
+182ms 200 GET /src/instructor/StudentCardPage.tsx
+182ms 200 GET /src/instructor/StudentSearchPage.tsx
+182ms 200 GET /src/instructor/RingBlockPage.tsx
+183ms 200 GET /src/instructor/TasksPage.tsx
+183ms 200 GET /src/leave/LeavePage.tsx
+183ms 200 GET /src/NotificationsPage.tsx
+183ms 200 GET /src/payments/CheckoutReturn.tsx
+183ms 200 GET /src/profile/NoticesCard.tsx
+184ms 200 GET /src/profile/ProfileLifecycleSection.tsx
+184ms 200 GET /src/PublicFooter.tsx
+192ms 200 GET /src/training/shared.ts
+192ms 200 GET /src/today/OverviewPage.tsx
+193ms 200 GET /src/today/TodayPage.tsx
+193ms 200 GET /src/training/TrainingDetailPage.tsx
+194ms 200 GET /src/SelfServicePages.tsx
+194ms 200 GET /@fs/work/packages/i18n/src/locales/ca/common.json
+194ms 200 GET /@fs/work/packages/i18n/src/locales/ca/shell.json
+195ms 200 GET /src/UnsubscribePage.tsx
+195ms 200 GET /src/training/TrainingPage.tsx
+199ms 200 GET /@fs/work/packages/i18n/src/locales/en/common.json
+199ms 200 GET /@fs/work/packages/i18n/src/locales/en/shell.json
+207ms 200 GET /@fs/work/packages/i18n/src/locales/es/common.json
+209ms 200 GET /@fs/work/packages/i18n/src/locales/es/shell.json
+209ms 200 GET /@fs/work/packages/auth/src/onboarding.css
+209ms 200 GET /@fs/work/packages/i18n/src/setup-base.ts
+210ms 200 GET /src/activities/ActivityHistoryRow.tsx
+210ms 200 GET /src/activities/activities.css
+210ms 200 GET /src/SignupPage.tsx
+211ms 200 GET /src/booking/booking.css
+211ms 200 GET /src/activities/ActivitiesBlock.tsx
+211ms 200 GET /src/booking/DogChips.tsx
+212ms 200 GET /src/booking/useSeatHold.ts
+212ms 200 GET /src/activities/ActivityReservationRow.tsx
+212ms 200 GET /src/notifications/unread.ts
+213ms 200 GET /node_modules/.vite/deps/i18next-icu.js
+213ms 200 GET /src/booking/ReservationRow.tsx
+213ms 200 GET /src/instructor/shared.ts
+213ms 200 GET /src/history/history.css
+213ms 200 GET /src/history/HistoryRow.tsx
+225ms 200 GET /src/instructor/instructor.css
+225ms 200 GET /src/instructor/useAttendanceSheet.ts
+225ms 200 GET /src/training/training.css
+228ms 200 GET /src/notifications/actions.ts
+228ms 200 GET /src/notifications/notifications.css
+228ms 200 GET /src/profile/preferences-saver.ts
+228ms 200 GET /src/today/today.css
+228ms 200 GET /src/today/shared.tsx
+228ms 200 GET /src/today/useDayGrid.ts
+228ms console.info %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+246ms 200 GET /@fs/work/packages/api-client/src/mocks/browser.ts
+253ms 200 GET /node_modules/.vite/deps/msw_browser.js
+254ms 200 GET /node_modules/.vite/deps/storeResponseCookies-DCnmXG4J.js
+261ms 200 GET /@fs/work/packages/api-client/src/mocks/scenarios.ts
+306ms 200 GET /@fs/work/packages/api-client/src/mocks/handlers.ts
+307ms 200 GET /node_modules/.vite/deps/msw.js
+308ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/branding-minim.json
+308ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/me-impersonated.json
+308ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/me-admin.json
+308ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/me-instructor.json
+308ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/me-member.json
+308ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/me-multi-profile.json
+308ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/onboarding.ts
+308ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/sessions.json
+308ms 200 GET /@fs/work/packages/api-client/src/mocks/attendance-handlers.ts
+312ms 200 GET /@fs/work/packages/api-client/src/mocks/backoffice-handlers.ts
+361ms 200 GET /@fs/work/packages/api-client/src/mocks/booking-handlers.ts
+361ms 200 GET /@fs/work/packages/api-client/src/mocks/day-grid-handlers.ts
+361ms 200 GET /@fs/work/packages/api-client/src/mocks/activity-handlers.ts
+361ms 200 GET /@fs/work/packages/api-client/src/mocks/calendar-handlers.ts
+361ms 200 GET /@fs/work/packages/api-client/src/mocks/billing-handlers.ts
+361ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/agenda.ts
+361ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/activities.ts
+362ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/audit-entries.json
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/attendance.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/branding-canic.json
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/dashboard.json
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/catalogs.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/billing.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/export-jobs.json
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/census.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/member-self-service.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/followup.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/notifications.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/settings.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/signup.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/messaging.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/list-exports.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/signup-review.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/list-fields.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/training.ts
+363ms 200 GET /@fs/work/packages/api-client/src/mocks/followup-handlers.ts
+364ms 200 GET /@fs/work/packages/api-client/src/mocks/messaging-handlers.ts
+364ms 200 GET /@fs/work/packages/api-client/src/mocks/notification-handlers.ts
+364ms 200 GET /@fs/work/packages/api-client/src/mocks/training-handlers.ts
+364ms 200 GET /@fs/work/packages/api-client/src/mocks/member-billing-handlers.ts
+364ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/day-grid.ts
+364ms 200 GET /@fs/work/packages/api-client/src/mocks/planning-handlers.ts
+364ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/planning.ts
+364ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/jobs.ts
+365ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/bookings.ts
+365ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/registrant-allocations.ts
+365ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/club-pages.json
+365ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/calendar.ts
+366ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/signup-config-canic.json
+366ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/inactivity.ts
+366ms 200 GET /@fs/work/packages/api-client/src/mocks/fixtures/member-signup-review.json
+447ms console.startGroupCollapsed %c[MSW] Mocking enabled. color:orangered;font-weight:bold;
+447ms console.log %cDocumentation: %chttps://mswjs.io/docs font-weight:bold font-weight:normal
+447ms console.log Found an issue? https://github.com/mswjs/msw/issues
+447ms console.log Worker script URL: http://127.0.0.1:4173/mockServiceWorker.js
+447ms console.log Worker scope: http://127.0.0.1:4173/
+447ms console.log Client ID: %s (%s) 94f0034e-71ba-4b01-b692-efc102fff225 top-level
+447ms console.endGroup console.groupEnd
+457ms 200 GET /api/v1/branding
+458ms console.startGroupCollapsed [MSW] 16:55:15 GET /api/v1/branding (%c200 OK%c) color:#69AB32 color:inherit
+458ms console.log Request {url: URL, method: GET, headers: Object, body: }
+458ms console.log Handler: HttpHandler
+458ms console.log Response {status: 200, statusText: OK, headers: Object, body: {"club":{"slug":"canic","name":"Club Agility Cànic…icyUrl":"https://canic.example.test/privacitat"}}}
+458ms console.endGroup console.groupEnd
+494ms 200 GET /@fs/work/packages/i18n/src/locales/ca/auth.json
+494ms 200 GET /@fs/work/packages/i18n/src/locales/ca/billing.json
+494ms 200 GET /@fs/work/packages/i18n/src/locales/ca/inactivity.json
+495ms 200 GET /@fs/work/packages/i18n/src/locales/ca/leave.json
+498ms 200 GET /@fs/work/packages/i18n/src/locales/ca/signup.json
+524ms 200 GET /@fs/work/packages/ui/src/icons/sprite.svg
+526ms 200 GET /@fs/work/node_modules/.pnpm/@fontsource+montserrat@5.3.0/node_modules/@fontsource/montserrat/files/montserrat-latin-600-normal.woff2
+532ms console.startGroupCollapsed [MSW] 16:55:15 POST /oauth2/token (%c200 OK%c) color:#69AB32 color:inherit
+532ms console.log Request {url: URL, method: POST, headers: Object, body: client_id=clubs-app&grant_type=refresh_token}
+532ms console.log Handler: HttpHandler
+532ms console.log Response {status: 200, statusText: OK, headers: Object, body: {"access_token":"mock-access-token","refresh_token… profile","token_type":"Bearer","expires_in":900}}
+532ms console.endGroup console.groupEnd
+533ms 200 POST /oauth2/token
+537ms 200 GET /api/v1/me
+538ms console.startGroupCollapsed [MSW] 16:55:15 GET /api/v1/me (%c200 OK%c) color:#69AB32 color:inherit
+538ms console.log Request {url: URL, method: GET, headers: Object, body: }
+538ms console.log Handler: HttpHandler
+538ms console.log Response {status: 200, statusText: OK, headers: Object, body: {"account":{"id":"10000000-0000-4000-8000-00000000…"features":["CLASSES","FREE_TRAINING","COURSES"]}}
+538ms console.endGroup console.groupEnd
+559ms 200 GET /api/v1/me/leave-requests
+559ms 200 GET /api/v1/me/training-summary
+559ms 200 GET /api/v1/me/leave-requests
+560ms console.startGroupCollapsed [MSW] 16:55:15 GET /api/v1/me/leave-requests (%c200 OK%c) color:#69AB32 color:inherit
+560ms console.log Request {url: URL, method: GET, headers: Object, body: }
+560ms console.log Handler: HttpHandler
+560ms console.log Response {status: 200, statusText: OK, headers: Object, body: {"defaultDate":"2026-08-11","fee":{"firstMonth":{"…,{"key":"OTHER","label":"Altres"}],"requests":[]}}
+560ms console.endGroup console.groupEnd
+561ms console.startGroupCollapsed [MSW] 16:55:15 GET /api/v1/me/training-summary (%c200 OK%c) color:#69AB32 color:inherit
+561ms console.log Request {url: URL, method: GET, headers: Object, body: }
+561ms console.log Handler: HttpHandler
+561ms console.log Response {status: 200, statusText: OK, headers: Object, body: {"bookingBlock":null,"cancellableBookings":[],"cou…ekOpensAt":{"dayOfWeek":"SUNDAY","time":"20:00"}}}
+561ms console.endGroup console.groupEnd
+562ms console.startGroupCollapsed [MSW] 16:55:15 GET /api/v1/me/leave-requests (%c200 OK%c) color:#69AB32 color:inherit
+562ms console.log Request {url: URL, method: GET, headers: Object, body: }
+562ms console.log Handler: HttpHandler
+562ms console.log Response {status: 200, statusText: OK, headers: Object, body: {"defaultDate":"2026-08-11","fee":{"firstMonth":{"…,{"key":"OTHER","label":"Altres"}],"requests":[]}}
+562ms console.endGroup console.groupEnd
+583ms 200 GET /@fs/work/packages/ui/src/icons/sprite.svg
+589ms 200 GET /@fs/work/node_modules/.pnpm/@fontsource+montserrat@5.3.0/node_modules/@fontsource/montserrat/files/montserrat-latin-400-normal.woff2
+592ms 200 GET /@fs/work/node_modules/.pnpm/@fontsource+montserrat@5.3.0/node_modules/@fontsource/montserrat/files/montserrat-latin-700-normal.woff2

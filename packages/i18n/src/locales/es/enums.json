@@ -248,7 +248,8 @@
     "COLLECTING": "remesado",
     "PAID": "cobrado",
     "FAILED": "impagado",
-    "CANCELLED": "anulado"
+    "CANCELLED": "anulado",
+    "REFUNDED": "reembolsado"
   },
   "inactivityState": {
     "REQUESTED": "solicitado",

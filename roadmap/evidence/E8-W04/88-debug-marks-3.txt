@@ -1,0 +1,17 @@
+1743 await loginMember(page, "memberNoInactivity");
+2012 await page.goto(`${clubsUrl}/inactivitat`);
+2416 await expect(page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }
+2731 await expect(page.getByText(/Ara tens 1 reserva dins del període/u)).t
+2775 await shot(page, "14-inactivitat-375.png");
+2829 await page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }).click
+2843 await page.waitForURL("**/perfil");
+3007 await expect(page.getByRole("link", { name: /pendent d'aprovació/u }))
+3326 await page.reload();
+3887 await expect(page.getByRole("link", { name: /pendent d'aprovació/u }))
+4263 await page.goto(`${clubsUrl}/baixa`);
+4843 await page.getByLabel("Motiu").selectOption("EXTERNAL");
+4902 await page.getByRole("button", { name: "ENVIA LA SOL·LICITUD" }).click
+5043 await page.getByRole("button", { name: "Torna al perfil" }).click();
+5044 await page.waitForURL("**/perfil");
+8121 await expect(page.getByRole("link", { name: /baixa sol·licitada/u })).
+8430 await page.reload();

@@ -411,7 +411,11 @@ export function buildSimulation(
     id: uuid(5, world.sequence),
     incidents: [...incidentsOf(world.variant)],
     invoicesPreview: preview,
-    kpis: simulationKpis(world),
+    // E90: the date the run would ask for (the Cànic's `collectionDayOfMonth` 1), null without SEPA.
+    kpis: {
+      ...simulationKpis(world),
+      collectionDate: world.providers.includes("SEPA_XML") ? `${period}-01` : null,
+    },
     period,
   };
 }

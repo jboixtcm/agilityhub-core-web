@@ -998,6 +998,8 @@ describe("E8-W01 billing fixtures follow the S12 contract (BillingPeriod, Billin
         SEPA_XML: { count: 164, total: eur(624000) },
       },
       cashPending: 4,
+      // E90: the run's default date, 01/09 in the mockup («data de cobrament: 01/09»).
+      collectionDate: "2026-09-01",
       count: 168,
       inactivityFees: { count: 2, firstMonth: eur(2000), following: eur(1000) },
       total: eur(648000),

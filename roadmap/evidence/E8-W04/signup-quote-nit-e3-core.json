@@ -1,9 +1,9 @@
 {
   "plan": "Abonat",
-  "today": "2026-10-08",
+  "today": "2026-10-09",
   "planQuotes": [
     {
-      "planId": "2a9c4234-0efa-4362-a7eb-04823bdec3d8",
+      "planId": "f2ed2ae5-296d-446d-97ca-28b1e02938d8",
       "lines": [
         {
           "concept": "ENTRY_FEE",
@@ -21,7 +21,7 @@
         {
           "option": "TODAY",
           "portion": "FULL",
-          "startDate": "2026-10-08",
+          "startDate": "2026-10-09",
           "amountDue": {
             "amountMinor": 6000,
             "currency": "EUR"
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "planId": "e21e4f35-94cf-4146-b719-147eb16cfa19",
+      "planId": "36ab6bc9-8a89-4780-a8c9-7827214ac51f",
       "lines": [
         {
           "concept": "PACK",
@@ -64,7 +64,7 @@
       "options": []
     },
     {
-      "planId": "11417b2c-112c-482e-82ac-24b6247d2fe0",
+      "planId": "d8edefa6-6e3a-4540-907b-3d41be01696a",
       "lines": [
         {
           "concept": "PACK",
@@ -81,7 +81,7 @@
       "options": []
     },
     {
-      "planId": "ed6dcfc1-e50f-41f0-b6f7-7455ec1c82fd",
+      "planId": "bbc62fd9-22fc-4c43-994a-aa060e9ea197",
       "lines": [
         {
           "concept": "ENTRY_FEE",

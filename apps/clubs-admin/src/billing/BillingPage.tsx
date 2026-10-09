@@ -818,6 +818,10 @@ export function BillingPage({
     stripe !== undefined;
   const modules = branding.modules;
   const skipped = detail?.status === "ROLLED_BACK" ? [] : (detail?.skipped ?? []);
+  const collectionDate =
+    detail !== undefined && detail.status !== "ROLLED_BACK" && detail.collectionDate != null
+      ? detail.collectionDate
+      : (simulation?.kpis.collectionDate ?? null);
 
   return (
     <div className="billing-page">
@@ -1000,7 +1004,12 @@ export function BillingPage({
         />
       ) : (
         <div className="billing-grid">
-          <SimulationCard onNavigate={onNavigate} simulation={simulation} skipped={skipped} />
+          <SimulationCard
+            onNavigate={onNavigate}
+            onOpenInvoice={setInvoiceId}
+            simulation={simulation}
+            skipped={skipped}
+          />
           <div className="billing-kpis">
             <Kpi
               detail={t("admin-billing:kpi.simulatedAt", {
@@ -1011,10 +1020,11 @@ export function BillingPage({
             />
             <Kpi
               detail={
-                detail?.collectionDate === null || detail?.collectionDate === undefined
+                // The run's date once there is one; before, the one the run would ask for (E90).
+                collectionDate == null
                   ? undefined
                   : t("admin-billing:kpi.collectionDate", {
-                      date: formats.formatPlainDate(detail.collectionDate, "dayMonthNumeric"),
+                      date: formats.formatPlainDate(collectionDate, "dayMonthNumeric"),
                     })
               }
               label={t("admin-billing:kpi.amount")}
@@ -1377,16 +1387,38 @@ function MemberRows({
  */
 function SimulationCard({
   onNavigate,
+  onOpenInvoice,
   simulation,
   skipped,
 }: {
   onNavigate: (path: string) => void;
+  onOpenInvoice: (invoiceId: string) => void;
   simulation: PeriodSimulation;
   skipped: readonly BillingIncident[];
 }) {
   const { t } = useTranslation(["admin-billing", "enums"]);
   const formats = useClubFormats();
-  const incidentLabel = (incident: BillingIncident) => t(`enums:billingIncident.${incident.code}`);
+  // E90: an incident about a receipt (`invoiceId`, `displayNumber`) opens it, as the list's number.
+  const incidentLabel = (incident: BillingIncident) => {
+    const label = t(`enums:billingIncident.${incident.code}`);
+    const { displayNumber, invoiceId } = incident;
+    if (invoiceId === undefined || displayNumber === undefined) return label;
+    return (
+      <>
+        {label}{" "}
+        <button
+          aria-label={t("admin-billing:list.openInvoice", { number: displayNumber })}
+          className="billing-number"
+          onClick={() => {
+            onOpenInvoice(invoiceId);
+          }}
+          type="button"
+        >
+          {displayNumber}
+        </button>
+      </>
+    );
+  };
   // The incidents above are skipped already («s'ometen de la generació»): only the others are new.
   const others = skipped.filter(
     (item) =>

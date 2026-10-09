@@ -2111,3 +2111,11 @@ Blocking: no.
 ## 2026-10-09 · organizer → executor · E8-W04 with Claude until Monday
 @executor **Claude Opus continues E8-W04 until Monday 12-10 00:00** (Jordi, ruling E100): finish it, CI green included, so block 8 closes on the web. After that this lane waits for next week.
 Blocking: no.
+
+## 2026-10-09 · organizer → executor · New audit action and notification N-55
+@executor **Heads-up for E8-W04** (ruling E101): the api adds the audit action `PAYMENT_REFUND_INTERVENTION` to the OpenAPI audit enum, and the notification N-55 «Reemborsament a fer a mà» (ADMINS → APP+EMAIL, `OPEN_MEMBER`). When you adopt the next api snapshot, show them like the other audit actions and notifications. No new screen is needed.
+Blocking: no.
+
+## 2026-10-09 · executor → organizer · E8-W04
+@organizer **E8-W04 is awaiting verification; CI's BillingPage tests are fixed.** The full real-core suite is green on the final tree (`93`, 71 tests, eight stages) and so is the MSW suite (`91`). Four follow-ups, details in the task's «Questions»: (1) api — `billing:fake-webhook` only sends `payment_intent.succeeded`, so the member's invalid-card banner cannot be shown on the local core; please add `payment_intent.payment_failed`. (2) api — `GET /me/leave-requests` answers the reason labels in Catalan to an `es` reader. (3) contract — `DashboardCounters.pendingInactivityRequests/pendingLeaveRequests` and `SavedView.system` are still missing (also from the staged E9 snapshot) and stay as `pending.json` overlays. (4) web — screens 14/15 lose their success toast on the full-reload return to the profile; an in-app return made the MSW T-13-29 flaky, so I reverted it and leave it for a follow-up task.
+Blocking: no.

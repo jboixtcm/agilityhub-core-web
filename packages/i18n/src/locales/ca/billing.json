@@ -8,8 +8,7 @@
   "familyGroup": "Grup familiar",
   "list": {
     "more": "Carrega'n més",
-    "receipt": "Rebut {number}",
-    "refunded": "reemborsat"
+    "receipt": "Rebut {number}"
   },
   "detail": {
     "title": "Detall del rebut",

@@ -3,7 +3,7 @@
   "back": "Back to profile",
   "loading": "Loading inactivity period",
   "loadError": "The inactivity period could not be loaded.",
-  "intro": "You are entitled to request a break (in months). During this time you would not take part in the club's activities and would pay a minimum maintenance fee that keeps your place and your current fee for when you return. It can be requested until day {deadlineDay} of the month before the inactivity period starts.",
+  "intro": "You are entitled to request a break (in months). During this time you will not take part in the club's activities and will pay a minimum maintenance fee that keeps your place and your current fee for when you return. It can be requested until day {deadlineDay} of the month before the inactivity period starts.",
   "endNote": "The end date can be changed during the inactivity period (also until day {deadlineDay}).",
   "form": {
     "fromMonth": "Start month (required)",

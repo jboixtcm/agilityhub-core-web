@@ -1,0 +1,29 @@
+diff --git a/packages/api-client/openapi/pending.json b/packages/api-client/openapi/pending.json
+index e6bf9dd..a587fdc 100644
+--- a/packages/api-client/openapi/pending.json
++++ b/packages/api-client/openapi/pending.json
+@@ -6,7 +6,23 @@
+     "description": "Mocks-first contracts not yet present in the authoritative core API snapshot."
+   },
+   "paths": {},
+-  "x-schema-overlays": {},
++  "x-schema-overlays": {
++    "SavedView": {
++      "type": "object",
++      "properties": {
++        "system": {
++          "type": "boolean"
++        }
++      }
++    },
++    "DashboardCounters": {
++      "type": "object",
++      "properties": {
++        "pendingInactivityRequests": {"type": "integer", "format": "int32"},
++        "pendingLeaveRequests": {"type": "integer", "format": "int32"}
++      }
++    }
++  },
+   "components": {
+     "schemas": {
+       "DogPendingFields": {

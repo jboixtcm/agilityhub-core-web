@@ -1,9 +1,9 @@
 {
   "created": {
-    "taskA": "29a4c542-2fbb-4abb-896e-abc763735528",
-    "taskB": "c57fc991-dffc-4d1a-a67c-c9fbd5fb6a71"
+    "taskA": "46036d0f-3059-4f7e-b689-0c5b1b18317c",
+    "taskB": "73911ea3-6395-4407-a68a-e7e261085464"
   },
-  "runId": "zztb5t",
+  "runId": "18qgdh",
   "steps": {
     "instants": {
       "finished": "2026-10-12T07:46:00.000Z",
@@ -87,7 +87,7 @@
     },
     "clock-2026-10-12T02:00:00.000Z": {
       "body": {
-        "now": "2026-10-12T02:00:00.000025291Z"
+        "now": "2026-10-12T02:00:00.000113167Z"
       },
       "status": 200
     },
@@ -113,8 +113,8 @@
       },
       "logins": {
         "instructor@example.test": "other",
-        "instructor.2@example.test": "teacher",
-        "instructor.3@example.test": "other"
+        "instructor.3@example.test": "teacher",
+        "instructor.2@example.test": "other"
       },
       "rows": [
         "Mel",
@@ -124,12 +124,12 @@
       ]
     },
     "scene": {
-      "bertaId": "3b9dae2a-640e-496b-80d2-ea103da59af3",
-      "classId": "54cd2560-cbf3-4c95-b2cb-6daf5d75e3a4",
-      "entryId": "a02e5787-ad6c-4d0f-bf40-0af76aaeb971",
-      "instructorA": "instructor.2@example.test",
+      "bertaId": "c007b191-6167-41b5-971f-4e150438f10b",
+      "classId": "3080a38a-5122-4792-a3c6-67ddd2063e85",
+      "entryId": "b8fab90c-7014-4ddc-8c41-f76edd0d5b5a",
+      "instructorA": "instructor.3@example.test",
       "instructorB": "instructor@example.test",
-      "melId": "27fbc323-8559-35d7-8ebe-90170432b56a",
+      "melId": "6451f086-1668-349c-bfa4-5ec98a63730b",
       "names": {
         "alba": "Alba + Pinya",
         "iu": "Iu + Gira",
@@ -137,6 +137,9 @@
         "nil": "Nil + Trufa",
         "rita": "Rita + Mel"
       }
+    },
+    "profile-choice-instructor.3@example.test": {
+      "landing": "/instructor/dia"
     },
     "f-22-card": {
       "lastClasses": [
@@ -178,9 +181,9 @@
         "pendingCount": 1,
         "doneCount": 1,
         "latest": {
-          "id": "141c8cf6-62f6-499b-b01e-1ffc06cd66f2",
+          "id": "68bcdc33-1c25-4dba-adb1-71d24d690c00",
           "text": "Tres sessions de quiets d'un minut abans de la classe de dilluns.",
-          "createdAt": "2026-10-08T20:32:00.759Z",
+          "createdAt": "2026-10-09T17:29:32.763Z",
           "createdByName": "Berta"
         }
       }
@@ -193,7 +196,7 @@
           "Pinya": "PENDING",
           "Trufa": "NO_SHOW"
         },
-        "savedAt": "2026-10-12T02:00:03.072Z",
+        "savedAt": "2026-10-12T02:00:03.591Z",
         "savedByName": "Berta",
         "status": 200,
         "version": 2
@@ -231,7 +234,7 @@
       "mailboxAfterNotice": [],
       "notice": {
         "atLocal": "04:00",
-        "at": "2026-10-12T02:00:03.543Z",
+        "at": "2026-10-12T02:00:04.336Z",
         "late": false,
         "minutesBefore": 269,
         "seatReleased": true,
@@ -251,7 +254,7 @@
       "rotate": [],
       "contentType": "application/pdf",
       "firstBytes": "%PDF-1.6",
-      "size": 13604,
+      "size": 13600,
       "status": 200,
       "suggestedFilename": "agenda-2026-10-12.pdf"
     },
@@ -292,9 +295,9 @@
           "pendingCount": 2,
           "doneCount": 1,
           "latest": {
-            "id": "29a4c542-2fbb-4abb-896e-abc763735528",
-            "text": "Salts curts amb recompensa al final, tres cops al dia (E6 zztb5t, text fictici).",
-            "createdAt": "2026-10-12T02:00:06.120Z",
+            "id": "46036d0f-3059-4f7e-b689-0c5b1b18317c",
+            "text": "Salts curts amb recompensa al final, tres cops al dia (E6 18qgdh, text fictici).",
+            "createdAt": "2026-10-12T02:00:14.901Z",
             "createdByName": "Berta"
           }
         }
@@ -310,15 +313,15 @@
           "status": 200
         },
         "meDogTask": {
-          "id": "29a4c542-2fbb-4abb-896e-abc763735528",
-          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 zztb5t, text fictici).",
-          "createdAt": "2026-10-12T02:00:06.120Z",
+          "id": "46036d0f-3059-4f7e-b689-0c5b1b18317c",
+          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 18qgdh, text fictici).",
+          "createdAt": "2026-10-12T02:00:14.901Z",
           "instructorName": "Berta",
           "attachmentsCount": 1
         },
         "meResponses": [
-          "/api/v1/me/activities",
           "/api/v1/me/training-summary",
+          "/api/v1/me/activities",
           "/api/v1/me/home",
           "/api/v1/me/pack-balances",
           "/api/v1/me/dogs",
@@ -333,7 +336,7 @@
       "task": {
         "attachments": 1,
         "created": 201,
-        "id": "29a4c542-2fbb-4abb-896e-abc763735528"
+        "id": "46036d0f-3059-4f7e-b689-0c5b1b18317c"
       }
     },
     "f-member-completion": {
@@ -341,9 +344,9 @@
         "pendingCount": 1,
         "doneCount": 2,
         "latest": {
-          "id": "29a4c542-2fbb-4abb-896e-abc763735528",
-          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 zztb5t, text fictici).",
-          "createdAt": "2026-10-12T02:00:06.120Z",
+          "id": "46036d0f-3059-4f7e-b689-0c5b1b18317c",
+          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 18qgdh, text fictici).",
+          "createdAt": "2026-10-12T02:00:14.901Z",
           "createdByName": "Berta"
         }
       },
@@ -453,11 +456,11 @@
         "narrowedValues": [
           {
             "count": 1,
-            "label": "Berta"
+            "label": "Aina"
           },
           {
             "count": 1,
-            "label": "Aina"
+            "label": "Berta"
           }
         ],
         "rows": [
@@ -538,7 +541,7 @@
     },
     "clock-2026-10-12T07:46:00.000Z": {
       "body": {
-        "now": "2026-10-12T07:46:00.000005Z"
+        "now": "2026-10-12T07:46:00.000005500Z"
       },
       "status": 200
     },
@@ -552,18 +555,18 @@
       "plan": {
         "counters": {
           "WOULD_SWEEP": 1,
-          "WOULD_FINISH": 11
+          "WOULD_FINISH": 2
         },
-        "items": 12,
+        "items": 3,
         "status": "SUCCEEDED"
       },
       "run": {
         "counters": {
           "swept": 1,
-          "finished": 11
+          "finished": 2
         },
         "errors": [],
-        "items": 12,
+        "items": 3,
         "status": "SUCCEEDED"
       },
       "sheet": {
@@ -575,15 +578,15 @@
     },
     "clock-2026-10-13T06:00:00.000Z": {
       "body": {
-        "now": "2026-10-13T06:00:00.000005Z"
+        "now": "2026-10-13T06:00:00.000004250Z"
       },
       "status": 200
     },
     "e-p3": {
       "first": {
         "counters": {
-          "late": 0,
-          "notices": 1
+          "notices": 1,
+          "late": 0
         },
         "errors": [],
         "items": 1
@@ -619,8 +622,8 @@
       },
       "noShowNotice": {
         "scheduledFor": "2026-10-13T06:00:00Z",
-        "queuedAt": "2026-10-13T06:00:01.171Z",
-        "sentAt": "2026-10-13T06:00:02.050Z"
+        "queuedAt": "2026-10-13T06:00:01.217Z",
+        "sentAt": "2026-10-13T06:00:01.354Z"
       },
       "second": {
         "counters": {},
@@ -714,7 +717,7 @@
         "ACTIVITY"
       ],
       "activityRow": {
-        "activityId": "fa701f0e-8a6c-4051-a19f-1a3f6398281a",
+        "activityId": "c3b928b3-5b35-4c48-876b-6bf10d061507",
         "isTheActivity": true,
         "rowsBefore": 0,
         "state": "CANCELLED",
@@ -821,7 +824,7 @@
     },
     "clock-2026-10-13T22:00:00.000Z": {
       "body": {
-        "now": "2026-10-13T22:00:00.000005833Z"
+        "now": "2026-10-13T22:00:00.000006083Z"
       },
       "status": 200
     },
@@ -839,9 +842,9 @@
       },
       "versionKept": true
     },
-    "clock-2026-10-08T20:32:53.313Z": {
+    "clock-2026-10-09T17:30:31.784Z": {
       "body": {
-        "now": "2026-10-08T20:32:53.313006375Z"
+        "now": "2026-10-09T17:30:31.784004917Z"
       },
       "status": 200
     },

@@ -1,0 +1,454 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (52 tests | 2 failed | 50 skipped) 315ms
+   ❯ E8-W04 snapshot deltas (ruling E90) on D6 (2)
+     × E8-W04 E90 (d): before a run, «Import de la remesa» reads the simulation's collectionDate 199ms
+     × E8-W04 E90 (a): an incident about a receipt shows its number, which opens the receipt 114ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W04 snapshot deltas (ruling E90) on D6 > E8-W04 E90 (d): before a run, «Import de la remesa» reads the simulation's collectionDate
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  data de cobrament: 01/10[39m
+Received:
+[31m  6.480 €Import de la remesaRemeses ›[39m
+ ❯ src/billing/BillingPage.test.tsx:1839:67
+    1837|     await screen.findByText("sense compte bancari informat");
+    1838|     expect(requests("POST", "/billing/runs")).toHaveLength(0);
+    1839|     expect(screen.getByText("Import de la remesa").parentElement).toHa…
+       |                                                                   ^
+    1840|       "data de cobrament: 01/10",
+    1841|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W04 snapshot deltas (ruling E90) on D6 > E8-W04 E90 (a): an incident about a receipt shows its number, which opens the receipt
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Obre el rebut 2026-0912"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Pas 1 — Simulació: incidències primer":
+  [36m<h2 />[39m
+
+  --------------------------------------------------table:
+
+  Name "":
+  [36m<table[39m
+    [33mclass[39m=[32m"billing-members"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Laura Serra mètode de pagament canviat Obre fitxa de Laura Serra":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  rowheader:
+
+  Name "Laura Serra":
+  [36m<th[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "mètode de pagament canviat":
+  [36m<td />[39m
+
+  Name "Obre fitxa de Laura Serra":
+  [36m<td[39m
+    [33mclass[39m=[32m"billing-members__action"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "Obre fitxa de Laura Serra":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Obre fitxa de Laura Serra"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+    [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000001"[39m
+  [36m/>[39m
+
+  --------------------------------------------------paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"billing-simulation__footnote"[39m
+  [36m/>[39m
+
+  --------------------------------------------------heading:
+
+  Name "Actius amb pagament en efectiu":
+  [36m<h3[39m
+    [33mclass[39m=[32m"billing-simulation__subtitle"[39m
+  [36m/>[39m
+
+  --------------------------------------------------table:
+
+  Name "":
+  [36m<table[39m
+    [33mclass[39m=[32m"billing-members"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Joan Vila data de baixa prevista: 31/12/2026 Obre fitxa de Joan Vila":
+  [36m<tr />[39m
+
+  Name "Roser Camps data de baixa prevista: 30/06/2027 Obre fitxa de Roser Camps":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  rowheader:
+
+  Name "Joan Vila":
+  [36m<th[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  Name "Roser Camps":
+  [36m<th[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "data de baixa prevista: 31/12/2026":
+  [36m<td />[39m
+
+  Name "Obre fitxa de Joan Vila":
+  [36m<td[39m
+    [33mclass[39m=[32m"billing-members__action"[39m
+  [36m/>[39m
+
+  Name "data de baixa prevista: 30/06/2027":
+  [36m<td />[39m
+
+  Name "Obre fitxa de Roser Camps":
+  [36m<td[39m
+    [33mclass[39m=[32m"billing-members__action"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  strong:
+
+  Name "":
+  [36m<strong />[39m
+
+  Name "":
+  [36m<strong />[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "Obre fitxa de Joan Vila":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+    [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000011"[39m
+  [36m/>[39m
+
+  Name "Obre fitxa de Roser Camps":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Obre fitxa de Roser Camps"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+    [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000012"[39m
+  [36m/>[39m
+
+  --------------------------------------------------heading:
+
+  Name "Omesos de la generació":
+  [36m<h3[39m
+    [33mclass[39m=[32m"billing-simulation__subtitle"[39m
+  [36m/>[39m
+
+  --------------------------------------------------table:
+
+  Name "":
+  [36m<table[39m
+    [33mclass[39m=[32m"billing-members"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  rowgroup:
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "Joan Vila sense compte bancari informat Obre fitxa de Joan Vila":
+  [36m<tr />[39m
+
+  Name "Pau Riera sense tarifa assignada Obre fitxa de Pau Riera":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  rowheader:
+
+  Name "Joan Vila":
+  [36m<th[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  Name "Pau Riera":
+  [36m<th[39m
+    [33mscope[39m=[32m"row"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "sense compte bancari informat":
+  [36m<td />[39m
+
+  Name "Obre fitxa de Joan Vila":
+  [36m<td[39m
+    [33mclass[39m=[32m"billing-members__action"[39m
+  [36m/>[39m
+
+  Name "sense tarifa assignada":
+  [36m<td />[39m
+
+  Name "Obre fitxa de Pau Riera":
+  [36m<td[39m
+    [33mclass[39m=[32m"billing-members__action"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "Obre fitxa de Joan Vila":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+    [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000011"[39m
+  [36m/>[39m
+
+  Name "Obre fitxa de Pau Riera":
+  [36m<a[39m
+    [33maria-label[39m=[32m"Obre fitxa de Pau Riera"[39m
+    [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+    [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000013"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<div[39m
+  [33mclass[39m=[32m"ah-card billing-simulation"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"billing-simulation__head"[39m
+  [36m>[39m
+    [36m<h2>[39m
+      [0mPas 1 — Simulació: incidències primer[0m
+    [36m</h2>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+    [36m>[39m
+      [36m<span[39m
+        [33maria-hidden[39m=[32m"true"[39m
+      [36m>[39m
+        [0m1[0m
+      [36m</span>[39m
+      [36m<span[39m
+        [33mclass[39m=[32m"ah-sr-only"[39m
+      [36m>[39m
+        [0m1 incidència[0m
+      [36m</span>[39m
+    [36m</span>[39m
+  [36m</div>[39m
+  [36m<table[39m
+    [33mclass[39m=[32m"billing-members"[39m
+  [36m>[39m
+    [36m<tbody>[39m
+      [36m<tr>[39m
+        [36m<th[39m
+          [33mscope[39m=[32m"row"[39m
+        [36m>[39m
+          [0mLaura Serra[0m
+        [36m</th>[39m
+        [36m<td>[39m
+          [0mmètode de pagament canviat[0m
+        [36m</td>[39m
+        [36m<td[39m
+          [33mclass[39m=[32m"billing-members__action"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Obre fitxa de Laura Serra"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+            [33mhref[39m=[32m"/abonats/b1000000-0000-4000-8000-000000000001"[39m
+          [36m>[39m
+            [0mObre fitxa[0m
+          [36m</a>[39m
+        [36m</td>[39m
+      [36m</tr>[39m
+    [36m</tbody>[39m
+  [36m</table>[39m
+  [36m<p[39m
+    [33mclass[39m=[32m"billing-simulation__footnote"[39m
+  [36m>[39m
+    [0mEls abonats amb incidència s'ometen de la generació.[0m
+  [36m</p>[39m
+  [36m<h3[39m
+    [33mclass[39m=[32m"billing-simulation__subtitle"[39m
+  [36m>[39m
+    [0mActius amb pagament en efectiu[0m
+  [36m</h3>[39m
+  [36m<table[39m
+    [33mclass[39m=[32m"billing-members"[39m
+  [36m>[39m
+    [36m<tbody>[39m
+      [36m<tr>[39m
+        [36m<th[39m
+          [33mscope[39m=[32m"row"[39m
+        [36m>[39m
+          [0mJoan Vila[0m
+        [36m</th>[39m
+        [36m<td>[39m
+          [0mdata de baixa prevista:[0m
+          [0m [0m
+          [36m<strong>[39m
+            [0m31/12/2026[0m
+          [36m</strong>[39m
+        [36m</td>[39m
+        [36m<td[39m
+          [33mclass[39m=[32m"billing-members__action"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+            [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000011"[39m
+          [36m>[39m
+            [0mObre fitxa[0m
+          [36m</a>[39m
+        [36m</td>[39m
+      [36m</tr>[39m
+      [36m<tr>[39m
+        [36m<th[39m
+          [33mscope[39m=[32m"row"[39m
+        [36m>[39m
+          [0mRoser Camps[0m
+        [36m</th>[39m
+        [36m<td>[39m
+          [0mdata de baixa prevista:[0m
+          [0m [0m
+          [36m<strong>[39m
+            [0m30/06/2027[0m
+          [36m</strong>[39m
+        [36m</td>[39m
+        [36m<td[39m
+          [33mclass[39m=[32m"billing-members__action"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Obre fitxa de Roser Camps"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+            [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000012"[39m
+          [36m>[39m
+            [0mObre fitxa[0m
+          [36m</a>[39m
+        [36m</td>[39m
+      [36m</tr>[39m
+    [36m</tbody>[39m
+  [36m</table>[39m
+  [36m<h3[39m
+    [33mclass[39m=[32m"billing-simulation__subtitle"[39m
+  [36m>[39m
+    [0mOmesos de la generació[0m
+  [36m</h3>[39m
+  [36m<table[39m
+    [33mclass[39m=[32m"billing-members"[39m
+  [36m>[39m
+    [36m<tbody>[39m
+      [36m<tr>[39m
+        [36m<th[39m
+          [33mscope[39m=[32m"row"[39m
+        [36m>[39m
+          [0mJoan Vila[0m
+        [36m</th>[39m
+        [36m<td>[39m
+          [0msense compte bancari informat[0m
+        [36m</td>[39m
+        [36m<td[39m
+          [33mclass[39m=[32m"billing-members__action"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Obre fitxa de Joan Vila"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+            [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000011"[39m
+          [36m>[39m
+            [0mObre fitxa[0m
+          [36m</a>[39m
+        [36m</td>[39m
+      [36m</tr>[39m
+      [36m<tr>[39m
+        [36m<th[39m
+          [33mscope[39m=[32m"row"[39m
+        [36m>[39m
+          [0mPau Riera[0m
+        [36m</th>[39m
+        [36m<td>[39m
+          [0msense tarifa assignada[0m
+        [36m</td>[39m
+        [36m<td[39m
+          [33mclass[39m=[32m"billing-members__action"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Obre fitxa de Pau Riera"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost billing-open"[39m
+            [33mhref[39m=[32m"/abonats/61000000-0000-4000-8000-000000000013"[39m
+          [36m>[39m
+            [0mObre fitxa[0m
+          [36m</a>[39m
+        [36m</td>[39m
+      [36m</tr>[39m
+    [36m</tbody>[39m
+  [36m</table>[39m
+[36m</div>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/billing/BillingPage.test.tsx:1878:34
+    1876|     );
+    1877|     if (!(card instanceof HTMLElement)) throw new TypeError("No simula…
+    1878|     fireEvent.click(within(card).getByRole("button", { name: "Obre el …
+       |                                  ^
+    1879|     expect(await screen.findByRole("dialog", { name: "Rebut 2026-0912"…
+    1880|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 50 skipped (52)
+   Start at  13:08:32
+   Duration  1.45s (transform 41%, tests 23%, environment 19%, import 13%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/billing/BillingPage.test.tsx -t E90

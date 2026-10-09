@@ -1,0 +1,560 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+ ❯ src/leave/LeavePage.test.tsx (12 tests | 1 failed | 11 skipped) 10186ms
+   ❯ T-13-30 member leave (12)
+     × E8-W04: without a navigate prop the withdrawal goes back to the profile in-app (no reload) 10184ms
+ ❯ src/inactivity/InactivityPage.test.tsx (17 tests | 1 failed | 16 skipped) 10452ms
+   ❯ T-13-29 member inactivity (17)
+     × E8-W04: without a navigate prop it goes back to the profile in-app, so the «desat» toast stays 10450ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/inactivity/InactivityPage.test.tsx > T-13-29 member inactivity > E8-W04: without a navigate prop it goes back to the profile in-app, so the «desat» toast stays
+AssertionError: expected '/inactivitat' to be '/perfil' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"lifecycle-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"lifecycle-page__bar"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna al perfil"[39m
+            [33mhref[39m=[32m"/perfil"[39m
+          [36m>[39m
+            [0m‹[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mPeríode d'inactivitat[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"lifecycle-form"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-intro"[39m
+          [36m>[39m
+            [0mTens dret a demanar una pausa (en mesos). Durant aquest temps no participaries de les activitats de l'escola i pagaràs una quota mínima de manteniment que conserva la teva entrada i la teva quota actual per quan tornis. Pot demanar-se fins al dia 25 del mes anterior al que es vol començar el període d'inactivitat.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [0mMes d'inici (obligatori)[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mid[39m=[32m"inactivity-from"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-10"[39m
+              [36m>[39m
+                [0mOctubre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-11"[39m
+              [36m>[39m
+                [0mNovembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2026-12"[39m
+              [36m>[39m
+                [0mDesembre 2026[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-01"[39m
+              [36m>[39m
+                [0mGener 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-02"[39m
+              [36m>[39m
+                [0mFebrer 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-03"[39m
+              [36m>[39m
+                [0mMarç 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-04"[39m
+              [36m>[39m
+                [0mAbril 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-05"[39m
+              [36m>[39m
+                [0mMaig 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-06"[39m
+              [36m>[39m
+                [0mJuny 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-07"[39m
+              [36m>[39m
+                [0mJuliol 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-08"[39m
+              [36m>[39m
+                [0mAgost 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-09"[39m
+              [36m>[39m
+                [0mSetembre 2027[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"2027-10"[39m
+              [36m>[39m
+                [0mOctubre 2027[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-to"[39m
+            [36m>[39m
+              [0mMes de finalització (si el saps)[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mid[39m=[32m"inactivity-to"[39m
+              [33mmin[39m=[32m"2026-10"[39m
+              [33mtype[39m=[32m"month"[39m
+              [33mvalue[39m=[32m""[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"lifecycle-open-end"[39m
+            [33mfor[39m=[32m"inactivity-open-end"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mchecked[39m=[32m""[39m
+              [33mclass[39m=[32m"ah-checkbox"[39m
+              [33mid[39m=[32m"inactivity-open-end"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+            [36m<span>[39m
+              [0m— encara no ho sé[0m
+            [36m</span>[39m
+          [36m</label>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"inactivity-comments"[39m
+            [36m>[39m
+              [0mComentaris[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea"[39m
+              [33mid[39m=[32m"inactivity-comments"[39m
+              [33mmaxlength[39m=[32m"500"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card lifecycle-fee"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<span>[39m
+                [0mQuota del 1r mes[0m
+              [36m</span>[39m
+              [36m<strong>[39m
+                [0m20,00 €[0m
+              [36m</strong>[39m
+            [36m</div>[39m
+            [36m<div>[39m
+              [36m<span>[39m
+                [0mMesos següents[0m
+              [36m</span>[39m
+              [36m<strong>[39m
+                [0m10,00 €/mes[0m
+              [36m</strong>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-note"[39m
+          [36m>[39m
+            [0mLa data de final es pot modificar durant el període d'inactivitat (també fins al dia 25).[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-warning"[39m
+          [36m>[39m
+            [0mAra tens 1 reserva dins del període: s'anul·larà si el club aprova la sol·licitud.[0m
+          [36m</p>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"submit"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mENVIA LA SOL·LICITUD[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-toast ah-tone--success"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mLa sol·licitud s'ha desat.[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"close"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+Expected: "/perfil"
+Received: "/inactivitat"
+
+ ❯ src/inactivity/InactivityPage.test.tsx:532:40
+    530|     expect(await screen.findByText("La sol·licitud s'ha desat.")).toBe…
+    531|     await waitFor(() => {
+    532|       expect(window.location.pathname).toBe("/perfil");
+       |                                        ^
+    533|     });
+    534|     expect(popstate).toHaveBeenCalled();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/leave/LeavePage.test.tsx > T-13-30 member leave > E8-W04: without a navigate prop the withdrawal goes back to the profile in-app (no reload)
+AssertionError: expected '/baixa' to be '/perfil' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div />[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"lifecycle-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"lifecycle-page__bar"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-label[39m=[32m"Torna al perfil"[39m
+            [33mhref[39m=[32m"/perfil"[39m
+          [36m>[39m
+            [0m‹[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mSol·licitar la baixa[0m
+          [36m</h1>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card leave-offer"[39m
+        [36m>[39m
+          [36m<p>[39m
+            [0mSi tens previst tornar més endavant, recorda que pots demanar un període d'inactivitat (predefinit o obert) i mantenir la teva entrada vigent i el teu import de quota actual per quan tornis.[0m
+          [36m</p>[39m
+          [36m<p>[39m
+            [0mLa quota és de 20,00 € el primer mes i 10,00 € els següents.[0m
+          [36m</p>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mhref[39m=[32m"/inactivitat"[39m
+          [36m>[39m
+            [0mVULL DEMANAR INACTIVITAT[0m
+          [36m</a>[39m
+        [36m</div>[39m
+        [36m<form[39m
+          [33mclass[39m=[32m"lifecycle-form"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"leave-date"[39m
+            [36m>[39m
+              [0mData en què vols la baixa[0m
+            [36m</label>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"ah-input"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mid[39m=[32m"leave-date"[39m
+              [33mmin[39m=[32m"2026-08-11"[39m
+              [33mrequired[39m=[32m""[39m
+              [33mtype[39m=[32m"date"[39m
+              [33mvalue[39m=[32m"2026-08-11"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-form-field__help"[39m
+            [36m>[39m
+              [0mAvui, 11 d’agost del 2026[0m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-note"[39m
+          [36m>[39m
+            [0mSi tries un dia d'un mes posterior a l'actual, aquell mes es cobrarà íntegrament.[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"leave-reason"[39m
+            [36m>[39m
+              [0mMotiu[0m
+            [36m</label>[39m
+            [36m<select[39m
+              [33mclass[39m=[32m"ah-input ah-select"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mid[39m=[32m"leave-reason"[39m
+              [33mrequired[39m=[32m""[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTria un motiu[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"LEARNED_ENOUGH"[39m
+              [36m>[39m
+                [0mJa he après tot el que volia[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"NO_TIME"[39m
+              [36m>[39m
+                [0mNo trobo temps per anar-hi[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"NOT_EXPECTED"[39m
+              [36m>[39m
+                [0mNo és el que esperava[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"EXTERNAL"[39m
+              [36m>[39m
+                [0mCondicionants meus aliens al club[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"OTHER"[39m
+              [36m>[39m
+                [0mAltres[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</div>[39m
+          [36m<fieldset[39m
+            [33mclass[39m=[32m"leave-nps"[39m
+          [36m>[39m
+            [36m<legend>[39m
+              [0mDe 0 a 10, amb quina probabilitat ens recomanaries?[0m
+            [36m</legend>[39m
+            [36m<div>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m0[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m1[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m2[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m3[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m4[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m5[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m6[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m7[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m8[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m9[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mdisabled[39m=[32m""[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m10[0m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</fieldset>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-form-field"[39m
+          [36m>[39m
+            [36m<label[39m
+              [33mclass[39m=[32m"ah-form-field__label"[39m
+              [33mfor[39m=[32m"leave-comment"[39m
+            [36m>[39m
+              [0mQuè podríem millorar perquè el club s'adaptés més a les teves necessitats?[0m
+            [36m</label>[39m
+            [36m<textarea[39m
+              [33mclass[39m=[32m"ah-input ah-textarea"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mid[39m=[32m"leave-comment"[39m
+              [33mmaxlength[39m=[32m"2000"[39m
+            [36m/>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mRETIRA LA SOL·LICITUD[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"lifecycle-footer"[39m
+          [36m>[39m
+            [0mEl club la revisarà i et confirmarà la data d'efecte.[0m
+          [36m</p>[39m
+        [36m</form>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"ah-toast-viewport"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-toast ah-tone--success"[39m
+          [33mrole[39m=[32m"status"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0mLa sol·licitud s'ha retirat.[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"close"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+Expected: "/perfil"
+Received: "/baixa"
+
+ ❯ src/leave/LeavePage.test.tsx:107:40
+    105|     fireEvent.click(await screen.findByRole("button", { name: "RETIRA …
+    106|     await waitFor(() => {
+    107|       expect(window.location.pathname).toBe("/perfil");
+       |                                        ^
+    108|     });
+    109|   });
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 27 skipped (29)
+   Start at  09:59:39
+   Duration  11.87s (tests 89%, transform 4%, environment 4%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/inactivity src/leave -t E8-W04: without a navigate prop

@@ -1,0 +1,337 @@
+heavy.sh: 10:39 waiting for the host lock, held by: 10:37 agilityhub-core-api-c: ./mvnw -q -Pmutation -DtargetClasses=com.agilityhub.core.payments.application.PendingChargeService,com.agilityhub.core.payments.application.PendingChargeService$*,com.agilityhub.core.payments.application.ProviderSecretVault,com.agilityhub.core.payments.application.ProviderSecretVault$*,com.agilityhub.core.payments.application.ReceiptPdf,com.agilityhub.core.payments.application.ReceiptPdf$*,com.agilityhub.core.payments.application.RemittanceLists,com.agilityhub.core.payments.application.RemittanceLists$*,com.agilityhub.core.payments.application.RemittanceService,com.agilityhub.core.payments.application.RemittanceService$*,com.agilityhub.core.payments.application.SignupPaymentAccess,com.agilityhub.core.payments.application.SignupPaymentAccess$*,com.agilityhub.core.payments.application.StripeWebhookSignatures,com.agilityhub.core.payments.application.StripeWebhookSignatures$*,com.agilityhub.core.payments.application.StripeWebhooks,com.agilityhub.core.payments.application.StripeWebhooks$*,com.agilityhub.core.payments.application.UpfrontPayments,com.agilityhub.core.payments.application.UpfrontPayments$*,com.agilityhub.core.payments.application.ports.* -DtargetTests=com.agilityhub.core.payments.*,com.agilityhub.core.clubs.bookings.api.BookingsIT,com.agilityhub.core.clubs.bookings.api.LifecycleConcurrencyIT,com.agilityhub.core.clubs.bookings.api.LifecycleIT,com.agilityhub.core.clubs.bookings.api.SingleClassCheckoutIT,com.agilityhub.core.clubs.census.api.SignupCensusCorrectionsIT,com.agilityhub.core.clubs.census.api.SignupFollowUpFixesIT,com.agilityhub.core.clubs.census.api.SignupGateFixesIT,com.agilityhub.core.clubs.census.api.SignupIT,com.agilityhub.core.clubs.census.api.SignupMinorFixesIT,com.agilityhub.core.clubs.dashboard.api.DashboardIT,com.agilityhub.core.clubs.messaging.application.engine.TemplateVariableParityIT,com.agilityhub.core.configuration.E3ContractIT,com.agilityhub.core.configuration.E3ResponseContractTest,com.agilityhub.core.configuration.E5BackOfficeContractTest,com.agilityhub.core.configuration.E8ContractIT,com.agilityhub.core.configuration.E8PersistenceIT,com.agilityhub.core.configuration.E8ResponseContractTest,com.agilityhub.core.configuration.ListFieldsContractIT,com.agilityhub.core.configuration.S04ErrorContractTest,com.agilityhub.core.migration.PlayoffAdapterTest,com.agilityhub.core.migration.PlayoffMigrationIT,com.agilityhub.core.shared.api.AnonymousRateLimitsTest -DmutationUnitSize=10 test-compile org.pitest:pitest-maven:mutationCoverage
+heavy.sh: the lock is still held after 45 min by: 10:37 agilityhub-core-api-c: ./mvnw -q -Pmutation -DtargetClasses=com.agilityhub.core.payments.application.PendingChargeService,com.agilityhub.core.payments.application.PendingChargeService$*,com.agilityhub.core.payments.application.ProviderSecretVault,com.agilityhub.core.payments.application.ProviderSecretVault$*,com.agilityhub.core.payments.application.ReceiptPdf,com.agilityhub.core.payments.application.ReceiptPdf$*,com.agilityhub.core.payments.application.RemittanceLists,com.agilityhub.core.payments.application.RemittanceLists$*,com.agilityhub.core.payments.application.RemittanceService,com.agilityhub.core.payments.application.RemittanceService$*,com.agilityhub.core.payments.application.SignupPaymentAccess,com.agilityhub.core.payments.application.SignupPaymentAccess$*,com.agilityhub.core.payments.application.StripeWebhookSignatures,com.agilityhub.core.payments.application.StripeWebhookSignatures$*,com.agilityhub.core.payments.application.StripeWebhooks,com.agilityhub.core.payments.application.StripeWebhooks$*,com.agilityhub.core.payments.application.UpfrontPayments,com.agilityhub.core.payments.application.UpfrontPayments$*,com.agilityhub.core.payments.application.ports.* -DtargetTests=com.agilityhub.core.payments.*,com.agilityhub.core.clubs.bookings.api.BookingsIT,com.agilityhub.core.clubs.bookings.api.LifecycleConcurrencyIT,com.agilityhub.core.clubs.bookings.api.LifecycleIT,com.agilityhub.core.clubs.bookings.api.SingleClassCheckoutIT,com.agilityhub.core.clubs.census.api.SignupCensusCorrectionsIT,com.agilityhub.core.clubs.census.api.SignupFollowUpFixesIT,com.agilityhub.core.clubs.census.api.SignupGateFixesIT,com.agilityhub.core.clubs.census.api.SignupIT,com.agilityhub.core.clubs.census.api.SignupMinorFixesIT,com.agilityhub.core.clubs.dashboard.api.DashboardIT,com.agilityhub.core.clubs.messaging.application.engine.TemplateVariableParityIT,com.agilityhub.core.configuration.E3ContractIT,com.agilityhub.core.configuration.E3ResponseContractTest,com.agilityhub.core.configuration.E5BackOfficeContractTest,com.agilityhub.core.configuration.E8ContractIT,com.agilityhub.core.configuration.E8PersistenceIT,com.agilityhub.core.configuration.E8ResponseContractTest,com.agilityhub.core.configuration.ListFieldsContractIT,com.agilityhub.core.configuration.S04ErrorContractTest,com.agilityhub.core.migration.PlayoffAdapterTest,com.agilityhub.core.migration.PlayoffMigrationIT,com.agilityhub.core.shared.api.AnonymousRateLimitsTest -DmutationUnitSize=10 test-compile org.pitest:pitest-maven:mutationCoverage
+heavy.sh: running WITHOUT the lock - if this run fails on timeouts, say so in the report
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E8-W04 e8-core.spec.ts
+
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-09T00:19:48.527835998Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:2b342f5af3e3ffd77f5c08f5b5c762a2bacf9332973c0a196d22d066d634e779]
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+E4_WEEK_START=2026-10-05 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-12 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-10-19 (the second club-local Monday after today, Europe/Madrid)
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W04/demo-canic.yaml (311 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W04/demo-fifo.yaml (62 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-e8-w04_default Creating 
+ Network agilityhub-e8-w04_default Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_export-files Creating 
+ Volume agilityhub-e8-w04_export-files Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Volume agilityhub-e8-w04_mailbox Creating 
+ Volume agilityhub-e8-w04_mongo-data Creating 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Volume agilityhub-e8-w04_mailbox Created 
+ Volume agilityhub-e8-w04_export-files Created 
+ Volume agilityhub-e8-w04_export-files Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Volume agilityhub-e8-w04_mongo-data Created 
+ Network agilityhub-e8-w04_default Created 
+ Network agilityhub-e8-w04_default Created 
+ Container agilityhub-e8-w04-mongo-1 Creating 
+ Container agilityhub-e8-w04-mongo-1 Created 
+ Container agilityhub-e8-w04-seed-1 Creating 
+ Container agilityhub-e8-w04-seed-1 Created 
+ Container agilityhub-e8-w04-activate-demo-club-1 Creating 
+ Container agilityhub-e8-w04-activate-demo-club-1 Created 
+ Container agilityhub-e8-w04-core-1 Creating 
+ Container agilityhub-e8-w04-core-1 Created 
+ Container agilityhub-e8-w04-mongo-1 Starting 
+ Container agilityhub-e8-w04-mongo-1 Started 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-seed-1 Starting 
+ Container agilityhub-e8-w04-seed-1 Started 
+ Container agilityhub-e8-w04-seed-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Exited 
+ Container agilityhub-e8-w04-activate-demo-club-1 Starting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Started 
+ Container agilityhub-e8-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-core-1 Starting 
+ Container agilityhub-e8-w04-core-1 Started 
+ Container agilityhub-e8-w04-mongo-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Waiting 
+ Container agilityhub-e8-w04-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w04-core-1 Waiting 
+ Container agilityhub-e8-w04-seed-1 Exited 
+ Container agilityhub-e8-w04-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w04-mongo-1 Healthy 
+ Container agilityhub-e8-w04-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W04/seed-files.log (191 lines)
+E8 seed totals: Cànic billing/lifecycle and FIFO card scenarios asserted
+ Container agilityhub-e8-w04-playwright-run-882cf4090ecc Creating 
+ Container agilityhub-e8-w04-playwright-run-882cf4090ecc Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +852
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 852, reused 810, downloaded 0, added 0
+Progress: resolved 852, reused 852, downloaded 0, added 216
+Progress: resolved 852, reused 852, downloaded 0, added 363
+Progress: resolved 852, reused 852, downloaded 0, added 541
+Progress: resolved 852, reused 852, downloaded 0, added 713
+Progress: resolved 852, reused 852, downloaded 0, added 830
+Progress: resolved 852, reused 852, downloaded 0, added 839
+Progress: resolved 852, reused 852, downloaded 0, added 851
+Progress: resolved 852, reused 852, downloaded 0, added 852
+Progress: resolved 852, reused 852, downloaded 0, added 852, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 10.8s using pnpm v9.15.9
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 6 tests using 1 worker
+
+[1/6] e2e/core/e8-core.spec.ts:614:5 › E8-W04 T-13-32 (e·1): screen 14 request → «Inactivitats» → D10 approval; the seeded inactive member on 04, D5 and D10
+  1) e2e/core/e8-core.spec.ts:614:5 › E8-W04 T-13-32 (e·1): screen 14 request → «Inactivitats» → D10 approval; the seeded inactive member on 04, D5 and D10 
+
+    Error: {"code":"NO_MEMBERSHIP","message":"El compte no té accés a aquest club.","details":{},"traceId":"f72a8f8c-4ccd-486f-9ae0-74025bd01afe"}
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 403
+
+      443 |   }
+      444 |   record.clock = [...(record.clock ?? []), { instant, status: answer.status }];
+    > 445 |   expect(answer.status, JSON.stringify(answer.body)).toBe(200);
+          |                                                      ^
+      446 |   await context.close();
+      447 | }
+      448 |
+        at setClock (/work/e2e/core/e8-core.spec.ts:445:54)
+        at /work/e2e/core/e8-core.spec.ts:618:3
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-09T09:27:31.981Z grant_type=refresh_token status=400 cookie=none context=w0c1 page=127.0.0.1:4174/entrar started=2026-10-09T09:27:31.964Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E8-W04 T-13...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e8-core-E8-W04-T-13-32-e·1-6a2d0-ive-member-on-04-D5-and-D10/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e8-core-E8-W04-T-13-32-e·1-6a2d0-ive-member-on-04-D5-and-D10/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e8-core-E8-W04-T-13-32-e·1-6a2d0-ive-member-on-04-D5-and-D10/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/6] e2e/core/e8-core.spec.ts:752:5 › E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 07 cancellation returns it, 13 shows both; the expired pack stays unusable
+  2) e2e/core/e8-core.spec.ts:752:5 › E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 07 cancellation returns it, 13 shows both; the expired pack stays unusable 
+
+    Error: {"code":"NO_MEMBERSHIP","message":"El compte no té accés a aquest club.","details":{},"traceId":"22487ea5-933b-4c5e-adb3-dcf24d7833b0"}
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 403
+
+      443 |   }
+      444 |   record.clock = [...(record.clock ?? []), { instant, status: answer.status }];
+    > 445 |   expect(answer.status, JSON.stringify(answer.body)).toBe(200);
+          |                                                      ^
+      446 |   await context.close();
+      447 | }
+      448 |
+        at setClock (/work/e2e/core/e8-core.spec.ts:445:54)
+        at /work/e2e/core/e8-core.spec.ts:787:7
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-09T09:27:33.981Z grant_type=refresh_token status=400 cookie=none context=w1c1 page=127.0.0.1:4174/entrar started=2026-10-09T09:27:33.975Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E8-W04 (d) ...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e8-core-E8-W04-d-R-12-23-2-a75ba-expired-pack-stays-unusable/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e8-core-E8-W04-d-R-12-23-2-a75ba-expired-pack-stays-unusable/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e8-core-E8-W04-d-R-12-23-2-a75ba-expired-pack-stays-unusable/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/6] e2e/core/e8-core.spec.ts:887:5 › E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML → returned → rollback → same numbers; cash paid; accounting export; GET /invoices timings
+  3) e2e/core/e8-core.spec.ts:887:5 › E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML → returned → rollback → same numbers; cash paid; accounting export; GET /invoices timings 
+
+    Error: The inactivity leg did not choose its member
+
+      892 |   const { page } = admin;
+      893 |   const laura = lifecycle.member;
+    > 894 |   if (laura === undefined) throw new Error("The inactivity leg did not choose its member");
+          |                                  ^
+      895 |
+      896 |   // D6 simulation: every number below is the real answer this page caused.
+      897 |   const simulation = await simulateOnD6(page, adminUrl, period);
+        at /work/e2e/core/e8-core.spec.ts:894:34
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-09T09:27:38.391Z grant_type=refresh_token status=400 cookie=none context=w2c1 page=127.0.0.1:4174/entrar started=2026-10-09T09:27:38.379Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E8-W04 T-12...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e8-core-E8-W04-T-12-27-a-b-95920-export-GET-invoices-timings/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e8-core-E8-W04-T-12-27-a-b-95920-export-GET-invoices-timings/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e8-core-E8-W04-T-12-27-a-b-95920-export-GET-invoices-timings/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[4/6] e2e/core/e8-core.spec.ts:1201:5 › E8-W04 T-13-32 (e·2) in es: 15 → «Baixes» → D10 approval → D5 «baixa dd/mm» and «Baixes previstes»; the month after has no receipt (R-13-11)
+  4) e2e/core/e8-core.spec.ts:1201:5 › E8-W04 T-13-32 (e·2) in es: 15 → «Baixes» → D10 approval → D5 «baixa dd/mm» and «Baixes previstes»; the month after has no receipt (R-13-11) 
+
+    Error: The inactivity leg did not choose its member
+
+      1206 |   const { page } = admin;
+      1207 |   const laura = lifecycle.member;
+    > 1208 |   if (laura === undefined) throw new Error("The inactivity leg did not choose its member");
+           |                                  ^
+      1209 |
+      1210 |   // Control: before her leave, the month after the billed one still bills her.
+      1211 |   const before = await simulateOnD6(page, adminUrl, monthAfterPeriod);
+        at /work/e2e/core/e8-core.spec.ts:1208:34
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-09T09:27:39.744Z grant_type=refresh_token status=400 cookie=none context=w3c1 page=127.0.0.1:4174/entrar started=2026-10-09T09:27:39.740Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E8-W04 T-13...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e8-core-E8-W04-T-13-32-e·2-34536-ter-has-no-receipt-R-13-11-/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e8-core-E8-W04-T-13-32-e·2-34536-ter-has-no-receipt-R-13-11-/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e8-core-E8-W04-T-13-32-e·2-34536-ter-has-no-receipt-R-13-11-/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[5/6] e2e/core/e8-core.spec.ts:1291:5 › E8-W04 (f) T-13-24 / T-12-21: instructor gates, another member's /me/…/{id} (also a family member's) is not found, nothing secret rendered
+  5) e2e/core/e8-core.spec.ts:1291:5 › E8-W04 (f) T-13-24 / T-12-21: instructor gates, another member's /me/…/{id} (also a family member's) is not found, nothing secret rendered 
+
+    Error: The lifecycle and billing legs did not leave their ids
+
+      1297 |   const invoiceId = lifecycle.invoiceId;
+      1298 |   if (periodId === undefined || invoiceId === undefined) {
+    > 1299 |     throw new Error("The lifecycle and billing legs did not leave their ids");
+           |           ^
+      1300 |   }
+      1301 |
+      1302 |   const instructor = await login(browser, adminUrl, INSTRUCTOR);
+        at /work/e2e/core/e8-core.spec.ts:1299:11
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-09T09:27:41.042Z grant_type=refresh_token status=400 cookie=none context=w4c1 page=127.0.0.1:4174/entrar started=2026-10-09T09:27:41.037Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E8-W04 (f) ...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e8-core-E8-W04-f-T-13-24-T-10909-und-nothing-secret-rendered/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e8-core-E8-W04-f-T-13-24-T-10909-und-nothing-secret-rendered/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e8-core-E8-W04-f-T-13-24-T-10909-und-nothing-secret-rendered/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[6/6] e2e/core/e8-core.spec.ts:1347:5 › E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] → 202 → CHARGING settles on its own (6b(a)) → «impagat (targeta)» and the member's banner → «cobrat»
+E8 fake card: payment_intent.payment_failed delivery failed (1)
+  6) e2e/core/e8-core.spec.ts:1347:5 › E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] → 202 → CHARGING settles on its own (6b(a)) → «impagat (targeta)» and the member's banner → «cobrat» 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "payment_intent.payment_failed 0"
+    Received: "payment_intent.payment_failed 1"
+
+    Call Log:
+    - Timeout 240000ms exceeded while waiting on the predicate
+
+      559 |       timeout: 240_000,
+      560 |     })
+    > 561 |     .toBe(`${event} 0`);
+          |      ^
+      562 |   rmSync(done, { force: true });
+      563 | }
+      564 |
+        at requestFakeCardEvent (/work/e2e/core/e8-core.spec.ts:561:6)
+        at /work/e2e/core/e8-core.spec.ts:1389:9
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-09T09:27:42.219Z grant_type=refresh_token status=400 cookie=none context=w5c1 page=127.0.0.1:4177/entrar started=2026-10-09T09:27:42.210Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E8-W04 (c) ...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e8-core-E8-W04-c-card-leg--56e55--member-s-banner-→-«cobrat»/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e8-core-E8-W04-c-card-leg--56e55--member-s-banner-→-«cobrat»/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e8-core-E8-W04-c-card-leg--56e55--member-s-banner-→-«cobrat»/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  6 failed
+    e2e/core/e8-core.spec.ts:614:5 › E8-W04 T-13-32 (e·1): screen 14 request → «Inactivitats» → D10 approval; the seeded inactive member on 04, D5 and D10 
+    e2e/core/e8-core.spec.ts:752:5 › E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 07 cancellation returns it, 13 shows both; the expired pack stays unusable 
+    e2e/core/e8-core.spec.ts:887:5 › E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML → returned → rollback → same numbers; cash paid; accounting export; GET /invoices timings 
+    e2e/core/e8-core.spec.ts:1201:5 › E8-W04 T-13-32 (e·2) in es: 15 → «Baixes» → D10 approval → D5 «baixa dd/mm» and «Baixes previstes»; the month after has no receipt (R-13-11) 
+    e2e/core/e8-core.spec.ts:1291:5 › E8-W04 (f) T-13-24 / T-12-21: instructor gates, another member's /me/…/{id} (also a family member's) is not found, nothing secret rendered 
+    e2e/core/e8-core.spec.ts:1347:5 › E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] → 202 → CHARGING settles on its own (6b(a)) → «impagat (targeta)» and the member's banner → «cobrat» 
+
+ ELIFECYCLE  Command failed with exit code 1.

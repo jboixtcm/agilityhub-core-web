@@ -248,7 +248,8 @@
     "COLLECTING": "in remittance",
     "PAID": "paid",
     "FAILED": "unpaid",
-    "CANCELLED": "cancelled"
+    "CANCELLED": "cancelled",
+    "REFUNDED": "refunded"
   },
   "inactivityState": {
     "REQUESTED": "requested",

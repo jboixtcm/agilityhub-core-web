@@ -1,7 +1,7 @@
 {
   "option": "TODAY",
   "portion": "FULL",
-  "startDate": "2026-10-08",
+  "startDate": "2026-10-09",
   "amountDue": {
     "amountMinor": 6000,
     "currency": "EUR"

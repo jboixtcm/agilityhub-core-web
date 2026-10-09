@@ -20,6 +20,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 
 import { BillingPage } from "./BillingPage";
 import { invoiceActions } from "./InvoiceDrawer";
+import { invoiceStatusView } from "./shared";
 
 const branding: Branding = {
   ...brandingCanicFixture,
@@ -194,7 +195,13 @@ describe("T-12-25 D6 «Facturació»: the month as the mockup draws it (S12 §2)
     ]);
     const openJoan = within(incidents).getByRole("link", { name: "Obre fitxa de Joan Vila" });
     expect(openJoan).toHaveTextContent("Obre fitxa");
-    expect(openJoan.getAttribute("href")).toMatch(/^\/abonats\/b1000000-/u);
+    // E8-W04 6b(d): the link points to a member whose D10 record the census mock serves.
+    const joanId = openJoan.getAttribute("href")?.replace(/^\/abonats\//u, "") ?? "";
+    const joan = await client().GET("/members/{id}/overview", {
+      params: { path: { id: joanId } },
+    });
+    expect(joan.response.status).toBe(200);
+    expect(joan.data?.member.fullName).toBe("Joan Vila");
     fireEvent.click(openJoan);
     expect(onNavigate).toHaveBeenCalledWith(openJoan.getAttribute("href"));
     expect(
@@ -922,7 +929,7 @@ describe("T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R
       await screen.findByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }),
     ).toBeVisible();
     expect(screen.queryByText("Amb targeta")).toBeNull();
-    expect(screen.getByRole("button", { name: "COBRA LES TARGETES" })).toBeVisible();
+    expect(screen.queryByRole("button", { name: "COBRA LES TARGETES" })).toBeNull();
   });
 
   it("T-12-32 billingManualOnly: «2 · GENERA ELS REBUTS»; the run issues every receipt by hand and makes no remittance", async () => {
@@ -974,7 +981,8 @@ describe("T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R
     ).toMatch(/^[0-9a-f-]{36}$/u);
     expect(await screen.findByText("Cobrant les targetes…")).toBeVisible();
     expect(cells(await invoiceRow("2026-0912")).at(6)).toBe("cobrant");
-    expect(screen.queryByRole("button", { name: "COBRA LES TARGETES" })).toBeNull();
+    // The snapshot accepts card-charges on GENERATED or CHARGING (E8 delta c): still offered.
+    expect(screen.getByRole("button", { name: "COBRA LES TARGETES" })).toBeEnabled();
     // The poll (every 5 s while CHARGING) reads the run settled: the month and the list are read again.
     const runReads = () =>
       requests("GET", `/billing/runs/${billingState.world.runs[0]?.run.id ?? ""}`).length;
@@ -1817,5 +1825,83 @@ describe("E8-W01 step 10: the D6 literals in ca (mockup V7) and the same keys in
     expect(esEnums.billingIncident?.PAYMENT_METHOD_CHANGED).toBe("método de pago cambiado");
     expect(enEnums.billingIncident?.MEMBER_NOT_ACTIVE).toBe("member not active");
     expect(enEnums.billingIncident?.PAYMENT_METHOD_CHANGED).toBe("payment method changed");
+  });
+});
+
+describe("E8-W04 snapshot deltas (ruling E90) on D6", () => {
+  it("E8-W04 E90 (d): before a run, «Import de la remesa» reads the simulation's collectionDate", async () => {
+    await renderPage({ search: "?mes=2026-10" });
+    const simulate = screen.getAllByRole("button", { name: "1 · SIMULA EL MES" })[0];
+    if (simulate === undefined) throw new TypeError("No simulate button");
+    fireEvent.click(simulate);
+    await screen.findByText("sense compte bancari informat");
+    expect(requests("POST", "/billing/runs")).toHaveLength(0);
+    expect(screen.getByText("Import de la remesa").parentElement).toHaveTextContent(
+      "data de cobrament: 01/10",
+    );
+  });
+
+  it("E8-W04 E90 (a): an incident about a receipt shows its number, which opens the receipt", async () => {
+    mockScenario("admin");
+    const month = await client().GET("/billing/periods/{period}", {
+      params: { path: { period: "2026-09" } },
+    });
+    const target = billingState.world.invoices.find(
+      (item) => item.invoice.displayNumber === "2026-0912",
+    )?.invoice;
+    const simulation = month.data?.simulation;
+    if (simulation == null || target === undefined) throw new TypeError("No September receipt");
+    server.use(
+      http.get("*/api/v1/billing/periods/2026-09", () =>
+        HttpResponse.json({
+          ...month.data,
+          simulation: {
+            ...simulation,
+            incidents: [
+              {
+                code: "PAYMENT_METHOD_CHANGED",
+                displayNumber: target.displayNumber,
+                invoiceId: target.id,
+                memberId: target.memberId,
+                memberName: "Laura Serra",
+              },
+            ],
+          },
+        }),
+      ),
+    );
+    await renderPage({ scenario: "admin" });
+    const card = (await screen.findByText("mètode de pagament canviat")).closest(
+      ".billing-simulation",
+    );
+    if (!(card instanceof HTMLElement)) throw new TypeError("No simulation card");
+    fireEvent.click(within(card).getByRole("button", { name: "Obre el rebut 2026-0912" }));
+    expect(await screen.findByRole("dialog", { name: "Rebut 2026-0912" })).toBeVisible();
+  });
+});
+
+describe("E8-W04 step 6(b): one wording per receipt state on D6, its drawer and /rebuts", () => {
+  it("E8-W04 6(b): a fully refunded receipt reads enums:invoiceStatus.REFUNDED, the key /rebuts reads", async () => {
+    const refunded = invoiceStatusView({
+      paymentMethodType: "CARD",
+      refundedTotal: { amountMinor: 4500, currency: "EUR" },
+      status: "PAID",
+      total: { amountMinor: 4500, currency: "EUR" },
+    });
+    expect(refunded.key).toBe("enums:invoiceStatus.REFUNDED");
+    const memberPage = readFileSync(
+      resolve(import.meta.dirname, "../../../clubs/src/billing/InvoicesPage.tsx"),
+      "utf8",
+    );
+    expect(memberPage.match(/t\("enums:invoiceStatus\.REFUNDED"\)/gu)).toHaveLength(2);
+    expect(memberPage).not.toContain("billing:list.refunded");
+    const words = await Promise.all(
+      (["ca", "es", "en"] as const).map(
+        async (locale) =>
+          ((await loadNamespace(locale, "enums")) as Record<string, Record<string, string>>)
+            .invoiceStatus?.REFUNDED,
+      ),
+    );
+    expect(words).toEqual(["reemborsat", "reembolsado", "refunded"]);
   });
 });

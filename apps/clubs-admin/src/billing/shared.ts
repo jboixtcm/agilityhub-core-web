@@ -111,7 +111,7 @@ export function invoiceStatusView(
         item.total !== undefined &&
         item.refundedTotal.amountMinor > 0 &&
         item.refundedTotal.amountMinor === item.total.amountMinor
-        ? { key: "admin-billing:status.refunded", tone: "neutral" }
+        ? { key: "enums:invoiceStatus.REFUNDED", tone: "neutral" }
         : { key: "enums:invoiceStatus.PAID", tone: "success" };
     case "FAILED":
       return item.paymentMethodType === "CARD"

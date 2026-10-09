@@ -90,7 +90,7 @@ function ReceiptRow({ invoice }: { invoice: Invoice }) {
         <b>{formats.formatMoney(invoice.total.amountMinor / 100)}</b>
         <Badge tone={tones[invoice.status]}>
           {isFullyRefunded(invoice)
-            ? t("billing:list.refunded")
+            ? t("enums:invoiceStatus.REFUNDED")
             : t(`enums:invoiceStatus.${invoice.status}`)}
         </Badge>
         {invoice.familyGroup ? <Chip>{t("billing:familyGroup")}</Chip> : null}
@@ -169,7 +169,7 @@ function Detail({ client, id }: { client: ApiClient; id: string }) {
             <strong>{invoice.displayNumber}</strong>
             <Badge tone={tones[invoice.status]}>
               {isFullyRefunded(invoice)
-                ? t("billing:list.refunded")
+                ? t("enums:invoiceStatus.REFUNDED")
                 : t(`enums:invoiceStatus.${invoice.status}`)}
             </Badge>
           </div>

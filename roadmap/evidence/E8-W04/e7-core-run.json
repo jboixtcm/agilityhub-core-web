@@ -1,22 +1,22 @@
 {
   "created": {
-    "localeEs": "6a40c7…",
-    "templateEdited": "6ac7fe…",
-    "bookingCca": "c9a0c4…",
-    "bookingCes": "9bbccc…",
-    "templateReset": "6ac7fe…",
-    "clubChangesOff": "0984ba…",
-    "bookingD": "8dc658…",
-    "clubChangesOn": "0984ba…",
-    "pushSubscription": "e3bfa9…",
+    "localeEs": "dd98d7…",
+    "templateEdited": "6ac924…",
+    "bookingCca": "1b5f67…",
+    "bookingCes": "11bd4b…",
+    "templateReset": "6ac924…",
+    "clubChangesOff": "ec5e72…",
+    "bookingD": "98e5cd…",
+    "clubChangesOn": "ec5e72…",
+    "pushSubscription": "af95d8…",
     "pushDeleted": "204",
-    "bookingH": "479e0d…",
-    "reminderSet": "0984ba…",
-    "reminderCleared": "0984ba…",
-    "bookingHCancelled": "479e0d…",
-    "localeRestored": "6a40c7…"
+    "bookingH": "989018…",
+    "reminderSet": "ec5e72…",
+    "reminderCleared": "ec5e72…",
+    "bookingHCancelled": "989018…",
+    "localeRestored": "dd98d7…"
   },
-  "runId": "zzvasv",
+  "runId": "18skfa",
   "steps": {
     "instants": {
       "coreUrl": "http://core:8080",
@@ -61,7 +61,7 @@
       "billing-reminder"
     ],
     "core-health": {
-      "builtAt": "2026-10-08T14:30:46.247Z",
+      "builtAt": "2026-10-09T00:18:50.123Z",
       "status": 200,
       "version": "0.1.0-SNAPSHOT"
     },
@@ -190,30 +190,30 @@
     },
     "scene": {
       "ca": {
-        "bookingA": "b5cd88…",
-        "dogId": "a43d8c…",
+        "bookingA": "3482c2…",
+        "dogId": "0c85f7…",
         "dogName": "Suro 190",
         "email": "#5",
         "firstName": "Laia",
-        "memberId": "0984ba…"
+        "memberId": "ec5e72…"
       },
       "classA": {
         "date": "2026-10-12",
         "description": "C+D+E",
-        "id": "85d44d…",
+        "id": "7c91b8…",
         "ringName": "Muntanya",
         "time": "08:30"
       },
-      "customTemplateId": "f5aaf5…",
+      "customTemplateId": "e69e14…",
       "es": {
-        "bookingA": "d40afa…",
-        "dogId": "e98fcd…",
+        "bookingA": "db2542…",
+        "dogId": "65f4a7…",
         "dogName": "Neu 192",
         "email": "#7",
         "firstName": "Ona",
-        "memberId": "6a40c7…"
+        "memberId": "dd98d7…"
       },
-      "n08aTemplateId": "6ac7fe…",
+      "n08aTemplateId": "6ac924…",
       "n08aTexts": {
         "locales": [
           "ca",
@@ -226,52 +226,52 @@
         {
           "email": "#5",
           "fullName": "Laia Fictici006",
-          "id": "0984ba…"
+          "id": "ec5e72…"
         },
         {
           "email": "#6",
           "fullName": "Aina Fictici007",
-          "id": "e43478…"
+          "id": "b70398…"
         },
         {
           "email": "#7",
           "fullName": "Ona Fictici008",
-          "id": "6a40c7…"
+          "id": "dd98d7…"
         },
         {
           "email": "#8",
           "fullName": "Aleix Fictici009",
-          "id": "4576af…"
+          "id": "c17062…"
         },
         {
           "email": "#9",
           "fullName": "Guillem Fictici010",
-          "id": "054096…"
+          "id": "905d5e…"
         },
         {
           "email": "#10",
           "fullName": "Pol Fictici011",
-          "id": "a7ad97…"
+          "id": "b57bb0…"
         },
         {
           "email": "#11",
           "fullName": "Ona Fictici012",
-          "id": "62dbc4…"
+          "id": "45ba79…"
         },
         {
           "email": "#12",
           "fullName": "Rita Fictici013",
-          "id": "86c89c…"
+          "id": "eaeb61…"
         },
         {
           "email": "#13",
           "fullName": "Pol Fictici014",
-          "id": "a931de…"
+          "id": "703761…"
         },
         {
           "email": "#14",
           "fullName": "Jana Fictici015",
-          "id": "3cde88…"
+          "id": "9f3442…"
         }
       ]
     },
@@ -365,8 +365,20 @@
             {
               "attempts": 1,
               "channel": "SMS",
-              "providerRef": "log-35…",
+              "providerRef": "log-20…",
               "status": "SENT"
+            }
+          ],
+          "locale": "es"
+        },
+        {
+          "audience": "ADMINS",
+          "deliveries": [
+            {
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
             }
           ],
           "locale": "ca"
@@ -389,20 +401,8 @@
             {
               "attempts": 1,
               "channel": "SMS",
-              "providerRef": "log-ea…",
+              "providerRef": "log-45…",
               "status": "SENT"
-            }
-          ],
-          "locale": "es"
-        },
-        {
-          "audience": "ADMINS",
-          "deliveries": [
-            {
-              "attempts": 0,
-              "channel": "APP",
-              "providerRef": null,
-              "status": "DELIVERED"
             }
           ],
           "locale": "ca"
@@ -447,7 +447,7 @@
         {
           "attempts": 1,
           "channel": "SMS",
-          "providerRef": "log-35…",
+          "providerRef": "log-45…",
           "status": "SENT"
         }
       ],
@@ -461,7 +461,7 @@
         "description": "C+D+E",
         "startsAtLocal": "2026-10-14T08:30"
       },
-      "marker": " (zzvasv)",
+      "marker": " (18skfa)",
       "put": 200,
       "reset": 200,
       "templateVersions": {
@@ -498,7 +498,7 @@
         {
           "attempts": 1,
           "channel": "SMS",
-          "providerRef": "log-7c…",
+          "providerRef": "log-2a…",
           "status": "SENT"
         }
       ],
@@ -520,10 +520,10 @@
     },
     "e-announcement": {
       "batch": {
-        "batchId": "eb682e…",
+        "batchId": "0413a4…",
         "code": "N-24",
         "createdAt": [
-          "2026-10-12T05:00:12.895Z"
+          "2026-10-12T05:00:22.556Z"
         ],
         "eventType": "AnnouncementSent",
         "rows": 10
@@ -551,14 +551,31 @@
             },
             {
               "channel": "EMAIL",
-              "status": "SENT"
+              "status": "QUEUED"
             },
             {
               "channel": "PUSH",
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#13"
+          "member": "#12"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "QUEUED"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#6"
         },
         {
           "channels": [
@@ -569,6 +586,74 @@
             {
               "channel": "EMAIL",
               "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#9"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#11"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "QUEUED"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#7"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "QUEUED"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#10"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "QUEUED"
             },
             {
               "channel": "PUSH",
@@ -609,7 +694,7 @@
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#9"
+          "member": "#13"
         },
         {
           "channels": [
@@ -619,99 +704,14 @@
             },
             {
               "channel": "EMAIL",
-              "status": "SENT"
+              "status": "QUEUED"
             },
             {
               "channel": "PUSH",
-              "status": "SENT"
+              "status": "QUEUED"
             }
           ],
           "member": "#8"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "SENT"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
-          "member": "#12"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "SENT"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
-          "member": "#10"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "SENT"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
-          "member": "#7"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "SENT"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
-          "member": "#11"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "SENT"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
-          "member": "#6"
         }
       ],
       "selection": {
@@ -848,7 +848,7 @@
         "counters": {
           "WOULD_REMIND": 1
         },
-        "dialogRow": "Booking 479e0d… · WOULD_REMIND",
+        "dialogRow": "Booking 989018… · WOULD_REMIND",
         "items": 1,
         "status": "SUCCEEDED"
       },
@@ -894,7 +894,7 @@
       },
       "templateCustomized": false
     },
-    "clock-2026-10-08T20:34:25.449Z": {
+    "clock-2026-10-09T17:32:11.414Z": {
       "status": 200
     },
     "j-clock-restored": {

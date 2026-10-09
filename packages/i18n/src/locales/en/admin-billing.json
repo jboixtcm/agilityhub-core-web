@@ -131,7 +131,6 @@
   "status": {
     "charging": "charging",
     "pendingManual": "pending · mark paid",
-    "refunded": "refunded",
     "failedManual": "unpaid (manual)",
     "failedCard": "unpaid (card)",
     "rolledBack": "cancelled · rollback"

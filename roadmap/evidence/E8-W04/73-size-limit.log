@@ -1,0 +1,29 @@
+
+> agilityhub-core-web@0.0.0 size-limit /Users/jordib/dev/agilityhub/agilityhub-core-web
+> size-limit
+
+  
+  clubs initial JavaScript
+  Size limit: 300 kB
+  Size:       192.46 kB gzipped
+  
+  clubs all JavaScript
+  Size limit: 420 kB
+  Size:       389.46 kB gzipped
+  
+  clubs-admin initial JavaScript
+  Size limit: 460 kB
+  Size:       423.74 kB gzipped
+  
+  clubs-admin all JavaScript
+  Size limit: 660 kB
+  Size:       617.93 kB gzipped
+  
+  id initial JavaScript
+  Size limit: 110 kB
+  Size:       99.47 kB gzipped
+  
+  id all JavaScript
+  Size limit: 310 kB
+  Size:       129.06 kB gzipped
+  

@@ -248,7 +248,8 @@
     "COLLECTING": "remesat",
     "PAID": "cobrat",
     "FAILED": "impagat",
-    "CANCELLED": "anul·lat"
+    "CANCELLED": "anul·lat",
+    "REFUNDED": "reemborsat"
   },
   "inactivityState": {
     "REQUESTED": "sol·licitat",

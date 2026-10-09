@@ -6,7 +6,7 @@
   "retry": "Try again",
   "empty": "You do not have any receipts yet.",
   "familyGroup": "Family group",
-  "list": { "more": "Load more", "receipt": "Receipt {number}", "refunded": "refunded" },
+  "list": { "more": "Load more", "receipt": "Receipt {number}" },
   "detail": {
     "title": "Receipt details",
     "lines": "Items",
