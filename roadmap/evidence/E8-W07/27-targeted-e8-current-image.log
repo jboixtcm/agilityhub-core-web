@@ -1,0 +1,65 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E8-W07 e8-core.spec.ts today\=2026-10-28
+
+club-local today overridden: 2026-10-28
+E4_WEEK_START=2026-10-26 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-11-02 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-11T12:11:36.318558748Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:3fc03ce194563e78ce95ef879016d8cc9c5b8b89919d3e253a6b0fdacd8e225b]
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W07/demo-canic.yaml (311 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W07/demo-fifo.yaml (62 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-e8-w07_default Creating 
+ Volume agilityhub-e8-w07_export-files Creating 
+ Volume agilityhub-e8-w07_export-files Creating 
+ Network agilityhub-e8-w07_default Creating 
+ Volume agilityhub-e8-w07_mailbox Creating 
+ Volume agilityhub-e8-w07_mailbox Creating 
+ Volume agilityhub-e8-w07_mongo-data Creating 
+ Volume agilityhub-e8-w07_mongo-data Creating 
+ Volume agilityhub-e8-w07_mongo-data Created 
+ Volume agilityhub-e8-w07_mongo-data Created 
+ Volume agilityhub-e8-w07_mailbox Created 
+ Volume agilityhub-e8-w07_mailbox Created 
+ Volume agilityhub-e8-w07_export-files Created 
+ Volume agilityhub-e8-w07_export-files Created 
+ Network agilityhub-e8-w07_default Created 
+ Network agilityhub-e8-w07_default Created 
+ Container agilityhub-e8-w07-mongo-1 Creating 
+ Container agilityhub-e8-w07-mongo-1 Created 
+ Container agilityhub-e8-w07-seed-1 Creating 
+ Container agilityhub-e8-w07-seed-1 Created 
+ Container agilityhub-e8-w07-activate-demo-club-1 Creating 
+ Container agilityhub-e8-w07-activate-demo-club-1 Created 
+ Container agilityhub-e8-w07-core-1 Creating 
+ Container agilityhub-e8-w07-core-1 Created 
+ Container agilityhub-e8-w07-mongo-1 Starting 
+ Container agilityhub-e8-w07-mongo-1 Started 
+ Container agilityhub-e8-w07-mongo-1 Waiting 
+ Container agilityhub-e8-w07-mongo-1 Healthy 
+ Container agilityhub-e8-w07-seed-1 Starting 
+ Container agilityhub-e8-w07-seed-1 Started 
+ Container agilityhub-e8-w07-seed-1 Waiting 
+ Container agilityhub-e8-w07-seed-1 Exited 
+ Container agilityhub-e8-w07-activate-demo-club-1 Starting 
+ Container agilityhub-e8-w07-activate-demo-club-1 Started 
+ Container agilityhub-e8-w07-mongo-1 Waiting 
+ Container agilityhub-e8-w07-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w07-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w07-mongo-1 Healthy 
+ Container agilityhub-e8-w07-core-1 Starting 
+ Container agilityhub-e8-w07-core-1 Started 
+ Container agilityhub-e8-w07-core-1 Waiting 
+ Container agilityhub-e8-w07-mongo-1 Waiting 
+ Container agilityhub-e8-w07-seed-1 Waiting 
+ Container agilityhub-e8-w07-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w07-seed-1 Exited 
+ Container agilityhub-e8-w07-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w07-mongo-1 Healthy 
+ Container agilityhub-e8-w07-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W07/seed-files.log (191 lines)
+E8 seed totals: Cànic billing/lifecycle and FIFO card scenarios asserted
+ Container agilityhub-e8-w07-playwright-run-65ba620fc6f7 Creating 
+ Container agilityhub-e8-w07-playwright-run-65ba620fc6f7 Created 
