@@ -52,7 +52,7 @@ export function useListExport(client: ApiClient) {
         return true;
       } catch (cause) {
         if (isApiError(cause, "EXPORT_LIMIT") && exportsDrawer !== undefined) {
-          exportsDrawer.openExports({ errorCode: "EXPORT_LIMIT" });
+          exportsDrawer.openExports({ errorCode: "EXPORT_LIMIT", kind: jobKind });
           return true;
         }
         setError({

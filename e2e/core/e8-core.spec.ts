@@ -104,6 +104,13 @@ interface GateRecord {
   inactivity?: {
     bookedInside: { classStartsAtLocal: string; stateAfterApproval: string; stateOn04: string };
     cancelledBookings: number;
+    feeArrangement: {
+      amountMinor: number;
+      currency: string;
+      fromMonth: string;
+      memberId: string;
+      toMonth: string;
+    };
     feeMemberInvoiceLine?: string;
     frozenMemberUntil: string | null;
     fromMonth: string;
@@ -142,8 +149,14 @@ interface GateRecord {
 /** The member who requests inactivity on 14 and her leave on 15 (T-13-32), and her family. */
 interface Lifecycle {
   familyPartner?: MemberListItem;
-  /** The seeded inactive member (Oct–Nov style period): her next-month receipt carries the fee. */
+  /** A separate monthly member whose fee period is arranged for this run's billing month. */
   feeMemberId?: string;
+  feeSnapshot?: {
+    amountMinor: number;
+    currency: string;
+    fromMonth: string;
+    toMonth: string;
+  };
   invoiceId?: string;
   leaveRequestId?: string;
   member?: MemberListItem;
@@ -570,6 +583,7 @@ async function setClock(browser: Browser, instant = clockInstant): Promise<void>
 /** The member Laura plays in T-13-32: ACTIVE, monthly plan, SEPA, nothing pending, in a family. */
 async function lifecycleCandidates(admin: Session): Promise<{
   family?: MemberListItem;
+  feeMember: MemberListItem;
   member: MemberListItem;
 }> {
   const answer = await call<MemberPage>(
@@ -598,7 +612,18 @@ async function lifecycleCandidates(admin: Session): Promise<{
   const member = inFamily ?? eligible[0];
   if (member === undefined) throw new Error("The E8 seed has no eligible monthly SEPA member");
   const family = inFamily === undefined ? undefined : partnerOf(inFamily);
-  return { family, member };
+  // Keep the fee proof independent from Laura's leave and from family billing: the invoice must
+  // belong directly to this member, so /rebuts and D10 can prove the same generated receipt.
+  const feeMember = eligible.find(
+    (candidate) =>
+      candidate.id !== member.id &&
+      candidate.id !== family?.id &&
+      candidate.familyGroup === undefined,
+  );
+  if (feeMember === undefined) {
+    throw new Error("The E8 seed has no second standalone monthly SEPA member for the fee proof");
+  }
+  return { family, feeMember, member };
 }
 
 async function findPackCase(
@@ -805,9 +830,35 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period b
   test.setTimeout(300_000);
   await setClock(browser);
   let admin = await login(browser, adminUrl, ADMIN);
-  const { family, member } = await lifecycleCandidates(admin);
+  const { family, feeMember, member } = await lifecycleCandidates(admin);
   lifecycle.member = member;
   lifecycle.familyPartner = family;
+
+  // Establish the fee proof from lifecycle dates, rather than relying on the fixed seed's Oct–Nov
+  // range. Admin creation is approved in one step (R-13-05), freezing the amount for this period.
+  const feePeriod = await call<InactivityPeriod>(admin, "/inactivity-periods", "POST", {
+    comments: "Prova fictícia de quota E8-W07",
+    fromMonth: period,
+    memberId: feeMember.id,
+    overrideDeadline: true,
+    toMonth: period,
+  });
+  expect(feePeriod.status, JSON.stringify(feePeriod.body)).toBe(201);
+  expect(feePeriod.body.member.id).toBe(feeMember.id);
+  expect(feePeriod.body.fromMonth).toBe(period);
+  expect(feePeriod.body.toMonth).toBe(period);
+  expect(["APPROVED", "ACTIVE"]).toContain(feePeriod.body.state);
+  const firstMonthFee = feePeriod.body.feeSnapshot?.firstMonth;
+  if (firstMonthFee === undefined) {
+    throw new Error("The arranged inactivity period has no frozen first-month fee");
+  }
+  lifecycle.feeMemberId = feeMember.id;
+  lifecycle.feeSnapshot = {
+    amountMinor: firstMonthFee.amountMinor,
+    currency: firstMonthFee.currency,
+    fromMonth: feePeriod.body.fromMonth,
+    toMonth: feePeriod.body.toMonth ?? feePeriod.body.fromMonth,
+  };
 
   // Laura's request on 14, in ca: the first month the core still accepts (R-13-01).
   let laura = await impersonate(browser, admin, member.id);
@@ -897,8 +948,8 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period b
   await page
     .getByRole("link", { name: `Obre la fitxa de ${member.fullName ?? ""}` })
     .last()
-    .click();
-  await expect(page).toHaveURL(new RegExp(`/abonats/${member.id}`, "u"));
+    .click({ timeout: 30_000 });
+  await expect(page).toHaveURL(new RegExp(`/abonats/${member.id}`, "u"), { timeout: 30_000 });
   const inactivityDrawer = page.getByRole("dialog", { name: "Inactivitat" });
   await expect(inactivityDrawer.getByRole("button", { name: "Aprova" })).toBeVisible();
   await shot(page, "D10-calaix-inactivitat-core-1280.png");
@@ -976,8 +1027,6 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period b
   ).toContainText(statusText);
   await visit(page, `${adminUrl}/abonats/${frozenMember.id}`);
   await expect(page.getByText(statusText, { exact: true }).first()).toBeVisible();
-  lifecycle.feeMemberId = frozenMember.id;
-
   record.inactivity = {
     bookedInside: {
       classStartsAtLocal: target.row.startsAtLocal,
@@ -985,6 +1034,13 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period b
       stateOn04: `${lauraRow?.state ?? "-"}/${lauraRow?.notBookableReason ?? "-"}`,
     },
     cancelledBookings: approved.cancelledBookings.length,
+    feeArrangement: {
+      amountMinor: firstMonthFee.amountMinor,
+      currency: firstMonthFee.currency,
+      fromMonth: feePeriod.body.fromMonth,
+      memberId: feeMember.id,
+      toMonth: feePeriod.body.toMonth ?? feePeriod.body.fromMonth,
+    },
     frozenMemberUntil: until,
     fromMonth: approved.fromMonth,
     memberId: member.id,
@@ -1271,12 +1327,24 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   }
   // R-13-11: after her approved leave on the last day of the previous month, Laura is not billed.
   expect(simulation.invoicesPreview.some((preview) => preview.memberId === laura.id)).toBe(false);
-  // R-13-08: within the seed's own inactive range, its inactive member's receipt carries the fee.
-  // A moved-date proof can bill a later month after Laura's approved leave; in that case her fee
-  // was already asserted in the pre-leave simulation and there is deliberately no second fee payer.
-  const feePreview = simulation.invoicesPreview.find((preview) =>
-    preview.lines.some((line) => line.origin === "INACTIVITY_FEE"),
+  // R-13-08: the independently selected inactive member must have the expected fee in this run.
+  // This is deliberately mandatory on moved-date proofs too: otherwise the receipt, member app and
+  // D10 assertions below could all disappear behind a conditional while the gate still passed.
+  const feeMemberId = lifecycle.feeMemberId;
+  if (feeMemberId === undefined) throw new Error("The inactivity leg did not choose a fee member");
+  const expectedFee = lifecycle.feeSnapshot;
+  if (expectedFee === undefined) throw new Error("The inactivity leg did not freeze the expected fee");
+  expect(expectedFee.fromMonth).toBe(period);
+  expect(expectedFee.toMonth).toBe(period);
+  const feePreview = simulation.invoicesPreview.find(
+    (preview) => preview.memberId === feeMemberId,
   );
+  expect(feePreview, `the arranged fee member is billed in ${period}`).toBeDefined();
+  const previewFeeLine = feePreview?.lines.find((line) => line.origin === "INACTIVITY_FEE");
+  expect(previewFeeLine?.total).toEqual({
+    amountMinor: expectedFee.amountMinor,
+    currency: expectedFee.currency,
+  });
   // E90 (d): before the run the amount KPI reads the date the run would ask for.
   const plannedCollection = simulation.kpis.collectionDate;
   if (plannedCollection != null) {
@@ -1507,50 +1575,45 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   expect(downloadedExport.suggestedFilename()).toMatch(/\.csv$/u);
   expect(exportDisposition).toContain(downloadedExport.suggestedFilename());
 
-  // R-13-08 on a real receipt in the seed's inactive range: the fee payer's own receipt reads
-  // «Quota inactivitat — {month}». On moved-date runs beyond that range, e·2's pre-leave
-  // simulation is the fee proof; keep any generated receipt id for the permissions leg.
+  // R-13-08 on a real receipt: the fee payer's own receipt reads
+  // «Quota inactivitat — {month}», and D10 shows the same generated receipt.
   expect(secondInvoices.items.some((item) => item.member?.id === laura.id)).toBe(false);
   if (record.leave !== undefined) record.leave.noReceiptAfterGeneration = true;
-  const feeInvoice =
-    feePreview === undefined
-      ? undefined
-      : secondInvoices.items.find((item) => item.member?.id === feePreview.memberId);
-  if (feePreview !== undefined && feeInvoice === undefined) {
-    throw new Error("The inactivity-fee receipt was not generated");
-  }
-  lifecycle.invoiceId = feeInvoice?.id ?? secondInvoices.items[0]?.id;
-  if (lifecycle.invoiceId === undefined) throw new Error("The generated run has no receipt");
-  if (feePreview !== undefined && feeInvoice !== undefined) {
-    const feeSession = await impersonate(browser, admin, feePreview.memberId);
-    const own = await call<MeInvoicePage>(
-      feeSession,
-      `/me/invoices?page=0&size=50&filter=period:eq:${period}`,
-    );
-    expect(own.status).toBe(200);
-    const ownLine = own.body.items
-      .find((item) => item.id === feeInvoice.id)
-      ?.lines.find((line) => line.origin === "INACTIVITY_FEE");
-    expect(ownLine?.description).toMatch(/^Quota inactivitat — /u);
-    if (record.inactivity !== undefined)
-      record.inactivity.feeMemberInvoiceLine = ownLine?.description;
-    await navigateSpa(feeSession.page, "/rebuts");
-    await expect(feeSession.page.locator(".receipt-list")).toBeVisible();
-    await expect(feeSession.page.locator(".receipt-list")).toContainText(
-      ownLine?.description ?? "Quota inactivitat",
-    );
-    await shot(feeSession.page, "rebuts-core-375.png");
-    await noSecretsRendered(feeSession.page);
+  const feeInvoice = secondInvoices.items.find((item) => item.member?.id === feeMemberId);
+  if (feeInvoice === undefined) throw new Error("The inactivity-fee receipt was not generated");
+  lifecycle.invoiceId = feeInvoice.id;
+  const feeSession = await impersonate(browser, admin, feeMemberId);
+  const own = await call<MeInvoicePage>(
+    feeSession,
+    `/me/invoices?page=0&size=50&filter=period:eq:${period}`,
+  );
+  expect(own.status).toBe(200);
+  const ownLine = own.body.items
+    .find((item) => item.id === feeInvoice.id)
+    ?.lines.find((line) => line.origin === "INACTIVITY_FEE");
+  expect(ownLine?.description).toMatch(/^Quota inactivitat — /u);
+  expect(ownLine?.total).toEqual({
+    amountMinor: expectedFee.amountMinor,
+    currency: expectedFee.currency,
+  });
+  if (record.inactivity !== undefined)
+    record.inactivity.feeMemberInvoiceLine = ownLine?.description;
+  await navigateSpa(feeSession.page, "/rebuts");
+  await expect(feeSession.page.locator(".receipt-list")).toBeVisible();
+  await expect(feeSession.page.locator(".receipt-list")).toContainText(
+    ownLine?.description ?? "Quota inactivitat",
+  );
+  await shot(feeSession.page, "rebuts-core-375.png");
+  await noSecretsRendered(feeSession.page);
 
-    // D10's billing block of the same member, with the real receipts.
-    const feeName = feeInvoice.member?.fullName ?? "";
-    await visit(page, `${adminUrl}/abonats/${feePreview.memberId}`);
-    await expect(page.getByRole("heading", { name: feeName })).toBeVisible();
-    await expect(page.locator(".member-billing")).toContainText(feeInvoice.displayNumber ?? "");
-    await shotAt(page, page.locator(".member-billing"), "D10-bloc-facturacio-core-1280.png");
-    await noSecretsRendered(page);
-    await feeSession.context.close();
-  }
+  // D10's billing block of the same member, with the real receipts.
+  const feeName = feeInvoice.member?.fullName ?? "";
+  await visit(page, `${adminUrl}/abonats/${feeMemberId}`);
+  await expect(page.getByRole("heading", { name: feeName })).toBeVisible();
+  await expect(page.locator(".member-billing")).toContainText(feeInvoice.displayNumber ?? "");
+  await shotAt(page, page.locator(".member-billing"), "D10-bloc-facturacio-core-1280.png");
+  await noSecretsRendered(page);
+  await feeSession.context.close();
 
   // Step 5: five loads of the full month and of two filters, as browser resource timings.
   const authorization = admin.bearer() ?? "";

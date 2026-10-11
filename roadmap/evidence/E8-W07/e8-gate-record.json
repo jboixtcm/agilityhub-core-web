@@ -1,0 +1,41 @@
+{
+  "clockInstant": "2026-11-23T07:00:00+01:00",
+  "leaveDate": "2026-11-30",
+  "period": "2026-12",
+  "weekStart": "2026-11-23",
+  "clock": [
+    {
+      "instant": "2026-11-23T07:00:00+01:00",
+      "status": 200
+    },
+    {
+      "instant": "2026-11-29T19:01:00.000Z",
+      "status": 200
+    }
+  ],
+  "pack": {
+    "afterBooking": 4,
+    "afterCancellation": 5,
+    "afterSeededRefund": 5,
+    "before": 5,
+    "expiredRemaining": 10,
+    "memberId": "54ac6e9c-2278-3850-8fdb-eb5e3774980a"
+  },
+  "card": {
+    "banner": {
+      "shown": true,
+      "source": "synthetic-invalid-flag"
+    },
+    "cardSetup": {
+      "host": "checkout.test",
+      "navigated": true,
+      "redirectOrigin": "https://fifo.example.test",
+      "status": 201
+    },
+    "failedChip": 0,
+    "paidChip": 1,
+    "settledWithoutReload": true,
+    "skipped": 0,
+    "submitted": 1
+  }
+}

@@ -1,0 +1,410 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx -t 'E8-W07|R-12-26 / E8-W04 round 2'
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (54 tests | 3 failed | 51 skipped) 16720ms
+   ❯ E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides (14)
+     × R-12-26 / E8-W04 round 2: a queued accounting export (202 ACCOUNTING job) is followed in the exports drawer to its download 5616ms
+     × E8-W07 #2: EXPORT_LIMIT keeps the accounting kind in the exports drawer 10353ms
+     × E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow 748ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-26 / E8-W04 round 2: a queued accounting export (202 ACCOUNTING job) is followed in the exports drawer to its download
+TestingLibraryElementError: Unable to find role="button" and name `/accounting.*\.xlsx/u`
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mExportacions[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca les exportacions"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"exports-drawer"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mEls fitxers preparats es poden descarregar durant set dies.[0m
+      [36m</p>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"exports-drawer__list"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"exports-drawer__heading"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mcanic_audit-entries_20260803-1220.xlsx[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mPreparada[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<small>[39m
+            [0mCreada el 3/8/26 12:20[0m
+          [36m</small>[39m
+          [36m<small>[39m
+            [0m4 files[0m
+          [36m</small>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost exports-drawer__download"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mDescarrega canic_audit-entries_20260803-1220.xlsx[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mExportacions[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca les exportacions"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"exports-drawer"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mEls fitxers preparats es poden descarregar durant set dies.[0m
+      [36m</p>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"exports-drawer__list"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"exports-drawer__heading"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mcanic_audit-entries_20260803-1220.xlsx[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mPreparada[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<small>[39m
+            [0mCreada el 3/8/26 12:20[0m
+          [36m</small>[39m
+          [36m<small>[39m
+            [0m4 files[0m
+          [36m</small>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost exports-drawer__download"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mDescarrega canic_audit-entries_20260803-1220.xlsx[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/BillingPage.test.tsx:1290:45
+    1288|     fireEvent.click(screen.getByRole("button", { name: "Exportacions" …
+    1289|     const reopened = await screen.findByRole("dialog", { name: "Export…
+    1290|     const download = await within(reopened).findByRole(
+       |                                             ^
+    1291|       "button",
+    1292|       { name: /accounting.*\.xlsx/u },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > E8-W07 #2: EXPORT_LIMIT keeps the accounting kind in the exports drawer
+AssertionError: expected 'LIST' to be 'ACCOUNTING' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"Exportacions"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m/>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"billing-page"[39m
+      [36m>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"billing-header"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mSetembre 2026[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33maria-label[39m=[32m"Canvi de mes"[39m
+            [33mclass[39m=[32m"billing-stepper"[39m
+            [33mrole[39m=[32m"group"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Mes anterior"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m‹ mes[0m
+            [36m</button>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+            [36m>[39m
+              [0m·[0m
+            [36m</span>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Mes següent"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0mmes ›[0m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"billing-header__spacer"[39m
+          [36m/>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary billing-action"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0m1 · SIMULA EL MES[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mtitle[39m=[32m"Els rebuts d'aquest mes ja s'han generat."[39m
+          [36m>[39m
+            [36m<button[39m
+              [33maria-describedby[39m=[32m"billing-generate-why"[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary billing-action"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0m2 · GENERA REMESA SEPA (XML)[0m
+              [36m</span>[39m
+            [36m</button>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+              [33mid[39m=[32m"billing-generate-why"[39m
+            [36m>[39m
+              [0mEls rebuts d'aquest mes ja s'han generat.[0m
+            [36m</span>[39m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost billing-action"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mRetrocedeix la remesa[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Rebut manual"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+            [33mtitle[39m=[32m"Rebut manual"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-plus"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-feedback"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"billing-grid"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card billing-simulation"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"billing-simulation__head"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mPas 1 — Simulació: incidències primer[0m
+              [36m</h2>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--danger"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m2[0m
+                [36m</span>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-sr-only"[39m
+                [36m>[39m
+                  [0m2 incidències[0m
+                [36m</span>[39m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<table[39m
+              [33mclass[39m=[32m"billing-members"[39m
+            [36m>[39m
+              [36m<tbody>[39m
+                [36m<tr>[39m
+                  [36m<th[39m
+                    [33mscope[39m=[32m"row"[39m
+                  [36m>[39m
+                    [0mJoan Vila[0m
+                  [36m</th>[39m
+                  [36m<td>[39m
+                    [0msense compte bancari informat[0m
+                  [36m</td>[39m
+                  [36m<td[39m
+                    [33mclass[39m=[32m"billing-members__action"[39m
+                  [36m>[39m
+                    [36m<a[39m
+       ...
+
+Expected: "ACCOUNTING"
+Received: "LIST"
+
+ ❯ src/billing/BillingPage.test.tsx:1332:80
+    1330|     expect(drawer).toHaveTextContent("S'ha assolit el límit d'exportac…
+    1331|     await waitFor(() => {
+    1332|       expect(requests("GET", "/exports").at(-1)?.url.searchParams.get(…
+       |                                                                                ^
+    1333|         "ACCOUNTING",
+    1334|       );
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+AssertionError: expected 6 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 6
+
+ ❯ src/billing/BillingPage.test.tsx:1501:25
+    1499|       await new Promise((resolve) => setTimeout(resolve, 500));
+    1500|     });
+    1501|     expect(periodReads).toBe(2);
+       |                         ^
+    1502|     expect(detailReads).toBe(2);
+    1503|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 51 skipped (54)
+   Start at  11:33:24
+   Duration  19.74s (tests 85%, environment 6%, transform 4%, import 2%, setup 2%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/billing/BillingPage.test.tsx -t 'E8-W07|R-12-26 / E8-W04 round 2'`
+Exit status 1

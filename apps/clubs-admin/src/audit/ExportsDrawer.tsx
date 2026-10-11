@@ -71,7 +71,7 @@ export function ExportJobsProvider({
   const [refreshKey, setRefreshKey] = useState(0);
   const [downloading, setDownloading] = useState<string>();
   const [downloadError, setDownloadError] = useState<string>();
-  const [kind, setKind] = useState<ExportJob["kind"]>("LIST");
+  const [kind, setKind] = useState<ExportJob["kind"]>();
   const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
 
   /**
@@ -107,7 +107,10 @@ export function ExportJobsProvider({
           ? "queued"
           : undefined,
     );
-    setKind(options?.kind ?? "LIST");
+    // The normal header entry has no kind: it lists every caller-owned job, including queued
+    // accounting exports recovered after a drawer close or a full reload. A flow that has just
+    // queued a job can still narrow the first view to that job's kind.
+    setKind(options?.kind);
     setOpen(true);
     setRefreshKey((value) => value + 1);
   }, []);
@@ -119,7 +122,9 @@ export function ExportJobsProvider({
     const load = async () => {
       setLoading(true);
       try {
-        const result = await client.GET("/exports", { params: { query: { kind } } });
+        const result = await client.GET("/exports", {
+          params: { query: kind === undefined ? {} : { kind } },
+        });
         if (!current) return;
         const next = result.data ?? [];
         setJobs(next);

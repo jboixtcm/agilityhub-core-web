@@ -18,7 +18,7 @@ import { delay, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { ExportJobsProvider } from "../audit/ExportsDrawer";
+import { ExportJobsProvider, useExportsDrawer } from "../audit/ExportsDrawer";
 
 import { BillingPage } from "./BillingPage";
 import { invoiceActions } from "./InvoiceDrawer";
@@ -84,6 +84,19 @@ function client() {
   return createApiClient({ baseUrl: `${window.location.origin}/api/v1`, getLocale: () => "ca" });
 }
 
+function TestExportsEntry() {
+  const { openExports } = useExportsDrawer();
+  return (
+    <button
+      aria-label="Exportacions"
+      onClick={() => {
+        openExports();
+      }}
+      type="button"
+    />
+  );
+}
+
 async function renderPage({
   locale = "ca",
   scenario = "admin",
@@ -109,6 +122,7 @@ async function renderPage({
             getLocale: () => "ca",
           })}
         >
+          <TestExportsEntry />
           <BillingPage client={client()} onNavigate={onNavigate} />
         </ExportJobsProvider>
       </BrandingProvider>
@@ -1265,21 +1279,60 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     // No file yet: the 202 opens the drawer on the ACCOUNTING jobs, which the api lists apart.
     expect(saved).toEqual([]);
     const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
-    const download = await within(drawer).findByRole(
+    expect(drawer).toHaveTextContent("Preparant l'exportació…");
+    fireEvent.click(within(drawer).getByRole("button", { name: "Tanca les exportacions" }));
+    expect(screen.queryByRole("dialog", { name: "Exportacions" })).toBeNull();
+
+    // The normal header entry (no explicit kind) must recover the accounting job after the drawer
+    // was closed. Its next read is also the one that observes the mock job becoming READY.
+    fireEvent.click(screen.getByRole("button", { name: "Exportacions" }));
+    const reopened = await screen.findByRole("dialog", { name: "Exportacions" });
+    const download = await within(reopened).findByRole(
       "button",
       { name: /accounting.*\.xlsx/u },
       { timeout: 5_000 },
     );
-    expect(
-      requests("GET", "/exports").every(
-        (entry) => entry.url.searchParams.get("kind") === "ACCOUNTING",
-      ),
-    ).toBe(true);
+    const exportReads = requests("GET", "/exports");
+    expect(exportReads[0]?.url.searchParams.get("kind")).toBe("ACCOUNTING");
+    expect(exportReads.at(-1)?.url.searchParams.get("kind")).toBeNull();
     fireEvent.click(download);
     await waitFor(() => {
       expect(saved).toHaveLength(1);
     });
     expect(saved[0]).toMatch(/accounting.*\.xlsx$/u);
+
+    // A provider remount models the production reload: the normal entry still lists the READY
+    // accounting job, without relying on in-memory drawer state.
+    cleanup();
+    await renderPage({ scenario: "adminExportsQueued" });
+    fireEvent.click(screen.getByRole("button", { name: "Exportacions" }));
+    expect(
+      await screen.findByRole("button", { name: /accounting.*\.xlsx/u }),
+    ).toBeEnabled();
+  });
+
+  it("E8-W07 #2: EXPORT_LIMIT keeps the accounting kind in the exports drawer", async () => {
+    server.use(
+      http.get("*/api/v1/billing/exports", () =>
+        HttpResponse.json(
+          { code: "EXPORT_LIMIT", details: {}, message: "Limit", traceId: "mock-trace" },
+          { status: 422 },
+        ),
+      ),
+    );
+    await renderPage();
+    fireEvent.click(screen.getByRole("button", { name: "Exporta per a comptabilitat" }));
+    const dialog = await screen.findByRole("dialog", { name: "Exporta per a comptabilitat" });
+    fireEvent.click(await within(dialog).findByRole("radio", { name: "Excel (XLSX)" }));
+    fireEvent.click(within(dialog).getByRole("button", { name: "Exporta" }));
+
+    const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
+    expect(drawer).toHaveTextContent("S'ha assolit el límit d'exportacions simultànies");
+    await waitFor(() => {
+      expect(requests("GET", "/exports").at(-1)?.url.searchParams.get("kind")).toBe(
+        "ACCOUNTING",
+      );
+    });
   });
 
   it("R-12-13: the poll stops after two minutes of CHARGING with [Actualitza], which polls again", async () => {
@@ -1409,6 +1462,48 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
       expect(screen.queryByText("Cobrant les targetes…")).toBeNull();
     });
   }, 20_000);
+
+  it("E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow", async () => {
+    mockScenario("billingStripe");
+    const api = client();
+    const period = await api.GET("/billing/periods/{period}", {
+      params: { path: { period: "2026-09" } },
+    });
+    const run = period.data?.run;
+    if (run === undefined || run === null) throw new TypeError("No Stripe run");
+    await api.POST("/billing/runs/{id}/card-charges", {
+      params: { header: { "Idempotency-Key": crypto.randomUUID() }, path: { id: run.id } },
+    });
+    sent.length = 0;
+    let periodReads = 0;
+    let detailReads = 0;
+    server.use(
+      http.get("*/api/v1/billing/periods/2026-09", async () => {
+        const read = ++periodReads;
+        if (read > 1) await delay(250);
+        return HttpResponse.json({
+          ...period.data,
+          run: { ...run, status: read === 1 ? "CHARGING" : "COMPLETED" },
+        });
+      }),
+      http.get("*/api/v1/billing/runs/:id", async () => {
+        detailReads += 1;
+        // Bound the unfixed loop so the regression run fails quickly without flooding the suite.
+        if (detailReads > 5) await delay("infinite");
+        return HttpResponse.json({ ...run, status: "COMPLETED" });
+      }),
+    );
+
+    await renderPage({ scenario: "billingStripe" });
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    });
+    expect(periodReads).toBe(2);
+    expect(detailReads).toBe(2);
+    await waitFor(() => {
+      expect(screen.queryByText("Cobrant les targetes…")).toBeNull();
+    });
+  });
 });
 
 describe("E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt", () => {

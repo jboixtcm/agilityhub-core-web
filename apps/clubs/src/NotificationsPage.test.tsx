@@ -572,6 +572,9 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
     await openFeed();
     expect(document.querySelectorAll(".notification-card")).toHaveLength(20);
     expect(screen.queryByRole("button", { name: /pàgina|següent/iu })).toBeNull();
+    await waitFor(() => {
+      expect(observers.some(({ node }) => node !== undefined)).toBe(true);
+    });
     showListEnd();
     await waitFor(() => {
       expect(document.querySelectorAll(".notification-card")).toHaveLength(24);

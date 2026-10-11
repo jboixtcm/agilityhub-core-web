@@ -279,7 +279,9 @@ export function BillingPage({
   const [runReadError, setRunReadError] = useState<{ error: unknown; id: string }>();
   const [pollTick, setPollTick] = useState(0);
   const pollStart = useRef<number | undefined>(undefined);
-  const lastRunStatus = useRef<{ id: string; status: BillingRun["status"] } | undefined>(undefined);
+  const settlementRefresh = useRef<
+    { id: string; refreshed: boolean; sawCharging: boolean } | undefined
+  >(undefined);
   const [pollStopped, setPollStopped] = useState(false);
   const runId = run?.id;
   const runStatus = run?.status;
@@ -290,18 +292,21 @@ export function BillingPage({
       (result) => {
         if (!current || result.data === undefined) return;
         const next = result.data;
-        const previousStatus =
-          lastRunStatus.current?.id === next.id
-            ? lastRunStatus.current.status
-            : runId === next.id
-              ? runStatus
-              : undefined;
-        // The cards settled (R-12-13): the month's chips and the receipts are read again.
+        const monitor =
+          settlementRefresh.current?.id === next.id
+            ? settlementRefresh.current
+            : { id: next.id, refreshed: false, sawCharging: runStatus === "CHARGING" };
+        if (runStatus === "CHARGING" || next.status === "CHARGING") monitor.sawCharging = true;
+        settlementRefresh.current = monitor;
+        // The cards settled (R-12-13): read the month's chips and receipts exactly once. The
+        // period response may be slower than this detail response and still say CHARGING while
+        // the refresh is in flight; that stale value must not start a refresh loop.
         const settled =
-          (previousStatus === "CHARGING" || runStatus === "CHARGING") &&
+          monitor.sawCharging &&
+          !monitor.refreshed &&
           next.status !== "CHARGING" &&
           next.status !== "GENERATED";
-        lastRunStatus.current = { id: next.id, status: next.status };
+        if (settled) monitor.refreshed = true;
         setRunDetail(next);
         setRunReadError(undefined);
         if (settled) refreshAll();

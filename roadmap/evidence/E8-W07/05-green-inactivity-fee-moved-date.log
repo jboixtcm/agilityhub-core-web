@@ -1,0 +1,282 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E8-W07 e8-core.spec.ts today\=2026-10-28
+
+club-local today overridden: 2026-10-28
+E4_WEEK_START=2026-10-26 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-11-02 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-11T08:16:48.515350552Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:d2f9e7f610a9f8b8b4fc711df5b8470a292d43cb7e9078977afd9c8f20f4d3c7]
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W07/demo-canic.yaml (311 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W07/demo-fifo.yaml (62 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Volume agilityhub-e8-w07_export-files Creating 
+ Volume agilityhub-e8-w07_mailbox Creating 
+ Volume agilityhub-e8-w07_export-files Creating 
+ Volume agilityhub-e8-w07_mailbox Creating 
+ Volume agilityhub-e8-w07_mongo-data Creating 
+ Volume agilityhub-e8-w07_mongo-data Creating 
+ Network agilityhub-e8-w07_default Creating 
+ Network agilityhub-e8-w07_default Creating 
+ Volume agilityhub-e8-w07_mailbox Created 
+ Volume agilityhub-e8-w07_mailbox Created 
+ Volume agilityhub-e8-w07_export-files Created 
+ Volume agilityhub-e8-w07_export-files Created 
+ Volume agilityhub-e8-w07_mongo-data Created 
+ Volume agilityhub-e8-w07_mongo-data Created 
+ Network agilityhub-e8-w07_default Created 
+ Network agilityhub-e8-w07_default Created 
+ Container agilityhub-e8-w07-mongo-1 Creating 
+ Container agilityhub-e8-w07-mongo-1 Created 
+ Container agilityhub-e8-w07-seed-1 Creating 
+ Container agilityhub-e8-w07-seed-1 Created 
+ Container agilityhub-e8-w07-activate-demo-club-1 Creating 
+ Container agilityhub-e8-w07-activate-demo-club-1 Created 
+ Container agilityhub-e8-w07-core-1 Creating 
+ Container agilityhub-e8-w07-core-1 Created 
+ Container agilityhub-e8-w07-mongo-1 Starting 
+ Container agilityhub-e8-w07-mongo-1 Started 
+ Container agilityhub-e8-w07-mongo-1 Waiting 
+ Container agilityhub-e8-w07-mongo-1 Healthy 
+ Container agilityhub-e8-w07-seed-1 Starting 
+ Container agilityhub-e8-w07-seed-1 Started 
+ Container agilityhub-e8-w07-seed-1 Waiting 
+ Container agilityhub-e8-w07-seed-1 Exited 
+ Container agilityhub-e8-w07-activate-demo-club-1 Starting 
+ Container agilityhub-e8-w07-activate-demo-club-1 Started 
+ Container agilityhub-e8-w07-mongo-1 Waiting 
+ Container agilityhub-e8-w07-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w07-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w07-mongo-1 Healthy 
+ Container agilityhub-e8-w07-core-1 Starting 
+ Container agilityhub-e8-w07-core-1 Started 
+ Container agilityhub-e8-w07-mongo-1 Waiting 
+ Container agilityhub-e8-w07-seed-1 Waiting 
+ Container agilityhub-e8-w07-activate-demo-club-1 Waiting 
+ Container agilityhub-e8-w07-core-1 Waiting 
+ Container agilityhub-e8-w07-seed-1 Exited 
+ Container agilityhub-e8-w07-activate-demo-club-1 Exited 
+ Container agilityhub-e8-w07-mongo-1 Healthy 
+ Container agilityhub-e8-w07-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E8-W07/seed-files.log (191 lines)
+E8 seed totals: Cànic billing/lifecycle and FIFO card scenarios asserted
+ Container agilityhub-e8-w07-playwright-run-251a25ab5e54 Creating 
+ Container agilityhub-e8-w07-playwright-run-251a25ab5e54 Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:34) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 11 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +852
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 852, reused 427, downloaded 0, added 0
+Progress: resolved 852, reused 839, downloaded 0, added 0
+Progress: resolved 852, reused 850, downloaded 0, added 172
+Progress: resolved 852, reused 851, downloaded 0, added 353
+Progress: resolved 852, reused 852, downloaded 0, added 535
+Progress: resolved 852, reused 852, downloaded 0, added 669
+Progress: resolved 852, reused 852, downloaded 0, added 815
+Progress: resolved 852, reused 852, downloaded 0, added 838
+Progress: resolved 852, reused 852, downloaded 0, added 844
+Progress: resolved 852, reused 852, downloaded 0, added 851
+Progress: resolved 852, reused 852, downloaded 0, added 852
+Progress: resolved 852, reused 852, downloaded 0, added 852, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 12.7s using pnpm v9.15.9
+
+[WebServer] (node:117) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:197) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:295) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:393) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+[WebServer] (node:488) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+[1/6] e2e/core/e8-core.spec.ts:827:5 › E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period booked → «Inactivitats» → D10 approval cancels it → 04 shows it NOT_BOOKABLE{INACTIVITY}; D5/D10 «inactiva fins»
+  1) e2e/core/e8-core.spec.ts:827:5 › E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period booked → «Inactivitats» → D10 approval cancels it → 04 shows it NOT_BOOKABLE{INACTIVITY}; D5/D10 «inactiva fins» 
+
+    TimeoutError: locator.click: Timeout 15000ms exceeded.
+    Call log:
+      - waiting for getByRole('link', { name: 'Obre la fitxa de Gala Fictici023' }).last()
+        - locator resolved to <a href="/abonats/7ab8211b-21c6-334e-bc46-6fc308bc1bc2?calaix=inactivitat&period=4b5129d0-fe32-47e3-a13b-46671d68e638">…</a>
+      - attempting click action
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
+        - performing click action
+        - click action done
+        - waiting for scheduled navigations to finish
+
+
+      949 |     .getByRole("link", { name: `Obre la fitxa de ${member.fullName ?? ""}` })
+      950 |     .last()
+    > 951 |     .click();
+          |      ^
+      952 |   await expect(page).toHaveURL(new RegExp(`/abonats/${member.id}`, "u"));
+      953 |   const inactivityDrawer = page.getByRole("dialog", { name: "Inactivitat" });
+      954 |   await expect(inactivityDrawer.getByRole("button", { name: "Aprova" })).toBeVisible();
+        at /work/e2e/core/e8-core.spec.ts:951:6
+
+    Error: Assertion error
+
+    Error: browserContext._wrapApiCall: Target page, context or browser has been closed
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-11T09:48:04.563Z grant_type=refresh_token status=400 cookie=none context=w0c2 page=127.0.0.1:4174/entrar started=2026-10-11T09:48:04.548Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E8-W04 T-13...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e8-core-E8-W04-T-13-32-e·1-37f16-VITY-D5-D10-«inactiva-fins»/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e8-core-E8-W04-T-13-32-e·1-37f16-VITY-D5-D10-«inactiva-fins»/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[2/6] e2e/core/e8-core.spec.ts:1052:5 › E8-W04 T-13-32 (e·2) in es: her inactivity fee simulated (R-13-08) → 15 → «Baixes» → D10 approval → D5 «baixa dd/mm» and «Baixes previstes»; the ungenerated month after the leave no longer bills her, the leave's month still does (R-13-11)
+  2) e2e/core/e8-core.spec.ts:1052:5 › E8-W04 T-13-32 (e·2) in es: her inactivity fee simulated (R-13-08) → 15 → «Baixes» → D10 approval → D5 «baixa dd/mm» and «Baixes previstes»; the ungenerated month after the leave no longer bills her, the leave's month still does (R-13-11) 
+
+    TypeError: expect(received).toMatch(expected)
+
+    Matcher error: received value must be a string
+
+    Received has value: undefined
+
+      1070 |   expect(lauraBefore, "her next month is billed before the leave").toBeDefined();
+      1071 |   const feeLine = lauraBefore?.lines.find((line) => line.origin === "INACTIVITY_FEE");
+    > 1072 |   expect(feeLine?.description).toMatch(/^Quota inactivitat — /u);
+           |                                ^
+      1073 |   if (record.inactivity !== undefined) {
+      1074 |     record.inactivity.simulatedLineBeforeLeave = feeLine?.description;
+      1075 |   }
+        at /work/e2e/core/e8-core.spec.ts:1072:32
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-11T09:48:34.257Z grant_type=refresh_token status=400 cookie=none context=w1c1 page=127.0.0.1:4174/entrar started=2026-10-11T09:48:34.245Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E8-W04 T-13...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e8-core-E8-W04-T-13-32-e·2-1abee-s-month-still-does-R-13-11-/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e8-core-E8-W04-T-13-32-e·2-1abee-s-month-still-does-R-13-11-/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e8-core-E8-W04-T-13-32-e·2-1abee-s-month-still-does-R-13-11-/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/6] e2e/core/e8-core.spec.ts:1168:5 › E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 07 cancellation returns it, 13 shows both; the expired pack stays unusable
+[4/6] e2e/core/e8-core.spec.ts:1291:5 › E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML → returned → rollback → same numbers; cash paid; accounting export; GET /invoices timings
+  3) e2e/core/e8-core.spec.ts:1291:5 › E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML → returned → rollback → same numbers; cash paid; accounting export; GET /invoices timings 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      1327 |   }
+      1328 |   // R-13-11: after her approved leave on the last day of the previous month, Laura is not billed.
+    > 1329 |   expect(simulation.invoicesPreview.some((preview) => preview.memberId === laura.id)).toBe(false);
+           |                                                                                       ^
+      1330 |   // R-13-08: the independently selected inactive member must have the expected fee in this run.
+      1331 |   // This is deliberately mandatory on moved-date proofs too: otherwise the receipt, member app and
+      1332 |   // D10 assertions below could all disappear behind a conditional while the gate still passed.
+        at /work/e2e/core/e8-core.spec.ts:1329:87
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-11T09:48:45.339Z grant_type=refresh_token status=400 cookie=none context=w2c4 page=127.0.0.1:4174/entrar started=2026-10-11T09:48:45.335Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E8-W04 T-12...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e8-core-E8-W04-T-12-27-a-b-95920-export-GET-invoices-timings/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e8-core-E8-W04-T-12-27-a-b-95920-export-GET-invoices-timings/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e8-core-E8-W04-T-12-27-a-b-95920-export-GET-invoices-timings/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[5/6] e2e/core/e8-core.spec.ts:1671:5 › E8-W04 (f) T-13-24 / T-12-21: instructor gates, another member's /me/…/{id} (also a family member's) is not found, nothing secret rendered
+  4) e2e/core/e8-core.spec.ts:1671:5 › E8-W04 (f) T-13-24 / T-12-21: instructor gates, another member's /me/…/{id} (also a family member's) is not found, nothing secret rendered 
+
+    Error: The lifecycle and billing legs did not leave their ids
+
+      1679 |   const leaveRequestId = lifecycle.leaveRequestId;
+      1680 |   if (periodId === undefined || invoiceId === undefined || leaveRequestId === undefined) {
+    > 1681 |     throw new Error("The lifecycle and billing legs did not leave their ids");
+           |           ^
+      1682 |   }
+      1683 |
+      1684 |   const instructor = await login(browser, adminUrl, INSTRUCTOR);
+        at /work/e2e/core/e8-core.spec.ts:1681:11
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-11T09:49:19.973Z grant_type=refresh_token status=400 cookie=none context=w3c1 page=127.0.0.1:4174/entrar started=2026-10-11T09:49:19.968Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E8-W04 (f) ...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e8-core-E8-W04-f-T-13-24-T-10909-und-nothing-secret-rendered/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e8-core-E8-W04-f-T-13-24-T-10909-und-nothing-secret-rendered/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e8-core-E8-W04-f-T-13-24-T-10909-und-nothing-secret-rendered/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[6/6] e2e/core/e8-core.spec.ts:1763:5 › E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] → 202 → CHARGING settles on its own (6b(a)) → «cobrat»; invalid-card fallback → [Actualitza la targeta] → checkout
+E8 fake card: payment_intent.succeeded delivered (provider reference redacted)
+  4 failed
+    e2e/core/e8-core.spec.ts:827:5 › E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period booked → «Inactivitats» → D10 approval cancels it → 04 shows it NOT_BOOKABLE{INACTIVITY}; D5/D10 «inactiva fins» 
+    e2e/core/e8-core.spec.ts:1052:5 › E8-W04 T-13-32 (e·2) in es: her inactivity fee simulated (R-13-08) → 15 → «Baixes» → D10 approval → D5 «baixa dd/mm» and «Baixes previstes»; the ungenerated month after the leave no longer bills her, the leave's month still does (R-13-11) 
+    e2e/core/e8-core.spec.ts:1291:5 › E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML → returned → rollback → same numbers; cash paid; accounting export; GET /invoices timings 
+    e2e/core/e8-core.spec.ts:1671:5 › E8-W04 (f) T-13-24 / T-12-21: instructor gates, another member's /me/…/{id} (also a family member's) is not found, nothing secret rendered 
+  2 passed (2.3m)
+
+ ELIFECYCLE  Command failed with exit code 1.
