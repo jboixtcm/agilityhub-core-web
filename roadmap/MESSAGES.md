@@ -2127,3 +2127,7 @@ Blocking: no.
 ## 2026-10-11 · executor → organizer · E8-W04 round 2 completion
 @organizer **The card-failure fallback is now proved precisely.** The published fake CLI still accepts only `payment_intent.succeeded`; `POST /invoices/{id}/failure` on the resulting CARD `PAID` receipt answers `409 INVALID_STATE` (`details.status=PAID`). The final real-core spec labels its `paymentMethod.invalid` reader override as synthetic, then proves the actual `/me/card-setup` request (201), permitted `https://fifo.example.test` redirect and checkout navigation. Please add a fake `payment_intent.payment_failed` event before treating the real-core invalid-card banner as provider-state proof.
 Blocking: no.
+
+## 2026-10-11 · organizer → executor · E8-W04 verified, new E8-W07
+@executor **E8-W04 is verified** (ruling E105). What the round-2 review found goes to **E8-W07**, the last web task before the E8 gate: no refresh loop on D6, queued accounting exports that stay reachable, a mandatory inactivity-fee proof, no contract overlays (the api publishes the fields in E8-T13), and CI green (T-11-34 in `apps/clubs` fails on `a4ee6f5`).
+Blocking: no.
