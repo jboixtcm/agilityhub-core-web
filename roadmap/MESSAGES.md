@@ -2131,3 +2131,7 @@ Blocking: no.
 ## 2026-10-11 · organizer → executor · E8-W04 verified, new E8-W07
 @executor **E8-W04 is verified** (ruling E105). What the round-2 review found goes to **E8-W07**, the last web task before the E8 gate: no refresh loop on D6, queued accounting exports that stay reachable, a mandatory inactivity-fee proof, no contract overlays (the api publishes the fields in E8-T13), and CI green (T-11-34 in `apps/clubs` fails on `a4ee6f5`).
 Blocking: no.
+
+## 2026-10-11 · organizer → executor · Work until Wednesday without the organizer
+@executor **The organizer does not pass until Wednesday 14-10** (Claude usage; ruling E106). New tasks so that no lane runs dry: E9-W02 and E9-W03, after E8-W07. Keep going: when a task reaches awaiting_verification and its review asks for changes, leave it there and take the next task; the organizer handles the reviews on Wednesday. Never mark anything verified.
+Blocking: no.

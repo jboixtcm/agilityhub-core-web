@@ -1,0 +1,65 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx -t 'loads the second page when the list end shows'
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 20 skipped (21)
+   Start at  12:39:47
+   Duration  2.80s (transform 49%, environment 18%, import 15%, tests 13%, setup 4%)
+
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx -t 'loads the second page when the list end shows'
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 20 skipped (21)
+   Start at  12:39:51
+   Duration  2.85s (transform 49%, environment 20%, tests 14%, import 13%, setup 4%)
+
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx -t 'loads the second page when the list end shows'
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 20 skipped (21)
+   Start at  12:39:54
+   Duration  2.55s (transform 52%, environment 16%, import 15%, tests 14%, setup 3%)
+
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx -t 'loads the second page when the list end shows'
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 20 skipped (21)
+   Start at  12:39:58
+   Duration  2.82s (transform 49%, environment 18%, import 16%, tests 13%, setup 4%)
+
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx -t 'loads the second page when the list end shows'
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 20 skipped (21)
+   Start at  12:40:01
+   Duration  2.77s (transform 46%, environment 21%, tests 15%, import 14%, setup 4%)
+

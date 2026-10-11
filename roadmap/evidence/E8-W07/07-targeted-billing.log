@@ -1,0 +1,13 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx -t 'E8-W07|R-12-26 / E8-W04 round 2'
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed | 51 skipped (54)
+   Start at  12:39:09
+   Duration  5.69s (tests 42%, environment 25%, transform 20%, import 7%, setup 6%)
+
