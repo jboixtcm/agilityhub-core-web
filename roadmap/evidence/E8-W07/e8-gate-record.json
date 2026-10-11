@@ -1,21 +1,21 @@
 {
-  "clockInstant": "2026-11-23T07:00:00+01:00",
-  "leaveDate": "2026-11-30",
-  "period": "2026-12",
-  "weekStart": "2026-11-23",
+  "clockInstant": "2026-10-19T07:00:00+02:00",
+  "leaveDate": "2026-10-31",
+  "period": "2026-11",
+  "weekStart": "2026-10-19",
   "clock": [
     {
-      "instant": "2026-11-23T07:00:00+01:00",
+      "instant": "2026-10-19T07:00:00+02:00",
       "status": 200
     },
     {
-      "instant": "2026-11-29T19:01:00.000Z",
+      "instant": "2026-10-25T19:01:00.000Z",
       "status": 200
     }
   ],
   "inactivity": {
     "bookedInside": {
-      "classStartsAtLocal": "2026-12-07T08:30",
+      "classStartsAtLocal": "2026-11-02T08:30",
       "stateAfterApproval": "CANCELLED",
       "stateOn04": "NOT_BOOKABLE/INACTIVITY"
     },
@@ -23,22 +23,22 @@
     "feeArrangement": {
       "amountMinor": 2000,
       "currency": "EUR",
-      "fromMonth": "2026-12",
-      "memberId": "447c55c7-e720-3a34-8c2b-2d7ea8e8b426",
-      "toMonth": "2026-12"
+      "fromMonth": "2026-11",
+      "memberId": "b13ccc38-b6ac-34f6-95e7-41d1ff068f45",
+      "toMonth": "2026-11"
     },
     "frozenMemberUntil": "2026-11-30",
-    "fromMonth": "2026-12",
-    "memberId": "ad7d9919-d53e-35bf-96ce-21b8fb766a85",
+    "fromMonth": "2026-11",
+    "memberId": "82d5aeb0-c609-33a5-b299-1390cb57e047",
     "stateAfterApproval": "APPROVED",
-    "simulatedLineBeforeLeave": "Quota inactivitat — Desembre 2026",
-    "feeMemberInvoiceLine": "Quota inactivitat — Desembre 2026"
+    "simulatedLineBeforeLeave": "Quota inactivitat — Novembre 2026",
+    "feeMemberInvoiceLine": "Quota inactivitat — Novembre 2026"
   },
   "leave": {
-    "effectiveDate": "2026-11-30",
+    "effectiveDate": "2026-10-31",
     "leaveMonthBilledAfter": true,
     "leaveMonthBilledBefore": true,
-    "memberId": "ad7d9919-d53e-35bf-96ce-21b8fb766a85",
+    "memberId": "82d5aeb0-c609-33a5-b299-1390cb57e047",
     "nextMonthBilledAfter": false,
     "nextMonthBilledBefore": true,
     "reasonLabelForEs": "Ja he après tot el que volia",
@@ -50,20 +50,20 @@
     "afterSeededRefund": 5,
     "before": 5,
     "expiredRemaining": 10,
-    "memberId": "e50821d4-65b1-335b-bd4e-8b7f1fe5b5ca"
+    "memberId": "3309136a-a56c-3498-b047-c40f77155e8d"
   },
   "performance": {
     "failed": {
-      "max": 188.9,
-      "median": 91.9
+      "max": 6.3,
+      "median": 4.9
     },
     "full": {
-      "max": 60.9,
-      "median": 20
+      "max": 8.9,
+      "median": 8.1
     },
     "paid": {
-      "max": 19.5,
-      "median": 11
+      "max": 4.9,
+      "median": 4.6
     }
   },
   "billing": {
@@ -83,7 +83,7 @@
       "paid": 0,
       "failed": 0
     },
-    "exportFileName": "canic_accounting_20261129-2002.csv",
+    "exportFileName": "canic_accounting_20261025-2001.csv",
     "exportJob": null,
     "exportStatus": 200,
     "firstNumbers": [
@@ -206,16 +206,16 @@
     "incidents": {},
     "kpis": {
       "cashPending": 55,
-      "collectionDate": "2026-12-01",
+      "collectionDate": "2026-11-01",
       "count": 115,
-      "inactivityFees": 1,
-      "totalMinor": 1010000
+      "inactivityFees": 2,
+      "totalMinor": 1005000
     },
     "receiptCount": 115,
     "remittanceCount": 60,
-    "remittanceFileName": "remesa-2026-12.xml",
+    "remittanceFileName": "remesa-2026-11.xml",
     "remittanceStatus": 200,
-    "remittanceTotalMinor": 374000,
+    "remittanceTotalMinor": 369000,
     "secondNumbers": [
       "2026-0001",
       "2026-0002",
