@@ -16,10 +16,94 @@ export CORE_URL="${CORE_URL:-http://core:8080}"
 # E7-W03 round 2 (step 2): an optional third argument `no-clock` (`pnpm e2e:core E7-W03
 # e7-core.spec.ts no-clock`) makes the specs treat `POST /test/clock` as absent, as an image
 # without the `test` profile would: the clock steps are skipped with their reason.
+# E8-W04 round 2 (review #1): an optional `today=YYYY-MM-DD` after the second argument
+# (`pnpm e2e:core E8-W04 e8-core.spec.ts today=2026-10-28`) replaces the club-local date the week
+# anchors below are computed from, so a run proves them for another day (only later days: the
+# seed refuses a week start before the real Monday).
 export CORE_CLOCK_DETECTION=""
-if [[ "${3:-}" == "no-clock" ]]; then
-  export CORE_CLOCK_DETECTION="off"
-  echo "CORE_CLOCK_DETECTION=off (POST /test/clock treated as absent)"
+club_today_override=""
+anchors_only=false
+for argument in "${@:3}"; do
+  case "$argument" in
+    no-clock)
+      export CORE_CLOCK_DETECTION="off"
+      echo "CORE_CLOCK_DETECTION=off (POST /test/clock treated as absent)"
+      ;;
+    today=????-??-??)
+      club_today_override="${argument#today=}"
+      echo "club-local today overridden: $club_today_override"
+      ;;
+    # Prints the week anchors computed for that day and stops (no image, no stack).
+    anchors-only)
+      anchors_only=true
+      ;;
+    *)
+      echo "Unknown argument: $argument (expected no-clock, today=YYYY-MM-DD or anchors-only)" >&2
+      exit 2
+      ;;
+  esac
+done
+
+# E8-W04 round 2 (ruling E103): there is no Stripe test account yet, so the browser harness has no
+# real-provider branch. Supplied keys are never silently replaced by the fake provider: a run that
+# includes the E8 stage stops here, before any stack starts, and prints no part of the key.
+if [[ -n "${STRIPE_TEST_SECRET_KEY:-}" && ( -z "${2:-}" || "${2:-}" == *e8-core* ) ]]; then
+  echo "e2e-core: STRIPE_TEST_SECRET_KEY is set, but the E8 browser stage has no real-Stripe branch (ruling E103)." >&2
+  echo "e2e-core: unset it to run the card leg on FakePaymentProvider; the signed real-Stripe delivery is api bin/e8-smoke's." >&2
+  exit 3
+fi
+
+# E4-W05: the demo seed anchors its planning on the club-local Monday of the current week
+# (`seed:demo --week-start`, api E4-T05); the E4 spec reads the same date. The Cànic's zone.
+club_today="${club_today_override:-$(TZ=Europe/Madrid date +%F)}"
+# A plain date's ISO weekday (1 = Monday), and a plain date moved by whole days (BSD or GNU date).
+weekday_of() {
+  date -j -f %F "$1" +%u 2>/dev/null || date -d "$1" +%u
+}
+add_days() {
+  date -j -v"$2"d -f %F "$1" +%F 2>/dev/null || date -d "$1 $2 days" +%F
+}
+club_weekday="$(weekday_of "$club_today")"
+days_since_monday="$(( club_weekday - 1 ))"
+club_monday="$(add_days "$club_today" "-$days_since_monday")"
+export E4_WEEK_START="${E4_WEEK_START:-$club_monday}"
+echo "E4_WEEK_START=$E4_WEEK_START (club-local Monday, Europe/Madrid)"
+# E5-W04: the E5 scenario of the demo seed (api E5-T06, `scenario:` of `demo-canic.yaml`) lives on
+# week 0 and needs every day of it ahead: `seed:demo` applies it only when `--week-start` is the
+# run's club-local Monday or later. So the E5 stage seeds from the next Monday (a week ahead on a
+# Monday): its spec sets the core's test clock to the scenario's `demoNow` (Monday 07:00 of that
+# week), always ahead of the browsers' own clock, which the run never fakes.
+days_to_monday="$(( 8 - club_weekday ))"
+next_monday="$(add_days "$club_today" "+$days_to_monday")"
+export E5_WEEK_START="${E5_WEEK_START:-$next_monday}"
+echo "E5_WEEK_START=$E5_WEEK_START (the club-local Monday after today, Europe/Madrid)"
+# E8-T06's billing seed needs the whole scenario week in the future: at the earliest the Monday
+# after E5's week. E8-W04 round 2 (review #1): the E8 spec's dates must hold on any run day, so
+# the week is anchored on the first such Monday X whose day of the month d (month length L) has
+#   d ≤ 25 (inactivity.requestDeadlineDay): at the clock (X 07:00) the next month is the first
+#     one a member can still ask for (R-13-01), the month this stage bills;
+#   d ≥ L − 13: the validated week +2 (X+14 … X+19) lies in that next month, so the requester
+#     books a class inside her period before the approval cancels it (R-13-05/06);
+#   d ≤ L − 6: the leave on the month's last day is still ≥ the core's date after the clock moves
+#     to week +2's opening (Sunday X+6 20:00, R-08-01), as R-13-10 requires.
+# Every month has a Monday in that window (eight days for L ≥ 30, Feb: 15–22).
+month_length() {
+  date -j -v1d -v+1m -v-1d -f %F "$1" +%d 2>/dev/null \
+    || date -d "$(date -d "$1" +%Y-%m-01) +1 month -1 day" +%d
+}
+e8_monday="$(add_days "$club_today" "+$(( 15 - club_weekday ))")"
+for _ in 1 2 3 4 5 6 7 8; do
+  e8_day="$((10#$(date -j -f %F "$e8_monday" +%d 2>/dev/null || date -d "$e8_monday" +%d)))"
+  e8_length="$((10#$(month_length "$e8_monday")))"
+  if ((e8_day <= 25 && e8_day >= e8_length - 13 && e8_day <= e8_length - 6)); then
+    break
+  fi
+  e8_monday="$(add_days "$e8_monday" "+7")"
+done
+export E8_WEEK_START="${E8_WEEK_START:-$e8_monday}"
+echo "E8_WEEK_START=$E8_WEEK_START (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)"
+if [[ "$anchors_only" == true ]]; then
+  exit 0
 fi
 
 core_image="ghcr.io/jboixtcm/agilityhub-core-api:main"
@@ -33,35 +117,6 @@ fi
 echo "core image: $core_image $(docker image inspect "$core_image" \
   --format '{{.Architecture}} revision={{index .Config.Labels "org.opencontainers.image.revision"}} created={{.Created}} digests={{.RepoDigests}}')"
 echo "core image seeds (/app/seeds): $(docker run --rm --entrypoint /bin/ls "$core_image" /app/seeds | tr '\n' ' ')"
-
-# E4-W05: the demo seed anchors its planning on the club-local Monday of the current week
-# (`seed:demo --week-start`, api E4-T05); the E4 spec reads the same date. The Cànic's zone.
-club_today="$(TZ=Europe/Madrid date +%F)"
-days_since_monday="$(( $(TZ=Europe/Madrid date +%u) - 1 ))"
-if ! club_monday="$(date -j -v-"${days_since_monday}"d -f %F "$club_today" +%F 2>/dev/null)"; then
-  club_monday="$(date -d "$club_today - $days_since_monday days" +%F)"
-fi
-export E4_WEEK_START="${E4_WEEK_START:-$club_monday}"
-echo "E4_WEEK_START=$E4_WEEK_START (club-local Monday, Europe/Madrid)"
-# E5-W04: the E5 scenario of the demo seed (api E5-T06, `scenario:` of `demo-canic.yaml`) lives on
-# week 0 and needs every day of it ahead: `seed:demo` applies it only when `--week-start` is the
-# run's club-local Monday or later. So the E5 stage seeds from the next Monday (a week ahead on a
-# Monday): its spec sets the core's test clock to the scenario's `demoNow` (Monday 07:00 of that
-# week), always ahead of the browsers' own clock, which the run never fakes.
-days_to_monday="$(( 8 - $(TZ=Europe/Madrid date +%u) ))"
-if ! next_monday="$(date -j -v+"${days_to_monday}"d -f %F "$club_today" +%F 2>/dev/null)"; then
-  next_monday="$(date -d "$club_today + $days_to_monday days" +%F)"
-fi
-export E5_WEEK_START="${E5_WEEK_START:-$next_monday}"
-echo "E5_WEEK_START=$E5_WEEK_START (the club-local Monday after today, Europe/Madrid)"
-# E8-T06's billing seed needs the whole scenario week in the future. Its smoke chooses the Monday
-# after E5's week, so leave/inactivity and the pack booking remain eligible when this stage runs.
-days_to_e8_monday="$(( 15 - $(TZ=Europe/Madrid date +%u) ))"
-if ! e8_monday="$(date -j -v+"${days_to_e8_monday}"d -f %F "$club_today" +%F 2>/dev/null)"; then
-  e8_monday="$(date -d "$club_today + $days_to_e8_monday days" +%F)"
-fi
-export E8_WEEK_START="${E8_WEEK_START:-$e8_monday}"
-echo "E8_WEEK_START=$E8_WEEK_START (the second club-local Monday after today, Europe/Madrid)"
 # The seed's `--week-start` of a stage (`docker-compose.yml`): E4's Monday unless a stage says so.
 export SEED_WEEK_START="$E4_WEEK_START"
 
@@ -92,7 +147,9 @@ echo "pnpm store: $CORE_PNPM_STORE_DIRECTORY (package cache only)"
 # the stack; without the profile `down` does not see that service's containers.
 cleanup() {
   # Stops E8-W04's fake-card watcher, if one runs (it removes its folder when it sees `stop`).
-  if [[ -d "$evidence_directory/.e8-fake-card" ]]; then touch "$evidence_directory/.e8-fake-card/stop"; fi
+  if [[ -d "$evidence_directory/.e8-fake-card" ]]; then
+    touch "$evidence_directory/.e8-fake-card/stop" 2>/dev/null || true
+  fi
   docker compose -f "$compose_file" --profile e2e down --volumes --remove-orphans >/dev/null 2>&1 || true
 }
 # An INT or TERM cleans up and ends the script (130 / 143): the handler exits instead of returning
@@ -136,7 +193,9 @@ run_core_suite() {
   # `run_stage` calls it as `run_core_suite <stage> || …`, which turns `set -e` off in here: a core
   # that does not start stops the stage (its seed log is kept all the same).
   local up_status=0
-  docker compose -f "$compose_file" up -d --wait mongo seed core || up_status=$?
+  # E8-W04 round 2: a seed that never finishes (attempt 1: two hours at 440 % CPU) fails the stage
+  # after 25 minutes instead of holding the host; its log is kept below as for any failure.
+  docker compose -f "$compose_file" up -d --wait --wait-timeout 1500 mongo seed core || up_status=$?
   save_seed_log "$1"
   if [[ "$up_status" -ne 0 ]]; then
     return "$up_status"
@@ -200,7 +259,9 @@ settle_e8_fake_card() {
 e8_handshake_directory="$evidence_directory/.e8-fake-card"
 watch_e8_fake_card() {
   local request="$e8_handshake_directory/request" event delivery_status deadline
-  deadline=$((SECONDS + 2700))
+  # E8-W04 round 2: longer than the stage can last (a 25-minute stack start plus the run on a
+  # loaded host); attempt 2's 45 minutes ran out before the stage did. The stage's `stop` ends it.
+  deadline=$((SECONDS + 10800))
   while ((SECONDS < deadline)) && [[ ! -e "$e8_handshake_directory/stop" ]]; do
     if [[ -s "$request" ]]; then
       event="$(tr -d '[:space:]' <"$request")"
@@ -223,15 +284,6 @@ watch_e8_fake_card() {
   rm -rf "$e8_handshake_directory"
 }
 
-# Stripe test keys are never read by this harness: the browser leg always runs the local fake
-# provider, and the signed real-Stripe delivery is api `bin/e8-smoke`'s.
-warn_e8_stripe_key() {
-  if [[ -n "${STRIPE_TEST_SECRET_KEY:-}" ]]; then
-    echo "E8 real Stripe key detected; the browser harness refuses to print or persist it" >&2
-    echo "Use api bin/e8-smoke for the signed real-Stripe delivery; continuing with the local fake provider" >&2
-  fi
-}
-
 # Runs the e8 stage with the watcher beside it.
 run_e8_with_card_watcher() {
   rm -rf "$e8_handshake_directory"
@@ -239,7 +291,7 @@ run_e8_with_card_watcher() {
   watch_e8_fake_card &
   local watcher=$!
   "$@"
-  touch "$e8_handshake_directory/stop"
+  touch "$e8_handshake_directory/stop" 2>/dev/null || true
   wait "$watcher" 2>/dev/null || true
   rm -rf "$e8_handshake_directory"
 }
@@ -452,7 +504,6 @@ if [[ "$staged" == true ]]; then
   # D6 stays open (no second pass, no reseed).
   export CORE_TEST_FILES="e8-core.spec.ts"
   export SEED_WEEK_START="$E8_WEEK_START"
-  warn_e8_stripe_key
   run_e8_with_card_watcher run_stage e8
 else
   export CORE_TEST_FILES="$2"
@@ -461,7 +512,6 @@ else
   fi
   if [[ "$2" == *e8-core* ]]; then
     export SEED_WEEK_START="$E8_WEEK_START"
-    warn_e8_stripe_key
     run_e8_with_card_watcher run_stage files
   else
     run_stage files

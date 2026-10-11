@@ -73,6 +73,8 @@ interface GateRecord {
     chipsAfterGeneration: Schemas["InvoiceCounts"];
     chipsAfterRollback: Schemas["InvoiceCounts"];
     exportFileName: string;
+    /** The queued ACCOUNTING job when the core answered `202` (null: the `200` file). */
+    exportJob: { id: string; kind: string } | null;
     exportStatus: number;
     firstNumbers: string[];
     incidents: Record<string, number>;
@@ -91,8 +93,8 @@ interface GateRecord {
     secondNumbers: string[];
   };
   card?: {
-    banner: "unproven" | { invoice: string; shown: boolean };
-    cardSetup: { host?: string; status: number };
+    banner: { invoice: string; shown: boolean };
+    cardSetup: { host: string; navigated: boolean; redirectOrigin: string; status: number };
     failedChip: number;
     paidChip: number;
     settledWithoutReload: boolean;
@@ -100,19 +102,24 @@ interface GateRecord {
     submitted: number;
   };
   inactivity?: {
+    bookedInside: { classStartsAtLocal: string; stateAfterApproval: string; stateOn04: string };
     cancelledBookings: number;
+    feeMemberInvoiceLine?: string;
     frozenMemberUntil: string | null;
     fromMonth: string;
     memberId: string;
-    ownInvoiceLine?: string;
-    screen04Status: number;
+    simulatedLineBeforeLeave?: string;
+    stateAfterApproval: string;
   };
   leave?: {
-    reasonLabelForEs: string;
-    decemberWithout: boolean;
-    decemberWithBefore: boolean;
     effectiveDate: string;
+    leaveMonthBilledAfter: boolean;
+    leaveMonthBilledBefore: boolean;
     memberId: string;
+    nextMonthBilledAfter: boolean;
+    nextMonthBilledBefore: boolean;
+    noReceiptAfterGeneration?: boolean;
+    reasonLabelForEs: string;
   };
   pack?: {
     clockMovedTo?: string;
@@ -135,6 +142,8 @@ interface GateRecord {
 /** The member who requests inactivity on 14 and her leave on 15 (T-13-32), and her family. */
 interface Lifecycle {
   familyPartner?: MemberListItem;
+  /** The seeded inactive member (Oct–Nov style period): her next-month receipt carries the fee. */
+  feeMemberId?: string;
   invoiceId?: string;
   leaveRequestId?: string;
   member?: MemberListItem;
@@ -195,16 +204,29 @@ function madridOffset(date: string): string {
   return name?.replace("GMT", "") ?? "+01:00";
 }
 
-const period = nextMonth(weekStart.slice(0, 7));
-const monthAfterPeriod = nextMonth(period);
-const leaveDate = monthEnd(weekStart.slice(0, 7));
+// `e2e-core.sh` anchors the week on a Monday X with L-13 ≤ day ≤ min(25, L-6) (round 2, review
+// #1): at X 07:00 the next month is the first one a member can still ask for, its week +2 is
+// validated, and the month's last day is still ahead after the clock moves to that week's opening.
+const weekMonth = weekStart.slice(0, 7);
+const period = nextMonth(weekMonth);
+const leaveDate = monthEnd(weekMonth);
 const clockInstant = `${weekStart}T07:00:00${madridOffset(weekStart)}`;
-const realClubToday = new Intl.DateTimeFormat("en-CA", {
-  day: "2-digit",
-  month: "2-digit",
-  timeZone: "Europe/Madrid",
-  year: "numeric",
-}).format(new Date());
+
+/** The club-local (Europe/Madrid) date of an instant. */
+function clubDate(instant: string | number): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone: "Europe/Madrid",
+    year: "numeric",
+  }).format(new Date(instant));
+}
+
+/** «Today» for the core: the club-local date of the last clock this stage set. */
+function coreToday(): string {
+  const last = record.clock?.at(-1)?.instant;
+  return last === undefined ? weekStart : clubDate(last);
+}
 // A full IBAN or a Stripe secret: never rendered anywhere (masked accounts are fine).
 const secretPattern = /\b[A-Z]{2}\d{2}(?:\s?[A-Z0-9]{4}){4,7}\b|sk_(?:test|live)_/u;
 
@@ -324,6 +346,7 @@ async function impersonate(
   memberId: string,
   baseUrl = clubsUrl,
   locale = "ca",
+  { onClubHost = false }: { onClubHost?: boolean } = {},
 ): Promise<Session> {
   for (let attempt = 0; ; attempt += 1) {
     const created = await call<Impersonation>(
@@ -348,7 +371,11 @@ async function impersonate(
           "urn:agilityhub:grant:handoff",
       { timeout: 60_000 },
     );
-    await page.goto(`${baseUrl}/entrar?handoff=${encodeURIComponent(handoff ?? "")}`);
+    // `onClubHost`: the app runs on the club's own host (the launchUrl's), which the core accepts
+    // as a redirect (`POST /me/card-setup`, round 2 review #5), served by the local dev server.
+    if (onClubHost) await serveClubHost(context, launch.origin, baseUrl);
+    const appUrl = onClubHost ? launch.origin : baseUrl;
+    await page.goto(`${appUrl}/entrar?handoff=${encodeURIComponent(handoff ?? "")}`);
     const exchange = await exchanged;
     // The handoff grant shares the per-IP authentication quota of the password logins (E4-W16).
     if (exchange.status() === 429 && attempt === 0) {
@@ -616,6 +643,76 @@ async function cancelFrom07(page: Page, bookingId: string): Promise<Booking> {
   return (await response.json()) as Booking;
 }
 
+/**
+ * 04 (`/reservar`) for `dogId`: the dog's chip when it is not the proposed one, then the row's
+ * seat hold and [CONFIRMAR LA RESERVA] (E5-W01's flow); the core's 201 booking.
+ */
+async function bookFrom04(page: Page, dogId: string, dogName: string, classId: string) {
+  const pageRead = page.waitForResponse(responseIs("GET", /\/api\/v1\/me\/bookable-classes$/u));
+  await navigateSpa(page, "/reservar");
+  const first = (await (await pageRead).json()) as BookableClasses;
+  if (first.dog.id !== dogId) {
+    const reread = page.waitForResponse(responseIs("GET", /\/api\/v1\/me\/bookable-classes$/u));
+    await page
+      .getByRole("button", {
+        name: new RegExp(`^${dogName.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")}(?: ·| \\(|$)`, "u"),
+      })
+      .first()
+      .click();
+    expect((await reread).status()).toBe(200);
+  }
+  const hold = page.waitForResponse(responseIs("POST", /\/api\/v1\/seat-holds$/u));
+  await page.locator(`.class-row[data-class-id="${classId}"]`).getByRole("button").click();
+  expect((await hold).status()).toBe(201);
+  const booked = page.waitForResponse(responseIs("POST", /\/api\/v1\/bookings$/u));
+  await page.getByRole("button", { name: "CONFIRMAR LA RESERVA" }).click();
+  const bookedHttp = await booked;
+  expect(bookedHttp.status()).toBe(201);
+  return (await bookedHttp.json()) as Booking;
+}
+
+/**
+ * Serves `origin` (a club's own host, the one the core accepts as a redirect) from the local dev
+ * server in this browser context: every request to it is fetched from `devServer` and answered
+ * as is, so the page's `window.location` is the club's host. Any other foreign host gets a stub
+ * page (a provider's checkout is never opened) and its sub-resources are aborted.
+ */
+async function serveClubHost(context: BrowserContext, origin: string, devServer: string) {
+  const local = new URL(devServer);
+  await context.route(
+    (url) => url.origin !== local.origin,
+    async (route) => {
+      const request = route.request();
+      const url = new URL(request.url());
+      if (url.origin === origin) {
+        const headers = { ...request.headers() };
+        delete headers.host;
+        const response = await context.request.fetch(`${devServer}${url.pathname}${url.search}`, {
+          data: request.postDataBuffer() ?? undefined,
+          headers,
+          maxRedirects: 0,
+          method: request.method(),
+        });
+        await route.fulfill({ response });
+        return;
+      }
+      if (request.resourceType() === "document") {
+        await route.fulfill({
+          body: "<!doctype html><title>checkout stub</title>",
+          contentType: "text/html",
+        });
+        return;
+      }
+      await route.abort();
+    },
+  );
+  // Vite's HMR socket on the club host has no server behind it: answered here, kept silent.
+  await context.routeWebSocket(
+    (url) => url.host === new URL(origin).host,
+    () => undefined,
+  );
+}
+
 /** Screen 13 (`/gossos`): the pack card of the dog shows the remaining sessions. */
 async function expectPackCard(page: Page, remaining: number): Promise<void> {
   const read = page.waitForResponse(responseIs("GET", /\/api\/v1\/me\/pack-balances$/u));
@@ -695,19 +792,18 @@ test.afterEach(() => {
   writeRecord();
 });
 
-test("E8-W04 T-13-32 (e·1): screen 14 request → «Inactivitats» → D10 approval; the seeded inactive member on 04, D5 and D10", async ({
+test("E8-W04 T-13-32 (e·1): screen 14 request → her class inside the period booked → «Inactivitats» → D10 approval cancels it → 04 shows it NOT_BOOKABLE{INACTIVITY}; D5/D10 «inactiva fins»", async ({
   browser,
 }) => {
-  test.setTimeout(240_000);
+  test.setTimeout(300_000);
   await setClock(browser);
-  const admin = await login(browser, adminUrl, ADMIN);
-  const { page } = admin;
+  let admin = await login(browser, adminUrl, ADMIN);
   const { family, member } = await lifecycleCandidates(admin);
   lifecycle.member = member;
   lifecycle.familyPartner = family;
 
   // Laura's request on 14, in ca: the first month the core still accepts (R-13-01).
-  const laura = await impersonate(browser, admin, member.id);
+  let laura = await impersonate(browser, admin, member.id);
   const contextRead = laura.page.waitForResponse(
     responseIs("GET", /\/api\/v1\/me\/inactivity-periods$/u),
   );
@@ -716,7 +812,7 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → «Inactivitats» → D10 appr
   expect(contextHttp.status()).toBe(200);
   const inactivityContext = (await contextHttp.json()) as MeInactivityContext;
   const fromMonth = inactivityContext.earliestFromMonth;
-  // The wrapper's E8 week starts before the 25th (inactivity.requestDeadlineDay) of its month.
+  // The wrapper's E8 week starts by the 25th (inactivity.requestDeadlineDay) of its month.
   expect(fromMonth, "the billing month of this run is the first month still requestable").toBe(
     period,
   );
@@ -745,6 +841,47 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → «Inactivitats» → D10 appr
   expect(requestedPeriod.toMonth).toBe(fromMonth);
   lifecycle.periodId = requestedPeriod.id;
   await noSecretsRendered(laura.page);
+
+  // A class of hers inside the requested month, booked before the decision (R-13-05/06). At X
+  // 07:00 the month's classes (week +2) are «Properament»: the core's clock goes to their opening
+  // (`opensAt`, R-08-01), with a re-login after the move; the request stays REQUESTED.
+  const herDogs = (await call<BookableClasses>(laura, "/me/bookable-classes")).body.dogs;
+  const inPeriod = async (session: Session) => {
+    const rows: { dogId: string; dogName: string; row: BookableClasses["classes"][number] }[] = [];
+    for (const dog of herDogs) {
+      const answer = await call<BookableClasses>(
+        session,
+        `/me/bookable-classes?dogId=${encodeURIComponent(dog.id)}`,
+      );
+      expect(answer.status).toBe(200);
+      for (const row of answer.body.classes) {
+        if (row.startsAtLocal.startsWith(period))
+          rows.push({ dogId: dog.id, dogName: dog.name, row });
+      }
+    }
+    return rows;
+  };
+  const before = await inPeriod(laura);
+  const opening = before
+    .filter(({ row }) => row.state === "NOT_YET_OPEN" && row.opensAt != null)
+    .map(({ row }) => Date.parse(row.opensAt ?? ""))
+    .sort((left, right) => left - right)[0];
+  if (!before.some(({ row }) => row.state === "BOOKABLE")) {
+    if (opening === undefined) {
+      throw new Error(
+        `Laura has no class in ${period} to book: ${JSON.stringify(before.map(({ row }) => `${row.startsAtLocal} ${row.state}`))}`,
+      );
+    }
+    await Promise.all([admin.context.close(), laura.context.close()]);
+    await setClock(browser, new Date(opening + 60_000).toISOString());
+    admin = await login(browser, adminUrl, ADMIN);
+    laura = await impersonate(browser, admin, member.id);
+  }
+  const target = (await inPeriod(laura)).find(({ row }) => row.state === "BOOKABLE");
+  if (target === undefined) throw new Error(`Laura has no BOOKABLE class in ${period}`);
+  const insideBooking = await bookFrom04(laura.page, target.dogId, target.dogName, target.row.id);
+  expect(insideBooking.state).toBe("ACTIVE");
+  const { page } = admin;
 
   // The admin reviews it in «Inactivitats i baixes» and approves it in the D10 drawer.
   await visit(page, `${adminUrl}/inactivitats`);
@@ -783,8 +920,35 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → «Inactivitats» → D10 appr
     ),
   ).toBeVisible();
 
+  // R-13-05/06 on her own booking: the approval cancelled it, and 04 shows that class of the
+  // period as not bookable for inactivity, for her (R-13-07, T-13-32).
+  expect(approved.cancelledBookings).toContainEqual(
+    expect.objectContaining({ id: insideBooking.id, type: "CLASS" }),
+  );
+  const cancelledInside = await call<Booking>(laura, `/bookings/${insideBooking.id}`);
+  expect(cancelledInside.status).toBe(200);
+  expect(cancelledInside.body.state).not.toBe("ACTIVE");
+  expect(cancelledInside.body.cancellation).not.toBeNull();
+  const lauraBookable = laura.page.waitForResponse(
+    (response) =>
+      responseIs("GET", /\/api\/v1\/me\/bookable-classes$/u)(response) &&
+      new URL(response.url()).searchParams.get("dogId") === target.dogId,
+  );
+  await navigateSpa(laura.page, `/reservar?dogId=${encodeURIComponent(target.dogId)}`);
+  const lauraBookableHttp = await lauraBookable;
+  expect(lauraBookableHttp.status()).toBe(200);
+  const lauraRow = ((await lauraBookableHttp.json()) as BookableClasses).classes.find(
+    (row) => row.id === target.row.id,
+  );
+  expect(lauraRow?.state).toBe("NOT_BOOKABLE");
+  expect(lauraRow?.notBookableReason).toBe("INACTIVITY");
+  const lauraRowCard = laura.page.locator(`.class-row[data-class-id="${target.row.id}"]`);
+  await expect(lauraRowCard).toHaveAttribute("data-bookable-state", "NOT_BOOKABLE");
+  await expect(lauraRowCard).toContainText("Aquest abonament està en un període d'inactivitat.");
+  await noSecretsRendered(laura.page);
+
   // The seeded inactive member (this month and the next): D5 and D10 show the last day of toMonth
-  // (S13 §13-1), and 04 shows her classes as not bookable for inactivity (T-13-32).
+  // (S13 §13-1).
   const periods = await call<InactivityPage>(admin, "/inactivity-periods?page=0&size=200");
   expect(periods.status).toBe(200);
   const frozen = periods.body.items.find(
@@ -805,34 +969,137 @@ test("E8-W04 T-13-32 (e·1): screen 14 request → «Inactivitats» → D10 appr
   ).toContainText(statusText);
   await visit(page, `${adminUrl}/abonats/${frozenMember.id}`);
   await expect(page.getByText(statusText, { exact: true }).first()).toBeVisible();
+  lifecycle.feeMemberId = frozenMember.id;
 
-  const eva = await impersonate(browser, admin, frozenMember.id);
-  const bookableResponse = eva.page.waitForResponse(
-    responseIs("GET", /\/api\/v1\/me\/bookable-classes$/u),
-  );
-  await navigateSpa(eva.page, "/reservar");
-  const bookableHttp = await bookableResponse;
-  const bookableBody = (await bookableHttp.json()) as BookableClasses | ApiProblem;
   record.inactivity = {
+    bookedInside: {
+      classStartsAtLocal: target.row.startsAtLocal,
+      stateAfterApproval: cancelledInside.body.state,
+      stateOn04: `${lauraRow?.state ?? "-"}/${lauraRow?.notBookableReason ?? "-"}`,
+    },
     cancelledBookings: approved.cancelledBookings.length,
     frozenMemberUntil: until,
     fromMonth: approved.fromMonth,
     memberId: member.id,
-    screen04Status: bookableHttp.status(),
+    stateAfterApproval: approved.state,
   };
-  expect(bookableHttp.status(), JSON.stringify(bookableBody)).toBe(200);
-  const bookable = bookableBody as BookableClasses;
-  expect(bookable.classes.some((item) => item.state === "BOOKABLE")).toBe(false);
-  expect(
-    bookable.classes.some(
-      (item) => item.state === "NOT_BOOKABLE" && item.notBookableReason === "INACTIVITY",
-    ),
-  ).toBe(true);
+  await Promise.all([admin.context.close(), laura.context.close()]);
+});
+
+test("E8-W04 T-13-32 (e·2) in es: her inactivity fee simulated (R-13-08) → 15 → «Baixes» → D10 approval → D5 «baixa dd/mm» and «Baixes previstes»; the ungenerated month after the leave no longer bills her, the leave's month still does (R-13-11)", async ({
+  browser,
+}) => {
+  test.setTimeout(300_000);
+  const admin = await login(browser, adminUrl, ADMIN);
+  const { page } = admin;
+  const laura = lifecycle.member;
+  if (laura === undefined) throw new Error("The inactivity leg did not choose its member");
+
+  // Before her leave, both months bill her: the leave's month (weekMonth, the control) and the
+  // next one (`period`, not generated yet), whose simulated line is the inactivity fee (R-13-08).
+  const leaveMonthBefore = await simulateOnD6(page, adminUrl, weekMonth);
+  const leaveMonthBilledBefore = leaveMonthBefore.invoicesPreview.some(
+    (preview) => preview.memberId === laura.id,
+  );
+  expect(leaveMonthBilledBefore).toBe(true);
+  const before = await simulateOnD6(page, adminUrl, period);
+  const lauraBefore = before.invoicesPreview.find((preview) => preview.memberId === laura.id);
+  expect(lauraBefore, "her next month is billed before the leave").toBeDefined();
+  const feeLine = lauraBefore?.lines.find((line) => line.origin === "INACTIVITY_FEE");
+  expect(feeLine?.description).toMatch(/^Quota inactivitat — /u);
+  if (record.inactivity !== undefined) {
+    record.inactivity.simulatedLineBeforeLeave = feeLine?.description;
+  }
+
+  let leaveReasonLabel = "";
+  const member = await impersonate(browser, admin, laura.id, clubsUrl, "es");
+  await member.page.goto(`${clubsUrl}/perfil`);
+  await member.page.locator(".shell-language select").selectOption("es");
+  await expect(member.page.getByRole("heading", { name: "Mi perfil" })).toBeVisible();
+  await navigateSpa(member.page, "/baixa");
+  await expect(member.page.getByRole("heading", { name: "Solicitar la baja" })).toBeVisible();
+  const leaveContext = await call<Schemas["MeLeaveContext"]>(member, "/me/leave-requests");
+  expect(leaveContext.status).toBe(200);
+  const reason = leaveContext.body.reasons[0];
+  if (reason === undefined) throw new Error("The leave reason catalog is empty");
+  // Evidence: the label the core sends this es reader (S13 §6: «in the reader's locale»).
+  leaveReasonLabel = reason.label;
+  await member.page.getByLabel("Fecha en la que quieres la baja").fill(leaveDate);
+  await member.page.getByLabel("Motivo").selectOption(reason.key);
+  if (leaveContext.body.npsEnabled) {
+    await member.page.locator(".leave-nps").getByRole("button", { exact: true, name: "8" }).click();
+  }
+  await member.page
+    .getByLabel("¿Qué podríamos mejorar para que el club se adaptara mejor a tus necesidades?")
+    .fill("Canvi fictici de disponibilitat E8-W04");
+  await shot(member.page, "15-baixa-core-375.png");
+  const leaveRequestResponse = member.page.waitForResponse(
+    responseIs("POST", /\/api\/v1\/me\/leave-requests$/u),
+  );
+  await member.page.getByRole("button", { name: "ENVÍA LA SOLICITUD" }).click();
+  const leaveRequestHttp = await leaveRequestResponse;
+  expect(leaveRequestHttp.status()).toBe(201);
+  const requestedLeave = (await leaveRequestHttp.json()) as LeaveRequest;
+  expect(requestedLeave.requestedDate).toBe(leaveDate);
+  lifecycle.leaveRequestId = requestedLeave.id;
+  await noSecretsRendered(member.page);
+
+  await visit(page, `${adminUrl}/inactivitats`);
+  await page.getByRole("tab", { name: "Baixes" }).click();
+  await page
+    .getByRole("link", { name: `Obre la fitxa de ${laura.fullName ?? ""}` })
+    .last()
+    .click();
+  const leaveDrawer = page.getByRole("dialog", { name: "Baixa (amb data)" });
+  await expect(leaveDrawer.getByLabel("Data d'efecte")).toHaveValue(leaveDate);
+  await shot(page, "D10-calaix-baixa-core-1280.png");
+  const leaveDecisionResponse = page.waitForResponse(
+    responseIs("POST", new RegExp(`/api/v1/leave-requests/${requestedLeave.id}/decision$`, "u")),
+  );
+  await leaveDrawer.getByRole("button", { name: "Aprova" }).click();
+  const leaveDecisionHttp = await leaveDecisionResponse;
+  expect(leaveDecisionHttp.status()).toBe(200);
+  expect(((await leaveDecisionHttp.json()) as LeaveRequest).state).toBe("APPROVED");
+
+  await visit(page, `${adminUrl}/abonats`);
+  await page
+    .getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" })
+    .fill(laura.fullName ?? "");
+  const defaultRow = page.locator("tbody tr").filter({ hasText: laura.fullName ?? "" });
+  await expect(defaultRow).toContainText(`baixa ${dayMonth(leaveDate)}`);
+  await page.locator("summary").filter({ hasText: "Vistes" }).click();
+  await page.getByRole("combobox", { name: "Vistes" }).selectOption({ label: "Baixes previstes" });
+  const plannedRow = page.locator("tbody tr").filter({ hasText: laura.fullName ?? "" });
   await expect(
-    eva.page.getByText("Aquest abonament està en un període d'inactivitat.").first(),
+    plannedRow.getByRole("link", { exact: true, name: laura.fullName ?? "" }),
   ).toBeVisible();
-  await noSecretsRendered(eva.page);
-  await Promise.all([admin.context.close(), laura.context.close(), eva.context.close()]);
+  await expect(plannedRow).toContainText(dayMonth(leaveDate));
+  await expect(plannedRow).toContainText("sol·licitud de l'abonat");
+  await page.locator("summary").filter({ hasText: "Vistes" }).click();
+  await shot(page, "D5-baixes-previstes-core-1280.png");
+
+  // R-13-11: a leave on the month's last day → that month is the last one billed. The month
+  // after (still ungenerated) no longer bills her; the leave's month still does.
+  const after = await simulateOnD6(page, adminUrl, period);
+  const nextMonthBilledAfter = after.invoicesPreview.some(
+    (preview) => preview.memberId === laura.id,
+  );
+  expect(nextMonthBilledAfter).toBe(false);
+  const leaveMonthAfter = await simulateOnD6(page, adminUrl, weekMonth);
+  const leaveMonthBilledAfter = leaveMonthAfter.invoicesPreview.some(
+    (preview) => preview.memberId === laura.id,
+  );
+  expect(leaveMonthBilledAfter).toBe(true);
+  record.leave = {
+    effectiveDate: leaveDate,
+    leaveMonthBilledAfter,
+    leaveMonthBilledBefore,
+    memberId: laura.id,
+    nextMonthBilledAfter,
+    nextMonthBilledBefore: lauraBefore !== undefined,
+    reasonLabelForEs: leaveReasonLabel,
+  };
+  await Promise.all([admin.context.close(), member.context.close()]);
 });
 
 test("E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 07 cancellation returns it, 13 shows both; the expired pack stays unusable", async ({
@@ -891,30 +1158,8 @@ test("E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 
       `The pack's dog has no BOOKABLE class: ${JSON.stringify({ block: bookable.body.bookingBlock, pack: bookable.body.pack, states })}`,
     );
   }
-  const pageRead = member.page.waitForResponse(
-    responseIs("GET", /\/api\/v1\/me\/bookable-classes$/u),
-  );
-  await navigateSpa(member.page, "/reservar");
-  expect((await pageRead).status()).toBe(200);
   const dogName = bookable.body.dogs.find((dog) => dog.id === packCase.pack.dogId)?.name ?? "";
-  const chip = member.page.getByRole("button", {
-    name: new RegExp(`^${dogName.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")}(?: ·| \\(|$)`, "u"),
-  });
-  if ((await chip.count()) > 0 && (await chip.first().getAttribute("aria-pressed")) !== "true") {
-    const reread = member.page.waitForResponse(
-      responseIs("GET", /\/api\/v1\/me\/bookable-classes$/u),
-    );
-    await chip.first().click();
-    expect((await reread).status()).toBe(200);
-  }
-  const hold = member.page.waitForResponse(responseIs("POST", /\/api\/v1\/seat-holds$/u));
-  await member.page.locator(`.class-row[data-class-id="${row.id}"]`).getByRole("button").click();
-  expect((await hold).status()).toBe(201);
-  const booked = member.page.waitForResponse(responseIs("POST", /\/api\/v1\/bookings$/u));
-  await member.page.getByRole("button", { name: "CONFIRMAR LA RESERVA" }).click();
-  const bookedHttp = await booked;
-  expect(bookedHttp.status()).toBe(201);
-  const booking = (await bookedHttp.json()) as Booking;
+  const booking = await bookFrom04(member.page, packCase.pack.dogId, dogName, row.id);
   const afterBooking = await packRemaining(member, packCase.pack.id);
   expect(afterBooking.remaining).toBe(afterSeeded.remaining - 1);
   expect(
@@ -959,10 +1204,12 @@ test("E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 
     joan,
     `/me/bookable-classes?dogId=${encodeURIComponent(expiredPack.dogId)}`,
   );
-  if (joanBookable.status === 200) {
-    expect(joanBookable.body.pack?.available ?? 0).toBe(0);
-    expect(joanBookable.body.classes.some((item) => item.state === "BOOKABLE")).toBe(false);
-  }
+  // Round 2 review #6: the answer itself first; then nothing of the expired pack is usable.
+  expect(joanBookable.status, JSON.stringify(joanBookable.body)).toBe(200);
+  // 04's pack card, when there is one, is the expired pack with nothing available.
+  expect([undefined, "EXPIRED"]).toContain(joanBookable.body.pack?.state ?? undefined);
+  expect(joanBookable.body.pack?.available ?? 0).toBe(0);
+  expect(joanBookable.body.classes.some((item) => item.state === "BOOKABLE")).toBe(false);
   record.pack = {
     afterBooking: afterBooking.remaining,
     afterCancellation: afterCancellation.remaining,
@@ -1012,9 +1259,13 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
       );
     }
   }
-  // R-13-08: Laura's approved month is billed as the inactivity fee.
-  const lauraPreview = simulation.invoicesPreview.find((preview) => preview.memberId === laura.id);
-  expect(lauraPreview?.lines.map((line) => line.origin)).toContain("INACTIVITY_FEE");
+  // R-13-11: after her approved leave on the last day of the previous month, Laura is not billed.
+  expect(simulation.invoicesPreview.some((preview) => preview.memberId === laura.id)).toBe(false);
+  // R-13-08: the seeded inactive member's (or her payer's) receipt carries the inactivity fee.
+  const feePreview = simulation.invoicesPreview.find((preview) =>
+    preview.lines.some((line) => line.origin === "INACTIVITY_FEE"),
+  );
+  if (feePreview === undefined) throw new Error("No simulated receipt has an inactivity fee");
   // E90 (d): before the run the amount KPI reads the date the run would ask for.
   const plannedCollection = simulation.kpis.collectionDate;
   if (plannedCollection != null) {
@@ -1108,7 +1359,7 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   });
   await returnedDrawer.getByRole("button", { name: "Marca impagat" }).click();
   const failModal = page.getByRole("dialog", { name: "Marca impagat" });
-  await failModal.getByLabel("Data de l'impagat").fill(realClubToday);
+  await failModal.getByLabel("Data de l'impagat").fill(coreToday());
   await failModal.getByLabel("Motiu").fill("Devolució bancària fictícia E8-W04");
   const failureResponse = page.waitForResponse(
     responseIs("POST", new RegExp(`/api/v1/invoices/${returnedRow.id}/failure$`, "u")),
@@ -1201,6 +1452,8 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   ).toContainText("cobrat");
 
   // Step 3: [Exporta per a comptabilitat] → the request, its status and the file name (not opened).
+  // A `200` is the file itself; a `202` queues an ACCOUNTING job, which the exports drawer lists
+  // until it is READY and then downloads (R-12-26, round 2 review #7).
   const exportRequest = page.waitForResponse(
     (response) =>
       response.request().method() === "GET" &&
@@ -1209,46 +1462,70 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   await page.getByRole("button", { name: "Exporta per a comptabilitat" }).click();
   const exportModal = page.getByRole("dialog", { name: "Exporta per a comptabilitat" });
   await expect(exportModal.getByRole("radio", { name: "CSV" })).toBeChecked();
-  const exportDownload = page.waitForEvent("download");
+  const exportDownload = page.waitForEvent("download", { timeout: 180_000 });
   await exportModal.getByRole("button", { name: "Exporta" }).click();
-  const [exported, downloadedExport] = await Promise.all([exportRequest, exportDownload]);
+  const exported = await exportRequest;
   const exportUrl = new URL(exported.url());
   expect(exportUrl.searchParams.get("period")).toBe(period);
   expect(exportUrl.searchParams.get("format")).toBe("csv");
   expect([200, 202]).toContain(exported.status());
+  let exportDisposition = exported.headers()["content-disposition"] ?? "";
+  let exportJob: { id: string; kind: string } | undefined;
+  if (exported.status() === 202) {
+    const queued = (await exported.json()) as { jobId: string };
+    const drawer = page.getByRole("dialog", { name: "Exportacions" });
+    await expect(drawer).toBeVisible();
+    const jobAnswer = await call<{ fileName?: string; kind: string; status: string }>(
+      admin,
+      `/exports/${queued.jobId}`,
+    );
+    expect(jobAnswer.status).toBe(200);
+    expect(jobAnswer.body.kind).toBe("ACCOUNTING");
+    exportJob = { id: queued.jobId, kind: jobAnswer.body.kind };
+    const fileRead = page.waitForResponse(
+      responseIs("GET", new RegExp(`/api/v1/exports/${queued.jobId}/download$`, "u")),
+      { timeout: 180_000 },
+    );
+    await drawer.getByRole("button", { name: /^Descarrega .*\.csv$/u }).click({ timeout: 180_000 });
+    const file = await fileRead;
+    expect(file.status()).toBe(200);
+    exportDisposition = file.headers()["content-disposition"] ?? "";
+  }
+  const downloadedExport = await exportDownload;
   expect(downloadedExport.suggestedFilename()).toMatch(/\.csv$/u);
-  expect(exported.headers()["content-disposition"] ?? "").toContain(
-    downloadedExport.suggestedFilename(),
-  );
+  expect(exportDisposition).toContain(downloadedExport.suggestedFilename());
 
-  // Laura's own receipt for the month carries «Quota inactivitat — {month}» (R-13-08).
-  const lauraInvoice = secondInvoices.items.find((item) => item.member?.id === laura.id);
-  if (lauraInvoice === undefined) throw new Error("Laura's inactivity receipt was not generated");
-  lifecycle.invoiceId = lauraInvoice.id;
-  const lauraSession = await impersonate(browser, admin, laura.id);
+  // R-13-08 on a real receipt: the fee payer's own receipt reads «Quota inactivitat — {month}».
+  expect(secondInvoices.items.some((item) => item.member?.id === laura.id)).toBe(false);
+  if (record.leave !== undefined) record.leave.noReceiptAfterGeneration = true;
+  const feeInvoice = secondInvoices.items.find((item) => item.member?.id === feePreview.memberId);
+  if (feeInvoice === undefined) throw new Error("The inactivity-fee receipt was not generated");
+  lifecycle.invoiceId = feeInvoice.id;
+  const feeSession = await impersonate(browser, admin, feePreview.memberId);
   const own = await call<MeInvoicePage>(
-    lauraSession,
+    feeSession,
     `/me/invoices?page=0&size=50&filter=period:eq:${period}`,
   );
   expect(own.status).toBe(200);
   const ownLine = own.body.items
-    .find((item) => item.id === lauraInvoice.id)
+    .find((item) => item.id === feeInvoice.id)
     ?.lines.find((line) => line.origin === "INACTIVITY_FEE");
   expect(ownLine?.description).toMatch(/^Quota inactivitat — /u);
-  if (record.inactivity !== undefined) record.inactivity.ownInvoiceLine = ownLine?.description;
-  await navigateSpa(lauraSession.page, "/rebuts");
-  await expect(lauraSession.page.locator(".receipt-list")).toBeVisible();
-  await expect(lauraSession.page.locator(".receipt-list")).toContainText(
+  if (record.inactivity !== undefined)
+    record.inactivity.feeMemberInvoiceLine = ownLine?.description;
+  await navigateSpa(feeSession.page, "/rebuts");
+  await expect(feeSession.page.locator(".receipt-list")).toBeVisible();
+  await expect(feeSession.page.locator(".receipt-list")).toContainText(
     ownLine?.description ?? "Quota inactivitat",
   );
-  await shot(lauraSession.page, "rebuts-core-375.png");
-  await noSecretsRendered(lauraSession.page);
+  await shot(feeSession.page, "rebuts-core-375.png");
+  await noSecretsRendered(feeSession.page);
 
   // D10's billing block of the same member, with the real receipts.
-  await visit(page, `${adminUrl}/abonats/${laura.id}`);
-  await expect(page.getByRole("heading", { name: laura.fullName ?? "" })).toBeVisible();
-  await expect(page.locator("body")).toContainText(lauraInvoice.displayNumber ?? "");
-  await expect(page.locator(".member-billing")).toContainText(lauraInvoice.displayNumber ?? "");
+  const feeName = feeInvoice.member?.fullName ?? "";
+  await visit(page, `${adminUrl}/abonats/${feePreview.memberId}`);
+  await expect(page.getByRole("heading", { name: feeName })).toBeVisible();
+  await expect(page.locator(".member-billing")).toContainText(feeInvoice.displayNumber ?? "");
   await shotAt(page, page.locator(".member-billing"), "D10-bloc-facturacio-core-1280.png");
   await noSecretsRendered(page);
 
@@ -1284,6 +1561,7 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
     chipsAfterGeneration: generated.counts,
     chipsAfterRollback: rolledBack.counts,
     exportFileName: downloadedExport.suggestedFilename(),
+    exportJob: exportJob ?? null,
     exportStatus: exported.status(),
     firstNumbers: [...firstNumbers].sort(),
     incidents: incidentCounts,
@@ -1301,102 +1579,7 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
     remittanceTotalMinor: remittance.total.amountMinor,
     secondNumbers: [...secondNumbers].sort(),
   };
-  await Promise.all([admin.context.close(), lauraSession.context.close()]);
-});
-
-test("E8-W04 T-13-32 (e·2) in es: 15 → «Baixes» → D10 approval → D5 «baixa dd/mm» and «Baixes previstes»; the month after has no receipt (R-13-11)", async ({
-  browser,
-}) => {
-  test.setTimeout(300_000);
-  const admin = await login(browser, adminUrl, ADMIN);
-  const { page } = admin;
-  const laura = lifecycle.member;
-  if (laura === undefined) throw new Error("The inactivity leg did not choose its member");
-
-  // Control: before her leave, the month after the billed one still bills her.
-  const before = await simulateOnD6(page, adminUrl, monthAfterPeriod);
-  const billedBefore = before.invoicesPreview.some((preview) => preview.memberId === laura.id);
-  expect(billedBefore).toBe(true);
-
-  let leaveReasonLabel = "";
-  const member = await impersonate(browser, admin, laura.id, clubsUrl, "es");
-  await member.page.goto(`${clubsUrl}/perfil`);
-  await member.page.locator(".shell-language select").selectOption("es");
-  await expect(member.page.getByRole("heading", { name: "Mi perfil" })).toBeVisible();
-  await navigateSpa(member.page, "/baixa");
-  await expect(member.page.getByRole("heading", { name: "Solicitar la baja" })).toBeVisible();
-  const leaveContext = await call<Schemas["MeLeaveContext"]>(member, "/me/leave-requests");
-  expect(leaveContext.status).toBe(200);
-  const reason = leaveContext.body.reasons[0];
-  if (reason === undefined) throw new Error("The leave reason catalog is empty");
-  // Evidence: the label the core sends this es reader (S13 §6: «in the reader's locale»).
-  leaveReasonLabel = reason.label;
-  await member.page.getByLabel("Fecha en la que quieres la baja").fill(leaveDate);
-  await member.page.getByLabel("Motivo").selectOption(reason.key);
-  if (leaveContext.body.npsEnabled) {
-    await member.page.locator(".leave-nps").getByRole("button", { exact: true, name: "8" }).click();
-  }
-  await member.page
-    .getByLabel("¿Qué podríamos mejorar para que el club se adaptara mejor a tus necesidades?")
-    .fill("Canvi fictici de disponibilitat E8-W04");
-  await shot(member.page, "15-baixa-core-375.png");
-  const leaveRequestResponse = member.page.waitForResponse(
-    responseIs("POST", /\/api\/v1\/me\/leave-requests$/u),
-  );
-  await member.page.getByRole("button", { name: "ENVÍA LA SOLICITUD" }).click();
-  const leaveRequestHttp = await leaveRequestResponse;
-  expect(leaveRequestHttp.status()).toBe(201);
-  const requestedLeave = (await leaveRequestHttp.json()) as LeaveRequest;
-  expect(requestedLeave.requestedDate).toBe(leaveDate);
-  lifecycle.leaveRequestId = requestedLeave.id;
-  await noSecretsRendered(member.page);
-
-  await visit(page, `${adminUrl}/inactivitats`);
-  await page.getByRole("tab", { name: "Baixes" }).click();
-  await page
-    .getByRole("link", { name: `Obre la fitxa de ${laura.fullName ?? ""}` })
-    .last()
-    .click();
-  const leaveDrawer = page.getByRole("dialog", { name: "Baixa (amb data)" });
-  await expect(leaveDrawer.getByLabel("Data d'efecte")).toHaveValue(leaveDate);
-  await shot(page, "D10-calaix-baixa-core-1280.png");
-  const leaveDecisionResponse = page.waitForResponse(
-    responseIs("POST", new RegExp(`/api/v1/leave-requests/${requestedLeave.id}/decision$`, "u")),
-  );
-  await leaveDrawer.getByRole("button", { name: "Aprova" }).click();
-  const leaveDecisionHttp = await leaveDecisionResponse;
-  expect(leaveDecisionHttp.status()).toBe(200);
-  expect(((await leaveDecisionHttp.json()) as LeaveRequest).state).toBe("APPROVED");
-
-  await visit(page, `${adminUrl}/abonats`);
-  await page
-    .getByRole("searchbox", { name: "Cerca per nom, DNI, gos…" })
-    .fill(laura.fullName ?? "");
-  const defaultRow = page.locator("tbody tr").filter({ hasText: laura.fullName ?? "" });
-  await expect(defaultRow).toContainText(`baixa ${dayMonth(leaveDate)}`);
-  await page.locator("summary").filter({ hasText: "Vistes" }).click();
-  await page.getByRole("combobox", { name: "Vistes" }).selectOption({ label: "Baixes previstes" });
-  const plannedRow = page.locator("tbody tr").filter({ hasText: laura.fullName ?? "" });
-  await expect(
-    plannedRow.getByRole("link", { exact: true, name: laura.fullName ?? "" }),
-  ).toBeVisible();
-  await expect(plannedRow).toContainText(dayMonth(leaveDate));
-  await expect(plannedRow).toContainText("sol·licitud de l'abonat");
-  await page.locator("summary").filter({ hasText: "Vistes" }).click();
-  await shot(page, "D5-baixes-previstes-core-1280.png");
-
-  // R-13-11: after the leave, the next month is simulated again and she is no longer billed.
-  const after = await simulateOnD6(page, adminUrl, monthAfterPeriod);
-  const billedAfter = after.invoicesPreview.some((preview) => preview.memberId === laura.id);
-  expect(billedAfter).toBe(false);
-  record.leave = {
-    decemberWithBefore: billedBefore,
-    decemberWithout: !billedAfter,
-    effectiveDate: leaveDate,
-    memberId: laura.id,
-    reasonLabelForEs: leaveReasonLabel,
-  };
-  await Promise.all([admin.context.close(), member.context.close()]);
+  await Promise.all([admin.context.close(), feeSession.context.close()]);
 });
 
 test("E8-W04 (f) T-13-24 / T-12-21: instructor gates, another member's /me/…/{id} (also a family member's) is not found, nothing secret rendered", async ({
@@ -1491,7 +1674,7 @@ test("E8-W04 (f) T-13-24 / T-12-21: instructor gates, another member's /me/…/{
   await Promise.all([admin.context.close(), instructor.context.close(), stranger.context.close()]);
 });
 
-test("E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] → 202 → CHARGING settles on its own (6b(a)) → «impagat (targeta)» and the member's banner → «cobrat»", async ({
+test("E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] → 202 → CHARGING settles on its own (6b(a)) → «cobrat» → returned by hand → the member's banner → [Actualitza la targeta] → checkout", async ({
   browser,
 }) => {
   test.setTimeout(600_000);
@@ -1542,7 +1725,6 @@ test("E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] →
     receiptsTable.locator(`tbody tr[data-invoice-number="${submittedReceipt.displayNumber}"]`),
   ).toContainText("cobrant");
 
-  let banner: NonNullable<GateRecord["card"]>["banner"] = "unproven";
   const skipped = charged.skipped[0];
   if (skipped !== undefined) {
     const skippedInvoice = await call<Invoice>(admin, `/invoices/${skipped.invoiceId}`);
@@ -1564,25 +1746,6 @@ test("E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] →
     ).toContainText("impagat (targeta)");
     await noSecretsRendered(second);
     await second.close();
-
-    // The member: /rebuts shows the card banner; [Actualitza la targeta] reaches a checkoutUrl
-    // (the provider's form itself is never opened: every other host is aborted).
-    const cardMember = await impersonate(
-      browser,
-      admin,
-      skippedInvoice.body.memberId,
-      fifoClubsUrl,
-    );
-    await navigateSpa(cardMember.page, "/rebuts");
-    const bannerCard = cardMember.page.locator(".billing-card-banner");
-    await expect(bannerCard).toContainText("No hem pogut cobrar el rebut de");
-    await shot(cardMember.page, "rebuts-targeta-core-375.png");
-    // Its action is the `POST /me/card-setup` proven below on the club's own host (this page runs
-    // on the local dev server, whose address the core rightly refuses as a redirect).
-    await expect(bannerCard.getByRole("button", { name: "Actualitza la targeta" })).toBeEnabled();
-    await noSecretsRendered(cardMember.page);
-    banner = { invoice: skippedInvoice.body.displayNumber, shown: true };
-    await cardMember.context.close();
   }
 
   // The provider confirms the submitted payment. The first tab, never reloaded since
@@ -1617,35 +1780,80 @@ test("E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] →
   await shot(page, "D6-targetes-core-1280.png");
   await noSecretsRendered(page);
 
-  // The card member's own /rebuts reads the same receipt «cobrat» and no banner. Without a refused
-  // receipt the banner cannot appear on this stack, so its action is proven at the api it calls:
-  // `POST /me/card-setup` (the impersonation token is allowed) answers a checkout link.
-  const payer = await impersonate(
-    browser,
-    admin,
-    (await call<Invoice>(admin, `/invoices/${submittedReceipt.id}`)).body.memberId,
-    fifoClubsUrl,
-  );
+  // The card member's own /rebuts reads the same receipt «cobrat» and no banner. Her app runs on
+  // the club's own host (served by the local dev server, `onClubHost`), the address the core
+  // accepts as the card-setup redirect.
+  const payerId = (await call<Invoice>(admin, `/invoices/${submittedReceipt.id}`)).body.memberId;
+  let payer = await impersonate(browser, admin, payerId, fifoClubsUrl, "ca", { onClubHost: true });
   await navigateSpa(payer.page, "/rebuts");
-  const payerRow = payer.page.locator(".receipt-row").filter({
-    hasText: `Rebut ${submittedReceipt.displayNumber}`,
-  });
-  await expect(payerRow).toContainText("cobrat");
+  const payerRow = () =>
+    payer.page.locator(".receipt-row").filter({
+      hasText: `Rebut ${submittedReceipt.displayNumber}`,
+    });
+  await expect(payerRow()).toContainText("cobrat");
   await expect(payer.page.locator(".billing-card-banner")).toHaveCount(0);
   await noSecretsRendered(payer.page);
-  // successUrl/cancelUrl on the club's app host (the origin of the core's own launchUrl), as the
-  // deployed app sends its address; the local dev server's 127.0.0.1 is not that host.
-  const cardSetup = await call<CardSetupLink>(payer, "/me/card-setup", "POST", {
-    cancelUrl: `${payer.appOrigin ?? ""}/rebuts`,
-    successUrl: `${payer.appOrigin ?? ""}/rebuts`,
-  });
-  expect(cardSetup.status, JSON.stringify(cardSetup.body)).toBe(201);
-  expect(cardSetup.body.checkoutUrl).toMatch(/^https?:\/\//u);
-  const cardSetupHost = new URL(cardSetup.body.checkoutUrl).host;
+  await payer.context.close();
+
+  // The paid card receipt is returned (a chargeback marked by hand: T-12-30 allows the manual
+  // failure on PAID; the local provider sends no failure event): D6 reads it unpaid, and the
+  // member's /rebuts shows the card banner for that month (R-12-22, T-12-26).
+  await page
+    .getByRole("searchbox", { name: "Cerca per número o abonat" })
+    .fill(submittedReceipt.displayNumber);
+  await page
+    .getByRole("button", { exact: true, name: `Obre el rebut ${submittedReceipt.displayNumber}` })
+    .click();
+  const cardDrawer = page.getByRole("dialog", { name: `Rebut ${submittedReceipt.displayNumber}` });
+  await cardDrawer.getByRole("button", { name: "Marca impagat" }).click();
+  const cardFailModal = page.getByRole("dialog", { name: "Marca impagat" });
+  await cardFailModal.getByLabel("Data de l'impagat").fill(coreToday());
+  await cardFailModal.getByLabel("Motiu").fill("Devolució fictícia de la targeta E8-W04");
+  const cardFailure = page.waitForResponse(
+    responseIs("POST", new RegExp(`/api/v1/invoices/${submittedReceipt.id}/failure$`, "u")),
+  );
+  await cardFailModal.getByRole("button", { exact: true, name: "Marca impagat" }).click();
+  const cardFailureHttp = await cardFailure;
+  expect(cardFailureHttp.status()).toBe(200);
+  const returnedCard = (await cardFailureHttp.json()) as Invoice;
+  expect(returnedCard.status).toBe("FAILED");
+  await expect(cardDrawer.getByText(/^impagat/u).first()).toBeVisible();
+  await cardDrawer.getByRole("button", { name: "Tanca el rebut" }).click();
+
+  // [Actualitza la targeta] through the UI: its request carries the club host's /rebuts, the core
+  // answers a checkout link and the page goes there (a stub: the provider's form is never opened).
+  payer = await impersonate(browser, admin, payerId, fifoClubsUrl, "ca", { onClubHost: true });
+  await navigateSpa(payer.page, "/rebuts");
+  const bannerCard = payer.page.locator(".billing-card-banner");
+  await expect(bannerCard).toContainText("No hem pogut cobrar el rebut de");
+  await expect(payerRow()).toContainText("impagat");
+  await shot(payer.page, "rebuts-targeta-core-375.png");
+  await noSecretsRendered(payer.page);
+  const cardSetupResponse = payer.page.waitForResponse(
+    responseIs("POST", /\/api\/v1\/me\/card-setup$/u),
+  );
+  await bannerCard.getByRole("button", { name: "Actualitza la targeta" }).click();
+  const cardSetupHttp = await cardSetupResponse;
+  const cardSetupBody = cardSetupHttp.request().postDataJSON() as {
+    cancelUrl: string;
+    successUrl: string;
+  };
+  expect(new URL(cardSetupBody.successUrl).origin).toBe(payer.appOrigin);
+  expect(new URL(cardSetupBody.cancelUrl).pathname).toBe("/rebuts");
+  expect(cardSetupHttp.status(), await cardSetupHttp.text()).toBe(201);
+  const cardSetup = (await cardSetupHttp.json()) as CardSetupLink;
+  expect(cardSetup.checkoutUrl).toMatch(/^https?:\/\//u);
+  await payer.page.waitForURL(cardSetup.checkoutUrl, { timeout: 30_000 });
+  const cardSetupHost = new URL(cardSetup.checkoutUrl).host;
   await payer.context.close();
   record.card = {
-    banner,
-    cardSetup: { host: cardSetupHost, status: cardSetup.status },
+    banner: { invoice: submittedReceipt.displayNumber, shown: true },
+    cardSetup: {
+      host: cardSetupHost,
+      navigated: true,
+      redirectOrigin: new URL(cardSetupBody.successUrl).origin,
+      status: cardSetupHttp.status(),
+    },
     failedChip: settled.counts.failed,
     paidChip: settled.counts.paid,
     settledWithoutReload: true,

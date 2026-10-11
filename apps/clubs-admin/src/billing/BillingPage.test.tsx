@@ -18,8 +18,9 @@ import { delay, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { BillingPage } from "./BillingPage";
 import { ExportJobsProvider } from "../audit/ExportsDrawer";
+
+import { BillingPage } from "./BillingPage";
 import { invoiceActions } from "./InvoiceDrawer";
 import { invoiceStatusView } from "./shared";
 
@@ -100,7 +101,14 @@ async function renderPage({
   render(
     <I18nextProvider i18n={i18n}>
       <BrandingProvider branding={branding}>
-        <ExportJobsProvider client={client()}>
+        {/* The app's signed export route needs the bearer, as the signed-in app sends it. */}
+        <ExportJobsProvider
+          client={createApiClient({
+            baseUrl: `${window.location.origin}/api/v1`,
+            getAccessToken: () => "mock-admin-token",
+            getLocale: () => "ca",
+          })}
+        >
           <BillingPage client={client()} onNavigate={onNavigate} />
         </ExportJobsProvider>
       </BrandingProvider>
@@ -1231,8 +1239,14 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     );
   });
 
-  it("R-12-26: a large accounting export is queued (202 ACCOUNTING job): no file is saved and the modal closes", async () => {
+  it("R-12-26 / E8-W04 round 2: a queued accounting export (202 ACCOUNTING job) is followed in the exports drawer to its download", async () => {
     const saved: string[] = [];
+    // jsdom has no object URLs: `saveFile` gets one and clicks a link with the file's name.
+    Object.defineProperty(URL, "createObjectURL", {
+      configurable: true,
+      value: () => "blob:accounting",
+    });
+    Object.defineProperty(URL, "revokeObjectURL", { configurable: true, value: () => undefined });
     vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (
       this: HTMLAnchorElement,
     ) {
@@ -1244,14 +1258,28 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     fireEvent.click(await within(dialog).findByRole("radio", { name: "Excel (XLSX)" }));
     fireEvent.click(within(dialog).getByRole("button", { name: "Exporta" }));
     await waitFor(() => {
-      expect(screen.queryByRole("dialog")).toBeNull();
+      expect(screen.queryByRole("dialog", { name: "Exporta per a comptabilitat" })).toBeNull();
     });
-    const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
-    expect(drawer).toHaveTextContent("Preparant l'exportació…");
-    expect(drawer).toHaveTextContent(/accounting|facturacio/iu);
     const [exported] = requests("GET", "/billing/exports");
     expect(exported?.url.searchParams.get("format")).toBe("xlsx");
+    // No file yet: the 202 opens the drawer on the ACCOUNTING jobs, which the api lists apart.
     expect(saved).toEqual([]);
+    const drawer = await screen.findByRole("dialog", { name: "Exportacions" });
+    const download = await within(drawer).findByRole(
+      "button",
+      { name: /accounting.*\.xlsx/u },
+      { timeout: 5_000 },
+    );
+    expect(
+      requests("GET", "/exports").every(
+        (entry) => entry.url.searchParams.get("kind") === "ACCOUNTING",
+      ),
+    ).toBe(true);
+    fireEvent.click(download);
+    await waitFor(() => {
+      expect(saved).toHaveLength(1);
+    });
+    expect(saved[0]).toMatch(/accounting.*\.xlsx$/u);
   });
 
   it("R-12-13: the poll stops after two minutes of CHARGING with [Actualitza], which polls again", async () => {

@@ -1,0 +1,60 @@
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:38.9978660Z 
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:38.9979350Z > clubs-admin@0.0.0 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:38.9980280Z > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:38.9980725Z 
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:38.9980848Z 
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:38.9981596Z /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin/src/billing/BillingPage.test.tsx
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0013141Z ##[error]  21:1  error  There should be at least one empty line between import groups                  import/order
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0023337Z ##[error]  22:1  error  There should be at least one empty line between import groups                  import/order
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0025972Z ##[error]  22:1  error  `../audit/ExportsDrawer` import should occur before import of `./BillingPage`  import/order
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0027200Z 
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0027788Z ✖ 3 problems (3 errors, 0 warnings)
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0028469Z   3 errors and 0 warnings potentially fixable with the `--fix` option.
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0028958Z 
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0029395Z  ELIFECYCLE  Command failed with exit code 1.
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0030228Z ##[group]@agilityhub/auth:lint
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0030748Z cache miss, executing 2925197e67cefb4b
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0031393Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0031974Z ##[group]@agilityhub/course-core:lint
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0032520Z cache miss, executing e1967c3b8013c83f
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0033118Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0033875Z ##[group]@agilityhub/course-core:test
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0034438Z cache miss, executing 34116acf0470d929
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0035055Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0035605Z ##[group]clubs:lint
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0036118Z cache miss, executing 02a6cd3dd043b091
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0036736Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0037355Z ##[group]@agilityhub/config:lint
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0037871Z cache miss, executing 42ac5d636417f38d
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0038519Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0039078Z ##[group]@agilityhub/config:typecheck
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0039599Z cache miss, executing 6860c83ceac65ae7
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0040198Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0040731Z ##[group]@agilityhub/i18n:typecheck
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0041221Z cache miss, executing 9a8d4fa016f2f976
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0041809Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0042362Z ##[group]@agilityhub/i18n:test
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0042867Z cache miss, executing e7601adf179b734d
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0043676Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0044258Z ##[group]@agilityhub/shared-types:test
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0044784Z cache miss, executing 0d5094aa59df2bb0
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0045363Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0045919Z ##[group]@agilityhub/shared-types:typecheck
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0046456Z cache miss, executing c4cd70d7e3ccd8fa
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0047058Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0047577Z ##[group]@agilityhub/shared-types:build
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0048137Z cache miss, executing a211f3de2fb8a1b3
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.0048736Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1135313Z ##[group]id:lint
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1135889Z cache miss, executing b97c217d91c5d1c4
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1136945Z ##[endgroup]
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1148976Z ##[error]command (/home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin) /home/runner/setup-pnpm/node_modules/.bin/pnpm run lint exited (1)
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1151814Z clubs-admin#lint:  ERROR  command (/home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin) /home/runner/setup-pnpm/node_modules/.bin/pnpm run lint exited (1)
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1153040Z 
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1153273Z  Tasks:    10 successful, 23 total
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1154102Z Cached:    0 cached, 23 total
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1154614Z   Time:    1m25.952s 
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1155098Z Failed:    clubs-admin#lint
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1155330Z 
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1155669Z  ERROR  run failed: command  exited (1)
+Frontend checks	Lint, typecheck, test, and build	2026-10-10T08:51:39.1266838Z ##[error]Process completed with exit code 1.

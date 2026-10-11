@@ -646,6 +646,7 @@ export function AccountingExportModal({
     const done = await listExport.runWith(
       () => requestAccountingExport(client, { format, period }),
       "accounting",
+      "ACCOUNTING",
     );
     if (done) onClose();
   };

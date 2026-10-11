@@ -1,0 +1,80 @@
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0701053Z dist/sw.mjs  17.90 kB │ gzip: 6.01 kB
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0701400Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0701671Z [32m✓ built in 46ms[39m
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0701914Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0702137Z [36mPWA v1.3.0[39m
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0702660Z mode      [35minjectManifest[39m
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0703240Z format:   [35mes[39m
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0703950Z precache  [32m83 entries[39m [2m(1277.47 KiB)[22m
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0704520Z files generated
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0704981Z   [2mdist/sw.js[22m
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0705641Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0706224Z ##[group]id:build
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0706738Z cache hit, replaying logs 9c6428b18b8ed495
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0707114Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0707722Z > id@0.0.0 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/id
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0708544Z > tsc --noEmit && vite build
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0708866Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0709525Z [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0710524Z transforming...
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0711073Z ✓ 242 modules transformed.
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0711554Z rendering chunks...
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0711990Z computing gzip size...
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0712899Z dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0738030Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0738319Z [32m✓ built in 440ms[39m
+Frontend checks	Run Playwright with MSW	2026-10-09T17:45:15.0739003Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1693813Z [;31mclubs-admin:e2e[;0m
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1694556Z cache bypass, force executing 1bbbeef590bd5c55
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1695017Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1695759Z > clubs-admin@0.0.0 e2e /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1696702Z > playwright test
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1697021Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1697035Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1697315Z Running 82 tests using 2 workers
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1698444Z ···········F····································································
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1699157Z ··
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1699332Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1700709Z   1) e2e/billing.spec.ts:170:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › E8-W04 6b: incident and cash-member links open their real D10 mock records 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1701648Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1701883Z     TypeError: Two billing tables expected
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1702202Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1702628Z       176 |     const [incidents, cash] = await simulation.getByRole("table").all();
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1703432Z       177 |     if (incidents === undefined || cash === undefined)
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1704147Z     > 178 |       throw new TypeError("Two billing tables expected");
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1704715Z           |             ^
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1705070Z       179 |
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1705720Z       180 |     await incidents.getByRole("link", { name: "Obre fitxa de Pau Riera" }).click();
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1706737Z       181 |     await expect(page).toHaveURL(/\/abonats\/61000000-0000-4000-8000-000000000013$/u);
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1707927Z         at /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin/e2e/billing.spec.ts:178:13
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1708642Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1709578Z     Error Context: ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-d9548-their-real-D10-mock-records/error-context.md
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1710637Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1711404Z     attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1712826Z     ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-d9548-their-real-D10-mock-records/trace.zip
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1713658Z     Usage:
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1713902Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1714972Z         pnpm exec playwright show-trace ../../test-results/clubs-admin/billing-E8-W01-D6-«Factura-d9548-their-real-D10-mock-records/trace.zip
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1716084Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1717195Z     ────────────────────────────────────────────────────────────────────────────────────────────────
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1718097Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1718301Z   1 failed
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1719520Z     e2e/billing.spec.ts:170:3 › E8-W01 D6 «Facturació» (S12 §2, mockup V7, MSW) › E8-W04 6b: incident and cash-member links open their real D10 mock records 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1720924Z   81 passed (5.4m)
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1721343Z  ELIFECYCLE  Command failed with exit code 1.
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1743986Z ##[error]command (/home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin) /home/runner/setup-pnpm/node_modules/.bin/pnpm run e2e exited (1)
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1753794Z clubs-admin#e2e:  ERROR  command (/home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin) /home/runner/setup-pnpm/node_modules/.bin/pnpm run e2e exited (1)
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1755008Z  ERROR  run failed: command  exited (1)
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1755497Z ##[group]clubs:e2e
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1755819Z cache bypass, force executing 3dce45b3c2414907
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1756276Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1756607Z ##[group]id:e2e
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1756905Z cache bypass, force executing 6a99d82038a00f87
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1757323Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1757443Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1757572Z  Tasks:    5 successful, 8 total
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1758050Z Cached:    5 cached, 8 total
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1758298Z   Time:    5m27.181s 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1758559Z Failed:    clubs-admin#e2e
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1758718Z 
+Frontend checks	Run Playwright with MSW	2026-10-09T17:50:42.1865937Z ##[error]Process completed with exit code 1.

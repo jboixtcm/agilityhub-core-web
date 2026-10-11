@@ -22,7 +22,8 @@ export interface ListExportError {
  * The export buttons of every list (S14 R-14-12, CONVENCIONS_API §4): the inline `200` file is
  * saved byte for byte; a queued `202` opens the exports drawer; `EXPORT_LIMIT` shows the drawer's
  * notice; any other code shows `errors:{code}` next to the button that ran it. One export at a time.
- * `runWith` takes another export route with the same answers (D6's accounting export, R-12-26).
+ * `runWith` takes another export route with the same answers (D6's accounting export, R-12-26);
+ * its queued job is listed under its own kind (`ACCOUNTING`), the kind `GET /exports` filters on.
  */
 export function useListExport(client: ApiClient) {
   const { t } = useTranslation(["census", "errors"]);
@@ -32,7 +33,11 @@ export function useListExport(client: ApiClient) {
   const [error, setError] = useState<ListExportError>();
 
   const runWith = useCallback(
-    async (request: () => Promise<ExportResult>, source = "list"): Promise<boolean> => {
+    async (
+      request: () => Promise<ExportResult>,
+      source = "list",
+      jobKind: "LIST" | "ACCOUNTING" = "LIST",
+    ): Promise<boolean> => {
       if (running.current) return false;
       running.current = true;
       setBusy(true);
@@ -40,7 +45,7 @@ export function useListExport(client: ApiClient) {
       try {
         const result = await request();
         if (result.kind === "queued") {
-          exportsDrawer?.openExports({ jobId: result.jobId });
+          exportsDrawer?.openExports({ jobId: result.jobId, kind: jobKind });
         } else {
           saveFile(result.blob, result.fileName);
         }

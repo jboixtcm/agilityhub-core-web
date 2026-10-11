@@ -657,7 +657,9 @@ export function BillingPage({
       key: "concept",
       label: t("admin-billing:list.columns.concept"),
       // The first line's frozen description, as the api composes it (R-12-30): never rebuilt.
-      render: (row) => row.concept ?? empty,
+      // E8-W04 round 2: the concept wraps, so the status column fits at 1280 px.
+      render: (row) =>
+        row.concept == null ? empty : <span className="billing-list__concept">{row.concept}</span>,
     },
     {
       key: "total",

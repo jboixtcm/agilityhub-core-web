@@ -125,7 +125,11 @@ import {
   fieldsProjection,
   MEMBER_LIST_FIELDS,
 } from "./list-fields";
-import { lifecycleMemberOverview, memberBillingHandlers, resetMemberBillingState } from "./member-billing-handlers";
+import {
+  lifecycleMemberOverview,
+  memberBillingHandlers,
+  resetMemberBillingState,
+} from "./member-billing-handlers";
 import {
   messagingHandlers,
   notificationExportRows,
@@ -2646,8 +2650,10 @@ export const handlers = [
   // S14 T-14-26 (INC-21): the list carries no `downloadUrl` (api `ExportQueries`); only
   // `GET /exports/{id}` does, and on local storage it is the api's own signed route, which also
   // needs the bearer.
-  http.get("*/api/v1/exports", () => {
+  http.get("*/api/v1/exports", ({ request }) => {
     exportPolls += 1;
+    // `kind` filters the caller's jobs as the api does (E8-W04 round 2: D6's ACCOUNTING job).
+    const kind = new URL(request.url).searchParams.get("kind");
     if (exportPolls >= 2) {
       exportJobsState = exportJobsState.map((job) =>
         job.status === "QUEUED" || job.status === "RUNNING"
@@ -2662,7 +2668,9 @@ export const handlers = [
           : job,
       );
     }
-    return HttpResponse.json(exportJobsState);
+    return HttpResponse.json(
+      kind === null ? exportJobsState : exportJobsState.filter((job) => job.kind === kind),
+    );
   }),
   http.get("*/api/v1/exports/:id/download", ({ params, request }) => {
     const job = exportJobsState.find((item) => item.id === String(params.id));
@@ -2947,19 +2955,21 @@ export const handlers = [
     }
     const body = (await request.json()) as PaymentMethodRequest;
     const submittedIban = body.sepa?.iban;
-    const iban = typeof submittedIban === "string" ? submittedIban.replaceAll(" ", "") : submittedIban;
+    const iban =
+      typeof submittedIban === "string" ? submittedIban.replaceAll(" ", "") : submittedIban;
     if (body.type === "SEPA_DD" && typeof iban === "string" && !/^ES\d{22}$/u.test(iban)) {
       return apiError("INVALID_IBAN", "Invalid IBAN", 400);
     }
-    const normalizedBody: PaymentMethodRequest = body.type === "SEPA_DD"
-      ? {
-          ...body,
-          sepa: {
-            ...body.sepa,
-            ...(iban === undefined ? {} : { iban }),
-          },
-        }
-      : body;
+    const normalizedBody: PaymentMethodRequest =
+      body.type === "SEPA_DD"
+        ? {
+            ...body,
+            sepa: {
+              ...body.sepa,
+              ...(iban === undefined ? {} : { iban }),
+            },
+          }
+        : body;
     const saved = signupPaymentMethod(censusRecordState.memberOverview.member, normalizedBody);
     censusRecordState.memberOverview.member.paymentMethod = saved.paymentMethod;
     censusRecordState.memberOverview.member.accountMissing = saved.accountMissing;

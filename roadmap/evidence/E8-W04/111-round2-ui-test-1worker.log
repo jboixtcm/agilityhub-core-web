@@ -1,0 +1,12 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+
+
+ Test Files  15 passed (15)
+      Tests  158 passed (158)
+   Start at  05:50:48
+   Duration  1028.03s (setup 97%, environment 2%, tests 1%)
+
+    Isolate  15 workers spawned · ~1.56s startup each (spawn + environment, per file)
+             at least ~21.77s faster with isolate: false — reuses workers across files instead of one per file
+

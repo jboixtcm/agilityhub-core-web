@@ -1,0 +1,212 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (52 tests | 1 failed | 51 skipped) 5534ms
+   ❯ E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides (12)
+     × R-12-26 / E8-W04 round 2: a queued accounting export (202 ACCOUNTING job) is followed in the exports drawer to its download 5530ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-26 / E8-W04 round 2: a queued accounting export (202 ACCOUNTING job) is followed in the exports drawer to its download
+TestingLibraryElementError: Unable to find role="button" and name `/accounting.*\.xlsx/u`
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mExportacions[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca les exportacions"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"exports-drawer"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mEls fitxers preparats es poden descarregar durant set dies.[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"exports-drawer__notice"[39m
+        [33mrole[39m=[32m"status"[39m
+      [36m>[39m
+        [0mPreparant l'exportació…[0m
+      [36m</p>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"exports-drawer__list"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"exports-drawer__heading"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mcanic_audit-entries_20260803-1220.xlsx[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mPreparada[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<small>[39m
+            [0mCreada el 3/8/26 12:20[0m
+          [36m</small>[39m
+          [36m<small>[39m
+            [0m4 files[0m
+          [36m</small>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost exports-drawer__download"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mDescarrega canic_audit-entries_20260803-1220.xlsx[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_0_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_0_"[39m
+    [36m>[39m
+      [0mExportacions[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca les exportacions"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"exports-drawer"[39m
+    [36m>[39m
+      [36m<p>[39m
+        [0mEls fitxers preparats es poden descarregar durant set dies.[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"exports-drawer__notice"[39m
+        [33mrole[39m=[32m"status"[39m
+      [36m>[39m
+        [0mPreparant l'exportació…[0m
+      [36m</p>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"exports-drawer__list"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"exports-drawer__heading"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0mcanic_audit-entries_20260803-1220.xlsx[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mPreparada[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<small>[39m
+            [0mCreada el 3/8/26 12:20[0m
+          [36m</small>[39m
+          [36m<small>[39m
+            [0m4 files[0m
+          [36m</small>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost exports-drawer__download"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mDescarrega canic_audit-entries_20260803-1220.xlsx[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/billing/BillingPage.test.tsx:1268:43
+    1266|     expect(saved).toEqual([]);
+    1267|     const drawer = await screen.findByRole("dialog", { name: "Exportac…
+    1268|     const download = await within(drawer).findByRole(
+       |                                           ^
+    1269|       "button",
+    1270|       { name: /accounting.*\.xlsx/u },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 51 skipped (52)
+   Start at  22:32:58
+   Duration  7.24s (tests 78%, transform 11%, environment 6%, import 4%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/billing/BillingPage.test.tsx -t R-12-26 / E8-W04

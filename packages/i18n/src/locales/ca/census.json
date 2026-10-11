@@ -104,7 +104,16 @@
       "status": "Estat"
     },
     "search": "Cerca per nom, DNI, gos…",
-    "status": {"inactive": "inactiva", "inactiveUntil": "inactiva fins {date}", "leaveScheduled": "baixa {date}"},
+    "status": {
+      "inactive": "inactiva",
+      "inactiveUntil": "inactiva fins {date}",
+      "leaveScheduled": "baixa {date}"
+    },
+    "statusFilter": {
+      "ACTIVE": "alta",
+      "INACTIVE_PERIOD": "inactiva",
+      "LEAVE_SCHEDULED": "baixa prevista"
+    },
     "selectRow": "Selecciona {name}",
     "statusLabel": "Estat dels abonats",
     "statuses": {

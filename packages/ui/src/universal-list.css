@@ -9,9 +9,11 @@
   justify-self: end;
 }
 
+/* E8-W04 round 2: a long applied filter or view name wraps the controls (D5 at 1280 px clipped them). */
 .ah-universal-list__toolbar {
   position: relative;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--ah-space-3);
 }

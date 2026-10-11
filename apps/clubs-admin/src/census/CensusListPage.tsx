@@ -95,6 +95,23 @@ function filterValue(value: unknown): string {
     : "";
 }
 
+/** E8-W04 round 2: a `displayStatus` filter reads its label («baixa prevista»), never the code. */
+function memberDisplayStatusFilterLabel(
+  value: string,
+  t: ReturnType<typeof useTranslation>["t"],
+): string {
+  switch (value) {
+    case "ACTIVE":
+      return t("census:members.statusFilter.ACTIVE");
+    case "INACTIVE_PERIOD":
+      return t("census:members.statusFilter.INACTIVE_PERIOD");
+    case "LEAVE_SCHEDULED":
+      return t("census:members.statusFilter.LEAVE_SCHEDULED");
+    default:
+      return value;
+  }
+}
+
 function apiFilters(filters: readonly UniversalFilter[]): string[] {
   return filters.map((filter) => `${filter.field}:${filter.operator}:${filter.value}`);
 }
@@ -620,9 +637,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           key: "leaveDate",
           label: t("census:members.columns.leaveDate"),
           render: (item) =>
-            item.leaveDate == null
-              ? t("census:values.empty")
-              : formatDate(item.leaveDate, locale),
+            item.leaveDate == null ? t("census:values.empty") : formatDate(item.leaveDate, locale),
           sortKey: "leaveDate",
         },
         {
@@ -1013,11 +1028,13 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           ? (dogItems.find((item) => item.level?.id === value)?.level?.name ?? value)
           : kind === "dogs" && filter.field === "memberId"
             ? (dogItems.find((item) => item.owner?.id === value)?.owner?.fullName ?? value)
-            : value === "true"
-              ? t("census:values.yes")
-              : value === "false"
-                ? t("census:values.no")
-                : value;
+            : kind === "members" && filter.field === "displayStatus"
+              ? memberDisplayStatusFilterLabel(value, t)
+              : value === "true"
+                ? t("census:values.yes")
+                : value === "false"
+                  ? t("census:values.no")
+                  : value;
     return {
       field: filter.field,
       fieldLabel:

@@ -1,0 +1,402 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 10 packages
+   • Remote caching disabled
+
+@agilityhub/shared-types:lint: cache hit, replaying logs a946566fb9efb741
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:lint: > eslint src tests scripts --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+@agilityhub/course-core:typecheck: cache hit, replaying logs 61edc282ad1bbb2a
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+@agilityhub/ui:typecheck: cache miss, executing 06a8a083346a4263
+clubs:lint: cache hit, replaying logs 02a6cd3dd043b091
+@agilityhub/api-client:typecheck: cache miss, executing 5220577265cbc8a1
+@agilityhub/auth:lint: cache hit, replaying logs 2925197e67cefb4b
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+@agilityhub/i18n:lint: cache miss, executing 626e662d0935fd03
+@agilityhub/ui:lint: cache miss, executing e9f4bf5c212a6785
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/auth:lint: 
+@agilityhub/ui:test: cache miss, executing 8770dd00542a2d92
+clubs-admin:lint: cache miss, executing 3bad2670066d4f77
+@agilityhub/course-core:lint: cache hit, replaying logs e1967c3b8013c83f
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:lint: > @agilityhub/course-core@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:test: cache hit, replaying logs 34116acf0470d929
+id:lint: cache hit, replaying logs b97c217d91c5d1c4
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  [32m✓[39m tests/coords.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-primitives.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-id.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/wrapper.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/calibration.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-colors-txt.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/apriltag-36h11.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/ring.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/marker-svg.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/geometry-transform.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/placement.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/units.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/summarize-course.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/parse-smarter-txt.test.ts [2m([22m[2m113 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-writer.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/warnings-rules.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/smarter-fixtures.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+@agilityhub/course-core:test:  [32m✓[39m tests/course-data-json-schema.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m Test Files [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+@agilityhub/course-core:test: [2m      Tests [22m [1m[32m364 passed[39m[22m[90m (364)[39m
+@agilityhub/course-core:test: [2m   Start at [22m 16:01:14
+@agilityhub/course-core:test: [2m   Duration [22m 1.25s[2m (transform 79%, import 15%, tests 4%, worker 2%)[22m
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: [2m  Transform [22m [33mtransforming modules took 5.41s[39m[2m · 79% of tracked time, re-done on every run[22m
+@agilityhub/course-core:test: [2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+@agilityhub/course-core:test: [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+@agilityhub/course-core:test: 
+@agilityhub/api-client:lint: cache miss, executing fcfd7bca32e93f5a
+@agilityhub/api-client:test: cache miss, executing 6330b2a67b1d29ff
+@agilityhub/config:lint: cache hit, replaying logs 42ac5d636417f38d
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/course-core:build: cache hit, replaying logs e18b31668a225399
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/config:typecheck: cache hit, replaying logs 6860c83ceac65ae7
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/shared-types:test: cache hit, replaying logs 0d5094aa59df2bb0
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: > @agilityhub/shared-types@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: > vitest run
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types[39m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test:  [32m✓[39m tests/build-session-export.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+@agilityhub/shared-types:test:  [32m✓[39m tests/json-schemas.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+@agilityhub/shared-types:test: [2m      Tests [22m [1m[32m38 passed[39m[22m[90m (38)[39m
+@agilityhub/shared-types:test: [2m   Start at [22m 16:01:24
+@agilityhub/shared-types:test: [2m   Duration [22m 740ms[2m (transform 70%, import 21%, tests 8%, worker 1%)[22m
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:typecheck: cache hit, replaying logs c4cd70d7e3ccd8fa
+@agilityhub/shared-types:build: cache hit, replaying logs a211f3de2fb8a1b3
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+clubs:build: cache miss, executing 3cd329572e9ac809
+clubs-admin:build: cache miss, executing 44b8f9f6ff3f0976
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+@agilityhub/i18n:lint: 
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:typecheck: > @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:typecheck: > tsc --noEmit
+@agilityhub/api-client:typecheck: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: > @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:test: > vitest run
+@agilityhub/api-client:test: 
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build
+clubs:build: 
+@agilityhub/api-client:test: 
+@agilityhub/api-client:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client[39m
+@agilityhub/api-client:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Errors [49m[22m[31m⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1m
+@agilityhub/ui:test: Vitest caught 15 unhandled errors during the test run.
+@agilityhub/ui:test: This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/tasks-panel.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/universal-list.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/components.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/slot-grid.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/rich-text.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/attendance.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/day-grid.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/schedule-grid.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/limited-markdown.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/Icon.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [2m Test Files [22m [2mno tests[22m
+@agilityhub/ui:test: [2m      Tests [22m [2mno tests[22m
+@agilityhub/ui:test: [2m     Errors [22m [1m[31m15 errors[39m[22m
+@agilityhub/ui:test: [2m   Start at [22m 01:47:22
+@agilityhub/ui:test: [2m   Duration [22m 3621.46s
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/attendance-sheet.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/branding.test.tsx.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/on-primary.test.ts.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/attendance-contrast.test.ts.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m547:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Error [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: [31m[1mError[22m: [vitest-pool]: Failed to start forks worker for test files /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/index.test.ts.[39m
+@agilityhub/ui:test: [90m [2m❯[22m ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:94[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m runNextTicks node:internal/process/task_queues:[2m64:5[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m518:9[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m Pool.schedule ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m11469:5[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m[1mCaused by: Error[22m: [vitest-pool-runner]: Timeout waiting for worker to respond[39m
+@agilityhub/ui:test: [90m [2m❯[22m Timeout.<anonymous> ../../node_modules/.pnpm/vitest@5.0.0_@types+node@24.13.3_jsdom@30.0.1_msw@2.15.0_@types+node@24.13.3_typescript@5.9.3_o3x36w4wzmhrb6lgsh25ijaypq/node_modules/vitest/dist/chunks/index.B89dZ0-N.js:[2m10968:58[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m listOnTimeout node:internal/timers:[2m585:17[22m[39m
+@agilityhub/ui:test: [90m [2m❯[22m processTimers node:internal/timers:[2m521:7[22m[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test: [31m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39m
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  ELIFECYCLE  Test failed. See above for more details.
+id:build: cache miss, executing 6cddc0814cccf396
+@agilityhub/ui#test:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui) /opt/homebrew/bin/pnpm run test exited (1)
+
+ Tasks:    13 successful, 24 total
+Cached:    13 cached, 24 total
+  Time:    1h0m33.419s 
+Failed:    @agilityhub/ui#test
+
+ ERROR  run failed: command  exited (1)

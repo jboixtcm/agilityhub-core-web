@@ -23,6 +23,8 @@ type ExportJob = components["schemas"]["ExportJob"];
 interface OpenExportsOptions {
   errorCode?: "EXPORT_LIMIT";
   jobId?: string;
+  /** The queued job's kind (`ACCOUNTING` for D6's export): the drawer lists that kind. */
+  kind?: ExportJob["kind"];
 }
 
 interface ExportsContextValue {
@@ -69,6 +71,7 @@ export function ExportJobsProvider({
   const [refreshKey, setRefreshKey] = useState(0);
   const [downloading, setDownloading] = useState<string>();
   const [downloadError, setDownloadError] = useState<string>();
+  const [kind, setKind] = useState<ExportJob["kind"]>("LIST");
   const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
 
   /**
@@ -104,6 +107,7 @@ export function ExportJobsProvider({
           ? "queued"
           : undefined,
     );
+    setKind(options?.kind ?? "LIST");
     setOpen(true);
     setRefreshKey((value) => value + 1);
   }, []);
@@ -115,7 +119,7 @@ export function ExportJobsProvider({
     const load = async () => {
       setLoading(true);
       try {
-        const result = await client.GET("/exports", { params: { query: { kind: "LIST" } } });
+        const result = await client.GET("/exports", { params: { query: { kind } } });
         if (!current) return;
         const next = result.data ?? [];
         setJobs(next);
@@ -136,7 +140,7 @@ export function ExportJobsProvider({
       current = false;
       if (timer !== undefined) window.clearTimeout(timer);
     };
-  }, [client, open, refreshKey]);
+  }, [client, kind, open, refreshKey]);
 
   const context = useMemo(() => ({ openExports }), [openExports]);
 

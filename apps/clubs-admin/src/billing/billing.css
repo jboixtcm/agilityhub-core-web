@@ -446,6 +446,14 @@
   align-items: end;
 }
 
+/* E8-W04 round 2: the receipts list's concept wraps instead of pushing «Estat» out of view. */
+.billing-list__concept {
+  display: block;
+  min-width: 12rem;
+  max-width: 22rem;
+  white-space: normal;
+}
+
 @media (max-width: 1100px) {
   .billing-grid {
     grid-template-columns: minmax(0, 1fr);
