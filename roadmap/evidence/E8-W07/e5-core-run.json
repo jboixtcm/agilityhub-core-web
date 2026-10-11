@@ -3,7 +3,10 @@
     "bookerBooking": "13754337-da68-4e60-ac3b-77f5ef736176",
     "swapBooking": "851bdf0a-b338-4f82-8f6e-0379a0457867",
     "waiterEntry": "7c21cf89-e960-40c4-b02b-ab8da8d25855",
-    "waiterClaim": "0c053756-1e47-4bef-8052-ea447c830861"
+    "waiterClaim": "0c053756-1e47-4bef-8052-ea447c830861",
+    "esBooking": "e72f650c-efc6-4934-bc62-80bbbfe10316",
+    "esEntry": "c2800f66-2104-4513-837c-5d6843e1ea82",
+    "esClaim": "0452e0bf-79f8-4163-8232-8f6978713bb8"
   },
   "demoNow": "2026-10-12T05:00:00.000Z",
   "runId": "3qhvja",
@@ -246,6 +249,51 @@
       },
       "release": {
         "state": "CANCELLED"
+      }
+    },
+    "g-es": {
+      "booking": 201,
+      "claim": 201,
+      "entryState": "CONSOLIDATED",
+      "home": {
+        "afterBooking": true,
+        "afterClaim": [
+          true,
+          true
+        ],
+        "afterJoin": "CLASS_WAITLIST"
+      },
+      "join": 201,
+      "release": "CANCELLED"
+    },
+    "h-cleanup": {
+      "swapBooking": {
+        "cancellation": 200,
+        "state": "CANCELLED"
+      },
+      "waiterClaim": {
+        "cancellation": null,
+        "state": "CANCELLED"
+      },
+      "esBooking": {
+        "cancellation": null,
+        "state": "not settled: page.evaluate: Target crashed "
+      },
+      "esClaim": {
+        "cancellation": null,
+        "state": "not settled: page.evaluate: Target crashed "
+      },
+      "bookerBooking": {
+        "cancellation": null,
+        "state": "CANCELLED"
+      },
+      "waiterEntry": {
+        "cancellation": null,
+        "state": "CONSOLIDATED"
+      },
+      "esEntry": {
+        "cancellation": null,
+        "state": "not settled: page.evaluate: Target crashed "
       }
     }
   },
