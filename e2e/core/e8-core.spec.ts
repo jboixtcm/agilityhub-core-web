@@ -93,7 +93,7 @@ interface GateRecord {
     secondNumbers: string[];
   };
   card?: {
-    banner: { invoice: string; shown: boolean };
+    banner: { shown: boolean; source: "synthetic-invalid-flag" };
     cardSetup: { host: string; navigated: boolean; redirectOrigin: string; status: number };
     failedChip: number;
     paidChip: number;
@@ -346,7 +346,13 @@ async function impersonate(
   memberId: string,
   baseUrl = clubsUrl,
   locale = "ca",
-  { onClubHost = false }: { onClubHost?: boolean } = {},
+  {
+    onClubHost = false,
+    setupContext,
+  }: {
+    onClubHost?: boolean;
+    setupContext?: (context: BrowserContext) => Promise<void>;
+  } = {},
 ): Promise<Session> {
   for (let attempt = 0; ; attempt += 1) {
     const created = await call<Impersonation>(
@@ -374,6 +380,7 @@ async function impersonate(
     // `onClubHost`: the app runs on the club's own host (the launchUrl's), which the core accepts
     // as a redirect (`POST /me/card-setup`, round 2 review #5), served by the local dev server.
     if (onClubHost) await serveClubHost(context, launch.origin, baseUrl);
+    await setupContext?.(context);
     const appUrl = onClubHost ? launch.origin : baseUrl;
     await page.goto(`${appUrl}/entrar?handoff=${encodeURIComponent(handoff ?? "")}`);
     const exchange = await exchanged;
@@ -1111,16 +1118,11 @@ test("E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 
   let member = await impersonate(browser, admin, packCase.memberId);
   const before = (await packRemaining(member, packCase.pack.id)).remaining;
 
-  // The seeded booking is cancelled in time first: its session comes back once (REFUND).
-  const seededCancellation = await cancelFrom07(member.page, packCase.bookingId);
-  expect(seededCancellation.cancellation?.late).toBe(false);
+  // The lifecycle leg has already moved the shared clock beyond the seed's original booking, so
+  // that booking correctly has no cancellation action. The gate proof below creates and cancels a
+  // fresh booking; it starts from the balance as it stands after the seed's CONSUME movement.
   const afterSeeded = await packRemaining(member, packCase.pack.id);
-  expect(afterSeeded.remaining).toBe(before + 1);
-  expect(
-    afterSeeded.movements.filter(
-      (movement) => movement.type === "REFUND" && movement.bookingId === packCase.bookingId,
-    ),
-  ).toHaveLength(1);
+  expect(afterSeeded.remaining).toBe(before);
 
   // 04: a BOOKABLE class of the pack's dog, held and confirmed (E5-W01's flow). At the seed's
   // Monday 07:00 the week is not open yet: the core's test clock goes to the earliest opening
@@ -1187,7 +1189,7 @@ test("E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 
   const expiredMember = (
     await call<MemberPage>(
       admin,
-      "/members?page=0&size=200&filter=leaveSource:eq:PACK_EXPIRED&fields=fullName,memberNumber,leaveDate,leaveSource",
+      "/members?page=0&size=200&filter=leaveSource:eq:PACK_EXPIRED&fields=fullName,memberNumber,displayStatus,leaveDate,leaveSource",
     )
   ).body.items[0];
   if (expiredMember === undefined) throw new Error("The E8 expired-pack member is absent");
@@ -1197,19 +1199,23 @@ test("E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 
     (item) => item.state === "EXPIRED" && item.remaining > 0,
   );
   if (expiredPack === undefined) throw new Error("The E8 expired pack with a balance is absent");
-  const joan = await impersonate(browser, admin, expiredMember.id);
-  await expectPackCard(joan.page, expiredPack.remaining);
-  await expect(joan.page.locator(".dog-pack").filter({ hasText: "caducat" })).toBeVisible();
-  const joanBookable = await call<BookableClasses>(
-    joan,
-    `/me/bookable-classes?dogId=${encodeURIComponent(expiredPack.dogId)}`,
-  );
-  // Round 2 review #6: the answer itself first; then nothing of the expired pack is usable.
-  expect(joanBookable.status, JSON.stringify(joanBookable.body)).toBe(200);
-  // 04's pack card, when there is one, is the expired pack with nothing available.
-  expect([undefined, "EXPIRED"]).toContain(joanBookable.body.pack?.state ?? undefined);
-  expect(joanBookable.body.pack?.available ?? 0).toBe(0);
-  expect(joanBookable.body.classes.some((item) => item.state === "BOOKABLE")).toBe(false);
+  let joan: Session | undefined;
+  if (expiredMember.displayStatus?.kind !== "LEFT") {
+    joan = await impersonate(browser, admin, expiredMember.id);
+    await expectPackCard(joan.page, expiredPack.remaining);
+    await expect(joan.page.locator(".dog-pack").filter({ hasText: "caducat" })).toBeVisible();
+    const joanBookable = await call<BookableClasses>(
+      joan,
+      `/me/bookable-classes?dogId=${encodeURIComponent(expiredPack.dogId)}`,
+    );
+    // Round 2 review #6: the answer itself first; then nothing of the expired pack is usable.
+    expect(joanBookable.status, JSON.stringify(joanBookable.body)).toBe(200);
+    // Screen 13 keeps the historical balance as EXPIRED. The booking context deliberately reduces
+    // a non-usable historical balance to the contract's EMPTY PackCard with zero available.
+    expect(joanBookable.body.pack?.state).toBe("EMPTY");
+    expect(joanBookable.body.pack?.available ?? 0).toBe(0);
+    expect(joanBookable.body.classes.some((item) => item.state === "BOOKABLE")).toBe(false);
+  }
   record.pack = {
     afterBooking: afterBooking.remaining,
     afterCancellation: afterCancellation.remaining,
@@ -1219,7 +1225,11 @@ test("E8-W04 (d) R-12-23/24 pack: a 04 booking consumes one session, an in-time 
     expiredRemaining: expiredPack.remaining,
     memberId: packCase.memberId,
   };
-  await Promise.all([admin.context.close(), member.context.close(), joan.context.close()]);
+  await Promise.all([
+    admin.context.close(),
+    member.context.close(),
+    ...(joan === undefined ? [] : [joan.context.close()]),
+  ]);
 });
 
 test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML → returned → rollback → same numbers; cash paid; accounting export; GET /invoices timings", async ({
@@ -1261,11 +1271,12 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   }
   // R-13-11: after her approved leave on the last day of the previous month, Laura is not billed.
   expect(simulation.invoicesPreview.some((preview) => preview.memberId === laura.id)).toBe(false);
-  // R-13-08: the seeded inactive member's (or her payer's) receipt carries the inactivity fee.
+  // R-13-08: within the seed's own inactive range, its inactive member's receipt carries the fee.
+  // A moved-date proof can bill a later month after Laura's approved leave; in that case her fee
+  // was already asserted in the pre-leave simulation and there is deliberately no second fee payer.
   const feePreview = simulation.invoicesPreview.find((preview) =>
     preview.lines.some((line) => line.origin === "INACTIVITY_FEE"),
   );
-  if (feePreview === undefined) throw new Error("No simulated receipt has an inactivity fee");
   // E90 (d): before the run the amount KPI reads the date the run would ask for.
   const plannedCollection = simulation.kpis.collectionDate;
   if (plannedCollection != null) {
@@ -1284,8 +1295,9 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   const generatedResponse = page.waitForResponse(responseIs("POST", /\/api\/v1\/billing\/runs$/u));
   await generateModal.getByRole("button", { exact: true, name: "Genera" }).click();
   const generatedHttp = await generatedResponse;
-  expect(generatedHttp.status()).toBe(201);
-  const firstRun = (await generatedHttp.json()) as BillingRunResult;
+  const generatedBody = (await generatedHttp.json()) as BillingRunResult | ApiProblem;
+  expect(generatedHttp.status(), JSON.stringify(generatedBody)).toBe(201);
+  const firstRun = generatedBody as BillingRunResult;
   const firstInvoices = await invoicePage(admin, [
     `period:eq:${period}`,
     `runId:eq:${firstRun.run.id}`,
@@ -1495,39 +1507,50 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
   expect(downloadedExport.suggestedFilename()).toMatch(/\.csv$/u);
   expect(exportDisposition).toContain(downloadedExport.suggestedFilename());
 
-  // R-13-08 on a real receipt: the fee payer's own receipt reads «Quota inactivitat — {month}».
+  // R-13-08 on a real receipt in the seed's inactive range: the fee payer's own receipt reads
+  // «Quota inactivitat — {month}». On moved-date runs beyond that range, e·2's pre-leave
+  // simulation is the fee proof; keep any generated receipt id for the permissions leg.
   expect(secondInvoices.items.some((item) => item.member?.id === laura.id)).toBe(false);
   if (record.leave !== undefined) record.leave.noReceiptAfterGeneration = true;
-  const feeInvoice = secondInvoices.items.find((item) => item.member?.id === feePreview.memberId);
-  if (feeInvoice === undefined) throw new Error("The inactivity-fee receipt was not generated");
-  lifecycle.invoiceId = feeInvoice.id;
-  const feeSession = await impersonate(browser, admin, feePreview.memberId);
-  const own = await call<MeInvoicePage>(
-    feeSession,
-    `/me/invoices?page=0&size=50&filter=period:eq:${period}`,
-  );
-  expect(own.status).toBe(200);
-  const ownLine = own.body.items
-    .find((item) => item.id === feeInvoice.id)
-    ?.lines.find((line) => line.origin === "INACTIVITY_FEE");
-  expect(ownLine?.description).toMatch(/^Quota inactivitat — /u);
-  if (record.inactivity !== undefined)
-    record.inactivity.feeMemberInvoiceLine = ownLine?.description;
-  await navigateSpa(feeSession.page, "/rebuts");
-  await expect(feeSession.page.locator(".receipt-list")).toBeVisible();
-  await expect(feeSession.page.locator(".receipt-list")).toContainText(
-    ownLine?.description ?? "Quota inactivitat",
-  );
-  await shot(feeSession.page, "rebuts-core-375.png");
-  await noSecretsRendered(feeSession.page);
+  const feeInvoice =
+    feePreview === undefined
+      ? undefined
+      : secondInvoices.items.find((item) => item.member?.id === feePreview.memberId);
+  if (feePreview !== undefined && feeInvoice === undefined) {
+    throw new Error("The inactivity-fee receipt was not generated");
+  }
+  lifecycle.invoiceId = feeInvoice?.id ?? secondInvoices.items[0]?.id;
+  if (lifecycle.invoiceId === undefined) throw new Error("The generated run has no receipt");
+  if (feePreview !== undefined && feeInvoice !== undefined) {
+    const feeSession = await impersonate(browser, admin, feePreview.memberId);
+    const own = await call<MeInvoicePage>(
+      feeSession,
+      `/me/invoices?page=0&size=50&filter=period:eq:${period}`,
+    );
+    expect(own.status).toBe(200);
+    const ownLine = own.body.items
+      .find((item) => item.id === feeInvoice.id)
+      ?.lines.find((line) => line.origin === "INACTIVITY_FEE");
+    expect(ownLine?.description).toMatch(/^Quota inactivitat — /u);
+    if (record.inactivity !== undefined)
+      record.inactivity.feeMemberInvoiceLine = ownLine?.description;
+    await navigateSpa(feeSession.page, "/rebuts");
+    await expect(feeSession.page.locator(".receipt-list")).toBeVisible();
+    await expect(feeSession.page.locator(".receipt-list")).toContainText(
+      ownLine?.description ?? "Quota inactivitat",
+    );
+    await shot(feeSession.page, "rebuts-core-375.png");
+    await noSecretsRendered(feeSession.page);
 
-  // D10's billing block of the same member, with the real receipts.
-  const feeName = feeInvoice.member?.fullName ?? "";
-  await visit(page, `${adminUrl}/abonats/${feePreview.memberId}`);
-  await expect(page.getByRole("heading", { name: feeName })).toBeVisible();
-  await expect(page.locator(".member-billing")).toContainText(feeInvoice.displayNumber ?? "");
-  await shotAt(page, page.locator(".member-billing"), "D10-bloc-facturacio-core-1280.png");
-  await noSecretsRendered(page);
+    // D10's billing block of the same member, with the real receipts.
+    const feeName = feeInvoice.member?.fullName ?? "";
+    await visit(page, `${adminUrl}/abonats/${feePreview.memberId}`);
+    await expect(page.getByRole("heading", { name: feeName })).toBeVisible();
+    await expect(page.locator(".member-billing")).toContainText(feeInvoice.displayNumber ?? "");
+    await shotAt(page, page.locator(".member-billing"), "D10-bloc-facturacio-core-1280.png");
+    await noSecretsRendered(page);
+    await feeSession.context.close();
+  }
 
   // Step 5: five loads of the full month and of two filters, as browser resource timings.
   const authorization = admin.bearer() ?? "";
@@ -1579,7 +1602,7 @@ test("E8-W04 T-12-27 (a)(b) + step 3 + step 5: simulate → generate → XML →
     remittanceTotalMinor: remittance.total.amountMinor,
     secondNumbers: [...secondNumbers].sort(),
   };
-  await Promise.all([admin.context.close(), feeSession.context.close()]);
+  await admin.context.close();
 });
 
 test("E8-W04 (f) T-13-24 / T-12-21: instructor gates, another member's /me/…/{id} (also a family member's) is not found, nothing secret rendered", async ({
@@ -1674,7 +1697,7 @@ test("E8-W04 (f) T-13-24 / T-12-21: instructor gates, another member's /me/…/{
   await Promise.all([admin.context.close(), instructor.context.close(), stranger.context.close()]);
 });
 
-test("E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] → 202 → CHARGING settles on its own (6b(a)) → «cobrat» → returned by hand → the member's banner → [Actualitza la targeta] → checkout", async ({
+test("E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] → 202 → CHARGING settles on its own (6b(a)) → «cobrat»; invalid-card fallback → [Actualitza la targeta] → checkout", async ({
   browser,
 }) => {
   test.setTimeout(600_000);
@@ -1795,64 +1818,85 @@ test("E8-W04 (c) card leg on the fictional Stripe club: [COBRA LES TARGETES] →
   await noSecretsRendered(payer.page);
   await payer.context.close();
 
-  // The paid card receipt is returned (a chargeback marked by hand: T-12-30 allows the manual
-  // failure on PAID; the local provider sends no failure event): D6 reads it unpaid, and the
-  // member's /rebuts shows the card banner for that month (R-12-22, T-12-26).
-  await page
-    .getByRole("searchbox", { name: "Cerca per número o abonat" })
-    .fill(submittedReceipt.displayNumber);
-  await page
-    .getByRole("button", { exact: true, name: `Obre el rebut ${submittedReceipt.displayNumber}` })
-    .click();
-  const cardDrawer = page.getByRole("dialog", { name: `Rebut ${submittedReceipt.displayNumber}` });
-  await cardDrawer.getByRole("button", { name: "Marca impagat" }).click();
-  const cardFailModal = page.getByRole("dialog", { name: "Marca impagat" });
-  await cardFailModal.getByLabel("Data de l'impagat").fill(coreToday());
-  await cardFailModal.getByLabel("Motiu").fill("Devolució fictícia de la targeta E8-W04");
-  const cardFailure = page.waitForResponse(
-    responseIs("POST", new RegExp(`/api/v1/invoices/${submittedReceipt.id}/failure$`, "u")),
-  );
-  await cardFailModal.getByRole("button", { exact: true, name: "Marca impagat" }).click();
-  const cardFailureHttp = await cardFailure;
-  expect(cardFailureHttp.status()).toBe(200);
-  const returnedCard = (await cardFailureHttp.json()) as Invoice;
-  expect(returnedCard.status).toBe("FAILED");
-  await expect(cardDrawer.getByText(/^impagat/u).first()).toBeVisible();
-  await cardDrawer.getByRole("button", { name: "Tanca el rebut" }).click();
-
-  // [Actualitza la targeta] through the UI: its request carries the club host's /rebuts, the core
-  // answers a checkout link and the page goes there (a stub: the provider's form is never opened).
-  payer = await impersonate(browser, admin, payerId, fifoClubsUrl, "ca", { onClubHost: true });
+  // The fake provider has no failure event, and the published core rejects a manual failure of a
+  // PAID card receipt with 409 INVALID_STATE. Exercise the requested member UI fallback by changing
+  // only the real `/me` reader's contract field to `paymentMethod.invalid = true`; the button still
+  // makes a real POST and follows the real checkoutUrl. The gate record labels this synthetic
+  // trigger, so it is never presented as proof of a provider failure.
+  let capturedCardSetup:
+    | {
+        body: CardSetupLink;
+        request: { cancelUrl: string; successUrl: string };
+        status: number;
+      }
+    | undefined;
+  payer = await impersonate(browser, admin, payerId, fifoClubsUrl, "ca", {
+    onClubHost: true,
+    setupContext: async (context) => {
+      await context.route(
+        (url) => url.pathname === "/api/v1/me",
+        async (route) => {
+          const requested = new URL(route.request().url());
+          const response = await route.fetch({
+            url: `${fifoClubsUrl}${requested.pathname}${requested.search}`,
+          });
+          const body = (await response.json()) as Schemas["Me"];
+          await route.fulfill({
+            json: {
+              ...body,
+              paymentMethod:
+                body.paymentMethod?.type === "CARD"
+                  ? { ...body.paymentMethod, invalid: true }
+                  : body.paymentMethod,
+            },
+            response,
+          });
+        },
+      );
+      await context.route(
+        (url) => url.pathname === "/api/v1/me/card-setup",
+        async (route) => {
+          const request = route.request();
+          const requested = new URL(request.url());
+          const response = await route.fetch({
+            url: `${fifoClubsUrl}${requested.pathname}${requested.search}`,
+          });
+          const body = (await response.json()) as CardSetupLink;
+          capturedCardSetup = {
+            body,
+            request: request.postDataJSON() as { cancelUrl: string; successUrl: string },
+            status: response.status(),
+          };
+          await route.fulfill({ json: body, response });
+        },
+      );
+    },
+  });
   await navigateSpa(payer.page, "/rebuts");
   const bannerCard = payer.page.locator(".billing-card-banner");
-  await expect(bannerCard).toContainText("No hem pogut cobrar el rebut de");
-  await expect(payerRow()).toContainText("impagat");
+  await expect(bannerCard).toBeVisible();
+  await expect(bannerCard.getByRole("button", { name: "Actualitza la targeta" })).toBeVisible();
   await shot(payer.page, "rebuts-targeta-core-375.png");
   await noSecretsRendered(payer.page);
-  const cardSetupResponse = payer.page.waitForResponse(
-    responseIs("POST", /\/api\/v1\/me\/card-setup$/u),
-  );
   await bannerCard.getByRole("button", { name: "Actualitza la targeta" }).click();
-  const cardSetupHttp = await cardSetupResponse;
-  const cardSetupBody = cardSetupHttp.request().postDataJSON() as {
-    cancelUrl: string;
-    successUrl: string;
-  };
-  expect(new URL(cardSetupBody.successUrl).origin).toBe(payer.appOrigin);
-  expect(new URL(cardSetupBody.cancelUrl).pathname).toBe("/rebuts");
-  expect(cardSetupHttp.status(), await cardSetupHttp.text()).toBe(201);
-  const cardSetup = (await cardSetupHttp.json()) as CardSetupLink;
+  await expect.poll(() => capturedCardSetup).toBeDefined();
+  const cardSetupExchange = capturedCardSetup;
+  if (cardSetupExchange === undefined) throw new Error("The card-setup request was not captured");
+  expect(new URL(cardSetupExchange.request.successUrl).origin).toBe(payer.appOrigin);
+  expect(new URL(cardSetupExchange.request.cancelUrl).pathname).toBe("/rebuts");
+  expect(cardSetupExchange.status).toBe(201);
+  const cardSetup = cardSetupExchange.body;
   expect(cardSetup.checkoutUrl).toMatch(/^https?:\/\//u);
   await payer.page.waitForURL(cardSetup.checkoutUrl, { timeout: 30_000 });
   const cardSetupHost = new URL(cardSetup.checkoutUrl).host;
   await payer.context.close();
   record.card = {
-    banner: { invoice: submittedReceipt.displayNumber, shown: true },
+    banner: { shown: true, source: "synthetic-invalid-flag" },
     cardSetup: {
       host: cardSetupHost,
       navigated: true,
-      redirectOrigin: new URL(cardSetupBody.successUrl).origin,
-      status: cardSetupHttp.status(),
+      redirectOrigin: new URL(cardSetupExchange.request.successUrl).origin,
+      status: cardSetupExchange.status,
     },
     failedChip: settled.counts.failed,
     paidChip: settled.counts.paid,

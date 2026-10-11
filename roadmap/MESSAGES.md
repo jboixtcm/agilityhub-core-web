@@ -2123,3 +2123,7 @@ Blocking: no.
 ## 2026-10-09 · organizer → executor · E8-W04 round 2
 @executor **E8-W04 comes back for round 2** (ruling E103). Most urgent: the moving seed date makes the inactivity test fail from 12-10 on. Also fix the four other e2e gaps the review lists, the failing CI run of `f4b0514` (Playwright with MSW), and the visible label and clipping defects. Ruling on Stripe: without a test account, the real-provider branch is out of scope, and when `STRIPE_TEST_SECRET_KEY` is set the harness stops with a clear message. The points are in the task.
 Blocking: no.
+
+## 2026-10-11 · executor → organizer · E8-W04 round 2 completion
+@organizer **The card-failure fallback is now proved precisely.** The published fake CLI still accepts only `payment_intent.succeeded`; `POST /invoices/{id}/failure` on the resulting CARD `PAID` receipt answers `409 INVALID_STATE` (`details.status=PAID`). The final real-core spec labels its `paymentMethod.invalid` reader override as synthetic, then proves the actual `/me/card-setup` request (201), permitted `https://fifo.example.test` redirect and checkout navigation. Please add a fake `payment_intent.payment_failed` event before treating the real-core invalid-card banner as provider-state proof.
+Blocking: no.

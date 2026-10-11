@@ -1,9 +1,9 @@
 {
   "created": {
-    "taskA": "46036d0f-3059-4f7e-b689-0c5b1b18317c",
-    "taskB": "73911ea3-6395-4407-a68a-e7e261085464"
+    "taskA": "7f1a6597-6e71-4c2a-a819-d745541a482a",
+    "taskB": "e74d7229-d45c-4eaf-9a8b-4a4ff8433587"
   },
-  "runId": "18qgdh",
+  "runId": "3k5cqt",
   "steps": {
     "instants": {
       "finished": "2026-10-12T07:46:00.000Z",
@@ -87,7 +87,7 @@
     },
     "clock-2026-10-12T02:00:00.000Z": {
       "body": {
-        "now": "2026-10-12T02:00:00.000113167Z"
+        "now": "2026-10-12T02:00:00.000036125Z"
       },
       "status": 200
     },
@@ -124,12 +124,12 @@
       ]
     },
     "scene": {
-      "bertaId": "c007b191-6167-41b5-971f-4e150438f10b",
-      "classId": "3080a38a-5122-4792-a3c6-67ddd2063e85",
-      "entryId": "b8fab90c-7014-4ddc-8c41-f76edd0d5b5a",
+      "bertaId": "4eb65810-c532-4497-96d5-553e269520fb",
+      "classId": "53e3ffec-1dc0-4276-9a5e-566e6df684e7",
+      "entryId": "4f6a2e74-ce66-4a1a-a430-33dc44e50638",
       "instructorA": "instructor.3@example.test",
       "instructorB": "instructor@example.test",
-      "melId": "6451f086-1668-349c-bfa4-5ec98a63730b",
+      "melId": "a9fffd8b-67a4-37be-9dc2-bafb4b10160a",
       "names": {
         "alba": "Alba + Pinya",
         "iu": "Iu + Gira",
@@ -181,9 +181,9 @@
         "pendingCount": 1,
         "doneCount": 1,
         "latest": {
-          "id": "68bcdc33-1c25-4dba-adb1-71d24d690c00",
+          "id": "eb187ba8-7210-4bcb-9eac-1f9aca7ab2c2",
           "text": "Tres sessions de quiets d'un minut abans de la classe de dilluns.",
-          "createdAt": "2026-10-09T17:29:32.763Z",
+          "createdAt": "2026-10-11T08:24:18.654Z",
           "createdByName": "Berta"
         }
       }
@@ -196,7 +196,7 @@
           "Pinya": "PENDING",
           "Trufa": "NO_SHOW"
         },
-        "savedAt": "2026-10-12T02:00:03.591Z",
+        "savedAt": "2026-10-12T02:00:03.692Z",
         "savedByName": "Berta",
         "status": 200,
         "version": 2
@@ -234,7 +234,7 @@
       "mailboxAfterNotice": [],
       "notice": {
         "atLocal": "04:00",
-        "at": "2026-10-12T02:00:04.336Z",
+        "at": "2026-10-12T02:00:04.218Z",
         "late": false,
         "minutesBefore": 269,
         "seatReleased": true,
@@ -254,7 +254,7 @@
       "rotate": [],
       "contentType": "application/pdf",
       "firstBytes": "%PDF-1.6",
-      "size": 13600,
+      "size": 13604,
       "status": 200,
       "suggestedFilename": "agenda-2026-10-12.pdf"
     },
@@ -295,9 +295,9 @@
           "pendingCount": 2,
           "doneCount": 1,
           "latest": {
-            "id": "46036d0f-3059-4f7e-b689-0c5b1b18317c",
-            "text": "Salts curts amb recompensa al final, tres cops al dia (E6 18qgdh, text fictici).",
-            "createdAt": "2026-10-12T02:00:14.901Z",
+            "id": "7f1a6597-6e71-4c2a-a819-d745541a482a",
+            "text": "Salts curts amb recompensa al final, tres cops al dia (E6 3k5cqt, text fictici).",
+            "createdAt": "2026-10-12T02:00:07.009Z",
             "createdByName": "Berta"
           }
         }
@@ -313,9 +313,9 @@
           "status": 200
         },
         "meDogTask": {
-          "id": "46036d0f-3059-4f7e-b689-0c5b1b18317c",
-          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 18qgdh, text fictici).",
-          "createdAt": "2026-10-12T02:00:14.901Z",
+          "id": "7f1a6597-6e71-4c2a-a819-d745541a482a",
+          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 3k5cqt, text fictici).",
+          "createdAt": "2026-10-12T02:00:07.009Z",
           "instructorName": "Berta",
           "attachmentsCount": 1
         },
@@ -336,7 +336,7 @@
       "task": {
         "attachments": 1,
         "created": 201,
-        "id": "46036d0f-3059-4f7e-b689-0c5b1b18317c"
+        "id": "7f1a6597-6e71-4c2a-a819-d745541a482a"
       }
     },
     "f-member-completion": {
@@ -344,9 +344,9 @@
         "pendingCount": 1,
         "doneCount": 2,
         "latest": {
-          "id": "46036d0f-3059-4f7e-b689-0c5b1b18317c",
-          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 18qgdh, text fictici).",
-          "createdAt": "2026-10-12T02:00:14.901Z",
+          "id": "7f1a6597-6e71-4c2a-a819-d745541a482a",
+          "text": "Salts curts amb recompensa al final, tres cops al dia (E6 3k5cqt, text fictici).",
+          "createdAt": "2026-10-12T02:00:07.009Z",
           "createdByName": "Berta"
         }
       },
@@ -456,11 +456,11 @@
         "narrowedValues": [
           {
             "count": 1,
-            "label": "Aina"
+            "label": "Berta"
           },
           {
             "count": 1,
-            "label": "Berta"
+            "label": "Aina"
           }
         ],
         "rows": [
@@ -541,7 +541,7 @@
     },
     "clock-2026-10-12T07:46:00.000Z": {
       "body": {
-        "now": "2026-10-12T07:46:00.000005500Z"
+        "now": "2026-10-12T07:46:00.000006291Z"
       },
       "status": 200
     },
@@ -578,15 +578,15 @@
     },
     "clock-2026-10-13T06:00:00.000Z": {
       "body": {
-        "now": "2026-10-13T06:00:00.000004250Z"
+        "now": "2026-10-13T06:00:00.000005625Z"
       },
       "status": 200
     },
     "e-p3": {
       "first": {
         "counters": {
-          "notices": 1,
-          "late": 0
+          "late": 0,
+          "notices": 1
         },
         "errors": [],
         "items": 1
@@ -622,8 +622,8 @@
       },
       "noShowNotice": {
         "scheduledFor": "2026-10-13T06:00:00Z",
-        "queuedAt": "2026-10-13T06:00:01.217Z",
-        "sentAt": "2026-10-13T06:00:01.354Z"
+        "queuedAt": "2026-10-13T06:00:01.230Z",
+        "sentAt": "2026-10-13T06:00:01.902Z"
       },
       "second": {
         "counters": {},
@@ -717,7 +717,7 @@
         "ACTIVITY"
       ],
       "activityRow": {
-        "activityId": "c3b928b3-5b35-4c48-876b-6bf10d061507",
+        "activityId": "d951574f-973f-4360-9f4c-1829e3eaf8ef",
         "isTheActivity": true,
         "rowsBefore": 0,
         "state": "CANCELLED",
@@ -824,7 +824,7 @@
     },
     "clock-2026-10-13T22:00:00.000Z": {
       "body": {
-        "now": "2026-10-13T22:00:00.000006083Z"
+        "now": "2026-10-13T22:00:00.000005667Z"
       },
       "status": 200
     },
@@ -842,9 +842,9 @@
       },
       "versionKept": true
     },
-    "clock-2026-10-09T17:30:31.784Z": {
+    "clock-2026-10-11T08:25:28.726Z": {
       "body": {
-        "now": "2026-10-09T17:30:31.784004917Z"
+        "now": "2026-10-11T08:25:28.726005542Z"
       },
       "status": 200
     },

@@ -1,0 +1,2 @@
+e2e-core: STRIPE_TEST_SECRET_KEY is set, but the E8 browser stage has no real-Stripe branch (ruling E103).
+e2e-core: unset it to run the card leg on FakePaymentProvider; the signed real-Stripe delivery is api bin/e8-smoke's.

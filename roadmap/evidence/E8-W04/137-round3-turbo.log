@@ -1,0 +1,1 @@
+heavy.sh: 10:33 waiting for the host lock, held by: 10:33 agilityhub-core-api-c: ./mvnw -q -Pmutation -DtargetTests=com.agilityhub.core.*Test -DmutationUnitSize=50 -DreportsDirectory=target/pit-reports-session3-unit -DhistoryInputFile=.local/pitest/session3-new.bin -DhistoryOutputFile=.local/pitest/session3-unit.bin test-compile org.pitest:pitest-maven:mutationCoverage

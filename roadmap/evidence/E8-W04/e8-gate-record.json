@@ -7,45 +7,65 @@
     {
       "instant": "2026-10-19T07:00:00+02:00",
       "status": 200
+    },
+    {
+      "instant": "2026-10-25T19:01:00.000Z",
+      "status": 200
     }
   ],
   "inactivity": {
-    "cancelledBookings": 0,
+    "bookedInside": {
+      "classStartsAtLocal": "2026-11-02T08:30",
+      "stateAfterApproval": "CANCELLED",
+      "stateOn04": "NOT_BOOKABLE/INACTIVITY"
+    },
+    "cancelledBookings": 1,
     "frozenMemberUntil": "2026-11-30",
     "fromMonth": "2026-11",
-    "memberId": "73f1276e-d8f8-3b14-9083-59cfeb385bff",
-    "screen04Status": 200,
-    "ownInvoiceLine": "Quota inactivitat — Novembre 2026"
+    "memberId": "9c7768c4-ee11-3d66-b123-7410ce392c70",
+    "stateAfterApproval": "APPROVED",
+    "simulatedLineBeforeLeave": "Quota inactivitat — Novembre 2026",
+    "feeMemberInvoiceLine": "Quota inactivitat — Novembre 2026"
+  },
+  "leave": {
+    "effectiveDate": "2026-10-31",
+    "leaveMonthBilledAfter": true,
+    "leaveMonthBilledBefore": true,
+    "memberId": "9c7768c4-ee11-3d66-b123-7410ce392c70",
+    "nextMonthBilledAfter": false,
+    "nextMonthBilledBefore": true,
+    "reasonLabelForEs": "Ja he après tot el que volia",
+    "noReceiptAfterGeneration": true
   },
   "pack": {
-    "afterBooking": 5,
-    "afterCancellation": 6,
-    "afterSeededRefund": 6,
+    "afterBooking": 4,
+    "afterCancellation": 5,
+    "afterSeededRefund": 5,
     "before": 5,
     "expiredRemaining": 10,
-    "memberId": "698eff20-55a8-322e-9c12-b23c62e4cdb1"
+    "memberId": "dab3c602-d3f3-38c4-b3ed-6dc3ff87cb96"
   },
   "performance": {
     "failed": {
-      "max": 6.1,
-      "median": 4.6
+      "max": 6.5,
+      "median": 5.1
     },
     "full": {
-      "max": 8.1,
-      "median": 7.5
+      "max": 9,
+      "median": 8
     },
     "paid": {
-      "max": 5,
-      "median": 4.3
+      "max": 4.8,
+      "median": 4.2
     }
   },
   "billing": {
-    "cashDisplayNumber": "2026-0116",
+    "cashDisplayNumber": "2026-0115",
     "cashLineCount": 3,
     "chipsAfterGeneration": {
-      "all": 116,
+      "all": 115,
       "pending": 55,
-      "remitted": 61,
+      "remitted": 60,
       "paid": 0,
       "failed": 0
     },
@@ -56,7 +76,8 @@
       "paid": 0,
       "failed": 0
     },
-    "exportFileName": "canic_accounting_20261019-0700.csv",
+    "exportFileName": "canic_accounting_20261025-2001.csv",
+    "exportJob": null,
     "exportStatus": 200,
     "firstNumbers": [
       "2026-0001",
@@ -173,22 +194,21 @@
       "2026-0112",
       "2026-0113",
       "2026-0114",
-      "2026-0115",
-      "2026-0116"
+      "2026-0115"
     ],
     "incidents": {},
     "kpis": {
       "cashPending": 55,
       "collectionDate": "2026-11-01",
-      "count": 116,
-      "inactivityFees": 2,
-      "totalMinor": 1011000
+      "count": 115,
+      "inactivityFees": 1,
+      "totalMinor": 1009000
     },
-    "receiptCount": 116,
-    "remittanceCount": 61,
+    "receiptCount": 115,
+    "remittanceCount": 60,
     "remittanceFileName": "remesa-2026-11.xml",
     "remittanceStatus": 200,
-    "remittanceTotalMinor": 375000,
+    "remittanceTotalMinor": 373000,
     "secondNumbers": [
       "2026-0001",
       "2026-0002",
@@ -304,16 +324,8 @@
       "2026-0112",
       "2026-0113",
       "2026-0114",
-      "2026-0115",
-      "2026-0116"
+      "2026-0115"
     ]
-  },
-  "leave": {
-    "decemberWithBefore": true,
-    "decemberWithout": true,
-    "effectiveDate": "2026-10-31",
-    "memberId": "73f1276e-d8f8-3b14-9083-59cfeb385bff",
-    "reasonLabelForEs": "Ja he après tot el que volia"
   },
   "permissions": {
     "familyPartnerChecked": true,
@@ -322,9 +334,14 @@
     "foreignPeriod": 404
   },
   "card": {
-    "banner": "unproven",
+    "banner": {
+      "shown": true,
+      "source": "synthetic-invalid-flag"
+    },
     "cardSetup": {
       "host": "checkout.test",
+      "navigated": true,
+      "redirectOrigin": "https://fifo.example.test",
       "status": 201
     },
     "failedChip": 0,

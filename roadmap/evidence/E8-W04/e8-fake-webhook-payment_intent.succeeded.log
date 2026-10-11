@@ -1,3 +1,13 @@
- Container agilityhub-e8-w04-core-run-7bc3fe41c466 Creating 
- Container agilityhub-e8-w04-core-run-7bc3fe41c466 Created 
+ Container agilityhub-e8-w04-core-run-f4fee548fecf Creating
+ Container agilityhub-e8-w04-core-run-f4fee548fecf Created
 Fake provider webhook delivered: payment_intent.succeeded
+2026-10-11T08:29:00.236Z ERROR [scheduled-job-1] c.a.c.p.application.jobs.JobRunner traceId= clubId= accountId= : Job item failed jobRunId=374eec20-f06a-468e-9def-8e28b7d6995e job=PAYMENT_TIMEOUTS clubId=5b83e0a2-88d8-4eb1-806e-72a00d52a73d entityId=63e63524-96bb-49e4-[redacted]=b98b40bc-6258-4da0-bfe5-2068e0d8e48a
+	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.lambda$cancelPaymentPending$2(BookingCancellationService.java:74)
+	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.cancelPaymentPending(BookingCancellationService.java:70)
+	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService$$SpringCGLIB$$0.cancelPaymentPending(<generated>)
+	at com.agilityhub.core.clubs.bookings.application.PaymentTimeoutsJob.apply(PaymentTimeoutsJob.java:40)
+2026-10-11T08:30:00.050Z ERROR [scheduled-job-1] c.a.c.p.application.jobs.JobRunner traceId= clubId= accountId= : Job item failed jobRunId=91d656fc-364b-4d0d-b901-a3022d3ffbfb job=PAYMENT_TIMEOUTS clubId=5b83e0a2-88d8-4eb1-806e-72a00d52a73d entityId=63e63524-96bb-49e4-[redacted]=75970650-fc1c-455e-b68d-20c3d9eccfdc
+	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.lambda$cancelPaymentPending$2(BookingCancellationService.java:74)
+	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.cancelPaymentPending(BookingCancellationService.java:70)
+	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService$$SpringCGLIB$$0.cancelPaymentPending(<generated>)
+	at com.agilityhub.core.clubs.bookings.application.PaymentTimeoutsJob.apply(PaymentTimeoutsJob.java:40)

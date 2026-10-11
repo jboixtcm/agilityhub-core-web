@@ -1,0 +1,43 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx -t 'T-12-25 invoiceActions'
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (52 tests | 1 failed | 51 skipped) 11ms
+   ❯ T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20) (6)
+     × T-12-25 invoiceActions: every status and method of S12 §5 (cards included) 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20) > T-12-25 invoiceActions: every status and method of S12 §5 (cards included)
+AssertionError: expected [ 'fail' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "fail",
++ ]
+
+ ❯ src/billing/BillingPage.test.tsx:819:7
+    817|         status: "PAID",
+    818|       }),
+    819|     ).toEqual([]);
+       |       ^
+    820|     expect(of({ paymentMethod: { type: "CARD" }, status: "COLLECTING" …
+    821|     expect(of({ status: "CANCELLED" })).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 51 skipped (52)
+   Start at  09:39:08
+   Duration  1.38s (transform 38%, environment 35%, import 19%, setup 7%, tests 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/billing/BillingPage.test.tsx -t 'T-12-25 invoiceActions'`
+Exit status 1
