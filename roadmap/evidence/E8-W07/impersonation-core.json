@@ -10,13 +10,10 @@
       "status": 503
     },
     {
-      "accountName": "Aina Example",
-      "impersonation": [
-        "actorName",
-        "memberName"
-      ],
-      "memberId": "e4085b69-a639-3616-bf2d-342bf18267f3",
-      "memberName": "Laia Fictici006",
+      "accountName": null,
+      "impersonation": null,
+      "memberId": null,
+      "memberName": null,
       "page": "/entrar",
       "status": 200
     },
@@ -26,7 +23,7 @@
         "actorName",
         "memberName"
       ],
-      "memberId": "e4085b69-a639-3616-bf2d-342bf18267f3",
+      "memberId": "6c55cc12-59b7-3c33-8afc-07d15aba0884",
       "memberName": "Laia Fictici006",
       "page": "/inici",
       "status": 200
@@ -37,7 +34,7 @@
         "actorName",
         "memberName"
       ],
-      "memberId": "e4085b69-a639-3616-bf2d-342bf18267f3",
+      "memberId": "6c55cc12-59b7-3c33-8afc-07d15aba0884",
       "memberName": "Laia Fictici006",
       "page": "/gossos",
       "status": 200
@@ -45,7 +42,7 @@
   ],
   "clubsRefreshGrants": 0,
   "d5RecordName": "Laia Fictici006",
-  "d10MemberId": "e4085b69-a639-3616-bf2d-342bf18267f3",
+  "d10MemberId": "6c55cc12-59b7-3c33-8afc-07d15aba0884",
   "firstMeAnswered503": true,
   "launchUrl": "https://app.example.test/entrar?handoff=<redacted>",
   "memberAction": "PUT /me/dogs/{id}/instructor-note 200",

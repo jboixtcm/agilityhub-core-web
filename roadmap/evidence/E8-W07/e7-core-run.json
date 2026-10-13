@@ -1,27 +1,27 @@
 {
   "created": {
-    "localeEs": "ae3d49…",
-    "templateEdited": "6acb83…",
-    "bookingCca": "fbc898…",
-    "bookingCes": "ca8de8…",
-    "templateReset": "6acb83…",
-    "clubChangesOff": "8d28ac…",
-    "bookingD": "13109b…",
-    "clubChangesOn": "8d28ac…",
-    "pushSubscription": "049eca…",
+    "localeEs": "0ebe7f…",
+    "templateEdited": "6ace7a…",
+    "bookingCca": "985390…",
+    "bookingCes": "d14d69…",
+    "templateReset": "6ace7a…",
+    "clubChangesOff": "4c4448…",
+    "bookingD": "1b8137…",
+    "clubChangesOn": "4c4448…",
+    "pushSubscription": "3fefb7…",
     "pushDeleted": "204",
-    "bookingH": "6f7f9b…",
-    "reminderSet": "8d28ac…",
-    "reminderCleared": "8d28ac…",
-    "bookingHCancelled": "6f7f9b…",
-    "localeRestored": "ae3d49…"
+    "bookingH": "ea0f78…",
+    "reminderSet": "4c4448…",
+    "reminderCleared": "4c4448…",
+    "bookingHCancelled": "ea0f78…",
+    "localeRestored": "0ebe7f…"
   },
-  "runId": "3tb6rm",
+  "runId": "70z6nz",
   "steps": {
     "instants": {
       "coreUrl": "http://core:8080",
-      "demoNow": "2026-10-12T05:00:00.000Z",
-      "weekStart": "2026-10-12"
+      "demoNow": "2026-10-19T05:00:00.000Z",
+      "weekStart": "2026-10-19"
     },
     "preflight": {
       "meNotifications": 200,
@@ -61,15 +61,15 @@
       "billing-reminder"
     ],
     "core-health": {
-      "builtAt": "2026-10-11T11:17:46.675Z",
+      "builtAt": "2026-10-11T12:10:24.235Z",
       "status": 200,
       "version": "0.1.0-SNAPSHOT"
     },
-    "clock-2026-10-12T05:00:00.000Z": {
+    "clock-2026-10-19T05:00:00.000Z": {
       "status": 200
     },
     "clock": {
-      "instant": "2026-10-12T05:00:00.000Z",
+      "instant": "2026-10-19T05:00:00.000Z",
       "status": 200
     },
     "parameters": {
@@ -138,11 +138,11 @@
     },
     "scene-bookings": {
       "ca": [
-        "2026-10-12T08:30"
+        "2026-10-19T08:30"
       ],
       "es": [
-        "2026-10-12T08:30",
-        "2026-10-14T08:30"
+        "2026-10-19T08:30",
+        "2026-10-21T08:30"
       ],
       "seededA": true
     },
@@ -190,30 +190,30 @@
     },
     "scene": {
       "ca": {
-        "bookingA": "5be5ae…",
-        "dogId": "0202eb…",
+        "bookingA": "72dfeb…",
+        "dogId": "bae8c0…",
         "dogName": "Suro 190",
         "email": "#5",
         "firstName": "Laia",
-        "memberId": "8d28ac…"
+        "memberId": "4c4448…"
       },
       "classA": {
-        "date": "2026-10-12",
+        "date": "2026-10-19",
         "description": "C+D+E",
-        "id": "20a4e1…",
+        "id": "115fa9…",
         "ringName": "Muntanya",
         "time": "08:30"
       },
-      "customTemplateId": "f247b4…",
+      "customTemplateId": "3cab31…",
       "es": {
-        "bookingA": "e046c6…",
-        "dogId": "d998b9…",
+        "bookingA": "e9f5fa…",
+        "dogId": "cc4fce…",
         "dogName": "Neu 192",
         "email": "#7",
         "firstName": "Ona",
-        "memberId": "ae3d49…"
+        "memberId": "0ebe7f…"
       },
-      "n08aTemplateId": "6acb83…",
+      "n08aTemplateId": "6ace7a…",
       "n08aTexts": {
         "locales": [
           "ca",
@@ -226,52 +226,52 @@
         {
           "email": "#5",
           "fullName": "Laia Fictici006",
-          "id": "8d28ac…"
+          "id": "4c4448…"
         },
         {
           "email": "#6",
           "fullName": "Aina Fictici007",
-          "id": "f4a125…"
+          "id": "9182a0…"
         },
         {
           "email": "#7",
           "fullName": "Ona Fictici008",
-          "id": "ae3d49…"
+          "id": "0ebe7f…"
         },
         {
           "email": "#8",
           "fullName": "Aleix Fictici009",
-          "id": "9aa44d…"
+          "id": "62b1d5…"
         },
         {
           "email": "#9",
           "fullName": "Guillem Fictici010",
-          "id": "efa180…"
+          "id": "4bdf19…"
         },
         {
           "email": "#10",
           "fullName": "Pol Fictici011",
-          "id": "fc33e9…"
+          "id": "c3c386…"
         },
         {
           "email": "#11",
           "fullName": "Ona Fictici012",
-          "id": "adc2f5…"
+          "id": "5099fd…"
         },
         {
           "email": "#12",
           "fullName": "Rita Fictici013",
-          "id": "4f1bb5…"
+          "id": "48cfb7…"
         },
         {
           "email": "#13",
           "fullName": "Pol Fictici014",
-          "id": "b69529…"
+          "id": "cda21c…"
         },
         {
           "email": "#14",
           "fullName": "Jana Fictici015",
-          "id": "cdf92f…"
+          "id": "52fcb5…"
         }
       ]
     },
@@ -348,6 +348,66 @@
       },
       "r1102": [
         {
+          "audience": "ADMINS",
+          "deliveries": [
+            {
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
+            }
+          ],
+          "locale": "ca"
+        },
+        {
+          "audience": "MEMBER",
+          "deliveries": [
+            {
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
+            },
+            {
+              "attempts": 1,
+              "channel": "EMAIL",
+              "providerRef": "local-…",
+              "status": "SENT"
+            },
+            {
+              "attempts": 1,
+              "channel": "SMS",
+              "providerRef": "log-93…",
+              "status": "SENT"
+            }
+          ],
+          "locale": "es"
+        },
+        {
+          "audience": "MEMBER",
+          "deliveries": [
+            {
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
+            },
+            {
+              "attempts": 1,
+              "channel": "EMAIL",
+              "providerRef": "local-…",
+              "status": "SENT"
+            },
+            {
+              "attempts": 1,
+              "channel": "SMS",
+              "providerRef": "log-d2…",
+              "status": "SENT"
+            }
+          ],
+          "locale": "ca"
+        },
+        {
           "audience": "INSTRUCTORS",
           "deliveries": [
             {
@@ -366,30 +426,6 @@
           "locale": "ca"
         },
         {
-          "audience": "MEMBER",
-          "deliveries": [
-            {
-              "attempts": 0,
-              "channel": "APP",
-              "providerRef": null,
-              "status": "DELIVERED"
-            },
-            {
-              "attempts": 1,
-              "channel": "EMAIL",
-              "providerRef": "local-…",
-              "status": "SENT"
-            },
-            {
-              "attempts": 1,
-              "channel": "SMS",
-              "providerRef": "log-83…",
-              "status": "SENT"
-            }
-          ],
-          "locale": "es"
-        },
-        {
           "audience": "ADMINS",
           "deliveries": [
             {
@@ -397,42 +433,6 @@
               "channel": "APP",
               "providerRef": null,
               "status": "DELIVERED"
-            }
-          ],
-          "locale": "ca"
-        },
-        {
-          "audience": "ADMINS",
-          "deliveries": [
-            {
-              "attempts": 0,
-              "channel": "APP",
-              "providerRef": null,
-              "status": "DELIVERED"
-            }
-          ],
-          "locale": "ca"
-        },
-        {
-          "audience": "MEMBER",
-          "deliveries": [
-            {
-              "attempts": 0,
-              "channel": "APP",
-              "providerRef": null,
-              "status": "DELIVERED"
-            },
-            {
-              "attempts": 1,
-              "channel": "EMAIL",
-              "providerRef": "local-…",
-              "status": "SENT"
-            },
-            {
-              "attempts": 1,
-              "channel": "SMS",
-              "providerRef": "log-a7…",
-              "status": "SENT"
             }
           ],
           "locale": "ca"
@@ -447,7 +447,7 @@
         {
           "attempts": 1,
           "channel": "SMS",
-          "providerRef": "log-a7…",
+          "providerRef": "log-d2…",
           "status": "SENT"
         }
       ],
@@ -459,9 +459,9 @@
     "c-template": {
       "class": {
         "description": "C+D+E",
-        "startsAtLocal": "2026-10-14T08:30"
+        "startsAtLocal": "2026-10-21T08:30"
       },
-      "marker": " (3tb6rm)",
+      "marker": " (70z6nz)",
       "put": 200,
       "reset": 200,
       "templateVersions": {
@@ -479,7 +479,7 @@
     "d-matrix": {
       "class": {
         "description": "C+D+E",
-        "startsAtLocal": "2026-10-15T08:30"
+        "startsAtLocal": "2026-10-22T08:30"
       },
       "d10Put": 200,
       "deliveries": [
@@ -498,7 +498,7 @@
         {
           "attempts": 1,
           "channel": "SMS",
-          "providerRef": "log-a1…",
+          "providerRef": "log-5c…",
           "status": "SENT"
         }
       ],
@@ -520,10 +520,10 @@
     },
     "e-announcement": {
       "batch": {
-        "batchId": "47d3ff…",
+        "batchId": "8e9e90…",
         "code": "N-24",
         "createdAt": [
-          "2026-10-12T05:00:15.226Z"
+          "2026-10-19T05:00:21.881Z"
         ],
         "eventType": "AnnouncementSent",
         "rows": 10
@@ -558,23 +558,6 @@
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#7"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "QUEUED"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
           "member": "#9"
         },
         {
@@ -585,40 +568,6 @@
             },
             {
               "channel": "EMAIL",
-              "status": "QUEUED"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
-          "member": "#6"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "SENT"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SENT"
-            }
-          ],
-          "member": "#8"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
               "status": "SENT"
             },
             {
@@ -626,7 +575,7 @@
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#11"
+          "member": "#7"
         },
         {
           "channels": [
@@ -636,48 +585,14 @@
             },
             {
               "channel": "EMAIL",
-              "status": "QUEUED"
+              "status": "SENT"
             },
             {
               "channel": "PUSH",
-              "status": "QUEUED"
+              "status": "SENT"
             }
           ],
           "member": "#14"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "SENT"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
-          "member": "#12"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "QUEUED"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
-          "member": "#13"
         },
         {
           "channels": [
@@ -712,6 +627,91 @@
             }
           ],
           "member": "#10"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "QUEUED"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#13"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SENT"
+            }
+          ],
+          "member": "#8"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#6"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#11"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#12"
         }
       ],
       "selection": {
@@ -815,15 +815,15 @@
       "faqItems": 7,
       "rulesTitle": "Normes del club"
     },
-    "clock-2026-10-17T12:30:00.000Z": {
+    "clock-2026-10-24T12:30:00.000Z": {
       "status": 200
     },
     "h-reminder": {
       "class": {
         "description": "D+E",
-        "startsAtLocal": "2026-10-17T16:30"
+        "startsAtLocal": "2026-10-24T16:30"
       },
-      "clock": "2026-10-17T12:30:00.000Z",
+      "clock": "2026-10-24T12:30:00.000Z",
       "deliveries": [
         {
           "attempts": 0,
@@ -848,7 +848,7 @@
         "counters": {
           "WOULD_REMIND": 1
         },
-        "dialogRow": "Booking 6f7f9b… · WOULD_REMIND",
+        "dialogRow": "Booking ea0f78… · WOULD_REMIND",
         "items": 1,
         "status": "SUCCEEDED"
       },
@@ -894,7 +894,7 @@
       },
       "templateCustomized": false
     },
-    "clock-2026-10-11T12:41:57.516Z": {
+    "clock-2026-10-13T18:40:04.851Z": {
       "status": 200
     },
     "j-clock-restored": {
@@ -937,5 +937,5 @@
       }
     }
   },
-  "weekStart": "2026-10-12"
+  "weekStart": "2026-10-19"
 }

@@ -129,7 +129,7 @@ Rendered: 2026-10-13 · Tasks: 83 · — 0 not_open · ☐ 2 ready · ▶ 1 in_p
 | [E8-W05](tasks/E8-W05.md) | E8-W02's round-4 review follow-ups — checkout confirmation refreshes the booking, preview-gated submission, the period's own fee, D10 pack row refresh, mock scenario fix, pack-read errors | B | ✅ `verified` | E8-W02 | — | 2026-10-08 | — |
 | [E8-W06](tasks/E8-W06.md) | E8-W03's round-4 review follow-ups — list filter operators and array values, direct-leave mock order, queue search, sort errors, idempotency message, currency-aware amounts | B | ✅ `verified` | E8-W03 | — | 2026-10-08 | — |
 | [E8-W04](tasks/E8-W04.md) | E8 integration (front) — adopt the api E8 snapshot and run the whole billing, packs, inactivity and leave flow against the published core with the E8 demo seed (simulate → generate → download the remittance XML → mark returned → roll back → regenerate; Stripe test checkout or the fake provider; pack consumed and refunded; inactivity and leave reflected in the receipt), screenshots with real data, gate E8 (front) evidence | B | ✅ `verified` | E8-W01, E8-W02, E8-W03, E7-W03, external:api:E8-T06 | — | 2026-10-11 | — |
-| [E8-W07](tasks/E8-W07.md) | E8-W04's round-2 review follow-ups — the D6 refresh loop, queued accounting exports that disappear, a mandatory inactivity-fee proof, the contract overlays, and CI green | B | ▶ `in_progress` | E8-W04 | — | 2026-10-11 | executor: resume + report |
+| [E8-W07](tasks/E8-W07.md) | E8-W04's round-2 review follow-ups — the D6 refresh loop, queued accounting exports that disappear, a mandatory inactivity-fee proof, the contract overlays, and CI green | B | ▶ `in_progress` | E8-W04 | — | 2026-10-13 | executor: resume + report |
 
 ## E9
 
