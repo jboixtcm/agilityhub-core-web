@@ -1,0 +1,9 @@
+
+> @agilityhub/course-ui@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+> vitest run
+
+sh: vitest: command not found
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/course-ui@0.0.1 test: `vitest run`
+spawn ENOENT
+ WARN   Local package.json exists, but node_modules missing, did you mean to install?

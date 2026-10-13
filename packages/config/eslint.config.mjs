@@ -166,6 +166,34 @@ export default tseslint.config(
     },
   },
   {
+    // Course UI recovered from the same web-planner commit as course-core (E9-W02). The port
+    // removes Next/Supabase coupling and literal colours, but keeps the upstream numerical and
+    // Three.js implementation style so behaviour remains reviewable against commit 65126cf.
+    // Correctness, accessibility, React hooks and the design-token colour rule remain enabled.
+    basePath: path.resolve(import.meta.dirname, "../.."),
+    files: [
+      "packages/course-ui/src/components/**/*.tsx",
+      "packages/course-ui/src/lib/marker-layout.ts",
+      "packages/course-ui/src/lib/planner-state.ts",
+    ],
+    linterOptions: {
+      reportUnusedDisableDirectives: "off",
+    },
+    rules: {
+      "@typescript-eslint/array-type": "off",
+      "@typescript-eslint/no-confusing-void-expression": "off",
+      "@typescript-eslint/no-meaningless-void-operator": "off",
+      "@typescript-eslint/no-misused-promises": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/no-unnecessary-condition": "off",
+      "@typescript-eslint/no-unnecessary-type-assertion": "off",
+      "@typescript-eslint/prefer-promise-reject-errors": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
+      "@typescript-eslint/use-unknown-in-catch-callback-variable": "off",
+      "import/order": "off",
+    },
+  },
+  {
     // Course engine recovered verbatim from the web-planner (E0-W08, ADR-013): the files stay
     // byte-identical to course-builder 65126cf so the origin can be diffed. These style/strictness
     // rules were not enforced there; the color, import-resolution and correctness rules still apply.

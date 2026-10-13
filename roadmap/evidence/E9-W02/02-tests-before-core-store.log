@@ -1,0 +1,28 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/core-api-store.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/core-api-store.test.ts [ src/core-api-store.test.ts ]
+Error: Cannot find module './core-api-store' imported from /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/core-api-store.test.ts
+ ❯ src/core-api-store.test.ts:4:1
+      2|
+      3| import { createApiClient } from "./client";
+      4| import { CoreApiStore } from "./core-api-store";
+       | ^
+      5|
+      6| const venue = {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  21:42:50
+   Duration  169ms (worker 98%, environment 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/core-api-store.test.ts

@@ -12,6 +12,8 @@
     "./mocks/server": "./src/mocks/server.ts"
   },
   "dependencies": {
+    "@agilityhub/course-core": "workspace:*",
+    "@agilityhub/course-ui": "workspace:*",
     "@tanstack/react-query": "catalog:",
     "openapi-fetch": "catalog:"
   },

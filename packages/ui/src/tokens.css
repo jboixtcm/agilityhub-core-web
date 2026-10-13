@@ -50,6 +50,24 @@
   --ah-color-level-d: #f5d67a;
   --ah-color-level-therapy: #85b8e8;
 
+  /* Course planner drawing colours. Components consume only these variables so diagrams and
+     WebGL scenes follow the active white-label theme instead of carrying the recovered app's
+     fixed palette. Clubs may override them alongside the rest of the branding contract. */
+  --ah-color-course-ring: var(--ah-color-border);
+  --ah-color-course-floor: var(--ah-color-background);
+  --ah-color-course-grid: var(--ah-color-surface-2);
+  --ah-color-course-marker: var(--ah-color-warning);
+  --ah-color-course-marker-muted: var(--ah-color-text-muted);
+  --ah-color-course-door: var(--ah-color-info);
+  --ah-color-course-door-accent: var(--ah-color-text);
+  --ah-color-course-no-go: var(--ah-color-danger);
+  --ah-color-course-obstacle: var(--ah-color-primary);
+  --ah-color-course-obstacle-light: var(--ah-color-info);
+  --ah-color-course-obstacle-dark: var(--ah-color-text);
+  --ah-color-course-selected: var(--ah-color-warning);
+  --ah-color-course-warning: var(--ah-color-danger);
+  --ah-color-course-text: var(--ah-color-text);
+
   --ah-radius-sm: 0.25rem;
   --ah-radius-md: 0.5rem;
   --ah-radius-lg: 0.625rem;

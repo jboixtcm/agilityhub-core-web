@@ -66,6 +66,12 @@ const DEFAULT_IDEMPOTENT_PATHS: readonly IdempotentMatcher[] = [
   { method: "DELETE", path: /^\/members\/[^/]+\/planned-leave$/ },
   /^\/upfront-payments$/,
   /^\/pack-balances\/[^/]+\/adjustments$/,
+  // S16 course builder (R-16-03, R-16-05 and R-16-11).
+  "/courses",
+  /^\/courses\/[^/]+\/(duplicate|copy-to-club)$/,
+  "/placements",
+  "/build-sessions",
+  /^\/build-sessions\/[^/]+\/finish$/,
   // Not S11's member writes (screen 11's read and read-all, 12's push subscription): their
   // contract declares no Idempotency-Key, and a key goes only where it is declared (CONVENCIONS_API
   // §7, E79; E7-W02 round 2 #8).
