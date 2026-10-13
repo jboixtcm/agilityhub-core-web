@@ -1,12 +1,12 @@
- Container agilityhub-e8-w07-core-run-e235592206e2 Creating 
- Container agilityhub-e8-w07-core-run-e235592206e2 Created 
+ Container agilityhub-e8-w07-core-run-18d1bd94b753 Creating
+ Container agilityhub-e8-w07-core-run-18d1bd94b753 Created
 Fake provider webhook delivered: payment_intent.succeeded
-2026-10-11T12:28:00.601Z ERROR [scheduled-job-1] c.a.c.p.application.jobs.JobRunner traceId= clubId= accountId= : Job item failed jobRunId=f9903e0a-e2fd-4e89-8d60-b5b6dae49919 job=PAYMENT_TIMEOUTS clubId=be5cc416-7e86-4bda-a436-c103ede2cb26 entityId=f07e847f-88c7-4362-8342-6450bff49c00 traceId=ae2cefb4-7fa9-46b6-8811-fcfcaa2ede84
+2026-10-13T19:32:00.311Z ERROR [scheduled-job-1] c.a.c.p.application.jobs.JobRunner traceId= clubId= accountId= : Job item failed jobRunId=f8ff778e-b0a3-4f4d-b6cf-55518260a6fd job=PAYMENT_TIMEOUTS clubId=71750602-68ed-4c9a-9f92-44b3f3181acd entityId=a286f148-3e98-4712-877d-bba64c6067f1 traceId=742e4fb3-33e0-4f39-a0ca-92c877197fc7
 	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.lambda$cancelPaymentPending$2(BookingCancellationService.java:74)
 	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.cancelPaymentPending(BookingCancellationService.java:70)
 	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService$$SpringCGLIB$$0.cancelPaymentPending(<generated>)
 	at com.agilityhub.core.clubs.bookings.application.PaymentTimeoutsJob.apply(PaymentTimeoutsJob.java:40)
-2026-10-11T12:29:00.098Z ERROR [scheduled-job-1] c.a.c.p.application.jobs.JobRunner traceId= clubId= accountId= : Job item failed jobRunId=21a87f5f-4426-48a2-9578-0643e031beea job=PAYMENT_TIMEOUTS clubId=be5cc416-7e86-4bda-a436-c103ede2cb26 entityId=f07e847f-88c7-4362-8342-6450bff49c00 traceId=b4a74908-8d1e-4ad3-87d2-c5183b700f58
+2026-10-13T19:33:00.043Z ERROR [scheduled-job-1] c.a.c.p.application.jobs.JobRunner traceId= clubId= accountId= : Job item failed jobRunId=f15cd9b7-8c34-4152-aaeb-[redacted]=PAYMENT_TIMEOUTS clubId=71750602-68ed-4c9a-9f92-44b3f3181acd entityId=a286f148-3e98-4712-877d-bba64c6067f1 traceId=c7ebec12-8541-403a-8264-e79d0060a1e8
 	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.lambda$cancelPaymentPending$2(BookingCancellationService.java:74)
 	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.cancelPaymentPending(BookingCancellationService.java:70)
 	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService$$SpringCGLIB$$0.cancelPaymentPending(<generated>)

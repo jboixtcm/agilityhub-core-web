@@ -1,22 +1,22 @@
 {
   "created": {
-    "localeEs": "0ebe7f…",
-    "templateEdited": "6ace7a…",
-    "bookingCca": "985390…",
-    "bookingCes": "d14d69…",
-    "templateReset": "6ace7a…",
-    "clubChangesOff": "4c4448…",
-    "bookingD": "1b8137…",
-    "clubChangesOn": "4c4448…",
-    "pushSubscription": "3fefb7…",
+    "localeEs": "83e509…",
+    "templateEdited": "6ace86…",
+    "bookingCca": "7be1eb…",
+    "bookingCes": "42b668…",
+    "templateReset": "6ace86…",
+    "clubChangesOff": "ff12af…",
+    "bookingD": "7c72d1…",
+    "clubChangesOn": "ff12af…",
+    "pushSubscription": "048d69…",
     "pushDeleted": "204",
-    "bookingH": "ea0f78…",
-    "reminderSet": "4c4448…",
-    "reminderCleared": "4c4448…",
-    "bookingHCancelled": "ea0f78…",
-    "localeRestored": "0ebe7f…"
+    "bookingH": "cc83b3…",
+    "reminderSet": "ff12af…",
+    "reminderCleared": "ff12af…",
+    "bookingHCancelled": "cc83b3…",
+    "localeRestored": "83e509…"
   },
-  "runId": "70z6nz",
+  "runId": "72s1jd",
   "steps": {
     "instants": {
       "coreUrl": "http://core:8080",
@@ -61,7 +61,7 @@
       "billing-reminder"
     ],
     "core-health": {
-      "builtAt": "2026-10-11T12:10:24.235Z",
+      "builtAt": "2026-10-13T18:27:55.426Z",
       "status": 200,
       "version": "0.1.0-SNAPSHOT"
     },
@@ -190,30 +190,30 @@
     },
     "scene": {
       "ca": {
-        "bookingA": "72dfeb…",
-        "dogId": "bae8c0…",
+        "bookingA": "005c50…",
+        "dogId": "8d7815…",
         "dogName": "Suro 190",
         "email": "#5",
         "firstName": "Laia",
-        "memberId": "4c4448…"
+        "memberId": "ff12af…"
       },
       "classA": {
         "date": "2026-10-19",
         "description": "C+D+E",
-        "id": "115fa9…",
+        "id": "4f98b8…",
         "ringName": "Muntanya",
         "time": "08:30"
       },
-      "customTemplateId": "3cab31…",
+      "customTemplateId": "3fecf2…",
       "es": {
-        "bookingA": "e9f5fa…",
-        "dogId": "cc4fce…",
+        "bookingA": "ad5f96…",
+        "dogId": "f7dd92…",
         "dogName": "Neu 192",
         "email": "#7",
         "firstName": "Ona",
-        "memberId": "0ebe7f…"
+        "memberId": "83e509…"
       },
-      "n08aTemplateId": "6ace7a…",
+      "n08aTemplateId": "6ace86…",
       "n08aTexts": {
         "locales": [
           "ca",
@@ -226,52 +226,52 @@
         {
           "email": "#5",
           "fullName": "Laia Fictici006",
-          "id": "4c4448…"
+          "id": "ff12af…"
         },
         {
           "email": "#6",
           "fullName": "Aina Fictici007",
-          "id": "9182a0…"
+          "id": "963051…"
         },
         {
           "email": "#7",
           "fullName": "Ona Fictici008",
-          "id": "0ebe7f…"
+          "id": "83e509…"
         },
         {
           "email": "#8",
           "fullName": "Aleix Fictici009",
-          "id": "62b1d5…"
+          "id": "6addb2…"
         },
         {
           "email": "#9",
           "fullName": "Guillem Fictici010",
-          "id": "4bdf19…"
+          "id": "2c867d…"
         },
         {
           "email": "#10",
           "fullName": "Pol Fictici011",
-          "id": "c3c386…"
+          "id": "47b46e…"
         },
         {
           "email": "#11",
           "fullName": "Ona Fictici012",
-          "id": "5099fd…"
+          "id": "45dda8…"
         },
         {
           "email": "#12",
           "fullName": "Rita Fictici013",
-          "id": "48cfb7…"
+          "id": "80bc60…"
         },
         {
           "email": "#13",
           "fullName": "Pol Fictici014",
-          "id": "cda21c…"
+          "id": "9f6974…"
         },
         {
           "email": "#14",
           "fullName": "Jana Fictici015",
-          "id": "52fcb5…"
+          "id": "c7a45a…"
         }
       ]
     },
@@ -348,18 +348,6 @@
       },
       "r1102": [
         {
-          "audience": "ADMINS",
-          "deliveries": [
-            {
-              "attempts": 0,
-              "channel": "APP",
-              "providerRef": null,
-              "status": "DELIVERED"
-            }
-          ],
-          "locale": "ca"
-        },
-        {
           "audience": "MEMBER",
           "deliveries": [
             {
@@ -377,31 +365,7 @@
             {
               "attempts": 1,
               "channel": "SMS",
-              "providerRef": "log-93…",
-              "status": "SENT"
-            }
-          ],
-          "locale": "es"
-        },
-        {
-          "audience": "MEMBER",
-          "deliveries": [
-            {
-              "attempts": 0,
-              "channel": "APP",
-              "providerRef": null,
-              "status": "DELIVERED"
-            },
-            {
-              "attempts": 1,
-              "channel": "EMAIL",
-              "providerRef": "local-…",
-              "status": "SENT"
-            },
-            {
-              "attempts": 1,
-              "channel": "SMS",
-              "providerRef": "log-d2…",
+              "providerRef": "log-cc…",
               "status": "SENT"
             }
           ],
@@ -436,6 +400,42 @@
             }
           ],
           "locale": "ca"
+        },
+        {
+          "audience": "MEMBER",
+          "deliveries": [
+            {
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
+            },
+            {
+              "attempts": 1,
+              "channel": "EMAIL",
+              "providerRef": "local-…",
+              "status": "SENT"
+            },
+            {
+              "attempts": 1,
+              "channel": "SMS",
+              "providerRef": "log-c6…",
+              "status": "SENT"
+            }
+          ],
+          "locale": "es"
+        },
+        {
+          "audience": "ADMINS",
+          "deliveries": [
+            {
+              "attempts": 0,
+              "channel": "APP",
+              "providerRef": null,
+              "status": "DELIVERED"
+            }
+          ],
+          "locale": "ca"
         }
       ],
       "readAll": {
@@ -447,7 +447,7 @@
         {
           "attempts": 1,
           "channel": "SMS",
-          "providerRef": "log-d2…",
+          "providerRef": "log-cc…",
           "status": "SENT"
         }
       ],
@@ -461,7 +461,7 @@
         "description": "C+D+E",
         "startsAtLocal": "2026-10-21T08:30"
       },
-      "marker": " (70z6nz)",
+      "marker": " (72s1jd)",
       "put": 200,
       "reset": 200,
       "templateVersions": {
@@ -498,7 +498,7 @@
         {
           "attempts": 1,
           "channel": "SMS",
-          "providerRef": "log-5c…",
+          "providerRef": "log-3e…",
           "status": "SENT"
         }
       ],
@@ -520,10 +520,10 @@
     },
     "e-announcement": {
       "batch": {
-        "batchId": "8e9e90…",
+        "batchId": "da67e3…",
         "code": "N-24",
         "createdAt": [
-          "2026-10-19T05:00:21.881Z"
+          "2026-10-19T05:00:14.305Z"
         ],
         "eventType": "AnnouncementSent",
         "rows": 10
@@ -572,10 +572,44 @@
             },
             {
               "channel": "PUSH",
+              "status": "SENT"
+            }
+          ],
+          "member": "#8"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#7"
+          "member": "#11"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#5"
         },
         {
           "channels": [
@@ -609,58 +643,7 @@
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#5"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "QUEUED"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
-          "member": "#10"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "QUEUED"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SKIPPED_NO_CONTACT"
-            }
-          ],
           "member": "#13"
-        },
-        {
-          "channels": [
-            {
-              "channel": "APP",
-              "status": "DELIVERED"
-            },
-            {
-              "channel": "EMAIL",
-              "status": "SENT"
-            },
-            {
-              "channel": "PUSH",
-              "status": "SENT"
-            }
-          ],
-          "member": "#8"
         },
         {
           "channels": [
@@ -694,7 +677,24 @@
               "status": "SKIPPED_NO_CONTACT"
             }
           ],
-          "member": "#11"
+          "member": "#10"
+        },
+        {
+          "channels": [
+            {
+              "channel": "APP",
+              "status": "DELIVERED"
+            },
+            {
+              "channel": "EMAIL",
+              "status": "SENT"
+            },
+            {
+              "channel": "PUSH",
+              "status": "SKIPPED_NO_CONTACT"
+            }
+          ],
+          "member": "#7"
         },
         {
           "channels": [
@@ -848,7 +848,7 @@
         "counters": {
           "WOULD_REMIND": 1
         },
-        "dialogRow": "Booking ea0f78… · WOULD_REMIND",
+        "dialogRow": "Booking cc83b3… · WOULD_REMIND",
         "items": 1,
         "status": "SUCCEEDED"
       },
@@ -894,7 +894,7 @@
       },
       "templateCustomized": false
     },
-    "clock-2026-10-13T18:40:04.851Z": {
+    "clock-2026-10-13T19:30:18.478Z": {
       "status": 200
     },
     "j-clock-restored": {

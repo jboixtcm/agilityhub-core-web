@@ -1,9 +1,9 @@
 {
-  "bytes": 4649,
-  "contentDisposition": "attachment; filename=\"canic_activity-registrations_20261013-2032.xlsx\"",
+  "bytes": 4655,
+  "contentDisposition": "attachment; filename=\"canic_activity-registrations_20261013-2124.xlsx\"",
   "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   "magic": "504b0304",
-  "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3A2cd3d95f-ab72-4f5a-a7f5-679ad0b8b026&format=xlsx&sort=registeredAt%2Casc",
+  "request": "/api/v1/activity-registrations/export?columns=member%2Cstate%2CregisteredAt%2Corigin&filter=activityId%3Aeq%3A7ae640f3-5a4d-45e6-9b07-b5ce014dafd3&format=xlsx&sort=registeredAt%2Casc",
   "status": 200,
-  "suggestedFilename": "canic_activity-registrations_20261013-2032.xlsx"
+  "suggestedFilename": "canic_activity-registrations_20261013-2124.xlsx"
 }

@@ -3,7 +3,7 @@
   "today": "2026-10-13",
   "planQuotes": [
     {
-      "planId": "432bd6ba-8a58-45a2-bcf4-efc997c7b51e",
+      "planId": "8078a024-4a33-4c6d-8ef1-bdc4f48da6ee",
       "lines": [
         {
           "concept": "ENTRY_FEE",
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "planId": "e19ee6f4-2a6c-43c4-a0b9-cc4dec95935c",
+      "planId": "ee42a761-3124-448f-9501-f585ab6d0f35",
       "lines": [
         {
           "concept": "PACK",
@@ -64,7 +64,7 @@
       "options": []
     },
     {
-      "planId": "25a1e42d-416c-48f4-8033-efba391aec50",
+      "planId": "490e70c7-e25f-41f4-a83d-76671c7765a9",
       "lines": [
         {
           "concept": "PACK",
@@ -81,7 +81,7 @@
       "options": []
     },
     {
-      "planId": "89d2e557-4cae-4360-8db7-ac224d6e7e06",
+      "planId": "817699ce-2fb4-40eb-b654-f0bd4a45cf0e",
       "lines": [
         {
           "concept": "ENTRY_FEE",
