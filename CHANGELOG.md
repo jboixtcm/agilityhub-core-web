@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Add the React 19 `@agilityhub/course-ui` planner package recovered from the approved course-builder source, with its twelve S16 components, Three.js obstacle assets, themed course tokens and framework-neutral navigation/persistence seams; add the generated-contract `CoreApiStore` for ring geometry and inventory, Smarter uploads, placements, markers, calibration logs and live build-obstacle state, including retry-safe upload submissions, latest-version geometry rebasing and the authenticated SSE subscription boundary (E9-W02).
 - Add the D10 inactivity, dated-leave, reactivation, payment-method and plan drawers; the ADMIN-only lifecycle queues; the D5 lifecycle columns and protected «Baixes previstes» view; catalog-driven D8/D11 billing values; translated stateful mocks, tests and desktop evidence (E8-W03).
 - Add E8 member billing and lifecycle views: own receipts with a valid PDF download, receipt-independent invalid-card recovery and checkout confirmation, API-backed dog pack balances, uncapped inactivity end-month edits, reload-safe inactivity and leave requests, and the D10 billing block with upfront-payment and pack-adjustment controls (E8-W02).
 - Initial pnpm and Turborepo workspace with the three applications, shared package skeletons, strict TypeScript, linting, formatting, tests, and commit hooks.

@@ -6,6 +6,7 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./core-api-store": "./src/core-api-store.ts",
     "./mocks/branding-canic": "./src/mocks/branding-canic.ts",
     "./mocks": "./src/mocks/handlers.ts",
     "./mocks/browser": "./src/mocks/browser.ts",

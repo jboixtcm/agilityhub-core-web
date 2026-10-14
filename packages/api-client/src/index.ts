@@ -33,7 +33,6 @@ export {
   waitlistEntryGuide,
 } from "./class-registrants";
 export { apiClient, createApiClient, type ApiClient, type ApiClientOptions } from "./client";
-export { CoreApiStore, type CoreApiStoreOptions } from "./core-api-store";
 export { getPublicClubPage, type PublicClubPageRequest } from "./club-pages";
 export {
   type AccountingExportFormat,

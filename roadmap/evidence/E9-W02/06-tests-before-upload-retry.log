@@ -1,0 +1,493 @@
+
+> @agilityhub/course-ui@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+
+ ❯ tests/port.test.tsx (4 tests | 1 failed) 143ms
+   ❯ T-16-04 course-ui port (4)
+     × R-16-03 keeps the upload payload and Idempotency-Key available after an unanswered save 55ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/port.test.tsx > T-16-04 course-ui port > R-16-03 keeps the upload payload and Idempotency-Key available after an unanswered save
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Continue"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Placement":
+  [36m<h2[39m
+    [33mclass[39m=[32m"text-sm font-semibold uppercase tracking-wide text-muted mb-3"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "Up":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Up"[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-text hover:opacity-90 active:opacity-100 min-h-[34px] px-3 text-xs "[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Left":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Left"[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-text hover:opacity-90 active:opacity-100 min-h-[34px] px-3 text-xs "[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Center":
+  [36m<button[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-surface text-muted hover:text-text hover:bg-surface/80 min-h-[34px] px-3 text-xs "[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Right":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Right"[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-text hover:opacity-90 active:opacity-100 min-h-[34px] px-3 text-xs "[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Down":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Down"[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-text hover:opacity-90 active:opacity-100 min-h-[34px] px-3 text-xs "[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rotate left":
+  [36m<button[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Rotate right":
+  [36m<button[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Fine left":
+  [36m<button[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Fine right":
+  [36m<button[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Flip horizontal":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Flip horizontal"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Flip vertical":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Flip vertical"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Reset":
+  [36m<button[39m
+    [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-surface text-muted hover:text-text hover:bg-surface/80 min-h-[34px] px-3 text-xs w-full"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Step":
+  [36m<select[39m
+    [33mclass[39m=[32m"block w-full bg-surface-2 text-text border border-border rounded-agh px-2 py-1 text-sm"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  option:
+
+  Name "0.10 m":
+  [36m<option[39m
+    [33mvalue[39m=[32m"0.1"[39m
+  [36m/>[39m
+
+  Name "0.50 m":
+  [36m<option[39m
+    [33mvalue[39m=[32m"0.5"[39m
+  [36m/>[39m
+
+  Name "1.00 m":
+  [36m<option[39m
+    [33mvalue[39m=[32m"1"[39m
+  [36m/>[39m
+
+  --------------------------------------------------group:
+
+  Name "Paper":
+  [36m<div[39m
+    [33maria-label[39m=[32m"Paper"[39m
+    [33mclass[39m=[32m"inline-flex items-center gap-1 rounded-agh bg-surface p-1 "[39m
+    [33mrole[39m=[32m"group"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "A4":
+  [36m<button[39m
+    [33maria-label[39m=[32m"A4"[39m
+    [33maria-pressed[39m=[32m"true"[39m
+    [33mclass[39m=[32m"min-h-[22px] px-2 text-xs font-semibold rounded-agh bg-warning text-[var(--ah-color-on-warning)]"[39m
+    [33mtitle[39m=[32m"A4: 210 x 297"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  Name "Letter":
+  [36m<button[39m
+    [33maria-label[39m=[32m"Letter"[39m
+    [33maria-pressed[39m=[32m"false"[39m
+    [33mclass[39m=[32m"min-h-[22px] px-2 text-xs font-semibold rounded-agh text-muted hover:text-text"[39m
+    [33mtitle[39m=[32m"Letter: 215.9 x 279.4"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------navigation:
+
+  Name "Course steps":
+  [36m<nav[39m
+    [33maria-label[39m=[32m"Course steps"[39m
+    [33mclass[39m=[32m"mb-6"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  list:
+
+  Name "":
+  [36m<ol[39m
+    [33mclass[39m=[32m"flex flex-wrap items-center gap-1 text-xs"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  listitem:
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"flex items-center"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<li[39m
+    [33mclass[39m=[32m"flex items-center"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  link:
+
+  Name "1Details":
+  [36m<a[39m
+    [33maria-current[39m=[32m"step"[39m
+    [33mclass[39m=[32m"inline-flex items-center gap-2 rounded-full border px-2.5 py-1 transition-colors border-warning bg-warning font-medium text-[var(--ah-color-on-warning)]"[39m
+    [33mhref[39m=[32m"/new/details"[39m
+  [36m/>[39m
+
+  --------------------------------------------------heading:
+
+  Name "Upload":
+  [36m<h2[39m
+    [33mclass[39m=[32m"text-sm font-semibold uppercase tracking-wide text-muted mb-3"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  alert:
+
+  Name "":
+  [36m<div[39m
+    [33mclass[39m=[32m"mt-3 p-3 border border-danger bg-danger/10 text-danger rounded"[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"bg-surface border border-border rounded-2xl p-4 "[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"text-sm font-semibold uppercase tracking-wide text-muted mb-3"[39m
+      [36m>[39m
+        [0mPlacement[0m
+      [36m</h2>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-3 gap-2 mb-3"[39m
+      [36m>[39m
+        [36m<div />[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Up"[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-text hover:opacity-90 active:opacity-100 min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m↑[0m
+        [36m</button>[39m
+        [36m<div />[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Left"[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-text hover:opacity-90 active:opacity-100 min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m←[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-surface text-muted hover:text-text hover:bg-surface/80 min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mCenter[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Right"[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-text hover:opacity-90 active:opacity-100 min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m→[0m
+        [36m</button>[39m
+        [36m<div />[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Down"[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-text hover:opacity-90 active:opacity-100 min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m↓[0m
+        [36m</button>[39m
+        [36m<div />[39m
+      [36m</div>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"block mb-3"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"block text-xs text-muted mb-1"[39m
+        [36m>[39m
+          [0mStep[0m
+        [36m</span>[39m
+        [36m<select[39m
+          [33mclass[39m=[32m"block w-full bg-surface-2 text-text border border-border rounded-agh px-2 py-1 text-sm"[39m
+        [36m>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"0.1"[39m
+          [36m>[39m
+            [0m0.10 m[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"0.5"[39m
+          [36m>[39m
+            [0m0.50 m[0m
+          [36m</option>[39m
+          [36m<option[39m
+            [33mvalue[39m=[32m"1"[39m
+          [36m>[39m
+            [0m1.00 m[0m
+          [36m</option>[39m
+        [36m</select>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-2 gap-2 mb-2"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mRotate left[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mRotate right[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mFine left[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mFine right[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-2 gap-2 mb-2"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Flip horizontal"[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m↔ [0m
+          [0mFlip horizontal[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33maria-label[39m=[32m"Flip vertical"[39m
+          [33maria-pressed[39m=[32m"false"[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m↕ [0m
+          [0mFlip vertical[0m
+        [36m</button>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-surface text-muted hover:text-text hover:bg-surface/80 min-h-[34px] px-3 text-xs w-full"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mReset[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33maria-label[39m=[32m"Paper"[39m
+      [33mclass[39m=[32m"inline-flex items-center gap-1 rounded-agh bg-surface p-1 "[39m
+      [33mrole[39m=[32m"group"[39m
+    [36m>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"A4"[39m
+        [33maria-pressed[39m=[32m"true"[39m
+        [33mclass[39m=[32m"min-h-[22px] px-2 text-xs font-semibold rounded-agh bg-warning text-[var(--ah-color-on-warning)]"[39m
+        [33mtitle[39m=[32m"A4: 210 x 297"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mA4[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33maria-label[39m=[32m"Letter"[39m
+        [33maria-pressed[39m=[32m"false"[39m
+        [33mclass[39m=[32m"min-h-[22px] px-2 text-xs font-semibold rounded-agh text-muted hover:text-text"[39m
+        [33mtitle[39m=[32m"Letter: 215.9 x 279.4"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mLetter[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+  [36m<div>[39m
+    [36m<nav[39m
+      [33maria-label[39m=[32m"Course steps"[39m
+      [33mclass[39m=[32m"mb-6"[39m
+    [36m>[39m
+      [36m<ol[39m
+        [33mclass[39m=[32m"flex flex-wrap items-center gap-1 text-xs"[39m
+      [36m>[39m
+        [36m<li[39m
+          [33mclass[39m=[32m"flex items-center"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33maria-current[39m=[32m"step"[39m
+            [33mclass[39m=[32m"inline-flex items-center gap-2 rounded-full border px-2.5 py-1 transition-colors border-warning bg-warning font-medium text-[var(--ah-color-on-warning)]"[39m
+            [33mhref[39m=[32m"/new/details"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"inline-flex h-5 w-5 items-center justify-center rounded-full bg-border text-[10px] font-semibold text-text"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0mDetails[0m
+            [36m</span>[39m
+          [36m</a>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"px-1.5 text-muted"[39m
+          [36m>[39m
+            [0m→[0m
+          [36m</span>[39m
+        [36m</li>[39m
+        [36m<li[39m
+          [33mclass[39m=[32m"flex items-center"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33maria-disabled[39m=[32m"true"[39m
+            [33mclass[39m=[32m"inline-flex items-center gap-2 rounded-full border px-2.5 py-1 transition-colors cursor-not-allowed border-border bg-transparent text-muted opacity-50"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"inline-flex h-5 w-5 items-center justify-center rounded-full bg-border text-[10px] font-semibold text-text"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0mPlace[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</li>[39m
+      [36m</ol>[39m
+    [36m</nav>[39m
+  [36m</div>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"bg-surface border border-border rounded-2xl p-4 "[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"text-sm font-semibold uppercase tracking-wide text-muted mb-3"[39m
+      [36m>[39m
+        [0mUpload[0m
+      [36m</h2>[39m
+      [36m<label[39m
+        [33mclass[39m=[32m"block"[39m
+      [36m>[39m
+        [36m<span[39m
+          [33mclass[39m=[32m"block text-sm text-muted mb-2"[39m
+        [36m>[39m
+          [0mFile[0m
+        [36m</span>[39m
+        [36m<input[39m
+          [33maccept[39m=[32m".txt,text/plain"[39m
+          [33mclass[39m=[32m"block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-agh file:border-0 file:bg-primary file:text-text file:font-semibold hover:file:opacity-90"[39m
+          [33mtype[39m=[32m"file"[39m
+        [36m/>[39m
+      [36m</label>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"mt-3 p-3 border border-danger bg-danger/10 text-danger rounded"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mUpload error[0m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ tests/port.test.tsx:154:28
+    152|     await screen.findByRole("alert");
+    153|
+    154|     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+       |                            ^
+    155|     await waitFor(() => expect(onUploaded).toHaveBeenCalledOnce());
+    156|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  22:10:44
+   Duration  989ms (environment 47%, transform 22%, tests 16%, import 14%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/course-ui@0.0.1 test: `vitest run`
+Exit status 1

@@ -1,0 +1,34 @@
+
+> @agilityhub/course-ui@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+
+ ❯ tests/planner-behaviour.test.ts (3 tests | 1 failed) 3ms
+   ❯ T-16-04 recovered planner behaviour (3)
+     × R-16-04 normalizes only the exact legacy A-F marker arrangement 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/planner-behaviour.test.ts > T-16-04 recovered planner behaviour > R-16-04 normalizes only the exact legacy A-F marker arrangement
+TypeError: normalizeLegacyMarkerReadingOrder is not a function
+ ❯ tests/planner-behaviour.test.ts:117:9
+    115|     expect(
+    116|       Object.fromEntries(
+    117|         normalizeLegacyMarkerReadingOrder(legacy).map((item) => [
+       |         ^
+    118|           item.label,
+    119|           [item.x_m, item.y_m],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 6 passed (7)
+   Start at  03:58:37
+   Duration  1.01s (environment 64%, transform 16%, import 12%, tests 9%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/course-ui@0.0.1 test: `vitest run`
+Exit status 1

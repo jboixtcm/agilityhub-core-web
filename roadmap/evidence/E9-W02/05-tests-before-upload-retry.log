@@ -1,0 +1,34 @@
+
+> @agilityhub/course-ui@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+
+ ❯ tests/port.test.tsx (4 tests | 1 failed) 95ms
+   ❯ T-16-04 course-ui port (4)
+     × R-16-03 keeps the upload payload and Idempotency-Key available after an unanswered save 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/port.test.tsx > T-16-04 course-ui port > R-16-03 keeps the upload payload and Idempotency-Key available after an unanswered save
+TypeError: The URL must be of scheme file
+ ❯ tests/port.test.tsx:113:20
+    111|
+    112|   it("R-16-03 keeps the upload payload and Idempotency-Key available a…
+    113|     const source = readFileSync(
+       |                    ^
+    114|       new URL("../../course-core/fixtures/smarter/jp-s-sw_993483_sades…
+    115|       "utf8",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  22:10:35
+   Duration  1.09s (environment 54%, transform 23%, import 13%, tests 10%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/course-ui@0.0.1 test: `vitest run`
+Exit status 1

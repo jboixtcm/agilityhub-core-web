@@ -13,6 +13,12 @@ apps can use the `courses` and `admin-courses` i18n namespaces.
 files at `/obstacle-models`, or pass the corresponding public base URL to `Planner3D.assetBaseUrl`.
 All drawing colours resolve through `--ah-color-course-*` tokens declared by `@agilityhub/ui`.
 
-`CoreApiStore` lives in `@agilityhub/api-client` and is the production `PlannerStore`
+`CoreApiStore` lives at `@agilityhub/api-client/core-api-store` and is the production `PlannerStore`
 implementation. It uses only generated S16 OpenAPI types. The current club is injected as the sole
 planner venue because S16 exposes club rings but no venue-list endpoint.
+
+The store covers ring geometry and inventory, course upload, placements, markers, calibration logs,
+and build-session obstacle state. Its `subscribeBuildEvents` option is the authenticated SSE boundary:
+the published OpenAPI currently describes `/build-sessions/{id}/events` as an untyped
+`text/event-stream`, so the consuming app supplies the authorized stream transport and cleanup while
+the store keeps the `PlannerStore` callback shape stable.

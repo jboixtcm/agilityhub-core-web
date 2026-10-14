@@ -1,0 +1,73 @@
+
+> @agilityhub/api-client@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> vitest run core-api-store.test.ts
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/core-api-store.test.ts (7 tests | 4 failed) 11ms
+   ❯ CoreApiStore implements PlannerStore (7)
+     × R-16-04 rebases only the edited marker on the latest geometry 2ms
+     × R-16-04 creates and lists calibration logs with the published nulls 0ms
+     × R-16-05 lists calendar placements with only the filters published by the core 0ms
+     × R-16-11 reads a build snapshot after an obstacle update and sends its version 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/core-api-store.test.ts > CoreApiStore implements PlannerStore > R-16-04 rebases only the edited marker on the latest geometry
+TypeError: store.updateMarker is not a function
+ ❯ src/core-api-store.test.ts:235:31
+    233|     });
+    234|
+    235|     const saved = await store.updateMarker("ring-1", "marker-1", {
+       |                               ^
+    236|       label: "Entrada",
+    237|       xMeters: 1.5,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/core-api-store.test.ts > CoreApiStore implements PlannerStore > R-16-04 creates and lists calibration logs with the published nulls
+TypeError: store.listCalibrationLogs is not a function
+ ❯ src/core-api-store.test.ts:278:32
+    276|     });
+    277|
+    278|     const listed = await store.listCalibrationLogs("ring-1");
+       |                                ^
+    279|     const created = await store.createCalibrationLog({
+    280|       averageErrorCm: 1.25,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/core-api-store.test.ts > CoreApiStore implements PlannerStore > R-16-05 lists calendar placements with only the filters published by the core
+TypeError: store.listCalendarPlacements is not a function
+ ❯ src/core-api-store.test.ts:342:32
+    340|     });
+    341|
+    342|     const result = await store.listCalendarPlacements({
+       |                                ^
+    343|       activityId: "activity-1",
+    344|       courseId: "course-1",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/core-api-store.test.ts > CoreApiStore implements PlannerStore > R-16-11 reads a build snapshot after an obstacle update and sends its version
+TypeError: store.upsertBuildObstacleStatus is not a function
+ ❯ src/core-api-store.test.ts:407:31
+    405|     });
+    406|
+    407|     const saved = await store.upsertBuildObstacleStatus({
+       |                               ^
+    408|       buildSessionId: "build-1",
+    409|       obstacleId: "obstacle-1",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 3 passed (7)
+   Start at  22:08:00
+   Duration  318ms (transform 69%, import 24%, tests 5%, worker 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/api-client@0.0.0 test: `vitest run core-api-store.test.ts`
+Exit status 1

@@ -12,10 +12,7 @@ export {
 export { RingMarkerDiagram } from "./components/RingMarkerDiagram";
 export { UnitsToggle } from "./components/UnitsToggle";
 export { UploadCourse, type UploadCourseLabels } from "./components/UploadCourse";
-export {
-  VenueRingSelector,
-  type VenueRingSelectorLabels,
-} from "./components/VenueRingSelector";
+export { VenueRingSelector, type VenueRingSelectorLabels } from "./components/VenueRingSelector";
 export { WarningsPanel } from "./components/WarningsPanel";
 export {
   computeWarnings,
@@ -27,9 +24,15 @@ export {
   type PlannerAction,
   type PlannerState,
 } from "./lib/planner-state";
+export { normalizeLegacyMarkerReadingOrder } from "./lib/marker-layout";
 export { configurePlannerStore, getPlannerStore } from "./lib/storage/get-store";
 export type {
+  CreateCalibrationLogInput,
+  CreateMarkerInput,
+  ListCalendarPlacementsInput,
+  PlannerBuildObstacleStatus,
   PlannerBuildSession,
+  PlannerCalibrationLog,
   PlannerCourse,
   PlannerPlacement,
   PlannerRing,
@@ -39,5 +42,7 @@ export type {
   PlannerVenue,
   SavePlacementInput,
   SaveRingDoorInput,
+  UpdateMarkerPatch,
+  UpsertBuildObstacleStatusInput,
   UploadCourseInput,
 } from "./lib/storage/types";

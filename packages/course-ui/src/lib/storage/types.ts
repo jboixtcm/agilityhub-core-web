@@ -1,9 +1,4 @@
-import type {
-  CourseData,
-  CoursePlacement,
-  ObstacleType,
-  Warning,
-} from "@agilityhub/course-core";
+import type { CourseData, CoursePlacement, ObstacleType, Warning } from "@agilityhub/course-core";
 
 export const MAX_RING_DOORS = 4;
 
@@ -42,7 +37,7 @@ export interface PlannerRingMarker {
   readonly physical_height_m: number;
   readonly is_fixed: boolean;
   readonly is_active: boolean;
-  readonly april_tag_id: number;
+  readonly april_tag_id: number | null;
   readonly notes: string | null;
 }
 
@@ -124,12 +119,119 @@ export interface PlannerPlacement {
   readonly version: number;
   readonly ringId: string;
   readonly courseId: string;
+  readonly activityId: string | null;
+  readonly displayName: string | null;
+  readonly name: string | null;
+  readonly scheduledAt: string | null;
+  readonly mode: "EVENT" | "TRAINING" | "FREE_FLOATING";
+  readonly status: "DRAFT" | "READY_TO_BUILD" | "ARCHIVED";
+}
+
+export interface ListCalendarPlacementsInput {
+  readonly ringId?: string;
+  readonly courseId?: string;
+  readonly activityId?: string;
+}
+
+export interface CreateMarkerInput {
+  readonly ringId: string;
+  readonly label: string;
+  readonly markerUid: string;
+  readonly role: string;
+  readonly xMeters: number;
+  readonly yMeters: number;
+  readonly zMeters?: number;
+  readonly rotationYDegrees?: number;
+  readonly physicalWidthMeters: number;
+  readonly physicalHeightMeters: number;
+  readonly isFixed?: boolean;
+  readonly aprilTagId?: number | null;
+  readonly notes?: string | null;
+}
+
+export interface UpdateMarkerPatch {
+  readonly label?: string;
+  readonly role?: string;
+  readonly xMeters?: number;
+  readonly yMeters?: number;
+  readonly zMeters?: number;
+  readonly rotationYDegrees?: number;
+  readonly physicalWidthMeters?: number;
+  readonly physicalHeightMeters?: number;
+  readonly isFixed?: boolean;
+  readonly isActive?: boolean;
+  readonly notes?: string | null;
+}
+
+export interface PlannerCalibrationLog {
+  readonly appVersion: string | null;
+  readonly arProvider: string | null;
+  readonly averageErrorCm: number;
+  readonly createdAt: string;
+  readonly createdByAccountId: string;
+  readonly deviceModel: string | null;
+  readonly id: string;
+  readonly markerCount: number;
+  readonly maxErrorCm: number;
+  readonly notes: string | null;
+  readonly osVersion: string | null;
+  readonly outcome: "GREEN" | "YELLOW" | "RED" | "ABORTED";
+  readonly rawMetadata: unknown;
+  readonly ringId: string;
+}
+
+export interface CreateCalibrationLogInput {
+  readonly ringId: string;
+  readonly outcome: PlannerCalibrationLog["outcome"];
+  readonly averageErrorCm: number;
+  readonly maxErrorCm: number;
+  readonly markerCount: number;
+  readonly notes?: string | null;
+  readonly rawMetadata?: Record<string, unknown>;
+  readonly appVersion?: string | null;
+  readonly arProvider?: string | null;
+  readonly deviceModel?: string | null;
+  readonly osVersion?: string | null;
+}
+
+export interface PlannerBuildObstacleStatus {
+  readonly obstacleId: string;
+  readonly status: "NOT_PLACED" | "CURRENT" | "PLACED" | "SKIPPED" | "NEEDS_CHECK";
+  readonly at: string | null;
+  readonly byAccountId: string | null;
+  readonly lastUpdatedClientSessionId: string | null;
+}
+
+export interface UpsertBuildObstacleStatusInput {
+  readonly buildSessionId: string;
+  readonly obstacleId: string;
+  readonly status: PlannerBuildObstacleStatus["status"];
+  readonly version?: number | null;
 }
 
 export interface PlannerBuildSession {
   readonly id: string;
   readonly version: number;
   readonly placementId: string;
+  readonly ringId: string;
+  readonly buildSheetFileKey: string | null;
+  readonly finishedAt: string | null;
+  readonly joinCode: string;
+  readonly joinToken: string | null;
+  readonly joinTokenRotatedAt: string | null;
+  readonly lastKnownMarkerId: string | null;
+  readonly live: boolean;
+  readonly localCacheVersion: number;
+  readonly obstacles: readonly PlannerBuildObstacleStatus[];
+  readonly participants: readonly {
+    readonly accountId: string;
+    readonly joinedAt: string;
+    readonly joinedVia: "QR" | "CODE";
+  }[];
+  readonly progressJson: unknown;
+  readonly selectedStrategy: "EQUIPMENT_TYPE" | "CLOSER_OBSTACLE_ORDER" | "FREE_BUILD";
+  readonly startedAt: string | null;
+  readonly startedByAccountId: string;
   readonly status: "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED" | "ABANDONED";
 }
 
@@ -142,15 +244,32 @@ export interface PlannerStore {
     ringId: string,
     inventory: readonly { obstacle_type: ObstacleType; quantity: number }[],
   ): Promise<PlannerRing>;
-  updateRingDoors(
-    ringId: string,
-    doors: readonly SaveRingDoorInput[],
-  ): Promise<PlannerRing>;
+  updateRingDoors(ringId: string, doors: readonly SaveRingDoorInput[]): Promise<PlannerRing>;
   uploadSmarterFile(input: UploadCourseInput): Promise<{ readonly course: PlannerCourse }>;
   savePlacement(input: SavePlacementInput): Promise<PlannerPlacement>;
+  listCalendarPlacements(input?: ListCalendarPlacementsInput): Promise<readonly PlannerPlacement[]>;
+  listMarkers(ringId: string): Promise<readonly PlannerRingMarker[]>;
+  createMarker(input: CreateMarkerInput): Promise<PlannerRingMarker>;
+  updateMarker(
+    ringId: string,
+    markerId: string,
+    patch: UpdateMarkerPatch,
+  ): Promise<PlannerRingMarker>;
+  deactivateMarker(ringId: string, markerId: string): Promise<PlannerRingMarker>;
+  listCalibrationLogs(ringId: string): Promise<readonly PlannerCalibrationLog[]>;
+  createCalibrationLog(input: CreateCalibrationLogInput): Promise<PlannerCalibrationLog>;
   createBuildSession(input: {
     readonly submissionKey: string;
     readonly placementId: string;
     readonly live?: boolean;
   }): Promise<PlannerBuildSession>;
+  getBuildSession(buildSessionId: string): Promise<PlannerBuildSession | null>;
+  listBuildObstacleStatuses(buildSessionId: string): Promise<readonly PlannerBuildObstacleStatus[]>;
+  upsertBuildObstacleStatus(
+    input: UpsertBuildObstacleStatusInput,
+  ): Promise<PlannerBuildObstacleStatus>;
+  subscribeBuildObstacleStatuses(
+    buildSessionId: string,
+    onChange: (status: PlannerBuildObstacleStatus) => void,
+  ): () => void;
 }

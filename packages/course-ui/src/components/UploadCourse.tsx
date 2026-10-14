@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { parseSmarterTxt, summarizeCourse, type CourseData } from '@agilityhub/course-core';
-import { useState, type ChangeEvent } from 'react';
+import { parseSmarterTxt, summarizeCourse, type CourseData } from "@agilityhub/course-core";
+import { useState, type ChangeEvent } from "react";
 
-import { getPlannerStore } from '../lib/storage/get-store.js';
+import { getPlannerStore } from "../lib/storage/get-store.js";
 
-import { NeutralBadge } from './ui/Badge.js';
-import { Button } from './ui/Button.js';
-import { Card, CardTitle } from './ui/Card.js';
+import { NeutralBadge } from "./ui/Badge.js";
+import { Button } from "./ui/Button.js";
+import { Card, CardTitle } from "./ui/Card.js";
 
 export interface UploadCourseLabels {
   readonly title: string;
@@ -31,11 +31,11 @@ interface Props {
   readonly onUploaded: (course: CourseData, courseDbId: string, filename: string) => void;
 }
 
-type Phase = 'idle' | 'parsing' | 'preview' | 'uploading' | 'error';
-type ErrorKind = 'parse' | 'upload' | null;
+type Phase = "idle" | "parsing" | "preview" | "uploading" | "error";
+type ErrorKind = "parse" | "upload" | null;
 
 export function UploadCourse({ labels, onUploaded }: Props) {
-  const [phase, setPhase] = useState<Phase>('idle');
+  const [phase, setPhase] = useState<Phase>("idle");
   const [errorKind, setErrorKind] = useState<ErrorKind>(null);
   const [filename, setFilename] = useState<string | null>(null);
   const [course, setCourse] = useState<CourseData | null>(null);
@@ -46,27 +46,27 @@ export function UploadCourse({ labels, onUploaded }: Props) {
   async function handleFile(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file === undefined) return;
-    setPhase('parsing');
+    setPhase("parsing");
     setErrorKind(null);
     setFilename(file.name);
     setSavedDbId(null);
     setSubmissionKey(crypto.randomUUID());
     try {
       const nextBytes = new Uint8Array(await file.arrayBuffer());
-      const text = new TextDecoder('utf-8').decode(nextBytes);
+      const text = new TextDecoder("utf-8").decode(nextBytes);
       const { courseData } = parseSmarterTxt(text, { sourceFileName: file.name });
       setBytes(nextBytes);
       setCourse(courseData);
-      setPhase('preview');
+      setPhase("preview");
     } catch {
-      setErrorKind('parse');
-      setPhase('error');
+      setErrorKind("parse");
+      setPhase("error");
     }
   }
 
   async function handleContinue() {
-    if (course === null || bytes === null || filename === null || phase === 'uploading') return;
-    setPhase('uploading');
+    if (course === null || bytes === null || filename === null || phase === "uploading") return;
+    setPhase("uploading");
     setErrorKind(null);
     try {
       const { course: savedCourse } = await getPlannerStore().uploadSmarterFile({
@@ -76,15 +76,15 @@ export function UploadCourse({ labels, onUploaded }: Props) {
         courseData: course,
       });
       setSavedDbId(savedCourse.id);
-      setPhase('preview');
+      setPhase("preview");
       onUploaded(course, savedCourse.id, filename);
     } catch {
-      setErrorKind('upload');
-      setPhase('error');
+      setErrorKind("upload");
+      setPhase("error");
     }
   }
 
-  const busy = phase === 'parsing' || phase === 'uploading';
+  const busy = phase === "parsing" || phase === "uploading";
 
   return (
     <Card>
@@ -101,21 +101,25 @@ export function UploadCourse({ labels, onUploaded }: Props) {
         />
       </label>
 
-      {phase === 'parsing' && filename !== null ? (
+      {phase === "parsing" && filename !== null ? (
         <p className="mt-3 text-sm text-muted">{labels.parsing(filename)}</p>
       ) : null}
 
       {errorKind !== null ? (
-        <div className="mt-3 p-3 border border-danger bg-danger/10 text-danger rounded" role="alert">
-          {errorKind === 'parse' ? labels.parseError : labels.uploadError}
+        <div
+          className="mt-3 p-3 border border-danger bg-danger/10 text-danger rounded"
+          role="alert"
+        >
+          {errorKind === "parse" ? labels.parseError : labels.uploadError}
         </div>
       ) : null}
 
-      {(phase === 'preview' || phase === 'uploading') && course !== null ? (
+      {(phase === "preview" || phase === "uploading" || errorKind === "upload") &&
+      course !== null ? (
         <div className="mt-4 space-y-3">
           <UploadPreview course={course} labels={labels} />
-          <Button onClick={handleContinue} disabled={savedDbId !== null || phase === 'uploading'}>
-            {phase === 'uploading'
+          <Button onClick={handleContinue} disabled={savedDbId !== null || phase === "uploading"}>
+            {phase === "uploading"
               ? labels.uploading
               : savedDbId !== null
                 ? labels.savedContinue

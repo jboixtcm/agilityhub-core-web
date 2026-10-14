@@ -1,0 +1,44 @@
+clubs-admin:test:  FAIL  src/audit/AuditPage.test.tsx > T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): every audit action and actor role of the contract has a label > reads a ca, es and en label for each AuditAction and actorRole value, never the code itself
+clubs-admin:test: AssertionError: expected [ …(12) ] to deeply equal []
+clubs-admin:test:
+clubs-admin:test: - Expected
+clubs-admin:test: + Received
+clubs-admin:test:
+clubs-admin:test: - []
+clubs-admin:test: + [
+clubs-admin:test: +   "ca actions.PAYMENT_REFUND_INTERVENTION",
+clubs-admin:test: +   "ca actions.COURSE_FORCED_PLACEMENT",
+clubs-admin:test: +   "ca actions.RING_GEOMETRY_CHANGED",
+clubs-admin:test: +   "ca actions.RING_SETUP_REGISTERED",
+clubs-admin:test: +   "es actions.PAYMENT_REFUND_INTERVENTION",
+clubs-admin:test: +   "es actions.COURSE_FORCED_PLACEMENT",
+clubs-admin:test: +   "es actions.RING_GEOMETRY_CHANGED",
+clubs-admin:test: +   "es actions.RING_SETUP_REGISTERED",
+clubs-admin:test: +   "en actions.PAYMENT_REFUND_INTERVENTION",
+clubs-admin:test: +   "en actions.COURSE_FORCED_PLACEMENT",
+clubs-admin:test: +   "en actions.RING_GEOMETRY_CHANGED",
+clubs-admin:test: +   "en actions.RING_SETUP_REGISTERED",
+clubs-admin:test: + ]
+clubs-admin:test:
+clubs-admin:test:  FAIL  src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+clubs-admin:test: AssertionError: expected 3 to be 2 // Object.is equality
+clubs-admin:test:
+clubs-admin:test: - Expected
+clubs-admin:test: + Received
+clubs-admin:test:
+clubs-admin:test: - 2
+clubs-admin:test: + 3
+clubs-admin:test:
+clubs-admin:test:  Test Files  2 failed | 44 passed (46)
+clubs-admin:test:       Tests  2 failed | 739 passed (741)
+clubs-admin:test:    Duration  50.08s (tests 71%, environment 12%, transform 8%, import 6%, setup 3%)
+clubs-admin:test:
+clubs-admin:test:  ELIFECYCLE  Test failed. See above for more details.
+clubs-admin#test:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run test exited (1)
+
+ Tasks:    37 successful, 38 total
+Cached:    13 cached, 38 total
+  Time:    1m48.499s
+Failed:    clubs-admin#test
+
+ ERROR  run failed: command exited (1)
