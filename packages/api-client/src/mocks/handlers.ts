@@ -4139,6 +4139,7 @@ export const handlers = [
       ...body,
       id: `view-${body.listKey}-${String(savedViews.length + 1)}`,
       ownerAccountId: "account-admin",
+      system: false,
       version: 1,
     };
     savedViews.push(view);
@@ -4165,7 +4166,12 @@ export const handlers = [
     if (current === undefined) {
       return apiError("NOT_FOUND", "Saved view not found", 404);
     }
-    const updated: SavedView = { ...body, id, ownerAccountId: current.ownerAccountId };
+    const updated: SavedView = {
+      ...body,
+      id,
+      ownerAccountId: current.ownerAccountId,
+      system: current.system,
+    };
     savedViews[index] = updated;
     return HttpResponse.json(updated);
   }),

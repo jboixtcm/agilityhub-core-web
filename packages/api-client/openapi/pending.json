@@ -6,23 +6,7 @@
     "description": "Mocks-first contracts not yet present in the authoritative core API snapshot."
   },
   "paths": {},
-  "x-schema-overlays": {
-    "SavedView": {
-      "type": "object",
-      "properties": {
-        "system": {
-          "type": "boolean"
-        }
-      }
-    },
-    "DashboardCounters": {
-      "type": "object",
-      "properties": {
-        "pendingInactivityRequests": {"type": "integer", "format": "int32"},
-        "pendingLeaveRequests": {"type": "integer", "format": "int32"}
-      }
-    }
-  },
+  "x-schema-overlays": {},
   "components": {
     "schemas": {
       "DogPendingFields": {

@@ -10,7 +10,14 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest
 
 import { AuthClient, type Me } from "./auth-client";
 import { MemoryRefreshTokenStore } from "./mock-refresh-token";
-import { RequireAuth, RequireModule, RequireRole, SessionProvider, useSession } from "./session";
+import {
+  RequireAuth,
+  RequireModule,
+  RequirePlatformRole,
+  RequireRole,
+  SessionProvider,
+  useSession,
+} from "./session";
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
@@ -163,6 +170,64 @@ describe("T-01-21 session and guards", () => {
     expect(screen.getByText("Denied admin")).toBeInTheDocument();
     expect(screen.queryByText("Admin content")).not.toBeInTheDocument();
     expect(screen.getByText("Member content")).toBeInTheDocument();
+  });
+
+  it("T-17-12 (E10-W01 step 1): the console guard reads the account's platform roles, with or without a membership", async () => {
+    const platformMe: Me = {
+      ...memberMe,
+      account: { ...memberMe.account, platformRoles: ["AGILITYHUB_ADMIN"] },
+    };
+    const { membership: _membership, ...withoutMembership } = platformMe;
+    for (const [me, expected] of [
+      [memberMe, "Denied console"],
+      [platformMe, "Console content"],
+      [withoutMembership, "Console content"],
+    ] as const) {
+      server.use(http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(me)));
+      const client = new AuthClient({
+        apiBaseUrl: API_BASE_URL,
+        identityBaseUrl: IDENTITY_BASE_URL,
+        mockMode: true,
+        mockRefreshTokenStore: new MemoryRefreshTokenStore(),
+      });
+      await client.login("biel.roca@example.test", "secret-password");
+      render(
+        <SessionProvider client={client}>
+          <RequirePlatformRole fallback={<p>Denied console</p>} role="AGILITYHUB_ADMIN">
+            <p>Console content</p>
+          </RequirePlatformRole>
+        </SessionProvider>,
+      );
+      expect(screen.getByText(expected)).toBeInTheDocument();
+      cleanup();
+    }
+  });
+
+  it("T-17-10 (E10-W01 step 1): an impersonation never carries the actor's platform roles", async () => {
+    server.use(
+      http.get(`${API_BASE_URL}/me`, () =>
+        HttpResponse.json({
+          ...memberMe,
+          account: { ...memberMe.account, platformRoles: ["AGILITYHUB_ADMIN"] },
+          impersonation: { actorName: "Aina Serra", memberName: "Biel Roca" },
+        }),
+      ),
+    );
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+      mockMode: true,
+      mockRefreshTokenStore: new MemoryRefreshTokenStore(),
+    });
+    await client.login("biel.roca@example.test", "secret-password");
+    render(
+      <SessionProvider client={client}>
+        <RequirePlatformRole fallback={<p>Denied console</p>} role="AGILITYHUB_ADMIN">
+          <p>Console content</p>
+        </RequirePlatformRole>
+      </SessionProvider>,
+    );
+    expect(screen.getByText("Denied console")).toBeInTheDocument();
   });
 
   it("E4-W16 step 3 (INC-19): a restore that fails offline or with a 5xx stays loading (no redirect) and signs in on the retry", async () => {

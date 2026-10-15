@@ -970,6 +970,7 @@ export const initialSavedViews: readonly SavedView[] = [
     ownerAccountId: "account-admin",
     shared: true,
     sort: ["name,asc"],
+    system: false,
     version: 1,
   },
 ];

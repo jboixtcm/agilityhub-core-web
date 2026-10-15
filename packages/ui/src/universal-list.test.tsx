@@ -469,6 +469,53 @@ describe("E8-W01 · a selection the screen holds and rows the selection cannot t
     );
     expect(screen.queryByRole("searchbox", { name: "Cerca" })).toBeNull();
   });
+
+  it("E10-W01 step 2: a list without saved views (S17's console) has no «Vistes» menu", () => {
+    const { rerender } = render(
+      <UniversalList<Row>
+        appliedFilters={[]}
+        caption="Clubs"
+        columns={[{ key: "id", label: "Id", render: (row) => row.id }]}
+        exportable={false}
+        filterColumns={[]}
+        labels={listLabels}
+        listKey="console-test"
+        loadFilterValues={() => Promise.resolve([])}
+        onExport={() => undefined}
+        onRetry={() => undefined}
+        onStateChange={() => undefined}
+        rowKey={(row) => row.id}
+        rows={[{ id: "c-1" }]}
+        state={state}
+        totalPages={1}
+      />,
+    );
+    expect(screen.queryByText("Vistes")).toBeNull();
+    rerender(
+      <UniversalList<Row>
+        appliedFilters={[]}
+        caption="Clubs"
+        columns={[{ key: "id", label: "Id", render: (row) => row.id }]}
+        exportable={false}
+        filterColumns={[]}
+        labels={listLabels}
+        listKey="console-test"
+        loadFilterValues={() => Promise.resolve([])}
+        onCreateView={() => Promise.reject(new Error("unused"))}
+        onDeleteView={() => Promise.resolve()}
+        onExport={() => undefined}
+        onRenameView={() => Promise.reject(new Error("unused"))}
+        onRetry={() => undefined}
+        onStateChange={() => undefined}
+        rowKey={(row) => row.id}
+        rows={[{ id: "c-1" }]}
+        savedViews={[]}
+        state={state}
+        totalPages={1}
+      />,
+    );
+    expect(screen.getAllByText("Vistes").length).toBeGreaterThan(0);
+  });
 });
 
 describe("E7-W06 step 5 (ruling E82, E6-W04 Q6) · stable data attributes on a list's rows", () => {

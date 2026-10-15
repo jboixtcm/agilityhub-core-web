@@ -169,15 +169,19 @@ export interface UniversalListProps<Row> {
   labels: UniversalListLabels<Row>;
   listKey: string;
   loadFilterValues: (field: string) => Promise<UniversalFilterValue[]>;
-  onCreateView: (
+  /**
+   * The saved views' writes. A list without saved views (S17's console: the platform account has
+   * no club, so no `/saved-views`) omits the three of them and `savedViews`: no «Vistes» menu.
+   */
+  onCreateView?: (
     name: string,
     shared: boolean,
     state: UniversalListState,
   ) => Promise<UniversalListSavedView>;
-  onDeleteView: (id: string) => Promise<void>;
+  onDeleteView?: (id: string) => Promise<void>;
   /** «Excel · PDF»: the export runs through the api client (bearer, binary file or queued job). */
   onExport: (format: "pdf" | "xlsx", state: UniversalListState) => void;
-  onRenameView: (view: UniversalListSavedView, name: string) => Promise<UniversalListSavedView>;
+  onRenameView?: (view: UniversalListSavedView, name: string) => Promise<UniversalListSavedView>;
   onRetry: () => void;
   onRowActivate?: (row: Row) => void;
   onStateChange: (state: UniversalListState) => void;
@@ -192,7 +196,7 @@ export interface UniversalListProps<Row> {
   rowHref?: (row: Row) => string;
   rowKey: (row: Row) => string;
   rows: Row[];
-  savedViews: UniversalListSavedView[];
+  savedViews?: UniversalListSavedView[];
   state: UniversalListState;
   /**
    * The status select of the toolbar. Omitted when the screen filters by its own chips (D14's
@@ -322,6 +326,8 @@ function formatActiveFilter(filters: AppliedUniversalFilter[]): string {
   return first === undefined ? "" : `${first.fieldLabel} = «${first.valueLabel}»`;
 }
 
+const NO_SAVED_VIEWS: UniversalListSavedView[] = [];
+
 export function UniversalList<Row>({
   appliedFilters,
   bulkActions,
@@ -352,7 +358,7 @@ export function UniversalList<Row>({
   rowHref,
   rowKey,
   rows,
-  savedViews,
+  savedViews = NO_SAVED_VIEWS,
   searchable = true,
   selectable = false,
   selected: controlledSelected,
@@ -384,14 +390,12 @@ export function UniversalList<Row>({
   const suggestedValueActive = valueRequired && !rangeActive;
   const [rangeStart, setRangeStart] = useState("");
   const [rangeEnd, setRangeEnd] = useState("");
-  const rangeOrdered = range?.inputType === "number"
-    ? Number(rangeStart) <= Number(rangeEnd)
-    : rangeStart <= rangeEnd;
+  const rangeOrdered =
+    range?.inputType === "number" ? Number(rangeStart) <= Number(rangeEnd) : rangeStart <= rangeEnd;
   // What [Afegeix el filtre] adds: the chosen value, or both ends of a range in order.
-  const pendingValue =
-    !valueRequired
-      ? ""
-      : !rangeActive
+  const pendingValue = !valueRequired
+    ? ""
+    : !rangeActive
       ? filterValue
       : rangeStart !== "" && rangeEnd !== "" && rangeOrdered
         ? range.toValue(rangeStart, rangeEnd)
@@ -829,110 +833,116 @@ export function UniversalList<Row>({
           </div>
         </details>
 
-        <details className="ah-universal-list__menu">
-          <summary>
-            {selectedView === undefined ? labels.views : labels.view(selectedView.name)}
-            <span aria-hidden="true">▾</span>
-          </summary>
-          <div className="ah-universal-list__menu-panel ah-universal-list__views">
-            <label>
-              <span>{labels.views}</span>
-              <select
-                onChange={(event) => {
-                  selectView(event.currentTarget.value);
-                }}
-                value={selectedViewId}
-              >
-                <option value="">{labels.noSavedView}</option>
-                {savedViews.map((view) => (
-                  <option key={view.id} value={view.id}>
-                    {view.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              <span>{labels.saveViewName}</span>
-              <input
-                maxLength={40}
-                onChange={(event) => {
-                  setViewName(event.currentTarget.value);
-                }}
-                value={viewName}
-              />
-            </label>
-            <label className="ah-universal-list__check-label">
-              <Checkbox
-                checked={sharedView}
-                onChange={(event) => {
-                  setSharedView(event.currentTarget.checked);
-                }}
-              />
-              {labels.sharedView}
-            </label>
-            <label className="ah-universal-list__check-label">
-              <Checkbox
-                checked={selectedViewId !== "" && defaultViewId === selectedViewId}
-                disabled={selectedViewId === ""}
-                onChange={(event) => {
-                  const id = event.currentTarget.checked ? selectedViewId : "";
-                  setDefaultViewId(id);
-                  if (typeof localStorage !== "undefined") {
-                    if (id === "") {
-                      localStorage.removeItem(defaultViewStorageKey(listKey));
-                    } else {
-                      localStorage.setItem(defaultViewStorageKey(listKey), id);
-                    }
-                  }
-                }}
-              />
-              {labels.defaultView}
-            </label>
-            <div className="ah-universal-list__menu-actions">
-              <Button
-                disabled={viewName.trim() === ""}
-                onClick={() => {
-                  runSavedViewAction(onCreateView(viewName.trim(), sharedView, state));
-                }}
-              >
-                {labels.createView}
-              </Button>
-              <Button
-                disabled={
-                  selectedView === undefined || selectedView.system === true || viewName.trim() === ""
-                }
-                onClick={() => {
-                  if (selectedView !== undefined) {
-                    runSavedViewAction(onRenameView(selectedView, viewName.trim()));
-                  }
-                }}
-                variant="ghost"
-              >
-                {labels.renameView}
-              </Button>
-              {selectedView?.system === true ? null : (
-                <Button
-                  disabled={selectedView === undefined}
-                  onClick={() => {
-                    if (selectedView !== undefined) {
-                      runSavedViewAction(
-                        onDeleteView(selectedView.id).then(() => {
-                          setSelectedViewId("");
-                          setViewName("");
-                          return undefined;
-                        }),
-                      );
+        {onCreateView === undefined ||
+        onDeleteView === undefined ||
+        onRenameView === undefined ? null : (
+          <details className="ah-universal-list__menu">
+            <summary>
+              {selectedView === undefined ? labels.views : labels.view(selectedView.name)}
+              <span aria-hidden="true">▾</span>
+            </summary>
+            <div className="ah-universal-list__menu-panel ah-universal-list__views">
+              <label>
+                <span>{labels.views}</span>
+                <select
+                  onChange={(event) => {
+                    selectView(event.currentTarget.value);
+                  }}
+                  value={selectedViewId}
+                >
+                  <option value="">{labels.noSavedView}</option>
+                  {savedViews.map((view) => (
+                    <option key={view.id} value={view.id}>
+                      {view.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span>{labels.saveViewName}</span>
+                <input
+                  maxLength={40}
+                  onChange={(event) => {
+                    setViewName(event.currentTarget.value);
+                  }}
+                  value={viewName}
+                />
+              </label>
+              <label className="ah-universal-list__check-label">
+                <Checkbox
+                  checked={sharedView}
+                  onChange={(event) => {
+                    setSharedView(event.currentTarget.checked);
+                  }}
+                />
+                {labels.sharedView}
+              </label>
+              <label className="ah-universal-list__check-label">
+                <Checkbox
+                  checked={selectedViewId !== "" && defaultViewId === selectedViewId}
+                  disabled={selectedViewId === ""}
+                  onChange={(event) => {
+                    const id = event.currentTarget.checked ? selectedViewId : "";
+                    setDefaultViewId(id);
+                    if (typeof localStorage !== "undefined") {
+                      if (id === "") {
+                        localStorage.removeItem(defaultViewStorageKey(listKey));
+                      } else {
+                        localStorage.setItem(defaultViewStorageKey(listKey), id);
+                      }
                     }
                   }}
-                  variant="danger"
+                />
+                {labels.defaultView}
+              </label>
+              <div className="ah-universal-list__menu-actions">
+                <Button
+                  disabled={viewName.trim() === ""}
+                  onClick={() => {
+                    runSavedViewAction(onCreateView(viewName.trim(), sharedView, state));
+                  }}
                 >
-                  {labels.deleteView}
+                  {labels.createView}
                 </Button>
-              )}
+                <Button
+                  disabled={
+                    selectedView === undefined ||
+                    selectedView.system === true ||
+                    viewName.trim() === ""
+                  }
+                  onClick={() => {
+                    if (selectedView !== undefined) {
+                      runSavedViewAction(onRenameView(selectedView, viewName.trim()));
+                    }
+                  }}
+                  variant="ghost"
+                >
+                  {labels.renameView}
+                </Button>
+                {selectedView?.system === true ? null : (
+                  <Button
+                    disabled={selectedView === undefined}
+                    onClick={() => {
+                      if (selectedView !== undefined) {
+                        runSavedViewAction(
+                          onDeleteView(selectedView.id).then(() => {
+                            setSelectedViewId("");
+                            setViewName("");
+                            return undefined;
+                          }),
+                        );
+                      }
+                    }}
+                    variant="danger"
+                  >
+                    {labels.deleteView}
+                  </Button>
+                )}
+              </div>
+              {savedViewError ? <p role="alert">{labels.saveError}</p> : null}
             </div>
-            {savedViewError ? <p role="alert">{labels.saveError}</p> : null}
-          </div>
-        </details>
+          </details>
+        )}
 
         {exportable ? (
           <details className="ah-universal-list__menu ah-universal-list__export">

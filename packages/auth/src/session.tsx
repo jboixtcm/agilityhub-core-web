@@ -10,9 +10,17 @@ import { type AuthClient, type Me, type Role } from "./auth-client";
  */
 export type SessionStatus = "anonymous" | "impersonationExpired" | "loading" | "signedIn";
 
+/** The account's global roles (`Me.account.platformRoles`, S01 §3, S17), never a club's. */
+export type PlatformRole = Me["account"]["platformRoles"][number];
+
 export interface SessionSnapshot {
   activeProfile: Role | null;
   me: Me | null;
+  /**
+   * S17 §2: `AGILITYHUB_ADMIN` opens the club console. Global, apart from `roles` (the host's
+   * membership): a platform admin may have no membership at all (R-01-17).
+   */
+  platformRoles: readonly PlatformRole[];
   roles: readonly Role[];
   status: SessionStatus;
 }
@@ -32,6 +40,10 @@ interface RequireRoleProps extends RequireAuthProps {
   roles: readonly Role[];
 }
 
+interface RequirePlatformRoleProps extends RequireAuthProps {
+  role: PlatformRole;
+}
+
 interface RequireModuleProps {
   children: ReactNode;
   module: ClubModule;
@@ -40,6 +52,7 @@ interface RequireModuleProps {
 const anonymousSession: SessionSnapshot = {
   activeProfile: null,
   me: null,
+  platformRoles: [],
   roles: [],
   status: "anonymous",
 };
@@ -47,6 +60,7 @@ const anonymousSession: SessionSnapshot = {
 const loadingSession: SessionSnapshot = {
   activeProfile: null,
   me: null,
+  platformRoles: [],
   roles: [],
   status: "loading",
 };
@@ -54,6 +68,7 @@ const loadingSession: SessionSnapshot = {
 const impersonationExpiredSession: SessionSnapshot = {
   activeProfile: null,
   me: null,
+  platformRoles: [],
   roles: [],
   status: "impersonationExpired",
 };
@@ -64,7 +79,9 @@ function sessionFromMe(me: Me): SessionSnapshot {
   const roles = [...(me.membership?.roles ?? [])];
   const preferredProfile = me.membership?.activeProfile ?? me.membership?.defaultProfile;
   const activeProfile = roles.find((role) => role === preferredProfile) ?? roles[0] ?? null;
-  return { activeProfile, me, roles, status: "signedIn" };
+  // An impersonation token acts as the member, never with the actor's platform roles (S01 R-01-16).
+  const platformRoles = me.impersonation === undefined ? [...me.account.platformRoles] : [];
+  return { activeProfile, me, platformRoles, roles, status: "signedIn" };
 }
 
 function sessionWithoutMe(client: AuthClient, pending: SessionSnapshot): SessionSnapshot {
@@ -165,6 +182,21 @@ export function RequireRole({ children, fallback = null, navigate, roles }: Requ
   return (
     <RequireAuth fallback={fallback} {...(navigate === undefined ? {} : { navigate })}>
       {allowed ? children : fallback}
+    </RequireAuth>
+  );
+}
+
+/** S17 §2: the platform console's guard, by the account's global role (not the membership's). */
+export function RequirePlatformRole({
+  children,
+  fallback = null,
+  navigate,
+  role,
+}: RequirePlatformRoleProps) {
+  const session = useSession();
+  return (
+    <RequireAuth fallback={fallback} {...(navigate === undefined ? {} : { navigate })}>
+      {session.platformRoles.includes(role) ? children : fallback}
     </RequireAuth>
   );
 }
