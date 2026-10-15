@@ -199,6 +199,14 @@ function themeProperties(theme: BrandingTheme): [string, string][] {
   return properties;
 }
 
+/**
+ * A theme's `--ah-*` custom properties as an inline style, for a preview that scopes a theme to
+ * one element (S17 D19 «Tema»): its descendants read the draft's tokens, the page keeps its own.
+ */
+export function brandingThemeStyle(theme: BrandingTheme): Record<string, string> {
+  return Object.fromEntries(themeProperties(theme));
+}
+
 export function applyBrandingTheme(
   theme: BrandingTheme,
   root: HTMLElement = document.documentElement,

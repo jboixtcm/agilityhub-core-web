@@ -41,6 +41,11 @@ interface RequireRoleProps extends RequireAuthProps {
 }
 
 interface RequirePlatformRoleProps extends RequireAuthProps {
+  /**
+   * A signed-in account without the role (S17 §2: «Aquest accés és només per a l'equip
+   * AgilityHub»); `fallback` stays the loading state, so the refusal never flashes before `/me`.
+   */
+  denied?: ReactNode;
   role: PlatformRole;
 }
 
@@ -189,6 +194,7 @@ export function RequireRole({ children, fallback = null, navigate, roles }: Requ
 /** S17 §2: the platform console's guard, by the account's global role (not the membership's). */
 export function RequirePlatformRole({
   children,
+  denied,
   fallback = null,
   navigate,
   role,
@@ -196,7 +202,7 @@ export function RequirePlatformRole({
   const session = useSession();
   return (
     <RequireAuth fallback={fallback} {...(navigate === undefined ? {} : { navigate })}>
-      {session.platformRoles.includes(role) ? children : fallback}
+      {session.platformRoles.includes(role) ? children : (denied ?? fallback)}
     </RequireAuth>
   );
 }

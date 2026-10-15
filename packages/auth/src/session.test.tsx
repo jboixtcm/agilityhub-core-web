@@ -193,14 +193,42 @@ describe("T-01-21 session and guards", () => {
       await client.login("biel.roca@example.test", "secret-password");
       render(
         <SessionProvider client={client}>
-          <RequirePlatformRole fallback={<p>Denied console</p>} role="AGILITYHUB_ADMIN">
+          <RequirePlatformRole
+            denied={<p>Denied console</p>}
+            fallback={<p>Loading console</p>}
+            role="AGILITYHUB_ADMIN"
+          >
             <p>Console content</p>
           </RequirePlatformRole>
         </SessionProvider>,
       );
       expect(screen.getByText(expected)).toBeInTheDocument();
+      expect(screen.queryByText("Loading console")).toBeNull();
       cleanup();
     }
+  });
+
+  it("T-17-12 (E10-W01 step 1): the refusal never shows while the session is still loading", () => {
+    server.use(http.get(`${API_BASE_URL}/me`, () => new Promise<never>(() => undefined)));
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+      mockMode: true,
+      mockRefreshTokenStore: new MemoryRefreshTokenStore(),
+    });
+    render(
+      <SessionProvider client={client}>
+        <RequirePlatformRole
+          denied={<p>Denied console</p>}
+          fallback={<p>Loading console</p>}
+          navigate={() => undefined}
+          role="AGILITYHUB_ADMIN"
+        >
+          <p>Console content</p>
+        </RequirePlatformRole>
+      </SessionProvider>,
+    );
+    expect(screen.queryByText("Denied console")).toBeNull();
   });
 
   it("T-17-10 (E10-W01 step 1): an impersonation never carries the actor's platform roles", async () => {

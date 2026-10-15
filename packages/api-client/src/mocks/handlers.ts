@@ -21,6 +21,7 @@ import {
 } from "./billing-handlers";
 import { bookingHandlers, bookingState, resetBookingMockState } from "./booking-handlers";
 import { calendarHandlers } from "./calendar-handlers";
+import { consoleHandlers, resetConsoleMockState } from "./console-handlers";
 import { dayGridHandlers } from "./day-grid-handlers";
 import { activityState, resetActivityState } from "./fixtures/activities";
 import { AGENDA_MOCK_NOW, AGENDA_SELECTED_CLASS_ID } from "./fixtures/agenda";
@@ -54,6 +55,7 @@ import {
   type MemberListItem,
   type SavedView,
 } from "./fixtures/census";
+import { CONSOLE_CLUB_IDS, consoleState } from "./fixtures/console";
 import dashboardFixture from "./fixtures/dashboard.json";
 import exportJobsFixture from "./fixtures/export-jobs.json";
 import { INBOX_ALL_READ_AT } from "./fixtures/followup";
@@ -1474,6 +1476,8 @@ function clubMemberPreferences(): NotificationPreferences {
 }
 
 export const handlers = [
+  // S17 D19 (E10-W01): the platform console's `/platform/*` world.
+  ...consoleHandlers,
   // E6-W04 step 0b: screen 13's checkbox (S10 R-10-10, §6) completes a task of `GET /me/dogs` for
   // its member (also the impersonation token), so 13 read again shows it done and counted. Any
   // other task, a staff caller or TASKS off are the follow-up world's, below.
@@ -4280,6 +4284,8 @@ export {
   INBOX_ALL_READ_AT,
   bookingState,
   catalogState,
+  CONSOLE_CLUB_IDS,
+  consoleState,
   ERASED_MEMBER_ID,
   JOBS_MOCK_NOW,
   mockExportBody,
@@ -4295,6 +4301,7 @@ export {
   resetBookingMockState,
   resetCatalogState,
   resetCensusRecordState,
+  resetConsoleMockState,
   resetDashboardMockState,
   resetFollowupMockState,
   resetMemberSelfServiceState,

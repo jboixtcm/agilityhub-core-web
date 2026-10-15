@@ -103,7 +103,43 @@ if (adminMembership === undefined || memberMembership === undefined) {
  */
 export const MOCK_CLUB_ID = adminMembership.clubId;
 
+/**
+ * S17 §2 (E10-W01): an AgilityHub account on the product host — the platform role and no club
+ * membership (R-01-17). The host's branding is the product's, never a club's.
+ */
+const platformMe: Me = {
+  account: {
+    email: "pol.ferrer@example.test",
+    emailVerifiedAt: "2026-08-03T08:00:00Z",
+    hasPassword: true,
+    id: "10000000-0000-4000-8000-0000000000a1",
+    locale: "ca",
+    name: "Pol Ferrer",
+    onboardingPending: false,
+    platformRoles: ["AGILITYHUB_ADMIN"],
+  },
+  features: [],
+};
+const productBranding: Branding = {
+  ...minimal,
+  club: { ...minimal.club, name: "AgilityHub", slug: "agilityhub" },
+  locales: ["ca", "es", "en"],
+  modules: [],
+};
+
 const scenarios = {
+  /** D19 on the product host, light (the product's own theme). */
+  platform: {
+    branding: productBranding,
+    me: platformMe,
+    sessions: accountSessions,
+  },
+  /** D19 on the product host with a dark theme (the 1280 px dark screenshots). */
+  platformDark: {
+    branding: { ...productBranding, theme: { ...canic.theme, logoDarkUrl: null, logoUrl: null, markUrl: null } },
+    me: platformMe,
+    sessions: accountSessions,
+  },
   admin: {
     branding: canic,
     me: meAdmin as Me,

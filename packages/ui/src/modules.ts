@@ -85,6 +85,49 @@ export const moduleUi = {
   SOCIAL_LEAGUE: { menuEntries: [], routes: ["/estadistiques/lliga"], tabs: [] },
 } as const satisfies Record<ClubModule, ModuleUiRegistration>;
 
+/**
+ * «Depèn de» of CATALEG_MODULS.md: a module is enabled only with the ones it requires (the api
+ * answers `422 MODULE_DEPENDENCY {module, requires}` otherwise, S17 R-17-04).
+ */
+export const moduleDependencies: Readonly<Partial<Record<ClubModule, readonly ClubModule[]>>> = {
+  PACKS: ["BILLING"],
+  SINGLE_CLASS: ["BILLING"],
+  SOCIAL_LEAGUE: ["STATS"],
+};
+
+/** S17 R-17-04's presets (`PlatformModulesRequest.preset`) and the modules each one enables. */
+export const modulePresets = {
+  COMPLET: clubModules.filter((module) => module !== "STATS" && module !== "SOCIAL_LEAGUE"),
+  MINIM: ["WAITLIST", "FAQ", "PUSH"],
+  CANIC: clubModules.filter(
+    (module) => module !== "SINGLE_CLASS" && module !== "STATS" && module !== "SOCIAL_LEAGUE",
+  ),
+} as const satisfies Record<string, readonly ClubModule[]>;
+
+export type ModulePreset = keyof typeof modulePresets;
+
+/** The modules `module` requires that `enabledModules` lacks. */
+export function missingModuleDependencies(
+  enabledModules: readonly string[],
+  module: ClubModule,
+): ClubModule[] {
+  return (moduleDependencies[module] ?? []).filter(
+    (required) => !enabledModules.includes(required),
+  );
+}
+
+/** The enabled modules that require `module` (it cannot go off while they are on). */
+export function moduleDependents(
+  enabledModules: readonly string[],
+  module: ClubModule,
+): ClubModule[] {
+  return clubModules.filter(
+    (candidate) =>
+      enabledModules.includes(candidate) &&
+      (moduleDependencies[candidate] ?? []).includes(module),
+  );
+}
+
 export function isModuleEnabled(enabledModules: readonly string[], module: ClubModule): boolean {
   return enabledModules.includes(module);
 }

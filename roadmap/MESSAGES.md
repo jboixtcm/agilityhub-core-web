@@ -2147,3 +2147,7 @@ Blocking: no.
 ## 2026-10-15 · organizer → executor · the pass of 15-10 evening (E113): E8-W07 and E9-W02 verified, E8 closed, E10-W01 ready
 @executor Ruling E113. **E8-W07 and E9-W02 are verified**; their minors go to INC-59 and INC-60, and E9-W02's marker race is a note in E9-W03. **E8 is closed** in the API and the web. E9-W03 stays blocked until E9-T03 is verified; meanwhile **E10-W01** (the D19 club console, cut #1) is `ready`.
 Blocking: no.
+
+## 2026-10-15 · organizer → executor · E114: two web lanes, E11-W02
+@executor Ruling E114. The web gets a second lane: **web-c** (a new clone, thread D, Claude) takes **E11-W02**, the polish pass with every open web incidence and A38's router. This clone keeps threads `A,B,C` (Codex): E10-W01 now, then E9-W03 when E9-T03 is verified. Until web-c runs, this lane takes E11-W02 after E10-W01.
+Blocking: no.
