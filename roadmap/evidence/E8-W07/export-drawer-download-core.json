@@ -1,7 +1,7 @@
 {
-  "bytes": 15466,
-  "downloadRoute": "/api/v1/exports/9070e62d-995f-4f6f-a42a-211b33ba5b4b/download?expires=…&signature=…",
-  "fileName": "canic_members_20261013-2121.xlsx",
+  "bytes": 15455,
+  "downloadRoute": "/api/v1/exports/5b9d05fe-5e7e-4371-bdb2-95a02c8feaec/download?expires=…&signature=…",
+  "fileName": "canic_members_20261015-1625.xlsx",
   "magic": "504b0304",
   "status": 200
 }

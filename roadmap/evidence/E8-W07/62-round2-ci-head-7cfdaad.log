@@ -1,0 +1,18 @@
+status=completed conclusion=success headSha=7cfdaadf5d75dfabe1add117d63ce2a5a77424bd url=https://github.com/jboixtcm/agilityhub-core-web/actions/runs/38746690880
+job=Frontend checks conclusion=success
+step=Set up job conclusion=success
+step=Check out repository conclusion=success
+step=Enable pnpm conclusion=success
+step=Set up Node.js conclusion=success
+step=Install dependencies conclusion=success
+step=Lint, typecheck, test, and build conclusion=success
+step=Check translations conclusion=success
+step=Check generated API types conclusion=success
+step=Install Chromium conclusion=success
+step=Run Playwright with MSW conclusion=success
+step=Check Clubs bundle size conclusion=success
+step=Upload Playwright screenshots conclusion=success
+step=Post Set up Node.js conclusion=success
+step=Post Enable pnpm conclusion=success
+step=Post Check out repository conclusion=success
+step=Complete job conclusion=success

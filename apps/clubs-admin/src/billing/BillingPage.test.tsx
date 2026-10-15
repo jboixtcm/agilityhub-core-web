@@ -1311,7 +1311,7 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     ).toBeEnabled();
   });
 
-  it("T-12-26 / E8-W07 #2: EXPORT_LIMIT keeps the accounting kind in the exports drawer", async () => {
+  it("T-12-25 / T-14-26 / R-12-26 / E8-W07 #2: EXPORT_LIMIT keeps the accounting kind in the exports drawer", async () => {
     server.use(
       http.get("*/api/v1/billing/exports", () =>
         HttpResponse.json(
@@ -1463,7 +1463,7 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     });
   }, 20_000);
 
-  it("R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow", async () => {
+  it("T-12-25 / R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow", async () => {
     mockScenario("billingStripe");
     const api = client();
     const period = await api.GET("/billing/periods/{period}", {

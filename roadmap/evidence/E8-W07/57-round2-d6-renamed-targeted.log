@@ -1,0 +1,67 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx -t E8-W07 --reporter\=verbose
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 D6 «Facturació»: the month as the mockup draws it (S12 §2) > T-12-25: header, incidents first with their labels and «Obre fitxa» links, the cash members, the KPIs and the chips
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 D6 «Facturació»: the month as the mockup draws it (S12 §2) > T-12-25: the month steppers rewrite ?mes= and read that month; a month without a simulation offers [1 · SIMULA EL MES], which shows its incidents
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 D6 «Facturació»: the month as the mockup draws it (S12 §2) > T-12-25: a month more than three months ahead is refused by the api with a toast, not on a field
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the strong confirmation and the generation (R-12-11, R-12-06) > R-12-29 (CONVENCIONS_API §7, E85): an unanswered generation (503) keeps its Idempotency-Key, so the retry is the same submission; the answer then retires it
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the strong confirmation and the generation (R-12-11, R-12-06) > CONVENCIONS_API §7 (E80): 409 IDEMPOTENCY_KEY_REUSED {IN_PROGRESS} reads the shared «encara està en curs» text inside the modal
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the strong confirmation and the generation (R-12-11, R-12-06) > T-12-25: «Es generaran 168 rebuts…» from the simulation's KPIs, then POST /billing/runs with one Idempotency-Key, «168 rebuts generats»
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the strong confirmation and the generation (R-12-11, R-12-06) > T-12-25 / R-12-07 billingStale: 409 SIMULATION_STALE turns the modal into «Torna a simular el mes» with [Simula de nou]
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the strong confirmation and the generation (R-12-11, R-12-06) > T-12-25: 422 COLLECTION_DATE_TOO_SOON shows the api's dates inside the modal (two business days, T-12-29b)
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 [Retrocedeix la remesa] only when the api says so (R-12-14) > T-12-25: absent once the remittance is submitted (rollbackable false), present while rollbackable
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 [Retrocedeix la remesa] only when the api says so (R-12-14) > T-12-25: the rollback button stays disabled until «RETROCEDIR» is typed exactly; then 200 «168 rebuts anul·lats» and the month reads rolled back
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 [Retrocedeix la remesa] only when the api says so (R-12-14) > T-12-25 billingRollbackBlocked: 409 RUN_NOT_ROLLBACKABLE lists the api's reasons in the modal and the button goes
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) > T-12-25: the chips filter the list by status on top of the month and show the api's counts
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) > T-12-25: a selection enables [Marcar cobrat (selecció)]; remitted rows cannot be selected; the bulk payment marks them paid
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) > E8-W01 round 2 #4: a receipt paid in its drawer leaves the held selection before pagination, so a later bulk payment never resends its id
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the receipts list: chips, selection and bulk mark-paid (R-12-16, E87) > E8-W04 6b: a drawer payment drops a selected receipt even when the Pendents filter removes its row
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20) > T-12-25: PENDING cash, COLLECTING and FAILED direct debits, a PAID and a CANCELLED receipt
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20) > T-12-25 invoiceActions: every status and method of S12 §5 (cards included)
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20) > T-12-25: [Marca cobrat] sends the paid date, the channel and the receipt's version; the drawer and the list read PAID
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20) > T-12-25: 409 STALE_VERSION reads «El rebut ha canviat. Torna a obrir-lo.» in the drawer and the receipt is read again
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20) > E8-W01 round 2 #6: a failed drawer refetch stays beside the cached receipt, unlocks its actions and recovers through [Torna-ho a provar]
+ ↓ src/billing/BillingPage.test.tsx > T-12-25 the receipt drawer: the actions each state allows (R-12-16…R-12-20) > T-12-25: [Descarrega el justificant] opens the PDF in a new tab without parsing it
+ ↓ src/billing/BillingPage.test.tsx > T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R-12-28) > T-12-32: SEPA_XML + MANUAL (the Cànic) → «2 · GENERA REMESA SEPA (XML)», no card KPI nor [COBRA LES TARGETES]
+ ↓ src/billing/BillingPage.test.tsx > T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R-12-28) > T-12-32 billingManualOnly: «2 · GENERA ELS REBUTS»; the run issues every receipt by hand and makes no remittance
+ ↓ src/billing/BillingPage.test.tsx > T-12-32 (D6 half) button 2 and the KPIs follow the club's providers (R-12-28) > T-12-32 billingStripe: «2 · GENERA ELS REBUTS I COBRA LES TARGETES», the card KPI, [COBRA LES TARGETES] → 202, the 5 s poll while CHARGING and «impagat (targeta)»
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-07: the run's skipped members are not repeated under the incidents; «Omesos de la generació» lists only the others
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-07: [Simula de nou] waits for its simulation and shows its refusal inside the modal (409 BILLING_BUSY)
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-07: [1 · SIMULA EL MES] refused with 409 BILLING_BUSY reads its toast, and a 400 on another field is not «tres mesos»
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > T-12-25: a selection is counted beside [Marcar cobrat (selecció)], and another chip (other receipts) drops it
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > T-12-25 / E87: a receipt cancelled by a rollback lists only under CANCELLED, reads «anul·lat · retrocés» and its drawer offers no action but the PDF
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / R-12-18: a withdrawn card reads «sense targeta vàlida» (never NO_PAYMENT_METHOD); [Reintenta amb targeta] → 409 MAX_ATTEMPTS shows the api's attempts
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-20: a refund over what was paid → 422 REFUND_EXCEEDS_PAID inside the refund modal
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-19: 422 CURRENCY_MISMATCH reads inside the manual receipt modal
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-26 / E8-W04 round 2: a queued accounting export (202 ACCOUNTING job) is followed in the exports drawer to its download
+ ✓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > T-12-25 / T-14-26 / R-12-26 / E8-W07 #2: EXPORT_LIMIT keeps the accounting kind in the exports drawer 322ms
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13: the poll stops after two minutes of CHARGING with [Actualitza], which polls again
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > E8-W01 round 2 #3: a CHARGING period starts bounded monitoring when the first run read fails, shows retry and settles on a later poll
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > E8-W04 6b: a CHARGING period refreshes after detail moves GENERATED to COMPLETED
+ ✓ src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > T-12-25 / R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow 164ms
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > R-12-19: a new search drops the chosen member, so the receipt never goes to a member the list no longer shows
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > E8-W01 round 2 #2: the manual adjustment search has no ACTIVE filter, shows a LEFT member's display status and creates their receipt
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > E8-W01 round 2 #2: 409 MEMBER_ERASED is mapped to the manual receipt's member field
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > R-12-19: the api's 400 on a line's member (lines[0].description) sits on that line, and on includeInNextRun under its checkbox, with no second generic alert
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > R-12-11: after 422 COLLECTION_DATE_TOO_SOON the admin generates with the api's first day (collectionDate = details.earliest, another payload, another key)
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > E8-W01 round 2 #1: 422 → accepted earliest → 503 → retry keeps the accepted body and the same Idempotency-Key
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 second review (01-10): the manual receipt's member and errors, the earliest collection date, a rolled-back receipt > R-12-14 E89: a receipt the admin cancelled before the rollback reads «anul·lat · retrocés» in the list and in its drawer, with its own reason
+ ↓ src/billing/BillingPage.test.tsx > R-12-19 and R-12-26: the manual receipt and the accounting export > R-12-19: [Rebut manual] finds the member, sends the lines in minor units, and the api's numbering blocks the rollback (MANUAL_INVOICE_AFTER)
+ ↓ src/billing/BillingPage.test.tsx > R-12-19 and R-12-26: the manual receipt and the accounting export > R-12-26: «Exporta per a comptabilitat» → GET /billing/exports?period=2026-09&format=csv, saved as facturacio-2026-09.csv
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 round 2 #7: member history, charging copy and the Docker defaults > Q3: a memberId link without mes lists all months, names that scope and selecting a month restores period:eq
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 round 2 #7: member history, charging copy and the Docker defaults > Q6: e2e-docker defaults to four workers and gives Chromium host IPC
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 step 10: the D6 literals in ca (mockup V7) and the same keys in es and en > E8-W01: «Pas 1 — Simulació: incidències primer», «Actius amb pagament en efectiu», «Marcar cobrat (selecció)», «Exporta per a comptabilitat»
+ ↓ src/billing/BillingPage.test.tsx > E8-W01 step 10: the D6 literals in ca (mockup V7) and the same keys in es and en > E8-W01: D6 in es and en reads its own month titles and never a Catalan literal
+ ↓ src/billing/BillingPage.test.tsx > E8-W04 snapshot deltas (ruling E90) on D6 > E8-W04 E90 (d): before a run, «Import de la remesa» reads the simulation's collectionDate
+ ↓ src/billing/BillingPage.test.tsx > E8-W04 snapshot deltas (ruling E90) on D6 > E8-W04 E90 (a): an incident about a receipt shows its number, which opens the receipt
+ ↓ src/billing/BillingPage.test.tsx > E8-W04 step 6(b): one wording per receipt state on D6, its drawer and /rebuts > E8-W04 6(b): a fully refunded receipt reads enums:invoiceStatus.REFUNDED, the key /rebuts reads
+
+ Test Files  1 passed (1)
+      Tests  2 passed | 52 skipped (54)
+   Start at  15:56:28
+   Duration  2.19s (environment 29%, transform 28%, tests 23%, import 13%, setup 6%)
+
