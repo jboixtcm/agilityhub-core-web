@@ -1,0 +1,1212 @@
+$ pnpm --dir packages/api-client exec vitest run src/core-api-store.payloads.test.ts src/core-api-store.ui.test.tsx src/core-api-store.test.ts  (sources at HEAD, round-2 tests)
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/core-api-store.payloads.test.ts (13 tests | 12 failed) 53ms
+   ❯ E9-W02 round 2: CoreApiStore payloads against the S16 contract (13)
+     × #1 R-16-03 a lost POST /courses answer is retried with the same key and the same body (one upload) 19ms
+     × #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=false, flipY=false, rotation 0° → -30° 4ms
+     × #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=true, flipY=false, rotation 0° → -150° 1ms
+     × #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=false, flipY=true, rotation 0° → 30° 4ms
+     × #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=true, flipY=true, rotation 0° → 150° 2ms
+     × #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=false, flipY=false, rotation 90° → 60° 6ms
+     × #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=true, flipY=false, rotation 90° → -60° 2ms
+     × #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=false, flipY=true, rotation 90° → 120° 2ms
+     × #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=true, flipY=true, rotation 90° → -120° 2ms
+     × #3 R-16-04 a door save after another editor's save answers 409 STALE_VERSION and their doors survive 4ms
+     × #4 R-16-05 a critical warning answers 422 PLACEMENT_BLOCKED {warnings}; the ADMIN's confirmed retry sends force: true 4ms
+     × #5 R-16-11 finishes a build session with the caller's key, and a retry reads the same answer 1ms
+ ❯ src/core-api-store.ui.test.tsx (4 tests | 4 failed) 2411ms
+   ❯ E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter) (4)
+     × #1 R-16-03 UploadCourse retries a lost answer with the same key and body: one upload, one course 193ms
+     × #8 R-16-02 a source over files.maxSizeMb reads FILE_TOO_LARGE's own catalog text in the upload card 36ms
+     × #9 R-16-04 add → save → edit → save keeps the saved door's id and leaves the editor clean 1099ms
+     × #3/#8 R-16-04 another editor's save in between: STALE_VERSION reads its catalog text in the editor, and [Desfés] brings their door in 1041ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #1 R-16-03 a lost POST /courses answer is retried with the same key and the same body (one upload)
+ApiError: IDEMPOTENCY_KEY_REUSED (fake api)
+ ❯ Function.fromResponse src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse src/client.ts:148:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:219:28
+ ❯ CoreApiStore.uploadSmarterFile src/core-api-store.ts:422:20
+ ❯ src/core-api-store.payloads.test.ts:87:31
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=false, flipY=false, rotation 0° → -30°
+AssertionError: expected 29.999999999999993 to be close to -30, received difference is 59.99999999999999, but expected 5e-10
+ ❯ src/core-api-store.payloads.test.ts:150:38
+    148|       const body = api.requests.at(-1)?.body as components["schemas"][…
+    149|       const persisted = body.resolvedObstacles.find((item) => item.obs…
+    150|       expect(persisted?.rotationDeg).toBeCloseTo(expected, 9);
+       |                                      ^
+    151|     },
+    152|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=true, flipY=false, rotation 0° → -150°
+AssertionError: expected 150.00000000000003 to be close to -150, received difference is 300, but expected 5e-10
+ ❯ src/core-api-store.payloads.test.ts:150:38
+    148|       const body = api.requests.at(-1)?.body as components["schemas"][…
+    149|       const persisted = body.resolvedObstacles.find((item) => item.obs…
+    150|       expect(persisted?.rotationDeg).toBeCloseTo(expected, 9);
+       |                                      ^
+    151|     },
+    152|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=false, flipY=true, rotation 0° → 30°
+AssertionError: expected -29.999999999999993 to be close to 30, received difference is 59.99999999999999, but expected 5e-10
+ ❯ src/core-api-store.payloads.test.ts:150:38
+    148|       const body = api.requests.at(-1)?.body as components["schemas"][…
+    149|       const persisted = body.resolvedObstacles.find((item) => item.obs…
+    150|       expect(persisted?.rotationDeg).toBeCloseTo(expected, 9);
+       |                                      ^
+    151|     },
+    152|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=true, flipY=true, rotation 0° → 150°
+AssertionError: expected -150.00000000000003 to be close to 150, received difference is 300, but expected 5e-10
+ ❯ src/core-api-store.payloads.test.ts:150:38
+    148|       const body = api.requests.at(-1)?.body as components["schemas"][…
+    149|       const persisted = body.resolvedObstacles.find((item) => item.obs…
+    150|       expect(persisted?.rotationDeg).toBeCloseTo(expected, 9);
+       |                                      ^
+    151|     },
+    152|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=false, flipY=false, rotation 90° → 60°
+AssertionError: expected 120.00000000000001 to be close to 60, received difference is 60.000000000000014, but expected 5e-10
+ ❯ src/core-api-store.payloads.test.ts:150:38
+    148|       const body = api.requests.at(-1)?.body as components["schemas"][…
+    149|       const persisted = body.resolvedObstacles.find((item) => item.obs…
+    150|       expect(persisted?.rotationDeg).toBeCloseTo(expected, 9);
+       |                                      ^
+    151|     },
+    152|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=true, flipY=false, rotation 90° → -60°
+AssertionError: expected -120.00000000000001 to be close to -60, received difference is 60.000000000000014, but expected 5e-10
+ ❯ src/core-api-store.payloads.test.ts:150:38
+    148|       const body = api.requests.at(-1)?.body as components["schemas"][…
+    149|       const persisted = body.resolvedObstacles.find((item) => item.obs…
+    150|       expect(persisted?.rotationDeg).toBeCloseTo(expected, 9);
+       |                                      ^
+    151|     },
+    152|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=false, flipY=true, rotation 90° → 120°
+AssertionError: expected 60.00000000000001 to be close to 120, received difference is 59.99999999999999, but expected 5e-10
+ ❯ src/core-api-store.payloads.test.ts:150:38
+    148|       const body = api.requests.at(-1)?.body as components["schemas"][…
+    149|       const persisted = body.resolvedObstacles.find((item) => item.obs…
+    150|       expect(persisted?.rotationDeg).toBeCloseTo(expected, 9);
+       |                                      ^
+    151|     },
+    152|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #2 R-16-01/05 persists the heading the planners render: angle 30°, flipX=true, flipY=true, rotation 90° → -120°
+AssertionError: expected -60.00000000000001 to be close to -120, received difference is 59.99999999999999, but expected 5e-10
+ ❯ src/core-api-store.payloads.test.ts:150:38
+    148|       const body = api.requests.at(-1)?.body as components["schemas"][…
+    149|       const persisted = body.resolvedObstacles.find((item) => item.obs…
+    150|       expect(persisted?.rotationDeg).toBeCloseTo(expected, 9);
+       |                                      ^
+    151|     },
+    152|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/16]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #3 R-16-04 a door save after another editor's save answers 409 STALE_VERSION and their doors survive
+Error: EXPECTED_A_REJECTION
+ ❯ rejection src/core-api-store.payloads.test.ts:55:9
+     53|     return error;
+     54|   }
+     55|   throw new Error("EXPECTED_A_REJECTION");
+       |         ^
+     56| }
+     57|
+ ❯ src/core-api-store.payloads.test.ts:187:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/16]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #4 R-16-05 a critical warning answers 422 PLACEMENT_BLOCKED {warnings}; the ADMIN's confirmed retry sends force: true
+ApiError: PLACEMENT_BLOCKED (fake api)
+ ❯ Function.fromResponse src/api-error.ts:52:12
+     50|       retryAfterHeader === null ? undefined : Number.parseInt(retryAft…
+     51|
+     52|     return new ApiError({
+       |            ^
+     53|       code,
+     54|       details: payload?.details,
+ ❯ Object.onResponse src/client.ts:148:13
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:219:28
+ ❯ CoreApiStore.savePlacement src/core-api-store.ts:442:20
+ ❯ src/core-api-store.payloads.test.ts:247:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/16]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #5 R-16-11 finishes a build session with the caller's key, and a retry reads the same answer
+TypeError: store.finishBuildSession is not a function
+ ❯ src/core-api-store.payloads.test.ts:305:34
+    303|     const store = storeOn(api);
+    304|
+    305|     const finished = await store.finishBuildSession({
+       |                                  ^
+    306|       buildSessionId: "session-1",
+    307|       submissionKey: "finish-key-1",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/16]⎯
+
+ FAIL  src/core-api-store.ui.test.tsx > E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter) > #1 R-16-03 UploadCourse retries a lost answer with the same key and body: one upload, one course
+AssertionError: expected '' to be 'S\'ha produït un error inesperat. Tor…' // Object.is equality
+
+- Expected
++ Received
+
+- S'ha produït un error inesperat. Torneu-ho a provar; si persisteix, indiqueu el codi de referència al club.
+
+ ❯ src/core-api-store.ui.test.tsx:144:60
+    142|     fireEvent.click(await screen.findByRole("button", { name: "Continu…
+    143|     // A lost answer is a network failure: the generic catalog text, b…
+    144|     expect((await screen.findByRole("alert")).textContent).toBe(
+       |                                                            ^
+    145|       "S'ha produït un error inesperat. Torneu-ho a provar; si persist…
+    146|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/16]⎯
+
+ FAIL  src/core-api-store.ui.test.tsx > E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter) > #8 R-16-02 a source over files.maxSizeMb reads FILE_TOO_LARGE's own catalog text in the upload card
+AssertionError: expected '' to be 'El fitxer és massa gran.' // Object.is equality
+
+- Expected
++ Received
+
+- El fitxer és massa gran.
+
+ ❯ src/core-api-store.ui.test.tsx:175:60
+    173|     fireEvent.click(await screen.findByRole("button", { name: "Continu…
+    174|
+    175|     expect((await screen.findByRole("alert")).textContent).toBe("El fi…
+       |                                                            ^
+    176|     expect(api.requests.at(-1)).toMatchObject({
+    177|       body: { contentType: "text/plain", purpose: "SMARTER_SOURCE", si…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/16]⎯
+
+ FAIL  src/core-api-store.ui.test.tsx > E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter) > #9 R-16-04 add → save → edit → save keeps the saved door's id and leaves the editor clean
+TestingLibraryElementError: Unable to find an element with the text: Portes desades. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"bg-surface border border-border rounded-2xl p-4 "[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"text-sm font-semibold uppercase tracking-wide text-muted mb-3"[39m
+      [36m>[39m
+        [0mPista central[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-xs text-muted mb-3"[39m
+      [36m>[39m
+        [0mPortes de la pista[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 lg:grid-cols-[1fr_240px] gap-3"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"border border-border rounded-md p-3 bg-surface/40 space-y-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Porta 1"[39m
+                [33mclass[39m=[32m"flex-1 bg-background border border-border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-warning"[39m
+                [33mplaceholder[39m=[32m"Porta 1"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m"Entrada"[39m
+              [36m/>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-xs text-muted flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mchecked[39m=[32m""[39m
+                  [33mtype[39m=[32m"checkbox"[39m
+                [36m/>[39m
+                [0mActiva[0m
+              [36m</label>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Treu la porta 1"[39m
+                [33mclass[39m=[32m"inline-flex items-center justify-center rounded-agh transition border border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-muted hover:text-text hover:bg-surface-2 min-h-9 min-w-9 "[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m""[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mfocusable[39m=[32m"false"[39m
+                  [33mheight[39m=[32m"20"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"1.5"[39m
+                  [33mviewBox[39m=[32m"0 0 20 20"[39m
+                  [33mwidth[39m=[32m"20"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M5 5l10 10"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M15 5 5 15"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mParet[0m
+                [36m</span>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Paret de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"south"[39m
+                  [36m>[39m
+                    [0mSud[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"north"[39m
+                  [36m>[39m
+                    [0mNord[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"west"[39m
+                  [36m>[39m
+                    [0mOest[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"east"[39m
+                  [36m>[39m
+                    [0mEst[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mInici[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Inici de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1 font-mono"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mmax[39m=[32m"40"[39m
+                  [33mmin[39m=[32m"0"[39m
+                  [33mstep[39m=[32m"0.05"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mFi[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Fi de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1 font-mono"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mmax[39m=[32m"40"[39m
+                  [33mmin[39m=[32m"0"[39m
+                  [33mstep[39m=[32m"0.05"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"4"[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mSentit[0m
+                [36m</span>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Sent...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"bg-surface border border-border rounded-2xl p-4 "[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"text-sm font-semibold uppercase tracking-wide text-muted mb-3"[39m
+      [36m>[39m
+        [0mPista central[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-xs text-muted mb-3"[39m
+      [36m>[39m
+        [0mPortes de la pista[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 lg:grid-cols-[1fr_240px] gap-3"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"border border-border rounded-md p-3 bg-surface/40 space-y-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Porta 1"[39m
+                [33mclass[39m=[32m"flex-1 bg-background border border-border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-warning"[39m
+                [33mplaceholder[39m=[32m"Porta 1"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m"Entrada"[39m
+              [36m/>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-xs text-muted flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mchecked[39m=[32m""[39m
+                  [33mtype[39m=[32m"checkbox"[39m
+                [36m/>[39m
+                [0mActiva[0m
+              [36m</label>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Treu la porta 1"[39m
+                [33mclass[39m=[32m"inline-flex items-center justify-center rounded-agh transition border border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-muted hover:text-text hover:bg-surface-2 min-h-9 min-w-9 "[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m""[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mfocusable[39m=[32m"false"[39m
+                  [33mheight[39m=[32m"20"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"1.5"[39m
+                  [33mviewBox[39m=[32m"0 0 20 20"[39m
+                  [33mwidth[39m=[32m"20"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M5 5l10 10"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M15 5 5 15"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mParet[0m
+                [36m</span>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Paret de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"south"[39m
+                  [36m>[39m
+                    [0mSud[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"north"[39m
+                  [36m>[39m
+                    [0mNord[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"west"[39m
+                  [36m>[39m
+                    [0mOest[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"east"[39m
+                  [36m>[39m
+                    [0mEst[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mInici[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Inici de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1 font-mono"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mmax[39m=[32m"40"[39m
+                  [33mmin[39m=[32m"0"[39m
+                  [33mstep[39m=[32m"0.05"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mFi[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Fi de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1 font-mono"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mmax[39m=[32m"40"[39m
+                  [33mmin[39m=[32m"0"[39m
+                  [33mstep[39m=[32m"0.05"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"4"[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mSentit[0m
+                [36m</span>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Sent...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/core-api-store.ui.test.tsx:192:18
+    190|     fireEvent.click(screen.getByRole("button", { name: "Afegeix una po…
+    191|     fireEvent.click(screen.getByRole("button", { name: "Desa" }));
+    192|     await screen.findByText("Portes desades");
+       |                  ^
+    193|
+    194|     const [first] = geometryPuts(api);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/16]⎯
+
+ FAIL  src/core-api-store.ui.test.tsx > E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter) > #3/#8 R-16-04 another editor's save in between: STALE_VERSION reads its catalog text in the editor, and [Desfés] brings their door in
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"bg-surface border border-border rounded-2xl p-4 "[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"text-sm font-semibold uppercase tracking-wide text-muted mb-3"[39m
+      [36m>[39m
+        [0mPista central[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-xs text-muted mb-3"[39m
+      [36m>[39m
+        [0mPortes de la pista[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 lg:grid-cols-[1fr_240px] gap-3"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"border border-border rounded-md p-3 bg-surface/40 space-y-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Porta 1"[39m
+                [33mclass[39m=[32m"flex-1 bg-background border border-border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-warning"[39m
+                [33mplaceholder[39m=[32m"Porta 1"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m"Entrada"[39m
+              [36m/>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-xs text-muted flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mchecked[39m=[32m""[39m
+                  [33mtype[39m=[32m"checkbox"[39m
+                [36m/>[39m
+                [0mActiva[0m
+              [36m</label>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Treu la porta 1"[39m
+                [33mclass[39m=[32m"inline-flex items-center justify-center rounded-agh transition border border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-muted hover:text-text hover:bg-surface-2 min-h-9 min-w-9 "[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m""[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mfocusable[39m=[32m"false"[39m
+                  [33mheight[39m=[32m"20"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"1.5"[39m
+                  [33mviewBox[39m=[32m"0 0 20 20"[39m
+                  [33mwidth[39m=[32m"20"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M5 5l10 10"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M15 5 5 15"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mParet[0m
+                [36m</span>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Paret de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"south"[39m
+                  [36m>[39m
+                    [0mSud[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"north"[39m
+                  [36m>[39m
+                    [0mNord[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"west"[39m
+                  [36m>[39m
+                    [0mOest[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"east"[39m
+                  [36m>[39m
+                    [0mEst[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mInici[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Inici de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1 font-mono"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mmax[39m=[32m"40"[39m
+                  [33mmin[39m=[32m"0"[39m
+                  [33mstep[39m=[32m"0.05"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mFi[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Fi de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1 font-mono"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mmax[39m=[32m"40"[39m
+                  [33mmin[39m=[32m"0"[39m
+                  [33mstep[39m=[32m"0.05"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"4"[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mSentit[0m
+                [36m</span>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Sentit de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"both"[39m
+                  [36m>[39m
+                    [0mEntrada i sortida[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0mEntrada[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"out"[39m
+                  [36m>[39m
+                    [0mSortida[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 gap-2 text-xs"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mMarge[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Marge de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1 font-mono"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mmin[39m=[32m"0"[39m
+                  [33mstep[39m=[32m"0.05"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"1.5"[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mNotes[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Notes de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1"[39m
+                  [33mplaceholder[39m=[32m""[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[10px] text-muted"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"lg:sticky lg:top-4 self-start"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-xs text-muted mb-1"[39m
+          [36m>[39m
+            [0mVista prèvia[0m
+          [36m</p>[39m
+          [36m<svg[39m
+            [33maria-label[39m=[32m"Portes de Pista central"[39m
+            [33mclass[39m=[32m"border border-border rounded bg-surface-2"[39m
+            [33mheight[39m=[32m"220"[39m
+            [33mrole[39m=[32m"img"[39m
+            [33mviewBox[39m=[32m"0 0 220 220"[39m
+            [33mwidth[39m=[32m"220"[39m
+          [36m>[39m
+            [36m<rect[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"98"[39m
+              [33mstroke[39m=[32m"var(--ah-color-course-ring)"[39m
+              [33mstroke-width[39m=[32m"1"[39m
+              [33mwidth[39m=[32m"196"[39m
+              [33mx[39m=[32m"12"[39m
+              [33my[39m=[32m"61"[39m
+            [36m/>[39m
+            [36m<g[39m
+              [33mopacity[39m=[32m"0.45"[39m
+            [36m>[39m
+              [36m<line[39m
+                [33mstroke[39m=[32m"var(--ah-color-course-door)"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"4"[39m
+                [33mx1[39m=[32m"21.8"[39m
+                [33mx2[39m=[32m"31.6"[39m
+                [33my1[39m=[32m"61"[39m
+                [33my2[39m=[32m"61"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mmarker-end[39m=[32m"url(#door-arrow)"[39m
+                [33mstroke[39m=[32m"var(--ah-color-course-marker-muted)"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mx1[39m=[32m"26.700000000000003"[39m
+                [33mx2[39m=[32m"26.700000000000003"[39m
+                [33my1[39m=[32m"61"[39m
+                [33my2[39m=[32m"79"[39m
+              [36m/>[39m
+              [36m<text[39m
+                [33mfill[39m=[32m"var(--ah-color-course-text)"[39m
+                [33mfont-size[39m=[32m"9"[39m
+                [33mx[39m=[32m"32.7"[39m
+                [33my[39m=[32m"55"[39m
+              [36m>[39m
+                [0mEntrada[0m
+              [36m</text>[39m
+            [36m</g>[39m
+            [36m<defs>[39m
+              [36m<marker[39m
+                [33mid[39m=[32m"door-arrow"[39m
+                [33mmarkerHeight[39m=[32m"6"[39m
+                [33mmarkerWidth[39m=[32m"6"[39m
+                [33morient[39m=[32m"auto-start-reverse"[39m
+                [33mrefX[39m=[32m"8"[39m
+                [33mrefY[39m=[32m"5"[39m
+                [33mviewBox[39m=[32m"0 0 10 10"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M 0 0 L 10 5 L 0 10 z"[39m
+                  [33mfill[39m=[32m"currentColor"[39m
+                [36m/>[39m
+              [36m</marker>[39m
+            [36m</defs>[39m
+          [36m</svg>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"mt-3 flex flex-wrap gap-2 items-center"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mAfegeix una porta[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-text hover:opacity-90 active:opacity-100 min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mDesa[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mDesfés[0m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"bg-surface border border-border rounded-2xl p-4 "[39m
+    [36m>[39m
+      [36m<h2[39m
+        [33mclass[39m=[32m"text-sm font-semibold uppercase tracking-wide text-muted mb-3"[39m
+      [36m>[39m
+        [0mPista central[0m
+      [36m</h2>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"text-xs text-muted mb-3"[39m
+      [36m>[39m
+        [0mPortes de la pista[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"grid grid-cols-1 lg:grid-cols-[1fr_240px] gap-3"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"border border-border rounded-md p-3 bg-surface/40 space-y-2"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex items-center gap-2"[39m
+            [36m>[39m
+              [36m<input[39m
+                [33maria-label[39m=[32m"Porta 1"[39m
+                [33mclass[39m=[32m"flex-1 bg-background border border-border rounded-md px-3 py-1.5 text-sm focus:outline-none focus:border-warning"[39m
+                [33mplaceholder[39m=[32m"Porta 1"[39m
+                [33mtype[39m=[32m"text"[39m
+                [33mvalue[39m=[32m"Entrada"[39m
+              [36m/>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"text-xs text-muted flex items-center gap-1"[39m
+              [36m>[39m
+                [36m<input[39m
+                  [33mchecked[39m=[32m""[39m
+                  [33mtype[39m=[32m"checkbox"[39m
+                [36m/>[39m
+                [0mActiva[0m
+              [36m</label>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Treu la porta 1"[39m
+                [33mclass[39m=[32m"inline-flex items-center justify-center rounded-agh transition border border-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warning disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-muted hover:text-text hover:bg-surface-2 min-h-9 min-w-9 "[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m""[39m
+                  [33mfill[39m=[32m"none"[39m
+                  [33mfocusable[39m=[32m"false"[39m
+                  [33mheight[39m=[32m"20"[39m
+                  [33mstroke[39m=[32m"currentColor"[39m
+                  [33mstroke-linecap[39m=[32m"round"[39m
+                  [33mstroke-linejoin[39m=[32m"round"[39m
+                  [33mstroke-width[39m=[32m"1.5"[39m
+                  [33mviewBox[39m=[32m"0 0 20 20"[39m
+                  [33mwidth[39m=[32m"20"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M5 5l10 10"[39m
+                  [36m/>[39m
+                  [36m<path[39m
+                    [33md[39m=[32m"M15 5 5 15"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mParet[0m
+                [36m</span>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Paret de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"south"[39m
+                  [36m>[39m
+                    [0mSud[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"north"[39m
+                  [36m>[39m
+                    [0mNord[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"west"[39m
+                  [36m>[39m
+                    [0mOest[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"east"[39m
+                  [36m>[39m
+                    [0mEst[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mInici[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Inici de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1 font-mono"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mmax[39m=[32m"40"[39m
+                  [33mmin[39m=[32m"0"[39m
+                  [33mstep[39m=[32m"0.05"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"2"[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mFi[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Fi de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1 font-mono"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mmax[39m=[32m"40"[39m
+                  [33mmin[39m=[32m"0"[39m
+                  [33mstep[39m=[32m"0.05"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"4"[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mSentit[0m
+                [36m</span>[39m
+                [36m<select[39m
+                  [33maria-label[39m=[32m"Sentit de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"both"[39m
+                  [36m>[39m
+                    [0mEntrada i sortida[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"in"[39m
+                  [36m>[39m
+                    [0mEntrada[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"out"[39m
+                  [36m>[39m
+                    [0mSortida[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"grid grid-cols-2 gap-2 text-xs"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mMarge[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Marge de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1 font-mono"[39m
+                  [33minputmode[39m=[32m"decimal"[39m
+                  [33mmin[39m=[32m"0"[39m
+                  [33mstep[39m=[32m"0.05"[39m
+                  [33mtype[39m=[32m"number"[39m
+                  [33mvalue[39m=[32m"1.5"[39m
+                [36m/>[39m
+              [36m</label>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"flex flex-col gap-1"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"text-muted"[39m
+                [36m>[39m
+                  [0mNotes[0m
+                [36m</span>[39m
+                [36m<input[39m
+                  [33maria-label[39m=[32m"Notes de la porta 1"[39m
+                  [33mclass[39m=[32m"bg-surface-2 border border-border rounded px-2 py-1"[39m
+                  [33mplaceholder[39m=[32m""[39m
+                  [33mtype[39m=[32m"text"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</label>[39m
+            [36m</div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"text-[10px] text-muted"[39m
+            [36m/>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"lg:sticky lg:top-4 self-start"[39m
+        [36m>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"text-xs text-muted mb-1"[39m
+          [36m>[39m
+            [0mVista prèvia[0m
+          [36m</p>[39m
+          [36m<svg[39m
+            [33maria-label[39m=[32m"Portes de Pista central"[39m
+            [33mclass[39m=[32m"border border-border rounded bg-surface-2"[39m
+            [33mheight[39m=[32m"220"[39m
+            [33mrole[39m=[32m"img"[39m
+            [33mviewBox[39m=[32m"0 0 220 220"[39m
+            [33mwidth[39m=[32m"220"[39m
+          [36m>[39m
+            [36m<rect[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mheight[39m=[32m"98"[39m
+              [33mstroke[39m=[32m"var(--ah-color-course-ring)"[39m
+              [33mstroke-width[39m=[32m"1"[39m
+              [33mwidth[39m=[32m"196"[39m
+              [33mx[39m=[32m"12"[39m
+              [33my[39m=[32m"61"[39m
+            [36m/>[39m
+            [36m<g[39m
+              [33mopacity[39m=[32m"0.45"[39m
+            [36m>[39m
+              [36m<line[39m
+                [33mstroke[39m=[32m"var(--ah-color-course-door)"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"4"[39m
+                [33mx1[39m=[32m"21.8"[39m
+                [33mx2[39m=[32m"31.6"[39m
+                [33my1[39m=[32m"61"[39m
+                [33my2[39m=[32m"61"[39m
+              [36m/>[39m
+              [36m<line[39m
+                [33mmarker-end[39m=[32m"url(#door-arrow)"[39m
+                [33mstroke[39m=[32m"var(--ah-color-course-marker-muted)"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mx1[39m=[32m"26.700000000000003"[39m
+                [33mx2[39m=[32m"26.700000000000003"[39m
+                [33my1[39m=[32m"61"[39m
+                [33my2[39m=[32m"79"[39m
+              [36m/>[39m
+              [36m<text[39m
+                [33mfill[39m=[32m"var(--ah-color-course-text)"[39m
+                [33mfont-size[39m=[32m"9"[39m
+                [33mx[39m=[32m"32.7"[39m
+                [33my[39m=[32m"55"[39m
+              [36m>[39m
+                [0mEntrada[0m
+              [36m</text>[39m
+            [36m</g>[39m
+            [36m<defs>[39m
+              [36m<marker[39m
+                [33mid[39m=[32m"door-arrow"[39m
+                [33mmarkerHeight[39m=[32m"6"[39m
+                [33mmarkerWidth[39m=[32m"6"[39m
+                [33morient[39m=[32m"auto-start-reverse"[39m
+                [33mrefX[39m=[32m"8"[39m
+                [33mrefY[39m=[32m"5"[39m
+                [33mviewBox[39m=[32m"0 0 10 10"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"M 0 0 L 10 5 L 0 10 z"[39m
+                  [33mfill[39m=[32m"currentColor"[39m
+                [36m/>[39m
+              [36m</marker>[39m
+            [36m</defs>[39m
+          [36m</svg>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"mt-3 flex flex-wrap gap-2 items-center"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mAfegeix una porta[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-text hover:opacity-90 active:opacity-100 min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mDesa[0m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)] min-h-[34px] px-3 text-xs "[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0mDesfés[0m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/core-api-store.ui.test.tsx:233:26
+    231|     fireEvent.click(screen.getByRole("button", { name: "Desa" }));
+    232|
+    233|     expect((await screen.findByRole("alert")).textContent).toBe(
+       |                          ^
+    234|       "Aquest element s'ha modificat des d'un altre lloc. Actualitzeu-…
+    235|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/16]⎯
+
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  16 failed | 9 passed (25)
+   Start at  19:12:25
+   Duration  5.18s (transform 43%, tests 35%, environment 12%, import 9%)
+
+  Transform  transforming modules took 3.07s · 43% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+
+exit 1

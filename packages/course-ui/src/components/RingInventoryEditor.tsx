@@ -78,7 +78,8 @@ export interface RingInventoryEditorLabels {
   readonly decrease: (name: string) => string;
   readonly quantity: (name: string) => string;
   readonly increase: (name: string) => string;
-  readonly saveError: string;
+  /** An api failure in the reader's language, by its code (the shared catalog mapper). */
+  readonly error: (error: unknown) => string;
   readonly saved: string;
   readonly saving: string;
   readonly save: string;
@@ -102,7 +103,8 @@ export function RingInventoryEditor({ ring, labels, onSaved }: Props) {
 
   const [values, setValues] = useState<Record<string, number>>(initial);
   const [saving, setSaving] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [error, setError] = useState<unknown>(null);
+  const hasError = error !== null;
   const [savedAt, setSavedAt] = useState<number | null>(null);
 
   const dirty = useMemo(() => {
@@ -127,8 +129,9 @@ export function RingInventoryEditor({ ring, labels, onSaved }: Props) {
   }
 
   async function handleSave() {
+    if (saving) return;
     setSaving(true);
-    setHasError(false);
+    setError(null);
     try {
       const rows = OBSTACLE_TYPES.flatMap(({ id: obstacle_type }) => {
         const quantity = values[obstacle_type] ?? 0;
@@ -138,8 +141,8 @@ export function RingInventoryEditor({ ring, labels, onSaved }: Props) {
       const updated = await store.updateRingInventory(ring.id, rows);
       onSaved(updated);
       setSavedAt(Date.now());
-    } catch {
-      setHasError(true);
+    } catch (saveError) {
+      setError(saveError);
     } finally {
       setSaving(false);
     }
@@ -147,7 +150,7 @@ export function RingInventoryEditor({ ring, labels, onSaved }: Props) {
 
   function handleReset() {
     setValues(initial);
-    setHasError(false);
+    setError(null);
   }
 
   const totalUnits = Object.values(values).reduce((acc, q) => acc + (q ?? 0), 0);
@@ -173,8 +176,11 @@ export function RingInventoryEditor({ ring, labels, onSaved }: Props) {
       </div>
 
       {hasError && (
-        <div className="mb-3 p-2 border border-danger bg-danger/10 text-danger rounded text-xs">
-          {labels.saveError}
+        <div
+          className="mb-3 p-2 border border-danger bg-danger/10 text-danger rounded text-xs"
+          role="alert"
+        >
+          {labels.error(error)}
         </div>
       )}
       {savedAt && !dirty && !hasError && (

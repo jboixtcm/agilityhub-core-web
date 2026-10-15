@@ -6,6 +6,7 @@ import {
   placeControlPointsInRing,
   placeCoursePoint,
   placeObstacleInRing,
+  placedObstacleHeadingVector,
   type CourseData,
   type CoursePlacement,
   type Warning,
@@ -485,28 +486,16 @@ export function PlannerCanvas({
             const isWarn = obstaclesWithWarnings.has(o.sourceId);
 
             // Visual rotation angle for this obstacle, in the SVG's already-
-            // Y-flipped frame. We walk the heading vector through the same
-            // flip → implicit-Smarter-Y → rotate chain placeCoursePoint
-            // applies to positions, then take atan2 to get a single
-            // rotation we can pass to SVG `rotate(...)`. Doing it on the
-            // vector instead of stacking angle formulas keeps this correct
-            // for every flip + rotate combo.
+            // Y-flipped frame. The heading vector comes from course-core's
+            // `placedObstacleHeadingVector` (flip → Smarter Y-down → rotate),
+            // the same function persistence and Planner3D use, then atan2
+            // gives a single rotation we can pass to SVG `rotate(...)`.
             //
             // The angle is then NEGATED before being handed to SVG `rotate`
             // because the outer <g scale(1 -1) ...> reverses orientation:
             // a positive CCW math-angle on a vector corresponds to a
             // negative-degree SVG rotation under that flip.
-            const θ = ((o.rotationDegrees ?? 0) * Math.PI) / 180;
-            const sx = placement.flipX ? -1 : 1;
-            const sy = placement.flipY ? -1 : 1;
-            const dx = sx * Math.cos(θ);
-            let dy = sy * Math.sin(θ);
-            dy = -dy;
-            const φ = ((placement.rotationDegrees ?? 0) * Math.PI) / 180;
-            const cφ = Math.cos(φ);
-            const sφ = Math.sin(φ);
-            const rx = dx * cφ - dy * sφ;
-            const ry = dx * sφ + dy * cφ;
+            const { x: rx, y: ry } = placedObstacleHeadingVector(o.rotationDegrees, placement);
             const visualAngleDeg = (Math.atan2(ry, rx) * 180) / Math.PI;
 
             const hasIcon = OBSTACLE_FOOTPRINTS_M[o.obstacleType] != null;

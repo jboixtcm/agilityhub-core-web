@@ -1,0 +1,1164 @@
+diff --git a/packages/api-client/src/core-api-store.ts b/packages/api-client/src/core-api-store.ts
+index 7d485ff..1eacfe9 100644
+--- a/packages/api-client/src/core-api-store.ts
++++ b/packages/api-client/src/core-api-store.ts
+@@ -1,5 +1,6 @@
+ import {
+   doorPolygonFromEdge,
++  placedObstacleHeadingDegrees,
+   placeObstacleInRing,
+   type CourseData,
+   type CoursePlacement,
+@@ -34,6 +35,7 @@ type ApiBuildSession = components["schemas"]["BuildSession"];
+ type ApiBuildObstacle = components["schemas"]["BuildObstacle"];
+ type ApiCalibrationLog = components["schemas"]["CalibrationLog"];
+ type ApiCourse = components["schemas"]["Course"];
++type ApiCourseRequest = components["schemas"]["CourseRequest"];
+ type ApiGeometry = components["schemas"]["RingGeometry"];
+ type ApiGeometryRequest = components["schemas"]["RingGeometryRequest"];
+ type ApiInventory = components["schemas"]["ObstacleInventory"];
+@@ -75,16 +77,6 @@ function placementMode(
+   return "PRESERVE_METERS";
+ }
+ 
+-function placementRotation(obstacleDegrees: number | null, placement: CoursePlacement): number {
+-  const theta = ((obstacleDegrees ?? 0) * Math.PI) / 180;
+-  const x = (placement.flipX ? -1 : 1) * Math.cos(theta);
+-  const y = (placement.flipY ? -1 : 1) * Math.sin(theta);
+-  const phi = (placement.rotationDegrees * Math.PI) / 180;
+-  const rx = x * Math.cos(phi) - y * Math.sin(phi);
+-  const ry = x * Math.sin(phi) + y * Math.cos(phi);
+-  return (Math.atan2(ry, rx) * 180) / Math.PI;
+-}
+-
+ function resolvedObstacles(course: CourseData, placement: CoursePlacement) {
+   const numbers = new Map<string, number[]>();
+   for (const number of course.numbers) {
+@@ -101,7 +93,8 @@ function resolvedObstacles(course: CourseData, placement: CoursePlacement) {
+           {
+             numbers: numbers.get(obstacle.sourceId) ?? [],
+             obstacleId: obstacle.sourceId,
+-            rotationDeg: placementRotation(obstacle.rotationDegrees, placement),
++            // The ring-frame Y-up heading both planners render (R-16-01/05, one convention).
++            rotationDeg: placedObstacleHeadingDegrees(obstacle.rotationDegrees, placement),
+             type: obstacle.obstacleType,
+             x: point.x,
+             y: point.y,
+@@ -280,6 +273,13 @@ export class CoreApiStore implements PlannerStore {
+   readonly #subscribeBuildEvents: CoreApiStoreOptions["subscribeBuildEvents"];
+   readonly #ringBase = new Map<string, ApiRing>();
+   readonly #ringCache = new Map<string, PlannerRing>();
++  /**
++   * The complete `POST /courses` body each upload `Idempotency-Key` owns (CONVENCIONS_API §7):
++   * once the source bytes are stored, a retry under the same key resends exactly this body (same
++   * `sourceFileKey`), never a new upload, so a lost answer is recovered instead of tripping
++   * `IDEMPOTENCY_KEY_REUSED`. A new file comes with a new key (UploadCourse), hence a new upload.
++   */
++  readonly #courseUploads = new Map<string, ApiCourseRequest>();
+ 
+   constructor(options: CoreApiStoreOptions) {
+     this.#client = options.client ?? apiClient;
+@@ -350,7 +350,11 @@ export class CoreApiStore implements PlannerStore {
+     return refreshed;
+   }
+ 
+-  async updateRingDoors(ringId: string, doors: readonly SaveRingDoorInput[]): Promise<PlannerRing> {
++  async updateRingDoors(
++    ringId: string,
++    doors: readonly SaveRingDoorInput[],
++    geometryVersion: number,
++  ): Promise<PlannerRing> {
+     const current = required(
+       (await this.#client.GET("/rings/{id}/geometry", { params: { path: { id: ringId } } })).data,
+       "ringGeometry",
+@@ -373,8 +377,12 @@ export class CoreApiStore implements PlannerStore {
+       side: door.side.toUpperCase() as "EAST" | "NORTH" | "SOUTH" | "WEST",
+       startM: door.startMeters,
+     }));
++    // The doors replace the list the user edited, so the body carries the version the user edited
++    // (`geometryVersion`), never the fresh one: if another editor saved in between, the api
++    // answers 409 STALE_VERSION and their doors survive (CONVENCIONS_API §7, R-16-04). When the
++    // versions match, `current` is exactly the geometry the user edited.
+     const result = await this.#client.PUT("/rings/{id}/geometry", {
+-      body: ringGeometryRequest(current, { doors: apiDoors }),
++      body: { ...ringGeometryRequest(current, { doors: apiDoors }), version: geometryVersion },
+       params: { path: { id: ringId } },
+     });
+     const geometry = required(result.data, "putRingGeometry");
+@@ -394,6 +402,17 @@ export class CoreApiStore implements PlannerStore {
+   }
+ 
+   async uploadSmarterFile(input: UploadCourseInput): Promise<{ readonly course: PlannerCourse }> {
++    const body =
++      this.#courseUploads.get(input.submissionKey) ?? (await this.#storeCourseSource(input));
++    const result = await this.#client.POST("/courses", {
++      body,
++      headers: { "Idempotency-Key": input.submissionKey },
++    });
++    return { course: plannerCourse(required(result.data, "createCourse")) };
++  }
++
++  /** Stores the `.txt` (signed upload) and remembers the creation body under the upload's key. */
++  async #storeCourseSource(input: UploadCourseInput): Promise<ApiCourseRequest> {
+     const upload = required(
+       (
+         await this.#client.POST("/courses/upload-urls", {
+@@ -419,23 +438,21 @@ export class CoreApiStore implements PlannerStore {
+         ? "AGILITY"
+         : "OTHER";
+     const designedOn = /^\d{4}-\d{2}-\d{2}$/.test(metadata.date) ? metadata.date : null;
+-    const result = await this.#client.POST("/courses", {
+-      body: {
+-        designedOn,
+-        designerName: metadata.designer.trim() === "" ? null : metadata.designer,
+-        discipline,
+-        levelIds: [],
+-        name: { [this.#locale]: input.courseData.title },
+-        normalizedJson: input.courseData,
+-        schemaVersion: 1,
+-        source: "SMARTER",
+-        sourceFileKey: upload.fileKey,
+-        tags: [],
+-        visibility: "CLUB",
+-      },
+-      headers: { "Idempotency-Key": input.submissionKey },
+-    });
+-    return { course: plannerCourse(required(result.data, "createCourse")) };
++    const body: ApiCourseRequest = {
++      designedOn,
++      designerName: metadata.designer.trim() === "" ? null : metadata.designer,
++      discipline,
++      levelIds: [],
++      name: { [this.#locale]: input.courseData.title },
++      normalizedJson: input.courseData,
++      schemaVersion: 1,
++      source: "SMARTER",
++      sourceFileKey: upload.fileKey,
++      tags: [],
++      visibility: "CLUB",
++    };
++    this.#courseUploads.set(input.submissionKey, body);
++    return body;
+   }
+ 
+   async savePlacement(input: SavePlacementInput): Promise<PlannerPlacement> {
+@@ -455,6 +472,8 @@ export class CoreApiStore implements PlannerStore {
+                 ? "FREE_FLOATING"
+                 : null,
+         name: input.name ?? null,
++        // R-16-05: only an ADMIN's confirmed retry overrides a critical warning.
++        ...(input.force === true ? { force: true } : {}),
+         placementMode: placementMode(input.placement.placementMode),
+         resolvedObstacles: resolvedObstacles(input.course, input.placement),
+         ringId: input.ringId,
+@@ -650,6 +669,17 @@ export class CoreApiStore implements PlannerStore {
+     );
+   }
+ 
++  async finishBuildSession(input: {
++    readonly buildSessionId: string;
++    readonly submissionKey: string;
++  }): Promise<PlannerBuildSession> {
++    const result = await this.#client.POST("/build-sessions/{id}/finish", {
++      headers: { "Idempotency-Key": input.submissionKey },
++      params: { path: { id: input.buildSessionId } },
++    });
++    return plannerBuildSession(required(result.data, "finishBuildSession"));
++  }
++
+   subscribeBuildObstacleStatuses(
+     buildSessionId: string,
+     onChange: (status: PlannerBuildObstacleStatus) => void,
+diff --git a/packages/course-core/src/geometry/units.ts b/packages/course-core/src/geometry/units.ts
+index e9dea16..6ffa5c9 100644
+--- a/packages/course-core/src/geometry/units.ts
++++ b/packages/course-core/src/geometry/units.ts
+@@ -27,19 +27,34 @@ export interface FormatLengthOptions {
+   readonly precision?: number;
+   /** If true, include the unit suffix (" m" / " ft"). Default: true. */
+   readonly withUnit?: boolean;
++  /**
++   * BCP 47 locale of the reader (the club's locale in the apps, R-16-17): «0,50 m» in `ca`/`es`,
++   * «0.50 m» in `en`. Without it the recovered `toFixed` output is kept (files, logs, exports).
++   */
++  readonly locale?: string;
++}
++
++function formatNumber(value: number, precision: number, locale: string | undefined): string {
++  const rounded = roundTo(value, precision);
++  return locale === undefined
++    ? rounded.toFixed(precision)
++    : new Intl.NumberFormat(locale, {
++        maximumFractionDigits: precision,
++        minimumFractionDigits: precision,
++      }).format(rounded);
+ }
+ 
+ export function formatMeters(m: number, opts: FormatLengthOptions = {}): string {
+   const precision = opts.precision ?? 2;
+   const withUnit = opts.withUnit ?? true;
+-  const v = roundTo(m, precision).toFixed(precision);
++  const v = formatNumber(m, precision, opts.locale);
+   return withUnit ? `${v} m` : v;
+ }
+ 
+ export function formatFeet(ft: number, opts: FormatLengthOptions = {}): string {
+   const precision = opts.precision ?? 1;
+   const withUnit = opts.withUnit ?? true;
+-  const v = roundTo(ft, precision).toFixed(precision);
++  const v = formatNumber(ft, precision, opts.locale);
+   return withUnit ? `${v} ft` : v;
+ }
+ 
+diff --git a/packages/course-ui/src/components/PlacementControls.tsx b/packages/course-ui/src/components/PlacementControls.tsx
+index 9ff3667..95f90a8 100644
+--- a/packages/course-ui/src/components/PlacementControls.tsx
++++ b/packages/course-ui/src/components/PlacementControls.tsx
+@@ -8,6 +8,8 @@ import { Card, CardTitle } from './ui/Card.js';
+ 
+ interface Props {
+   units: UnitSystem;
++  /** The club's locale for the step lengths («0,50 m» in `ca`, R-16-17). */
++  locale: string;
+   labels: {
+     readonly center: string;
+     readonly flipHorizontal: string;
+@@ -41,6 +43,7 @@ const STEP_OPTIONS_M = [0.1, 0.5, 1.0] as const;
+ 
+ export function PlacementControls({
+   units,
++  locale,
+   labels,
+   disabled,
+   onNudge,
+@@ -117,7 +120,7 @@ export function PlacementControls({
+         >
+           {STEP_OPTIONS_M.map((s) => (
+             <option key={s} value={s}>
+-              {formatLength(s, units)}
++              {formatLength(s, units, { locale })}
+             </option>
+           ))}
+         </select>
+diff --git a/packages/course-ui/src/components/Planner3D.tsx b/packages/course-ui/src/components/Planner3D.tsx
+index 210d0e7..397ca9c 100644
+--- a/packages/course-ui/src/components/Planner3D.tsx
++++ b/packages/course-ui/src/components/Planner3D.tsx
+@@ -20,15 +20,17 @@
+  *
+  * Flip + heading math
+  * -------------------
+- * The same direction-vector chain we use in PlannerCanvas (flip → implicit
+- * Smarter Y-down → user rotation φ) is reused here. The resulting heading
+- * angle, converted with atan2, becomes the obstacle's world-Y rotation.
++ * The direction-vector chain (flip → Smarter Y-down → user rotation φ) lives in
++ * `course-core` (`placedObstacleHeadingVector`) and is shared with PlannerCanvas and with
++ * persistence. The resulting heading, converted with atan2, becomes the obstacle's world-Y
++ * rotation.
+  */
+ import {
+   normalizeDoorSide,
+   placeControlPointsInRing,
+   placeCoursePoint,
+   placeObstacleInRing,
++  placedObstacleHeadingVector,
+   type CourseData,
+   type CoursePlacement,
+   type ObstacleType,
+@@ -670,39 +672,19 @@ function buildDoubleJumpOverlay(): THREE.Group {
+   return group;
+ }
+ 
+-/** Compute the visual heading (Y-axis rotation, radians) for an obstacle, including flip + placement rotation. */
+-function obstacleHeadingY(obstacleRotDeg: number | null, placement: CoursePlacement): number {
+-  const θ = ((obstacleRotDeg ?? 0) * Math.PI) / 180;
+-  const sx = placement.flipX ? -1 : 1;
+-  const sy = placement.flipY ? -1 : 1;
+-  // Heading vector in design frame after flip.
+-  const dx = sx * Math.cos(θ);
+-  let dy = sy * Math.sin(θ);
+-  // Positions in CourseData are now ring Y-up (parser flips at ingest),
+-  // but ANGLES (`obstacle.rotationDegrees`) are still authored in Smarter's
+-  // Y-down convention — the parser doesn't touch them. So we still need
+-  // this one flip on the heading vector's Y component to convert the
+-  // angle convention. Don't remove unless `rotationDegrees` is also flipped
+-  // at parse time (and the Unity reader's heading math is updated in
+-  // lockstep).
+-  dy = -dy;
+-  // Apply user rotation φ in ring frame.
+-  const φ = ((placement.rotationDegrees ?? 0) * Math.PI) / 180;
+-  const cφ = Math.cos(φ);
+-  const sφ = Math.sin(φ);
+-  const rx = dx * cφ - dy * sφ;
+-  const ry = dx * sφ + dy * cφ;
+-  // (rx, ry) is the heading direction in ring frame. We need the
+-  // three.js Y-rotation α that makes the model's local +X (its "forward")
+-  // point in this direction in world space.
+-  //
+-  // Three.js rotates around +Y by α as: (1, 0, 0) → (cos α, 0, −sin α).
+-  // Ring +X maps to world +X; ring +Y maps to world −Z. So a ring-frame
+-  // heading (rx, ry) corresponds to world direction (rx, 0, −ry). Match
+-  // components against the rotated +X above:
+-  //   cos α = rx,  −sin α = −ry  →  sin α = ry
+-  //   α = atan2(ry, rx)
+-  return Math.atan2(ry, rx);
++/**
++ * The visual heading (Y-axis rotation, radians) of an obstacle, including flip + placement
++ * rotation. The ring-frame heading comes from `course-core` (`placedObstacleHeadingVector`), the
++ * same function persistence uses for `resolvedObstacles[].rotationDeg`, so the preview and the
++ * saved AR geometry never disagree (E9-W02 round 2, review #2).
++ *
++ * Three.js rotates around +Y by α as: (1, 0, 0) → (cos α, 0, −sin α). Ring +X maps to world +X;
++ * ring +Y maps to world −Z. So a ring-frame heading (rx, ry) corresponds to world direction
++ * (rx, 0, −ry): cos α = rx, sin α = ry → α = atan2(ry, rx).
++ */
++export function obstacleHeadingY(obstacleRotDeg: number | null, placement: CoursePlacement): number {
++  const { x, y } = placedObstacleHeadingVector(obstacleRotDeg, placement);
++  return Math.atan2(y, x);
+ }
+ 
+ /**
+@@ -1674,6 +1656,12 @@ function anchorDoorRing(
+   };
+ }
+ 
++/** The tokens of the obstacle number badge (`makeTextSprite`). */
++export const COURSE_NUMBER_BADGE = {
++  background: '--ah-color-course-number-bg',
++  foreground: '--ah-color-course-number-fg',
++} as const;
++
+ /** Build a text sprite using a canvas texture. Cheap, readable, no font-loading dance. */
+ function makeTextSprite(text: string): THREE.Sprite {
+   const canvas = document.createElement('canvas');
+@@ -1681,13 +1669,13 @@ function makeTextSprite(text: string): THREE.Sprite {
+   canvas.height = 128;
+   const ctx = canvas.getContext('2d')!;
+   ctx.clearRect(0, 0, 128, 128);
+-  ctx.globalAlpha = 0.85;
+-  ctx.fillStyle = themeColor('--ah-color-course-obstacle-dark');
++  // Opaque badge on the contrasting number pair (E9-W02 round 2, review #8): the recovered
++  // dark-on-dark pairing left only the badge's transparency to tell the digit apart.
++  ctx.fillStyle = themeColor(COURSE_NUMBER_BADGE.background);
+   ctx.beginPath();
+   ctx.arc(64, 64, 40, 0, Math.PI * 2);
+   ctx.fill();
+-  ctx.globalAlpha = 1;
+-  ctx.fillStyle = themeColor('--ah-color-course-text');
++  ctx.fillStyle = themeColor(COURSE_NUMBER_BADGE.foreground);
+   ctx.font = 'bold 56px system-ui, -apple-system, sans-serif';
+   ctx.textAlign = 'center';
+   ctx.textBaseline = 'middle';
+diff --git a/packages/course-ui/src/components/PlannerCanvas.tsx b/packages/course-ui/src/components/PlannerCanvas.tsx
+index 563a35f..ee18fac 100644
+--- a/packages/course-ui/src/components/PlannerCanvas.tsx
++++ b/packages/course-ui/src/components/PlannerCanvas.tsx
+@@ -6,6 +6,7 @@ import {
+   placeControlPointsInRing,
+   placeCoursePoint,
+   placeObstacleInRing,
++  placedObstacleHeadingVector,
+   type CourseData,
+   type CoursePlacement,
+   type Warning,
+@@ -485,28 +486,16 @@ export function PlannerCanvas({
+             const isWarn = obstaclesWithWarnings.has(o.sourceId);
+ 
+             // Visual rotation angle for this obstacle, in the SVG's already-
+-            // Y-flipped frame. We walk the heading vector through the same
+-            // flip → implicit-Smarter-Y → rotate chain placeCoursePoint
+-            // applies to positions, then take atan2 to get a single
+-            // rotation we can pass to SVG `rotate(...)`. Doing it on the
+-            // vector instead of stacking angle formulas keeps this correct
+-            // for every flip + rotate combo.
++            // Y-flipped frame. The heading vector comes from course-core's
++            // `placedObstacleHeadingVector` (flip → Smarter Y-down → rotate),
++            // the same function persistence and Planner3D use, then atan2
++            // gives a single rotation we can pass to SVG `rotate(...)`.
+             //
+             // The angle is then NEGATED before being handed to SVG `rotate`
+             // because the outer <g scale(1 -1) ...> reverses orientation:
+             // a positive CCW math-angle on a vector corresponds to a
+             // negative-degree SVG rotation under that flip.
+-            const θ = ((o.rotationDegrees ?? 0) * Math.PI) / 180;
+-            const sx = placement.flipX ? -1 : 1;
+-            const sy = placement.flipY ? -1 : 1;
+-            const dx = sx * Math.cos(θ);
+-            let dy = sy * Math.sin(θ);
+-            dy = -dy;
+-            const φ = ((placement.rotationDegrees ?? 0) * Math.PI) / 180;
+-            const cφ = Math.cos(φ);
+-            const sφ = Math.sin(φ);
+-            const rx = dx * cφ - dy * sφ;
+-            const ry = dx * sφ + dy * cφ;
++            const { x: rx, y: ry } = placedObstacleHeadingVector(o.rotationDegrees, placement);
+             const visualAngleDeg = (Math.atan2(ry, rx) * 180) / Math.PI;
+ 
+             const hasIcon = OBSTACLE_FOOTPRINTS_M[o.obstacleType] != null;
+diff --git a/packages/course-ui/src/components/RingDoorEditor.tsx b/packages/course-ui/src/components/RingDoorEditor.tsx
+index baed087..db25257 100644
+--- a/packages/course-ui/src/components/RingDoorEditor.tsx
++++ b/packages/course-ui/src/components/RingDoorEditor.tsx
+@@ -10,9 +10,14 @@
+  *     and end position along the wall, a flow direction (in/out/both),
+  *     an optional clearance override and an active/inactive toggle.
+  *
+- * Both the storage layer (mock + supabase) and the BuildSessionExport
+- * already carry these fields; this editor produces inputs the store
+- * accepts via `PlannerStore.updateRingDoors`.
++ * Both the storage layer and the BuildSessionExport already carry these
++ * fields; this editor produces inputs the store accepts via
++ * `PlannerStore.updateRingDoors`, under optimistic locking: the save sends
++ * the geometry version the user edited, so another editor's save in
++ * between answers `409 STALE_VERSION` (shown here through the caller's
++ * catalog mapper) instead of being overwritten. After a save the drafts
++ * are rebuilt from the saved ring (stable ids, clean state); after a
++ * conflict, [Revert] reads the latest ring before the user edits again.
+  *
+  * Visual preview: a tiny SVG showing the ring rectangle with each
+  * configured door drawn on its wall plus a flow arrow. Sized for clarity
+@@ -86,7 +91,8 @@ export interface RingDoorEditorLabels {
+   readonly save: string;
+   readonly revert: string;
+   readonly saved: string;
+-  readonly saveError: string;
++  /** An api failure in the reader's language, by its code (the shared catalog mapper). */
++  readonly error: (error: unknown) => string;
+   readonly validation: {
+     readonly maximum: (count: number, maximum: number) => string;
+     readonly endpoints: (door: string) => string;
+@@ -343,38 +349,69 @@ function DoorPreview({
+ // Editor
+ // ---------------------------------------------------------------------------
+ 
+-export function RingDoorEditor({ ring, labels, onSaved }: Props) {
+-  const initial = useMemo(
+-    () => ring.doors.map((d, i) => ringDoorToDraft(d, ring, i)),
+-    [ring],
++function draftsOf(ring: PlannerRing): DraftDoor[] {
++  return ring.doors.map((d, i) => ringDoorToDraft(d, ring, i));
++}
++
++function differs(drafts: readonly DraftDoor[], initial: readonly DraftDoor[]): boolean {
++  if (drafts.length !== initial.length) return true;
++  for (let i = 0; i < drafts.length; i += 1) {
++    const a = drafts[i]!;
++    const b = initial[i]!;
++    if (
++      a.id !== b.id ||
++      a.label !== b.label ||
++      a.side !== b.side ||
++      a.startMeters !== b.startMeters ||
++      a.endMeters !== b.endMeters ||
++      a.flow !== b.flow ||
++      a.isActive !== b.isActive ||
++      a.clearanceMeters !== b.clearanceMeters ||
++      a.notes !== b.notes
++    ) {
++      return true;
++    }
++  }
++  return false;
++}
++
++function isStaleVersion(error: unknown): boolean {
++  return (
++    typeof error === 'object' &&
++    error !== null &&
++    (error as { code?: unknown }).code === 'STALE_VERSION'
+   );
++}
++
++export function RingDoorEditor({ ring: ringProp, labels, onSaved }: Props) {
++  // The ring the drafts were built from: the prop, then each saved (or, after a conflict,
++  // re-read) ring. Its `geometry_version` is the version the next save sends.
++  const [ring, setRing] = useState<PlannerRing>(ringProp);
++  const initial = useMemo(() => draftsOf(ring), [ring]);
+   const [drafts, setDrafts] = useState<readonly DraftDoor[]>(initial);
+   const [saving, setSaving] = useState(false);
+-  const [hasError, setHasError] = useState(false);
++  const [error, setError] = useState<unknown>(null);
+   const [savedAt, setSavedAt] = useState<number | null>(null);
++  const hasError = error !== null;
+ 
+   const validation = useMemo(() => validateDrafts(drafts, ring, labels), [drafts, labels, ring]);
+-  const dirty = useMemo(() => {
+-    if (drafts.length !== initial.length) return true;
+-    for (let i = 0; i < drafts.length; i += 1) {
+-      const a = drafts[i]!;
+-      const b = initial[i]!;
+-      if (
+-        a.id !== b.id ||
+-        a.label !== b.label ||
+-        a.side !== b.side ||
+-        a.startMeters !== b.startMeters ||
+-        a.endMeters !== b.endMeters ||
+-        a.flow !== b.flow ||
+-        a.isActive !== b.isActive ||
+-        a.clearanceMeters !== b.clearanceMeters ||
+-        a.notes !== b.notes
+-      ) {
+-        return true;
+-      }
++  const dirty = useMemo(() => differs(drafts, initial), [drafts, initial]);
++
++  // A new ring from the parent: another ring always replaces the form; a newer version of this
++  // ring (the parent re-read it) only when the user has nothing unsaved, so stale drafts are never
++  // rebased onto a fresher version.
++  const [seenProp, setSeenProp] = useState(ringProp);
++  if (seenProp !== ringProp) {
++    setSeenProp(ringProp);
++    const otherRing = ringProp.id !== ring.id;
++    const newer = ringProp.geometry_version > ring.geometry_version;
++    if (otherRing || (newer && !dirty)) {
++      setRing(ringProp);
++      setDrafts(draftsOf(ringProp));
++      setError(null);
++      setSavedAt(null);
+     }
+-    return false;
+-  }, [drafts, initial]);
++  }
+ 
+   function patchDraft(key: string, patch: Partial<DraftDoor>) {
+     setDrafts((prev) => prev.map((d) => (d.key === key ? { ...d, ...patch } : d)));
+@@ -409,23 +446,52 @@ export function RingDoorEditor({ ring, labels, onSaved }: Props) {
+     setSavedAt(null);
+   }
+ 
+-  function handleReset() {
+-    setDrafts(initial);
+-    setHasError(false);
+-    setSavedAt(null);
++  function adopt(next: PlannerRing) {
++    setRing(next);
++    setDrafts(draftsOf(next));
++  }
++
++  async function handleReset() {
++    if (!isStaleVersion(error)) {
++      setDrafts(initial);
++      setError(null);
++      setSavedAt(null);
++      return;
++    }
++    // Another editor saved in between: read their doors before the user edits again, so the
++    // next save carries the latest version with a list that includes their changes.
++    setSaving(true);
++    try {
++      const latest = await getPlannerStore().getRing(ring.id);
++      if (latest !== null) {
++        adopt(latest);
++        onSaved(latest);
++      }
++      setError(null);
++      setSavedAt(null);
++    } catch (readError) {
++      setError(readError);
++    } finally {
++      setSaving(false);
++    }
+   }
+ 
+   async function handleSave() {
+-    if (validation.errors.length > 0) return;
++    if (validation.errors.length > 0 || saving) return;
+     setSaving(true);
+-    setHasError(false);
++    setError(null);
+     try {
+       const store = getPlannerStore();
+-      const updated = await store.updateRingDoors(ring.id, validation.inputs);
++      const updated = await store.updateRingDoors(
++        ring.id,
++        validation.inputs,
++        ring.geometry_version,
++      );
++      adopt(updated);
+       onSaved(updated);
+       setSavedAt(Date.now());
+-    } catch {
+-      setHasError(true);
++    } catch (saveError) {
++      setError(saveError);
+     } finally {
+       setSaving(false);
+     }
+@@ -625,7 +691,7 @@ export function RingDoorEditor({ ring, labels, onSaved }: Props) {
+           variant="outline"
+           size="sm"
+           onClick={handleReset}
+-          disabled={!dirty || saving}
++          disabled={(!dirty && !hasError) || saving}
+         >
+           {labels.revert}
+         </Button>
+@@ -640,7 +706,7 @@ export function RingDoorEditor({ ring, labels, onSaved }: Props) {
+       )}
+       {hasError && (
+         <p className="mt-2 text-xs text-danger" role="alert">
+-          {labels.saveError}
++          {labels.error(error)}
+         </p>
+       )}
+       {savedAt && !dirty && !hasError && (
+diff --git a/packages/course-ui/src/components/RingInventoryEditor.tsx b/packages/course-ui/src/components/RingInventoryEditor.tsx
+index 0facfbf..3ca1845 100644
+--- a/packages/course-ui/src/components/RingInventoryEditor.tsx
++++ b/packages/course-ui/src/components/RingInventoryEditor.tsx
+@@ -78,7 +78,8 @@ export interface RingInventoryEditorLabels {
+   readonly decrease: (name: string) => string;
+   readonly quantity: (name: string) => string;
+   readonly increase: (name: string) => string;
+-  readonly saveError: string;
++  /** An api failure in the reader's language, by its code (the shared catalog mapper). */
++  readonly error: (error: unknown) => string;
+   readonly saved: string;
+   readonly saving: string;
+   readonly save: string;
+@@ -102,7 +103,8 @@ export function RingInventoryEditor({ ring, labels, onSaved }: Props) {
+ 
+   const [values, setValues] = useState<Record<string, number>>(initial);
+   const [saving, setSaving] = useState(false);
+-  const [hasError, setHasError] = useState(false);
++  const [error, setError] = useState<unknown>(null);
++  const hasError = error !== null;
+   const [savedAt, setSavedAt] = useState<number | null>(null);
+ 
+   const dirty = useMemo(() => {
+@@ -127,8 +129,9 @@ export function RingInventoryEditor({ ring, labels, onSaved }: Props) {
+   }
+ 
+   async function handleSave() {
++    if (saving) return;
+     setSaving(true);
+-    setHasError(false);
++    setError(null);
+     try {
+       const rows = OBSTACLE_TYPES.flatMap(({ id: obstacle_type }) => {
+         const quantity = values[obstacle_type] ?? 0;
+@@ -138,8 +141,8 @@ export function RingInventoryEditor({ ring, labels, onSaved }: Props) {
+       const updated = await store.updateRingInventory(ring.id, rows);
+       onSaved(updated);
+       setSavedAt(Date.now());
+-    } catch {
+-      setHasError(true);
++    } catch (saveError) {
++      setError(saveError);
+     } finally {
+       setSaving(false);
+     }
+@@ -147,7 +150,7 @@ export function RingInventoryEditor({ ring, labels, onSaved }: Props) {
+ 
+   function handleReset() {
+     setValues(initial);
+-    setHasError(false);
++    setError(null);
+   }
+ 
+   const totalUnits = Object.values(values).reduce((acc, q) => acc + (q ?? 0), 0);
+@@ -173,8 +176,11 @@ export function RingInventoryEditor({ ring, labels, onSaved }: Props) {
+       </div>
+ 
+       {hasError && (
+-        <div className="mb-3 p-2 border border-danger bg-danger/10 text-danger rounded text-xs">
+-          {labels.saveError}
++        <div
++          className="mb-3 p-2 border border-danger bg-danger/10 text-danger rounded text-xs"
++          role="alert"
++        >
++          {labels.error(error)}
+         </div>
+       )}
+       {savedAt && !dirty && !hasError && (
+diff --git a/packages/course-ui/src/components/RingMarkerDiagram.tsx b/packages/course-ui/src/components/RingMarkerDiagram.tsx
+index cdf0f01..627d6a4 100644
+--- a/packages/course-ui/src/components/RingMarkerDiagram.tsx
++++ b/packages/course-ui/src/components/RingMarkerDiagram.tsx
+@@ -20,9 +20,15 @@
+  *   - SVG outer transform flips Y so +Y is visually up.
+  *   - Every text element wraps in a counter-`scale(1 -1)` group so
+  *     labels read upright.
++ *
++ * Markers are drawn at their Core coordinates, unchanged: the recovered
++ * Supabase A–F reading-order heuristic moved authoritative markers away
++ * from where `listMarkers`, the renderers and the AR export put them
++ * (E9-W02 round 2, review #6).
+  */
+ 
+-import { normalizeLegacyMarkerReadingOrder } from '../lib/marker-layout.js';
++import { formatMeters } from '@agilityhub/course-core';
++
+ import type { PlannerRing } from '../lib/storage/types.js';
+ 
+ const COLORS = {
+@@ -42,11 +48,13 @@ const COLORS = {
+ export interface RingMarkerDiagramProps {
+   readonly ring: PlannerRing;
+   readonly ariaLabel: string;
++  /** The club's locale for the ring dimensions («22,5 m» in `ca`, R-16-17). */
++  readonly locale: string;
+   /** Optional className for the wrapping `<div>`. */
+   readonly className?: string;
+ }
+ 
+-export function RingMarkerDiagram({ ring, ariaLabel, className }: RingMarkerDiagramProps) {
++export function RingMarkerDiagram({ ring, ariaLabel, locale, className }: RingMarkerDiagramProps) {
+   const W = ring.length_m;
+   const H = ring.width_m;
+   // Outer margin in metres — wide enough to fit a marker label sitting
+@@ -62,7 +70,7 @@ export function RingMarkerDiagram({ ring, ariaLabel, className }: RingMarkerDiag
+   // size by width alone and the diagram fills it without distortion.
+   const aspect = viewW / viewH;
+ 
+-  const markers = normalizeLegacyMarkerReadingOrder(ring.markers);
++  const markers = ring.markers;
+   const activeMarkers = markers.filter((m) => m.is_active);
+   const inactiveMarkers = markers.filter((m) => !m.is_active);
+   const activeDoors = ring.doors.filter((d) => d.is_active ?? true);
+@@ -237,7 +245,7 @@ export function RingMarkerDiagram({ ring, ariaLabel, className }: RingMarkerDiag
+               fontSize={0.42}
+               fill={COLORS.axis}
+             >
+-              {W} m
++              {dimension(W, locale)}
+             </text>
+           </g>
+           <g transform={`translate(${-0.9} ${H / 2}) scale(1 -1) rotate(-90)`}>
+@@ -249,7 +257,7 @@ export function RingMarkerDiagram({ ring, ariaLabel, className }: RingMarkerDiag
+               fontSize={0.42}
+               fill={COLORS.axis}
+             >
+-              {H} m
++              {dimension(H, locale)}
+             </text>
+           </g>
+         </g>
+@@ -258,6 +266,11 @@ export function RingMarkerDiagram({ ring, ariaLabel, className }: RingMarkerDiag
+   );
+ }
+ 
++/** A ring side in metres, in the reader's locale, without padding whole metres («40 m»). */
++function dimension(meters: number, locale: string): string {
++  return formatMeters(meters, { locale, precision: Number.isInteger(meters) ? 0 : 2 });
++}
++
+ /**
+  * Return every integer multiple of `step` strictly between 0 and
+  * `total`. e.g. `rangeStrictlyInside(20, 5) === [5, 10, 15]`. We use
+diff --git a/packages/course-ui/src/components/UnitsToggle.tsx b/packages/course-ui/src/components/UnitsToggle.tsx
+index 17eb801..86efcf7 100644
+--- a/packages/course-ui/src/components/UnitsToggle.tsx
++++ b/packages/course-ui/src/components/UnitsToggle.tsx
+@@ -28,7 +28,7 @@ export function UnitsToggle({ labels, units, onChange }: Props) {
+           className={[
+             'px-2 py-1 transition',
+             u === units
+-              ? 'bg-primary text-text'
++              ? 'bg-primary text-primary-fg'
+               : 'bg-surface text-muted hover:text-text',
+           ].join(' ')}
+         >
+diff --git a/packages/course-ui/src/components/UploadCourse.tsx b/packages/course-ui/src/components/UploadCourse.tsx
+index 185ebef..c24eaa4 100644
+--- a/packages/course-ui/src/components/UploadCourse.tsx
++++ b/packages/course-ui/src/components/UploadCourse.tsx
+@@ -14,7 +14,8 @@ export interface UploadCourseLabels {
+   readonly file: string;
+   readonly parsing: (filename: string) => string;
+   readonly parseError: string;
+-  readonly uploadError: string;
++  /** An api failure in the reader's language, by its code (the shared catalog mapper). */
++  readonly error: (error: unknown) => string;
+   readonly uploading: string;
+   readonly savedContinue: string;
+   readonly continue: string;
+@@ -32,11 +33,29 @@ interface Props {
+ }
+ 
+ type Phase = "idle" | "parsing" | "preview" | "uploading" | "error";
+-type ErrorKind = "parse" | "upload" | null;
++
++/**
++ * CONVENCIONS_API §7 (E85): a 4xx with the api's body is the submission's answer and retires its
++ * `Idempotency-Key`; a network failure, a 5xx or `409 IDEMPOTENCY_KEY_REUSED {IN_PROGRESS}` are
++ * not, so the retry keeps the key — and, in the store, the same uploaded file and body.
++ */
++function retiresKey(error: unknown): boolean {
++  if (typeof error !== "object" || error === null) return false;
++  const { code, details, status } = error as { code?: unknown; details?: unknown; status?: unknown };
++  if (typeof code !== "string" || typeof status !== "number" || status < 400 || status >= 500) {
++    return false;
++  }
++  const reason =
++    typeof details === "object" && details !== null
++      ? (details as { reason?: unknown }).reason
++      : undefined;
++  return !(code === "IDEMPOTENCY_KEY_REUSED" && reason === "IN_PROGRESS");
++}
++type UploadError = { readonly kind: "parse" } | { readonly kind: "upload"; readonly error: unknown };
+ 
+ export function UploadCourse({ labels, onUploaded }: Props) {
+   const [phase, setPhase] = useState<Phase>("idle");
+-  const [errorKind, setErrorKind] = useState<ErrorKind>(null);
++  const [failure, setFailure] = useState<UploadError | null>(null);
+   const [filename, setFilename] = useState<string | null>(null);
+   const [course, setCourse] = useState<CourseData | null>(null);
+   const [savedDbId, setSavedDbId] = useState<string | null>(null);
+@@ -47,7 +66,7 @@ export function UploadCourse({ labels, onUploaded }: Props) {
+     const file = event.target.files?.[0];
+     if (file === undefined) return;
+     setPhase("parsing");
+-    setErrorKind(null);
++    setFailure(null);
+     setFilename(file.name);
+     setSavedDbId(null);
+     setSubmissionKey(crypto.randomUUID());
+@@ -59,7 +78,7 @@ export function UploadCourse({ labels, onUploaded }: Props) {
+       setCourse(courseData);
+       setPhase("preview");
+     } catch {
+-      setErrorKind("parse");
++      setFailure({ kind: "parse" });
+       setPhase("error");
+     }
+   }
+@@ -67,7 +86,7 @@ export function UploadCourse({ labels, onUploaded }: Props) {
+   async function handleContinue() {
+     if (course === null || bytes === null || filename === null || phase === "uploading") return;
+     setPhase("uploading");
+-    setErrorKind(null);
++    setFailure(null);
+     try {
+       const { course: savedCourse } = await getPlannerStore().uploadSmarterFile({
+         submissionKey,
+@@ -78,8 +97,9 @@ export function UploadCourse({ labels, onUploaded }: Props) {
+       setSavedDbId(savedCourse.id);
+       setPhase("preview");
+       onUploaded(course, savedCourse.id, filename);
+-    } catch {
+-      setErrorKind("upload");
++    } catch (error) {
++      if (retiresKey(error)) setSubmissionKey(crypto.randomUUID());
++      setFailure({ kind: "upload", error });
+       setPhase("error");
+     }
+   }
+@@ -97,7 +117,7 @@ export function UploadCourse({ labels, onUploaded }: Props) {
+           accept=".txt,text/plain"
+           onChange={handleFile}
+           disabled={busy}
+-          className="block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-agh file:border-0 file:bg-primary file:text-text file:font-semibold hover:file:opacity-90"
++          className="block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-agh file:border-0 file:bg-primary file:text-primary-fg file:font-semibold hover:file:opacity-90"
+         />
+       </label>
+ 
+@@ -105,16 +125,16 @@ export function UploadCourse({ labels, onUploaded }: Props) {
+         <p className="mt-3 text-sm text-muted">{labels.parsing(filename)}</p>
+       ) : null}
+ 
+-      {errorKind !== null ? (
++      {failure !== null ? (
+         <div
+           className="mt-3 p-3 border border-danger bg-danger/10 text-danger rounded"
+           role="alert"
+         >
+-          {errorKind === "parse" ? labels.parseError : labels.uploadError}
++          {failure.kind === "parse" ? labels.parseError : labels.error(failure.error)}
+         </div>
+       ) : null}
+ 
+-      {(phase === "preview" || phase === "uploading" || errorKind === "upload") &&
++      {(phase === "preview" || phase === "uploading" || failure?.kind === "upload") &&
+       course !== null ? (
+         <div className="mt-4 space-y-3">
+           <UploadPreview course={course} labels={labels} />
+diff --git a/packages/course-ui/src/components/WarningsPanel.tsx b/packages/course-ui/src/components/WarningsPanel.tsx
+index e9e0875..d9e6353 100644
+--- a/packages/course-ui/src/components/WarningsPanel.tsx
++++ b/packages/course-ui/src/components/WarningsPanel.tsx
+@@ -1,6 +1,12 @@
+ 'use client';
+ 
+-import type { UnitSystem, Warning, WarningSeverity } from '@agilityhub/course-core';
++import {
++  formatLength,
++  type UnitSystem,
++  type Warning,
++  type WarningRuleId,
++  type WarningSeverity,
++} from '@agilityhub/course-core';
+ 
+ import { SeverityBadge } from './ui/Badge.js';
+ import { Card, CardTitle } from './ui/Card.js';
+@@ -8,20 +14,37 @@ import { Card, CardTitle } from './ui/Card.js';
+ interface Props {
+   warnings: readonly Warning[];
+   units: UnitSystem;
++  /** The club's locale for the measured distances («0,80 m» in `ca`, R-16-17). */
++  locale: string;
+   selectedObstacleId: string | null;
+   labels: {
+     readonly title: (count: number) => string;
+     readonly empty: string;
+     readonly severity: Readonly<Record<WarningSeverity, string>>;
++    /** The rule's name in the reader's language (`enums:courseWarningRule.*`), never its id. */
++    readonly rule: (ruleId: WarningRuleId) => string;
+     readonly warning: (warning: Warning) => string;
+-    readonly distance: (meters: number, units: UnitSystem) => string;
+   };
+   onSelectObstacle: (id: string | null) => void;
+ }
+ 
++/**
++ * The rules whose `distanceMeters` is a length. `obstacle-inventory` reuses the field for the
++ * missing (or unknown) equipment count, which must never read as metres or feet (review #12).
++ */
++const LENGTH_RULES: ReadonlySet<WarningRuleId> = new Set<WarningRuleId>([
++  'outside-ring',
++  'border-clearance',
++  'course-no-go',
++  'ring-no-go',
++  'door-clearance',
++  'course-larger-than-ring',
++]);
++
+ export function WarningsPanel({
+   warnings,
+   units,
++  locale,
+   selectedObstacleId,
+   labels,
+   onSelectObstacle,
+@@ -56,10 +79,10 @@ export function WarningsPanel({
+                 >
+                   <span className="flex items-center gap-2 mb-1">
+                     <SeverityBadge severity={w.severity} label={labels.severity[w.severity]} />
+-                    <span className="text-muted">{w.ruleId}</span>
+-                    {w.distanceMeters != null ? (
++                    <span className="text-muted">{labels.rule(w.ruleId)}</span>
++                    {w.distanceMeters != null && LENGTH_RULES.has(w.ruleId) ? (
+                       <span className="ml-auto text-muted">
+-                        {labels.distance(w.distanceMeters, units)}
++                        {formatLength(w.distanceMeters, units, { locale })}
+                       </span>
+                     ) : null}
+                   </span>
+diff --git a/packages/course-ui/src/components/ui/Badge.tsx b/packages/course-ui/src/components/ui/Badge.tsx
+index dcf8b5d..ef08b3a 100644
+--- a/packages/course-ui/src/components/ui/Badge.tsx
++++ b/packages/course-ui/src/components/ui/Badge.tsx
+@@ -2,7 +2,7 @@ import type { WarningSeverity } from '@agilityhub/course-core';
+ import type { ReactNode } from 'react';
+ 
+ const severityClass: Record<WarningSeverity, string> = {
+-  critical: 'bg-red-600/20 text-danger border-danger',
++  critical: 'bg-danger/10 text-danger border-danger',
+   warning: 'bg-warning/10 text-warning border-warning',
+   info: 'bg-info/10 text-info border-info',
+ };
+diff --git a/packages/course-ui/src/components/ui/Button.tsx b/packages/course-ui/src/components/ui/Button.tsx
+index ac59363..8962cb4 100644
+--- a/packages/course-ui/src/components/ui/Button.tsx
++++ b/packages/course-ui/src/components/ui/Button.tsx
+@@ -10,11 +10,12 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+ }
+ 
+ const variantClass: Record<ButtonVariant, string> = {
+-  primary: 'bg-primary text-text hover:opacity-90 active:opacity-100',
++  primary: 'bg-primary text-primary-fg hover:opacity-90 active:opacity-100',
+   outline:
+     'bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)]',
+   neutral: 'bg-surface text-muted hover:text-text hover:bg-surface/80',
+-  danger: 'bg-red-700 text-white hover:bg-red-600',
++  // Same pairing as the shared `.ah-button--danger` (packages/ui/src/components.css).
++  danger: 'bg-danger text-primary-fg hover:opacity-90',
+ };
+ 
+ const sizeClass: Record<ButtonSize, string> = {
+diff --git a/packages/course-ui/src/components/ui/IconButton.tsx b/packages/course-ui/src/components/ui/IconButton.tsx
+index c98964c..4f892fd 100644
+--- a/packages/course-ui/src/components/ui/IconButton.tsx
++++ b/packages/course-ui/src/components/ui/IconButton.tsx
+@@ -38,7 +38,7 @@ interface Props extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'
+ 
+ const variantClass: Record<IconButtonVariant, string> = {
+   ghost: 'bg-transparent text-muted hover:text-text hover:bg-surface-2',
+-  filled: 'bg-primary text-text hover:opacity-90 active:opacity-100',
++  filled: 'bg-primary text-primary-fg hover:opacity-90 active:opacity-100',
+   danger: 'bg-transparent text-danger hover:text-danger hover:bg-danger/10',
+ };
+ 
+diff --git a/packages/course-ui/src/index.ts b/packages/course-ui/src/index.ts
+index 68a543e..7592995 100644
+--- a/packages/course-ui/src/index.ts
++++ b/packages/course-ui/src/index.ts
+@@ -24,7 +24,6 @@ export {
+   type PlannerAction,
+   type PlannerState,
+ } from "./lib/planner-state";
+-export { normalizeLegacyMarkerReadingOrder } from "./lib/marker-layout";
+ export { configurePlannerStore, getPlannerStore } from "./lib/storage/get-store";
+ export type {
+   CreateCalibrationLogInput,
+diff --git a/packages/course-ui/src/lib/marker-layout.ts b/packages/course-ui/src/lib/marker-layout.ts
+deleted file mode 100644
+index 5f9a9a0..0000000
+--- a/packages/course-ui/src/lib/marker-layout.ts
++++ /dev/null
+@@ -1,93 +0,0 @@
+-import type { PlannerRingMarker as DBRingMarker } from './storage/types.js';
+-
+-type CanonicalLabel = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
+-
+-const CANONICAL_LABELS: readonly CanonicalLabel[] = ['A', 'B', 'C', 'D', 'E', 'F'];
+-const EPSILON_M = 0.75;
+-
+-/**
+- * Phase 9e1 originally wrote the six labels in the old perimeter order:
+- *
+- *   top:    B F D
+- *   bottom: A E C
+- *
+- * The product convention is reading order:
+- *
+- *   top:    A B C
+- *   bottom: D E F
+- *
+- * Until every Supabase project has run the data migration, normalize that
+- * exact legacy shape at read time so planner diagrams, marker downloads,
+- * and AR exports agree with the printable instructions.
+- */
+-export function normalizeLegacyMarkerReadingOrder(
+-  markers: readonly DBRingMarker[],
+-): DBRingMarker[] {
+-  const byLabel = activeCanonicalMarkersByLabel(markers);
+-  if (!byLabel || !looksLikeLegacyPerimeterOrder(byLabel)) {
+-    return [...markers];
+-  }
+-
+-  const targetByLabel: Record<CanonicalLabel, DBRingMarker> = {
+-    A: byLabel.B,
+-    B: byLabel.F,
+-    C: byLabel.D,
+-    D: byLabel.A,
+-    E: byLabel.E,
+-    F: byLabel.C,
+-  };
+-
+-  return markers.map((marker) => {
+-    const label = marker.label.trim().toUpperCase() as CanonicalLabel;
+-    if (!marker.is_active || !isCanonicalLabel(label)) return marker;
+-    const target = targetByLabel[label];
+-    return { ...marker, x_m: target.x_m, y_m: target.y_m };
+-  });
+-}
+-
+-function activeCanonicalMarkersByLabel(
+-  markers: readonly DBRingMarker[],
+-): Record<CanonicalLabel, DBRingMarker> | null {
+-  const out = new Map<CanonicalLabel, DBRingMarker>();
+-  let activeCount = 0;
+-  for (const marker of markers) {
+-    if (!marker.is_active) continue;
+-    activeCount += 1;
+-    const label = marker.label.trim().toUpperCase();
+-    if (!isCanonicalLabel(label)) continue;
+-    if (out.has(label)) return null;
+-    out.set(label, marker);
+-  }
+-
+-  if (activeCount !== CANONICAL_LABELS.length) return null;
+-
+-  for (const label of CANONICAL_LABELS) {
+-    if (!out.has(label)) return null;
+-  }
+-
+-  return Object.fromEntries(out) as Record<CanonicalLabel, DBRingMarker>;
+-}
+-
+-function looksLikeLegacyPerimeterOrder(markers: Record<CanonicalLabel, DBRingMarker>): boolean {
+-  const { A, B, C, D, E, F } = markers;
+-  return (
+-    nearly(A.x_m, B.x_m) &&
+-    nearly(E.x_m, F.x_m) &&
+-    nearly(C.x_m, D.x_m) &&
+-    nearly(A.y_m, E.y_m) &&
+-    nearly(A.y_m, C.y_m) &&
+-    nearly(B.y_m, F.y_m) &&
+-    nearly(B.y_m, D.y_m) &&
+-    B.y_m > A.y_m + EPSILON_M &&
+-    E.x_m > A.x_m + EPSILON_M &&
+-    C.x_m > E.x_m + EPSILON_M
+-  );
+-}
+-
+-function nearly(a: number, b: number): boolean {
+-  return Math.abs(a - b) <= EPSILON_M;
+-}
+-
+-function isCanonicalLabel(label: string): label is CanonicalLabel {
+-  return (CANONICAL_LABELS as readonly string[]).includes(label);
+-}
+diff --git a/packages/course-ui/src/lib/storage/types.ts b/packages/course-ui/src/lib/storage/types.ts
+index e15fc83..9f7c149 100644
+--- a/packages/course-ui/src/lib/storage/types.ts
++++ b/packages/course-ui/src/lib/storage/types.ts
+@@ -112,6 +112,12 @@ export interface SavePlacementInput {
+   readonly sizes?: readonly ("XS" | "S" | "M" | "I" | "L" | "ALL")[];
+   readonly isTraining?: boolean;
+   readonly mode?: "event" | "training" | "free-floating";
++  /**
++   * R-16-05: a placement with a `critical` warning is refused (`422 PLACEMENT_BLOCKED{warnings}`)
++   * unless an ADMIN confirms it; the confirmed retry sends `force: true` (and a new
++   * `submissionKey`, since the body changes).
++   */
++  readonly force?: boolean;
+ }
+ 
+ export interface PlannerPlacement {
+@@ -244,7 +250,16 @@ export interface PlannerStore {
+     ringId: string,
+     inventory: readonly { obstacle_type: ObstacleType; quantity: number }[],
+   ): Promise<PlannerRing>;
+-  updateRingDoors(ringId: string, doors: readonly SaveRingDoorInput[]): Promise<PlannerRing>;
++  /**
++   * Replaces the ring's doors under optimistic locking: `geometryVersion` is the version the user
++   * edited (`PlannerRing.geometry_version`), so another editor's save in between answers
++   * `409 STALE_VERSION` instead of being overwritten (CONVENCIONS_API §7, R-16-04).
++   */
++  updateRingDoors(
++    ringId: string,
++    doors: readonly SaveRingDoorInput[],
++    geometryVersion: number,
++  ): Promise<PlannerRing>;
+   uploadSmarterFile(input: UploadCourseInput): Promise<{ readonly course: PlannerCourse }>;
+   savePlacement(input: SavePlacementInput): Promise<PlannerPlacement>;
+   listCalendarPlacements(input?: ListCalendarPlacementsInput): Promise<readonly PlannerPlacement[]>;
+@@ -268,6 +283,11 @@ export interface PlannerStore {
+   upsertBuildObstacleStatus(
+     input: UpsertBuildObstacleStatusInput,
+   ): Promise<PlannerBuildObstacleStatus>;
++  /** R-16-11: `POST /build-sessions/{id}/finish` with the caller-owned `Idempotency-Key`. */
++  finishBuildSession(input: {
++    readonly buildSessionId: string;
++    readonly submissionKey: string;
++  }): Promise<PlannerBuildSession>;
+   subscribeBuildObstacleStatuses(
+     buildSessionId: string,
+     onChange: (status: PlannerBuildObstacleStatus) => void,
+diff --git a/packages/ui/src/tokens.css b/packages/ui/src/tokens.css
+index 5db027a..ca1fb2c 100644
+--- a/packages/ui/src/tokens.css
++++ b/packages/ui/src/tokens.css
+@@ -67,6 +67,10 @@
+   --ah-color-course-selected: var(--ah-color-warning);
+   --ah-color-course-warning: var(--ah-color-danger);
+   --ah-color-course-text: var(--ah-color-text);
++  /* The obstacle number badge: the club's primary pair, whose contrast the branding contract
++     already guarantees (AA in the light and dark themes, see course-ui tokens test). */
++  --ah-color-course-number-bg: var(--ah-color-primary);
++  --ah-color-course-number-fg: var(--ah-color-primary-fg);
+ 
+   --ah-radius-sm: 0.25rem;
+   --ah-radius-md: 0.5rem;

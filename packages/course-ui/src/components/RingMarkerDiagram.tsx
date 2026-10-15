@@ -20,9 +20,15 @@
  *   - SVG outer transform flips Y so +Y is visually up.
  *   - Every text element wraps in a counter-`scale(1 -1)` group so
  *     labels read upright.
+ *
+ * Markers are drawn at their Core coordinates, unchanged: the recovered
+ * Supabase A–F reading-order heuristic moved authoritative markers away
+ * from where `listMarkers`, the renderers and the AR export put them
+ * (E9-W02 round 2, review #6).
  */
 
-import { normalizeLegacyMarkerReadingOrder } from '../lib/marker-layout.js';
+import { formatMeters } from '@agilityhub/course-core';
+
 import type { PlannerRing } from '../lib/storage/types.js';
 
 const COLORS = {
@@ -42,11 +48,13 @@ const COLORS = {
 export interface RingMarkerDiagramProps {
   readonly ring: PlannerRing;
   readonly ariaLabel: string;
+  /** The club's locale for the ring dimensions («22,5 m» in `ca`, R-16-17). */
+  readonly locale: string;
   /** Optional className for the wrapping `<div>`. */
   readonly className?: string;
 }
 
-export function RingMarkerDiagram({ ring, ariaLabel, className }: RingMarkerDiagramProps) {
+export function RingMarkerDiagram({ ring, ariaLabel, locale, className }: RingMarkerDiagramProps) {
   const W = ring.length_m;
   const H = ring.width_m;
   // Outer margin in metres — wide enough to fit a marker label sitting
@@ -62,7 +70,7 @@ export function RingMarkerDiagram({ ring, ariaLabel, className }: RingMarkerDiag
   // size by width alone and the diagram fills it without distortion.
   const aspect = viewW / viewH;
 
-  const markers = normalizeLegacyMarkerReadingOrder(ring.markers);
+  const markers = ring.markers;
   const activeMarkers = markers.filter((m) => m.is_active);
   const inactiveMarkers = markers.filter((m) => !m.is_active);
   const activeDoors = ring.doors.filter((d) => d.is_active ?? true);
@@ -237,7 +245,7 @@ export function RingMarkerDiagram({ ring, ariaLabel, className }: RingMarkerDiag
               fontSize={0.42}
               fill={COLORS.axis}
             >
-              {W} m
+              {dimension(W, locale)}
             </text>
           </g>
           <g transform={`translate(${-0.9} ${H / 2}) scale(1 -1) rotate(-90)`}>
@@ -249,13 +257,18 @@ export function RingMarkerDiagram({ ring, ariaLabel, className }: RingMarkerDiag
               fontSize={0.42}
               fill={COLORS.axis}
             >
-              {H} m
+              {dimension(H, locale)}
             </text>
           </g>
         </g>
       </svg>
     </div>
   );
+}
+
+/** A ring side in metres, in the reader's locale, without padding whole metres («40 m»). */
+function dimension(meters: number, locale: string): string {
+  return formatMeters(meters, { locale, precision: Number.isInteger(meters) ? 0 : 2 });
 }
 
 /**

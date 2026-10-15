@@ -16,18 +16,27 @@
     "three": "catalog:"
   },
   "devDependencies": {
+    "@agilityhub/i18n": "workspace:*",
+    "@agilityhub/ui": "workspace:*",
+    "@playwright/test": "catalog:",
+    "@tailwindcss/vite": "catalog:",
     "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@types/three": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
     "jsdom": "catalog:",
     "react-dom": "catalog:",
+    "tailwindcss": "catalog:",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vitest": "catalog:"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "lint": "eslint src tests --max-warnings 0 --config ../../eslint.config.mjs",
+    "e2e": "playwright test",
+    "harness": "vite --config vite.harness.config.ts",
+    "lint": "eslint src tests harness e2e playwright.config.ts vite.harness.config.ts --max-warnings 0 --config ../../eslint.config.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   }

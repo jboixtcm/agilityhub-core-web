@@ -22,11 +22,15 @@
     "react": "^19.0.0"
   },
   "devDependencies": {
+    "@agilityhub/i18n": "workspace:*",
+    "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "ajv": "catalog:",
     "ajv-formats": "catalog:",
+    "jsdom": "catalog:",
     "openapi-typescript": "catalog:",
     "react": "catalog:",
+    "react-dom": "catalog:",
     "msw": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

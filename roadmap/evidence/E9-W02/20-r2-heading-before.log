@@ -1,0 +1,25 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+
+ ❯ tests/heading.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/heading.test.ts [ tests/heading.test.ts ]
+Error: Cannot find module '../src/geometry/heading.js' imported from /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core/tests/heading.test.ts
+ ❯ tests/heading.test.ts:3:1
+      1| import { describe, expect, it } from 'vitest';
+      2|
+      3| import { placedObstacleHeadingDegrees, placedObstacleHeadingVector } f…
+       | ^
+      4|
+      5| const base = { flipX: false, flipY: false, rotationDegrees: 0 };
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  18:48:44
+   Duration  113ms (worker 98%, environment 2%)
+

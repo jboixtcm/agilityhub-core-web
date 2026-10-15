@@ -356,5 +356,6 @@
   "origin": {"APP": "app", "BACKOFFICE": "club", "SYSTEM": "sistema"},
   "memberDisplayStatus": {"INACTIVE_PERIOD": "inactiva", "INACTIVE_PERIOD_DATED": "inactiva fins {date}", "LEAVE_SCHEDULED": "baixa prevista {date}"},
   "finishReason": {"SCHEDULED": "finalització prevista", "ADMIN": "decisió del club", "LEAVE": "baixa"},
-  "cancelReason": {"WITHDRAWN": "retirada", "EXPIRED": "caducada", "LEAVE": "baixa", "MEMBER": "per l'abonat", "ADMIN": "pel club", "SYSTEM": "pel sistema"}
+  "cancelReason": {"WITHDRAWN": "retirada", "EXPIRED": "caducada", "LEAVE": "baixa", "MEMBER": "per l'abonat", "ADMIN": "pel club", "SYSTEM": "pel sistema"},
+  "courseWarningRule": {"outside-ring": "Fora de la pista", "border-clearance": "Marge al perímetre", "course-no-go": "Zona no-go del recorregut", "ring-no-go": "Zona no-go de la pista", "door-clearance": "Distància a la porta", "course-larger-than-ring": "Recorregut més gran que la pista", "obstacle-inventory": "Inventari d'obstacles"}
 }

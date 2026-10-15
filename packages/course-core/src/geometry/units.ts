@@ -27,19 +27,34 @@ export interface FormatLengthOptions {
   readonly precision?: number;
   /** If true, include the unit suffix (" m" / " ft"). Default: true. */
   readonly withUnit?: boolean;
+  /**
+   * BCP 47 locale of the reader (the club's locale in the apps, R-16-17): «0,50 m» in `ca`/`es`,
+   * «0.50 m» in `en`. Without it the recovered `toFixed` output is kept (files, logs, exports).
+   */
+  readonly locale?: string;
+}
+
+function formatNumber(value: number, precision: number, locale: string | undefined): string {
+  const rounded = roundTo(value, precision);
+  return locale === undefined
+    ? rounded.toFixed(precision)
+    : new Intl.NumberFormat(locale, {
+        maximumFractionDigits: precision,
+        minimumFractionDigits: precision,
+      }).format(rounded);
 }
 
 export function formatMeters(m: number, opts: FormatLengthOptions = {}): string {
   const precision = opts.precision ?? 2;
   const withUnit = opts.withUnit ?? true;
-  const v = roundTo(m, precision).toFixed(precision);
+  const v = formatNumber(m, precision, opts.locale);
   return withUnit ? `${v} m` : v;
 }
 
 export function formatFeet(ft: number, opts: FormatLengthOptions = {}): string {
   const precision = opts.precision ?? 1;
   const withUnit = opts.withUnit ?? true;
-  const v = roundTo(ft, precision).toFixed(precision);
+  const v = formatNumber(ft, precision, opts.locale);
   return withUnit ? `${v} ft` : v;
 }
 

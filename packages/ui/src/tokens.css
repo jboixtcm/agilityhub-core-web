@@ -67,6 +67,10 @@
   --ah-color-course-selected: var(--ah-color-warning);
   --ah-color-course-warning: var(--ah-color-danger);
   --ah-color-course-text: var(--ah-color-text);
+  /* The obstacle number badge: the club's primary pair, whose contrast the branding contract
+     already guarantees (AA in the light and dark themes, see course-ui tokens test). */
+  --ah-color-course-number-bg: var(--ah-color-primary);
+  --ah-color-course-number-fg: var(--ah-color-primary-fg);
 
   --ah-radius-sm: 0.25rem;
   --ah-radius-md: 0.5rem;

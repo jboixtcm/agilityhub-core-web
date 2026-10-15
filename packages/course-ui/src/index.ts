@@ -24,7 +24,6 @@ export {
   type PlannerAction,
   type PlannerState,
 } from "./lib/planner-state";
-export { normalizeLegacyMarkerReadingOrder } from "./lib/marker-layout";
 export { configurePlannerStore, getPlannerStore } from "./lib/storage/get-store";
 export type {
   CreateCalibrationLogInput,

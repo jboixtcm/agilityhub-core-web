@@ -356,5 +356,6 @@
   "origin": {"APP": "app", "BACKOFFICE": "club", "SYSTEM": "system"},
   "memberDisplayStatus": {"INACTIVE_PERIOD": "inactive", "INACTIVE_PERIOD_DATED": "inactive until {date}", "LEAVE_SCHEDULED": "leave scheduled {date}"},
   "finishReason": {"SCHEDULED": "scheduled end", "ADMIN": "club decision", "LEAVE": "leave"},
-  "cancelReason": {"WITHDRAWN": "withdrawn", "EXPIRED": "expired", "LEAVE": "leave", "MEMBER": "by member", "ADMIN": "by club", "SYSTEM": "by system"}
+  "cancelReason": {"WITHDRAWN": "withdrawn", "EXPIRED": "expired", "LEAVE": "leave", "MEMBER": "by member", "ADMIN": "by club", "SYSTEM": "by system"},
+  "courseWarningRule": {"outside-ring": "Outside the ring", "border-clearance": "Perimeter clearance", "course-no-go": "Course no-go zone", "ring-no-go": "Ring no-go zone", "door-clearance": "Door clearance", "course-larger-than-ring": "Course larger than the ring", "obstacle-inventory": "Obstacle inventory"}
 }

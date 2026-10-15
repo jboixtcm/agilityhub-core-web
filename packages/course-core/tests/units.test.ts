@@ -41,4 +41,12 @@ describe('units', () => {
     expect(formatLength(1, 'M')).toBe('1.00 m');
     expect(formatLength(1, 'FT')).toBe(`${metersToFeet(1).toFixed(1)} ft`);
   });
+
+  it('R-16-17 formats lengths with the reader locale when one is given', () => {
+    expect(formatLength(0.5, 'M', { locale: 'ca' })).toBe('0,50 m');
+    expect(formatLength(0.5, 'M', { locale: 'es' })).toBe('0,50 m');
+    expect(formatLength(0.5, 'M', { locale: 'en' })).toBe('0.50 m');
+    expect(formatLength(1, 'FT', { locale: 'ca' })).toBe('3,3 ft');
+    expect(formatMeters(40, { locale: 'ca', precision: 0 })).toBe('40 m');
+  });
 });

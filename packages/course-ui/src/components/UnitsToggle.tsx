@@ -28,7 +28,7 @@ export function UnitsToggle({ labels, units, onChange }: Props) {
           className={[
             'px-2 py-1 transition',
             u === units
-              ? 'bg-primary text-text'
+              ? 'bg-primary text-primary-fg'
               : 'bg-surface text-muted hover:text-text',
           ].join(' ')}
         >

@@ -1,0 +1,9 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+
+
+ Test Files  3 passed (3)
+      Tests  39 passed (39)
+   Start at  19:24:31
+   Duration  422ms (transform 48%, import 30%, tests 20%, worker 2%)
+

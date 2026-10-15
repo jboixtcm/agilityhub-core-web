@@ -1,4 +1,5 @@
 export { type MessageKey, translateStatic as t } from "./catalog";
+export * from "./course-texts";
 export * from "./followup-labels";
 export * from "./format";
 export * from "./locale";

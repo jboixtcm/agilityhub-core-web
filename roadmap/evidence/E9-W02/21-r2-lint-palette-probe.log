@@ -1,0 +1,7 @@
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui/src/components/ui/PaletteProbe.tsx
+  2:26  error  Use a semantic utility backed by an --ah-* token instead of a Tailwind palette colour  no-restricted-syntax
+  3:25  error  Use a semantic utility backed by an --ah-* token instead of a Tailwind palette colour  no-restricted-syntax
+
+✖ 2 problems (2 errors, 0 warnings)
+

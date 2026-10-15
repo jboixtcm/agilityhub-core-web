@@ -2,7 +2,7 @@ import type { WarningSeverity } from '@agilityhub/course-core';
 import type { ReactNode } from 'react';
 
 const severityClass: Record<WarningSeverity, string> = {
-  critical: 'bg-red-600/20 text-danger border-danger',
+  critical: 'bg-danger/10 text-danger border-danger',
   warning: 'bg-warning/10 text-warning border-warning',
   info: 'bg-info/10 text-info border-info',
 };

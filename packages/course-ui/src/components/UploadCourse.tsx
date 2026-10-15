@@ -14,7 +14,8 @@ export interface UploadCourseLabels {
   readonly file: string;
   readonly parsing: (filename: string) => string;
   readonly parseError: string;
-  readonly uploadError: string;
+  /** An api failure in the reader's language, by its code (the shared catalog mapper). */
+  readonly error: (error: unknown) => string;
   readonly uploading: string;
   readonly savedContinue: string;
   readonly continue: string;
@@ -32,11 +33,29 @@ interface Props {
 }
 
 type Phase = "idle" | "parsing" | "preview" | "uploading" | "error";
-type ErrorKind = "parse" | "upload" | null;
+
+/**
+ * CONVENCIONS_API §7 (E85): a 4xx with the api's body is the submission's answer and retires its
+ * `Idempotency-Key`; a network failure, a 5xx or `409 IDEMPOTENCY_KEY_REUSED {IN_PROGRESS}` are
+ * not, so the retry keeps the key — and, in the store, the same uploaded file and body.
+ */
+function retiresKey(error: unknown): boolean {
+  if (typeof error !== "object" || error === null) return false;
+  const { code, details, status } = error as { code?: unknown; details?: unknown; status?: unknown };
+  if (typeof code !== "string" || typeof status !== "number" || status < 400 || status >= 500) {
+    return false;
+  }
+  const reason =
+    typeof details === "object" && details !== null
+      ? (details as { reason?: unknown }).reason
+      : undefined;
+  return !(code === "IDEMPOTENCY_KEY_REUSED" && reason === "IN_PROGRESS");
+}
+type UploadError = { readonly kind: "parse" } | { readonly kind: "upload"; readonly error: unknown };
 
 export function UploadCourse({ labels, onUploaded }: Props) {
   const [phase, setPhase] = useState<Phase>("idle");
-  const [errorKind, setErrorKind] = useState<ErrorKind>(null);
+  const [failure, setFailure] = useState<UploadError | null>(null);
   const [filename, setFilename] = useState<string | null>(null);
   const [course, setCourse] = useState<CourseData | null>(null);
   const [savedDbId, setSavedDbId] = useState<string | null>(null);
@@ -47,7 +66,7 @@ export function UploadCourse({ labels, onUploaded }: Props) {
     const file = event.target.files?.[0];
     if (file === undefined) return;
     setPhase("parsing");
-    setErrorKind(null);
+    setFailure(null);
     setFilename(file.name);
     setSavedDbId(null);
     setSubmissionKey(crypto.randomUUID());
@@ -59,7 +78,7 @@ export function UploadCourse({ labels, onUploaded }: Props) {
       setCourse(courseData);
       setPhase("preview");
     } catch {
-      setErrorKind("parse");
+      setFailure({ kind: "parse" });
       setPhase("error");
     }
   }
@@ -67,7 +86,7 @@ export function UploadCourse({ labels, onUploaded }: Props) {
   async function handleContinue() {
     if (course === null || bytes === null || filename === null || phase === "uploading") return;
     setPhase("uploading");
-    setErrorKind(null);
+    setFailure(null);
     try {
       const { course: savedCourse } = await getPlannerStore().uploadSmarterFile({
         submissionKey,
@@ -78,8 +97,9 @@ export function UploadCourse({ labels, onUploaded }: Props) {
       setSavedDbId(savedCourse.id);
       setPhase("preview");
       onUploaded(course, savedCourse.id, filename);
-    } catch {
-      setErrorKind("upload");
+    } catch (error) {
+      if (retiresKey(error)) setSubmissionKey(crypto.randomUUID());
+      setFailure({ kind: "upload", error });
       setPhase("error");
     }
   }
@@ -97,7 +117,7 @@ export function UploadCourse({ labels, onUploaded }: Props) {
           accept=".txt,text/plain"
           onChange={handleFile}
           disabled={busy}
-          className="block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-agh file:border-0 file:bg-primary file:text-text file:font-semibold hover:file:opacity-90"
+          className="block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-agh file:border-0 file:bg-primary file:text-primary-fg file:font-semibold hover:file:opacity-90"
         />
       </label>
 
@@ -105,16 +125,16 @@ export function UploadCourse({ labels, onUploaded }: Props) {
         <p className="mt-3 text-sm text-muted">{labels.parsing(filename)}</p>
       ) : null}
 
-      {errorKind !== null ? (
+      {failure !== null ? (
         <div
           className="mt-3 p-3 border border-danger bg-danger/10 text-danger rounded"
           role="alert"
         >
-          {errorKind === "parse" ? labels.parseError : labels.uploadError}
+          {failure.kind === "parse" ? labels.parseError : labels.error(failure.error)}
         </div>
       ) : null}
 
-      {(phase === "preview" || phase === "uploading" || errorKind === "upload") &&
+      {(phase === "preview" || phase === "uploading" || failure?.kind === "upload") &&
       course !== null ? (
         <div className="mt-4 space-y-3">
           <UploadPreview course={course} labels={labels} />

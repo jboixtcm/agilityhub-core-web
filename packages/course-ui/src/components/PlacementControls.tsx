@@ -8,6 +8,8 @@ import { Card, CardTitle } from './ui/Card.js';
 
 interface Props {
   units: UnitSystem;
+  /** The club's locale for the step lengths («0,50 m» in `ca`, R-16-17). */
+  locale: string;
   labels: {
     readonly center: string;
     readonly flipHorizontal: string;
@@ -41,6 +43,7 @@ const STEP_OPTIONS_M = [0.1, 0.5, 1.0] as const;
 
 export function PlacementControls({
   units,
+  locale,
   labels,
   disabled,
   onNudge,
@@ -117,7 +120,7 @@ export function PlacementControls({
         >
           {STEP_OPTIONS_M.map((s) => (
             <option key={s} value={s}>
-              {formatLength(s, units)}
+              {formatLength(s, units, { locale })}
             </option>
           ))}
         </select>

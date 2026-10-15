@@ -10,11 +10,12 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantClass: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-text hover:opacity-90 active:opacity-100',
+  primary: 'bg-primary text-primary-fg hover:opacity-90 active:opacity-100',
   outline:
     'bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)]',
   neutral: 'bg-surface text-muted hover:text-text hover:bg-surface/80',
-  danger: 'bg-red-700 text-white hover:bg-red-600',
+  // Same pairing as the shared `.ah-button--danger` (packages/ui/src/components.css).
+  danger: 'bg-danger text-primary-fg hover:opacity-90',
 };
 
 const sizeClass: Record<ButtonSize, string> = {

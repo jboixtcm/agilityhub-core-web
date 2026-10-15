@@ -1,0 +1,16 @@
+@import "tailwindcss";
+@import "@agilityhub/ui/tokens.css";
+
+/* The package's components, rendered by this harness only (E9-W02 round 2 browser evidence). */
+@source "../src";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ah-color-text);
+  font-family: var(--ah-font-sans);
+  background: var(--ah-color-background);
+}

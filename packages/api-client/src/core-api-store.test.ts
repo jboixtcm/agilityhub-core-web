@@ -21,7 +21,7 @@ async function requestJson(request: Request): Promise<unknown> {
 }
 
 describe("CoreApiStore implements PlannerStore", () => {
-  it("R-16-04 rebases only edited doors on the latest geometry version", async () => {
+  it("R-16-04 replaces the doors under the geometry version the user edited, keeping the markers", async () => {
     const requests: Request[] = [];
     const fetchMock = vi.fn((input: RequestInfo | URL) => {
       const request = input instanceof Request ? input : new Request(input);
@@ -80,17 +80,21 @@ describe("CoreApiStore implements PlannerStore", () => {
       venue,
     });
 
-    await store.updateRingDoors("ring-1", [
-      {
-        clearanceMeters: 0.5,
-        endMeters: 4,
-        flow: "both",
-        isActive: true,
-        label: "Access",
-        side: "north",
-        startMeters: 2,
-      },
-    ]);
+    await store.updateRingDoors(
+      "ring-1",
+      [
+        {
+          clearanceMeters: 0.5,
+          endMeters: 4,
+          flow: "both",
+          isActive: true,
+          label: "Access",
+          side: "north",
+          startMeters: 2,
+        },
+      ],
+      7,
+    );
 
     expect(requests.map((request) => `${request.method} ${new URL(request.url).pathname}`)).toEqual(
       ["GET /rings/ring-1/geometry", "PUT /rings/ring-1/geometry"],

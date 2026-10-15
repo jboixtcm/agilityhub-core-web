@@ -1,0 +1,34 @@
+$ pnpm --dir packages/course-core exec vitest run tests/units.test.ts  (sources at HEAD, round-2 tests)
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+
+ ❯ tests/units.test.ts (6 tests | 1 failed) 9ms
+   ❯ units (6)
+     × R-16-17 formats lengths with the reader locale when one is given 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/units.test.ts > units > R-16-17 formats lengths with the reader locale when one is given
+AssertionError: expected '0.50 m' to be '0,50 m' // Object.is equality
+
+Expected: "0,50 m"
+Received: "0.50 m"
+
+ ❯ tests/units.test.ts:46:54
+     44|
+     45|   it('R-16-17 formats lengths with the reader locale when one is given…
+     46|     expect(formatLength(0.5, 'M', { locale: 'ca' })).toBe('0,50 m');
+       |                                                      ^
+     47|     expect(formatLength(0.5, 'M', { locale: 'es' })).toBe('0,50 m');
+     48|     expect(formatLength(0.5, 'M', { locale: 'en' })).toBe('0.50 m');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  19:12:31
+   Duration  267ms (transform 54%, import 22%, tests 17%, worker 7%)
+
+
+exit 1

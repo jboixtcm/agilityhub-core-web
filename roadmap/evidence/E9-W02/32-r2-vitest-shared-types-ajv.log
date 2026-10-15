@@ -1,0 +1,9 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+
+
+ Test Files  1 passed (1)
+      Tests  17 passed (17)
+   Start at  19:24:32
+   Duration  453ms (transform 53%, import 32%, tests 14%, worker 1%)
+

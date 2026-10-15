@@ -10,6 +10,13 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 const literalColorPattern = /#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/g;
+// Tailwind's fixed palette (`bg-red-700`, `hover:text-white`, `bg-red-600/20`…) bypasses the club
+// theme exactly like a hex literal (E9-W02 round 2, review #11): semantic utilities only
+// (`bg-danger`, `text-primary-fg`…), which resolve to the --ah-* tokens.
+const tailwindPaletteSelector =
+  "(^|[\\s:])(bg|text|border|ring|fill|stroke|from|via|to|outline|divide|placeholder|accent|caret|decoration|shadow)-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|white|black)(-\\d{2,3})?\\b";
+const tailwindPaletteMessage =
+  "Use a semantic utility backed by an --ah-* token instead of a Tailwind palette colour.";
 const typescriptFiles = ["**/*.{ts,tsx}"];
 
 const typedConfigs = [
@@ -138,6 +145,14 @@ export default tseslint.config(
           selector: "TemplateElement[value.raw=/hsla?\\(/]",
           message: "Use an --ah-* design token instead of a literal color.",
         },
+        {
+          selector: `Literal[value=/${tailwindPaletteSelector}/]`,
+          message: tailwindPaletteMessage,
+        },
+        {
+          selector: `TemplateElement[value.raw=/${tailwindPaletteSelector}/]`,
+          message: tailwindPaletteMessage,
+        },
       ],
     },
     settings: {
@@ -173,7 +188,6 @@ export default tseslint.config(
     basePath: path.resolve(import.meta.dirname, "../.."),
     files: [
       "packages/course-ui/src/components/**/*.tsx",
-      "packages/course-ui/src/lib/marker-layout.ts",
       "packages/course-ui/src/lib/planner-state.ts",
     ],
     linterOptions: {

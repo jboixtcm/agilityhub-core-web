@@ -38,7 +38,7 @@ interface Props extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'
 
 const variantClass: Record<IconButtonVariant, string> = {
   ghost: 'bg-transparent text-muted hover:text-text hover:bg-surface-2',
-  filled: 'bg-primary text-text hover:opacity-90 active:opacity-100',
+  filled: 'bg-primary text-primary-fg hover:opacity-90 active:opacity-100',
   danger: 'bg-transparent text-danger hover:text-danger hover:bg-danger/10',
 };
 

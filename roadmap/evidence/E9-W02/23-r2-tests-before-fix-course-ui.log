@@ -1,0 +1,351 @@
+$ pnpm --dir packages/course-ui exec vitest run  (sources at HEAD, round-2 tests)
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+
+ ❯ tests/tokens.test.ts (4 tests | 4 failed) 22ms
+   ❯ E9-W02 round 2 #7/#8/#11: course-ui reads the club's theme pairs (AGENTS rules 2 and 6) (4)
+     × every solid primary background carries the primary foreground (no text-on-primary at 1:1) 13ms
+     × no Tailwind palette colour (the fixed red/white utilities of review #11) is left in the package 5ms
+     × the primary pair and the 3D obstacle number badge reach AA (4.5:1) in the light theme 1ms
+     × the primary pair and the 3D obstacle number badge reach AA (4.5:1) in the dark theme 2ms
+ ❯ tests/panels.test.tsx (6 tests | 5 failed) 311ms
+   ❯ #6 R-16-04 RingMarkerDiagram draws the markers at their Core coordinates (2)
+     × every marker sits where the api stores it (no A–F reading-order relocation) 48ms
+     × R-16-17 the ring sides read in the club's locale 9ms
+   ❯ #12/#13 WarningsPanel: translated rules, lengths only where they are lengths (2)
+     × R-16-12 an inventory shortage never reads its missing count as metres or feet 8ms
+     × R-16-17 a door clearance reads its translated rule and its distance in the club's locale 3ms
+   ❯ #13 PlacementControls formats the nudge steps in the club's locale (2)
+     × ca 132ms
+ ❯ tests/viewers.test.tsx (14 tests | 2 failed) 1094ms
+   ❯ T-16-04 the course viewers render the fixture courses (5)
+     × #8 the 3D number badge paints the number on the contrasting badge pair 77ms
+   ❯ T-16-04 the placement editor emits geometry and warnings on interaction (1)
+     × R-16-05 nudging the course 3 m east moves every obstacle 3 m and adds the border warnings 213ms
+ ❯ tests/port.test.tsx (5 tests | 1 failed) 1368ms
+   ❯ T-16-04 course-ui port (5)
+     × CONVENCIONS_API §7 an api 4xx answer retires the upload key; a 409 IN_PROGRESS keeps it 1028ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/panels.test.tsx > #6 R-16-04 RingMarkerDiagram draws the markers at their Core coordinates > every marker sits where the api stores it (no A–F reading-order relocation)
+AssertionError: expected { A: [ +0, 20 ], B: [ 20, 20 ], …(4) } to deeply equal { A: [ +0, +0 ], B: [ +0, 20 ], …(4) }
+
+- Expected
++ Received
+
+  {
+    "A": [
+      0,
+-     0,
++     20,
+    ],
+    "B": [
+-     0,
+      20,
++     20,
+    ],
+    "C": [
+      40,
+-     0,
++     20,
+    ],
+    "D": [
+-     40,
+-     20,
++     0,
++     0,
+    ],
+    "E": [
+      20,
+      0,
+    ],
+    "F": [
+-     20,
+-     20,
++     40,
++     0,
+    ],
+  }
+
+ ❯ tests/panels.test.tsx:91:19
+     89|       }),
+     90|     );
+     91|     expect(drawn).toEqual({
+       |                   ^
+     92|       A: [0, 0],
+     93|       B: [0, 20],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  tests/panels.test.tsx > #6 R-16-04 RingMarkerDiagram draws the markers at their Core coordinates > R-16-17 the ring sides read in the club's locale
+AssertionError: expected [ 'A', 'B', 'C', 'D', 'E', 'F', …(3) ] to deeply equal ArrayContaining ["40 m", "22,50 m"]
+
+- Expected
++ Received
+
+- ArrayContaining [
++ [
++   "A",
++   "B",
++   "C",
++   "D",
++   "E",
++   "F",
++   "0,0",
+    "40 m",
+-   "22,50 m",
++   "22.5 m",
+  ]
+
+ ❯ tests/panels.test.tsx:106:21
+    104|     );
+    105|     const texts = () => [...container.querySelectorAll("text")].map((t…
+    106|     expect(texts()).toEqual(expect.arrayContaining(["40 m", "22,50 m"]…
+       |                     ^
+    107|     rerender(<RingMarkerDiagram ariaLabel="Ring markers" locale="en" r…
+    108|     expect(texts()).toEqual(expect.arrayContaining(["40 m", "22.50 m"]…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  tests/panels.test.tsx > #12/#13 WarningsPanel: translated rules, lengths only where they are lengths > R-16-12 an inventory shortage never reads its missing count as metres or feet
+ FAIL  tests/panels.test.tsx > #12/#13 WarningsPanel: translated rules, lengths only where they are lengths > R-16-17 a door clearance reads its translated rule and its distance in the club's locale
+ FAIL  tests/viewers.test.tsx > T-16-04 the placement editor emits geometry and warnings on interaction > R-16-05 nudging the course 3 m east moves every obstacle 3 m and adds the border warnings
+TypeError: labels.distance is not a function
+ ❯ src/components/WarningsPanel.tsx:62:33
+     60|                     {w.distanceMeters != null ? (
+     61|                       <span className="ml-auto text-muted">
+     62|                         {labels.distance(w.distanceMeters, units)}
+       |                                 ^
+     63|                       </span>
+     64|                     ) : null}
+ ❯ WarningsPanel src/components/WarningsPanel.tsx:37:21
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  tests/panels.test.tsx > #13 PlacementControls formats the nudge steps in the club's locale > ca
+AssertionError: expected [ '0.10 m', '0.50 m', '1.00 m' ] to deeply equal [ '0,10 m', '0,50 m', '1,00 m' ]
+
+- Expected
++ Received
+
+  [
+-   "0,10 m",
+-   "0,50 m",
+-   "1,00 m",
++   "0.10 m",
++   "0.50 m",
++   "1.00 m",
+  ]
+
+ ❯ tests/panels.test.tsx:214:79
+    212|       />,
+    213|     );
+    214|     expect(screen.getAllByRole("option").map((option) => option.textCo…
+       |                                                                               ^
+    215|   });
+    216| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  tests/port.test.tsx > T-16-04 course-ui port > CONVENCIONS_API §7 an api 4xx answer retires the upload key; a 409 IN_PROGRESS keeps it
+AssertionError: expected '' to be 'IDEMPOTENCY_KEY_REUSED' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"bg-surface border border-border rounded-2xl p-4 "[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mclass[39m=[32m"text-sm font-semibold uppercase tracking-wide text-muted mb-3"[39m
+        [36m>[39m
+          [0mUpload[0m
+        [36m</h2>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"block"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"block text-sm text-muted mb-2"[39m
+          [36m>[39m
+            [0mFile[0m
+          [36m</span>[39m
+          [36m<input[39m
+            [33maccept[39m=[32m".txt,text/plain"[39m
+            [33mclass[39m=[32m"block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-agh file:border-0 file:bg-primary file:text-text file:font-semibold hover:file:opacity-90"[39m
+            [33mtype[39m=[32m"file"[39m
+          [36m/>[39m
+        [36m</label>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mt-3 p-3 border border-danger bg-danger/10 text-danger rounded"[39m
+          [33mrole[39m=[32m"alert"[39m
+        [36m/>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"mt-4 space-y-3"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-2 text-sm"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"flex flex-wrap items-center gap-2"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"font-semibold text-text"[39m
+              [36m>[39m
+                [0mJP S SW[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"inline-flex items-center px-2 py-0.5 text-xs font-medium rounded border border-border bg-surface-2 text-muted"[39m
+              [36m>[39m
+                [0mM[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"inline-flex items-center px-2 py-0.5 text-xs font-medium rounded border border-border bg-surface-2 text-muted"[39m
+              [36m>[39m
+                [0m27 × 29[0m
+              [36m</span>[39m
+            [36m</div>[39m
+            [36m<ul[39m
+              [33mclass[39m=[32m"text-xs text-muted space-y-1"[39m
+            [36m>[39m
+              [36m<li>[39m
+                [0m21 obstacles[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0m21 numbers[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0m0 zones[0m
+              [36m</li>[39m
+              [36m<li>[39m
+                [0m0 logos[0m
+              [36m</li>[39m
+            [36m</ul>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"inline-flex items-center justify-center font-semibold rounded-agh transition border border-transparent disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-text hover:opacity-90 active:opacity-100 min-h-[43px] px-4 text-sm "[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mContinue[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+
+- Expected
++ Received
+
+- IDEMPOTENCY_KEY_REUSED
+
+ ❯ tests/port.test.tsx:221:55
+    219|       fireEvent.click(await screen.findByRole("button", { name: "Conti…
+    220|       await waitFor(() => {
+    221|         expect(screen.getByRole("alert").textContent).toBe(code);
+       |                                                       ^
+    222|       });
+    223|     }
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  tests/tokens.test.ts > E9-W02 round 2 #7/#8/#11: course-ui reads the club's theme pairs (AGENTS rules 2 and 6) > every solid primary background carries the primary foreground (no text-on-primary at 1:1)
+AssertionError: expected [ …(4) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "components/UnitsToggle.tsx: bg-primary text-text",
++   "components/UploadCourse.tsx: block w-full text-sm file:mr-3 file:py-2 file:px-3 file:rounded-agh file:border-0 file:bg-primary file:text-text file:font-semibold hover:file:opacity-90",
++   "components/ui/Button.tsx: bg-primary text-text hover:opacity-90 active:opacity-100",
++   "components/ui/IconButton.tsx: bg-primary text-text hover:opacity-90 active:opacity-100",
++ ]
+
+ ❯ tests/tokens.test.ts:44:23
+     42|     // Button primary, IconButton filled, UnitsToggle's pressed unit, …
+     43|     expect(checked).toBeGreaterThanOrEqual(4);
+     44|     expect(offending).toEqual([]);
+       |                       ^
+     45|   });
+     46|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  tests/tokens.test.ts > E9-W02 round 2 #7/#8/#11: course-ui reads the club's theme pairs (AGENTS rules 2 and 6) > no Tailwind palette colour (the fixed red/white utilities of review #11) is left in the package
+AssertionError: expected [ …(4) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "components/ui/Badge.tsx: bg-red-600/20",
++   "components/ui/Button.tsx: bg-red-700",
++   "components/ui/Button.tsx: text-white",
++   "components/ui/Button.tsx: hover:bg-red-600",
++ ]
+
+ ❯ tests/tokens.test.ts:53:19
+     51|       classes.filter((name) => palette.test(name)).map((name) => `${fi…
+     52|     );
+     53|     expect(found).toEqual([]);
+       |                   ^
+     54|   });
+     55|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  tests/tokens.test.ts > E9-W02 round 2 #7/#8/#11: course-ui reads the club's theme pairs (AGENTS rules 2 and 6) > the primary pair and the 3D obstacle number badge reach AA (4.5:1) in the light theme
+ FAIL  tests/tokens.test.ts > E9-W02 round 2 #7/#8/#11: course-ui reads the club's theme pairs (AGENTS rules 2 and 6) > the primary pair and the 3D obstacle number badge reach AA (4.5:1) in the dark theme
+TypeError: Cannot read properties of undefined (reading 'foreground')
+ ❯ tests/tokens.test.ts:63:38
+     61|       );
+     62|       expect(
+     63|         contrast(COURSE_NUMBER_BADGE.foreground, COURSE_NUMBER_BADGE.b…
+       |                                      ^
+     64|       ).toBeGreaterThanOrEqual(4.5);
+     65|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+ FAIL  tests/viewers.test.tsx > T-16-04 the course viewers render the fixture courses > #8 the 3D number badge paints the number on the contrasting badge pair
+Error: UNKNOWN_TOKEN:--ah-color-course-number-bg
+ ❯ colour tests/helpers/tokens.ts:53:35
+     51|   if (variable !== undefined) {
+     52|     const next = vars.get(variable);
+     53|     if (next === undefined) throw new Error(`UNKNOWN_TOKEN:${variable}…
+       |                                   ^
+     54|     return colour(next, vars);
+     55|   }
+ ❯ tokenRgb tests/helpers/tokens.ts:68:10
+ ❯ Module.tokenHex tests/helpers/tokens.ts:72:14
+ ❯ tests/viewers.test.tsx:291:54
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
+
+
+ Test Files  4 failed | 1 passed (5)
+      Tests  12 failed | 19 passed (31)
+   Start at  19:12:19
+   Duration  4.35s (transform 41%, environment 33%, tests 17%, import 8%)
+
+  Transform  transforming modules took 6.77s · 41% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+
+exit 1

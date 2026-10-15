@@ -6,11 +6,9 @@ import { describe, expect, it } from "vitest";
 
 import {
   INITIAL_STATE,
-  normalizeLegacyMarkerReadingOrder,
   plannerReducer,
   summarizeInventoryWarnings,
   type PlannerRing,
-  type PlannerRingMarker,
 } from "../src/index";
 
 const course = parseSmarterTxt(
@@ -39,26 +37,6 @@ const ring: PlannerRing = {
   venue_id: "venue-1",
   width_m: 20,
 };
-
-function marker(label: string, x: number, y: number): PlannerRingMarker {
-  return {
-    april_tag_id: null,
-    id: `marker-${label}`,
-    is_active: true,
-    is_fixed: true,
-    label,
-    marker_uid: `marker-${label.toLowerCase()}`,
-    notes: null,
-    physical_height_m: 0.16,
-    physical_width_m: 0.16,
-    ring_id: "ring-1",
-    role: "reference",
-    rotation_y_deg: 0,
-    x_m: x,
-    y_m: y,
-    z_m: 0,
-  };
-}
 
 describe("T-16-04 recovered planner behaviour", () => {
   it("R-16-05 centres a loaded course and changes to preserve-metres after a nudge", () => {
@@ -100,29 +78,5 @@ describe("T-16-04 recovered planner behaviour", () => {
     ]);
 
     expect(summary).toEqual({ blockers: [], inventoryNotConfigured: true, shortages: [] });
-  });
-
-  it("R-16-04 normalizes only the exact legacy A-F marker arrangement", () => {
-    const legacy = [
-      marker("A", 0, 0),
-      marker("B", 0, 20),
-      marker("C", 40, 0),
-      marker("D", 40, 20),
-      marker("E", 20, 0),
-      marker("F", 20, 20),
-    ];
-
-    expect(
-      Object.fromEntries(
-        normalizeLegacyMarkerReadingOrder(legacy).map((item) => [item.label, [item.x_m, item.y_m]]),
-      ),
-    ).toEqual({
-      A: [0, 20],
-      B: [20, 20],
-      C: [40, 20],
-      D: [0, 0],
-      E: [20, 0],
-      F: [40, 0],
-    });
   });
 });

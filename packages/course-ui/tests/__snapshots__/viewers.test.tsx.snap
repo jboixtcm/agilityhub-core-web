@@ -1,0 +1,565 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`T-16-04 the course viewers render the fixture courses > Planner2D (PlannerCanvas) on ag-au-tryout-i-copy_998859_sadesign.txt 1`] = `
+{
+  "icons": [
+    "translate(36.744 14.052) rotate(-117.28)",
+    "translate(18.202 8.817) rotate(-102.62)",
+    "translate(10.156 9.461) rotate(102.76)",
+    "translate(2.893 13.509) rotate(135.11)",
+    "translate(13.506 17.995) rotate(96.67)",
+    "translate(32.238 8.929) rotate(-158.7)",
+    "translate(11.841 3.914) rotate(-50.56)",
+    "translate(26.857 2.901) rotate(-100.32)",
+    "translate(36.223 4.348) rotate(-39.34)",
+    "translate(20.431 0.91) rotate(-178.87)",
+    "translate(18.991 13.149) rotate(48.49)",
+    "translate(6.523 15.598) rotate(-64.8)",
+    "translate(19.823 17.346) rotate(-30.21)",
+    "translate(29.613 18.489) rotate(11.05)",
+    "translate(26.513 7.363) rotate(30.4)",
+  ],
+  "numbers": [
+    "1@translate(25.77 3.334) scale(1 -1)",
+    "2@translate(32.771 8.933) scale(1 -1)",
+    "3@translate(35.552 14.405) scale(1 -1)",
+    "4@translate(32.265 18.762) scale(1 -1)",
+    "5@translate(20.759 17.651) scale(1 -1)",
+    "6@translate(13.697 14.341) scale(1 -1)",
+    "7@translate(2.311 12.552) scale(1 -1)",
+    "8@translate(9.938 10.085) scale(1 -1)",
+    "9@translate(19.718 8.15) scale(1 -1)",
+    "10@translate(25.319 11.783) scale(1 -1)",
+    "11@translate(36.008 15.37) scale(1 -1)",
+    "12@translate(39.625 5.429) scale(1 -1)",
+    "13@translate(25.384 1.662) scale(1 -1)",
+    "14@translate(8.981 3.141) scale(1 -1)",
+    "15@translate(6.23 14.542) scale(1 -1)",
+    "17@translate(19.424 14.136) scale(1 -1)",
+    "18@translate(24.52 8.169) scale(1 -1)",
+    "20@translate(29.188 15.413) scale(1 -1)",
+    "21@translate(17.224 9.533) scale(1 -1)",
+    "16@translate(14.336 18.869) scale(1 -1)",
+    "19@translate(39.115 4.788) scale(1 -1)",
+    "22@translate(12.29 5.006) scale(1 -1)",
+  ],
+}
+`;
+
+exports[`T-16-04 the course viewers render the fixture courses > Planner2D (PlannerCanvas) on jp-s-sw_993483_sadesign.txt 1`] = `
+{
+  "icons": [
+    "translate(4.666 14.277) rotate(176.46)",
+    "translate(11.373 20.311) rotate(5.56)",
+    "translate(4.358 6.951) rotate(7.02)",
+    "translate(21.013 23.342) rotate(-30.44)",
+    "translate(14.449 27.005) rotate(106.61)",
+    "translate(7.393 21.087) rotate(54.18)",
+    "translate(21.309 18.514) rotate(-80.64)",
+    "translate(25.734 24.196) rotate(65.87)",
+    "translate(23.64 10.447) rotate(15.88)",
+    "translate(19.59 2.08) rotate(-7.08)",
+    "translate(20.41 7.412) rotate(59.42)",
+    "translate(20.438 14.978) rotate(17.34)",
+    "translate(8.669 26.599) rotate(109.06)",
+    "translate(16.645 8.321) rotate(-139.82)",
+    "translate(5.92 4.361) rotate(132.87)",
+    "translate(9.37 12.965) rotate(128.14)",
+    "translate(14.826 21.782) rotate(22.4)",
+    "translate(2.11 23.338) rotate(108.79)",
+  ],
+  "numbers": [
+    "1@translate(20.241 22.687) scale(1 -1)",
+    "2@translate(15.19 27.687) scale(1 -1)",
+    "3@translate(10.464 19.562) scale(1 -1)",
+    "5@translate(3.761 7.574) scale(1 -1)",
+    "6@translate(5.328 13.905) scale(1 -1)",
+    "7@translate(7.497 20.029) scale(1 -1)",
+    "9@translate(21.345 19.383) scale(1 -1)",
+    "12@translate(8.814 25.794) scale(1 -1)",
+    "14@translate(0.98 17.265) scale(1 -1)",
+    "11@translate(18.449 25.994) scale(1 -1)",
+    "8@translate(14.186 20.931) scale(1 -1)",
+    "10@translate(25.887 22.994) scale(1 -1)",
+    "15@translate(6.302 7.071) scale(1 -1)",
+    "17@translate(20.7 6.349) scale(1 -1)",
+    "18@translate(21.185 13.212) scale(1 -1)",
+    "19@translate(24.959 10.691) scale(1 -1)",
+    "21@translate(18.588 3.149) scale(1 -1)",
+    "13@translate(3.706 24.598) scale(1 -1)",
+    "16@translate(9.925 1.413) scale(1 -1)",
+    "4@translate(7.984 13.655) scale(1 -1)",
+    "20@translate(17.753 8.41) scale(1 -1)",
+  ],
+}
+`;
+
+exports[`T-16-04 the course viewers render the fixture courses > Planner3D on ag-au-tryout-i-copy_998859_sadesign.txt 1`] = `
+{
+  "numbers": [
+    [
+      25.77,
+      -3.334,
+    ],
+    [
+      32.771,
+      -8.933,
+    ],
+    [
+      35.552,
+      -14.405,
+    ],
+    [
+      32.265,
+      -18.762,
+    ],
+    [
+      20.759,
+      -17.651,
+    ],
+    [
+      13.697,
+      -14.341,
+    ],
+    [
+      2.311,
+      -12.552,
+    ],
+    [
+      9.938,
+      -10.085,
+    ],
+    [
+      19.718,
+      -8.15,
+    ],
+    [
+      25.319,
+      -11.783,
+    ],
+    [
+      36.008,
+      -15.37,
+    ],
+    [
+      39.625,
+      -5.429,
+    ],
+    [
+      25.384,
+      -1.662,
+    ],
+    [
+      8.981,
+      -3.141,
+    ],
+    [
+      6.23,
+      -14.542,
+    ],
+    [
+      19.424,
+      -14.136,
+    ],
+    [
+      24.52,
+      -8.169,
+    ],
+    [
+      29.188,
+      -15.413,
+    ],
+    [
+      17.224,
+      -9.533,
+    ],
+    [
+      14.336,
+      -18.869,
+    ],
+    [
+      39.115,
+      -4.788,
+    ],
+    [
+      12.29,
+      -5.006,
+    ],
+  ],
+  "obstacles": [
+    {
+      "id": "275",
+      "kind": "Mesh",
+      "rotationY": 0,
+      "x": 0,
+      "z": 0,
+    },
+    {
+      "id": "247",
+      "kind": "Mesh",
+      "rotationY": 0,
+      "x": 0,
+      "z": 0,
+    },
+    {
+      "id": "6",
+      "kind": "Mesh",
+      "rotationY": 0,
+      "x": 0,
+      "z": 0,
+    },
+    {
+      "id": "205",
+      "kind": "Mesh",
+      "rotationY": 0,
+      "x": 0,
+      "z": 0,
+    },
+    {
+      "id": "1",
+      "kind": "Group",
+      "rotationY": 3.618,
+      "x": 36.744,
+      "z": -14.052,
+    },
+    {
+      "id": "5",
+      "kind": "Group",
+      "rotationY": 3.362,
+      "x": 18.202,
+      "z": -8.817,
+    },
+    {
+      "id": "16",
+      "kind": "Group",
+      "rotationY": -0.223,
+      "x": 10.156,
+      "z": -9.461,
+    },
+    {
+      "id": "145",
+      "kind": "Group",
+      "rotationY": -0.787,
+      "x": 2.893,
+      "z": -13.509,
+    },
+    {
+      "id": "202",
+      "kind": "Group",
+      "rotationY": -0.116,
+      "x": 13.506,
+      "z": -17.995,
+    },
+    {
+      "id": "237",
+      "kind": "Group",
+      "rotationY": 4.341,
+      "x": 32.238,
+      "z": -8.929,
+    },
+    {
+      "id": "239",
+      "kind": "Group",
+      "rotationY": 2.453,
+      "x": 11.841,
+      "z": -3.914,
+    },
+    {
+      "id": "246",
+      "kind": "Group",
+      "rotationY": 3.322,
+      "x": 26.857,
+      "z": -2.901,
+    },
+    {
+      "id": "152",
+      "kind": "Group",
+      "rotationY": 0.687,
+      "x": 36.223,
+      "z": -4.348,
+    },
+    {
+      "id": "215",
+      "kind": "Group",
+      "rotationY": 3.122,
+      "x": 20.431,
+      "z": -0.91,
+    },
+    {
+      "id": "273",
+      "kind": "Group",
+      "rotationY": 0.724,
+      "x": 18.991,
+      "z": -13.149,
+    },
+    {
+      "id": "278",
+      "kind": "Group",
+      "rotationY": 1.131,
+      "x": 6.523,
+      "z": -15.598,
+    },
+    {
+      "id": "178",
+      "kind": "Group",
+      "rotationY": 2.098,
+      "x": 19.823,
+      "z": -17.346,
+    },
+    {
+      "id": "180",
+      "kind": "Group",
+      "rotationY": -0.193,
+      "x": 29.613,
+      "z": -18.489,
+    },
+    {
+      "id": "216",
+      "kind": "Group",
+      "rotationY": -0.531,
+      "x": 26.513,
+      "z": -7.363,
+    },
+  ],
+}
+`;
+
+exports[`T-16-04 the course viewers render the fixture courses > Planner3D on jp-s-sw_993483_sadesign.txt 1`] = `
+{
+  "numbers": [
+    [
+      20.241,
+      -22.687,
+    ],
+    [
+      15.19,
+      -27.687,
+    ],
+    [
+      10.464,
+      -19.562,
+    ],
+    [
+      3.761,
+      -7.574,
+    ],
+    [
+      5.328,
+      -13.905,
+    ],
+    [
+      7.497,
+      -20.029,
+    ],
+    [
+      21.345,
+      -19.383,
+    ],
+    [
+      8.814,
+      -25.794,
+    ],
+    [
+      0.98,
+      -17.265,
+    ],
+    [
+      18.449,
+      -25.994,
+    ],
+    [
+      14.186,
+      -20.931,
+    ],
+    [
+      25.887,
+      -22.994,
+    ],
+    [
+      6.302,
+      -7.071,
+    ],
+    [
+      20.7,
+      -6.349,
+    ],
+    [
+      21.185,
+      -13.212,
+    ],
+    [
+      24.959,
+      -10.691,
+    ],
+    [
+      18.588,
+      -3.149,
+    ],
+    [
+      3.706,
+      -24.598,
+    ],
+    [
+      9.925,
+      -1.413,
+    ],
+    [
+      7.984,
+      -13.655,
+    ],
+    [
+      17.753,
+      -8.41,
+    ],
+  ],
+  "obstacles": [
+    {
+      "id": "210",
+      "kind": "Mesh",
+      "rotationY": 0,
+      "x": 0,
+      "z": 0,
+    },
+    {
+      "id": "205",
+      "kind": "Mesh",
+      "rotationY": 0,
+      "x": 0,
+      "z": 0,
+    },
+    {
+      "id": "224",
+      "kind": "Mesh",
+      "rotationY": 0,
+      "x": 0,
+      "z": 0,
+    },
+    {
+      "id": "1",
+      "kind": "Group",
+      "rotationY": -1.509,
+      "x": 4.666,
+      "z": -14.277,
+    },
+    {
+      "id": "5",
+      "kind": "Group",
+      "rotationY": 1.474,
+      "x": 11.373,
+      "z": -20.311,
+    },
+    {
+      "id": "22",
+      "kind": "Group",
+      "rotationY": 1.448,
+      "x": 4.358,
+      "z": -6.951,
+    },
+    {
+      "id": "116",
+      "kind": "Group",
+      "rotationY": 2.102,
+      "x": 21.013,
+      "z": -23.342,
+    },
+    {
+      "id": "127",
+      "kind": "Group",
+      "rotationY": -0.29,
+      "x": 14.449,
+      "z": -27.005,
+    },
+    {
+      "id": "131",
+      "kind": "Group",
+      "rotationY": 0.625,
+      "x": 7.393,
+      "z": -21.087,
+    },
+    {
+      "id": "145",
+      "kind": "Group",
+      "rotationY": 2.978,
+      "x": 21.309,
+      "z": -18.514,
+    },
+    {
+      "id": "176",
+      "kind": "Group",
+      "rotationY": 0.421,
+      "x": 25.734,
+      "z": -24.196,
+    },
+    {
+      "id": "178",
+      "kind": "Group",
+      "rotationY": 1.294,
+      "x": 23.64,
+      "z": -10.447,
+    },
+    {
+      "id": "198",
+      "kind": "Group",
+      "rotationY": 1.694,
+      "x": 19.59,
+      "z": -2.08,
+    },
+    {
+      "id": "202",
+      "kind": "Group",
+      "rotationY": 0.534,
+      "x": 20.41,
+      "z": -7.412,
+    },
+    {
+      "id": "214",
+      "kind": "Group",
+      "rotationY": 1.268,
+      "x": 20.438,
+      "z": -14.978,
+    },
+    {
+      "id": "221",
+      "kind": "Group",
+      "rotationY": -0.333,
+      "x": 8.669,
+      "z": -26.599,
+    },
+    {
+      "id": "230",
+      "kind": "Group",
+      "rotationY": 4.011,
+      "x": 16.645,
+      "z": -8.321,
+    },
+    {
+      "id": "215",
+      "kind": "Group",
+      "rotationY": -2.319,
+      "x": 5.92,
+      "z": -4.361,
+    },
+    {
+      "id": "226",
+      "kind": "Group",
+      "rotationY": -2.236,
+      "x": 9.37,
+      "z": -12.965,
+    },
+    {
+      "id": "16",
+      "kind": "Group",
+      "rotationY": 1.18,
+      "x": 14.826,
+      "z": -21.782,
+    },
+    {
+      "id": "222",
+      "kind": "Group",
+      "rotationY": -0.328,
+      "x": 2.11,
+      "z": -23.338,
+    },
+  ],
+}
+`;

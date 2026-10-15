@@ -112,6 +112,12 @@ export interface SavePlacementInput {
   readonly sizes?: readonly ("XS" | "S" | "M" | "I" | "L" | "ALL")[];
   readonly isTraining?: boolean;
   readonly mode?: "event" | "training" | "free-floating";
+  /**
+   * R-16-05: a placement with a `critical` warning is refused (`422 PLACEMENT_BLOCKED{warnings}`)
+   * unless an ADMIN confirms it; the confirmed retry sends `force: true` (and a new
+   * `submissionKey`, since the body changes).
+   */
+  readonly force?: boolean;
 }
 
 export interface PlannerPlacement {
@@ -244,7 +250,16 @@ export interface PlannerStore {
     ringId: string,
     inventory: readonly { obstacle_type: ObstacleType; quantity: number }[],
   ): Promise<PlannerRing>;
-  updateRingDoors(ringId: string, doors: readonly SaveRingDoorInput[]): Promise<PlannerRing>;
+  /**
+   * Replaces the ring's doors under optimistic locking: `geometryVersion` is the version the user
+   * edited (`PlannerRing.geometry_version`), so another editor's save in between answers
+   * `409 STALE_VERSION` instead of being overwritten (CONVENCIONS_API §7, R-16-04).
+   */
+  updateRingDoors(
+    ringId: string,
+    doors: readonly SaveRingDoorInput[],
+    geometryVersion: number,
+  ): Promise<PlannerRing>;
   uploadSmarterFile(input: UploadCourseInput): Promise<{ readonly course: PlannerCourse }>;
   savePlacement(input: SavePlacementInput): Promise<PlannerPlacement>;
   listCalendarPlacements(input?: ListCalendarPlacementsInput): Promise<readonly PlannerPlacement[]>;
@@ -268,6 +283,11 @@ export interface PlannerStore {
   upsertBuildObstacleStatus(
     input: UpsertBuildObstacleStatusInput,
   ): Promise<PlannerBuildObstacleStatus>;
+  /** R-16-11: `POST /build-sessions/{id}/finish` with the caller-owned `Idempotency-Key`. */
+  finishBuildSession(input: {
+    readonly buildSessionId: string;
+    readonly submissionKey: string;
+  }): Promise<PlannerBuildSession>;
   subscribeBuildObstacleStatuses(
     buildSessionId: string,
     onChange: (status: PlannerBuildObstacleStatus) => void,

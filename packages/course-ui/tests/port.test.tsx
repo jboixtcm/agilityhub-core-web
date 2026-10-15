@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   PaperSizeToggle,
@@ -14,6 +14,8 @@ import {
   type PlanStepDefinition,
   type PlannerStore,
 } from "../src/index";
+
+afterEach(cleanup);
 
 describe("T-16-04 course-ui port", () => {
   it("R-16-01 keeps placement controls as controlled actions", () => {
@@ -27,6 +29,7 @@ describe("T-16-04 course-ui port", () => {
     render(
       <PlacementControls
         units="M"
+        locale="ca"
         labels={{
           center: "Center",
           flipHorizontal: "Flip horizontal",
@@ -134,7 +137,7 @@ describe("T-16-04 course-ui port", () => {
           savedContinue: "Saved",
           title: "Upload",
           units: (value) => value,
-          uploadError: "Upload error",
+          error: () => "Upload error",
           uploading: "Uploading",
         }}
         onUploaded={onUploaded}
@@ -160,5 +163,69 @@ describe("T-16-04 course-ui port", () => {
     expect(uploadSmarterFile.mock.calls[0]?.[0].bytes).toEqual(
       uploadSmarterFile.mock.calls[1]?.[0].bytes,
     );
+  });
+
+  it("CONVENCIONS_API §7 an api 4xx answer retires the upload key; a 409 IN_PROGRESS keeps it", async () => {
+    const source = readFileSync(
+      resolve(process.cwd(), "../course-core/fixtures/smarter/jp-s-sw_993483_sadesign.txt"),
+      "utf8",
+    );
+    // The api-client's ApiError fields (status, top-level code, details, traceId).
+    const inProgress = Object.assign(new Error("in progress"), {
+      code: "IDEMPOTENCY_KEY_REUSED",
+      details: { reason: "IN_PROGRESS" },
+      status: 409,
+      traceId: "trace-1",
+    });
+    const invalid = Object.assign(new Error("invalid"), {
+      code: "COURSE_MODEL_INVALID",
+      details: null,
+      status: 400,
+      traceId: "trace-2",
+    });
+    const uploadSmarterFile = vi
+      .fn<PlannerStore["uploadSmarterFile"]>()
+      .mockRejectedValueOnce(inProgress)
+      .mockRejectedValueOnce(invalid)
+      .mockResolvedValueOnce({ course: { id: "course-1", name: "Course", version: 1 } });
+    configurePlannerStore({ uploadSmarterFile } as unknown as PlannerStore);
+    const shown = vi.fn((error: unknown) => (error as { code: string }).code);
+
+    render(
+      <UploadCourse
+        labels={{
+          continue: "Continue",
+          dimensions: (length, width) => `${String(length)} × ${String(width)}`,
+          error: shown,
+          file: "File",
+          ignoredLogos: (count) => `${String(count)} logos`,
+          noGoZones: (count) => `${String(count)} zones`,
+          numbers: (count) => `${String(count)} numbers`,
+          obstacles: (count) => `${String(count)} obstacles`,
+          parseError: "Parse error",
+          parsing: (filename) => `Parsing ${filename}`,
+          savedContinue: "Saved",
+          title: "Upload",
+          units: (value) => value,
+          uploading: "Uploading",
+        }}
+        onUploaded={vi.fn()}
+      />,
+    );
+    fireEvent.change(screen.getByLabelText("File"), {
+      target: { files: [new File([source], "course.txt", { type: "text/plain" })] },
+    });
+    for (const code of ["IDEMPOTENCY_KEY_REUSED", "COURSE_MODEL_INVALID"]) {
+      fireEvent.click(await screen.findByRole("button", { name: "Continue" }));
+      await waitFor(() => {
+        expect(screen.getByRole("alert").textContent).toBe(code);
+      });
+    }
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    await screen.findByRole("button", { name: "Saved" });
+
+    const keys = uploadSmarterFile.mock.calls.map(([input]) => input.submissionKey);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[1]);
   });
 });

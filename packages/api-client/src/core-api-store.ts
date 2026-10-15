@@ -1,5 +1,6 @@
 import {
   doorPolygonFromEdge,
+  placedObstacleHeadingDegrees,
   placeObstacleInRing,
   type CourseData,
   type CoursePlacement,
@@ -34,6 +35,7 @@ type ApiBuildSession = components["schemas"]["BuildSession"];
 type ApiBuildObstacle = components["schemas"]["BuildObstacle"];
 type ApiCalibrationLog = components["schemas"]["CalibrationLog"];
 type ApiCourse = components["schemas"]["Course"];
+type ApiCourseRequest = components["schemas"]["CourseRequest"];
 type ApiGeometry = components["schemas"]["RingGeometry"];
 type ApiGeometryRequest = components["schemas"]["RingGeometryRequest"];
 type ApiInventory = components["schemas"]["ObstacleInventory"];
@@ -75,16 +77,6 @@ function placementMode(
   return "PRESERVE_METERS";
 }
 
-function placementRotation(obstacleDegrees: number | null, placement: CoursePlacement): number {
-  const theta = ((obstacleDegrees ?? 0) * Math.PI) / 180;
-  const x = (placement.flipX ? -1 : 1) * Math.cos(theta);
-  const y = (placement.flipY ? -1 : 1) * Math.sin(theta);
-  const phi = (placement.rotationDegrees * Math.PI) / 180;
-  const rx = x * Math.cos(phi) - y * Math.sin(phi);
-  const ry = x * Math.sin(phi) + y * Math.cos(phi);
-  return (Math.atan2(ry, rx) * 180) / Math.PI;
-}
-
 function resolvedObstacles(course: CourseData, placement: CoursePlacement) {
   const numbers = new Map<string, number[]>();
   for (const number of course.numbers) {
@@ -101,7 +93,8 @@ function resolvedObstacles(course: CourseData, placement: CoursePlacement) {
           {
             numbers: numbers.get(obstacle.sourceId) ?? [],
             obstacleId: obstacle.sourceId,
-            rotationDeg: placementRotation(obstacle.rotationDegrees, placement),
+            // The ring-frame Y-up heading both planners render (R-16-01/05, one convention).
+            rotationDeg: placedObstacleHeadingDegrees(obstacle.rotationDegrees, placement),
             type: obstacle.obstacleType,
             x: point.x,
             y: point.y,
@@ -280,6 +273,13 @@ export class CoreApiStore implements PlannerStore {
   readonly #subscribeBuildEvents: CoreApiStoreOptions["subscribeBuildEvents"];
   readonly #ringBase = new Map<string, ApiRing>();
   readonly #ringCache = new Map<string, PlannerRing>();
+  /**
+   * The complete `POST /courses` body each upload `Idempotency-Key` owns (CONVENCIONS_API §7):
+   * once the source bytes are stored, a retry under the same key resends exactly this body (same
+   * `sourceFileKey`), never a new upload, so a lost answer is recovered instead of tripping
+   * `IDEMPOTENCY_KEY_REUSED`. A new file comes with a new key (UploadCourse), hence a new upload.
+   */
+  readonly #courseUploads = new Map<string, ApiCourseRequest>();
 
   constructor(options: CoreApiStoreOptions) {
     this.#client = options.client ?? apiClient;
@@ -350,7 +350,11 @@ export class CoreApiStore implements PlannerStore {
     return refreshed;
   }
 
-  async updateRingDoors(ringId: string, doors: readonly SaveRingDoorInput[]): Promise<PlannerRing> {
+  async updateRingDoors(
+    ringId: string,
+    doors: readonly SaveRingDoorInput[],
+    geometryVersion: number,
+  ): Promise<PlannerRing> {
     const current = required(
       (await this.#client.GET("/rings/{id}/geometry", { params: { path: { id: ringId } } })).data,
       "ringGeometry",
@@ -373,8 +377,12 @@ export class CoreApiStore implements PlannerStore {
       side: door.side.toUpperCase() as "EAST" | "NORTH" | "SOUTH" | "WEST",
       startM: door.startMeters,
     }));
+    // The doors replace the list the user edited, so the body carries the version the user edited
+    // (`geometryVersion`), never the fresh one: if another editor saved in between, the api
+    // answers 409 STALE_VERSION and their doors survive (CONVENCIONS_API §7, R-16-04). When the
+    // versions match, `current` is exactly the geometry the user edited.
     const result = await this.#client.PUT("/rings/{id}/geometry", {
-      body: ringGeometryRequest(current, { doors: apiDoors }),
+      body: { ...ringGeometryRequest(current, { doors: apiDoors }), version: geometryVersion },
       params: { path: { id: ringId } },
     });
     const geometry = required(result.data, "putRingGeometry");
@@ -394,6 +402,17 @@ export class CoreApiStore implements PlannerStore {
   }
 
   async uploadSmarterFile(input: UploadCourseInput): Promise<{ readonly course: PlannerCourse }> {
+    const body =
+      this.#courseUploads.get(input.submissionKey) ?? (await this.#storeCourseSource(input));
+    const result = await this.#client.POST("/courses", {
+      body,
+      headers: { "Idempotency-Key": input.submissionKey },
+    });
+    return { course: plannerCourse(required(result.data, "createCourse")) };
+  }
+
+  /** Stores the `.txt` (signed upload) and remembers the creation body under the upload's key. */
+  async #storeCourseSource(input: UploadCourseInput): Promise<ApiCourseRequest> {
     const upload = required(
       (
         await this.#client.POST("/courses/upload-urls", {
@@ -419,23 +438,21 @@ export class CoreApiStore implements PlannerStore {
         ? "AGILITY"
         : "OTHER";
     const designedOn = /^\d{4}-\d{2}-\d{2}$/.test(metadata.date) ? metadata.date : null;
-    const result = await this.#client.POST("/courses", {
-      body: {
-        designedOn,
-        designerName: metadata.designer.trim() === "" ? null : metadata.designer,
-        discipline,
-        levelIds: [],
-        name: { [this.#locale]: input.courseData.title },
-        normalizedJson: input.courseData,
-        schemaVersion: 1,
-        source: "SMARTER",
-        sourceFileKey: upload.fileKey,
-        tags: [],
-        visibility: "CLUB",
-      },
-      headers: { "Idempotency-Key": input.submissionKey },
-    });
-    return { course: plannerCourse(required(result.data, "createCourse")) };
+    const body: ApiCourseRequest = {
+      designedOn,
+      designerName: metadata.designer.trim() === "" ? null : metadata.designer,
+      discipline,
+      levelIds: [],
+      name: { [this.#locale]: input.courseData.title },
+      normalizedJson: input.courseData,
+      schemaVersion: 1,
+      source: "SMARTER",
+      sourceFileKey: upload.fileKey,
+      tags: [],
+      visibility: "CLUB",
+    };
+    this.#courseUploads.set(input.submissionKey, body);
+    return body;
   }
 
   async savePlacement(input: SavePlacementInput): Promise<PlannerPlacement> {
@@ -455,6 +472,8 @@ export class CoreApiStore implements PlannerStore {
                 ? "FREE_FLOATING"
                 : null,
         name: input.name ?? null,
+        // R-16-05: only an ADMIN's confirmed retry overrides a critical warning.
+        ...(input.force === true ? { force: true } : {}),
         placementMode: placementMode(input.placement.placementMode),
         resolvedObstacles: resolvedObstacles(input.course, input.placement),
         ringId: input.ringId,
@@ -648,6 +667,17 @@ export class CoreApiStore implements PlannerStore {
         "upsertBuildObstacleStatus:obstacle",
       ),
     );
+  }
+
+  async finishBuildSession(input: {
+    readonly buildSessionId: string;
+    readonly submissionKey: string;
+  }): Promise<PlannerBuildSession> {
+    const result = await this.#client.POST("/build-sessions/{id}/finish", {
+      headers: { "Idempotency-Key": input.submissionKey },
+      params: { path: { id: input.buildSessionId } },
+    });
+    return plannerBuildSession(required(result.data, "finishBuildSession"));
   }
 
   subscribeBuildObstacleStatuses(

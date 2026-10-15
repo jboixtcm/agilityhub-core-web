@@ -10,9 +10,14 @@
  *     and end position along the wall, a flow direction (in/out/both),
  *     an optional clearance override and an active/inactive toggle.
  *
- * Both the storage layer (mock + supabase) and the BuildSessionExport
- * already carry these fields; this editor produces inputs the store
- * accepts via `PlannerStore.updateRingDoors`.
+ * Both the storage layer and the BuildSessionExport already carry these
+ * fields; this editor produces inputs the store accepts via
+ * `PlannerStore.updateRingDoors`, under optimistic locking: the save sends
+ * the geometry version the user edited, so another editor's save in
+ * between answers `409 STALE_VERSION` (shown here through the caller's
+ * catalog mapper) instead of being overwritten. After a save the drafts
+ * are rebuilt from the saved ring (stable ids, clean state); after a
+ * conflict, [Revert] reads the latest ring before the user edits again.
  *
  * Visual preview: a tiny SVG showing the ring rectangle with each
  * configured door drawn on its wall plus a flow arrow. Sized for clarity
@@ -86,7 +91,8 @@ export interface RingDoorEditorLabels {
   readonly save: string;
   readonly revert: string;
   readonly saved: string;
-  readonly saveError: string;
+  /** An api failure in the reader's language, by its code (the shared catalog mapper). */
+  readonly error: (error: unknown) => string;
   readonly validation: {
     readonly maximum: (count: number, maximum: number) => string;
     readonly endpoints: (door: string) => string;
@@ -343,38 +349,69 @@ function DoorPreview({
 // Editor
 // ---------------------------------------------------------------------------
 
-export function RingDoorEditor({ ring, labels, onSaved }: Props) {
-  const initial = useMemo(
-    () => ring.doors.map((d, i) => ringDoorToDraft(d, ring, i)),
-    [ring],
+function draftsOf(ring: PlannerRing): DraftDoor[] {
+  return ring.doors.map((d, i) => ringDoorToDraft(d, ring, i));
+}
+
+function differs(drafts: readonly DraftDoor[], initial: readonly DraftDoor[]): boolean {
+  if (drafts.length !== initial.length) return true;
+  for (let i = 0; i < drafts.length; i += 1) {
+    const a = drafts[i]!;
+    const b = initial[i]!;
+    if (
+      a.id !== b.id ||
+      a.label !== b.label ||
+      a.side !== b.side ||
+      a.startMeters !== b.startMeters ||
+      a.endMeters !== b.endMeters ||
+      a.flow !== b.flow ||
+      a.isActive !== b.isActive ||
+      a.clearanceMeters !== b.clearanceMeters ||
+      a.notes !== b.notes
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isStaleVersion(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    (error as { code?: unknown }).code === 'STALE_VERSION'
   );
+}
+
+export function RingDoorEditor({ ring: ringProp, labels, onSaved }: Props) {
+  // The ring the drafts were built from: the prop, then each saved (or, after a conflict,
+  // re-read) ring. Its `geometry_version` is the version the next save sends.
+  const [ring, setRing] = useState<PlannerRing>(ringProp);
+  const initial = useMemo(() => draftsOf(ring), [ring]);
   const [drafts, setDrafts] = useState<readonly DraftDoor[]>(initial);
   const [saving, setSaving] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [error, setError] = useState<unknown>(null);
   const [savedAt, setSavedAt] = useState<number | null>(null);
+  const hasError = error !== null;
 
   const validation = useMemo(() => validateDrafts(drafts, ring, labels), [drafts, labels, ring]);
-  const dirty = useMemo(() => {
-    if (drafts.length !== initial.length) return true;
-    for (let i = 0; i < drafts.length; i += 1) {
-      const a = drafts[i]!;
-      const b = initial[i]!;
-      if (
-        a.id !== b.id ||
-        a.label !== b.label ||
-        a.side !== b.side ||
-        a.startMeters !== b.startMeters ||
-        a.endMeters !== b.endMeters ||
-        a.flow !== b.flow ||
-        a.isActive !== b.isActive ||
-        a.clearanceMeters !== b.clearanceMeters ||
-        a.notes !== b.notes
-      ) {
-        return true;
-      }
+  const dirty = useMemo(() => differs(drafts, initial), [drafts, initial]);
+
+  // A new ring from the parent: another ring always replaces the form; a newer version of this
+  // ring (the parent re-read it) only when the user has nothing unsaved, so stale drafts are never
+  // rebased onto a fresher version.
+  const [seenProp, setSeenProp] = useState(ringProp);
+  if (seenProp !== ringProp) {
+    setSeenProp(ringProp);
+    const otherRing = ringProp.id !== ring.id;
+    const newer = ringProp.geometry_version > ring.geometry_version;
+    if (otherRing || (newer && !dirty)) {
+      setRing(ringProp);
+      setDrafts(draftsOf(ringProp));
+      setError(null);
+      setSavedAt(null);
     }
-    return false;
-  }, [drafts, initial]);
+  }
 
   function patchDraft(key: string, patch: Partial<DraftDoor>) {
     setDrafts((prev) => prev.map((d) => (d.key === key ? { ...d, ...patch } : d)));
@@ -409,23 +446,52 @@ export function RingDoorEditor({ ring, labels, onSaved }: Props) {
     setSavedAt(null);
   }
 
-  function handleReset() {
-    setDrafts(initial);
-    setHasError(false);
-    setSavedAt(null);
+  function adopt(next: PlannerRing) {
+    setRing(next);
+    setDrafts(draftsOf(next));
+  }
+
+  async function handleReset() {
+    if (!isStaleVersion(error)) {
+      setDrafts(initial);
+      setError(null);
+      setSavedAt(null);
+      return;
+    }
+    // Another editor saved in between: read their doors before the user edits again, so the
+    // next save carries the latest version with a list that includes their changes.
+    setSaving(true);
+    try {
+      const latest = await getPlannerStore().getRing(ring.id);
+      if (latest !== null) {
+        adopt(latest);
+        onSaved(latest);
+      }
+      setError(null);
+      setSavedAt(null);
+    } catch (readError) {
+      setError(readError);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleSave() {
-    if (validation.errors.length > 0) return;
+    if (validation.errors.length > 0 || saving) return;
     setSaving(true);
-    setHasError(false);
+    setError(null);
     try {
       const store = getPlannerStore();
-      const updated = await store.updateRingDoors(ring.id, validation.inputs);
+      const updated = await store.updateRingDoors(
+        ring.id,
+        validation.inputs,
+        ring.geometry_version,
+      );
+      adopt(updated);
       onSaved(updated);
       setSavedAt(Date.now());
-    } catch {
-      setHasError(true);
+    } catch (saveError) {
+      setError(saveError);
     } finally {
       setSaving(false);
     }
@@ -625,7 +691,7 @@ export function RingDoorEditor({ ring, labels, onSaved }: Props) {
           variant="outline"
           size="sm"
           onClick={handleReset}
-          disabled={!dirty || saving}
+          disabled={(!dirty && !hasError) || saving}
         >
           {labels.revert}
         </Button>
@@ -640,7 +706,7 @@ export function RingDoorEditor({ ring, labels, onSaved }: Props) {
       )}
       {hasError && (
         <p className="mt-2 text-xs text-danger" role="alert">
-          {labels.saveError}
+          {labels.error(error)}
         </p>
       )}
       {savedAt && !dirty && !hasError && (

@@ -20,15 +20,17 @@
  *
  * Flip + heading math
  * -------------------
- * The same direction-vector chain we use in PlannerCanvas (flip → implicit
- * Smarter Y-down → user rotation φ) is reused here. The resulting heading
- * angle, converted with atan2, becomes the obstacle's world-Y rotation.
+ * The direction-vector chain (flip → Smarter Y-down → user rotation φ) lives in
+ * `course-core` (`placedObstacleHeadingVector`) and is shared with PlannerCanvas and with
+ * persistence. The resulting heading, converted with atan2, becomes the obstacle's world-Y
+ * rotation.
  */
 import {
   normalizeDoorSide,
   placeControlPointsInRing,
   placeCoursePoint,
   placeObstacleInRing,
+  placedObstacleHeadingVector,
   type CourseData,
   type CoursePlacement,
   type ObstacleType,
@@ -670,39 +672,19 @@ function buildDoubleJumpOverlay(): THREE.Group {
   return group;
 }
 
-/** Compute the visual heading (Y-axis rotation, radians) for an obstacle, including flip + placement rotation. */
-function obstacleHeadingY(obstacleRotDeg: number | null, placement: CoursePlacement): number {
-  const θ = ((obstacleRotDeg ?? 0) * Math.PI) / 180;
-  const sx = placement.flipX ? -1 : 1;
-  const sy = placement.flipY ? -1 : 1;
-  // Heading vector in design frame after flip.
-  const dx = sx * Math.cos(θ);
-  let dy = sy * Math.sin(θ);
-  // Positions in CourseData are now ring Y-up (parser flips at ingest),
-  // but ANGLES (`obstacle.rotationDegrees`) are still authored in Smarter's
-  // Y-down convention — the parser doesn't touch them. So we still need
-  // this one flip on the heading vector's Y component to convert the
-  // angle convention. Don't remove unless `rotationDegrees` is also flipped
-  // at parse time (and the Unity reader's heading math is updated in
-  // lockstep).
-  dy = -dy;
-  // Apply user rotation φ in ring frame.
-  const φ = ((placement.rotationDegrees ?? 0) * Math.PI) / 180;
-  const cφ = Math.cos(φ);
-  const sφ = Math.sin(φ);
-  const rx = dx * cφ - dy * sφ;
-  const ry = dx * sφ + dy * cφ;
-  // (rx, ry) is the heading direction in ring frame. We need the
-  // three.js Y-rotation α that makes the model's local +X (its "forward")
-  // point in this direction in world space.
-  //
-  // Three.js rotates around +Y by α as: (1, 0, 0) → (cos α, 0, −sin α).
-  // Ring +X maps to world +X; ring +Y maps to world −Z. So a ring-frame
-  // heading (rx, ry) corresponds to world direction (rx, 0, −ry). Match
-  // components against the rotated +X above:
-  //   cos α = rx,  −sin α = −ry  →  sin α = ry
-  //   α = atan2(ry, rx)
-  return Math.atan2(ry, rx);
+/**
+ * The visual heading (Y-axis rotation, radians) of an obstacle, including flip + placement
+ * rotation. The ring-frame heading comes from `course-core` (`placedObstacleHeadingVector`), the
+ * same function persistence uses for `resolvedObstacles[].rotationDeg`, so the preview and the
+ * saved AR geometry never disagree (E9-W02 round 2, review #2).
+ *
+ * Three.js rotates around +Y by α as: (1, 0, 0) → (cos α, 0, −sin α). Ring +X maps to world +X;
+ * ring +Y maps to world −Z. So a ring-frame heading (rx, ry) corresponds to world direction
+ * (rx, 0, −ry): cos α = rx, sin α = ry → α = atan2(ry, rx).
+ */
+export function obstacleHeadingY(obstacleRotDeg: number | null, placement: CoursePlacement): number {
+  const { x, y } = placedObstacleHeadingVector(obstacleRotDeg, placement);
+  return Math.atan2(y, x);
 }
 
 /**
@@ -1674,6 +1656,12 @@ function anchorDoorRing(
   };
 }
 
+/** The tokens of the obstacle number badge (`makeTextSprite`). */
+export const COURSE_NUMBER_BADGE = {
+  background: '--ah-color-course-number-bg',
+  foreground: '--ah-color-course-number-fg',
+} as const;
+
 /** Build a text sprite using a canvas texture. Cheap, readable, no font-loading dance. */
 function makeTextSprite(text: string): THREE.Sprite {
   const canvas = document.createElement('canvas');
@@ -1681,13 +1669,13 @@ function makeTextSprite(text: string): THREE.Sprite {
   canvas.height = 128;
   const ctx = canvas.getContext('2d')!;
   ctx.clearRect(0, 0, 128, 128);
-  ctx.globalAlpha = 0.85;
-  ctx.fillStyle = themeColor('--ah-color-course-obstacle-dark');
+  // Opaque badge on the contrasting number pair (E9-W02 round 2, review #8): the recovered
+  // dark-on-dark pairing left only the badge's transparency to tell the digit apart.
+  ctx.fillStyle = themeColor(COURSE_NUMBER_BADGE.background);
   ctx.beginPath();
   ctx.arc(64, 64, 40, 0, Math.PI * 2);
   ctx.fill();
-  ctx.globalAlpha = 1;
-  ctx.fillStyle = themeColor('--ah-color-course-text');
+  ctx.fillStyle = themeColor(COURSE_NUMBER_BADGE.foreground);
   ctx.font = 'bold 56px system-ui, -apple-system, sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
