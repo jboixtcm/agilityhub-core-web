@@ -1311,7 +1311,7 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     ).toBeEnabled();
   });
 
-  it("E8-W07 #2: EXPORT_LIMIT keeps the accounting kind in the exports drawer", async () => {
+  it("T-12-26 / E8-W07 #2: EXPORT_LIMIT keeps the accounting kind in the exports drawer", async () => {
     server.use(
       http.get("*/api/v1/billing/exports", () =>
         HttpResponse.json(
@@ -1463,7 +1463,7 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     });
   }, 20_000);
 
-  it("E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow", async () => {
+  it("R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow", async () => {
     mockScenario("billingStripe");
     const api = client();
     const period = await api.GET("/billing/periods/{period}", {
@@ -1477,29 +1477,84 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
     sent.length = 0;
     let periodReads = 0;
     let detailReads = 0;
+    let releaseLateDetail: () => void = () => undefined;
+    const lateDetail = new Promise<void>((resolve) => {
+      releaseLateDetail = resolve;
+    });
+    let releaseRefreshedPeriod: () => void = () => undefined;
+    const refreshedPeriod = new Promise<void>((resolve) => {
+      releaseRefreshedPeriod = resolve;
+    });
+    const nativeSetTimeout = window.setTimeout.bind(window);
+    let firePoll: (() => void) | undefined;
+    vi.spyOn(window, "setTimeout").mockImplementation(
+      (handler, timeout, ...arguments_): ReturnType<typeof setTimeout> => {
+        if (timeout === 5_000 && typeof handler === "function") {
+          firePoll = () => {
+            handler(...arguments_);
+          };
+          return 5_000 as unknown as ReturnType<typeof setTimeout>;
+        }
+        return nativeSetTimeout(
+          handler,
+          timeout,
+          ...arguments_,
+        ) as unknown as ReturnType<typeof setTimeout>;
+      },
+    );
     server.use(
       http.get("*/api/v1/billing/periods/2026-09", async () => {
         const read = ++periodReads;
-        if (read > 1) await delay(250);
+        if (read > 1) await refreshedPeriod;
         return HttpResponse.json({
           ...period.data,
           run: { ...run, status: read === 1 ? "CHARGING" : "COMPLETED" },
         });
       }),
       http.get("*/api/v1/billing/runs/:id", async () => {
-        detailReads += 1;
-        // Bound the unfixed loop so the regression run fails quickly without flooding the suite.
-        if (detailReads > 5) await delay("infinite");
-        return HttpResponse.json({ ...run, status: "COMPLETED" });
+        const read = ++detailReads;
+        if (read === 2) await lateDetail;
+        return HttpResponse.json({
+          ...run,
+          status: read === 1 ? "CHARGING" : "COMPLETED",
+        });
       }),
     );
 
     await renderPage({ scenario: "billingStripe" });
+    expect(await screen.findByText("Cobrant les targetes…")).toBeVisible();
+    expect(periodReads).toBe(1);
+    expect(detailReads).toBe(1);
+
+    // Start the next detail read from the five-second poll, then resolve that read explicitly.
+    // No wall-clock race decides whether the stale CHARGING period or COMPLETED detail wins.
+    const poll = firePoll;
+    if (poll === undefined) throw new TypeError("The card-charge poll was not scheduled");
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      poll();
+      await Promise.resolve();
+    });
+    await waitFor(() => {
+      expect(detailReads).toBe(2);
+    });
+    await act(async () => {
+      releaseLateDetail();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    await waitFor(() => {
+      // The one settlement refresh starts one period read and one replacement detail read.
+      expect(periodReads).toBe(2);
+      expect(detailReads).toBe(3);
+    });
+    await act(async () => {
+      // Flush the replacement detail's state/effect chain. The old implementation refreshed here
+      // again while the held period read was still stale CHARGING.
+      await Promise.resolve();
+      await Promise.resolve();
     });
     expect(periodReads).toBe(2);
-    expect(detailReads).toBe(2);
+    releaseRefreshedPeriod();
     await waitFor(() => {
       expect(screen.queryByText("Cobrant les targetes…")).toBeNull();
     });

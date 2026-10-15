@@ -1,0 +1,220 @@
+run 01
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:03:38
+   Duration  1.77s (transform 38%, environment 23%, tests 22%, import 13%, setup 4%)
+
+run 02
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:03:40
+   Duration  1.78s (transform 42%, tests 21%, environment 19%, import 15%, setup 4%)
+
+run 03
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:03:42
+   Duration  1.79s (transform 41%, tests 21%, environment 20%, import 14%, setup 4%)
+
+run 04
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:03:44
+   Duration  1.68s (transform 41%, tests 22%, environment 19%, import 14%, setup 4%)
+
+run 05
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:03:47
+   Duration  1.63s (transform 41%, tests 23%, environment 18%, import 14%, setup 4%)
+
+run 06
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:03:49
+   Duration  1.58s (transform 41%, tests 22%, environment 19%, import 14%, setup 4%)
+
+run 07
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:03:51
+   Duration  1.90s (transform 41%, tests 23%, environment 18%, import 14%, setup 4%)
+
+run 08
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:03:53
+   Duration  2.14s (transform 40%, tests 23%, environment 20%, import 13%, setup 4%)
+
+run 09
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:03:56
+   Duration  2.15s (transform 40%, tests 24%, environment 19%, import 14%, setup 4%)
+
+run 10
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:03:59
+   Duration  2.06s (transform 42%, tests 21%, environment 18%, import 15%, setup 4%)
+
+run 11
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:04:01
+   Duration  1.75s (transform 41%, tests 23%, environment 19%, import 14%, setup 4%)
+
+run 12
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:04:04
+   Duration  1.71s (transform 40%, tests 22%, environment 20%, import 14%, setup 4%)
+
+run 13
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:04:06
+   Duration  1.74s (transform 40%, tests 24%, environment 18%, import 14%, setup 4%)
+
+run 14
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:04:08
+   Duration  2.17s (transform 42%, tests 24%, environment 16%, import 15%, setup 4%)
+
+run 15
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:04:11
+   Duration  2.06s (transform 39%, tests 25%, environment 18%, import 13%, setup 4%)
+
+run 16
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:04:13
+   Duration  1.93s (transform 41%, tests 22%, environment 19%, import 14%, setup 4%)
+
+run 17
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:04:16
+   Duration  2.26s (transform 41%, environment 21%, tests 19%, import 14%, setup 4%)
+
+run 18
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:04:19
+   Duration  1.84s (transform 41%, tests 22%, environment 19%, import 14%, setup 4%)
+
+run 19
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:04:21
+   Duration  1.72s (transform 41%, tests 23%, environment 18%, import 14%, setup 4%)
+
+run 20
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------·----------------
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 53 skipped (54)
+   Start at  09:04:23
+   Duration  1.71s (transform 41%, tests 22%, environment 19%, import 15%, setup 4%)
+
