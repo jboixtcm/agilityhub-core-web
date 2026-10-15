@@ -1,0 +1,300 @@
+== run 01
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:15:28
+   Duration  6.57s (tests 55%, transform 25%, environment 11%, import 7%, setup 3%)
+
+RUN-PASSED
+== run 02
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:15:35
+   Duration  5.13s (tests 65%, transform 19%, environment 8%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 03
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:15:41
+   Duration  5.00s (tests 65%, transform 20%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 04
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:15:46
+   Duration  5.20s (tests 65%, transform 20%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 05
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:15:52
+   Duration  5.01s (tests 65%, transform 20%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 06
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:15:58
+   Duration  5.09s (tests 65%, transform 20%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 07
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:16:03
+   Duration  5.03s (tests 66%, transform 19%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 08
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:16:09
+   Duration  5.09s (tests 65%, transform 20%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 09
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:16:15
+   Duration  5.08s (tests 65%, transform 20%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 10
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:16:20
+   Duration  5.09s (tests 66%, transform 19%, environment 8%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 11
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:16:26
+   Duration  5.04s (tests 64%, transform 21%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 12
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:16:32
+   Duration  4.94s (tests 66%, transform 19%, environment 8%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 13
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:16:37
+   Duration  5.07s (tests 65%, transform 20%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 14
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:16:43
+   Duration  5.02s (tests 65%, transform 20%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 15
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:16:49
+   Duration  5.36s (tests 64%, transform 20%, environment 8%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 16
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:16:54
+   Duration  5.14s (tests 65%, transform 20%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 17
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:17:00
+   Duration  5.11s (tests 65%, transform 20%, environment 8%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 18
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:17:06
+   Duration  5.11s (tests 66%, transform 19%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 19
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:17:12
+   Duration  5.10s (tests 65%, transform 20%, environment 8%, import 6%, setup 2%)
+
+RUN-PASSED
+== run 20
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run src/NotificationsPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+
+ Test Files  1 passed (1)
+      Tests  21 passed (21)
+   Start at  13:17:17
+   Duration  5.05s (tests 65%, transform 20%, environment 7%, import 6%, setup 2%)
+
+RUN-PASSED

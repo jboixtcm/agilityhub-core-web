@@ -1,0 +1,176 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx -t 'R-12-13 / E8-W07 #1'
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=2
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=3
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=4
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=5
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=50
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=100
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=150
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=200
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=250
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=300
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=350
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=400
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=450
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=500
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=550
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=600
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=650
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=700
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=750
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=800
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=850
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=900
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=950
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1000
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1050
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1100
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1150
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1200
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1250
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1300
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1350
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1400
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1450
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1500
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1550
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1600
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1650
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1700
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1750
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1800
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1850
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1900
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=1950
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=2000
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=2050
+
+stdout | src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+TMP periodReads=2100
+
+ ❯ src/billing/BillingPage.test.tsx (54 tests | 1 failed | 53 skipped) 15012ms
+   ❯ E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides (14)
+     × R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow 15009ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/billing/BillingPage.test.tsx:1466:3
+    1464|   }, 20_000);
+    1465|
+    1466|   it("R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGI…
+       |   ^
+    1467|     mockScenario("billingStripe");
+    1468|     const api = client();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 53 skipped (54)
+   Start at  12:58:03
+   Duration  16.92s (tests 89%, transform 4%, environment 3%, import 2%, setup 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/billing/BillingPage.test.tsx -t 'R-12-13 / E8-W07 #1'`
+Exit status 1

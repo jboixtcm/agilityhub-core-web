@@ -392,17 +392,9 @@
         "help": "Duración máxima de una sesión de montaje.",
         "label": "Duración máxima de la sesión de montaje"
       },
-      "gateClearanceMeters": {
-        "help": "Distancia mínima de seguridad en las puertas.",
-        "label": "Margen de seguridad en puertas"
-      },
-      "obstacleClearanceMeters": {
-        "help": "Distancia mínima entre obstáculos.",
-        "label": "Margen entre obstáculos"
-      },
-      "placementMarginMeters": {
-        "help": "Margen mínimo entre un obstáculo y el límite de la pista.",
-        "label": "Margen de colocación de obstáculos"
+      "defaultWarningThresholdM": {
+        "help": "Distancia mínima, en metros, por debajo de la cual colocar un recorrido en la pista genera un aviso.",
+        "label": "Umbral de aviso de colocación"
       },
       "setupAutoExpireDays": {
         "help": "Días hasta que un recorrido montado caduca automáticamente.",

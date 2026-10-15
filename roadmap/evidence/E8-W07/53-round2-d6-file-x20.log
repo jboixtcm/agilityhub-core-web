@@ -1,0 +1,300 @@
+== run 01
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  12:59:19
+   Duration  44.80s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 02
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:00:05
+   Duration  46.20s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 03
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:01:17
+   Duration  44.81s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 04
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:02:03
+   Duration  44.90s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 05
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:02:48
+   Duration  44.77s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 06
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:03:34
+   Duration  44.96s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 07
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:04:19
+   Duration  44.34s (tests 97%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 08
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:05:04
+   Duration  44.22s (tests 97%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 09
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:05:49
+   Duration  45.01s (tests 97%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 10
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:06:35
+   Duration  44.71s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 11
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:07:20
+   Duration  44.71s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 12
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:08:05
+   Duration  43.71s (tests 97%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 13
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:08:50
+   Duration  43.99s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 14
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:09:34
+   Duration  45.13s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 15
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:10:20
+   Duration  44.56s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 16
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:11:05
+   Duration  44.25s (tests 97%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 17
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:11:50
+   Duration  44.85s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 18
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:12:36
+   Duration  46.19s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 19
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:13:22
+   Duration  47.34s (tests 97%, transform 1%, environment 1%, import 1%)
+
+RUN-PASSED
+== run 20
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+
+ Test Files  1 passed (1)
+      Tests  54 passed (54)
+   Start at  13:14:10
+   Duration  44.70s (tests 96%, transform 2%, environment 1%, import 1%)
+
+RUN-PASSED

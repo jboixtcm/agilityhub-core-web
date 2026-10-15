@@ -1,0 +1,1468 @@
+Frontend checks	UNKNOWN STEP	﻿2026-10-15T08:31:57.1194419Z Current runner version: '2.337.0'
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1221010Z ##[group]Runner Image Provisioner
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1222137Z Hosted Compute Agent
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1222748Z Version: 20261002.596
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1223493Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1224282Z Build Date: 2026-10-02T22:28:27Z
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1225066Z Worker ID: {e3532c3b-13d6-42cd-8dd2-c6e979a7ebfb}
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1225832Z Region: westcentralus
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1226487Z Cloud: Azure
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1227103Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1228707Z ##[group]Operating System
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1229414Z Ubuntu
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1229986Z 24.04.5
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1230533Z LTS
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1231316Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1231909Z ##[group]Runner Image
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1232566Z Image: ubuntu-24.04
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1233235Z Version: 20261004.327.1
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1234908Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1236640Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1237647Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1238907Z ##[group]GITHUB_TOKEN Permissions
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1241523Z Contents: read
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1242299Z Metadata: read
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1242903Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1245215Z Secret source: Actions
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1246253Z Cache mode: write
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1247084Z Prepare workflow directory
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1596862Z Prepare all required actions
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.1645260Z Getting action download info
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.4703057Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:57.5533615Z Download action repository 'pnpm/action-setup@v4' (SHA:b906affcce14559ad1aafd4ab0e942779e9f58b1)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:58.6062472Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.3138783Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.5406011Z Complete job name: Frontend checks
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6148344Z ##[group]Run actions/checkout@v4
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6148904Z with:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6149157Z   repository: jboixtcm/agilityhub-core-web
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6152267Z   token: ***
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6152491Z   ssh-strict: true
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6152713Z   ssh-user: git
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6152940Z   persist-credentials: true
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6153202Z   clean: true
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6153431Z   sparse-checkout-cone-mode: true
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6153694Z   fetch-depth: 1
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6153916Z   fetch-tags: false
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6154153Z   show-progress: true
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6154539Z   lfs: false
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6154942Z   submodules: false
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6155179Z   set-safe-directory: true
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6155442Z   allow-unsafe-pr-checkout: false
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.6155971Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7176529Z Syncing repository: jboixtcm/agilityhub-core-web
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7178452Z ##[group]Getting Git version info
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7179291Z Working directory is '/home/runner/work/agilityhub-core-web/agilityhub-core-web'
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7180416Z [command]/usr/bin/git version
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7248734Z git version 2.55.0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7269626Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7285257Z Temporarily overriding HOME='/home/runner/work/_temp/0718dbd0-c085-427d-b132-b0cc7821c49d' before making global git config changes
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7286767Z Adding repository directory to the temporary git global config as a safe directory
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7290616Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/agilityhub-core-web/agilityhub-core-web
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7357672Z Deleting the contents of '/home/runner/work/agilityhub-core-web/agilityhub-core-web'
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7359117Z ##[group]Initializing the repository
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7360245Z [command]/usr/bin/git init /home/runner/work/agilityhub-core-web/agilityhub-core-web
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7468468Z hint: Using 'master' as the name for the initial branch. This default branch name
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7469541Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7473255Z hint: to use in all of your new repositories, which will suppress this warning,
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7473880Z hint: call:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7474164Z hint:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7474647Z hint: 	git config --global init.defaultBranch <name>
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7475144Z hint:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7475543Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7476079Z hint: 'development'. The just-created branch can be renamed via this command:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7476465Z hint:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7476776Z hint: 	git branch -m <name>
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7477060Z hint:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7477409Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7478053Z Initialized empty Git repository in /home/runner/work/agilityhub-core-web/agilityhub-core-web/.git/
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7483947Z [command]/usr/bin/git remote add origin https://github.com/jboixtcm/agilityhub-core-web
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7537568Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7538282Z ##[group]Disabling automatic garbage collection
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7542609Z [command]/usr/bin/git config --local gc.auto 0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7578984Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7579813Z ##[group]Setting up auth
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7586527Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.7622981Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.8011315Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.8054187Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.8317064Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.8357933Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.8612808Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.8657802Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.8658530Z ##[group]Fetching the repository
+Frontend checks	UNKNOWN STEP	2026-10-15T08:31:59.8668316Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +273eeb5b441258e8df5060b37a59cc4ee2b67681:refs/remotes/origin/main
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:11.3688815Z From https://github.com/jboixtcm/agilityhub-core-web
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:11.3689399Z  * [new ref]         273eeb5b441258e8df5060b37a59cc4ee2b67681 -> origin/main
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:11.3692360Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:11.3692836Z ##[group]Determining the checkout info
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:11.3700772Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:11.3703033Z [command]/usr/bin/git sparse-checkout disable
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:11.3759117Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:11.3800131Z ##[group]Checking out the ref
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:11.3800966Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.4038147Z Updating files:  49% (3394/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.4162639Z Updating files:  50% (3412/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.4240871Z Updating files:  51% (3480/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.4334841Z Updating files:  52% (3548/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.4411873Z Updating files:  53% (3617/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.4931327Z Updating files:  54% (3685/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.4946076Z Updating files:  55% (3753/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.5045427Z Updating files:  56% (3821/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.5149438Z Updating files:  57% (3890/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.5524059Z Updating files:  58% (3958/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.5742648Z Updating files:  59% (4026/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.5810920Z Updating files:  60% (4094/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.5903189Z Updating files:  61% (4163/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.6026950Z Updating files:  62% (4231/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.6108513Z Updating files:  63% (4299/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.6512186Z Updating files:  64% (4367/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.6682957Z Updating files:  65% (4435/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.6730545Z Updating files:  66% (4504/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.6825662Z Updating files:  67% (4572/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.6919079Z Updating files:  68% (4640/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.7009076Z Updating files:  69% (4708/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.7082972Z Updating files:  70% (4777/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.7563757Z Updating files:  71% (4845/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.7700759Z Updating files:  72% (4913/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.7780731Z Updating files:  73% (4981/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.7889278Z Updating files:  74% (5050/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.8100757Z Updating files:  75% (5118/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.8421664Z Updating files:  76% (5186/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.8518104Z Updating files:  77% (5254/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.8582822Z Updating files:  78% (5322/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.8674819Z Updating files:  79% (5391/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.8915530Z Updating files:  80% (5459/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.9194238Z Updating files:  81% (5527/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.9284292Z Updating files:  82% (5595/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.9403425Z Updating files:  83% (5664/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.9487314Z Updating files:  84% (5732/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.9536986Z Updating files:  85% (5800/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.9599798Z Updating files:  86% (5868/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.9718419Z Updating files:  87% (5937/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.9807112Z Updating files:  88% (6005/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:12.9869655Z Updating files:  89% (6073/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.0238573Z Updating files:  90% (6141/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.0505988Z Updating files:  91% (6209/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.0587034Z Updating files:  92% (6278/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.0692397Z Updating files:  93% (6346/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1047547Z Updating files:  94% (6414/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1355315Z Updating files:  95% (6482/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1450234Z Updating files:  96% (6551/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1495950Z Updating files:  97% (6619/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1567921Z Updating files:  98% (6687/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1732747Z Updating files:  99% (6755/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1733368Z Updating files: 100% (6823/6823)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1733656Z Updating files: 100% (6823/6823), done.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1808714Z Switched to a new branch 'main'
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1815535Z branch 'main' set up to track 'origin/main'.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1878732Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1928904Z [command]/usr/bin/git log -1 --format=%H
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.1958992Z 273eeb5b441258e8df5060b37a59cc4ee2b67681
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.2201740Z ##[group]Run pnpm/action-setup@v4
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.2202033Z with:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.2202243Z   dest: ~/setup-pnpm
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.2202476Z   run_install: null
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.2202690Z   cache: false
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.2202925Z   cache_dependency_path: pnpm-lock.yaml
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.2203222Z   package_json_file: package.json
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.2203475Z   standalone: false
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.2203683Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.3674714Z ##[group]Running self-installer...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.7648782Z (node:2388) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:13.7650465Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.0205579Z Progress: resolved 1, reused 0, downloaded 0, added 0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.0296642Z Packages: +1
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.0297291Z +
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.4869459Z Progress: resolved 1, reused 0, downloaded 1, added 1, done
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5275302Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5275904Z dependencies:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5298059Z + pnpm 9.15.9 (12.11.2 is available)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5298405Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5298541Z Done in 989ms
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5483000Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5511922Z Installation Completed!
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5703043Z ##[group]Run actions/setup-node@v4
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5703324Z with:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5703526Z   node-version: 22
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5703736Z   cache: pnpm
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5703938Z   always-auth: false
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5704166Z   check-latest: false
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5706679Z   token: ***
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5706877Z env:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5707139Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.5707487Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.7172380Z Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.7177378Z (node:2402) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.7178509Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:14.7180468Z ##[group]Environment details
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:15.2112760Z node: v22.23.3
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:15.2113189Z npm: 10.9.9
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:15.2113499Z yarn: 1.22.22
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:15.2115006Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:15.2156894Z [command]/home/runner/setup-pnpm/node_modules/.bin/pnpm store path --silent
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:15.6122246Z /home/runner/setup-pnpm/node_modules/.bin/store/v3
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:15.8375102Z Cache hit for: node-cache-Linux-x64-pnpm-999634bcded701c79b9e3c36eec6074f8b4789df1642ff2ecf2da752184a630b
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:15.8486807Z (node:2402) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:17.0268744Z Received 46137344 of 128334584 (36.0%), 44.0 MBs/sec
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:17.5158051Z Received 128334584 of 128334584 (100.0%), 82.2 MBs/sec
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:17.5159068Z Cache Size: ~122 MB (128334584 B)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:17.5314711Z [command]/usr/bin/tar -xf /home/runner/work/_temp/98bb48da-6a36-4a4d-9a13-d18252335b32/cache.tzst -P -C /home/runner/work/agilityhub-core-web/agilityhub-core-web --use-compress-program unzstd
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.1071512Z Cache restored successfully
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.1145431Z Cache restored from key: node-cache-Linux-x64-pnpm-999634bcded701c79b9e3c36eec6074f8b4789df1642ff2ecf2da752184a630b
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.1332012Z ##[group]Run pnpm install --frozen-lockfile
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.1332459Z [36;1mpnpm install --frozen-lockfile[0m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.1585324Z shell: /usr/bin/bash -e {0}
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.1585670Z env:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.1585962Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.1586299Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.5825087Z Scope: all 12 workspace projects
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.6525371Z Lockfile is up to date, resolution step is skipped
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.7080136Z Progress: resolved 1, reused 0, downloaded 0, added 0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.8333402Z Packages: +859
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:19.8334547Z ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:20.7089807Z Progress: resolved 859, reused 859, downloaded 0, added 76
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.3221920Z Progress: resolved 859, reused 859, downloaded 0, added 859, done
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9212197Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9212924Z devDependencies:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9213538Z + @commitlint/cli 21.2.2
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9214098Z + @commitlint/config-conventional 21.2.2
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9214621Z + @eslint/css 2.0.0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9215024Z + @eslint/js 9.39.5
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9215760Z + @playwright/test 1.63.0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9216182Z + @size-limit/file 13.0.3
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9216606Z + @types/node 24.13.3
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9216971Z + eslint 9.39.5
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9217448Z + eslint-import-resolver-typescript 4.4.5
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9218013Z + eslint-plugin-import 2.32.0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9218541Z + eslint-plugin-jsx-a11y 6.10.2
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9219055Z + eslint-plugin-react 7.37.5
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9219555Z + eslint-plugin-react-hooks 7.1.1
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9220013Z + globals 17.12.0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9220362Z + husky 9.1.7
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9220720Z + i18next-parser 9.4.0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9221291Z + lint-staged 17.5.0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9221641Z + msw 2.15.0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9222018Z + prettier 3.9.6
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9222395Z + size-limit 13.0.3
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9222742Z + turbo 2.10.12
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9223105Z + typescript 5.9.3
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9223490Z + typescript-eslint 8.69.0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9223755Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:21.9378676Z . prepare$ node packages/config/scripts/prepare-husky.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.0209723Z . prepare: Done
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.0668244Z Done in 2.8s using pnpm v9.15.9
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.0902167Z ##[group]Run pnpm turbo run lint typecheck test build --concurrency=2
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.0902753Z [36;1mpnpm turbo run lint typecheck test build --concurrency=2[0m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.0972464Z shell: /usr/bin/bash -e {0}
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.0972737Z env:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.0973020Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.0973365Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5287265Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5288075Z Attention:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5289109Z Turborepo now collects completely anonymous telemetry regarding usage.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5289934Z This information is used to shape the Turborepo roadmap and prioritize features.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5290849Z You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5292150Z https://turborepo.dev/docs/telemetry
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5292366Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5642859Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5655909Z    • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5657226Z    • Running lint, typecheck, test, build in 11 packages
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5658162Z    • Remote caching disabled
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:22.5658707Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:26.8563524Z ##[group]@agilityhub/course-core:typecheck
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:26.8564635Z cache miss, executing 61edc282ad1bbb2a
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:26.8565359Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:26.8566668Z > @agilityhub/course-core@0.0.1 typecheck /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-core
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:26.8567923Z > tsc --noEmit
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:26.8568322Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:26.8568995Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:30.6818963Z ##[group]@agilityhub/shared-types:lint
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:30.6820338Z cache miss, executing a946566fb9efb741
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:30.6821041Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:30.6822584Z > @agilityhub/shared-types@0.0.1 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/shared-types
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:30.6824092Z > eslint src tests scripts --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:30.6824743Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:30.6825255Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:31.1072580Z ##[group]@agilityhub/course-core:build
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:31.1073701Z cache miss, executing e18b31668a225399
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:31.1074381Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:31.1075443Z > @agilityhub/course-core@0.0.1 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-core
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:31.1076730Z > tsc -p tsconfig.build.json
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:31.1077161Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:31.1077725Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:36.7434806Z ##[group]@agilityhub/ui:typecheck
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:36.7436362Z cache miss, executing 1932d0db980cc486
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:36.7437130Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:36.7450596Z > @agilityhub/ui@0.0.0 typecheck /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/ui
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:36.7451853Z > tsc --noEmit
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:36.7452085Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:36.7455430Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:51.7912590Z ##[group]@agilityhub/ui:lint
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:51.7914476Z cache miss, executing 4a2adae79b3919e3
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:51.7914831Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:51.7919985Z > @agilityhub/ui@0.0.0 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/ui
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:51.7921340Z > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:51.7922126Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:51.7922791Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0410179Z ##[group]@agilityhub/ui:test
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0410832Z cache miss, executing 453f518c08420cba
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0421586Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0422331Z > @agilityhub/ui@0.0.0 test /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/ui
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0423161Z > vitest run
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0423355Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0423364Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0425088Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/ui[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0425572Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0426718Z [90mstderr[2m | src/day-grid.test.tsx[2m > [22m[2mDayGrid presenter (screens 10 / 23)[2m > [22m[2mrenders the api's «Sense» column as delivered and never adds one of its own
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0427861Z [22m[39m[DayGrid] cells without a matching column are not drawn: cls-1 (ringId null)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0428204Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0428653Z  [32m✓[39m src/day-grid.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 611[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0429261Z    [32m✓[39m DayGrid presenter (screens 10 / 23) [2m(10)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0430081Z      [33m[2m✓[22m[39m keeps identical ring columns and strips the leading zero of each start time[33m 306[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0430948Z  [32m✓[39m src/tasks-panel.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 1526[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0434629Z  [32m✓[39m src/universal-list.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1799[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0435632Z    [32m✓[39m E5-W05 round 2 #2 · a range filter with no suggested values (ruling E80) [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0437268Z      [33m[2m✓[22m[39m offers two dates instead of the value list, never asks for the field's values, and adds the range's own value[33m 717[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0438678Z    [32m✓[39m E8-W03 round 4 #1 · operator-specific universal filter values [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0439708Z      [33m[2m✓[22m[39m E8-W06 #1 reloads suggested values when the operator changes from eq to lt[33m 305[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0440582Z      [33m[2m✓[22m[39m sends both range bounds for between and no value for exists[33m 394[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0441628Z  [32m✓[39m src/attendance.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 785[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0442338Z    [32m✓[39m E6-W01 step 3 AttendanceCircles (S10 R-10-03, mockup 21) [2m(5)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0443151Z      [33m[2m✓[22m[39m renders the four circles white · green · yellow · red as one radio group[33m 321[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0443945Z  [32m✓[39m src/slot-grid.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 741[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0444566Z    [32m✓[39m SlotGrid presenter (S09 screens 08 and 24) [2m(6)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0445394Z      [33m[2m✓[22m[39m draws each variant of the api's state and reason, and only a bookable FREE cell is pressable[33m 415[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0446246Z  [32m✓[39m src/components.test.tsx [2m([22m[2m31 tests[22m[2m)[22m[33m 1092[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0446778Z    [32m✓[39m base components [2m(31)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0447565Z      [33m[2m✓[22m[39m Button exposes a disabled loading state[33m 307[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0448326Z  [32m✓[39m src/attendance-contrast.test.ts [2m([22m[2m34 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0449069Z  [32m✓[39m src/rich-text.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 611[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0449850Z  [32m✓[39m src/attendance-sheet.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 317[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0450557Z  [32m✓[39m src/on-primary.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0451411Z  [32m✓[39m src/branding.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 128[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0452281Z  [32m✓[39m src/schedule-grid.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 581[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0452808Z    [32m✓[39m ScheduleGrid [2m(3)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0453561Z      [33m[2m✓[22m[39m stacks cells per slot, exposes day buttons and tints cells through --schedule-color[33m 483[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0454620Z  [32m✓[39m src/limited-markdown.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 417[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0455238Z    [32m✓[39m LimitedMarkdown [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0455956Z      [33m[2m✓[22m[39m renders the allowed subset and strips unsupported HTML and images[33m 416[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0456678Z  [32m✓[39m src/index.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0457554Z  [32m✓[39m src/icons/Icon.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 120[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0458118Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0458540Z [2m Test Files [22m [1m[32m15 passed[39m[22m[90m (15)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0459080Z [2m      Tests [22m [1m[32m158 passed[39m[22m[90m (158)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0459511Z [2m   Start at [22m 08:32:37
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0460141Z [2m   Duration [22m 14.23s[2m (environment 57%, tests 24%, setup 14%, transform 4%, import 2%)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0460521Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0460995Z [2mEnvironment [22m [33mjsdom was created 15 times[39m[2m · 21.28s total, 57% of tracked time[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0462414Z [2m            [22m [2mcreate it once per worker with [22m[33mpool: 'vmThreads'[39m[2m (keeps per-file isolation) or [22m[33misolate: false[39m[2m (shares it across files)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0463468Z [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-environments[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0463860Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:52.0464158Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:53.8974091Z ##[group]@agilityhub/config:lint
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:53.8996533Z cache miss, executing c07f3835c19f9ad5
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:53.9006150Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:53.9007238Z > @agilityhub/config@0.0.0 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/config
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:53.9008716Z > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:53.9009360Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:53.9009993Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:54.5582936Z ##[group]@agilityhub/config:typecheck
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:54.5586648Z cache miss, executing d958f81f702c06ef
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:54.5587248Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:54.5588345Z > @agilityhub/config@0.0.0 typecheck /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/config
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:54.5589808Z > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:54.5590496Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:54.5590915Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:57.1935644Z ##[group]@agilityhub/i18n:lint
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:57.1956182Z cache miss, executing dd2be69263f6a085
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:57.1956661Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:57.1959853Z > @agilityhub/i18n@0.0.0 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/i18n
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:57.1961879Z > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:57.1965180Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:32:57.1966053Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:37.8278526Z ##[group]clubs:lint
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:37.8279144Z cache miss, executing a4af644164592333
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:37.8279501Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:37.8280116Z > clubs@0.0.0 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:37.8281098Z > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:37.8281741Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:37.8282158Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:50.2592128Z ##[group]@agilityhub/course-ui:lint
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:50.2592921Z cache miss, executing 252eefe8a375f027
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:50.2593248Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:50.2594004Z > @agilityhub/course-ui@0.0.1 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-ui
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:50.2594973Z > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:50.2595414Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:33:50.2595849Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:14.6707821Z ##[group]clubs-admin:lint
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:14.6762897Z cache miss, executing 9ae6ac12b0c6b379
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:14.6791833Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:14.6803149Z > clubs-admin@0.0.0 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:14.6822762Z > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:14.6823326Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:14.6824020Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:15.6168257Z ##[group]@agilityhub/api-client:lint
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:15.6168963Z cache miss, executing 9995d8f8eac3bb63
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:15.6169341Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:15.6170162Z > @agilityhub/api-client@0.0.0 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/api-client
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:15.6172115Z > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:15.6172745Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:15.6173184Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.2839645Z ##[group]@agilityhub/course-core:lint
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.2840330Z cache miss, executing e1967c3b8013c83f
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.2840702Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.2841667Z > @agilityhub/course-core@0.0.1 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-core
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.2842904Z > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.2843361Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.2843766Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.5918555Z ##[group]id:lint
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.5919146Z cache miss, executing b97c217d91c5d1c4
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.5919503Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.5920039Z > id@0.0.0 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/id
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.5920989Z > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.5921651Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:24.5922026Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4406575Z ##[group]@agilityhub/course-core:test
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4407689Z cache miss, executing 34116acf0470d929
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4408344Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4409436Z > @agilityhub/course-core@0.0.1 test /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-core
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4410631Z > vitest run
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4411017Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4411403Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4412867Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-core[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4414028Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4414943Z  [32m✓[39m tests/apriltag-36h11.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4416263Z  [32m✓[39m tests/marker-svg.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4417681Z  [32m✓[39m tests/warnings-rules.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4419299Z  [32m✓[39m tests/placement.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4420802Z  [32m✓[39m tests/warnings-engine.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4422932Z  [32m✓[39m tests/smarter-writer.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4424896Z  [32m✓[39m tests/parse-smarter-txt.test.ts [2m([22m[2m113 tests[22m[2m)[22m[32m 77[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4431838Z  [32m✓[39m tests/calibration.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4433396Z  [32m✓[39m tests/smarter-fixtures.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4434470Z  [32m✓[39m tests/geometry-primitives.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4435244Z  [32m✓[39m tests/marker-id.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4436025Z  [32m✓[39m tests/course-data-json-schema.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 315[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4436831Z  [32m✓[39m tests/geometry-transform.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4437559Z  [32m✓[39m tests/ring.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4438537Z  [32m✓[39m tests/summarize-course.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4439286Z  [32m✓[39m tests/coords.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4440043Z  [32m✓[39m tests/parse-smarter-colors-txt.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4440776Z  [32m✓[39m tests/units.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4441808Z  [32m✓[39m tests/wrapper.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4442311Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4442615Z [2m Test Files [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4443156Z [2m      Tests [22m [1m[32m364 passed[39m[22m[90m (364)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4443614Z [2m   Start at [22m 08:34:25
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4444161Z [2m   Duration [22m 2.28s[2m (transform 39%, import 34%, tests 23%, worker 4%)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4444482Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4445035Z [2m    Isolate [22m [33m19 workers spawned[39m[2m · ~164ms startup each (spawn + environment, per file)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4446097Z [2m            [22m [2mat least ~875ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4446568Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:27.4446999Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4891479Z ##[group]@agilityhub/shared-types:test
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4892506Z cache miss, executing 0d5094aa59df2bb0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4893027Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4894034Z > @agilityhub/shared-types@0.0.1 test /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/shared-types
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4895097Z > vitest run
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4895418Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4895585Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4897151Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/shared-types[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4898301Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4899284Z  [32m✓[39m tests/build-session-export.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 122[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4900791Z  [32m✓[39m tests/json-schemas.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 143[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4901738Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4902372Z [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4903344Z [2m      Tests [22m [1m[32m38 passed[39m[22m[90m (38)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4904127Z [2m   Start at [22m 08:34:28
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4905142Z [2m   Duration [22m 1.09s[2m (transform 54%, import 27%, tests 17%, worker 1%)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4905823Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:29.4906377Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:33.9108099Z ##[group]@agilityhub/shared-types:typecheck
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:33.9108994Z cache miss, executing c4cd70d7e3ccd8fa
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:33.9109855Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:33.9110605Z > @agilityhub/shared-types@0.0.1 typecheck /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/shared-types
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:33.9111615Z > tsc --noEmit
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:33.9112006Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:33.9112565Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:34.9207298Z ##[group]@agilityhub/auth:lint
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:34.9222940Z cache miss, executing 2925197e67cefb4b
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:34.9223585Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:34.9224503Z > @agilityhub/auth@0.0.0 lint /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/auth
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:34.9225754Z > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:34.9226364Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:34.9226924Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:37.4947873Z ##[group]@agilityhub/shared-types:build
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:37.4948867Z cache miss, executing a211f3de2fb8a1b3
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:37.4949499Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:37.4950563Z > @agilityhub/shared-types@0.0.1 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/shared-types
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:37.4952080Z > tsc -p tsconfig.build.json
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:37.4952558Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:37.4953174Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7640337Z ##[group]@agilityhub/i18n:test
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7642045Z cache miss, executing 17824a2a8389c2a5
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7643206Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7644054Z > @agilityhub/i18n@0.0.0 test /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/i18n
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7645029Z > vitest run
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7645382Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7645542Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7646946Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/i18n[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7647877Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7648703Z  [32m✓[39m src/activities.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 168[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7649992Z  [32m✓[39m src/locale.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7651496Z  [32m✓[39m src/index.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 97[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7652901Z  [32m✓[39m src/format.test.ts [2m([22m[2m99 tests[22m[2m)[22m[32m 175[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7672817Z  [32m✓[39m src/masking.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7673531Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7674060Z [2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7675060Z [2m      Tests [22m [1m[32m120 passed[39m[22m[90m (120)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7675881Z [2m   Start at [22m 08:34:38
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7676949Z [2m   Duration [22m 1.26s[2m (transform 64%, tests 18%, import 17%, worker 1%)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7677564Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:39.7678110Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:40.2434045Z ##[group]@agilityhub/i18n:typecheck
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:40.2434820Z cache miss, executing ecc8df484525fd18
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:40.2435167Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:40.2435896Z > @agilityhub/i18n@0.0.0 typecheck /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/i18n
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:40.2436714Z > tsc --noEmit
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:40.2436902Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:40.2437335Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6070274Z ##[group]@agilityhub/course-ui:test
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6071730Z cache miss, executing a90632bcb55cc2e9
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6074149Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6075226Z > @agilityhub/course-ui@0.0.1 test /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-ui
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6076385Z > vitest run
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6076749Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6076917Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6078441Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-ui[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6079444Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6080362Z  [32m✓[39m tests/planner-behaviour.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6082078Z  [32m✓[39m tests/port.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 586[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6083390Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6087944Z [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6089109Z [2m      Tests [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6090007Z [2m   Start at [22m 08:34:40
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6091362Z [2m   Duration [22m 2.87s[2m (environment 49%, transform 27%, tests 12%, import 11%)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6092166Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:43.6092781Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:45.7468213Z ##[group]@agilityhub/course-ui:typecheck
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:45.7482918Z cache miss, executing 76cecc580d328fb0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:45.7483635Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:45.7484701Z > @agilityhub/course-ui@0.0.1 typecheck /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-ui
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:45.7516138Z > tsc --noEmit
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:45.7523167Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:45.7524018Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:48.6165634Z ##[group]@agilityhub/course-ui:build
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:48.6166413Z cache miss, executing d54a037e7ba9e92f
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:48.6166765Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:48.6168300Z > @agilityhub/course-ui@0.0.1 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-ui
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:48.6169326Z > tsc -p tsconfig.build.json
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:48.6169606Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:34:48.6170132Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:05.6712934Z ##[group]@agilityhub/api-client:typecheck
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:05.6713805Z cache miss, executing 01be4e34dbf589a3
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:05.6714179Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:05.6715080Z > @agilityhub/api-client@0.0.0 typecheck /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/api-client
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:05.6716052Z > tsc --noEmit
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:05.6716254Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:05.6720292Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9653265Z ##[group]@agilityhub/auth:test
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9687707Z cache miss, executing d607d4aba81482fa
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9688443Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9689402Z > @agilityhub/auth@0.0.0 test /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/auth
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9690487Z > vitest run
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9690866Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9691061Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9692803Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/auth[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9693795Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9694675Z  [32m✓[39m src/session.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 493[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9696155Z  [32m✓[39m src/auth-client.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 1301[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9698043Z    [32m✓[39m T-01-11 E4-W16 round 2 #1 (S01 R-01-09, E47): a transient /me failure after a handoff never falls back to the cookie [2m(3)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9700477Z      [33m[2m✓[22m[39m /me keeps failing: the exchange rejects but the tab keeps that session, restores never read the cookie (also after a reload), and retryHandoff enters it[33m 316[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9702831Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9703587Z [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9704678Z [2m      Tests [22m [1m[32m32 passed[39m[22m[90m (32)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9705558Z [2m   Start at [22m 08:35:06
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9706695Z [2m   Duration [22m 4.10s[2m (environment 39%, tests 24%, transform 19%, import 18%)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9707453Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:10.9708120Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7134185Z ##[group]@agilityhub/api-client:test
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7152462Z cache miss, executing 46390a526ad99ce5
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7153077Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7154127Z > @agilityhub/api-client@0.0.0 test /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/api-client
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7155228Z > vitest run
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7159421Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7159645Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7161602Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/api-client[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7163078Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7164170Z  [32m✓[39m src/mocks/activity-handlers.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 2245[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7165845Z    [32m✓[39m E4-W04 activity MSW handlers follow the S07 contract (forms A, B and the D7 list) [2m(14)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7167606Z      [33m[2m✓[22m[39m serves form A, the member forms, the conflicts and the cancellation preview[33m 308[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7169327Z  [32m✓[39m src/mocks/billing-handlers.test.ts [2m([22m[2m53 tests[22m[2m)[22m[33m 3595[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7178986Z  [32m✓[39m src/mocks/booking-handlers.test.ts [2m([22m[2m30 tests[22m[2m)[22m[33m 2705[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7179933Z  [32m✓[39m src/mocks/fixtures.contract.test.ts [2m([22m[2m85 tests[22m[2m)[22m[33m 3182[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7180821Z  [32m✓[39m src/mocks/signup-handlers.test.ts [2m([22m[2m32 tests[22m[2m)[22m[33m 660[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7182092Z  [32m✓[39m src/index.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 716[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7183620Z  [32m✓[39m src/preferences-saver.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 159[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7185019Z  [32m✓[39m src/mocks/followup-handlers.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 642[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7186449Z  [32m✓[39m src/mocks/messaging-handlers.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 835[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7187872Z  [32m✓[39m src/mocks/training-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 1356[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7189273Z  [32m✓[39m src/mocks/calendar-handlers.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 2071[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7190581Z    [32m✓[39m E4-W02 calendar MSW handlers follow the S06 contract (forms B and D) [2m(7)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7192305Z      [33m[2m✓[22m[39m serves the D4 week (form B) with the Thursday warning and the Carretera block[33m 312[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7194181Z    [32m✓[39m E5-W05 round 2 · the calendar world's reads are the caller's club's, and refuse `q` as the snapshot does (CONVENCIONS_API §4, E75) [2m(5)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7196390Z      [33m[2m✓[22m[39m E5-W05 round 2 #11.e: an ADMIN of another club lists no week and no class, and this world's week, calendar and class are 404 NOT_FOUND for it[33m 310[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7198239Z  [32m✓[39m src/mocks/backoffice-handlers.test.ts [2m([22m[2m47 tests[22m[2m)[22m[33m 16888[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7199820Z    [32m✓[39m E5-W05 round 2 · the staff registrants' level is the dog's own, and follows levels.enabled (S08 §6) [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7202523Z      [33m[2m✓[22m[39m E5-W05 round 3 #4: in every class of the calendar and day-grid worlds each registrant's level is one the class allows (S08 R-08-04), no dog is listed twice, and the rows match the class's counters[33m 1137[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7204847Z    [32m✓[39m E7-W07 step 5 · the staff reads never book a dog over its week's limit (S08 R-08-02, R-08-03, R-08-19) [2m(7)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7208269Z      [33m[2m✓[22m[39m T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 10 at 8:12 (D1 and D10, S15's example day) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice[33m 1239[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7212750Z      [33m[2m✓[22m[39m T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dc 12 at 10:00 (D4) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice[33m 890[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7217408Z      [33m[2m✓[22m[39m T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 7:10 (the ring-usage register) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice[33m 938[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7221998Z      [33m[2m✓[22m[39m T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dl 3 at 21:00 (screen 23's drawer) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice[33m 903[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7225669Z      [33m[2m✓[22m[39m T-08-03 E7-W07 step 5 (R-08-02, R-08-03, R-08-19): at dg 2 at 20:30 (the member world) no dog of the default world is booked over its week's limit in the calendar or the day grid, counted with the member's own bookings; every class still lists its counters' registrants, of a level it allows, no dog twice[33m 878[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7228924Z      [33m[2m✓[22m[39m T-08-03 E7-W07 round 2 #3 (R-08-02, R-08-03): after Tuesday's 18:50 class is cancelled, still no dog of the calendar or the day grid is booked over its week's limit, and every class lists its counters' registrants[33m 2246[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7231396Z    [32m✓[39m E7-W07 round 2 #5b · the staff rows were booked, and the waiting entries joined, before now (S08 R-08-01) [2m(4)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7234210Z      [33m[2m✓[22m[39m T-08-03 E7-W07 round 2 #5b (R-08-01): at dl 10 at 8:12 (D1 and D10, S15's example day) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened[33m 1091[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7237605Z      [33m[2m✓[22m[39m T-08-03 E7-W07 round 2 #5b (R-08-01): at dc 12 at 10:00 (D4) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened[33m 957[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7241013Z      [33m[2m✓[22m[39m T-08-03 E7-W07 round 2 #5b (R-08-01): at dl 3 at 7:10 (the ring-usage register) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened[33m 1701[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7244646Z      [33m[2m✓[22m[39m T-08-03 E7-W07 round 2 #5b (R-08-01): at dg 2 at 20:30 (the member world) every staff row's bookedAt (D4, screen 23, D10's list) and every waiting entry's joinedAt is no later than now and no earlier than its class's week first opened[33m 975[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7246902Z  [32m✓[39m src/mocks/agenda-handlers.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 757[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7248209Z  [32m✓[39m src/core-api-store.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7249615Z  [32m✓[39m src/mocks/attendance-handlers.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 1001[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7251035Z  [32m✓[39m src/mocks/census-handlers.test.ts [2m([22m[2m104 tests[22m[2m)[22m[33m 701[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7252660Z  [32m✓[39m src/mocks/notification-handlers.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 802[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7253955Z  [32m✓[39m src/exports.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 77[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7255154Z  [32m✓[39m src/submission-key.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7256411Z  [32m✓[39m src/branding-cache.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 453[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7257694Z  [32m✓[39m src/mocks/list-exports.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 526[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7259238Z  [32m✓[39m src/attendance-sheet.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7260603Z  [32m✓[39m src/mocks/day-grid-handlers.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 702[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7262085Z  [32m✓[39m src/uploads.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 144[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7263219Z  [32m✓[39m src/api-error.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7264421Z  [32m✓[39m src/mocks/list-fields.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7265722Z  [32m✓[39m src/mocks/auth-handoff.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 1326[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7267137Z    [32m✓[39m T-01-12 E4-W16 round 2 #2 (S01 R-01-09, E47): a handoff code is single-use across page loads [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7268863Z      [33m[2m✓[22m[39m redeem code 1, reload, redeem code 2, then code 1 again → refused (the whole redemption history stays spent)[33m 944[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7270516Z      [33m[2m✓[22m[39m the back office never issues again a code it issued before its own reload[33m 380[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7271723Z  [32m✓[39m src/club-pages.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 84[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7272776Z  [32m✓[39m src/mocks/club-settings-handlers.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 105[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7274105Z  [32m✓[39m src/mocks/mock-worlds.budget.test.ts [2m([22m[2m24 tests[22m[2m)[22m[33m 7296[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7275232Z    [32m✓[39m E3-W10 build-time budget of the MSW mock worlds [2m(24)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7276444Z      [33m[2m✓[22m[39m imports the mock modules afresh within the start-up budget[33m 2495[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7277110Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7277600Z [2m Test Files [22m [1m[32m30 passed[39m[22m[90m (30)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7278492Z [2m      Tests [22m [1m[32m659 passed[39m[22m[90m (659)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7279185Z [2m   Start at [22m 08:34:49
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7280012Z [2m   Duration [22m 30.09s[2m (tests 59%, import 32%, transform 8%)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7280481Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7281530Z [2m    Isolate [22m [33m30 workers spawned[39m[2m · ~202ms startup each (spawn + environment, per file)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7283558Z [2m            [22m [2mat least ~1.82s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7284422Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:19.7284936Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:21.6405743Z ##[group]@agilityhub/auth:typecheck
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:21.6406430Z cache miss, executing c8794bc5f58749fc
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:21.6406765Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:21.6407518Z > @agilityhub/auth@0.0.0 typecheck /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/auth
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:21.6408400Z > tsc --noEmit
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:21.6408585Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:21.6408969Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4795335Z ##[group]id:build
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4795971Z cache miss, executing e049549b0ec999b8
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4796354Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4796916Z > id@0.0.0 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/id
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4797658Z > tsc --noEmit && vite build
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4797928Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4798749Z [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4799389Z transforming...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4799845Z ✓ 242 modules transformed.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4800244Z rendering chunks...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4800601Z computing gzip size...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4801611Z dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4802685Z dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4803631Z dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4804971Z dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4805943Z dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4806852Z dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4807708Z dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4808619Z dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4809534Z dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4810426Z dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4812278Z dist/assets/index-ChtNX0kH.css                           52.76 kB │ gzip:   9.59 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4813483Z dist/assets/common-BpH9cuss.js                            2.30 kB │ gzip:   1.09 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4814603Z dist/assets/common-D5M4a98u.js                            2.39 kB │ gzip:   1.18 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4815783Z dist/assets/common-DLazKDt-.js                            2.45 kB │ gzip:   1.20 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4817209Z dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4818301Z dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4819332Z dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4820398Z dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4821943Z dist/assets/errors-Bvp7svDM.js                           23.31 kB │ gzip:   7.57 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4823033Z dist/assets/errors-QdWmQXin.js                           23.32 kB │ gzip:   7.54 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4824088Z dist/assets/index-DeQiUS8I.js                           327.61 kB │ gzip: 100.97 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4824569Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4824813Z [32m✓ built in 416ms[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:33.4825530Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0693728Z ##[group]clubs-admin:build
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0702565Z cache miss, executing 728e506d438e4b93
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0721769Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0727332Z > clubs-admin@0.0.0 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0728381Z > tsc --noEmit && vite build
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0728781Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0729726Z [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0730490Z transforming...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0731079Z ✓ 323 modules transformed.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0731863Z rendering chunks...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0732353Z computing gzip size...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0733309Z dist/index.html                                             2.65 kB │ gzip:   0.91 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0734535Z dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0735579Z dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0736635Z dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0737637Z dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0738621Z dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0739647Z dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0740614Z dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0741968Z dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0743501Z dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0777512Z dist/assets/index-BJvr5qkf.css                            134.08 kB │ gzip:  20.25 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0778993Z dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0803184Z dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0809546Z dist/assets/notifications-BP8GtpgC.js                       0.75 kB │ gzip:   0.47 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0811093Z dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0812777Z dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0814175Z dist/assets/billing-fouQ79Yi.js                             1.19 kB │ gzip:   0.64 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0815561Z dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0816857Z dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0818281Z dist/assets/admin-training-DDv2dFuD.js                      1.35 kB │ gzip:   0.63 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0819714Z dist/assets/history-Bs5JKpAd.js                             1.35 kB │ gzip:   0.69 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0821284Z dist/assets/admin-training-Du9KAoeO.js                      1.42 kB │ gzip:   0.68 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0822776Z dist/assets/admin-training-CtWdBvS6.js                      1.44 kB │ gzip:   0.69 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0824428Z dist/assets/training-CYuCURIa.js                            1.57 kB │ gzip:   0.80 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0825746Z dist/assets/home-CLVBc5a3.js                                1.59 kB │ gzip:   0.79 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0827137Z dist/assets/training-DhvOYmdN.js                            1.62 kB │ gzip:   0.85 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0828536Z dist/assets/training-B5riWOVN.js                            1.63 kB │ gzip:   0.86 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0829923Z dist/assets/leave-BJCFfMEA.js                               1.64 kB │ gzip:   0.83 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0831547Z dist/assets/home-DIaHUeYG.js                                1.65 kB │ gzip:   0.84 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0832849Z dist/assets/home-vQT0WHAi.js                                1.67 kB │ gzip:   0.84 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0834137Z dist/assets/leave-CNFxa8RY.js                               1.75 kB │ gzip:   0.94 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0835512Z dist/assets/leave-DLQuaFFq.js                               1.76 kB │ gzip:   0.94 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0836884Z dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0838242Z dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0839565Z dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0840866Z dist/assets/inactivity-1DJxpGMC.js                          1.93 kB │ gzip:   0.93 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0842490Z dist/assets/inactivity-CCuSHOmb.js                          2.02 kB │ gzip:   1.02 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0843859Z dist/assets/inactivity-CpsDk17I.js                          2.04 kB │ gzip:   1.01 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0845186Z dist/assets/admin-dashboard-VZhOZ68T.js                     2.07 kB │ gzip:   1.02 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0846584Z dist/assets/admin-dashboard-MI69Hia9.js                     2.13 kB │ gzip:   1.10 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0848074Z dist/assets/admin-dashboard-DNVY2TkD.js                     2.18 kB │ gzip:   1.11 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0849519Z dist/assets/id-cJQwgM2i.js                                  2.89 kB │ gzip:   1.28 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0850864Z dist/assets/id-Dio3OKNo.js                                  3.04 kB │ gzip:   1.41 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0852333Z dist/assets/id-Rnv2hXs4.js                                  3.10 kB │ gzip:   1.42 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0853803Z dist/assets/admin-messaging-Deb_qeG3.js                     4.53 kB │ gzip:   1.87 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0855146Z dist/assets/admin-messaging-BzpSHSUj.js                     4.70 kB │ gzip:   2.01 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0856512Z dist/assets/admin-messaging-dXGlHtst.js                     4.79 kB │ gzip:   2.03 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0857859Z dist/assets/booking-C2JFywZY.js                             4.84 kB │ gzip:   1.84 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0859284Z dist/assets/auth-C10lCXDJ.js                                5.05 kB │ gzip:   2.14 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0860565Z dist/assets/booking-BnHoP-fw.js                             5.18 kB │ gzip:   2.03 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0862189Z dist/assets/booking-oFemWAlT.js                             5.19 kB │ gzip:   2.03 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0863126Z dist/assets/admin-catalogs-p29fM8xq.js                      5.41 kB │ gzip:   2.01 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0864049Z dist/assets/auth-Uy3Y-og8.js                                5.63 kB │ gzip:   2.37 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0864903Z dist/assets/signup-BkgU37Eh.js                              5.63 kB │ gzip:   2.54 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0865793Z dist/assets/admin-catalogs-dZtpqy8S.js                      5.67 kB │ gzip:   2.23 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0866720Z dist/assets/auth-DU3LoyRH.js                                5.70 kB │ gzip:   2.38 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0876505Z dist/assets/admin-catalogs-D4wG5vIy.js                      5.87 kB │ gzip:   2.26 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0877703Z dist/assets/signup-Bi4UbtBk.js                              5.88 kB │ gzip:   2.80 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0878760Z dist/assets/admin-audit-D51iUUEl.js                         5.88 kB │ gzip:   2.46 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0880161Z dist/assets/signup-DQ9RZKro.js                              5.97 kB │ gzip:   2.82 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0881546Z dist/assets/admin-activities-Cmq1QEmn.js                    6.01 kB │ gzip:   2.42 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0882747Z dist/assets/admin-activities-p-Yew4Zm.js                    6.17 kB │ gzip:   2.62 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0883975Z dist/assets/admin-activities-7OuSwNid.js                    6.38 kB │ gzip:   2.68 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0885122Z dist/assets/admin-audit-BTlJjzbH.js                         6.44 kB │ gzip:   2.71 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0886290Z dist/assets/admin-audit-DNUzTvVu.js                         6.55 kB │ gzip:   2.73 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0887477Z dist/assets/census-Drl8KD6d.js                              6.79 kB │ gzip:   2.66 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0888592Z dist/assets/census-BwBGWGVI.js                              7.14 kB │ gzip:   2.93 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0889665Z dist/assets/census-D_K8N9oO.js                              7.34 kB │ gzip:   2.97 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0890730Z dist/assets/admin-scheduling-nhXWwjRG.js                    8.23 kB │ gzip:   3.04 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0902171Z dist/assets/enums-CBHhsYyt.js                               8.55 kB │ gzip:   3.49 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0902963Z dist/assets/admin-scheduling-DeLeUPtJ.js                    8.64 kB │ gzip:   3.30 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0903733Z dist/assets/admin-scheduling-BhSriSnV.js                    8.64 kB │ gzip:   3.31 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0904464Z dist/assets/enums-Fb9eEND4.js                               8.82 kB │ gzip:   3.61 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0906267Z dist/assets/enums-C7fH82AG.js                               8.86 kB │ gzip:   3.60 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0906957Z dist/assets/instructor-Drv5FS73.js                          8.95 kB │ gzip:   3.24 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0907868Z dist/assets/instructor-C9Nzp3I-.js                          9.33 kB │ gzip:   3.45 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0908576Z dist/assets/instructor-DOywIQyk.js                          9.43 kB │ gzip:   3.47 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0909301Z dist/assets/admin-billing-CSu7p_6R.js                       9.83 kB │ gzip:   3.47 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0910000Z dist/assets/admin-billing-CC32bEji.js                      10.03 kB │ gzip:   3.78 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0910693Z dist/assets/admin-billing-C6P5ZjUV.js                      10.24 kB │ gzip:   3.81 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0911588Z dist/assets/admin-census-Cs77qzU3.js                       17.55 kB │ gzip:   6.53 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0912318Z dist/assets/admin-census-CKc7ESYs.js                       18.59 kB │ gzip:   7.03 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0913005Z dist/assets/admin-census-DV0dTNnQ.js                       19.02 kB │ gzip:   7.12 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0913676Z dist/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0914584Z dist/assets/admin-settings-BGWZWGcY.js                     23.15 kB │ gzip:   8.03 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0915259Z dist/assets/errors-Bvp7svDM.js                             23.31 kB │ gzip:   7.57 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0915922Z dist/assets/errors-QdWmQXin.js                             23.32 kB │ gzip:   7.54 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0916597Z dist/assets/admin-settings-Djo9n4mk.js                     24.88 kB │ gzip:   8.71 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0917283Z dist/assets/admin-settings-DfNEfLE4.js                     25.34 kB │ gzip:   8.72 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0917942Z dist/assets/index-wsb_jduM.js                           1,259.25 kB │ gzip: 426.00 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0918237Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0919581Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0920669Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0920989Z [33m[plugin builtin:vite-reporter] 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0921901Z (!) Some chunks are larger than 500 kB after minification. Consider:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0922421Z - Using dynamic import() to code-split the application
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0923269Z - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0924213Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0925848Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0926900Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0928313Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0929411Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0930814Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0932137Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0933553Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0934610Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0936010Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0937055Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0937314Z [32m✓ built in 879ms[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:49.0937836Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6248041Z ##[group]clubs:build
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6264156Z cache miss, executing d0a0af088e62ddde
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6264755Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6265543Z > clubs@0.0.0 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6266275Z > tsc --noEmit && vite build
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6266584Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6267312Z [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6267872Z transforming...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6268301Z ✓ 297 modules transformed.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6268710Z rendering chunks...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6269080Z computing gzip size...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6269713Z dist/index.html                                           2.71 kB │ gzip:   0.94 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6270831Z dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6272279Z dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6273154Z dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6274019Z dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6274861Z dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6275750Z dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6276624Z dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6277496Z dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6278377Z dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6279611Z dist/assets/index-u9hRQRjT.css                          120.47 kB │ gzip:  19.02 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6280764Z dist/assets/notifications-ChKXsAvB.js                     0.75 kB │ gzip:   0.47 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6282445Z dist/assets/notifications-dxKZmlHL.js                     0.75 kB │ gzip:   0.43 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6283669Z dist/assets/notifications-BP8GtpgC.js                     0.75 kB │ gzip:   0.47 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6284725Z dist/assets/billing-Dcn1Gx1O.js                           1.08 kB │ gzip:   0.56 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6285852Z dist/assets/virtual_pwa-register-B75S_EnE.js              1.12 kB │ gzip:   0.59 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6286977Z dist/assets/billing-B7XHt--p.js                           1.17 kB │ gzip:   0.63 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6288127Z dist/assets/billing-fouQ79Yi.js                           1.19 kB │ gzip:   0.64 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6289225Z dist/assets/history-B1Xz7N4l.js                           1.27 kB │ gzip:   0.65 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6290030Z dist/assets/history-D5FndTjo.js                           1.32 kB │ gzip:   0.68 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6290722Z dist/assets/admin-training-DDv2dFuD.js                    1.35 kB │ gzip:   0.63 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6292016Z dist/assets/history-Bs5JKpAd.js                           1.35 kB │ gzip:   0.69 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6293130Z dist/assets/admin-training-Du9KAoeO.js                    1.42 kB │ gzip:   0.68 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6294463Z dist/assets/admin-training-CtWdBvS6.js                    1.44 kB │ gzip:   0.69 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6295582Z dist/assets/training-CYuCURIa.js                          1.57 kB │ gzip:   0.80 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6296693Z dist/assets/home-CLVBc5a3.js                              1.59 kB │ gzip:   0.79 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6297810Z dist/assets/training-DhvOYmdN.js                          1.62 kB │ gzip:   0.85 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6298917Z dist/assets/training-B5riWOVN.js                          1.63 kB │ gzip:   0.86 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6300004Z dist/assets/leave-BJCFfMEA.js                             1.64 kB │ gzip:   0.83 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6301284Z dist/assets/home-DIaHUeYG.js                              1.65 kB │ gzip:   0.84 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6302377Z dist/assets/home-vQT0WHAi.js                              1.67 kB │ gzip:   0.84 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6303439Z dist/assets/leave-CNFxa8RY.js                             1.75 kB │ gzip:   0.94 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6304516Z dist/assets/leave-DLQuaFFq.js                             1.76 kB │ gzip:   0.94 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6305613Z dist/assets/activities-_j5UPNJ2.js                        1.79 kB │ gzip:   0.83 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6306723Z dist/assets/activities-D_fvQi10.js                        1.86 kB │ gzip:   0.91 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6307839Z dist/assets/activities-BKuUowmB.js                        1.88 kB │ gzip:   0.91 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6308963Z dist/assets/inactivity-1DJxpGMC.js                        1.93 kB │ gzip:   0.93 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6310079Z dist/assets/inactivity-CCuSHOmb.js                        2.02 kB │ gzip:   1.02 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6311633Z dist/assets/inactivity-CpsDk17I.js                        2.04 kB │ gzip:   1.01 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6312764Z dist/assets/admin-dashboard-VZhOZ68T.js                   2.07 kB │ gzip:   1.02 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6313878Z dist/assets/admin-dashboard-MI69Hia9.js                   2.13 kB │ gzip:   1.10 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6315079Z dist/assets/admin-dashboard-DNVY2TkD.js                   2.18 kB │ gzip:   1.11 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6316198Z dist/assets/id-cJQwgM2i.js                                2.89 kB │ gzip:   1.28 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6317162Z dist/assets/id-Dio3OKNo.js                                3.04 kB │ gzip:   1.41 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6318157Z dist/assets/id-Rnv2hXs4.js                                3.10 kB │ gzip:   1.42 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6319296Z dist/assets/admin-messaging-Deb_qeG3.js                   4.53 kB │ gzip:   1.87 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6320517Z dist/assets/admin-messaging-BzpSHSUj.js                   4.70 kB │ gzip:   2.01 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6323653Z dist/assets/admin-messaging-dXGlHtst.js                   4.79 kB │ gzip:   2.03 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6325162Z dist/assets/booking-C2JFywZY.js                           4.84 kB │ gzip:   1.84 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6326345Z dist/assets/auth-C10lCXDJ.js                              5.05 kB │ gzip:   2.14 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6327430Z dist/assets/booking-BnHoP-fw.js                           5.18 kB │ gzip:   2.03 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6328546Z dist/assets/booking-oFemWAlT.js                           5.19 kB │ gzip:   2.03 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6329706Z dist/assets/admin-catalogs-p29fM8xq.js                    5.41 kB │ gzip:   2.01 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6330852Z dist/assets/auth-Uy3Y-og8.js                              5.63 kB │ gzip:   2.37 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6332096Z dist/assets/signup-BkgU37Eh.js                            5.63 kB │ gzip:   2.54 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6333158Z dist/assets/workbox-window.prod.es5-Bd17z0YL.js           5.65 kB │ gzip:   2.20 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6334300Z dist/assets/admin-catalogs-dZtpqy8S.js                    5.67 kB │ gzip:   2.23 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6335425Z dist/assets/auth-DU3LoyRH.js                              5.70 kB │ gzip:   2.38 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6336530Z dist/assets/admin-catalogs-D4wG5vIy.js                    5.87 kB │ gzip:   2.26 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6337617Z dist/assets/signup-Bi4UbtBk.js                            5.88 kB │ gzip:   2.80 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6338685Z dist/assets/admin-audit-D51iUUEl.js                       5.88 kB │ gzip:   2.46 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6339740Z dist/assets/signup-DQ9RZKro.js                            5.97 kB │ gzip:   2.82 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6340804Z dist/assets/admin-activities-Cmq1QEmn.js                  6.01 kB │ gzip:   2.42 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6342251Z dist/assets/admin-activities-p-Yew4Zm.js                  6.17 kB │ gzip:   2.62 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6343395Z dist/assets/admin-activities-7OuSwNid.js                  6.38 kB │ gzip:   2.68 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6344544Z dist/assets/admin-audit-BTlJjzbH.js                       6.44 kB │ gzip:   2.71 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6345923Z dist/assets/admin-audit-DNUzTvVu.js                       6.55 kB │ gzip:   2.73 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6347013Z dist/assets/census-Drl8KD6d.js                            6.79 kB │ gzip:   2.66 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6348015Z dist/assets/census-BwBGWGVI.js                            7.14 kB │ gzip:   2.93 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6348959Z dist/assets/census-D_K8N9oO.js                            7.34 kB │ gzip:   2.97 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6349954Z dist/assets/admin-scheduling-nhXWwjRG.js                  8.23 kB │ gzip:   3.04 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6350970Z dist/assets/enums-CBHhsYyt.js                             8.55 kB │ gzip:   3.49 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6352284Z dist/assets/admin-scheduling-DeLeUPtJ.js                  8.64 kB │ gzip:   3.30 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6353368Z dist/assets/admin-scheduling-BhSriSnV.js                  8.64 kB │ gzip:   3.31 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6354721Z dist/assets/enums-Fb9eEND4.js                             8.82 kB │ gzip:   3.61 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6355808Z dist/assets/enums-C7fH82AG.js                             8.86 kB │ gzip:   3.60 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6356913Z dist/assets/instructor-Drv5FS73.js                        8.95 kB │ gzip:   3.24 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6357978Z dist/assets/instructor-C9Nzp3I-.js                        9.33 kB │ gzip:   3.45 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6359099Z dist/assets/instructor-DOywIQyk.js                        9.43 kB │ gzip:   3.47 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6360175Z dist/assets/admin-billing-CSu7p_6R.js                     9.83 kB │ gzip:   3.47 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6361592Z dist/assets/admin-billing-CC32bEji.js                    10.03 kB │ gzip:   3.78 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6363479Z dist/assets/admin-billing-C6P5ZjUV.js                    10.24 kB │ gzip:   3.81 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6373149Z dist/assets/admin-census-Cs77qzU3.js                     17.55 kB │ gzip:   6.53 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6374512Z dist/assets/admin-census-CKc7ESYs.js                     18.59 kB │ gzip:   7.03 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6375786Z dist/assets/admin-census-DV0dTNnQ.js                     19.02 kB │ gzip:   7.12 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6377325Z dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6378583Z dist/assets/admin-settings-BGWZWGcY.js                   23.15 kB │ gzip:   8.03 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6379763Z dist/assets/errors-Bvp7svDM.js                           23.31 kB │ gzip:   7.57 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6380885Z dist/assets/errors-QdWmQXin.js                           23.32 kB │ gzip:   7.54 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6382150Z dist/assets/admin-settings-Djo9n4mk.js                   24.88 kB │ gzip:   8.71 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6383374Z dist/assets/admin-settings-DfNEfLE4.js                   25.34 kB │ gzip:   8.72 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6384573Z dist/assets/index-CIyqwtmx.js                           678.49 kB │ gzip: 194.71 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6385120Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6387534Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6389454Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6389936Z [33m[plugin builtin:vite-reporter] 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6390668Z (!) Some chunks are larger than 500 kB after minification. Consider:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6391581Z - Using dynamic import() to code-split the application
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6392989Z - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6394610Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6397568Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6399459Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6402405Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6404294Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6406850Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6408735Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6411342Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6413431Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6415736Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0m../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6417479Z [39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6417885Z [32m✓ built in 697ms[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6418153Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6418371Z [36mPWA v1.3.0[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6419134Z Building [35msrc/sw.ts[39m service worker ("[35mes[39m" format)...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6420173Z [36mvite v8.2.2 [32mbuilding client environment for production...[36m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6421494Z [warn] `inlineDynamicImports` option is deprecated, please use `codeSplitting: false` instead.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6422263Z transforming...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6422718Z ✓ 60 modules transformed.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6423118Z rendering chunks...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6423492Z computing gzip size...
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6424214Z dist/sw.mjs  17.90 kB │ gzip: 6.01 kB
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6424513Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6424731Z [32m✓ built in 45ms[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6425038Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6425231Z [36mPWA v1.3.0[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6425735Z mode      [35minjectManifest[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6426207Z format:   [35mes[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6426806Z precache  [32m83 entries[39m [2m(1279.23 KiB)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6427300Z files generated
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6427662Z   [2mdist/sw.js[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:51.6428345Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0093356Z ##[group]id:test
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0094193Z cache miss, executing b90bc8bc13c37ec8
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0094693Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0095346Z > id@0.0.0 test /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/id
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0100016Z > vitest run
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0100453Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0100614Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0102258Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/id[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0103166Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0104060Z  [32m✓[39m src/App.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 873[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0105118Z    [32m✓[39m T-01-22 apps/id [2m(9)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0106253Z      [33m[2m✓[22m[39m resumes a server-side OIDC flow after password login[33m 302[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0106995Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0107609Z [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0108533Z [2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0109243Z [2m   Start at [22m 08:35:50
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0110275Z [2m   Duration [22m 2.92s[2m (tests 32%, environment 31%, transform 25%, setup 7%, import 5%)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0111030Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:35:53.0112193Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:15.3172799Z ##[group]clubs:typecheck
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:15.3203040Z cache miss, executing 1f6bfd731089607d
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:15.3241512Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:15.3274584Z > clubs@0.0.0 typecheck /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:15.3332259Z > tsc --noEmit
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:15.3341681Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:15.3392434Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:53.0784436Z ##[group]clubs-admin:typecheck
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:53.0787557Z cache miss, executing be758ad171071242
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:53.0788290Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:53.0789316Z > clubs-admin@0.0.0 typecheck /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:53.0790427Z > tsc --noEmit
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:53.0790848Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:36:53.0791679Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9239506Z [;31mclubs:test[;0m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9370971Z cache miss, executing 130769039979d68e
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9410428Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9491401Z > clubs@0.0.0 test /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9509615Z > vitest run
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9525566Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9548586Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9554426Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9555393Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9556201Z  [32m✓[39m src/App.test.tsx [2m([22m[2m59 tests[22m[2m)[22m[33m 12425[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9557136Z    [32m✓[39m T-02-14 clubs shell [2m(7)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9558174Z      [33m[2m✓[22m[39m uses the compact mark with the runtime club name[33m 518[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9559114Z    [32m✓[39m T-01-18 access screen [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9560394Z      [33m[2m✓[22m[39m uses the exact access actions, focuses an empty email and gates signup[33m 383[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9561774Z    [32m✓[39m T-01-19 activation screen [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9562925Z      [33m[2m✓[22m[39m renders gender-aware, reset and invalid-link variants[33m 329[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9564475Z    [32m✓[39m T-01-21 profile access rows and impersonation [2m(5)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9565973Z      [33m[2m✓[22m[39m renders the mockup rows in order without account sessions or backoffice handoff[33m 683[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9567844Z      [33m[2m✓[22m[39m E8-W02 round 3 #1 reads /me.paymentMethod.invalid on profile and receipts without a failed CARD receipt[33m 302[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9569707Z    [32m✓[39m T-01-11 E4-W16 steps 1–2 (INC-15, INC-18, E47): «Entra com l'abonat» in the member app [2m(10)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9571966Z      [33m[2m✓[22m[39m round 2 #1: a redeemed code whose /me keeps failing shows the error with a retry, never the admin's own session; the retry opens 03 with the banner[33m 302[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9573911Z    [32m✓[39m T-07-30 E4-W08 S07 §6 /activitats/:id is for MEMBER and impersonated sessions (AGENTS rule 3) [2m(3)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9575684Z      [33m[2m✓[22m[39m an instructor-only session gets the usual no-access path: no detail, no /me/activities call[33m 459[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9578246Z    [32m✓[39m T-01-26 imported-account onboarding and policy re-consent [2m(4)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9579630Z      [33m[2m✓[22m[39m renders the screen and pop-up in Catalan, Spanish and English[33m 466[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9580703Z    [32m✓[39m T-03-40 mobile own dogs [2m(7)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9582072Z      [33m[2m✓[22m[39m E8-W05 #6 keeps pack balances on a failed refresh and exposes a pending retry[33m 405[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9583695Z      [33m[2m✓[22m[39m renders own dogs, saves the note, shows task totals and gates TASKS[33m 393[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9585517Z      [33m[2m✓[22m[39m E4-W16 step 6 (INC-22): «＋ DOC.» works again after a first upload, on another dog, with empty fields[33m 359[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9587306Z    [32m✓[39m T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) [2m(3)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9589203Z      [33m[2m✓[22m[39m step 2: «Nivell {codi}» only when the dog carries its level (none without levels.enabled), without reading /parameters[33m 313[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9590814Z    [32m✓[39m T-03-41 mobile own data [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9592196Z      [33m[2m✓[22m[39m keeps identity read-only, resolves towns, maps READ_ONLY and gates billing[33m 393[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9593666Z  [32m✓[39m src/instructor/tasks.test.tsx [2m([22m[2m34 tests[22m[2m)[22m[33m 12830[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9594951Z    [32m✓[39m T-10-28 (26) screen 26 «Tasques i notes» (S10 §2, R-10-10…R-10-12) [2m(10)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9597223Z      [33m[2m✓[22m[39m mockup 26: the title, the private observations, the three tasks (the done one struck through with «feta per la Laura el 02-08»), the history link, the member's note read-only and [DESA] waiting for a change[33m 839[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9600670Z      [33m[2m✓[22m[39m T-10-25 «＋ Afegir» uploads the video through the signed url (TASK, the signed headers, no bearer) and creates one task with one Idempotency-Key, even on a double tap; 22's counters follow[33m 447[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9603550Z      [33m[2m✓[22m[39m the pencil edits the text with the version read; the ✕ asks «Vols eliminar aquesta tasca?» and deletes with its key; ✓ completes (feta per l'Estel) and ↺ reopens[33m 550[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9606002Z      [33m[2m✓[22m[39m an edit opened before another instructor's change is sent with its own version: STALE_VERSION (409), and the typed text stays[33m 425[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9608409Z      [33m[2m✓[22m[39m [DESA] saves the observations with the version read and one key; a stale version (tasksStale) keeps the typed text to recover and saves it again on the new version[33m 527[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9611033Z      [33m[2m✓[22m[39m an observation file goes through the DOG_OBSERVATIONS upload and POST /attachments; a clip opens a fresh signed url[33m 312[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9612763Z    [32m✓[39m E6-W02 round 2 (review of 30-09): screen 26 [2m(5)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9614408Z      [33m[2m✓[22m[39m #1 (CONVENCIONS_API §7, T-10-25): a network failure keeps the submission's key, so its retry creates one task[33m 302[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9616316Z      [33m[2m✓[22m[39m #1 (E74): two deliberate submissions with the same text are two tasks, each with its own key[33m 401[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9618964Z      [33m[2m✓[22m[39m #2 (R-10-10): with 52 tasks «Mostra'n més» reads the next page into the same list, whose tasks are managed like the rest — the oldest done one reopened, the oldest pending one edited, completed and deleted[33m 1787[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9621088Z    [32m✓[39m T-10-28 (26) E6-W05 (reviews of E6-W02's round 2): screen 26 [2m(10)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9623924Z      [33m[2m✓[22m[39m step 1 (E74): an unanswered creation the api never received is retried as it was; the expired file is refused (409 INVALID_STATE), uploaded again and the task created once[33m 304[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9626600Z      [33m[2m✓[22m[39m step 1 (CONVENCIONS_API §7, E79): «IN_PROGRESS» is not the submission's answer — its retry keeps the key and the files, and one task is created[33m 465[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9629238Z      [33m[2m✓[22m[39m E7-W06 review #3 (CONVENCIONS_API §7, E79): a gateway's 504 without the api's body is no answer — the retry keeps the key and the files, and one task is created[33m 328[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9632688Z      [33m[2m✓[22m[39m T-10-25 T-10-15 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps the key — the retry sends the same key and files; a 422 DOG_NOT_ACTIVE retires it — the next submission of the same text is a new one with a new key, and one task is created[33m 370[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9636163Z      [33m[2m✓[22m[39m E7-W05 step 4 (CONVENCIONS_API §7, E80): a task whose first request is still running says so with the shared in-progress text, never the key's technical one, and its retry creates one task[33m 301[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9638761Z      [33m[2m✓[22m[39m step 2: a mixed selection keeps the refused file's message while the accepted one uploads — on the observations and on an open task[33m 321[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9640475Z    [32m✓[39m E6-W04 step 0d (review of E6-W05): screen 26 [2m(4)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9642594Z      [33m[2m✓[22m[39m E6-W04 step 0d: an instructor's mixed selection (a JPEG and an executable) attaches the JPEG and says «prog.exe: …» — on the observations and on an open task[33m 311[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9644495Z    [32m✓[39m T-10-28 (26) E7-W06 (E6-W04 question 5 and its report nits): screen 26's new-task form [2m(4)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9647441Z      [33m[2m✓[22m[39m E7-W06 step 5 (E6-W04 Q5): an instructor's new task with refused files names each one — «prog.exe: …», «vídeo_llarg.mp4: …» — creates nothing and keeps the form; without them the same form creates the task with the file already uploaded[33m 342[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9650639Z      [33m[2m✓[22m[39m E7-W06 step 6 (E6-W04's report nit): a creation whose answer was lost and whose text was then edited is abandoned — its key is dropped, so the first text written again later is a new task with a new key[33m 660[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9654006Z      [33m[2m✓[22m[39m E7-W06 step 6 (E6-W04's report nit): a creation whose answer was lost and whose form was then cancelled is abandoned — the same text in a new form is a new task with a new key[33m 351[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9655914Z  [32m✓[39m src/SignupPage.test.tsx [2m([22m[2m104 tests[22m[2m)[22m[33m 20152[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9656976Z    [32m✓[39m T-04-29 signup person and draft [2m(7)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9658644Z      [33m[2m✓[22m[39m persists a current draft, expires it after 24 hours and maps identity states[33m 1435[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9660338Z      [33m[2m✓[22m[39m masks and validates the browser-independent birth date control[33m 430[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9662056Z      [33m[2m✓[22m[39m M2 checks the ES postal code and a past birth date from 1900 before any request[33m 480[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9663779Z      [33m[2m✓[22m[39m GENERIC profile: the first document type of the profile and an editable prefix[33m 432[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9665127Z    [32m✓[39m T-04-30 signup dog, uploads, plans and module gates [2m(5)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9666545Z      [33m[2m✓[22m[39m uploads sequentially named vaccination pages and renders API plans[33m 369[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9668236Z      [33m[2m✓[22m[39m validates and normalises the chip per country profile and the birth month[33m 503[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9669544Z    [32m✓[39m T-04-31 signup family lookup [2m(3)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9670841Z      [33m[2m✓[22m[39m continues empty, resolves the fixture family and supports a pending lookup[33m 352[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9672357Z    [32m✓[39m T-04-32 signup payment, checkout and add-dog mode [2m(12)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9673753Z      [33m[2m✓[22m[39m shows each payment text only under its method (T-04-32, M7 web half)[33m 327[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9674848Z    [32m✓[39m E3-W06 round 2 [2m(9)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9676231Z      [33m[2m✓[22m[39m #2 after a cancelled checkout 19 is read-only and the retry charges the committed signup[33m 396[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9677898Z      [33m[2m✓[22m[39m #5 the birth date is checked against the club's today, not the browser's[33m 388[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9679304Z    [32m✓[39m E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review [2m(5)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9681005Z      [33m[2m✓[22m[39m #1 a slow full page load: the departing page never renders nor consumes the destination's error[33m 555[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9683224Z      [33m[2m✓[22m[39m #2 a cancelled checkout is consumed once: cancel → retry → lost answer → reload → retry with the same key[33m 332[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9684942Z  [32m✓[39m src/activities/activities.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 4391[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9686327Z    [32m✓[39m T-07-30 app: block «Activitats» of 04, detail, rows of 03 and 25 [2m(19)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9687902Z      [33m[2m✓[22m[39m draws the 04 block with the exact badges; the full row with waitlist stays tappable[33m 616[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9689766Z      [33m[2m✓[22m[39m FULL_WAITLIST: the waitlist dialog → toast «Ets a la llista d'espera» → [SURT DE LA LLISTA D'ESPERA][33m 310[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9692073Z      [33m[2m✓[22m[39m registered: [ANUL·LA LA INSCRIPCIÓ] with confirmation; after the start, the contact text[33m 330[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9693916Z    [32m✓[39m E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): 13's registration keeps one key per submission [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9697061Z      [33m[2m✓[22m[39m T-07-30 T-07-14 E7-W07 step 4 (CONVENCIONS_API §7, E85): [INSCRIU-M'HI] keeps its Idempotency-Key through a network failure, IN_PROGRESS («L'operació encara està en curs…») and a 503 with the api's body; a 422 BOOKING_BLOCKED retires it, so the same registration sent again takes a new key[33m 320[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9699639Z  [32m✓[39m src/instructor/instructor.test.tsx [2m([22m[2m44 tests[22m[2m)[22m[33m 14450[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9700878Z    [32m✓[39m T-10-27 screen 20 «Grups del dia» (S10 §2, R-10-01) [2m(7)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9702970Z      [33m[2m✓[22m[39m mockup 20: the day chips, each class with n/n, the hourglass and its second line, the legend and the block with its reason and note[33m 880[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9705271Z      [33m[2m✓[22m[39m a chip changes the day (?date=); an empty day reads «Cap classe aquest dia»; the instructor chip offers no «Tot el club» and shows another's day[33m 480[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9707045Z    [32m✓[39m T-10-27 screen 21 «Detall de classe i passar llista» (S10 R-10-02…R-10-06) [2m(14)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9708877Z      [33m[2m✓[22m[39m a tap changes the circle locally with no request; [DESA] sends only the changed items with the current version and a UUID key[33m 395[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9710972Z      [33m[2m✓[22m[39m 409 STALE_VERSION: the toast, the other's change kept, and only the caller's own edit sent again with the new version[33m 324[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9713298Z      [33m[2m✓[22m[39m after a refusal the list is read again and the caller's choices are rebased: a row someone else changed meanwhile is theirs[33m 349[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9715130Z    [32m✓[39m E6-W01 round 2 #1 (review #1, R-10-04): a recovery read never overwrites a newer save [2m(3)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9717056Z      [33m[2m✓[22m[39m after a refused PUT every circle and [DESA] stay locked until the list is read again; a tap or [DESA] meanwhile sends nothing[33m 385[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9718703Z    [32m✓[39m E6-W01 step 6 the instructor's student search (S10 §2, §13-9) [2m(5)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9720456Z      [33m[2m✓[22m[39m lists the active dogs as «{guia} + {gos} · {nivell}», asks the api for the typed text after 300 ms and opens 22[33m 1612[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9722768Z      [33m[2m✓[22m[39m round 2 #2 (review #2): with 51 matching dogs the first page shows 50 and «Mostra'n més» appends the 51st from the next page[33m 2380[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9724887Z      [33m[2m✓[22m[39m round 2 #2 and #4: a failed next page keeps the 50 rows, says why by its code, and «Mostra'n més» asks it again[33m 2277[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9726751Z    [32m✓[39m T-10-27 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 21's sheet keeps its key on IN_PROGRESS [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9729695Z      [33m[2m✓[22m[39m E7-W06 step 1: 21's attendance save keeps its Idempotency-Key and the choice on IN_PROGRESS, says «L'operació encara està en curs…» without reading the list again, the retry sends the same key, and the same save after the api's answer takes a new key[33m 412[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9732400Z  [32m✓[39m src/training/TrainingPage.test.tsx [2m([22m[2m28 tests[22m[2m)[22m[33m 13535[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9733798Z    [32m✓[39m T-09-37 screen 08 exists only with a dog allowed to train alone [2m(3)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9735302Z      [33m[2m✓[22m[39m without eligible dogs the tab is absent and /entrenaments goes back to 03[33m 1207[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9737225Z      [33m[2m✓[22m[39m with Rock and Toby the tab exists and Rock (defaultDogId) is the selected chip[33m 479[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9738853Z      [33m[2m✓[22m[39m FREE_TRAINING off: no tab, and the route shows nothing of the module[33m 360[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9740225Z    [32m✓[39m T-09-38 screen 08 grid, «Qualsevol» and the confirmation [2m(4)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9741834Z      [33m[2m✓[22m[39m draws the api's cells: free outlined and pressable, struck, «classe» dimmed[33m 730[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9743580Z      [33m[2m✓[22m[39m «Qualsevol» with two free rings asks which one, Muntanya first, and books with it[33m 873[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9745214Z      [33m[2m✓[22m[39m the counter card reads the selected day's week and follows the dog[33m 342[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9746494Z    [32m✓[39m T-09-39 screen 08 at the weekly limit (R-09-05) [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9747804Z      [33m[2m✓[22m[39m without any cancellable session: the short message[33m 344[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9749154Z    [32m✓[39m screen 08 refusals by code (S09 §6, R-09-06) [2m(5)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9750572Z      [33m[2m✓[22m[39m 409 SLOT_TAKEN: the message, the grid read again and the api's free rings offered[33m 490[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9752370Z      [33m[2m✓[22m[39m 409 TRAINING_LIMIT_REACHED on a stale counter: the R-09-05 message from the details[33m 368[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9753858Z      [33m[2m✓[22m[39m 422 codes show their message by code, never the api's text[33m 414[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9755393Z      [33m[2m✓[22m[39m while the booking is sent the button is busy and the grid, days and dogs are inert[33m 402[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9756976Z      [33m[2m✓[22m[39m a lost answer keeps its Idempotency-Key for the retry; an answer drops it[33m 485[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9758575Z    [32m✓[39m E5-W05 step 11: a refreshed grid clears an invalid choice (E5-W02 round-2 review #1, R-09-03) [2m(3)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9760458Z      [33m[2m✓[22m[39m E5-W05 step 11: another member books the chosen slot; the focus refresh clears the choice and [Confirma] is disabled[33m 488[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9762580Z      [33m[2m✓[22m[39m E5-W05 step 11: with «Qualsevol», the chosen ring taken meanwhile clears the choice and its chooser[33m 609[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9764499Z      [33m[2m✓[22m[39m E5-W05 round 2 #13: a refresh that clears the choice a SLOT_TAKEN offered also clears that message[33m 644[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9766180Z    [32m✓[39m E5-W05 step 12: the offline copy blocks the booking (E5-W02 round-2 review #2, S09 §2) [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9768331Z      [33m[2m✓[22m[39m E5-W05 step 12: a NETWORK answer while navigator.onLine is true: «pot no estar al dia», [Confirma] disabled, and the retry reads again[33m 604[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9770236Z      [33m[2m✓[22m[39m E5-W05 step 12: the counter's offline copy blocks the booking too[33m 395[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9771643Z    [32m✓[39m screen 08 without network (S09 §2 «sense connexió») [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9773084Z      [33m[2m✓[22m[39m keeps the last grid marked «pot no estar al dia» and blocks the booking[33m 340[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9774638Z    [32m✓[39m E5-W02 round 2 · review #1: the offline copy of 08 is per club and person (S09 §6) [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9776274Z      [33m[2m✓[22m[39m A's answers never show for B after a network failure, and B's session drops A's copy[33m 355[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9777863Z    [32m✓[39m E5-W02 round 2 · review #3: the tab follows the member's rights (R-09-01, S09 §7) [2m(3)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9779404Z      [33m[2m✓[22m[39m rights granted while away: the tab appears when the app regains focus[33m 382[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9781627Z      [33m[2m✓[22m[39m a MODULE_DISABLED from any training read asks the rights again, and the tab goes[33m 351[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9783079Z    [32m✓[39m E5-W02 round 2 · review #4: a failed counter (S09 §2 states) [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9784575Z      [33m[2m✓[22m[39m shows its error and retry, and [Confirma] stays disabled until the summary is there[33m 340[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9786273Z    [32m✓[39m T-09-38 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 08's booking keeps its key on IN_PROGRESS [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9789222Z      [33m[2m✓[22m[39m E7-W06 step 1: 08's training booking keeps its Idempotency-Key and its choice on IN_PROGRESS, says «L'operació encara està en curs…» (the shared errorText), the retry sends the same key, and the same booking after the api's answer takes a new key[33m 618[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9791927Z    [32m✓[39m E7-W07 step 4 (CONVENCIONS_API §7, E85): 08's booking follows the shared submission-key rule [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9794877Z      [33m[2m✓[22m[39m T-09-38 T-09-16 E7-W07 step 4 (CONVENCIONS_API §7, E85): a 503 with the api's body keeps 08's Idempotency-Key and its choice, so the retry sends the same key; a 422 DOG_ALREADY_BOOKED retires it, so the same booking sent again takes a new key[33m 888[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9797307Z  [32m✓[39m src/booking/confirm.test.tsx [2m([22m[2m22 tests[22m[2m)[22m[33m 6586[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9798700Z    [32m✓[39m T-08-36 the 30 s hold counts on the api clock, not the device's (R-08-07) [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9800484Z      [33m[2m✓[22m[39m a device clock 5 min ahead still starts at 0:30, reaches 0 at the right instant, then the red note returns to 04[33m 478[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9802411Z      [33m[2m✓[22m[39m 409 SEAT_HOLD_EXPIRED on the confirmation shows the same red note[33m 502[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9803830Z    [32m✓[39m T-08-38 screen 06: the swap when the week's limit is reached (R-08-09) [2m(4)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9805519Z      [33m[2m✓[22m[39m single selection among the swappable bookings, the button names both days, then the swap is confirmed[33m 466[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9807309Z      [33m[2m✓[22m[39m «CANCEL·LAR LA NOVA RESERVA» releases the hold (DELETE) and goes back to 04[33m 327[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9808819Z      [33m[2m✓[22m[39m the back gesture leaves the page and releases the hold too[33m 357[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9810267Z    [32m✓[39m 29: the normal confirmation and the informative variants (S08 §2 29, decision B1) [2m(8)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9812006Z      [33m[2m✓[22m[39m normal: no swap, «CONFIRMAR LA RESERVA», then the calendar links and the booking[33m 313[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9813755Z      [33m[2m✓[22m[39m the limit per person (unit MEMBER) names no dog: «Aquesta setmana ja has fet dues classes.»[33m 308[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9815823Z      [33m[2m✓[22m[39m a seat another hold takes: the retry note, and a retry that gets the seat shows the countdown[33m 343[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9817320Z    [32m✓[39m R-08-15 the claim of a NOTIFIED waiting entry (step 5) [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9818777Z      [33m[2m✓[22m[39m a claim that lost the seat (409 SEAT_TAKEN) goes back to 04 with its message[33m 356[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9820472Z    [32m✓[39m T-08-16 E7-W06 step 1 (CONVENCIONS_API §7, E74, E79, E80): 06/29's booking keeps its key on IN_PROGRESS [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9823531Z      [33m[2m✓[22m[39m E7-W06 step 1: 06's booking stays on the page with its Idempotency-Key on IN_PROGRESS (no return to 04), says «L'operació encara està en curs…», the retry sends the same key, and the same booking after the api's answer takes a new key[33m 351[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9825567Z Not implemented: navigation to another Document
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9826387Z Not implemented: navigation to another Document
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9827814Z  [32m✓[39m src/profile/NoticesCard.test.tsx [2m([22m[2m27 tests[22m[2m)[22m[33m 20653[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9829347Z    [32m✓[39m T-11-35 screen 12 «Avisos» and «Idioma» (S11 §2, R-11-04, R-11-07, R-11-15, R-11-17) [2m(27)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9831325Z      [33m[2m✓[22m[39m the fixed green tick under «App», the four e-mail switches with the product defaults and «+SMS»[33m 1185[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9832943Z      [33m[2m✓[22m[39m hides «+SMS» in a club without SMS (R-11-17)[33m 460[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9834305Z      [33m[2m✓[22m[39m the reminder select lists «Mai» and the club's options[33m 490[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9835924Z      [33m[2m✓[22m[39m each change shows at once and is saved as a partial PUT after the 300 ms pause[33m 1913[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9837662Z      [33m[2m✓[22m[39m rolls a refused change back with its message (422 INVALID_REMINDER_OPTION)[33m 643[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9839537Z      [33m[2m✓[22m[39m keeps a newer choice when an older save answers late (the answer rebases the member's edits)[33m 936[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9842105Z      [33m[2m✓[22m[39m E7-W02 round 2 #1: leaving 12 while a PUT is on its way sends the waiting change at once, and the latest choice (120) is what the api keeps even when the older PUT answers last[33m 742[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9844581Z      [33m[2m✓[22m[39m E7-W02 round 2 #1: a change kept across a reload is sent again on the next visit of the same account and club only[33m 1135[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9847110Z      [33m[2m✓[22m[39m E7-W05 step 1, path a (R-11-04): the older PUT lands last and the resend of the latest choice is lost — the latest choice stays in the outbox, and the next visit saves it[33m 1296[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9850005Z      [33m[2m✓[22m[39m E7-W05 step 1, path b (R-11-04): the older PUT lands last and its answer is lost — the latest choice is sent again once it settles, and the outbox goes only after that save's 2xx[33m 734[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9852664Z      [33m[2m✓[22m[39m E7-W05 step 1, path c (R-11-04): the older PUT lands last but answers first — the latest choice is sent again and saved[33m 834[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9855315Z      [33m[2m✓[22m[39m E7-W05 step 2 (R-11-04): back from the back-forward cache, 12 saves again — pagehide with a change pending, pageshow(persisted), an edit while that PUT is out, leave: the edit is saved[33m 773[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9857749Z      [33m[2m✓[22m[39m E7-W05 step 6 (E7-W02 review #4): an older visit's success never erases the entry a newer visit left in the outbox[33m 917[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9860236Z      [33m[2m✓[22m[39m E7-W06 (E7-W05 review #4): back from the back-forward cache with nothing unsaved, 12 saves the change a newer visit left in the outbox instead of taking it over and ignoring it[33m 551[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9864090Z      [33m[2m✓[22m[39m E7-W07 step 2 (E7-W06 review #3, ruling E85: option a; R-11-04): overlapping PUTs and the last one lost — 12 reads GET again (the api holds 1 h), shows the member's «2 h abans» as a pending change with «Desant…», sends it again, and its 2xx saves it and frees the outbox[33m 1131[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9868671Z      [33m[2m✓[22m[39m E7-W07 step 2 (ruling E85: option a): the retry is lost too and the member leaves right after — the departure carries «2 h abans» and keeps it, so the next visit within 5 minutes of leaving shows it as a pending change before it is saved; E7-W07 round 2 #1: that visit's PUT fails too — «2 h abans» stays shown and kept, and the member's next change sends it[33m 2452[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9872365Z      [33m[2m✓[22m[39m E7-W05 step 6 (E7-W02 review #5): an impersonated session never shows the browser-permission note (it never asks for push)[33m 591[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9875016Z      [33m[2m✓[22m[39m E7-W02 round 2 #5: a permission already refused shows the explanation on arrival (read at mount, never asked), and a change still saves[33m 508[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9877099Z      [33m[2m✓[22m[39m an iPhone outside the installed app gets the install hint and no permission prompt[33m 545[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9878921Z      [33m[2m✓[22m[39m no push toggle without PushManager in the browser, nor in a club without PUSH[33m 384[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9880628Z      [33m[2m✓[22m[39m «Aprèn amb AgilityHub ›» after «Els meus gossos» only with LEARN_LINK[33m 481[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9882702Z      [33m[2m✓[22m[39m the language select writes Account.locale, switches the UI at once and says only new notices change[33m 407[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9884934Z      [33m[2m✓[22m[39m an impersonated session saves the member's choice but never asks for push, and its logout keeps this device's subscription[33m 681[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9887030Z  [31m❯[39m src/NotificationsPage.test.tsx [2m([22m[2m21 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 7805[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9888473Z    [31m❯[39m T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11) [2m(21)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9890144Z      [33m[2m✓[22m[39m renders mockup 11's six cards as delivered: icon, tone, texts, relative time, «i per SMS», the buttons[33m 765[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9892142Z      [33m[2m✓[22m[39m never prints «i per SMS» without the SMS module, even for an SMS the api lists[33m 485[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9893876Z      [33m[2m✓[22m[39m [CANVIA DE CLASSE] opens 04 with the notification's dog[33m 443[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9895456Z      [33m[2m✓[22m[39m [AGAFA LA PLAÇA] reuses E5-W01's claim: the entry's seat hold, then the confirmation (06/29)[33m 497[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9897199Z      [32m✓[39m [AGAFA LA PLAÇA] reads disabled, with its hint, once the seat is gone (enabled: false)[32m 265[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9899102Z      [33m[2m✓[22m[39m E7-W02 round 2 #4 (AGENTS rule 3): with WAITLIST off, a historical N-15 the api still lists is an informative card with no [AGAFA LA PLAÇA][33m 459[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9901062Z      [32m✓[39m a hold refused with 409 SEAT_TAKEN shows E5-W01's message in the card[32m 256[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9902967Z      [32m✓[39m an informative card opens its route on tap, without a button; one without an action is inert[32m 276[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9904577Z      [32m✓[39m entering calls read-all once, and 03's bell goes quiet[32m 286[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9906199Z      [33m[2m✓[22m[39m back on 03 from the browser's page cache, the bell reads GET /me/home again[33m 438[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9908332Z      [33m[2m✓[22m[39m E7-W02 round 2 #3: a failed read-all is sent again (bounded retry), and its answer silences the bell[33m 746[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9910950Z      [33m[2m✓[22m[39m E7-W02 round 2 #3: inside one document (the module store survives, as in an in-app return), a read-all answered after 03 mounted updates the bell (03 reads GET /me/home again)[33m 428[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9914664Z [31m     [31m×[31m E7-W05 step 3 (S11 §13-8): a read-all left without an answer stays pending in the tab's sessionStorage for this account and club, and a fresh 03 sends it again before it reads GET /me/home — the bell goes quiet[39m[32m 245[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9916991Z      [33m[2m✓[22m[39m E7-W05 step 3: another account's or club's pending read-all is not sent from 03[33m 409[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9918946Z      [33m[2m✓[22m[39m E7-W05 step 6 (E7-W02 review #3): a quiet refetch of 03 that fails keeps the last rows on screen[33m 345[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9921766Z      [33m[2m✓[22m[39m E7-W06 step 3 (E7-W05 review #2): 03's other quiet reload — a read-all answered while 03 is shown — keeps the rows when its GET /me/home fails[33m 351[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9924752Z      [33m[2m✓[22m[39m E7-W06 (E7-W05 review #5): while 03 sends a pending read-all again, the bell never shows the stale unread count — neither before the resend's answer nor before the GET /me/home read that follows it[33m 318[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9926994Z      [32m✓[39m a card tapped before read-all has landed is marked read on its own[32m 250[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9928329Z      [32m✓[39m the empty state: «Encara no tens cap avís»[32m 112[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9929738Z      [32m✓[39m loads the second page when the list end shows (no page buttons)[32m 190[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9931495Z      [32m✓[39m a failed read shows the error by its code, and [Torna-ho a provar] reads again[32m 228[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9933265Z  [32m✓[39m src/history/history.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 2264[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9934596Z    [32m✓[39m T-10-31 screen 25 «Històric» (S10 §2, R-10-14) [2m(11)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9936605Z      [33m[2m✓[22m[39m mockup 25: the three dogs with «Tots» pressed by default, the four type chips, the window caption and the seven rows with their exact badges and lines[33m 410[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9938635Z  [32m✓[39m src/inactivity/InactivityPage.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 7854[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9939900Z    [32m✓[39m T-13-29 member inactivity [2m(16)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9941605Z      [33m[2m✓[22m[39m E8-W04 step 0c: a cached range stays blocked while its replacement preview is pending[33m 1392[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9943429Z      [33m[2m✓[22m[39m E8-W05 #2: submission waits through the preview debounce and its current response[33m 408[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9945286Z      [33m[2m✓[22m[39m renders consultation mode, the proposed open end, fee and debounced booking warning[33m 450[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9947020Z      [33m[2m✓[22m[39m shows the API earliest month for INACTIVITY_DEADLINE_PASSED[33m 450[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9948753Z      [33m[2m✓[22m[39m covers zero, singular and plural booking previews after the selected months change[33m 689[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9950557Z      [33m[2m✓[22m[39m offers future ends for a historical open ACTIVE period and beyond a long fixed end[33m 391[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9952508Z      [33m[2m✓[22m[39m loads and links to the conflicting live period after INACTIVITY_OVERLAP[33m 788[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9954275Z      [33m[2m✓[22m[39m clears an end month overtaken by a changed start and submits an open end[33m 420[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9956239Z      [33m[2m✓[22m[39m clears an old booking warning and reports a failed replacement preview[33m 720[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9958008Z      [33m[2m✓[22m[39m renders a historical ACTIVE period and patches only its changed editable end[33m 404[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9959729Z      [33m[2m✓[22m[39m after 409 STALE_VERSION keeps only the member's own edit on top of the new version[33m 806[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9961680Z      [33m[2m✓[22m[39m keeps a newly created period for the return-to-profile subtitle[33m 588[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9963423Z  [32m✓[39m src/today/OverviewPage.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 4790[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9964633Z    [32m✓[39m T-06-29 screen 23 «Visió global» [2m(9)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9966105Z      [33m[2m✓[22m[39m shows n/n +e with the planned instructor, training names, the block and the cancelled class[33m 629[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9968230Z      [33m[2m✓[22m[39m E5-W03 step 1 lists the class's registrants and the «En espera» line in the drawer, read-only (S08 §6)[32m 300[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9970684Z      [33m[2m✓[22m[39m E5-W05 round 2 #3: the drawer's level chips are the dogs' own levels (Duna «C»), and none in a club with levels.enabled = false[33m 577[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9972776Z    [32m✓[39m T-06-29 E4-W14 screen 23's drawer: the instructors' label follows the count, the names are a list [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9974893Z      [33m[2m✓[22m[39m ca «Instructor: Marc» / «Instructors: Marc i Núria»; es «Instructores: Marc y Núria»; en «Instructors: Marc and Núria»[33m 1635[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9976660Z  [32m✓[39m src/booking/detail.test.tsx [2m([22m[2m26 tests[22m[2m)[22m[33m 8737[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9978022Z    [32m✓[39m T-08-39 screen 07: the booking, who booked it, and its cancellation (R-08-10) [2m(19)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9979781Z      [33m[2m✓[22m[39m E8-W05 #1: a paid checkout reads the booking again before exposing its confirmed actions[33m 2498[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9982517Z      [33m[2m✓[22m[39m E5-W05 step 8: shows the mockup card, and a cancellation in time asks first and leaves the green note, which names no week («pots reservar una altra classe.»)[33m 424[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9984767Z      [33m[2m✓[22m[39m inside the 4 h threshold the dialog warns, and the late note names «4 hores»[33m 336[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9986764Z      [33m[2m✓[22m[39m a booking cancelled by a swap, opened later: its state chip only, no «dins el termini» note (review #4)[33m 785[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9988765Z      [33m[2m✓[22m[39m a CANCELLED_LATE booking cancelled by MEMBER, opened later: its chip «anul·lada tard» only, no note (review #4)[33m 305[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9992068Z      [33m[2m✓[22m[39m E7-W06 step 3 (E7-W05 review #2): a cancellation whose reload fails shows 07's error with a retry, never the old «confirmada» card; the retry shows the cancelled booking and its note[33m 395[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9993615Z    [32m✓[39m T-08-39 the waiting entry (/espera/:id, R-08-16) [2m(7)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9994583Z      [33m[2m✓[22m[39m the card with «en llista d'espera», no position in ALL_AT_ONCE, and «SURT DE LA LLISTA D'ESPERA» back to 03[33m 314[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9995545Z  [32m✓[39m src/today/TodayPage.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 3505[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9996186Z    [32m✓[39m T-06-29 screen 10 «Classes del dia» [2m(18)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9997002Z      [33m[2m✓[22m[39m draws the mockup grid with identical ring columns, the date header and the week chips[33m 677[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9998005Z      [33m[2m✓[22m[39m moves by chips and arrows (Sunday only by the arrows) and keeps ?date in the address[33m 342[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:30.9999169Z      [33m[2m✓[22m[39m shows the empty state (dayGridEmpty) and the error toast with retry[33m 379[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0000060Z  [32m✓[39m src/instructor/RingBlockPage.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 9844[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0000857Z    [32m✓[39m screen 24 «Reservar o bloquejar pista» (S09 §2 row 24, R-09-11) [2m(9)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0002442Z      [33m[2m✓[22m[39m «Reserva de pista» first with its four reasons; «Bloqueig» hides them and offers its two[33m 957[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0004235Z      [33m[2m✓[22m[39m a contiguous selection writes the summary and posts the block, then 23 with its toast[33m 1361[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0005923Z      [33m[2m✓[22m[39m 409 RING_BLOCK_CONFLICT marks the conflicting cells, lists the overlaps and reads the grid again[33m 1935[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0007633Z      [33m[2m✓[22m[39m 422 RING_HAS_BOOKINGS: the instructor is told to ask the administration, and nothing forces it[33m 587[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0009581Z      [33m[2m✓[22m[39m FREE_TRAINING off: only «Bloqueig», and the times are taken without a grid (the api validates)[33m 579[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0011424Z      [33m[2m✓[22m[39m E5-W02 round 2 · review #5: without a grid the band's last half hour can be taken (13:30–14:00)[33m 635[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0012965Z      [33m[2m✓[22m[39m while the block is sent the button is busy and the grid, kinds and rings are inert[33m 757[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0014493Z      [33m[2m✓[22m[39m a time refusal is shown by code (400 INVALID_TIME_RANGE), and a lost answer keeps its key[33m 661[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0016009Z    [32m✓[39m T-09-40 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): 24's block keeps its key on IN_PROGRESS [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0018263Z      [33m[2m✓[22m[39m E7-W06 step 1: 24's ring block keeps its Idempotency-Key on IN_PROGRESS, says «L'operació encara està en curs…», the retry sends the same key, and the same block after the api's answer takes a new key[33m 908[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0021490Z      [33m[2m✓[22m[39m E7-W07 step 4 (CONVENCIONS_API §7, E85; R-09-11): a 503 with the api's body keeps 24's key — the retry sends the same one; a 422 RING_NOT_RESERVABLE retires it — the same block sent again takes a new key[33m 1179[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0023445Z  [32m✓[39m src/booking/home.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 4893[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0024484Z    [32m✓[39m screen 03 «Inici» (S08 §2, R-08-02, R-08-20, R-08-23) [2m(9)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0025911Z      [33m[2m✓[22m[39m the greeting and the bell, «Tots» last and pressed, the counters and the rows as the api delivers them[33m 1424[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0027949Z      [33m[2m✓[22m[39m E5-W04 step 0 (mockup 03, api E5-T25): each class, waiting and training row carries its ring's dot in the api's `ringColor`; the activity row none[33m 312[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0030196Z      [33m[2m✓[22m[39m a dog selected: its rows without « · amb …» and the member's activity still there (the api keeps it), its counters, and «Tots» brings them back[33m 590[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0032612Z      [33m[2m✓[22m[39m a dog without reservations, for a member without activity registrations: «Encara no tens cap reserva» and a way to 04[33m 396[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0034164Z      [33m[2m✓[22m[39m only one accessible dog: no «Tots», its chip selected and its rows without « · amb …» (V3); nothing unread: the bell is still[33m 339[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0035297Z    [32m✓[39m E5-W01 i18n: the three locales, and the club's zone for a viewer elsewhere (CONVENCIONS_I18N §5) [2m(3)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0036107Z      [33m[2m✓[22m[39m en: 04's badges and pack in English[33m 333[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0037011Z      [33m[2m✓[22m[39m a viewer in America/Bogota still reads the club's times (Europe/Madrid): «18:50» and «20:14»[33m 325[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0037977Z Not implemented: navigation to another Document
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0038401Z Not implemented: navigation to another Document
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0039087Z  [32m✓[39m src/billing/InvoicesPage.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 2912[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0040166Z    [32m✓[39m T-12-26 member receipts [2m(11)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0041397Z      [33m[2m✓[22m[39m lists frozen descriptions, localized amounts and the family-group receipt[33m 1186[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0042910Z      [33m[2m✓[22m[39m disables load-more while reading and de-duplicates overlapping pages by receipt id[33m 363[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0044273Z  [32m✓[39m src/booking/book.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 5277[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0045623Z    [32m✓[39m T-08-37 screen 04 «Reservar»: every row state with its mockup badge (S08 §2, R-08-03) [2m(12)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0047858Z      [33m[2m✓[22m[39m Duna: the chips without «Tots», the pack, the intro, the activities and the six rows (mockup 04's, with «ds 8» a normal row: E7-W07 step 6, ruling E85)[33m 1091[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0049958Z      [33m[2m✓[22m[39m Rock: «Sense sessions» is inert with an expiring pack; Toby: the block banner and inert rows without a badge[33m 641[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0051699Z      [33m[2m✓[22m[39m WAITLIST off: the full rows read «Completa» and do nothing[33m 302[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0053464Z      [33m[2m✓[22m[39m WAITLIST_OPEN asks first, joins with the selected dog, then the row leaves the list with «Ets a la llista d'espera»[33m 541[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0055898Z      [33m[2m✓[22m[39m E7-W06 step 3 (E7-W05 review #2): a join whose reload fails shows 04's error with a retry, never the joined row next to the notice; the retry reads the list again without it[33m 701[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0058256Z      [33m[2m✓[22m[39m a hold refused with any other code stays on 04 with its errors: message and the list read again[33m 431[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0059841Z      [33m[2m✓[22m[39m the app mounts 04 on /reservar with the «Reservar» tab active[33m 323[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0061263Z  [32m✓[39m src/notifications/push.test.ts [2m([22m[2m13 tests[22m[2m)[22m[33m 599[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0062650Z  [32m✓[39m src/training/TrainingDetailPage.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 4207[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0063947Z    [32m✓[39m S09 training booking detail (/entrenaments/:id, the 07 pattern, R-09-10) [2m(6)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0065410Z      [33m[2m✓[22m[39m a future booking: title, state, line, who booked it, and the cancellation back to 03[33m 1842[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0067143Z      [33m[2m✓[22m[39m 422 TRAINING_CANCEL_TOO_LATE: the threshold and the minutes left, from the details, in the dialog[33m 367[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0068995Z      [33m[2m✓[22m[39m 409 INVALID_STATE: the message and the booking read again (cancelled elsewhere)[33m 412[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0070731Z    [32m✓[39m E7-W07 step 4 (CONVENCIONS_API §7, E74, E80, E85): the training cancellation follows the shared submission-key rule [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0074106Z      [33m[2m✓[22m[39m T-09-25 E7-W07 step 4 (CONVENCIONS_API §7, E85): [ANUL·LA] sends an Idempotency-Key, keeps it through IN_PROGRESS («L'operació encara està en curs…») and a 503 with the api's body, and a 422 TRAINING_CANCEL_TOO_LATE retires it, so the same cancellation sent again takes a new key[33m 453[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0076606Z    [32m✓[39m E5-W05 step 13: the detail reaches DONE (E5-W02 round-2 review #3, S09 §5) [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0078194Z      [33m[2m✓[22m[39m E5-W05 step 13: with a controlled clock the booking reads «fet» after its endsAt, without a remount[33m 317[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0080011Z  [32m✓[39m src/leave/LeavePage.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 3033[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0081005Z    [32m✓[39m T-13-30 member leave [2m(11)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0082341Z      [33m[2m✓[22m[39m E8-W05 #5: a leave-only reload adds no inactivity period to memberNoInactivity[33m 943[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0083885Z      [33m[2m✓[22m[39m renders the inactivity offer, API reason catalog, NPS 0–10 and full-month help[33m 403[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0085404Z      [33m[2m✓[22m[39m sends the selected catalog reason and shows the review footer[33m 318[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0096817Z      [33m[2m✓[22m[39m withdraws a pending request and returns to the profile[33m 517[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0098174Z      [33m[2m✓[22m[39m keeps the 15 literals complete in ca, es and en[33m 311[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0099399Z  [32m✓[39m src/InfoPage.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1161[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0100299Z    [32m✓[39m T-05-CP-07 screen 30 Info [2m(2)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0101629Z      [33m[2m✓[22m[39m shows FAQ, rules and other active pages only[33m 764[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0102877Z  [32m✓[39m src/dog-tasks-contrast.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0104125Z  [32m✓[39m src/training/i18n.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2135[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0105364Z    [32m✓[39m T-09-41 training and instructor vocabulary, locales and club time zone [2m(4)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0106893Z      [33m[2m✓[22m[39m has no forbidden term nor requirement code in training, instructor and enums (ca/es/en)[33m 518[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0108722Z      [33m[2m✓[22m[39m formats in the club's zone, never the viewer's: an October 06:30Z slot reads «8:30»[33m 1465[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0110277Z  [32m✓[39m src/payments/CheckoutReturn.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1255[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0111478Z    [32m✓[39m E8-W02 round 2 checkout return [2m(4)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0112348Z      [33m[2m✓[22m[39m sends the signup capability only for an anonymous signup return[33m 604[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0113307Z      [33m[2m✓[22m[39m a parent re-render with a new inline onPaid neither restarts the poll nor reads again[33m 396[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0114251Z  [32m✓[39m src/instructor/attendance-rows.test.tsx [2m([22m[2m1 test[22m[2m)[22m[33m 817[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0115147Z    [32m✓[39m T-10-27 E7-W06 step 5 (ruling E82, E6-W04 Q6): stable data attributes on screen 21's rows [2m(1)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0116566Z      [33m[2m✓[22m[39m E7-W06 step 5: each attendance row carries its booking's id and the state it shows (data-booking-id, data-attendance-state); a tap changes the state, and the saved list keeps it[33m 807[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0117835Z  [32m✓[39m src/notifications/locales.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 3635[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0118724Z    [32m✓[39m E7-W02 round 2 #6 · screens 11, 12 and the unsubscribe page in es and en (Definition of Done) [2m(6)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0119598Z      [33m[2m✓[22m[39m E7-W02 round 2 #6 (es): the feed, its actions and a club without SMS[33m 1486[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0120409Z      [33m[2m✓[22m[39m E7-W02 round 2 #6 (en): the feed, its actions and a club without SMS[33m 784[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0122022Z      [33m[2m✓[22m[39m E7-W02 round 2 #6 (es): 12's «Avisos», the reminder options and a refused permission[33m 384[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0123519Z      [33m[2m✓[22m[39m E7-W02 round 2 #6 (en): 12's «Avisos», the reminder options and a refused permission[33m 481[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0124623Z  [32m✓[39m src/notifications/sw-logic.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0125456Z  [32m✓[39m src/today/literals.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 340[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0126207Z  [32m✓[39m src/UnsubscribePage.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 877[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0126978Z    [32m✓[39m E7-W02 step 10 · the e-mail unsubscribe page /comunicats/baixa (S11 R-11-08) [2m(4)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0127870Z      [33m[2m✓[22m[39m 200: sends the token once and confirms, with a way to the «Avisos» of 12 for a session[33m 604[2mms[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0128323Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0128646Z [31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0128900Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0130529Z [41m[1m FAIL [22m[49m src/NotificationsPage.test.tsx[2m > [22mT-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)[2m > [22mE7-W05 step 3 (S11 §13-8): a read-all left without an answer stays pending in the tab's sessionStorage for this account and club, and a fresh 03 sends it again before it reads GET /me/home — the bell goes quiet
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0132595Z [31m[1mAssertionError[22m: expected 1 to be 2 // Object.is equality[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0132914Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0133049Z [32m- Expected[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0133322Z [31m+ Received[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0133453Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0133578Z [32m- 2[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0133799Z [31m+ 1[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0133918Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0134250Z [36m [2m❯[22m src/NotificationsPage.test.tsx:[2m405:57[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0134528Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0134975Z [2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m29 passed[39m[22m[90m (30)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0135745Z [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m569 passed[39m[22m[90m (570)[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0136261Z [2m   Start at [22m 08:35:54
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0136871Z [2m   Duration [22m 96.65s[2m (tests 64%, environment 16%, import 10%, transform 5%, setup 4%)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0137433Z     [90m403|[39m     await renderApp("/inici");
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0138009Z     [90m404|[39m     expect(await screen.findByRole("link", { name: "Avisos" })).toBeVi…
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0138647Z     [90m405|[39m     expect(count("POST", "/me/notifications/read-all")).toBe(2);
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0139214Z     [90m   |[39m                                                         [31m^[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0139654Z     [90m406|[39m     const order = requests
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0140001Z     [90m407|[39m       .filter(
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0140174Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0140414Z [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0140616Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0140622Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0141417Z [2m    Isolate [22m [33m30 workers spawned[39m[2m · ~1.74s startup each (spawn + environment, per file)[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0142568Z [2m            [22m [2mat least ~15.63s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0143084Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0143093Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0164579Z ##[error]AssertionError: expected 1 to be 2 // Object.is equality
+Frontend checks	UNKNOWN STEP	
+Frontend checks	UNKNOWN STEP	- Expected
+Frontend checks	UNKNOWN STEP	+ Received
+Frontend checks	UNKNOWN STEP	
+Frontend checks	UNKNOWN STEP	- 2
+Frontend checks	UNKNOWN STEP	+ 1
+Frontend checks	UNKNOWN STEP	
+Frontend checks	UNKNOWN STEP	 ❯ src/NotificationsPage.test.tsx:405:57
+Frontend checks	UNKNOWN STEP	
+Frontend checks	UNKNOWN STEP	
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0172669Z  ELIFECYCLE  Test failed. See above for more details.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0173251Z ##[group]id:typecheck
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0173575Z cache miss, executing 7bcebd5214bcfc53
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.0174025Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1237942Z ##[group]clubs-admin:test
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1240690Z ##[error]command (/home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs) /home/runner/setup-pnpm/node_modules/.bin/pnpm run test exited (1)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1243275Z clubs#test:  ERROR  command (/home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs) /home/runner/setup-pnpm/node_modules/.bin/pnpm run test exited (1)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1244425Z cache miss, executing 4272e93817263f69
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1244644Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1245095Z > clubs-admin@0.0.0 test /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1245603Z > vitest run
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1245736Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1245742Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1246572Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin[39m
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1247051Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1247335Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1247468Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1247615Z  Tasks:    35 successful, 38 total
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1247945Z Cached:    0 cached, 38 total
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1248216Z   Time:    5m8.594s 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1248459Z Failed:    clubs#test
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1248605Z 
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1253592Z  ERROR  run failed: command  exited (1)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1414570Z ##[error]Process completed with exit code 1.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1508488Z ##[group]Run actions/upload-artifact@v4
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1508786Z with:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1509007Z   name: playwright-screenshots
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1509293Z   path: roadmap/evidence/**/*.png
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1509560Z   if-no-files-found: error
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1509800Z   retention-days: 14
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1510024Z   compression-level: 6
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1510254Z   overwrite: false
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1510478Z   include-hidden-files: false
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1510724Z env:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1510970Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.1511537Z ##[endgroup]
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.3228200Z (node:4900) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.3229764Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.8116252Z With the provided path, there will be 2548 files uploaded
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.8122146Z Artifact name is valid!
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:31.8127554Z Root directory input is valid!
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:32.1500519Z Beginning upload of artifact content to blob storage
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:32.5360351Z (node:4900) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:33.1851541Z Uploaded bytes 8388608
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:33.4557697Z Uploaded bytes 16777216
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:33.5576235Z Uploaded bytes 25165824
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:33.7602931Z Uploaded bytes 33554432
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:34.1867760Z Uploaded bytes 41943040
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:34.4396834Z Uploaded bytes 50331648
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:34.7417451Z Uploaded bytes 58720256
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:35.0596676Z Uploaded bytes 67108864
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:35.4235932Z Uploaded bytes 75497472
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:35.7752537Z Uploaded bytes 83886080
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:36.1442800Z Uploaded bytes 92274688
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:36.3802212Z Uploaded bytes 100663296
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:36.7153483Z Uploaded bytes 109051904
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:37.0881522Z Uploaded bytes 117440512
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:37.3881044Z Uploaded bytes 125829120
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:37.7277362Z Uploaded bytes 134217728
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:38.0701086Z Uploaded bytes 142606336
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:38.3898200Z Uploaded bytes 150994944
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:38.6577990Z Uploaded bytes 159383552
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:38.9747019Z Uploaded bytes 167772160
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:39.3372393Z Uploaded bytes 176160768
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:39.6462064Z Uploaded bytes 184549376
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:40.0730154Z Uploaded bytes 192937984
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:40.6063594Z Uploaded bytes 201326592
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:40.6793607Z Uploaded bytes 209715200
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:40.8938876Z Uploaded bytes 218103808
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:41.2232533Z Uploaded bytes 226492416
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:41.5820328Z Uploaded bytes 234881024
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:41.9501951Z Uploaded bytes 243269632
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:42.1830860Z Uploaded bytes 251658240
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:42.5657468Z Uploaded bytes 260046848
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:42.8840500Z Uploaded bytes 268435456
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:43.1815970Z Uploaded bytes 276824064
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:43.2872340Z Uploaded bytes 277433234
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:43.3458376Z Finished uploading artifact content to blob storage!
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:43.3460996Z SHA256 digest of uploaded artifact zip is d605e40806f34cc46e3038dd48a8ce78aba6a01c6e6f79fac9ce47e030ba8f71
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:43.3463035Z Finalizing artifact upload
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:43.7107449Z Artifact playwright-screenshots.zip successfully finalized. Artifact ID 11958822735
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:43.7108921Z Artifact playwright-screenshots has been successfully uploaded! Final size is 277433234 bytes. Artifact ID is 11958822735
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:43.7117042Z Artifact download URL: https://github.com/jboixtcm/agilityhub-core-web/actions/runs/38706320815/artifacts/11958822735
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:43.7487331Z Post job cleanup.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:43.8942142Z Pruning is unnecessary.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:43.9117527Z Post job cleanup.
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0028771Z [command]/usr/bin/git version
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0071271Z git version 2.55.0
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0109158Z Temporarily overriding HOME='/home/runner/work/_temp/b4a55efd-a43d-4e20-9c56-162fca6e34f9' before making global git config changes
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0110764Z Adding repository directory to the temporary git global config as a safe directory
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0114155Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/agilityhub-core-web/agilityhub-core-web
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0156193Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0192513Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0467598Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0500626Z http.https://github.com/.extraheader
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0524155Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0560604Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0864839Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.0910409Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.1328479Z Cleaning up orphan processes
+Frontend checks	UNKNOWN STEP	2026-10-15T08:37:44.1649605Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4, pnpm/action-setup@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -392,17 +392,9 @@
         "help": "Maximum duration of a build session.",
         "label": "Maximum build-session duration"
       },
-      "gateClearanceMeters": {
-        "help": "Minimum safe distance at gates.",
-        "label": "Gate safety clearance"
-      },
-      "obstacleClearanceMeters": {
-        "help": "Minimum distance between obstacles.",
-        "label": "Obstacle clearance"
-      },
-      "placementMarginMeters": {
-        "help": "Minimum distance between an obstacle and the ring boundary.",
-        "label": "Obstacle placement margin"
+      "defaultWarningThresholdM": {
+        "help": "Minimum distance, in metres, below which placing a course in the ring raises a warning.",
+        "label": "Placement warning threshold"
       },
       "setupAutoExpireDays": {
         "help": "Days before a course setup expires automatically.",

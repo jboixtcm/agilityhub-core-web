@@ -401,18 +401,26 @@ describe("T-11-34 screen 11 «Notificacions» (S11 §2, R-11-10, R-11-11)", () =
     cleanup();
     server.resetHandlers();
     await renderApp("/inici");
+    // The bell is quiet from 03's first render (the marker is read synchronously); the resend
+    // itself leaves from an effect and MSW records it asynchronously (E8-W07 round 2: CI run
+    // 38706320815 read the count before it), so the requests are awaited, not sampled.
     expect(await screen.findByRole("link", { name: "Avisos" })).toBeVisible();
+    await waitFor(() => {
+      expect(count("POST", "/me/notifications/read-all")).toBe(2);
+    });
+    await waitFor(() => {
+      const order = requests
+        .filter(
+          (item) =>
+            item.path === "/api/v1/me/notifications/read-all" || item.path === "/api/v1/me/home",
+        )
+        .map((item) => `${item.method} ${item.path}`);
+      // After the second read-all, 03 read /me/home again.
+      expect(order.slice(order.lastIndexOf("POST /api/v1/me/notifications/read-all"))).toContain(
+        "GET /api/v1/me/home",
+      );
+    });
     expect(count("POST", "/me/notifications/read-all")).toBe(2);
-    const order = requests
-      .filter(
-        (item) =>
-          item.path === "/api/v1/me/notifications/read-all" || item.path === "/api/v1/me/home",
-      )
-      .map((item) => `${item.method} ${item.path}`);
-    // After the second read-all, 03 read /me/home again.
-    expect(order.slice(order.lastIndexOf("POST /api/v1/me/notifications/read-all"))).toContain(
-      "GET /api/v1/me/home",
-    );
     await waitFor(() => {
       expect(
         Object.keys(sessionStorage).filter((key) => key.startsWith(READ_ALL_PENDING_KEY)),

@@ -1,0 +1,35 @@
+
+> clubs-admin@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> vitest run src/billing/BillingPage.test.tsx -t 'R-12-13 / E8-W07 #1'
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/billing/BillingPage.test.tsx (54 tests | 1 failed | 53 skipped) 15013ms
+   ❯ E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides (14)
+     × R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow 15010ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/billing/BillingPage.test.tsx:1466:3
+    1464|   }, 20_000);
+    1465|
+    1466|   it("R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGI…
+       |   ^
+    1467|     mockScenario("billingStripe");
+    1468|     const api = client();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 53 skipped (54)
+   Start at  12:57:29
+   Duration  17.20s (tests 88%, transform 4%, environment 4%, import 2%, setup 1%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 test: `vitest run src/billing/BillingPage.test.tsx -t 'R-12-13 / E8-W07 #1'`
+Exit status 1

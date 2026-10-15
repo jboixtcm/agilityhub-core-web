@@ -392,17 +392,9 @@
         "help": "Durada màxima d'una sessió de muntatge.",
         "label": "Durada màxima de la sessió de muntatge"
       },
-      "gateClearanceMeters": {
-        "help": "Distància mínima de seguretat a les portes.",
-        "label": "Marge de seguretat a portes"
-      },
-      "obstacleClearanceMeters": {
-        "help": "Distància mínima entre obstacles.",
-        "label": "Marge entre obstacles"
-      },
-      "placementMarginMeters": {
-        "help": "Marge mínim entre un obstacle i el límit de la pista.",
-        "label": "Marge de col·locació d'obstacles"
+      "defaultWarningThresholdM": {
+        "help": "Distància mínima, en metres, per sota de la qual col·locar un recorregut a la pista genera un avís.",
+        "label": "Llindar d'avís de col·locació"
       },
       "setupAutoExpireDays": {
         "help": "Dies fins que un recorregut muntat caduca automàticament.",

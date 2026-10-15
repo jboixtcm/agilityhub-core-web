@@ -311,7 +311,7 @@ const initialParameters: Parameters = {
           constraints: { min: 1 },
           module: "COURSES",
         }),
-        parameter("courses.placementMarginMeters", "courses", "decimal", 1.5, {
+        parameter("courses.defaultWarningThresholdM", "courses", "decimal", 1.5, {
           constraints: { min: 0, step: 0.1 },
           module: "COURSES",
         }),
