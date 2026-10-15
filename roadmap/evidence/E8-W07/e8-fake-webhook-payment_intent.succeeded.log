@@ -1,12 +1,7 @@
- Container agilityhub-e8-w07-core-run-18d1bd94b753 Creating
- Container agilityhub-e8-w07-core-run-18d1bd94b753 Created
+ Container agilityhub-e8-w07-core-run-201e0c9b34c0 Creating 
+ Container agilityhub-e8-w07-core-run-201e0c9b34c0 Created 
 Fake provider webhook delivered: payment_intent.succeeded
-2026-10-13T19:32:00.311Z ERROR [scheduled-job-1] c.a.c.p.application.jobs.JobRunner traceId= clubId= accountId= : Job item failed jobRunId=f8ff778e-b0a3-4f4d-b6cf-55518260a6fd job=PAYMENT_TIMEOUTS clubId=71750602-68ed-4c9a-9f92-44b3f3181acd entityId=a286f148-3e98-4712-877d-bba64c6067f1 traceId=742e4fb3-33e0-4f39-a0ca-92c877197fc7
-	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.lambda$cancelPaymentPending$2(BookingCancellationService.java:74)
-	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.cancelPaymentPending(BookingCancellationService.java:70)
-	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService$$SpringCGLIB$$0.cancelPaymentPending(<generated>)
-	at com.agilityhub.core.clubs.bookings.application.PaymentTimeoutsJob.apply(PaymentTimeoutsJob.java:40)
-2026-10-13T19:33:00.043Z ERROR [scheduled-job-1] c.a.c.p.application.jobs.JobRunner traceId= clubId= accountId= : Job item failed jobRunId=f15cd9b7-8c34-4152-aaeb-[redacted]=PAYMENT_TIMEOUTS clubId=71750602-68ed-4c9a-9f92-44b3f3181acd entityId=a286f148-3e98-4712-877d-bba64c6067f1 traceId=c7ebec12-8541-403a-8264-e79d0060a1e8
+2026-10-15T15:11:00.524Z ERROR [scheduled-job-1] c.a.c.p.application.jobs.JobRunner traceId= clubId= accountId= : Job item failed jobRunId=3e60abb5-8b66-4132-9136-75ceec2c81b8 job=PAYMENT_TIMEOUTS clubId=ee9ba78a-e0cc-44ea-b11b-4a86f99c58bf entityId=4bfc05e1-953e-445c-966b-aaed17dc8c2b traceId=4c1fe862-2c49-43e6-[redacted]
 	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.lambda$cancelPaymentPending$2(BookingCancellationService.java:74)
 	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService.cancelPaymentPending(BookingCancellationService.java:70)
 	at com.agilityhub.core.clubs.bookings.application.BookingCancellationService$$SpringCGLIB$$0.cancelPaymentPending(<generated>)

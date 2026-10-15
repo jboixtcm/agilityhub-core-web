@@ -34,7 +34,7 @@
     },
     {
       "_id": "N-15",
-      "count": 2
+      "count": 1
     },
     {
       "_id": "N-18a",
@@ -85,12 +85,8 @@
       "count": 1
     },
     {
-      "_id": "N-40",
-      "count": 1
-    },
-    {
       "_id": "N-54",
-      "count": 4
+      "count": 2
     }
   ],
   "notices": [
@@ -100,7 +96,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-13T19:29:31.834Z"
+        "$date": "2026-10-15T15:07:59.200Z"
       },
       "deliveries": [
         {
@@ -153,277 +149,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-13T19:29:31.834Z"
-      },
-      "deliveries": [
-        {
-          "attempts": 0,
-          "channel": "APP",
-          "providerRef": null,
-          "status": "DELIVERED"
-        },
-        {
-          "attempts": 1,
-          "channel": "EMAIL",
-          "providerRef": "present",
-          "status": "SENT"
-        },
-        {
-          "attempts": 1,
-          "channel": "SMS",
-          "providerRef": "present",
-          "status": "SENT"
-        }
-      ],
-      "locale": "ca",
-      "readAt": null,
-      "recipient": [
-        "accountId",
-        "displayName",
-        "memberId"
-      ],
-      "templateVersion": 0,
-      "variables": [
-        "admin_text",
-        "audience",
-        "class_date",
-        "class_description",
-        "class_time",
-        "club_name",
-        "dog_name",
-        "dog_name_article",
-        "entityId",
-        "gender",
-        "member_first_name",
-        "member_last_names",
-        "member_name",
-        "ring_name"
-      ]
-    },
-    {
-      "action": "CHANGE_CLASS",
-      "audience": "INSTRUCTORS",
-      "category": "CLUB_CHANGES",
-      "code": "N-08a",
-      "createdAt": {
-        "$date": "2026-10-13T19:29:31.834Z"
-      },
-      "deliveries": [
-        {
-          "attempts": 0,
-          "channel": "APP",
-          "providerRef": null,
-          "status": "DELIVERED"
-        },
-        {
-          "attempts": 1,
-          "channel": "EMAIL",
-          "providerRef": "present",
-          "status": "SENT"
-        }
-      ],
-      "locale": "ca",
-      "readAt": null,
-      "recipient": [
-        "accountId",
-        "displayName",
-        "memberId"
-      ],
-      "templateVersion": 0,
-      "variables": [
-        "admin_text",
-        "audience",
-        "class_date",
-        "class_description",
-        "class_time",
-        "club_name",
-        "entityId",
-        "ring_name"
-      ]
-    },
-    {
-      "action": "CHANGE_CLASS",
-      "audience": "ADMINS",
-      "category": "CLUB_CHANGES",
-      "code": "N-08a",
-      "createdAt": {
-        "$date": "2026-10-13T19:29:31.834Z"
-      },
-      "deliveries": [
-        {
-          "attempts": 0,
-          "channel": "APP",
-          "providerRef": null,
-          "status": "DELIVERED"
-        }
-      ],
-      "locale": "ca",
-      "readAt": null,
-      "recipient": [
-        "accountId",
-        "displayName",
-        "memberId"
-      ],
-      "templateVersion": 0,
-      "variables": [
-        "admin_text",
-        "audience",
-        "class_date",
-        "class_description",
-        "class_time",
-        "club_name",
-        "entityId",
-        "ring_name"
-      ]
-    },
-    {
-      "action": "CHANGE_CLASS",
-      "audience": "ADMINS",
-      "category": "CLUB_CHANGES",
-      "code": "N-08a",
-      "createdAt": {
-        "$date": "2026-10-13T19:29:31.834Z"
-      },
-      "deliveries": [
-        {
-          "attempts": 0,
-          "channel": "APP",
-          "providerRef": null,
-          "status": "DELIVERED"
-        }
-      ],
-      "locale": "ca",
-      "readAt": null,
-      "recipient": [
-        "accountId",
-        "displayName",
-        "memberId"
-      ],
-      "templateVersion": 0,
-      "variables": [
-        "admin_text",
-        "audience",
-        "class_date",
-        "class_description",
-        "class_time",
-        "club_name",
-        "entityId",
-        "ring_name"
-      ]
-    },
-    {
-      "action": "CHANGE_CLASS",
-      "audience": "MEMBER",
-      "category": "CLUB_CHANGES",
-      "code": "N-08a",
-      "createdAt": {
-        "$date": "2026-10-13T19:29:37.192Z"
-      },
-      "deliveries": [
-        {
-          "attempts": 0,
-          "channel": "APP",
-          "providerRef": null,
-          "status": "DELIVERED"
-        },
-        {
-          "attempts": 1,
-          "channel": "EMAIL",
-          "providerRef": "present",
-          "status": "SENT"
-        },
-        {
-          "attempts": 1,
-          "channel": "SMS",
-          "providerRef": "present",
-          "status": "SENT"
-        }
-      ],
-      "locale": "ca",
-      "readAt": null,
-      "recipient": [
-        "accountId",
-        "displayName",
-        "memberId"
-      ],
-      "templateVersion": 0,
-      "variables": [
-        "admin_text",
-        "audience",
-        "class_date",
-        "class_description",
-        "class_time",
-        "club_name",
-        "dog_name",
-        "dog_name_article",
-        "entityId",
-        "gender",
-        "member_first_name",
-        "member_last_names",
-        "member_name",
-        "ring_name"
-      ]
-    },
-    {
-      "action": "CHANGE_CLASS",
-      "audience": "MEMBER",
-      "category": "CLUB_CHANGES",
-      "code": "N-08a",
-      "createdAt": {
-        "$date": "2026-10-13T19:29:37.192Z"
-      },
-      "deliveries": [
-        {
-          "attempts": 0,
-          "channel": "APP",
-          "providerRef": null,
-          "status": "DELIVERED"
-        },
-        {
-          "attempts": 1,
-          "channel": "EMAIL",
-          "providerRef": "present",
-          "status": "SENT"
-        },
-        {
-          "attempts": 1,
-          "channel": "SMS",
-          "providerRef": "present",
-          "status": "SENT"
-        }
-      ],
-      "locale": "ca",
-      "readAt": null,
-      "recipient": [
-        "accountId",
-        "displayName",
-        "memberId"
-      ],
-      "templateVersion": 0,
-      "variables": [
-        "admin_text",
-        "audience",
-        "class_date",
-        "class_description",
-        "class_time",
-        "club_name",
-        "dog_name",
-        "dog_name_article",
-        "entityId",
-        "gender",
-        "member_first_name",
-        "member_last_names",
-        "member_name",
-        "ring_name"
-      ]
-    },
-    {
-      "action": "CHANGE_CLASS",
-      "audience": "MEMBER",
-      "category": "CLUB_CHANGES",
-      "code": "N-08a",
-      "createdAt": {
-        "$date": "2026-10-13T19:29:37.192Z"
+        "$date": "2026-10-15T15:07:59.200Z"
       },
       "deliveries": [
         {
@@ -476,7 +202,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-13T19:29:37.192Z"
+        "$date": "2026-10-15T15:07:59.200Z"
       },
       "deliveries": [
         {
@@ -517,7 +243,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-13T19:29:37.192Z"
+        "$date": "2026-10-15T15:07:59.200Z"
       },
       "deliveries": [
         {
@@ -552,7 +278,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-13T19:29:37.192Z"
+        "$date": "2026-10-15T15:07:59.200Z"
       },
       "deliveries": [
         {
@@ -587,7 +313,277 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:04.194Z"
+        "$date": "2026-10-15T15:08:04.760Z"
+      },
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 1,
+          "channel": "EMAIL",
+          "providerRef": "present",
+          "status": "SENT"
+        },
+        {
+          "attempts": 1,
+          "channel": "SMS",
+          "providerRef": "present",
+          "status": "SENT"
+        }
+      ],
+      "locale": "ca",
+      "readAt": null,
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "templateVersion": 0,
+      "variables": [
+        "admin_text",
+        "audience",
+        "class_date",
+        "class_description",
+        "class_time",
+        "club_name",
+        "dog_name",
+        "dog_name_article",
+        "entityId",
+        "gender",
+        "member_first_name",
+        "member_last_names",
+        "member_name",
+        "ring_name"
+      ]
+    },
+    {
+      "action": "CHANGE_CLASS",
+      "audience": "MEMBER",
+      "category": "CLUB_CHANGES",
+      "code": "N-08a",
+      "createdAt": {
+        "$date": "2026-10-15T15:08:04.760Z"
+      },
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 1,
+          "channel": "EMAIL",
+          "providerRef": "present",
+          "status": "SENT"
+        },
+        {
+          "attempts": 1,
+          "channel": "SMS",
+          "providerRef": "present",
+          "status": "SENT"
+        }
+      ],
+      "locale": "ca",
+      "readAt": null,
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "templateVersion": 0,
+      "variables": [
+        "admin_text",
+        "audience",
+        "class_date",
+        "class_description",
+        "class_time",
+        "club_name",
+        "dog_name",
+        "dog_name_article",
+        "entityId",
+        "gender",
+        "member_first_name",
+        "member_last_names",
+        "member_name",
+        "ring_name"
+      ]
+    },
+    {
+      "action": "CHANGE_CLASS",
+      "audience": "MEMBER",
+      "category": "CLUB_CHANGES",
+      "code": "N-08a",
+      "createdAt": {
+        "$date": "2026-10-15T15:08:04.760Z"
+      },
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 1,
+          "channel": "EMAIL",
+          "providerRef": "present",
+          "status": "SENT"
+        },
+        {
+          "attempts": 1,
+          "channel": "SMS",
+          "providerRef": "present",
+          "status": "SENT"
+        }
+      ],
+      "locale": "ca",
+      "readAt": null,
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "templateVersion": 0,
+      "variables": [
+        "admin_text",
+        "audience",
+        "class_date",
+        "class_description",
+        "class_time",
+        "club_name",
+        "dog_name",
+        "dog_name_article",
+        "entityId",
+        "gender",
+        "member_first_name",
+        "member_last_names",
+        "member_name",
+        "ring_name"
+      ]
+    },
+    {
+      "action": "CHANGE_CLASS",
+      "audience": "INSTRUCTORS",
+      "category": "CLUB_CHANGES",
+      "code": "N-08a",
+      "createdAt": {
+        "$date": "2026-10-15T15:08:04.760Z"
+      },
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 1,
+          "channel": "EMAIL",
+          "providerRef": "present",
+          "status": "SENT"
+        }
+      ],
+      "locale": "ca",
+      "readAt": null,
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "templateVersion": 0,
+      "variables": [
+        "admin_text",
+        "audience",
+        "class_date",
+        "class_description",
+        "class_time",
+        "club_name",
+        "entityId",
+        "ring_name"
+      ]
+    },
+    {
+      "action": "CHANGE_CLASS",
+      "audience": "ADMINS",
+      "category": "CLUB_CHANGES",
+      "code": "N-08a",
+      "createdAt": {
+        "$date": "2026-10-15T15:08:04.760Z"
+      },
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        }
+      ],
+      "locale": "ca",
+      "readAt": null,
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "templateVersion": 0,
+      "variables": [
+        "admin_text",
+        "audience",
+        "class_date",
+        "class_description",
+        "class_time",
+        "club_name",
+        "entityId",
+        "ring_name"
+      ]
+    },
+    {
+      "action": "CHANGE_CLASS",
+      "audience": "ADMINS",
+      "category": "CLUB_CHANGES",
+      "code": "N-08a",
+      "createdAt": {
+        "$date": "2026-10-15T15:08:04.760Z"
+      },
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        }
+      ],
+      "locale": "ca",
+      "readAt": null,
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "templateVersion": 0,
+      "variables": [
+        "admin_text",
+        "audience",
+        "class_date",
+        "class_description",
+        "class_time",
+        "club_name",
+        "entityId",
+        "ring_name"
+      ]
+    },
+    {
+      "action": "CHANGE_CLASS",
+      "audience": "MEMBER",
+      "category": "CLUB_CHANGES",
+      "code": "N-08a",
+      "createdAt": {
+        "$date": "2026-10-19T05:00:05.376Z"
       },
       "deliveries": [
         {
@@ -640,7 +636,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:04.194Z"
+        "$date": "2026-10-19T05:00:05.376Z"
       },
       "deliveries": [
         {
@@ -693,7 +689,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:04.194Z"
+        "$date": "2026-10-19T05:00:05.376Z"
       },
       "deliveries": [
         {
@@ -734,7 +730,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:04.194Z"
+        "$date": "2026-10-19T05:00:05.376Z"
       },
       "deliveries": [
         {
@@ -769,7 +765,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:04.194Z"
+        "$date": "2026-10-19T05:00:05.376Z"
       },
       "deliveries": [
         {
@@ -804,7 +800,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:06.837Z"
+        "$date": "2026-10-19T05:00:08.635Z"
       },
       "deliveries": [
         {
@@ -857,7 +853,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:06.837Z"
+        "$date": "2026-10-19T05:00:08.635Z"
       },
       "deliveries": [
         {
@@ -910,7 +906,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:06.837Z"
+        "$date": "2026-10-19T05:00:08.635Z"
       },
       "deliveries": [
         {
@@ -963,7 +959,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:06.837Z"
+        "$date": "2026-10-19T05:00:08.635Z"
       },
       "deliveries": [
         {
@@ -1004,7 +1000,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:06.837Z"
+        "$date": "2026-10-19T05:00:08.635Z"
       },
       "deliveries": [
         {
@@ -1039,7 +1035,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:06.837Z"
+        "$date": "2026-10-19T05:00:08.635Z"
       },
       "deliveries": [
         {
@@ -1074,7 +1070,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:09.177Z"
+        "$date": "2026-10-19T05:00:10.939Z"
       },
       "deliveries": [
         {
@@ -1127,7 +1123,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:09.177Z"
+        "$date": "2026-10-19T05:00:10.939Z"
       },
       "deliveries": [
         {
@@ -1168,7 +1164,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:09.177Z"
+        "$date": "2026-10-19T05:00:10.939Z"
       },
       "deliveries": [
         {
@@ -1203,7 +1199,7 @@
       "category": "CLUB_CHANGES",
       "code": "N-08a",
       "createdAt": {
-        "$date": "2026-10-19T05:00:09.177Z"
+        "$date": "2026-10-19T05:00:10.939Z"
       },
       "deliveries": [
         {
@@ -1238,7 +1234,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:14.305Z"
+        "$date": "2026-10-19T05:00:16.091Z"
       },
       "deliveries": [
         {
@@ -1285,7 +1281,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:14.305Z"
+        "$date": "2026-10-19T05:00:16.091Z"
       },
       "deliveries": [
         {
@@ -1332,7 +1328,54 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:14.305Z"
+        "$date": "2026-10-19T05:00:16.091Z"
+      },
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 1,
+          "channel": "EMAIL",
+          "providerRef": "present",
+          "status": "SENT"
+        },
+        {
+          "attempts": 1,
+          "channel": "PUSH",
+          "providerRef": null,
+          "status": "SENT"
+        }
+      ],
+      "locale": "ca",
+      "readAt": null,
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "templateVersion": 0,
+      "variables": [
+        "audience",
+        "club_name",
+        "dog_name",
+        "dog_name_article",
+        "gender",
+        "member_first_name",
+        "member_last_names",
+        "member_name"
+      ]
+    },
+    {
+      "action": null,
+      "audience": "MEMBER",
+      "category": "CLUB_NEWS",
+      "code": "N-24",
+      "createdAt": {
+        "$date": "2026-10-19T05:00:16.091Z"
       },
       "deliveries": [
         {
@@ -1379,54 +1422,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:14.305Z"
-      },
-      "deliveries": [
-        {
-          "attempts": 0,
-          "channel": "APP",
-          "providerRef": null,
-          "status": "DELIVERED"
-        },
-        {
-          "attempts": 1,
-          "channel": "EMAIL",
-          "providerRef": "present",
-          "status": "SENT"
-        },
-        {
-          "attempts": 1,
-          "channel": "PUSH",
-          "providerRef": null,
-          "status": "SENT"
-        }
-      ],
-      "locale": "ca",
-      "readAt": null,
-      "recipient": [
-        "accountId",
-        "displayName",
-        "memberId"
-      ],
-      "templateVersion": 0,
-      "variables": [
-        "audience",
-        "club_name",
-        "dog_name",
-        "dog_name_article",
-        "gender",
-        "member_first_name",
-        "member_last_names",
-        "member_name"
-      ]
-    },
-    {
-      "action": null,
-      "audience": "MEMBER",
-      "category": "CLUB_NEWS",
-      "code": "N-24",
-      "createdAt": {
-        "$date": "2026-10-19T05:00:14.305Z"
+        "$date": "2026-10-19T05:00:16.091Z"
       },
       "deliveries": [
         {
@@ -1473,54 +1469,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:14.305Z"
-      },
-      "deliveries": [
-        {
-          "attempts": 0,
-          "channel": "APP",
-          "providerRef": null,
-          "status": "DELIVERED"
-        },
-        {
-          "attempts": 1,
-          "channel": "EMAIL",
-          "providerRef": "present",
-          "status": "SENT"
-        },
-        {
-          "attempts": 0,
-          "channel": "PUSH",
-          "providerRef": null,
-          "status": "SKIPPED_NO_CONTACT"
-        }
-      ],
-      "locale": "es",
-      "readAt": null,
-      "recipient": [
-        "accountId",
-        "displayName",
-        "memberId"
-      ],
-      "templateVersion": 0,
-      "variables": [
-        "audience",
-        "club_name",
-        "dog_name",
-        "dog_name_article",
-        "gender",
-        "member_first_name",
-        "member_last_names",
-        "member_name"
-      ]
-    },
-    {
-      "action": null,
-      "audience": "MEMBER",
-      "category": "CLUB_NEWS",
-      "code": "N-24",
-      "createdAt": {
-        "$date": "2026-10-19T05:00:14.305Z"
+        "$date": "2026-10-19T05:00:16.091Z"
       },
       "deliveries": [
         {
@@ -1567,7 +1516,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:14.305Z"
+        "$date": "2026-10-19T05:00:16.091Z"
       },
       "deliveries": [
         {
@@ -1614,54 +1563,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:14.305Z"
-      },
-      "deliveries": [
-        {
-          "attempts": 0,
-          "channel": "APP",
-          "providerRef": null,
-          "status": "DELIVERED"
-        },
-        {
-          "attempts": 1,
-          "channel": "EMAIL",
-          "providerRef": "present",
-          "status": "SENT"
-        },
-        {
-          "attempts": 1,
-          "channel": "PUSH",
-          "providerRef": null,
-          "status": "SENT"
-        }
-      ],
-      "locale": "ca",
-      "readAt": null,
-      "recipient": [
-        "accountId",
-        "displayName",
-        "memberId"
-      ],
-      "templateVersion": 0,
-      "variables": [
-        "audience",
-        "club_name",
-        "dog_name",
-        "dog_name_article",
-        "gender",
-        "member_first_name",
-        "member_last_names",
-        "member_name"
-      ]
-    },
-    {
-      "action": null,
-      "audience": "MEMBER",
-      "category": "CLUB_NEWS",
-      "code": "N-24",
-      "createdAt": {
-        "$date": "2026-10-19T05:00:14.305Z"
+        "$date": "2026-10-19T05:00:16.091Z"
       },
       "deliveries": [
         {
@@ -1708,7 +1610,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:16.577Z"
+        "$date": "2026-10-19T05:00:16.091Z"
       },
       "deliveries": [
         {
@@ -1724,57 +1626,10 @@
           "status": "SENT"
         },
         {
-          "attempts": 0,
-          "channel": "PUSH",
-          "providerRef": null,
-          "status": "SKIPPED_NO_CONTACT"
-        }
-      ],
-      "locale": "ca",
-      "readAt": "set",
-      "recipient": [
-        "accountId",
-        "displayName",
-        "memberId"
-      ],
-      "templateVersion": 0,
-      "variables": [
-        "audience",
-        "club_name",
-        "dog_name",
-        "dog_name_article",
-        "gender",
-        "member_first_name",
-        "member_last_names",
-        "member_name"
-      ]
-    },
-    {
-      "action": null,
-      "audience": "MEMBER",
-      "category": "CLUB_NEWS",
-      "code": "N-24",
-      "createdAt": {
-        "$date": "2026-10-19T05:00:16.577Z"
-      },
-      "deliveries": [
-        {
-          "attempts": 0,
-          "channel": "APP",
-          "providerRef": null,
-          "status": "DELIVERED"
-        },
-        {
           "attempts": 1,
-          "channel": "EMAIL",
-          "providerRef": "present",
-          "status": "SENT"
-        },
-        {
-          "attempts": 0,
           "channel": "PUSH",
           "providerRef": null,
-          "status": "SKIPPED_NO_CONTACT"
+          "status": "SENT"
         }
       ],
       "locale": "ca",
@@ -1802,7 +1657,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:16.577Z"
+        "$date": "2026-10-19T05:00:16.091Z"
       },
       "deliveries": [
         {
@@ -1849,7 +1704,54 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:16.577Z"
+        "$date": "2026-10-19T05:00:18.493Z"
+      },
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 1,
+          "channel": "EMAIL",
+          "providerRef": "present",
+          "status": "SENT"
+        },
+        {
+          "attempts": 0,
+          "channel": "PUSH",
+          "providerRef": null,
+          "status": "SKIPPED_NO_CONTACT"
+        }
+      ],
+      "locale": "ca",
+      "readAt": "set",
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "templateVersion": 0,
+      "variables": [
+        "audience",
+        "club_name",
+        "dog_name",
+        "dog_name_article",
+        "gender",
+        "member_first_name",
+        "member_last_names",
+        "member_name"
+      ]
+    },
+    {
+      "action": null,
+      "audience": "MEMBER",
+      "category": "CLUB_NEWS",
+      "code": "N-24",
+      "createdAt": {
+        "$date": "2026-10-19T05:00:18.493Z"
       },
       "deliveries": [
         {
@@ -1896,7 +1798,54 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:16.577Z"
+        "$date": "2026-10-19T05:00:18.493Z"
+      },
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 1,
+          "channel": "EMAIL",
+          "providerRef": "present",
+          "status": "SENT"
+        },
+        {
+          "attempts": 0,
+          "channel": "PUSH",
+          "providerRef": null,
+          "status": "SKIPPED_NO_CONTACT"
+        }
+      ],
+      "locale": "es",
+      "readAt": null,
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "templateVersion": 0,
+      "variables": [
+        "audience",
+        "club_name",
+        "dog_name",
+        "dog_name_article",
+        "gender",
+        "member_first_name",
+        "member_last_names",
+        "member_name"
+      ]
+    },
+    {
+      "action": null,
+      "audience": "MEMBER",
+      "category": "CLUB_NEWS",
+      "code": "N-24",
+      "createdAt": {
+        "$date": "2026-10-19T05:00:18.493Z"
       },
       "deliveries": [
         {
@@ -1943,7 +1892,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:16.577Z"
+        "$date": "2026-10-19T05:00:18.493Z"
       },
       "deliveries": [
         {
@@ -1990,7 +1939,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:16.577Z"
+        "$date": "2026-10-19T05:00:18.493Z"
       },
       "deliveries": [
         {
@@ -2037,7 +1986,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:16.577Z"
+        "$date": "2026-10-19T05:00:18.493Z"
       },
       "deliveries": [
         {
@@ -2084,7 +2033,7 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:16.577Z"
+        "$date": "2026-10-19T05:00:18.493Z"
       },
       "deliveries": [
         {
@@ -2131,7 +2080,54 @@
       "category": "CLUB_NEWS",
       "code": "N-24",
       "createdAt": {
-        "$date": "2026-10-19T05:00:16.577Z"
+        "$date": "2026-10-19T05:00:18.493Z"
+      },
+      "deliveries": [
+        {
+          "attempts": 0,
+          "channel": "APP",
+          "providerRef": null,
+          "status": "DELIVERED"
+        },
+        {
+          "attempts": 1,
+          "channel": "EMAIL",
+          "providerRef": "present",
+          "status": "SENT"
+        },
+        {
+          "attempts": 0,
+          "channel": "PUSH",
+          "providerRef": null,
+          "status": "SKIPPED_NO_CONTACT"
+        }
+      ],
+      "locale": "ca",
+      "readAt": null,
+      "recipient": [
+        "accountId",
+        "displayName",
+        "memberId"
+      ],
+      "templateVersion": 0,
+      "variables": [
+        "audience",
+        "club_name",
+        "dog_name",
+        "dog_name_article",
+        "gender",
+        "member_first_name",
+        "member_last_names",
+        "member_name"
+      ]
+    },
+    {
+      "action": null,
+      "audience": "MEMBER",
+      "category": "CLUB_NEWS",
+      "code": "N-24",
+      "createdAt": {
+        "$date": "2026-10-19T05:00:18.493Z"
       },
       "deliveries": [
         {
@@ -2178,7 +2174,7 @@
       "category": "OPERATIONAL",
       "code": "N-13",
       "createdAt": {
-        "$date": "2026-10-24T12:30:02.909Z"
+        "$date": "2026-10-24T12:30:03.538Z"
       },
       "deliveries": [
         {
@@ -2372,7 +2368,7 @@
         "channel": "APP",
         "status": "DELIVERED"
       },
-      "count": 2
+      "count": 1
     },
     {
       "_id": {
@@ -2380,7 +2376,7 @@
         "channel": "PUSH",
         "status": "SKIPPED_NO_CONTACT"
       },
-      "count": 2
+      "count": 1
     },
     {
       "_id": {
@@ -2388,7 +2384,7 @@
         "channel": "SMS",
         "status": "SKIPPED_MODULE_OFF"
       },
-      "count": 2
+      "count": 1
     },
     {
       "_id": {
@@ -2560,27 +2556,11 @@
     },
     {
       "_id": {
-        "code": "N-40",
-        "channel": "APP",
-        "status": "DELIVERED"
-      },
-      "count": 1
-    },
-    {
-      "_id": {
-        "code": "N-40",
-        "channel": "EMAIL",
-        "status": "SKIPPED_BY_PREFERENCE"
-      },
-      "count": 1
-    },
-    {
-      "_id": {
         "code": "N-54",
         "channel": "APP",
         "status": "DELIVERED"
       },
-      "count": 4
+      "count": 2
     },
     {
       "_id": {
@@ -2588,7 +2568,7 @@
         "channel": "EMAIL",
         "status": "SENT"
       },
-      "count": 4
+      "count": 2
     }
   ],
   "templates": [

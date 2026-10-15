@@ -1,0 +1,5 @@
+heavy.sh: 17:12 waiting for the host lock, held by: 17:11 agilityhub-core-api: ./mvnw -q clean verify
+heavy.sh: 17:35 got the host lock after 23 min 32 s
+undefined
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with EACCES: /Users/jordib/dev/agilityhub/agilityhub-core-web turbo run lint typecheck test build --force
+spawn /Users/jordib/dev/agilityhub/agilityhub-core-web EACCES
