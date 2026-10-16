@@ -3,6 +3,8 @@ import { Card, DayGrid, useBranding } from "@agilityhub/ui";
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useSetupColumnAction } from "../courses/blocks";
+
 import "./today.css";
 import {
   DayGridError,
@@ -27,6 +29,8 @@ export function TodayPage({ client }: { client: ApiClient }) {
   const { t } = useTranslation(["home", "enums", "instructor"]);
   const labels = useGridLabels();
   const day = useDayGrid(client, "member");
+  // S16 §2: the course icon in a ring's header → the viewer of its active setup.
+  const setupAction = useSetupColumnAction(false);
   const [balloon, setBalloon] = useState<Balloon>();
   const balloonRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -42,8 +46,9 @@ export function TodayPage({ client }: { client: ApiClient }) {
               cell.atRisk === true &&
               cell.riskText !== null &&
               cell.riskText !== undefined,
+            setupAction,
           ),
-    [day.grid, t],
+    [day.grid, setupAction, t],
   );
 
   useEffect(() => {

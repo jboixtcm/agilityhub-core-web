@@ -1,8 +1,9 @@
 import type { components } from "../../generated/schema";
 
-import { clubInstant, clubLocalDateOf } from "./calendar";
+import { classSession, clubInstant, clubLocalDateOf } from "./calendar";
 import { catalogState } from "./catalogs";
-import { addDays } from "./planning";
+import { PLACEMENT_IDS, plannedPlacementOf, setupsVisible } from "./courses";
+import { addDays, mondayOf } from "./planning";
 import {
   registrantAllocations,
   resetRegistrantAllocations,
@@ -111,6 +112,8 @@ interface MockClass {
   id: string;
   instructorName: string;
   levelNames: string[];
+  /** S16 R-16-13: the class's planned placement («Recorregut previst»), on its own ring. */
+  placementId?: string;
   ringName: string;
   startsAtLocal: string;
 }
@@ -140,7 +143,12 @@ const CLASSES = {
   // opened at 20:00, begun at the clock (`notSelectable{DONE}`: `startsAt ≤ now`, R-08-09). It
   // counts in W0 (E5-W05 step 7).
   done: mockClass("2026-08-02", "20:00", "21:00", "B+C", ["B", "C"], "Central"),
-  mon3: mockClass("2026-08-03", "18:50", "19:50", "B+C", ["B", "C"], "Central"),
+  // Duna's booking of 03/07 (`booking-duna-mon3`): it plans Central's league placement (S16
+  // R-16-13), and Central holds an ACTIVE photo setup, so 07 shows both lines.
+  mon3: {
+    ...mockClass("2026-08-03", "18:50", "19:50", "B+C", ["B", "C"], "Central"),
+    placementId: PLACEMENT_IDS.centralLeague,
+  },
   tobyTue4: mockClass("2026-08-04", "18:00", "19:00", "A+B", ["A", "B"], "Cadells"),
   wed5: mockClass("2026-08-05", "18:50", "19:50", "B+C", ["B", "C"], "Central"),
   wed5Rock: mockClass("2026-08-05", "19:00", "20:00", "D i sup.", ["D", "E", "F", "G"], "Muntanya"),
@@ -457,6 +465,101 @@ function bookingClassSession(item: MockClass, now: number): BookingClassSession 
     ringColor: ringColor(item.ringName),
     ringName: item.ringName,
     startsAtLocal: item.startsAtLocal,
+  };
+}
+
+/** The booking world's class capacity (its free seats come from 04's rows, else two). */
+const CLASS_CAPACITY = 6;
+
+function classSeats(classId: string): { freeSeats: number; waiting: number } {
+  const options: BookingOptions = { locale: "ca", modules: [], now: 0, thresholdMinutes: 0 };
+  const row = DOGS.flatMap((dog) => rowsFor(dog.id, options)).find(
+    (item) => item.classId === classId,
+  );
+  return { freeSeats: row?.freeSeats ?? 2, waiting: row?.waiting ?? 0 };
+}
+
+function ringOfClass(item: MockClass) {
+  return catalogState.rings.find((ring) => ring.name === item.ringName);
+}
+
+function levelIdsOf(item: MockClass): string[] {
+  return item.levelNames.flatMap((code) => {
+    const level = catalogState.levels.find((candidate) => candidate.code === code);
+    return level === undefined ? [] : [level.id];
+  });
+}
+
+/**
+ * `GET /class-sessions/{id}` of a booking world's class (07 reads it by `classSessionId`) for a
+ * MEMBER (an impersonation included): S06 §6 «Altres formes», the instructor per R-06-12,
+ * `waiting` only with WAITLIST and S16 R-16-13 `plannedPlacement` only with COURSES and
+ * `courses.showSetupToMembers`. `undefined` for an id of another world.
+ */
+export function bookingClassMemberView(
+  classId: string,
+  options: { locale: string; modules: readonly string[]; now: number },
+): components["schemas"]["ClassSessionMemberView"] | undefined {
+  const item = findClass(classId);
+  if (item === undefined) return undefined;
+  const ring = ringOfClass(item);
+  const seats = classSeats(classId);
+  return {
+    capacity: CLASS_CAPACITY,
+    date: item.startsAtLocal.slice(0, 10),
+    displayDescription: item.description,
+    endTime: item.endsAtLocal.slice(11, 16),
+    freeSeats: seats.freeSeats,
+    id: item.id,
+    instructorName: visibleInstructor(item, options.now),
+    levelIds: levelIdsOf(item),
+    ...(setupsVisible(options.modules)
+      ? { plannedPlacement: plannedPlacementOf(item.placementId, options.locale) }
+      : {}),
+    ring: ring === undefined ? null : { color: ring.color, id: ring.id, name: ring.name },
+    startTime: item.startsAtLocal.slice(11, 16),
+    state: Date.parse(localInstant(item.endsAtLocal)) <= options.now ? "FINISHED" : "ACTIVE",
+    ...(options.modules.includes("WAITLIST") ? { waiting: seats.waiting } : {}),
+  };
+}
+
+/**
+ * The staff `GET /class-sessions/{id}` of a booking world's class: the instructor projection (no
+ * `notes`) with the detail-only `instructorNames` and `ring` (api E5-T15), and `placementId` only
+ * with COURSES.
+ */
+export function bookingClassStaffView(
+  classId: string,
+  options: { modules: readonly string[]; now: number },
+): components["schemas"]["ClassSession"] | undefined {
+  const item = findClass(classId);
+  if (item === undefined) return undefined;
+  const ring = ringOfClass(item);
+  const seats = classSeats(classId);
+  const date = item.startsAtLocal.slice(0, 10);
+  const session = classSession({
+    booked: CLASS_CAPACITY - seats.freeSeats,
+    capacity: CLASS_CAPACITY,
+    capacityMode: "AUTO",
+    date,
+    description: null,
+    displayDescription: item.description,
+    endTime: item.endsAtLocal.slice(11, 16),
+    id: item.id,
+    instructorIds: [`instructor-${item.instructorName.toLowerCase()}`],
+    levelIds: levelIdsOf(item),
+    ringId: ring?.id ?? null,
+    startTime: item.startsAtLocal.slice(11, 16),
+    state: Date.parse(localInstant(item.endsAtLocal)) <= options.now ? "FINISHED" : "ACTIVE",
+    waiting: seats.waiting,
+    weekId: `week-${mondayOf(date)}`,
+  });
+  delete session.notes;
+  return {
+    ...session,
+    instructorNames: [item.instructorName],
+    ...(options.modules.includes("COURSES") ? { placementId: item.placementId ?? null } : {}),
+    ring: ring === undefined ? null : { color: ring.color, id: ring.id, name: ring.name },
   };
 }
 

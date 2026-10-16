@@ -905,8 +905,11 @@ describe("D16 «Geometria» (S16 §2, R-16-04/06/08)", () => {
 
   it("R-16-08 «Substituït» compares instants, not strings: the same moment written with milliseconds still reads as a replacement", async () => {
     const dismantled = courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaDismantled);
-    if (dismantled === undefined) throw new Error("SETUP_NOT_FOUND");
-    dismantled.dismantledAt = "2026-10-12T18:00:00.000Z";
+    const active = courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaActive);
+    if (dismantled === undefined || active === undefined) throw new Error("SETUP_NOT_FOUND");
+    // The same instant as the replacing setup's `builtAt`, written with milliseconds (E9-W04: the
+    // mock world's dates are relative to its day).
+    dismantled.dismantledAt = new Date(active.builtAt).toISOString();
     await renderRoute("/pistes/ring-muntanya/geometria");
     const history = await screen.findByRole("region", { name: "Muntatges" });
     expect(await within(history).findByText("Substituït")).toBeVisible();

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  clubDaysSince,
   clubLocalInstant,
   createClubFormats,
   dayRelativeParts,
@@ -435,5 +436,19 @@ describe("club-aware formats", () => {
         ),
       ).toBe("dv 7/08");
     });
+  });
+});
+
+describe("T-16-22 (R-16-17) clubDaysSince: «muntat ahir», «fa 2 dies» in the club's zone", () => {
+  it("counts club-local days, never the device's", () => {
+    // 23:30 UTC on the 4th is already the 5th in Madrid (CEST): built «today» at 12:00 on the 5th.
+    expect(clubDaysSince("2026-10-04T23:30:00Z", "Europe/Madrid", "2026-10-05T10:00:00Z")).toBe(0);
+    expect(clubDaysSince("2026-10-04T21:30:00Z", "Europe/Madrid", "2026-10-05T10:00:00Z")).toBe(1);
+    expect(clubDaysSince("2026-10-03T08:00:00Z", "Europe/Madrid", "2026-10-05T10:00:00Z")).toBe(2);
+  });
+
+  it("crosses the October DST change by calendar days; a future instant counts as today", () => {
+    expect(clubDaysSince("2026-10-24T12:00:00Z", "Europe/Madrid", "2026-10-26T09:00:00Z")).toBe(2);
+    expect(clubDaysSince("2026-10-06T12:00:00Z", "Europe/Madrid", "2026-10-05T10:00:00Z")).toBe(0);
   });
 });

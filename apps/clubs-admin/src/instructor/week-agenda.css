@@ -260,3 +260,53 @@
   align-items: center;
   gap: var(--ah-space-3);
 }
+
+/* S16 §2 (E9-W04): the rings' course icons above the grid (D12's columns are days). */
+.week-agenda__setups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.week-agenda__setup {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-2);
+  min-height: 2rem;
+  padding: var(--ah-space-1) var(--ah-space-3);
+  color: var(--ah-color-text);
+  background: var(--ah-color-surface-alt);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-full);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+}
+
+.week-agenda__setup .ah-icon {
+  color: var(--ah-color-primary);
+}
+
+.week-agenda__setup:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 2px;
+}
+
+.week-agenda__setup-detail {
+  display: grid;
+  gap: var(--ah-space-2);
+}
+
+.week-agenda__setup-detail p {
+  margin: 0;
+}
+
+.week-agenda__setup-image {
+  max-width: 100%;
+  max-height: 20rem;
+  object-fit: contain;
+  border-radius: var(--ah-radius-md);
+}

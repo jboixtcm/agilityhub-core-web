@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import "../booking/booking.css";
 import { DogChips } from "../booking/DogChips";
 import { errorText, navigateInApp, type Translate } from "../booking/shared";
+import { TrainingSetupLines } from "../courses/blocks";
 
 import "./training.css";
 import {
@@ -447,8 +448,8 @@ export function TrainingPage({ client }: { client: ApiClient }) {
         </button>
         {rings.map((ring: TrainingRing) => {
           const pressed = ring.id === filter;
-          // R-09-15: the course built on the ring. S16's viewer is still a placeholder, so the
-          // indicator is shown (and described) and the tap selects the ring only.
+          // R-09-15: the course built on the ring, shown (and described) on the chip; the chip
+          // keeps selecting the ring to book, and the line under the chips opens S16's viewer.
           const setup = ring.setup !== null && ring.setup !== undefined;
           return (
             <button
@@ -479,6 +480,7 @@ export function TrainingPage({ client }: { client: ApiClient }) {
             </span>
           ))}
       </div>
+      <TrainingSetupLines rings={rings} />
       {stale ? (
         <div className="booking-note booking-note--neutral training-stale">
           <p role="status">{t("training:grid.stale")}</p>

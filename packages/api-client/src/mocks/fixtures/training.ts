@@ -3,6 +3,7 @@ import { planningState } from "../planning-handlers";
 
 import { clubInstant, clubLocalDateOf, clubLocalTime } from "./calendar";
 import { catalogState, type Ring } from "./catalogs";
+import { ringSetupSummary } from "./courses";
 import { addDays } from "./planning";
 import { findParameter } from "./settings";
 
@@ -21,6 +22,7 @@ type TrainingSlot = components["schemas"]["TrainingSlot"];
 type TrainingSlots = components["schemas"]["TrainingSlots"];
 type TrainingSummary = components["schemas"]["TrainingSummary"];
 type WeekOpensAt = components["schemas"]["WeekOpensAt"];
+type ReaderLocale = "ca" | "en" | "es";
 
 /**
  * The S09 mock world (E5-W02), drawn after mockups 08 and 24: Monday 3 August 2026 at 7:10
@@ -500,7 +502,7 @@ export function findRing(ringId: string): Ring | undefined {
   return catalogState.rings.find((ring) => ring.id === ringId);
 }
 
-function trainingRing(ring: Ring, withSetup: boolean): TrainingRing {
+function trainingRing(ring: Ring, withSetup: boolean, locale: ReaderLocale): TrainingRing {
   return {
     capacity: ring.effectiveTrainingCapacity,
     color: ring.color,
@@ -508,21 +510,9 @@ function trainingRing(ring: Ring, withSetup: boolean): TrainingRing {
     name: ring.name,
     order: ring.order,
     shortName: ring.shortName,
-    // R-09-15: the course built on Muntanya (S16), only with COURSES.
-    ...(withSetup
-      ? {
-          setup:
-            ring.id === MUN
-              ? {
-                  builtAt: "2026-08-02T16:10:00Z",
-                  expectedUntil: "2026-08-09",
-                  id: "setup-muntanya-1",
-                  kind: "AGILITY",
-                  levelNames: ["D"],
-                }
-              : null,
-        }
-      : {}),
+    // R-09-15: the ring's ACTIVE setup of the S16 world (`null` without one), only with COURSES
+    // and, for a MEMBER, `courses.showSetupToMembers`; absent otherwise.
+    ...(withSetup ? { setup: ringSetupSummary(ring.id, locale) } : {}),
   };
 }
 
@@ -601,7 +591,10 @@ export interface SlotsOptions {
   modules: readonly string[];
   now: number;
   ringId: string | null;
+  /** R-09-15 `rings[].setup` (COURSES, and `courses.showSetupToMembers` for a MEMBER). */
   showSetup: boolean;
+  /** The reader's language (`levelNames`); default `ca`. */
+  locale?: ReaderLocale;
   staff: boolean;
   to: string;
 }
@@ -663,7 +656,7 @@ export function trainingSlots(options: SlotsOptions): TrainingSlots {
     dogEligible:
       options.dogId === null ||
       eligibleDogs(options.modules, options.levelsEnabled).some((dog) => dog.id === options.dogId),
-    rings: rings.map((ring) => trainingRing(ring, options.showSetup)),
+    rings: rings.map((ring) => trainingRing(ring, options.showSetup, options.locale ?? "ca")),
     slotMinutes,
     timeZone: "Europe/Madrid",
     window: { from, to },

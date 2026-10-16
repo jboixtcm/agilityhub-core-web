@@ -6,6 +6,8 @@
   "dependencies": {
     "@agilityhub/api-client": "workspace:*",
     "@agilityhub/auth": "workspace:*",
+    "@agilityhub/course-core": "workspace:*",
+    "@agilityhub/course-ui": "workspace:*",
     "@agilityhub/i18n": "workspace:*",
     "@agilityhub/ui": "workspace:*",
     "react": "catalog:",

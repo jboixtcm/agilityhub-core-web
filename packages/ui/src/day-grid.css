@@ -29,6 +29,32 @@
   white-space: nowrap;
 }
 
+/* S16 §2: the header's course icon (10/23) or the instructors' cone, a 24 px target under the name. */
+.ah-day-grid__column-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 1.5rem;
+  margin-top: 0.1rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--ah-radius-sm, 4px);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.ah-day-grid__column-action .ah-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.ah-day-grid__column-action:focus-visible {
+  outline: 2px solid var(--ah-color-primary);
+  outline-offset: 1px;
+}
+
 .ah-day-grid__column[data-colored] {
   color: color-mix(in srgb, var(--schedule-color) 70%, var(--ah-color-text));
 }

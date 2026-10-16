@@ -530,6 +530,13 @@ if [[ "$staged" == true ]]; then
   export SEED_WEEK_START="$E8_WEEK_START"
   run_e8_with_card_watcher run_stage e8
   cleanup
+  # E9-W04: S16 in the members' app (the viewer, «Registra què hi ha muntat», a build session on
+  # two phones through the SSE stream) on its own fresh seed; the demo seed has no course, so the
+  # spec stores Muntanya's geometry, a course, its placement and a setup through the api first.
+  export CORE_TEST_FILES="e9-core.spec.ts"
+  export SEED_WEEK_START="$E4_WEEK_START"
+  run_stage e9
+  cleanup
   # E10-W01: S17's club console (list, one record tab, the «Nou club» wizard) on its own fresh
   # seed, with the platform role granted by `grant_platform_admin`.
   export CORE_TEST_FILES="e10-core.spec.ts"

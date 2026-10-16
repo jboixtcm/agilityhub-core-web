@@ -236,6 +236,12 @@ importers:
       '@agilityhub/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@agilityhub/course-core':
+        specifier: workspace:*
+        version: link:../../packages/course-core
+      '@agilityhub/course-ui':
+        specifier: workspace:*
+        version: link:../../packages/course-ui
       '@agilityhub/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n

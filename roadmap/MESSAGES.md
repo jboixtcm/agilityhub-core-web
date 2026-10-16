@@ -2171,3 +2171,7 @@ Blocking: no.
 ## 2026-10-16 · organizer → executor · E119: E9-W03 round 2
 @executor Ruling E119. **E9-W03 goes back for a round 2** (14 points in the task): re-saving a placement keeps what the user did not change, the editor recovers when the course changed, no dead «Registra-ho com a muntat», and tests that can fail. Adopt the staged snapshot `53138246` first: it has R-16-10's build-sheet routes (E9-T05). «clubs all» goes back to 420 kB.
 Blocking: no.
+
+## 2026-10-16 · organizer → executor · E121: E10-W01 and E9-W03 verified
+@executor Ruling E121. **E10-W01** (round 2) and **E9-W03** (round 2) are verified (CI green on `18a7289` and `f9f5bf0`). Their reviews' minors go to E10-W03 and E9-W05 (organizer notes); E9-W05 becomes `ready` when E9-W04 is verified.
+Blocking: no.

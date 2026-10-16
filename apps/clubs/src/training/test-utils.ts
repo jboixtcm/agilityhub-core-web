@@ -2,6 +2,7 @@ import {
   mockScenario,
   resetActivityState,
   resetBookingMockState,
+  resetCourseMockState,
   resetPlanningState,
   resetTrainingMockState,
   TRAINING_MOCK_NOW,
@@ -53,6 +54,8 @@ export function setupTrainingWorld(): void {
   });
   beforeEach(() => {
     vi.useFakeTimers({ now: TRAINING_NOW, shouldAdvanceTime: true, toFake: ["Date"] });
+    // S16 (E9-W04): the course world's dates are relative to its day, drawn at this clock.
+    resetCourseMockState();
     resetPlanningState();
     resetTrainingMockState();
     resetBookingMockState();

@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw";
 
+import { bookingClassMemberView, bookingClassStaffView, findClass } from "./fixtures/bookings";
 import {
   DAY_GRID_TENANT,
   dayGridClassSessions,
@@ -93,10 +94,21 @@ export const dayGridHandlers = [
       ? HttpResponse.json(dayGridFixture(date, view, options))
       : undefined;
   }),
-  http.get("*/api/v1/class-sessions/:id", ({ params }) => {
+  http.get("*/api/v1/class-sessions/:id", ({ params, request }) => {
     const id = String(params.id);
-    if (!isFixtureClass(id)) return undefined;
     const scenario = currentMockScenario();
+    // The booking world's classes (screen 07 reads its booking's class): S06's projections.
+    if (findClass(id) !== undefined) {
+      if (!ownTenant(scenario)) return apiError("NOT_FOUND", "Class not found", 404);
+      const modules = scenario.branding.modules;
+      const now = Date.now();
+      return HttpResponse.json(
+        isStaff(scenario)
+          ? bookingClassStaffView(id, { modules, now })
+          : bookingClassMemberView(id, { locale: readerLocale(request), modules, now }),
+      );
+    }
+    if (!isFixtureClass(id)) return undefined;
     if (!ownTenant(scenario)) return apiError("NOT_FOUND", "Class not found", 404);
     if (isStaff(scenario)) {
       return HttpResponse.json(dayGridStaffSession(id));

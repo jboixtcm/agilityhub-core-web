@@ -24,13 +24,16 @@ import {
   requiredModulesForUiItem,
   resolveBrandingLogo,
   Select,
+  Skeleton,
   TabBar,
   ToastProvider,
   type TabBarItem,
   useBranding,
 } from "@agilityhub/ui";
 import {
+  lazy,
   type ReactNode,
+  Suspense,
   type SyntheticEvent,
   useCallback,
   useEffect,
@@ -49,6 +52,7 @@ import { ConfirmPage } from "./booking/ConfirmPage";
 import { HomePage } from "./booking/HomePage";
 import { navigateInApp } from "./booking/shared";
 import { WaitlistDetailPage } from "./booking/WaitlistDetailPage";
+import type { CourseScreen as CourseScreenModel } from "./courses/CoursesRoute";
 import { HistoryPage } from "./history/HistoryPage";
 import { InactivityPage } from "./inactivity/InactivityPage";
 import { InfoPage } from "./InfoPage";
@@ -135,10 +139,12 @@ export const MOBILE_ROUTES: readonly RouteDefinition[] = [
   { path: "/activitats/:id" },
   // Screen 30.
   { path: "/info" },
-  // New course screens from S16.
+  // S16 §2 (E9-W04): the viewer (by ring, or by setup from 08/07/10/23 and N-31), and the
+  // instructors' «Registra què hi ha muntat» and build session (INSTRUCTOR · ADMIN).
   { path: "/recorreguts/muntat/:ringId" },
-  { path: "/instructor/pistes/:ringId/muntat", roles: ["INSTRUCTOR"] },
-  { path: "/instructor/muntatge/:sessionId", roles: ["INSTRUCTOR"] },
+  { path: "/recorreguts/:setupId" },
+  { path: "/instructor/pistes/:ringId/muntat", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/instructor/muntatge/:sessionId", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screens 27 and 27b (reserved for R2).
   { path: "/estadistiques" },
   { path: "/estadistiques/lliga" },
@@ -168,11 +174,7 @@ function BookingCheckoutRoute({ bookingId, client }: { bookingId: string; client
           window.location.assign("/reservar");
         }}
       />
-      <BookingDetailPage
-        bookingId={bookingId}
-        client={client}
-        refresh={bookingRefresh}
-      />
+      <BookingDetailPage bookingId={bookingId} client={client} refresh={bookingRefresh} />
     </>
   );
 }
@@ -1329,9 +1331,7 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
       <ProfileLifecycleSection
         client={client}
         logoutDisabled={working}
-        memberAccess={
-          me.impersonation !== undefined || me.membership.roles.includes("MEMBER")
-        }
+        memberAccess={me.impersonation !== undefined || me.membership.roles.includes("MEMBER")}
         onLogout={() => {
           setWorking(true);
           // R-11-07: this device's push subscription goes first, never blocking the logout. An
@@ -1445,6 +1445,18 @@ function TasksRoute({ client, dogId }: { client: ApiClient; dogId: string }) {
     };
   }, [cardPath, enabled]);
   return enabled ? <TasksPage client={client} dogId={dogId} /> : null;
+}
+
+/** S16 (E9-W04): the course screens load on demand, out of the members' app start. */
+const CoursesRoute = lazy(() => import("./courses/CoursesRoute"));
+
+function CourseScreen({ client, screen }: { client: ApiClient; screen: CourseScreenModel }) {
+  const { t } = useTranslation("courses");
+  return (
+    <Suspense fallback={<Skeleton height="12rem" label={t("courses:loading")} />}>
+      <CoursesRoute client={client} screen={screen} />
+    </Suspense>
+  );
 }
 
 function LegacyAccessRedirect() {
@@ -1755,6 +1767,38 @@ function AppContent({
           ringId={safeDecode(pathname.split("/")[3] ?? "")}
         />
       </RequireRole>
+    ) : route.path === "/recorreguts/muntat/:ringId" || route.path === "/recorreguts/:setupId" ? (
+      // S16 §2 «visor mòbil»: MEMBER (an impersonated session too) and INSTRUCTOR; the api
+      // projects the setup by role (R-16-09) and applies `courses.showSetupToMembers`.
+      <RequireAuth>
+        <RequireModule module="COURSES">
+          <CourseScreen
+            client={apiClient}
+            key={pathname}
+            screen={
+              route.path === "/recorreguts/:setupId"
+                ? { kind: "setup", setupId: safeDecode(pathname.split("/")[2] ?? "") }
+                : { kind: "ring", ringId: safeDecode(pathname.split("/")[3] ?? "") }
+            }
+          />
+        </RequireModule>
+      </RequireAuth>
+    ) : route.path === "/instructor/pistes/:ringId/muntat" ||
+      route.path === "/instructor/muntatge/:sessionId" ? (
+      // S16 §2 «Registra què hi ha muntat» and «Sessió de muntatge»: INSTRUCTOR · ADMIN.
+      <InstructorRoute>
+        <RequireModule module="COURSES">
+          <CourseScreen
+            client={apiClient}
+            key={pathname}
+            screen={
+              route.path === "/instructor/muntatge/:sessionId"
+                ? { kind: "session", sessionId: safeDecode(pathname.split("/")[3] ?? "") }
+                : { kind: "register", ringId: safeDecode(pathname.split("/")[3] ?? "") }
+            }
+          />
+        </RequireModule>
+      </InstructorRoute>
     ) : import.meta.env.DEV && pathname === "/_gallery/historic-activitats" ? (
       // Development-only evidence of the screen 25 activity rows (S10/E6 owns `/historic`).
       <RequireAuth>
@@ -1811,6 +1855,10 @@ function AppContent({
             "/instructor/classes/:id",
             "/instructor/alumnes/:dogId",
             "/instructor/alumnes/:dogId/tasques",
+            "/recorreguts/muntat/:ringId",
+            "/recorreguts/:setupId",
+            "/instructor/pistes/:ringId/muntat",
+            "/instructor/muntatge/:sessionId",
           ].includes(route.path)
         }
       >

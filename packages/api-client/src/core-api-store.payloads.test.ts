@@ -326,6 +326,44 @@ describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () =>
       status: "COMPLETED",
     });
     expect(again).toEqual(finished);
+    // The setup finish registered (R-16-07), so the phone can link to it.
+    expect(finished.setupId).toBe("setup-1");
+  });
+
+  it("T-16-10 R-16-11 joinBuildSession posts the typed code (no Idempotency-Key) and answers the session with the caller in it", async () => {
+    const api = createFakeCoreApi();
+    const store = storeOn(api);
+
+    const joined = await store.joinBuildSession({ code: "qx7k2m" });
+
+    expect(api.requests).toEqual([
+      { body: { code: "qx7k2m" }, idempotencyKey: null, method: "POST", path: "/build-sessions/join" },
+    ]);
+    expect(joined).toMatchObject({ id: "session-1", setupId: null, status: "IN_PROGRESS" });
+    expect(joined.participants).toContainEqual(
+      expect.objectContaining({ accountId: "account-me", joinedVia: "CODE" }),
+    );
+  });
+
+  it("R-16-11 a code no open session has answers 404 NOT_FOUND; a tap on a closed session 422 BUILD_SESSION_FINISHED", async () => {
+    const api = createFakeCoreApi();
+    const store = storeOn(api);
+
+    const wrongCode = await rejection(store.joinBuildSession({ code: "ZZZZZZ" }));
+    api.closeElsewhere("ABANDONED");
+    const lateTap = await rejection(
+      store.upsertBuildObstacleStatus({
+        buildSessionId: "session-1",
+        obstacleId: "obstacle-2",
+        status: "PLACED",
+      }),
+    );
+
+    expect(isApiError(wrongCode) && [wrongCode.status, wrongCode.code]).toEqual([404, "NOT_FOUND"]);
+    expect(isApiError(lateTap) && [lateTap.status, lateTap.code]).toEqual([
+      422,
+      "BUILD_SESSION_FINISHED",
+    ]);
   });
 });
 

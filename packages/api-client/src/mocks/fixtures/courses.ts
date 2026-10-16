@@ -16,6 +16,12 @@ import {
 } from "@agilityhub/course-core";
 
 import type { components } from "../../generated/schema";
+import { callerClubOwnsTheWorld, currentMockScenario } from "../scenarios";
+
+import { clubInstant } from "./calendar";
+import { catalogState } from "./catalogs";
+import { addDays, clubLocalDate } from "./planning";
+import { findParameter } from "./settings";
 
 /**
  * `ACTIVITY_IDS.league` of `fixtures/activities` (the «Lliga social — 3a jornada» on every ring),
@@ -29,6 +35,7 @@ export type Placement = Schemas["Placement"];
 export type RingGeometry = Schemas["RingGeometry"];
 export type RingSetup = Schemas["RingSetup"];
 export type ObstacleInventory = Schemas["ObstacleInventory"];
+export type BuildSession = Schemas["BuildSession"];
 
 export const COURSE_IDS = {
   agility: "course-agility-c-d",
@@ -708,37 +715,48 @@ function setup(
   };
 }
 
-function initialSetups(): RingSetup[] {
+/**
+ * The setups history, dated from the club-local `today` of the reset (like the planning world), so
+ * «muntat ahir» reads right under any pinned clock: Muntanya's ACTIVE setup was built yesterday at
+ * 19:00 from the Thursday placement (sent as D18's «Registra-ho com a muntat» sends it: the
+ * placement only, so `courseId` is null), replacing the EMPTY one of five days ago; the AGILITY one
+ * of fifteen days ago (sent with `courseId`) expired; Central's ACTIVE setup is a photo of two days
+ * ago. Carretera, Cadells and Petita have none. Each expires at the club's midnight seven days
+ * after it was built (`courses.setupAutoExpireDays`, no `expectedUntil`).
+ */
+export function initialSetups(today: string = clubLocalDate()): RingSetup[] {
+  const at = (days: number, time: string) => clubInstant(addDays(today, days), time);
+  const expiry = (builtDaysAgo: number) => clubInstant(addDays(today, 7 - builtDaysAgo), "00:00");
+  const activeBuiltAt = at(-1, "19:00");
   return [
     setup(SETUP_IDS.muntanyaActive, "ring-muntanya", {
-      builtAt: "2026-10-12T18:00:00Z",
-      courseId: COURSE_IDS.jumping,
-      expiresAt: "2026-10-18T22:00:00Z",
+      builtAt: activeBuiltAt,
+      expiresAt: expiry(1),
       kind: "JUMPING",
-      levelIds: ["level-c"],
+      levelIds: ["level-c", "level-d"],
       notes: "Muntat per al grup de dijous.",
       placementId: PLACEMENT_IDS.muntanyaJumping,
       status: "ACTIVE",
     }),
     setup(SETUP_IDS.muntanyaDismantled, "ring-muntanya", {
-      builtAt: "2026-10-08T08:00:00Z",
-      dismantledAt: "2026-10-12T18:00:00Z",
+      builtAt: at(-5, "10:00"),
+      dismantledAt: activeBuiltAt,
       dismantledByAccountId: INSTRUCTOR_ACCOUNT,
-      expiresAt: "2026-10-14T22:00:00Z",
+      expiresAt: expiry(5),
       kind: "EMPTY",
       status: "DISMANTLED",
     }),
     setup(SETUP_IDS.muntanyaExpired, "ring-muntanya", {
       agilityhubLevel: "HARD",
-      builtAt: "2026-09-28T07:00:00Z",
+      builtAt: at(-15, "09:00"),
       courseId: COURSE_IDS.agility,
-      expiresAt: "2026-10-04T22:00:00Z",
+      expiresAt: expiry(15),
       kind: "AGILITY",
       status: "EXPIRED",
     }),
     setup(SETUP_IDS.centralPhoto, "ring-central", {
-      builtAt: "2026-10-14T07:30:00Z",
-      expiresAt: "2026-10-20T22:00:00Z",
+      builtAt: at(-2, "09:30"),
+      expiresAt: expiry(2),
       imageFileKey: `${COURSES_CLUB_ID}/courses/gimcana.svg`,
       imageUrl: `${COURSE_FILES_ORIGIN}/courses/gimcana.svg`,
       kind: "FUN",
@@ -759,6 +777,8 @@ export interface CourseFile {
 }
 
 export interface CourseWorld {
+  /** R-16-11: the club's build sessions, open and closed (none at start). */
+  buildSessions: BuildSession[];
   courses: Course[];
   /** Uploaded files by `fileKey` (the S3 side of the upload URLs). */
   files: Map<string, CourseFile>;
@@ -772,6 +792,7 @@ export interface CourseWorld {
 function initialWorld(): CourseWorld {
   const geometries = initialGeometries();
   return {
+    buildSessions: [],
     courses: initialCourses(),
     files: new Map([
       [
@@ -820,6 +841,102 @@ export function classPlacementRefusal(
   const placement = courseState.placements.find((item) => item.id === placementId);
   if (placement === undefined) return { code: "NOT_FOUND", status: 404 };
   return placement.ringId === ringId ? undefined : { code: "PLACEMENT_RING_MISMATCH", status: 422 };
+}
+
+// ---------------------------------------------------------------------------------------------
+// What the other verticals read of the S16 world (R-16-09, R-16-13, S06, S09 R-09-15).
+
+type ReaderLocale = "ca" | "en" | "es";
+
+/**
+ * `courses.showSetupToMembers` (R-16-09): the scenario's value (`memberSetupHidden`,
+ * `instructorSetupHidden`), else the parameter world's (a test may `replaceParameter` it).
+ */
+export function setupsShownToMembers(): boolean {
+  const pinned = currentMockScenario().showSetupToMembers;
+  if (pinned !== undefined) return pinned;
+  return findParameter("courses.showSetupToMembers")?.value !== false;
+}
+
+/** `courses.allowInstructorPublish` (R-16-07): the scenario's value, else the parameter world's. */
+export function instructorsPublishSetups(): boolean {
+  const pinned = currentMockScenario().allowInstructorPublish;
+  if (pinned !== undefined) return pinned;
+  return findParameter("courses.allowInstructorPublish")?.value !== false;
+}
+
+/** A MEMBER reader: an impersonation token, or an account without INSTRUCTOR or ADMIN. */
+export function readsAsMember(): boolean {
+  const { me } = currentMockScenario();
+  if (me.impersonation !== undefined) return true;
+  return !(me.membership?.roles.some((role) => role === "INSTRUCTOR" || role === "ADMIN") ?? false);
+}
+
+/**
+ * Whether the caller sees the rings' setups and the classes' planned placements: only with
+ * COURSES, and a MEMBER only while `courses.showSetupToMembers` (R-16-09, R-16-13, R-09-15).
+ */
+export function setupsVisible(modules: readonly string[]): boolean {
+  return modules.includes("COURSES") && (!readsAsMember() || setupsShownToMembers());
+}
+
+/** The course's name in the reader's language (R-16-17), else Catalan, else any. */
+export function courseNameIn(course: Course, locale: string): string {
+  const names = course.nameI18n ?? {};
+  return names[locale] ?? names.ca ?? Object.values(names)[0] ?? course.name;
+}
+
+/** The ring's ACTIVE setup (`Ring.activeSetupId`), of the caller's club only. */
+export function activeSetupOf(ringId: string): RingSetup | undefined {
+  if (!callerClubOwnsTheWorld()) return undefined;
+  return courseState.setups.find((item) => item.ringId === ringId && item.status === "ACTIVE");
+}
+
+/** The course a setup shows: its own `courseId`, else its placement's (undefined once deleted). */
+export function courseShownBy(item: RingSetup): Course | undefined {
+  const courseId =
+    item.courseId ??
+    courseState.placements.find((placement) => placement.id === item.placementId)?.courseId;
+  return courseId == null ? undefined : courseState.courses.find((course) => course.id === courseId);
+}
+
+/**
+ * S09 R-09-15 `rings[].setup`: the ACTIVE setup as `RingSetupSummary`, `levelNames` the club
+ * levels' names in the reader's language (S09 §6 example: `["D"]`); `null` for a ring without one.
+ */
+export function ringSetupSummary(
+  ringId: string,
+  locale: ReaderLocale = "ca",
+): Schemas["RingSetupSummary"] | null {
+  const active = activeSetupOf(ringId);
+  if (active === undefined) return null;
+  return {
+    builtAt: active.builtAt,
+    expectedUntil: active.expectedUntil ?? null,
+    id: active.id,
+    kind: active.kind,
+    levelNames: active.levelIds.flatMap((id) => {
+      const level = catalogState.levels.find((candidate) => candidate.id === id);
+      return level === undefined ? [] : [level.nameI18n?.[locale] ?? level.name];
+    }),
+  };
+}
+
+/**
+ * S06 R-16-13 `ClassSessionMemberView.plannedPlacement` («Recorregut previst», screen 07): the
+ * placement and its course's name in the reader's language; `null` without a placement or once
+ * its course is gone.
+ */
+export function plannedPlacementOf(
+  placementId: string | null | undefined,
+  locale: string,
+): Schemas["PlannedPlacement"] | null {
+  if (placementId == null || !callerClubOwnsTheWorld()) return null;
+  const placement = courseState.placements.find((item) => item.id === placementId);
+  const course = courseState.courses.find((item) => item.id === placement?.courseId);
+  return placement === undefined || course === undefined
+    ? null
+    : { courseName: courseNameIn(course, locale), placementId: placement.id };
 }
 
 /** The placements of an activity (`Activity.placementIds`, only with COURSES). */

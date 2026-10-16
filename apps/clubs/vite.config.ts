@@ -1,8 +1,51 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { loadEnv } from "vite";
+import { loadEnv, type Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { configDefaults, defineConfig } from "vitest/config";
+
+/**
+ * course-ui's FBX models, published at `/obstacle-models` as Planner3D reads them: the viewer's 3D
+ * tab (S16 §2, E9-W04), as clubs-admin's D18 does (E9-W03).
+ */
+const OBSTACLE_MODELS = resolve(
+  import.meta.dirname,
+  "../../packages/course-ui/assets/obstacle-models",
+);
+
+function obstacleModels(): Plugin {
+  return {
+    configureServer(server) {
+      server.middlewares.use("/obstacle-models", (request, response, next) => {
+        const file = (request.url ?? "").split("?")[0]?.replace(/^\//u, "") ?? "";
+        if (!/^[\w.-]+\.fbx$/u.test(file)) {
+          next();
+          return;
+        }
+        try {
+          const data = readFileSync(resolve(OBSTACLE_MODELS, file));
+          response.setHeader("Content-Type", "application/octet-stream");
+          response.end(data);
+        } catch {
+          next();
+        }
+      });
+    },
+    generateBundle() {
+      for (const file of readdirSync(OBSTACLE_MODELS).filter((name) => name.endsWith(".fbx"))) {
+        this.emitFile({
+          fileName: `obstacle-models/${file}`,
+          source: readFileSync(resolve(OBSTACLE_MODELS, file)),
+          type: "asset",
+        });
+      }
+    },
+    name: "course-ui-obstacle-models",
+  };
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
@@ -25,6 +68,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
+      obstacleModels(),
       // S11 R-11-07 (E7-W02): our own worker (`src/sw.ts`) for web push. The navigation fallback
       // to `/index.html` and its denylist of the same-site proxy routes live in the worker now.
       // `injectRegister: false`: only `main.tsx` registers it, and never with `VITE_MOCK=1`, where
@@ -34,7 +78,8 @@ export default defineConfig(({ mode }) => {
         filename: "sw.ts",
         injectManifest: {
           // INC-20: the mock world (and its worker) never goes into the production precache.
-          globIgnores: ["**/browser-*.js", "**/mockServiceWorker.js"],
+          // S16 (E9-W04): nor the viewer's 3D tab (three.js), loaded only when someone opens it.
+          globIgnores: ["**/browser-*.js", "**/mockServiceWorker.js", "**/CourseViewer3D-*.js"],
         },
         injectRegister: false,
         manifest: false,

@@ -5,7 +5,9 @@
  * `{code, message, details, traceId}`, `Idempotency-Key` replay and `IDEMPOTENCY_KEY_REUSED
  * {reason: DIFFERENT_REQUEST}` per CONVENCIONS_API §7, `STALE_VERSION` on a geometry `version` that
  * is not the current one, and `422 PLACEMENT_BLOCKED {warnings}` for a critical warning without
- * `force` (R-16-05). Shapes are the generated schemas, so they cannot drift from the snapshot.
+ * `force` (R-16-05), and the build session `session-1` (R-16-11: join by code or QR token, taps,
+ * finish; `422 BUILD_SESSION_FINISHED` once closed). Shapes are the generated schemas, so they
+ * cannot drift from the snapshot.
  */
 import type { components } from "./generated/schema";
 
@@ -46,6 +48,12 @@ export interface FakeCoreApi {
   saveGeometryElsewhere: (
     edit: (geometry: Schemas["RingGeometry"]) => Schemas["RingGeometry"],
   ) => void;
+  /** The build session `session-1` as the api stores it (R-16-11). */
+  buildSession: Schemas["BuildSession"];
+  /** Another phone's tap on an obstacle of `session-1`, straight into the api's state. */
+  tapElsewhere: (obstacleId: string, status: Schemas["BuildObstacle"]["status"]) => void;
+  /** Another phone closes `session-1` (`COMPLETED` with a setup, or `ABANDONED`). */
+  closeElsewhere: (status: "ABANDONED" | "COMPLETED") => void;
 }
 
 export const fakeRing: Schemas["Ring"] = {
@@ -165,29 +173,55 @@ function placementFrom(id: string, body: Schemas["PlacementRequest"]): Schemas["
   };
 }
 
-function buildSession(id: string, finishedAt: string | null): Schemas["BuildSession"] {
+/** An open build session with three obstacles, one already placed by the admin. */
+export function fakeBuildSession(): Schemas["BuildSession"] {
   return {
     buildSheetFileKey: null,
-    finishedAt,
-    id,
-    joinCode: "482913",
-    joinToken: null,
+    finishedAt: null,
+    id: "session-1",
+    joinCode: "QX7K2M",
+    joinToken: "join-token-1",
     joinTokenRotatedAt: null,
     lastKnownMarkerId: null,
     live: true,
     localCacheVersion: 1,
-    obstacles: [],
-    participants: [],
+    obstacles: [
+      {
+        at: NOW,
+        byAccountId: "account-admin",
+        lastUpdatedClientSessionId: null,
+        obstacleId: "obstacle-1",
+        status: "PLACED",
+      },
+      {
+        at: null,
+        byAccountId: null,
+        lastUpdatedClientSessionId: null,
+        obstacleId: "obstacle-2",
+        status: "NOT_PLACED",
+      },
+      {
+        at: null,
+        byAccountId: null,
+        lastUpdatedClientSessionId: null,
+        obstacleId: "obstacle-3",
+        status: "NOT_PLACED",
+      },
+    ],
+    participants: [{ accountId: "account-admin", joinedAt: NOW, joinedVia: "CODE" }],
     placementId: "placement-1",
     progressJson: null,
     ringId: "ring-1",
     selectedStrategy: "EQUIPMENT_TYPE",
+    setupId: null,
     startedAt: NOW,
     startedByAccountId: "account-admin",
-    status: finishedAt === null ? "IN_PROGRESS" : "COMPLETED",
-    version: finishedAt === null ? 4 : 5,
+    status: "IN_PROGRESS",
+    version: 4,
   };
 }
+
+const LATER = "2026-10-15T09:05:00Z";
 
 /** `files.maxSizeMb` is the club parameter (CATALEG_PARAMETRES, default 25). */
 export function createFakeCoreApi({ maxSizeMb = 25 }: { maxSizeMb?: number } = {}): FakeCoreApi {
@@ -198,9 +232,40 @@ export function createFakeCoreApi({ maxSizeMb = 25 }: { maxSizeMb?: number } = {
   const answers = new Map<string, { fingerprint: string; status: number; body: unknown }>();
   const lost = new Set<string>();
   let uploadCount = 0;
-  let finishedAt: string | null = null;
+
+  /** R-16-11: an obstacle's tap (last write wins), the first one makes the session IN_PROGRESS. */
+  function tap(
+    obstacleId: string,
+    status: Schemas["BuildObstacle"]["status"],
+    byAccountId: string,
+  ): void {
+    const session = api.buildSession;
+    api.buildSession = {
+      ...session,
+      obstacles: session.obstacles.map((obstacle) =>
+        obstacle.obstacleId === obstacleId ? { ...obstacle, at: LATER, byAccountId, status } : obstacle,
+      ),
+      status: "IN_PROGRESS",
+      version: session.version + 1,
+    };
+  }
+
+  function close(status: "ABANDONED" | "COMPLETED"): Schemas["BuildSession"] {
+    api.buildSession = {
+      ...api.buildSession,
+      finishedAt: status === "COMPLETED" ? NOW : null,
+      setupId: status === "COMPLETED" ? "setup-1" : null,
+      status,
+      version: api.buildSession.version + 1,
+    };
+    return api.buildSession;
+  }
 
   const api: FakeCoreApi = {
+    buildSession: fakeBuildSession(),
+    closeElsewhere: (status) => {
+      close(status);
+    },
     courses,
     fetch: async (input, init) => {
       const request = input instanceof Request ? input : new Request(input, init);
@@ -233,6 +298,9 @@ export function createFakeCoreApi({ maxSizeMb = 25 }: { maxSizeMb?: number } = {
     saveGeometryElsewhere: (edit) => {
       const next = edit(api.geometry);
       api.geometry = { ...next, updatedAt: NOW, version: api.geometry.version + 1 };
+    },
+    tapElsewhere: (obstacleId, status) => {
+      tap(obstacleId, status, "account-other");
     },
     uploadFetch: (input, init) => {
       const url = input instanceof Request ? input.url : String(input);
@@ -365,11 +433,52 @@ export function createFakeCoreApi({ maxSizeMb = 25 }: { maxSizeMb?: number } = {
         status: 200,
       };
     }
-    if (method === "POST" && path === "/build-sessions/session-1/finish") {
-      finishedAt ??= NOW;
-      return { body: buildSession("session-1", finishedAt), status: 200 };
+    return buildSessionRoute(method, path, body) ?? failure(404, "NOT_FOUND");
+  }
+
+  /** The published R-16-11 rules of `session-1` (the only session of the fake club). */
+  function buildSessionRoute(
+    method: string,
+    path: string,
+    body: unknown,
+  ): { status: number; body: unknown } | null {
+    const session = api.buildSession;
+    const open = session.status === "NOT_STARTED" || session.status === "IN_PROGRESS";
+    if (method === "POST" && path === "/build-sessions/join") {
+      // The joinCode (case-insensitive, CODE) or the QR's joinToken (QR) of an open session.
+      const { code } = body as Schemas["BuildJoinRequest"];
+      const byCode = code.toUpperCase() === session.joinCode.toUpperCase();
+      if (!open || (!byCode && code !== session.joinToken)) return failure(404, "NOT_FOUND");
+      if (!session.participants.some((participant) => participant.accountId === "account-me")) {
+        api.buildSession = {
+          ...session,
+          participants: [
+            ...session.participants,
+            { accountId: "account-me", joinedAt: LATER, joinedVia: byCode ? "CODE" : "QR" },
+          ],
+          version: session.version + 1,
+        };
+      }
+      return { body: api.buildSession, status: 200 };
     }
-    return failure(404, "NOT_FOUND");
+    if (method === "GET" && path === "/build-sessions/session-1") {
+      return { body: session, status: 200 };
+    }
+    const obstaclePath = /^\/build-sessions\/session-1\/obstacles\/([^/]+)$/u.exec(path);
+    if (method === "PATCH" && obstaclePath !== null) {
+      const obstacleId = obstaclePath[1] ?? "";
+      if (!session.obstacles.some((obstacle) => obstacle.obstacleId === obstacleId)) {
+        return failure(404, "NOT_FOUND");
+      }
+      if (!open) return failure(422, "BUILD_SESSION_FINISHED");
+      tap(obstacleId, (body as Schemas["BuildObstacleRequest"]).status, "account-me");
+      return { body: api.buildSession, status: 200 };
+    }
+    if (method === "POST" && path === "/build-sessions/session-1/finish") {
+      if (!open) return failure(422, "BUILD_SESSION_FINISHED");
+      return { body: close("COMPLETED"), status: 200 };
+    }
+    return null;
   }
 
   return api;

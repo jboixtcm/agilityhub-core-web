@@ -2,7 +2,9 @@ import { http, HttpResponse } from "msw";
 
 import type { components } from "../generated/schema";
 
+import { readerLocale } from "./day-grid-handlers";
 import { clubInstant, clubLocalDateOf, clubLocalTime } from "./fixtures/calendar";
+import { setupsVisible } from "./fixtures/courses";
 import {
   cancellableUntilOf,
   eligibleDogs,
@@ -376,10 +378,12 @@ export const trainingHandlers = [
         dogId,
         from,
         levelsEnabled: levelsEnabled(),
+        locale: readerLocale(request),
         modules,
         now: nowMs(),
         ringId,
-        showSetup: modules.includes("COURSES"),
+        // R-09-15: only with COURSES, and for a MEMBER only while courses.showSetupToMembers.
+        showSetup: setupsVisible(modules),
         staff,
         to,
       }),

@@ -4,6 +4,7 @@ import {
   Button,
   DAY_GRID_NO_RING,
   type DayGridCellModel,
+  type DayGridColumnAction,
   type DayGridColumnModel,
   type DayGridLabels,
   type DayGridRowModel,
@@ -142,6 +143,7 @@ export function mapDayGrid(
   grid: DayGridResponse,
   t: Translate,
   pressable: (cell: DayGridApiCell) => boolean,
+  columnAction?: (column: DayGridResponse["columns"][number]) => DayGridColumnAction | undefined,
 ): MappedDayGrid {
   const cellsById = new Map<string, DayGridApiCell>();
   const rows = grid.rows.map((row) => ({
@@ -168,6 +170,7 @@ export function mapDayGrid(
   }));
   // Columns exactly as delivered, «Sense» included (`ringId: null`, label from the api).
   const columns = grid.columns.map((column) => ({
+    action: columnAction?.(column),
     color: column.color,
     id: column.ringId ?? DAY_GRID_NO_RING,
     label: column.shortName,

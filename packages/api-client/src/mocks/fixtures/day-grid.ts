@@ -3,6 +3,7 @@ import type { components } from "../../generated/schema";
 import brandingCanic from "./branding-canic.json";
 import { classSession, clubInstant, type ClassSession, type RingBlock } from "./calendar";
 import { catalogState } from "./catalogs";
+import { activeSetupOf, setupsVisible } from "./courses";
 
 type ClassSessionMemberView = components["schemas"]["ClassSessionMemberView"];
 type DayGrid = components["schemas"]["DayGrid"];
@@ -318,6 +319,9 @@ export function dayGridMemberSession(
   id: string,
   modules: readonly string[],
 ): ClassSessionMemberView | undefined {
+  // S16 R-16-13: no class of this world plans a placement (`null`), shown only with COURSES and
+  // `courses.showSetupToMembers`.
+  const planned = setupsVisible(modules) ? { plannedPlacement: null } : {};
   for (const [date, items] of Object.entries(days)) {
     for (const item of items) {
       if (item.kind !== "CLASS" || classId(date, item) !== id) continue;
@@ -332,6 +336,7 @@ export function dayGridMemberSession(
         id,
         instructorName: item.hiddenForMembers === true ? null : item.instructor,
         levelIds: [],
+        ...planned,
         ring: ring === undefined ? null : { color: ring.color, id: ring.id, name: ring.name },
         startTime: item.start,
         state: "ACTIVE",
@@ -451,11 +456,16 @@ export function dayGridFixture(
   const classWithoutRing = [...cells.values()].some((row) =>
     row.some((cell) => cell.kind === "CLASS" && (cell.ringId ?? null) === null),
   );
+  // S06/S16: `activeSetupId` only with COURSES; a MEMBER reads it only while
+  // `courses.showSetupToMembers` (null otherwise, like a ring without an ACTIVE setup).
+  const showSetups = setupsVisible(options.modules);
   const ringColumns: DayGridColumn[] = [...catalogState.rings]
     .filter((ring) => ring.active)
     .sort((left, right) => left.order - right.order)
     .map((ring) => ({
-      ...(options.modules.includes("COURSES") ? { activeSetupId: null } : {}),
+      ...(options.modules.includes("COURSES")
+        ? { activeSetupId: showSetups ? (activeSetupOf(ring.id)?.id ?? null) : null }
+        : {}),
       color: ring.color,
       name: ring.name,
       ringId: ring.id,

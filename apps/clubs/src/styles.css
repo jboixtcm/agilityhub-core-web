@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "@agilityhub/ui/tokens.css";
+/* S16 (E9-W04): course-ui's 2D and 3D viewers style themselves with Tailwind utilities. */
+@source "../../../packages/course-ui/src";
 
 * {
   box-sizing: border-box;

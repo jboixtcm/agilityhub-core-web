@@ -14,6 +14,12 @@ import {
   type RingBlock,
 } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
+import {
+  activeSetupOf,
+  plannedPlacementOf,
+  readsAsMember,
+  setupsVisible,
+} from "./fixtures/courses";
 import { noRingDayGridColumn } from "./fixtures/day-grid";
 import { atRiskNow, minDogsParameter } from "./fixtures/jobs";
 import {
@@ -45,6 +51,7 @@ type WeekCalendar = components["schemas"]["WeekCalendar"];
 type DayGrid = components["schemas"]["DayGrid"];
 type DayGridCell = components["schemas"]["DayGridCell"];
 type ClassSessionCreateRequest = components["schemas"]["ClassSessionCreateRequest"];
+type ClassSessionMemberView = components["schemas"]["ClassSessionMemberView"];
 type ClassSessionPatchRequest = components["schemas"]["ClassSessionPatchRequest"];
 type ClassCancellationRequest = components["schemas"]["ClassCancellationRequest"];
 type RiskExemptionRequest = components["schemas"]["RiskExemptionRequest"];
@@ -461,6 +468,36 @@ function ownSession(id: string): ClassSession | undefined {
   return callerClubOwnsTheWorld() ? findSession(id) : undefined;
 }
 
+/**
+ * `GET /class-sessions/{id}` for a MEMBER (S06 §6 «Altres formes»): no counters, notes nor
+ * instructor ids; the instructor only `bookings.showInstructorHoursBefore` hours before (R-06-12);
+ * `waiting` only with WAITLIST; S16 R-16-13 `plannedPlacement` only with COURSES and
+ * `courses.showSetupToMembers`.
+ */
+function memberView(session: ClassSession, locale: string): ClassSessionMemberView {
+  const ring = catalogState.rings.find((candidate) => candidate.id === session.ringId);
+  const hours = Number(findParameter("bookings.showInstructorHoursBefore")?.value ?? 24);
+  const named = Date.now() >= Date.parse(session.startsAt) - hours * 3.6e6;
+  const modules = currentMockScenario().branding.modules;
+  return {
+    capacity: session.capacity,
+    date: session.date,
+    displayDescription: session.displayDescription,
+    endTime: session.endTime,
+    freeSeats: Math.max(session.capacity - session.counters.booked, 0),
+    id: session.id,
+    instructorName: named ? session.instructorIds.map(instructorName).join(", ") : null,
+    levelIds: [...session.levelIds],
+    ...(setupsVisible(modules)
+      ? { plannedPlacement: plannedPlacementOf(session.placementId, locale) }
+      : {}),
+    ring: ring === undefined ? null : { color: ring.color, id: ring.id, name: ring.name },
+    startTime: session.startTime,
+    state: session.state,
+    ...(modules.includes("WAITLIST") ? { waiting: session.counters.waiting } : {}),
+  };
+}
+
 /** A ring block of the caller's club (the JWT's tenant), for a read or a write. */
 function ownBlock(id: string): RingBlock | undefined {
   return callerClubOwnsTheWorld()
@@ -628,11 +665,17 @@ function dayGrid(date: string, view: "instructor" | "member", locale: "ca" | "en
       });
     }
   }
+  // S06/S16: `activeSetupId` only with COURSES; a MEMBER reads it only while
+  // `courses.showSetupToMembers` (null otherwise, like a ring without an ACTIVE setup).
+  const modules = currentMockScenario().branding.modules;
+  const showSetups = setupsVisible(modules);
   const ringColumns = [...catalogState.rings]
     .filter((ring) => usedRings.has(ring.id))
     .sort((left, right) => left.order - right.order)
     .map((ring) => ({
-      activeSetupId: null,
+      ...(modules.includes("COURSES")
+        ? { activeSetupId: showSetups ? (activeSetupOf(ring.id)?.id ?? null) : null }
+        : {}),
       color: ring.color,
       name: ring.name,
       ringId: ring.id,
@@ -739,12 +782,19 @@ export const calendarHandlers = [
       : [];
     return listResponse(request, classes, CLASS_LIST_SPEC);
   }),
-  http.get("*/api/v1/class-sessions/:id", ({ params }) => {
+  http.get("*/api/v1/class-sessions/:id", ({ params, request }) => {
     const session = ownSession(String(params.id));
     if (session === undefined) return apiError("NOT_FOUND", "Class not found", 404);
     // Detail only (api E5-T15): the instructors' names in `instructorIds` order and the ring,
     // always sent (`null` for a class without a ring).
     const ring = catalogState.rings.find((candidate) => candidate.id === session.ringId);
+    if (readsAsMember()) {
+      // S06 §6 «Altres formes»: a MEMBER (an impersonation included) reads only ACTIVE/FINISHED.
+      if (session.state !== "ACTIVE" && session.state !== "FINISHED") {
+        return apiError("NOT_FOUND", "Class not found", 404);
+      }
+      return HttpResponse.json(memberView(session, readerLocale(request)));
+    }
     return HttpResponse.json({
       ...sessionResponse(session),
       instructorNames: session.instructorIds.map(instructorName),

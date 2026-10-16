@@ -1,5 +1,7 @@
 import { type CSSProperties, type MouseEvent, useEffect } from "react";
 
+import { Icon } from "./icons/Icon";
+import type { IconName } from "./icons/names";
 import { ScheduleCell } from "./schedule-grid";
 
 /**
@@ -12,10 +14,21 @@ export type DayGridView = "instructor" | "member";
 
 export type DayGridCellKind = "ACTIVITY" | "BLOCK" | "CLASS" | "OCCUPIED" | "TRAINING";
 
+/**
+ * A button in a column's header (S16 §2: the course icon of 10/23 → the viewer, and the
+ * instructors' cone → «Registra què hi ha muntat»); its `label` is its accessible name.
+ */
+export interface DayGridColumnAction {
+  icon: IconName;
+  label: string;
+  onPress: () => void;
+}
+
 export interface DayGridColumnModel {
   id: string;
   label: string;
   color?: string | null | undefined;
+  action?: DayGridColumnAction | undefined;
 }
 
 export interface DayGridOccupancyModel {
@@ -209,6 +222,16 @@ export function DayGrid({
             }
           >
             {column.label}
+            {column.action === undefined ? null : (
+              <button
+                aria-label={column.action.label}
+                className="ah-day-grid__column-action"
+                onClick={column.action.onPress}
+                type="button"
+              >
+                <Icon aria-hidden="true" name={column.action.icon} />
+              </button>
+            )}
           </span>
         ))}
       </div>

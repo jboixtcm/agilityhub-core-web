@@ -146,6 +146,9 @@ const dynamicKeyPrefixes = [
   "admin-courses:list.owner.",
   "admin-courses:list.ownerType.",
   "enums:agilityhubLevel.",
+  // S16 (E9-W04): the build session's statuses as the api sends them (mobile build session).
+  "enums:buildObstacleStatus.",
+  "enums:buildSessionStatus.",
   "enums:courseDiscipline.",
   "enums:courseSource.",
   "enums:doorFlow.",

@@ -187,8 +187,8 @@ describe("E5-W02 step 9 · the S09 mock world answers as the api (S09 §6, CATAL
       "2026-08-06",
     ]);
     expect(body.rings.map((ring) => ring.name)).toEqual(["Muntanya", "Central", "Carretera"]);
-    // R-09-15 with COURSES: the course built on Muntanya.
-    expect(body.rings[0]?.setup?.levelNames).toEqual(["D"]);
+    // R-09-15 with COURSES: the course built on Muntanya (the S16 world's ACTIVE setup, C–D).
+    expect(body.rings[0]?.setup?.levelNames).toEqual(["C", "D"]);
     // 30 half hours from 7:00 to 22:00 (R-09-03), 7:00 = 05:00Z in summer.
     const monday = slotsOf(body, "2026-08-03");
     expect(monday).toHaveLength(30);

@@ -99,7 +99,10 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
 
   it("renders the api's «Sense» column as delivered and never adds one of its own", () => {
     const rows = [{ cells: [classCell({ ringId: null })], time: "10:00" }];
-    const withNoRing = [...columns, { color: "var(--ah-color-border)", id: DAY_GRID_NO_RING, label: "Sense" }];
+    const withNoRing = [
+      ...columns,
+      { color: "var(--ah-color-border)", id: DAY_GRID_NO_RING, label: "Sense" },
+    ];
     const { rerender } = render(
       <DayGrid columns={withNoRing} labels={labels} rows={rows} view="member" />,
     );
@@ -150,23 +153,10 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
   it("shows «n/n +e · instructor» in the instructor view, «+e» only with WAITLIST", () => {
     const rows = [{ cells: [classCell({})], time: "18:50" }];
     const { rerender } = render(
-      <DayGrid
-        columns={columns}
-        labels={labels}
-        rows={rows}
-        showWaiting
-        view="instructor"
-      />,
+      <DayGrid columns={columns} labels={labels} rows={rows} showWaiting view="instructor" />,
     );
     expect(screen.getByText("5/5 +2 · Marc")).toBeVisible();
-    rerender(
-      <DayGrid
-        columns={columns}
-        labels={labels}
-        rows={rows}
-        view="instructor"
-      />,
-    );
+    rerender(<DayGrid columns={columns} labels={labels} rows={rows} view="instructor" />);
     expect(screen.getByText("5/5 · Marc")).toBeVisible();
   });
 
@@ -274,26 +264,30 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
       readFileSync(resolve(import.meta.dirname, "day-grid.css"), "utf8"),
       readFileSync(resolve(import.meta.dirname, "schedule-grid.css"), "utf8"),
     ].join("\n");
-    const rules = [...styles.replaceAll(/\/\*[\s\S]*?\*\//gu, "").matchAll(/([^{}]+)\{([^{}]*)\}/gu)].map(
-      ([, selector = "", body = ""]) => ({
-        declarations: new Map(
-          body
-            .split(";")
-            .map((declaration) => declaration.split(":").map((part) => part.trim()))
-            .filter((parts): parts is [string, string] => parts.length === 2 && parts[0] !== "")
-            .map(([property, value]) => [property, value]),
-        ),
-        selector: selector.trim(),
-      }),
+    const rules = [
+      ...styles.replaceAll(/\/\*[\s\S]*?\*\//gu, "").matchAll(/([^{}]+)\{([^{}]*)\}/gu),
+    ].map(([, selector = "", body = ""]) => ({
+      declarations: new Map(
+        body
+          .split(";")
+          .map((declaration) => declaration.split(":").map((part) => part.trim()))
+          .filter((parts): parts is [string, string] => parts.length === 2 && parts[0] !== "")
+          .map(([property, value]) => [property, value]),
+      ),
+      selector: selector.trim(),
+    }));
+    const lineRules = rules.filter((rule) =>
+      /ah-schedule-cell__(title|subtitle)\b/u.test(rule.selector),
     );
-    const lineRules = rules.filter((rule) => /ah-schedule-cell__(title|subtitle)\b/u.test(rule.selector));
     // No rule of a cell line breaks a word (break-word/anywhere, break-all, automatic hyphens).
     for (const rule of lineRules) {
       expect(rule.declarations.get("overflow-wrap") ?? "normal", rule.selector).toBe("normal");
       expect(rule.declarations.get("word-break") ?? "normal", rule.selector).toBe("normal");
       expect(rule.declarations.get("hyphens") ?? "manual", rule.selector).toBe("manual");
     }
-    const subtitle = rules.find((rule) => rule.selector === ".ah-day-grid .ah-schedule-cell__subtitle");
+    const subtitle = rules.find(
+      (rule) => rule.selector === ".ah-day-grid .ah-schedule-cell__subtitle",
+    );
     // The day grid wraps its lines between words (pre-line) and, inherited values aside, never
     // inside one: an over-long word is clipped with an ellipsis within the cell.
     expect(subtitle?.declarations.get("white-space")).toBe("pre-line");
@@ -318,7 +312,13 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
           {
             cells: [
               classCell({}),
-              { dashed: true, id: "b1", kind: "BLOCK", reasonLabel: "manteniment", ringId: "ring-car" },
+              {
+                dashed: true,
+                id: "b1",
+                kind: "BLOCK",
+                reasonLabel: "manteniment",
+                ringId: "ring-car",
+              },
             ],
             time: "08:30",
           },
@@ -373,5 +373,32 @@ describe("DayGrid presenter (screens 10 / 23)", () => {
       />,
     );
     expect(screen.queryByText("B+C")).not.toBeInTheDocument();
+  });
+
+  it("T-16-16 (S16 §2): a column header carries its course action, named and pressable; the others none", () => {
+    const onPress = vi.fn();
+    render(
+      <DayGrid
+        columns={columns.map((column, index) =>
+          index === 0
+            ? {
+                ...column,
+                action: { icon: "flag", label: "Recorregut muntat a Muntanya", onPress },
+              }
+            : column,
+        )}
+        labels={labels}
+        rows={[{ cells: [classCell({})], time: "20:00" }]}
+        view="member"
+      />,
+    );
+    const [, muntanya, carretera] = screen.getAllByRole("columnheader");
+    if (muntanya === undefined || carretera === undefined) throw new Error("NO_HEADERS");
+    const action = within(muntanya).getByRole("button", {
+      name: "Recorregut muntat a Muntanya",
+    });
+    fireEvent.click(action);
+    expect(onPress).toHaveBeenCalledTimes(1);
+    expect(within(carretera).queryByRole("button")).not.toBeInTheDocument();
   });
 });

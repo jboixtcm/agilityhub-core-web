@@ -46,6 +46,7 @@ export type {
   ListCalendarPlacementsInput,
   PlannerBuildObstacleStatus,
   PlannerBuildSession,
+  PlannerBuildSessionWatchers,
   PlannerCalibrationLog,
   PlannerCourse,
   PlannerPlacement,

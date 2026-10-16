@@ -42,6 +42,8 @@ import { useTranslation } from "react-i18next";
 import { addDays, dayLabel, isIsoDate, minutesOf, timeLabel } from "../planning/calendar-shared";
 import { RingBlockCard } from "../training/RingBlockCard";
 
+import { AgendaRingSetups } from "./AgendaRingSetups";
+
 import "./week-agenda.css";
 
 type InstructorWeek = components["schemas"]["InstructorWeek"];
@@ -745,6 +747,12 @@ export function WeekAgendaPage({
           </Button>
         </div>
       </header>
+      <AgendaRingSetups
+        client={client}
+        onNavigate={onNavigate}
+        ringId={query.pista}
+        rings={data?.filters.rings ?? []}
+      />
       {pdfError === undefined ? null : (
         <Toast
           dismissLabel={t("instructor:attendance.dismiss")}

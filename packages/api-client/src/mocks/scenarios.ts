@@ -21,6 +21,11 @@ type SessionList = components["schemas"]["Session"][];
 type OnboardingState = components["schemas"]["OnboardingState"];
 
 export interface MockScenarioDefinition {
+  /**
+   * Parameter `courses.allowInstructorPublish` (S16 R-16-07); default: the parameter world's
+   * (true). False: an INSTRUCTOR registers no setup (`POST /ring-setups` 403, `finish` without one).
+   */
+  allowInstructorPublish?: boolean;
   /** The S10 world's club-wide variant (`fixtures/attendance.ts`, screens 20–22). */
   attendance?: AttendanceVariant;
   /**
@@ -69,6 +74,12 @@ export interface MockScenarioDefinition {
   onboarding?: OnboardingState;
   outdatedConsentOnce?: boolean;
   rateLimited?: boolean;
+  /**
+   * Parameter `courses.showSetupToMembers` (S16 R-16-09); default: the parameter world's (true).
+   * False: a MEMBER reads no setup (`/me/ring-setups` all `null`, no `rings[].setup`, no
+   * `activeSetupId`, no `plannedPlacement`); staff read them unchanged.
+   */
+  showSetupToMembers?: boolean;
   signupStripe?: boolean;
   /** Parameter `signup.allowFamilyGroupPending` (R-04-12); default true. */
   signupFamilyPendingAllowed?: boolean;
@@ -496,6 +507,33 @@ const scenarios = {
   adminNoCourses: {
     branding: { ...canic, modules: canic.modules.filter((module) => module !== "COURSES") },
     me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /** S16 R-16-15 (E9-W04): a member of a club without COURSES (no setup on 08, 10, 07). */
+  memberNoCourses: {
+    branding: { ...canic, modules: canic.modules.filter((module) => module !== "COURSES") },
+    me: member,
+    sessions: accountSessions,
+  },
+  /** S16 R-16-09 (E9-W04): `courses.showSetupToMembers = false`, read by a member. */
+  memberSetupHidden: {
+    branding: canic,
+    me: member,
+    sessions: accountSessions,
+    showSetupToMembers: false,
+  },
+  /** S16 R-16-09 (E9-W04): `courses.showSetupToMembers = false`, read by an instructor. */
+  instructorSetupHidden: {
+    branding: canic,
+    me: meInstructor as Me,
+    sessions: accountSessions,
+    showSetupToMembers: false,
+  },
+  /** S16 R-16-07/11 (E9-W04): `courses.allowInstructorPublish = false`, an instructor's finish. */
+  instructorNoPublish: {
+    allowInstructorPublish: false,
+    branding: canic,
+    me: meInstructor as Me,
     sessions: accountSessions,
   },
   /**

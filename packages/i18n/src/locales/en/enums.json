@@ -366,5 +366,7 @@
   "ringSurface": {"GRASS": "Grass", "SAND": "Sand", "ARTIFICIAL": "Artificial turf", "INDOOR": "Indoor", "OTHER": "Other"},
   "doorFlow": {"IN": "entry", "OUT": "exit", "BOTH": "entry and exit"},
   "doorSide": {"NORTH": "North", "SOUTH": "South", "EAST": "East", "WEST": "West"},
-  "courseWarningRule": {"outside-ring": "Outside the ring", "border-clearance": "Perimeter clearance", "course-no-go": "Course no-go zone", "ring-no-go": "Ring no-go zone", "door-clearance": "Door clearance", "course-larger-than-ring": "Course larger than the ring", "obstacle-inventory": "Obstacle inventory"}
+  "courseWarningRule": {"outside-ring": "Outside the ring", "border-clearance": "Perimeter clearance", "course-no-go": "Course no-go zone", "ring-no-go": "Ring no-go zone", "door-clearance": "Door clearance", "course-larger-than-ring": "Course larger than the ring", "obstacle-inventory": "Obstacle inventory"},
+  "buildObstacleStatus": {"NOT_PLACED": "pending", "CURRENT": "now", "PLACED": "placed", "SKIPPED": "skipped", "NEEDS_CHECK": "to check"},
+  "buildSessionStatus": {"NOT_STARTED": "not started", "IN_PROGRESS": "in progress", "COMPLETED": "finished", "ABANDONED": "abandoned"}
 }

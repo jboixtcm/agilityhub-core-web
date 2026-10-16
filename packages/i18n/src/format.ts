@@ -469,6 +469,17 @@ function shortTime(value: DateInput, locale: Locale, timeZone: string): string {
   return formatTime(value, locale, timeZone).replace(/^0(?=\d:)/u, "");
 }
 
+/**
+ * Whole club-local days from an instant to `now` (S16 §10 `builtAgo`: «ahir», «fa 2 dies»), both
+ * read as days of the club's zone, never the device's; an instant ahead of `now` counts as 0.
+ */
+export function clubDaysSince(value: DateInput, timeZone: string, now: DateInput = new Date()) {
+  const from = parsePlainDate(clubLocalDate(value, timeZone));
+  const to = parsePlainDate(clubLocalDate(now, timeZone));
+  if (from === undefined || to === undefined) return 0;
+  return Math.max(0, Math.round((to.getTime() - from.getTime()) / 86_400_000));
+}
+
 function previousPlainDate(date: string): string {
   const day = parsePlainDate(date);
   if (day === undefined) return date;

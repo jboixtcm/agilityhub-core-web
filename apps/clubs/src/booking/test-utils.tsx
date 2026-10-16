@@ -3,6 +3,7 @@ import {
   mockScenario,
   resetActivityState,
   resetBookingMockState,
+  resetCourseMockState,
   type MockScenario,
 } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
@@ -38,6 +39,8 @@ export function setupBookingWorld(): void {
   });
   beforeEach(() => {
     vi.useFakeTimers({ now: BOOKING_NOW, shouldAdvanceTime: true, toFake: ["Date"] });
+    // S16 (E9-W04): the course world's dates are relative to its day, drawn at this clock.
+    resetCourseMockState();
     resetBookingMockState();
     resetActivityState();
     mockScenario("member");

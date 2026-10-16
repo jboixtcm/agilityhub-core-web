@@ -24,6 +24,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { noticeText, pageNotice, type PageNotice } from "../booking/shared";
+import { useSetupColumnAction } from "../courses/blocks";
 
 import "./today.css";
 import {
@@ -358,6 +359,8 @@ export function OverviewPage({ client }: { client: ApiClient }) {
   const [selection, setSelection] = useState<Selection>();
   // S09 screen 24 comes back here with «Pista reservada» / «Pista bloquejada» (E5-W02).
   const [notice, setNotice] = useState<PageNotice | undefined>(pageNotice);
+  // S16 §2 and §13-3: the ring's course icon → the viewer; the cone → «Registra què hi ha muntat».
+  const setupAction = useSetupColumnAction(true);
   const mapped = useMemo(
     () =>
       day.grid === undefined
@@ -368,8 +371,9 @@ export function OverviewPage({ client }: { client: ApiClient }) {
             (cell) =>
               (cell.kind === "CLASS" && cell.classId !== undefined) ||
               (cell.kind === "BLOCK" && cell.blockId !== undefined),
+            setupAction,
           ),
-    [day.grid, t],
+    [day.grid, setupAction, t],
   );
 
   return (

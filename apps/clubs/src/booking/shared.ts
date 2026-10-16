@@ -37,6 +37,11 @@ export interface PageNotice {
   messageKey?:
     | "booking:waitlist.joined"
     | "booking:waitlist.left"
+    | "courses:register.saved"
+    | "courses:register.savedReplacing"
+    | "courses:session.finished"
+    | "courses:session.finishedNoSetup"
+    | "courses:viewer.dismantled"
     | "instructor:ringBlock.saved.BLOCK"
     | "instructor:ringBlock.saved.RESERVATION"
     | "training:detail.cancelled";
@@ -53,6 +58,21 @@ export function noticeText(t: Translate, notice: PageNotice): string {
   }
   if (notice.messageKey === "instructor:ringBlock.saved.RESERVATION") {
     return t("instructor:ringBlock.saved.RESERVATION");
+  }
+  // S16 (E9-W04): the setup registered or dismantled, the build session finished, on the viewer.
+  switch (notice.messageKey) {
+    case "courses:register.saved":
+      return t("courses:register.saved");
+    case "courses:register.savedReplacing":
+      return t("courses:register.savedReplacing");
+    case "courses:session.finished":
+      return t("courses:session.finished");
+    case "courses:session.finishedNoSetup":
+      return t("courses:session.finishedNoSetup");
+    case "courses:viewer.dismantled":
+      return t("courses:viewer.dismantled");
+    default:
+      break;
   }
   return t(`errors:${notice.code ?? "INTERNAL_ERROR"}`, {
     defaultValue: t("errors:INTERNAL_ERROR"),

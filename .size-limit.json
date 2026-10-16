@@ -7,8 +7,24 @@
   },
   {
     "name": "clubs all JavaScript",
-    "path": "apps/clubs/dist/assets/*.js",
+    "path": [
+      "apps/clubs/dist/assets/*.js",
+      "!apps/clubs/dist/assets/CoursesRoute-*.js",
+      "!apps/clubs/dist/assets/CourseViewer3D-*.js"
+    ],
     "limit": "420 kB",
+    "gzip": true
+  },
+  {
+    "name": "clubs courses JavaScript (viewer, «Registra què hi ha muntat», build session; lazy, COURSES only)",
+    "path": "apps/clubs/dist/assets/CoursesRoute-*.js",
+    "limit": "40 kB",
+    "gzip": true
+  },
+  {
+    "name": "clubs course 3D viewer JavaScript (the viewer's 3D tab, lazy, three.js)",
+    "path": "apps/clubs/dist/assets/CourseViewer3D-*.js",
+    "limit": "167 kB",
     "gzip": true
   },
   {

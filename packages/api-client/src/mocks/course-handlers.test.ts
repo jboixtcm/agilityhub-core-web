@@ -130,13 +130,37 @@ const COURSE_ROUTES: readonly (readonly [method: string, path: string])[] = [
   ["POST", "/ring-setups"],
   ["POST", `/ring-setups/${SETUP_IDS.muntanyaActive}/dismantle`],
   ["POST", `/ring-setups/${SETUP_IDS.muntanyaActive}/renewal`],
+  // E9-W04: the member's setups and the build sessions.
+  ["GET", "/me/ring-setups"],
+  ["POST", "/build-sessions"],
+  ["POST", "/build-sessions/join"],
+  ["GET", "/build-sessions/build-session-1"],
+  ["PATCH", "/build-sessions/build-session-1/obstacles/1"],
+  ["POST", "/build-sessions/build-session-1/finish"],
 ];
 
 /** The routes a MEMBER reads (R-16-16); every other one is staff-only. */
 const MEMBER_READS = new Set([
   `GET /courses/${COURSE_IDS.jumping}`,
   `GET /ring-setups/${SETUP_IDS.muntanyaActive}`,
+  "GET /me/ring-setups",
 ]);
+
+/** A build session started by `scenario` on a placement (`POST /build-sessions`, 201). */
+async function startBuild(
+  scenario: MockScenario,
+  placementId: string,
+  extra: Partial<Schemas["BuildSessionRequest"]> = {},
+): Promise<Schemas["BuildSession"]> {
+  const started = await call<Schemas["BuildSession"]>(scenario, "POST", "/build-sessions", {
+    live: true,
+    placementId,
+    ...extra,
+  });
+  expect(started.status).toBe(201);
+  valid("BuildSession", started.body);
+  return started.body;
+}
 
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
@@ -295,8 +319,9 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
     expect(courseState.geometries["ring-central"]).toBeDefined();
     const setups = courseState.setups.filter((item) => item.status === "ACTIVE").map((s) => s.id);
     expect(setups).toEqual([SETUP_IDS.muntanyaActive, SETUP_IDS.centralPhoto]);
+    // Built two days ago: it expires at the club's midnight seven days after (E9-W04 dates).
     expect(courseState.setups.find((item) => item.id === SETUP_IDS.centralPhoto)?.expiresAt).toBe(
-      "2026-10-20T22:00:00Z",
+      clubInstant(addDays(clubLocalDate(), 5), "00:00"),
     );
   });
 
@@ -1084,5 +1109,568 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
       "/activities/activity-lliga-social-3",
     );
     expect(without.body).not.toHaveProperty("placementIds");
+  });
+});
+
+describe("E9-W04 · what the members' app reads of S16, and the build sessions (R-16-09, R-16-11, R-16-13, R-09-15)", () => {
+  const today = () => clubLocalDate();
+  const yesterdayAt = (time: string) => clubInstant(addDays(today(), -1), time);
+
+  it("T-16-09 R-16-09 GET /me/ring-setups: one item per active ring in catalog order, the ACTIVE setup's summary (placement → viewer, photo → thumbnail) or null, never the builder or the notes", async () => {
+    for (const reader of ["member", "impersonated", "instructor"] as const) {
+      const list = await call<Schemas["MeRingSetup"][]>(reader, "GET", "/me/ring-setups");
+      expect(list.status, reader).toBe(200);
+      for (const item of list.body) valid("MeRingSetup", item);
+      expect(list.body.map((item) => item.ringId)).toEqual([
+        "ring-muntanya",
+        "ring-central",
+        "ring-carretera",
+        "ring-cadells",
+        "ring-petita",
+      ]);
+      expect(list.body[0]?.setup).toEqual({
+        builtAt: yesterdayAt("19:00"),
+        expectedUntil: null,
+        hasViewer: true,
+        id: SETUP_IDS.muntanyaActive,
+        kind: "JUMPING",
+        levelLabel: "C–D",
+        // The placement's course thumbnail (the setup has no photo).
+        thumbnailUrl: `https://files.example.test/thumbnails/${COURSE_IDS.jumping}.svg`,
+      });
+      expect(list.body[1]?.setup).toEqual({
+        builtAt: clubInstant(addDays(today(), -2), "09:30"),
+        expectedUntil: null,
+        hasViewer: false,
+        id: SETUP_IDS.centralPhoto,
+        kind: "FUN",
+        levelLabel: null,
+        thumbnailUrl: "https://files.example.test/courses/gimcana.svg",
+      });
+      expect(list.body.slice(2).map((item) => item.setup)).toEqual([null, null, null]);
+    }
+    // The photo is served by the mock storage.
+    const photo = await fetch("https://files.example.test/courses/gimcana.svg");
+    expect(photo.headers.get("Content-Type")).toBe("image/svg+xml");
+    // The member reads the course the viewer draws (through the placement: courseId is null).
+    expect(courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaActive)?.courseId).toBe(
+      null,
+    );
+    const course = await call<Schemas["Course"]>("member", "GET", `/courses/${COURSE_IDS.jumping}`);
+    expect(course.status).toBe(200);
+    // A dismantled setup leaves the ring without one.
+    const dismantled = await call<Schemas["RingSetup"]>(
+      "admin",
+      "POST",
+      `/ring-setups/${SETUP_IDS.centralPhoto}/dismantle`,
+    );
+    expect(dismantled.status).toBe(200);
+    const after = await call<Schemas["MeRingSetup"][]>(
+      "member",
+      "GET",
+      "/me/ring-setups?ringIds=ring-central",
+    );
+    expect(after.body).toEqual([{ ringId: "ring-central", setup: null }]);
+  });
+
+  it("T-16-09 R-16-09 ringIds: the given rings in that order, repeated (openapi-fetch's form) or comma-separated; a ring of no club is 404 NOT_FOUND; COURSES off → 404 MODULE_DISABLED; another club's member reads none", async () => {
+    const repeated = await call<Schemas["MeRingSetup"][]>(
+      "member",
+      "GET",
+      "/me/ring-setups?ringIds=ring-carretera&ringIds=ring-muntanya",
+    );
+    expect(repeated.body.map((item) => [item.ringId, item.setup?.id ?? null])).toEqual([
+      ["ring-carretera", null],
+      ["ring-muntanya", SETUP_IDS.muntanyaActive],
+    ]);
+    const comma = await call<Schemas["MeRingSetup"][]>(
+      "member",
+      "GET",
+      "/me/ring-setups?ringIds=ring-central,ring-petita",
+    );
+    expect(comma.body.map((item) => item.ringId)).toEqual(["ring-central", "ring-petita"]);
+    const unknown = await call<Schemas["ApiError"]>(
+      "member",
+      "GET",
+      "/me/ring-setups?ringIds=ring-muntanya,ring-nowhere",
+    );
+    expect(unknown).toMatchObject({ body: { code: "NOT_FOUND", details: {} }, status: 404 });
+    valid("ApiError", unknown.body);
+    const off = await call<Schemas["ApiError"]>("memberNoCourses", "GET", "/me/ring-setups");
+    expect(off).toMatchObject({ body: { code: "MODULE_DISABLED" }, status: 404 });
+    const other = await call<Schemas["MeRingSetup"][]>("coursesOtherClub", "GET", "/me/ring-setups");
+    expect(other).toMatchObject({ body: [], status: 200 });
+    const theirs = await call<Schemas["ApiError"]>(
+      "coursesOtherClub",
+      "GET",
+      "/me/ring-setups?ringIds=ring-muntanya",
+    );
+    expect(theirs.status).toBe(404);
+  });
+
+  it("T-16-09 / T-09-22 courses.showSetupToMembers = false: a MEMBER reads every ring with setup null (scenario memberSetupHidden, or the parameter); an INSTRUCTOR's projection is unchanged", async () => {
+    const hidden = await call<Schemas["MeRingSetup"][]>(
+      "memberSetupHidden",
+      "GET",
+      "/me/ring-setups",
+    );
+    expect(hidden.status).toBe(200);
+    expect(hidden.body.map((item) => item.setup)).toEqual([null, null, null, null, null]);
+    const staff = await call<Schemas["MeRingSetup"][]>(
+      "instructorSetupHidden",
+      "GET",
+      "/me/ring-setups",
+    );
+    expect(staff.body[0]?.setup?.id).toBe(SETUP_IDS.muntanyaActive);
+    const parameter = findParameter("courses.showSetupToMembers");
+    if (parameter === undefined) throw new Error("PARAMETER_NOT_FOUND");
+    replaceParameter({ ...parameter, value: false });
+    const member = await call<Schemas["MeRingSetup"][]>("impersonated", "GET", "/me/ring-setups");
+    expect(member.body.every((item) => item.setup === null)).toBe(true);
+    const instructor = await call<Schemas["MeRingSetup"][]>("instructor", "GET", "/me/ring-setups");
+    expect(instructor.body[1]?.setup?.id).toBe(SETUP_IDS.centralPhoto);
+  });
+
+  it("R-09-15 / T-09-22 GET /training-slots rings[].setup is the S16 world's ACTIVE setup (levelNames the levels' names), absent for a MEMBER while courses.showSetupToMembers is off and without COURSES", async () => {
+    const path = `/training-slots?from=${today()}&to=${today()}`;
+    const grid = await call<Schemas["TrainingSlots"]>("member", "GET", path);
+    expect(grid.status).toBe(200);
+    valid("TrainingSlots", grid.body);
+    expect(grid.body.rings.map((ring) => [ring.id, ring.setup])).toEqual([
+      [
+        "ring-muntanya",
+        {
+          builtAt: yesterdayAt("19:00"),
+          expectedUntil: null,
+          id: SETUP_IDS.muntanyaActive,
+          kind: "JUMPING",
+          levelNames: ["C", "D"],
+        },
+      ],
+      [
+        "ring-central",
+        {
+          builtAt: clubInstant(addDays(today(), -2), "09:30"),
+          expectedUntil: null,
+          id: SETUP_IDS.centralPhoto,
+          kind: "FUN",
+          levelNames: [],
+        },
+      ],
+      ["ring-carretera", null],
+    ]);
+    // A new setup on Carretera shows on the next read (the world is S16's, not a fixed one).
+    const registered = await call<Schemas["RingSetupCreated"]>("admin", "POST", "/ring-setups", {
+      kind: "EMPTY",
+      levelIds: ["level-p"],
+      ringId: "ring-carretera",
+    });
+    expect(registered.status).toBe(201);
+    const spanish = await call<Schemas["TrainingSlots"]>("member", "GET", path, undefined, {
+      "Accept-Language": "es",
+    });
+    expect(spanish.body.rings[2]?.setup).toMatchObject({
+      id: registered.body.setup.id,
+      kind: "EMPTY",
+      levelNames: ["Cachorros"],
+    });
+    for (const scenario of ["memberSetupHidden", "memberNoCourses"] as const) {
+      const without = await call<Schemas["TrainingSlots"]>(scenario, "GET", path);
+      expect(without.status, scenario).toBe(200);
+      for (const ring of without.body.rings) expect(ring, scenario).not.toHaveProperty("setup");
+    }
+    const staff = await call<Schemas["TrainingSlots"]>("instructorSetupHidden", "GET", path);
+    expect(staff.body.rings[0]?.setup?.id).toBe(SETUP_IDS.muntanyaActive);
+  });
+
+  it("R-16-09 S06 DayGridColumn.activeSetupId: the ring's ACTIVE setup with COURSES (day-grid fixture days and the calendar world), null for a MEMBER while courses.showSetupToMembers is off, absent without COURSES", async () => {
+    const columns = async (scenario: MockScenario, path: string) => {
+      const grid = await call<Schemas["DayGrid"]>(scenario, "GET", path);
+      expect(grid.status, `${scenario} ${path}`).toBe(200);
+      valid("DayGrid", grid.body);
+      return grid.body.columns;
+    };
+    const fixture = "/day-grid?date=2026-08-04&view=member";
+    const ids = (list: Schemas["DayGridColumn"][]) =>
+      list.filter((column) => column.ringId != null).map((column) => column.activeSetupId);
+    expect(ids(await columns("member", fixture))).toEqual([
+      SETUP_IDS.muntanyaActive,
+      SETUP_IDS.centralPhoto,
+      null,
+      null,
+      null,
+    ]);
+    expect(ids(await columns("memberSetupHidden", fixture))).toEqual([
+      null,
+      null,
+      null,
+      null,
+      null,
+    ]);
+    expect((await columns("instructorSetupHidden", fixture))[0]?.activeSetupId).toBe(
+      SETUP_IDS.muntanyaActive,
+    );
+    for (const column of await columns("memberNoCourses", fixture)) {
+      expect(column).not.toHaveProperty("activeSetupId");
+    }
+    // The calendar world's day (Wednesday 12 August 2026, its classes on Central and Muntanya).
+    vi.useFakeTimers({ now: new Date("2026-08-12T08:00:00Z"), toFake: ["Date"] });
+    resetPlanningState();
+    const calendar = await columns("instructor", "/day-grid?date=2026-08-12&view=instructor");
+    expect(calendar.find((column) => column.ringId === "ring-central")?.activeSetupId).toBe(
+      SETUP_IDS.centralPhoto,
+    );
+    const calendarHidden = await columns("memberSetupHidden", "/day-grid?date=2026-08-12");
+    expect(calendarHidden.every((column) => column.activeSetupId == null)).toBe(true);
+    for (const column of await columns("memberNoCourses", "/day-grid?date=2026-08-12")) {
+      expect(column).not.toHaveProperty("activeSetupId");
+    }
+  });
+
+  it("R-16-13 GET /class-sessions/{id} for a MEMBER: plannedPlacement {placementId, courseName in the reader's language} only with COURSES and courses.showSetupToMembers; null without a placement or once its course is gone; staff get placementId", async () => {
+    // 07 of `booking-duna-mon3`: its class plans Central's league placement.
+    const mon3 = "class-2026-08-03-1850";
+    const member = await call<Schemas["ClassSessionMemberView"]>(
+      "member",
+      "GET",
+      `/class-sessions/${mon3}`,
+    );
+    expect(member.status).toBe(200);
+    valid("ClassSessionMemberView", member.body);
+    expect(member.body).toMatchObject({
+      date: "2026-08-03",
+      displayDescription: "B+C",
+      plannedPlacement: { courseName: "Agility C–D", placementId: PLACEMENT_IDS.centralLeague },
+      ring: { id: "ring-central", name: "Central" },
+      startTime: "18:50",
+    });
+    expect(member.body).not.toHaveProperty("counters");
+    // `booking-rock-mon10`: Muntanya, no planned placement.
+    const mon10 = await call<Schemas["ClassSessionMemberView"]>(
+      "impersonated",
+      "GET",
+      "/class-sessions/class-2026-08-10-1900",
+    );
+    expect(mon10.body).toMatchObject({
+      plannedPlacement: null,
+      ring: { id: "ring-muntanya" },
+    });
+    for (const scenario of ["memberSetupHidden", "memberNoCourses"] as const) {
+      const hidden = await call<Schemas["ClassSessionMemberView"]>(
+        scenario,
+        "GET",
+        `/class-sessions/${mon3}`,
+      );
+      expect(hidden.status).toBe(200);
+      expect(hidden.body, scenario).not.toHaveProperty("plannedPlacement");
+    }
+    const staff = await call<Schemas["ClassSession"]>("instructor", "GET", `/class-sessions/${mon3}`);
+    valid("ClassSession", staff.body);
+    expect(staff.body).toMatchObject({
+      instructorNames: ["Marc"],
+      placementId: PLACEMENT_IDS.centralLeague,
+      ring: { id: "ring-central" },
+    });
+    expect(staff.body).not.toHaveProperty("plannedPlacement");
+    // The calendar world's class read by a MEMBER: the member projection, its placement's course
+    // name in the reader's language, and null once the course is gone.
+    const agility = courseState.courses.find((item) => item.id === COURSE_IDS.agility);
+    if (agility === undefined) throw new Error("COURSE_NOT_FOUND");
+    agility.nameI18n = { ca: "Agility C–D", es: "Agility C–D (grupo del miércoles)" };
+    vi.useFakeTimers({ now: new Date("2026-08-12T08:00:00Z"), toFake: ["Date"] });
+    resetPlanningState();
+    const id = "cls-2026-08-12-1850-0";
+    const patched = await call<Schemas["ClassSession"]>("admin", "PATCH", `/class-sessions/${id}`, {
+      placementId: PLACEMENT_IDS.centralLeague,
+      version: 1,
+    });
+    expect(patched.status).toBe(200);
+    const read = await call<Schemas["ClassSessionMemberView"]>(
+      "member",
+      "GET",
+      `/class-sessions/${id}`,
+      undefined,
+      { "Accept-Language": "es" },
+    );
+    valid("ClassSessionMemberView", read.body);
+    expect(read.body.plannedPlacement).toEqual({
+      courseName: "Agility C–D (grupo del miércoles)",
+      placementId: PLACEMENT_IDS.centralLeague,
+    });
+    expect(read.body).not.toHaveProperty("instructorIds");
+    courseState.courses = courseState.courses.filter((item) => item.id !== COURSE_IDS.agility);
+    const gone = await call<Schemas["ClassSessionMemberView"]>(
+      "member",
+      "GET",
+      `/class-sessions/${id}`,
+    );
+    expect(gone.body.plannedPlacement).toBeNull();
+  });
+
+  it("T-16-10 R-16-11 a build session: NOT_STARTED with every resolved obstacle NOT_PLACED and a six-character join code; another phone joins by code (any case) or by the QR token, once; taps are last-write-wins and make it IN_PROGRESS; an obstacle it does not list → 404", async () => {
+    const placement = courseState.placements.find(
+      (item) => item.id === PLACEMENT_IDS.muntanyaJumping,
+    );
+    const session = await startBuild("instructor", PLACEMENT_IDS.muntanyaJumping, {
+      live: false,
+    });
+    expect(session).toMatchObject({
+      finishedAt: null,
+      live: false,
+      participants: [],
+      placementId: PLACEMENT_IDS.muntanyaJumping,
+      ringId: "ring-muntanya",
+      selectedStrategy: "EQUIPMENT_TYPE",
+      setupId: null,
+      startedByAccountId: "10000000-0000-4000-8000-000000000003",
+      status: "NOT_STARTED",
+      version: 1,
+    });
+    expect(session.joinCode).toMatch(/^[A-Z0-9]{6}$/u);
+    expect(session.joinToken).toEqual(expect.any(String));
+    expect(Date.parse(session.startedAt ?? "")).not.toBeNaN();
+    expect(session.obstacles).toEqual(
+      (placement?.resolvedObstacles ?? []).map((obstacle) => ({
+        at: null,
+        byAccountId: null,
+        lastUpdatedClientSessionId: null,
+        obstacleId: obstacle.obstacleId,
+        status: "NOT_PLACED",
+      })),
+    );
+    // Another open session never draws the same code.
+    const other = await startBuild("admin", PLACEMENT_IDS.centralLeague, {
+      selectedStrategy: "FREE_BUILD",
+    });
+    expect(other.joinCode).not.toBe(session.joinCode);
+    expect(other.selectedStrategy).toBe("FREE_BUILD");
+
+    const byCode = await call<Schemas["BuildSession"]>("admin", "POST", "/build-sessions/join", {
+      code: session.joinCode.toLowerCase(),
+    });
+    expect(byCode.status).toBe(200);
+    valid("BuildSession", byCode.body);
+    expect(byCode.body.participants).toMatchObject([
+      { accountId: "10000000-0000-4000-8000-000000000001", joinedVia: "CODE" },
+    ]);
+    expect(Date.parse(byCode.body.participants[0]?.joinedAt ?? "")).not.toBeNaN();
+    const again = await call<Schemas["BuildSession"]>("admin", "POST", "/build-sessions/join", {
+      code: session.joinToken,
+    });
+    expect(again.body.participants).toHaveLength(1);
+    const byQr = await call<Schemas["BuildSession"]>("instructor", "POST", "/build-sessions/join", {
+      code: other.joinToken,
+    });
+    expect(byQr.body.participants.map((item) => item.joinedVia)).toEqual(["QR"]);
+    const nowhere = await call<Schemas["ApiError"]>("admin", "POST", "/build-sessions/join", {
+      code: "ZZZZZZ",
+    });
+    expect(nowhere).toMatchObject({ body: { code: "NOT_FOUND" }, status: 404 });
+
+    const first = session.obstacles[0]?.obstacleId ?? "";
+    const tap = (scenario: MockScenario, status: string, version?: number) =>
+      call<Schemas["BuildSession"]>(
+        scenario,
+        "PATCH",
+        `/build-sessions/${session.id}/obstacles/${first}`,
+        { status, ...(version === undefined ? {} : { version }) },
+      );
+    const placed = await tap("instructor", "PLACED", 1);
+    expect(placed.status).toBe(200);
+    valid("BuildSession", placed.body);
+    expect(placed.body).toMatchObject({ status: "IN_PROGRESS", version: 2 });
+    expect(placed.body.obstacles[0]).toMatchObject({
+      byAccountId: "10000000-0000-4000-8000-000000000003",
+      obstacleId: first,
+      status: "PLACED",
+    });
+    // A stale version is not compared: the last write wins.
+    const checked = await tap("admin", "NEEDS_CHECK", 1);
+    expect(checked.body).toMatchObject({ status: "IN_PROGRESS", version: 3 });
+    expect(checked.body.obstacles[0]).toMatchObject({
+      byAccountId: "10000000-0000-4000-8000-000000000001",
+      status: "NEEDS_CHECK",
+    });
+    const read = await call<Schemas["BuildSession"]>(
+      "instructor",
+      "GET",
+      `/build-sessions/${session.id}`,
+    );
+    expect(read.body).toEqual(checked.body);
+    const unknown = await call<Schemas["ApiError"]>(
+      "admin",
+      "PATCH",
+      `/build-sessions/${session.id}/obstacles/obstacle-nowhere`,
+      { status: "PLACED" },
+    );
+    expect(unknown).toMatchObject({ body: { code: "NOT_FOUND" }, status: 404 });
+    const invalid = await tap("admin", "PENDING");
+    expect(invalid).toMatchObject({
+      body: { code: "VALIDATION_ERROR", details: { fieldErrors: [{ field: "status" }] } },
+      status: 400,
+    });
+  });
+
+  it("T-16-10 R-16-11 finish: COMPLETED with finishedAt; an ADMIN registers the ring's setup (kind from the discipline, the placement as its source, the course's levels) replacing the active one; a closed session → 422 BUILD_SESSION_FINISHED on PATCH, finish and join; the keyed finish replays", async () => {
+    const session = await startBuild("admin", PLACEMENT_IDS.centralLeague);
+    const key = { "Idempotency-Key": "finish-1" };
+    const finished = await call<Schemas["BuildSession"]>(
+      "admin",
+      "POST",
+      `/build-sessions/${session.id}/finish`,
+      undefined,
+      key,
+    );
+    expect(finished.status).toBe(200);
+    valid("BuildSession", finished.body);
+    expect(finished.body).toMatchObject({ status: "COMPLETED", version: 2 });
+    expect(finished.body.finishedAt).toEqual(expect.any(String));
+    const setup = courseState.setups.find((item) => item.id === finished.body.setupId);
+    expect(setup).toMatchObject({
+      agilityhubLevel: null,
+      courseId: null,
+      imageFileKey: null,
+      kind: "AGILITY",
+      levelIds: ["level-c", "level-d"],
+      placementId: PLACEMENT_IDS.centralLeague,
+      ringId: "ring-central",
+      status: "ACTIVE",
+    });
+    expect(courseState.setups.find((item) => item.id === SETUP_IDS.centralPhoto)?.status).toBe(
+      "DISMANTLED",
+    );
+    const replay = await call<Schemas["BuildSession"]>(
+      "admin",
+      "POST",
+      `/build-sessions/${session.id}/finish`,
+      undefined,
+      key,
+    );
+    expect(replay).toEqual(finished);
+    const closed = [
+      await call<Schemas["ApiError"]>(
+        "admin",
+        "PATCH",
+        `/build-sessions/${session.id}/obstacles/${session.obstacles[0]?.obstacleId ?? ""}`,
+        { status: "PLACED" },
+      ),
+      await call<Schemas["ApiError"]>("admin", "POST", `/build-sessions/${session.id}/finish`),
+    ];
+    for (const answer of closed) {
+      expect(answer).toMatchObject({ body: { code: "BUILD_SESSION_FINISHED" }, status: 422 });
+      valid("ApiError", answer.body);
+    }
+    const join = await call<Schemas["ApiError"]>("instructor", "POST", "/build-sessions/join", {
+      code: session.joinCode,
+    });
+    expect(join).toMatchObject({ body: { code: "NOT_FOUND" }, status: 404 });
+    // A closed session is still read.
+    const read = await call<Schemas["BuildSession"]>(
+      "instructor",
+      "GET",
+      `/build-sessions/${session.id}`,
+    );
+    expect(read.body.status).toBe("COMPLETED");
+  });
+
+  it("T-16-10 R-16-11 finish on a ring whose ACTIVE setup already shows the placement refreshes it as a renewal (builtAt, builtBy, the same expectedUntil, a new expiresAt); an INSTRUCTOR with courses.allowInstructorPublish off registers none (setupId null)", async () => {
+    const active = courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaActive);
+    if (active === undefined) throw new Error("SETUP_NOT_FOUND");
+    active.expectedUntil = addDays(today(), 2);
+    const session = await startBuild("instructor", PLACEMENT_IDS.muntanyaJumping);
+    const finished = await call<Schemas["BuildSession"]>(
+      "instructor",
+      "POST",
+      `/build-sessions/${session.id}/finish`,
+    );
+    expect(finished.body).toMatchObject({ setupId: SETUP_IDS.muntanyaActive, status: "COMPLETED" });
+    const refreshed = courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaActive);
+    expect(refreshed).toMatchObject({
+      builtByAccountId: "10000000-0000-4000-8000-000000000003",
+      expectedUntil: addDays(today(), 2),
+      expiresAt: clubInstant(addDays(today(), 3), "00:00"),
+      status: "ACTIVE",
+    });
+    expect(refreshed?.builtAt).not.toBe(yesterdayAt("19:00"));
+    expect(courseState.setups.filter((item) => item.status === "ACTIVE")).toHaveLength(2);
+
+    const before = structuredClone(courseState.setups);
+    const unpublished = await startBuild("instructorNoPublish", PLACEMENT_IDS.centralLeague);
+    const closed = await call<Schemas["BuildSession"]>(
+      "instructorNoPublish",
+      "POST",
+      `/build-sessions/${unpublished.id}/finish`,
+    );
+    expect(closed.body).toMatchObject({ setupId: null, status: "COMPLETED" });
+    expect(courseState.setups).toEqual(before);
+  });
+
+  it("R-16-11 / R-16-15 / R-16-16 build session refusals: VALIDATION_ERROR, another club's or an unknown placement → NOT_FOUND, an unreadable course → COURSE_NOT_VISIBLE, a session open for courses.buildSessionMaxHours → BUILD_SESSION_FINISHED (join NOT_FOUND), MODULE_DISABLED, FORBIDDEN for a MEMBER, another club finds none", async () => {
+    const missing = await call<Schemas["ApiError"]>("admin", "POST", "/build-sessions", {
+      live: true,
+    });
+    expect(missing).toMatchObject({
+      body: {
+        code: "VALIDATION_ERROR",
+        details: { fieldErrors: [{ code: "REQUIRED", field: "placementId" }] },
+      },
+      status: 400,
+    });
+    const unknown = await call<Schemas["ApiError"]>("admin", "POST", "/build-sessions", {
+      live: true,
+      placementId: "placement-nowhere",
+    });
+    expect(unknown).toMatchObject({ body: { code: "NOT_FOUND" }, status: 404 });
+    const theirs = await call<Schemas["ApiError"]>("coursesOtherClub", "POST", "/build-sessions", {
+      live: true,
+      placementId: PLACEMENT_IDS.centralLeague,
+    });
+    expect(theirs).toMatchObject({ body: { code: "NOT_FOUND" }, status: 404 });
+    // A placement of the admin's PRIVATE course: the instructor cannot read the course.
+    const league = courseState.placements.find((item) => item.id === PLACEMENT_IDS.centralLeague);
+    if (league === undefined) throw new Error("PLACEMENT_NOT_FOUND");
+    courseState.placements.push({ ...league, courseId: COURSE_IDS.mine, id: "placement-private" });
+    const hidden = await call<Schemas["ApiError"]>("instructor", "POST", "/build-sessions", {
+      live: true,
+      placementId: "placement-private",
+    });
+    expect(hidden).toMatchObject({ body: { code: "COURSE_NOT_VISIBLE" }, status: 404 });
+
+    const session = await startBuild("instructor", PLACEMENT_IDS.muntanyaJumping);
+    const foreign = await call<Schemas["ApiError"]>(
+      "coursesOtherClub",
+      "GET",
+      `/build-sessions/${session.id}`,
+    );
+    expect(foreign).toMatchObject({ body: { code: "NOT_FOUND" }, status: 404 });
+    expect(
+      await call<Schemas["ApiError"]>("member", "GET", `/build-sessions/${session.id}`),
+    ).toMatchObject({ body: { code: "FORBIDDEN" }, status: 403 });
+    expect(
+      await call<Schemas["ApiError"]>("impersonated", "GET", `/build-sessions/${session.id}`),
+    ).toMatchObject({ body: { code: "IMPERSONATION_DENIED" }, status: 403 });
+    expect(
+      await call<Schemas["ApiError"]>("adminNoCourses", "GET", `/build-sessions/${session.id}`),
+    ).toMatchObject({ body: { code: "MODULE_DISABLED" }, status: 404 });
+
+    // Twelve hours later the session has outlived courses.buildSessionMaxHours.
+    vi.useFakeTimers({ now: new Date(Date.now() + 12 * 3.6e6), toFake: ["Date"] });
+    const late = await call<Schemas["ApiError"]>(
+      "instructor",
+      "PATCH",
+      `/build-sessions/${session.id}/obstacles/${session.obstacles[0]?.obstacleId ?? ""}`,
+      { status: "PLACED" },
+    );
+    expect(late).toMatchObject({ body: { code: "BUILD_SESSION_FINISHED" }, status: 422 });
+    const lateFinish = await call<Schemas["ApiError"]>(
+      "instructor",
+      "POST",
+      `/build-sessions/${session.id}/finish`,
+    );
+    expect(lateFinish).toMatchObject({ body: { code: "BUILD_SESSION_FINISHED" }, status: 422 });
+    const lateJoin = await call<Schemas["ApiError"]>("admin", "POST", "/build-sessions/join", {
+      code: session.joinCode,
+    });
+    expect(lateJoin).toMatchObject({ body: { code: "NOT_FOUND" }, status: 404 });
   });
 });

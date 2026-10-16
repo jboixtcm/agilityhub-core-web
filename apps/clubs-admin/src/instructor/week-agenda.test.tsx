@@ -6,6 +6,7 @@ import {
   mockScenario,
   type MockScenario,
   resetAttendanceMockState,
+  resetCourseMockState,
   resetFollowupMockState,
   resetTrainingMockState,
 } from "@agilityhub/api-client/mocks";
@@ -857,5 +858,57 @@ describe("T-10-29 E7-W06 step 1 (CONVENCIONS_API §7, E79, E80): D12's sheet kee
     expect(puts[0]?.key).toMatch(/^[0-9a-f-]{36}$/u);
     expect(puts[1]?.key).toBe(puts[0]?.key);
     expect(puts[2]?.key).not.toBe(puts[0]?.key);
+  });
+});
+
+describe("T-16-16 D12: the rings' courses set up (S16 §2 «icona a la capçalera de pista»)", () => {
+  beforeEach(() => {
+    // The course world's dates are relative to its day, drawn at the agenda's clock.
+    resetCourseMockState();
+  });
+
+  it("one course icon per ring with a setup; Muntanya's opens its setup and its course in D18", async () => {
+    const { onNavigate } = await renderAgenda();
+    const strip = await screen.findByRole("list", { name: "Recorreguts muntats a les pistes" });
+    const muntanya = await within(strip).findByRole("button", {
+      name: "Muntanya: Jumping · nivell C–D · muntat ahir",
+    });
+    expect(
+      within(strip).getByRole("button", { name: "Central: Fun · muntat fa 2 dies" }),
+    ).toBeVisible();
+    fireEvent.click(muntanya);
+    const dialog = await screen.findByRole("dialog", { name: "Muntanya" });
+    fireEvent.click(await within(dialog).findByRole("button", { name: "Obre el recorregut" }));
+    expect(onNavigate).toHaveBeenCalledWith("/recorreguts/course-jumping-dijous");
+  });
+
+  it("the «Pista» filter keeps that ring's icon only; a photo setup shows its photo and no course", async () => {
+    await renderAgenda({ path: "/agenda?pista=ring-central" });
+    const strip = await screen.findByRole("list", { name: "Recorreguts muntats a les pistes" });
+    const central = await within(strip).findByRole("button", {
+      name: "Central: Fun · muntat fa 2 dies",
+    });
+    expect(within(strip).queryByRole("button", { name: /^Muntanya:/u })).not.toBeInTheDocument();
+    fireEvent.click(central);
+    const dialog = await screen.findByRole("dialog", { name: "Central" });
+    expect(
+      await within(dialog).findByRole("img", { name: "Foto o plànol del muntatge" }),
+    ).toBeVisible();
+    await waitFor(() => {
+      expect(within(dialog).queryByRole("status")).not.toBeInTheDocument();
+    });
+    expect(
+      within(dialog).queryByRole("button", { name: "Obre el recorregut" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("R-16-15: without COURSES there is no icon and no read of /me/ring-setups", async () => {
+    const requests = recordRequests();
+    await renderAgenda({ modules: canic.modules.filter((module) => module !== "COURSES") });
+    await grid();
+    expect(
+      screen.queryByRole("list", { name: "Recorreguts muntats a les pistes" }),
+    ).not.toBeInTheDocument();
+    expect(requests.some((request) => request.line.startsWith("GET /me/ring-setups"))).toBe(false);
   });
 });

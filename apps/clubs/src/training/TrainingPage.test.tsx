@@ -252,7 +252,10 @@ describe("T-09-39 screen 08 at the weekly limit (R-09-05)", () => {
       await screen.findByText("Has arribat al límit de 3 reserves per aquesta setmana."),
     ).toBeVisible();
     expect(screen.queryByRole("button", { name: /^Confirma/u })).not.toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /Muntanya|Carretera/u })).not.toBeInTheDocument();
+    // The training rows' links (`«dl 3 · 8:30 · Muntanya»`); S16's course line is another link.
+    expect(
+      screen.queryByRole("link", { name: /· (Muntanya|Carretera)$/u }),
+    ).not.toBeInTheDocument();
   });
 });
 

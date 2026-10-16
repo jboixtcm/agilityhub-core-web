@@ -295,9 +295,25 @@ export interface PlannerBuildSession {
   }[];
   readonly progressJson: unknown;
   readonly selectedStrategy: "EQUIPMENT_TYPE" | "CLOSER_OBSTACLE_ORDER" | "FREE_BUILD";
+  /**
+   * R-16-11: the ring setup the finish registered or refreshed; `null` while open, once
+   * `ABANDONED`, or when an INSTRUCTOR finished it without `courses.allowInstructorPublish`.
+   */
+  readonly setupId: string | null;
   readonly startedAt: string | null;
   readonly startedByAccountId: string;
   readonly status: "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED" | "ABANDONED";
+}
+
+/** What a live build-session subscription reports besides the obstacles (R-16-11). */
+export interface PlannerBuildSessionWatchers {
+  /**
+   * The session read again (a poll, a reconnection, the `finished` event) whose status,
+   * `finishedAt`, `setupId` or participants differ from the last state the store knew — e.g.
+   * another phone finished it (`COMPLETED` with its `setupId`) or it was `ABANDONED`. Always
+   * called after the stream's `finished` event. Its `obstacles` are the store's merged state.
+   */
+  readonly onSession?: (session: PlannerBuildSession) => void;
 }
 
 export interface PlannerStore {
@@ -353,8 +369,19 @@ export interface PlannerStore {
     readonly buildSessionId: string;
     readonly submissionKey: string;
   }): Promise<PlannerBuildSession>;
+  /**
+   * R-16-11 (S16 §14.2): `POST /build-sessions/join {code}` — an open session's `joinCode`
+   * (case-insensitive) or its QR's `joinToken`; the caller becomes a participant once.
+   */
+  joinBuildSession(input: { readonly code: string }): Promise<PlannerBuildSession>;
+  /**
+   * R-16-11 live updates: `onChange` receives only the obstacles changed by someone else since the
+   * state the caller last read through this store (create/get/join/finish/list answers, and its
+   * own `upsertBuildObstacleStatus` for that obstacle). Returns the cleanup.
+   */
   subscribeBuildObstacleStatuses(
     buildSessionId: string,
     onChange: (status: PlannerBuildObstacleStatus) => void,
+    watchers?: PlannerBuildSessionWatchers,
   ): () => void;
 }

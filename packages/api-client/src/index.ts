@@ -32,6 +32,18 @@ export {
   useClassRegistrants,
   waitlistEntryGuide,
 } from "./class-registrants";
+export {
+  BUILD_EVENTS_MAX_REOPEN_DELAY_MS,
+  BUILD_EVENTS_REOPEN_DELAY_MS,
+  type BuildEventHandlers,
+  type BuildEventsSubscriberOptions,
+  type BuildEventSource,
+  type BuildEventSourceConstructor,
+  type BuildFinishedEvent,
+  type BuildObstacleEvent,
+  createBuildEventsSubscriber,
+  type SubscribeBuildEvents,
+} from "./build-events";
 export { apiClient, createApiClient, type ApiClient, type ApiClientOptions } from "./client";
 export { getPublicClubPage, type PublicClubPageRequest } from "./club-pages";
 export {

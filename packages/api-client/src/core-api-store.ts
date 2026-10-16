@@ -11,6 +11,7 @@ import type {
   ListCalendarPlacementsInput,
   PlannerBuildObstacleStatus,
   PlannerBuildSession,
+  PlannerBuildSessionWatchers,
   PlannerCalibrationLog,
   PlannerCourse,
   PlannerPlacement,
@@ -28,6 +29,7 @@ import type {
 } from "@agilityhub/course-ui";
 
 import { isApiError } from "./api-error";
+import type { BuildFinishedEvent, SubscribeBuildEvents } from "./build-events";
 import { apiClient, type ApiClient } from "./client";
 import type { components } from "./generated/schema";
 
@@ -52,14 +54,66 @@ interface CoreApiVenue {
   readonly locale?: string;
 }
 
+/** R-16-11: another phone sees a tap in less than 2 s. */
+export const BUILD_POLL_INTERVAL_MS = 2000;
+
 export interface CoreApiStoreOptions {
   readonly client?: ApiClient;
-  readonly subscribeBuildEvents?: (
-    buildSessionId: string,
-    onObstacle: (status: PlannerBuildObstacleStatus) => void,
-  ) => () => void;
+  /**
+   * R-16-11 live mode: the session's event stream (`createBuildEventsSubscriber`). Without it,
+   * or when it cannot open (`BUILD_EVENTS_UNSUPPORTED`), the store polls the session (INC-60).
+   */
+  readonly subscribeBuildEvents?: SubscribeBuildEvents;
+  /** The polling period (default `BUILD_POLL_INTERVAL_MS`); also the stream's re-read retry. */
+  readonly buildPollIntervalMs?: number;
   readonly uploadFetch?: typeof globalThis.fetch;
   readonly venue: CoreApiVenue;
+}
+
+/**
+ * The last state of a build session the store gave its caller: each obstacle with the session
+ * version it was read at, so an older read never overwrites a newer change (R-16-11).
+ */
+interface BuildSessionMemory {
+  session: PlannerBuildSession;
+  readonly obstacles: Map<
+    string,
+    { readonly obstacle: PlannerBuildObstacleStatus; readonly version: number }
+  >;
+}
+
+function isClosed(status: PlannerBuildSession["status"]): boolean {
+  return status === "COMPLETED" || status === "ABANDONED";
+}
+
+function sameObstacle(a: PlannerBuildObstacleStatus, b: PlannerBuildObstacleStatus): boolean {
+  return a.status === b.status && a.at === b.at && a.byAccountId === b.byAccountId;
+}
+
+function participantIds(session: PlannerBuildSession): string {
+  return session.participants
+    .map((participant) => participant.accountId)
+    .sort()
+    .join(",");
+}
+
+/** What `onSession` reports: the session closed, its setup, or who builds it changed. */
+function sessionMoved(before: PlannerBuildSession, after: PlannerBuildSession): boolean {
+  return (
+    before.status !== after.status ||
+    before.finishedAt !== after.finishedAt ||
+    before.setupId !== after.setupId ||
+    participantIds(before) !== participantIds(after)
+  );
+}
+
+/**
+ * The session as the `finished` event closed it: an outlived session is `ABANDONED` on the stream
+ * before S15 P9 records it, so `GET` may still read it open.
+ */
+function closedBy(session: PlannerBuildSession, event: BuildFinishedEvent): PlannerBuildSession {
+  if (isClosed(session.status)) return session;
+  return { ...session, finishedAt: event.finishedAt ?? session.finishedAt, status: event.status };
 }
 
 function required<T>(value: T | undefined, operation: string): T {
@@ -225,6 +279,7 @@ function plannerBuildSession(session: ApiBuildSession): PlannerBuildSession {
     progressJson: session.progressJson ?? null,
     ringId: session.ringId,
     selectedStrategy: session.selectedStrategy,
+    setupId: session.setupId ?? null,
     startedAt: session.startedAt ?? null,
     startedByAccountId: session.startedByAccountId,
     status: session.status,
@@ -356,7 +411,10 @@ export class CoreApiStore implements PlannerStore {
   readonly #uploadFetch: typeof globalThis.fetch;
   readonly #venue: PlannerVenue;
   readonly #locale: string;
-  readonly #subscribeBuildEvents: CoreApiStoreOptions["subscribeBuildEvents"];
+  readonly #subscribeBuildEvents: SubscribeBuildEvents | undefined;
+  readonly #buildPollIntervalMs: number;
+  /** R-16-11: per build session, the state its caller last received from this store. */
+  readonly #buildSessions = new Map<string, BuildSessionMemory>();
   readonly #ringBase = new Map<string, ApiRing>();
   readonly #ringCache = new Map<string, PlannerRing>();
   /**
@@ -374,6 +432,7 @@ export class CoreApiStore implements PlannerStore {
     this.#uploadFetch = options.uploadFetch ?? ((input, init) => globalThis.fetch(input, init));
     this.#locale = options.venue.locale ?? "ca";
     this.#subscribeBuildEvents = options.subscribeBuildEvents;
+    this.#buildPollIntervalMs = options.buildPollIntervalMs ?? BUILD_POLL_INTERVAL_MS;
     this.#venue = {
       city: options.venue.city ?? null,
       default_paper_size: options.venue.defaultPaperSize ?? "a4",
@@ -406,8 +465,22 @@ export class CoreApiStore implements PlannerStore {
       return await this.#hydrateRing(ring);
     } catch (error) {
       if (isApiError(error) && error.status === 404) return null;
+      // E9-W04 (found by the real-core run): an INSTRUCTOR is refused the ring's record, but reads
+      // the club's catalog (`RingReaderView`) and the ring's geometry (S16 §6: GET for INSTRUCTOR),
+      // which is all the build session and the viewer draw.
+      if (isApiError(error, "FORBIDDEN")) return this.#getRingFromCatalog(ringId);
       throw error;
     }
+  }
+
+  async #getRingFromCatalog(ringId: string): Promise<PlannerRing | null> {
+    const result = await this.#client.GET("/rings", {
+      params: { query: { includeInactive: false } },
+    });
+    const ring = required(result.data, "getRing:catalog").items.find((item) => item.id === ringId);
+    if (ring === undefined) return null;
+    this.#ringBase.set(ring.id, ring);
+    return this.#hydrateRing(ring);
   }
 
   async updateRingInventory(
@@ -746,15 +819,24 @@ export class CoreApiStore implements PlannerStore {
       body: { live: input.live ?? true, placementId: input.placementId },
       headers: { "Idempotency-Key": input.submissionKey },
     });
-    return plannerBuildSession(required(result.data, "createBuildSession"));
+    return this.#rememberBuildSession(
+      plannerBuildSession(required(result.data, "createBuildSession")),
+    );
+  }
+
+  /** R-16-11: `POST /build-sessions/join {code}` (joinCode or the QR's joinToken; no key). */
+  async joinBuildSession(input: { readonly code: string }): Promise<PlannerBuildSession> {
+    const result = await this.#client.POST("/build-sessions/join", {
+      body: { code: input.code },
+    });
+    return this.#rememberBuildSession(
+      plannerBuildSession(required(result.data, "joinBuildSession")),
+    );
   }
 
   async getBuildSession(buildSessionId: string): Promise<PlannerBuildSession | null> {
     try {
-      const result = await this.#client.GET("/build-sessions/{id}", {
-        params: { path: { id: buildSessionId } },
-      });
-      return plannerBuildSession(required(result.data, "getBuildSession"));
+      return this.#rememberBuildSession(await this.#readBuildSession(buildSessionId));
     } catch (error) {
       if (isApiError(error) && error.status === 404) return null;
       throw error;
@@ -764,10 +846,7 @@ export class CoreApiStore implements PlannerStore {
   async listBuildObstacleStatuses(
     buildSessionId: string,
   ): Promise<readonly PlannerBuildObstacleStatus[]> {
-    const result = await this.#client.GET("/build-sessions/{id}", {
-      params: { path: { id: buildSessionId } },
-    });
-    return required(result.data, "listBuildObstacleStatuses").obstacles.map(plannerBuildObstacle);
+    return this.#rememberBuildSession(await this.#readBuildSession(buildSessionId)).obstacles;
   }
 
   async upsertBuildObstacleStatus(
@@ -780,12 +859,16 @@ export class CoreApiStore implements PlannerStore {
       },
     });
     const session = required(result.data, "upsertBuildObstacleStatus");
-    return plannerBuildObstacle(
+    const obstacle = plannerBuildObstacle(
       required(
-        session.obstacles.find((obstacle) => obstacle.obstacleId === input.obstacleId),
+        session.obstacles.find((candidate) => candidate.obstacleId === input.obstacleId),
         "upsertBuildObstacleStatus:obstacle",
       ),
     );
+    // The answer carries the whole session, but the caller applies only this obstacle: another
+    // phone's changes in it must still reach the subscription later (R-16-11).
+    this.#rememberBuildObstacle(input.buildSessionId, obstacle, session.version);
+    return obstacle;
   }
 
   async finishBuildSession(input: {
@@ -796,17 +879,205 @@ export class CoreApiStore implements PlannerStore {
       headers: { "Idempotency-Key": input.submissionKey },
       params: { path: { id: input.buildSessionId } },
     });
-    return plannerBuildSession(required(result.data, "finishBuildSession"));
+    return this.#rememberBuildSession(
+      plannerBuildSession(required(result.data, "finishBuildSession")),
+    );
   }
 
+  /**
+   * R-16-11 live updates (INC-60): through the event stream when `subscribeBuildEvents` is
+   * configured and can open, else by polling `GET /build-sessions/{id}` every
+   * `buildPollIntervalMs`. Either way `onChange` gets only what the caller does not have yet.
+   */
   subscribeBuildObstacleStatuses(
     buildSessionId: string,
     onChange: (status: PlannerBuildObstacleStatus) => void,
+    watchers: PlannerBuildSessionWatchers = {},
   ): () => void {
-    if (this.#subscribeBuildEvents === undefined) {
-      throw new Error("CORE_API_BUILD_EVENTS_NOT_CONFIGURED");
+    const apply = (read: PlannerBuildSession, finished?: BuildFinishedEvent): void => {
+      const session = finished === undefined ? read : closedBy(read, finished);
+      const { changed, merged, moved } = this.#mergeBuildSession(session);
+      for (const obstacle of changed) onChange(obstacle);
+      if (moved || finished !== undefined) watchers.onSession?.(merged);
+    };
+    if (this.#subscribeBuildEvents !== undefined) {
+      try {
+        return this.#streamBuildSession(
+          buildSessionId,
+          this.#subscribeBuildEvents,
+          onChange,
+          apply,
+        );
+      } catch {
+        // No EventSource in this runtime (BUILD_EVENTS_UNSUPPORTED): poll instead.
+      }
     }
-    return this.#subscribeBuildEvents(buildSessionId, onChange);
+    return this.#pollBuildSession(buildSessionId, apply);
+  }
+
+  #streamBuildSession(
+    buildSessionId: string,
+    transport: SubscribeBuildEvents,
+    onChange: (status: PlannerBuildObstacleStatus) => void,
+    apply: (session: PlannerBuildSession, finished?: BuildFinishedEvent) => void,
+  ): () => void {
+    let stopped = false;
+    let retry: ReturnType<typeof setTimeout> | undefined;
+    // No replay: at every open (the first one too, for the changes between the caller's read and
+    // the open) the state is read again; a failed read is retried.
+    const reread = (finished?: BuildFinishedEvent): void => {
+      if (retry !== undefined) clearTimeout(retry);
+      retry = undefined;
+      this.#readBuildSession(buildSessionId).then(
+        (session) => {
+          if (!stopped) apply(session, finished);
+        },
+        () => {
+          if (stopped) return;
+          retry = setTimeout(() => {
+            reread(finished);
+          }, this.#buildPollIntervalMs);
+        },
+      );
+    };
+    const close = transport(
+      buildSessionId,
+      (event) => {
+        if (stopped || event.sessionId !== buildSessionId) return;
+        const obstacle: PlannerBuildObstacleStatus = {
+          at: event.at,
+          byAccountId: event.byAccountId,
+          lastUpdatedClientSessionId: null,
+          obstacleId: event.obstacleId,
+          status: event.status,
+        };
+        if (this.#rememberBuildObstacle(buildSessionId, obstacle, event.version)) {
+          onChange(obstacle);
+        }
+      },
+      {
+        onFinished: (event) => {
+          reread(event);
+        },
+        onOpened: () => {
+          reread();
+        },
+      },
+    );
+    return () => {
+      stopped = true;
+      if (retry !== undefined) clearTimeout(retry);
+      close();
+    };
+  }
+
+  /** INC-60: one read at a time, the next one `buildPollIntervalMs` after the previous answer. */
+  #pollBuildSession(
+    buildSessionId: string,
+    apply: (session: PlannerBuildSession) => void,
+  ): () => void {
+    const known = this.#buildSessions.get(buildSessionId);
+    // A closed session changes no more.
+    if (known !== undefined && isClosed(known.session.status)) return () => undefined;
+    let stopped = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const tick = async (): Promise<void> => {
+      timer = undefined;
+      let session: PlannerBuildSession | null = null;
+      try {
+        session = await this.#readBuildSession(buildSessionId);
+      } catch {
+        // A failed poll is skipped: the next one runs.
+      }
+      if (stopped) return;
+      if (session !== null) {
+        apply(session);
+        if (isClosed(this.#buildSessions.get(buildSessionId)?.session.status ?? session.status)) {
+          return;
+        }
+      }
+      schedule();
+    };
+    const schedule = (): void => {
+      timer = setTimeout(() => void tick(), this.#buildPollIntervalMs);
+    };
+    schedule();
+    return () => {
+      stopped = true;
+      if (timer !== undefined) clearTimeout(timer);
+    };
+  }
+
+  async #readBuildSession(buildSessionId: string): Promise<PlannerBuildSession> {
+    const result = await this.#client.GET("/build-sessions/{id}", {
+      params: { path: { id: buildSessionId } },
+    });
+    return plannerBuildSession(required(result.data, "getBuildSession"));
+  }
+
+  /** A whole session the caller receives (create, get, join, finish, list). */
+  #rememberBuildSession(session: PlannerBuildSession): PlannerBuildSession {
+    this.#buildSessions.set(session.id, {
+      obstacles: new Map(
+        session.obstacles.map((obstacle) => [
+          obstacle.obstacleId,
+          { obstacle, version: session.version },
+        ]),
+      ),
+      session,
+    });
+    return session;
+  }
+
+  /**
+   * One obstacle the caller receives (its own tap, a stream event) at a session `version`;
+   * `true` when it is news to the caller (neither older than nor equal to what it has).
+   */
+  #rememberBuildObstacle(
+    buildSessionId: string,
+    obstacle: PlannerBuildObstacleStatus,
+    version: number,
+  ): boolean {
+    const memory = this.#buildSessions.get(buildSessionId);
+    if (memory === undefined) return true;
+    const known = memory.obstacles.get(obstacle.obstacleId);
+    if (known !== undefined && known.version > version) return false;
+    memory.obstacles.set(obstacle.obstacleId, { obstacle, version });
+    return known === undefined || !sameObstacle(known.obstacle, obstacle);
+  }
+
+  /**
+   * A session read again: the obstacles that changed since the caller's state (an obstacle
+   * known at a newer version keeps it), the merged session, and whether `onSession` reports it.
+   * Without a remembered state the read is the baseline: no obstacle is news.
+   */
+  #mergeBuildSession(session: PlannerBuildSession): {
+    readonly changed: readonly PlannerBuildObstacleStatus[];
+    readonly merged: PlannerBuildSession;
+    readonly moved: boolean;
+  } {
+    const memory = this.#buildSessions.get(session.id);
+    if (memory === undefined) {
+      return { changed: [], merged: this.#rememberBuildSession(session), moved: true };
+    }
+    const changed: PlannerBuildObstacleStatus[] = [];
+    for (const obstacle of session.obstacles) {
+      const known = memory.obstacles.get(obstacle.obstacleId);
+      if (known !== undefined && known.version > session.version) continue;
+      if (known === undefined || !sameObstacle(known.obstacle, obstacle)) changed.push(obstacle);
+      memory.obstacles.set(obstacle.obstacleId, { obstacle, version: session.version });
+    }
+    // A closed session stays closed: an older read never reopens it.
+    const keep = isClosed(memory.session.status) && !isClosed(session.status);
+    const moved = !keep && sessionMoved(memory.session, session);
+    const base = keep ? memory.session : session;
+    memory.session = {
+      ...base,
+      obstacles: base.obstacles.map(
+        (obstacle) => memory.obstacles.get(obstacle.obstacleId)?.obstacle ?? obstacle,
+      ),
+    };
+    return { changed, merged: memory.session, moved };
   }
 
   async #getGeometry(ringId: string): Promise<ApiGeometry> {

@@ -14,6 +14,7 @@ import {
 import { type CSSProperties, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { BookingCourseLines } from "../courses/blocks";
 
 import "./booking.css";
 import { type Booking, errorText, localParts, type Translate, useBooking } from "./shared";
@@ -215,6 +216,8 @@ export function BookingDetailPage({
           <Icon aria-hidden="true" name="clock" />
           {bookedLine}
         </p>
+        {/* S16 §2 / R-16-13: what is set up on the class's ring, and the course it plans. */}
+        <BookingCourseLines classSessionId={data.classSessionId} client={client} />
       </Card>
       {cancellable ? <Button onClick={open}>{t("booking:detail.cancel")}</Button> : null}
       {note !== undefined ? (

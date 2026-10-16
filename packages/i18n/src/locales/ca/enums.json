@@ -366,5 +366,7 @@
   "ringSurface": {"GRASS": "Gespa", "SAND": "Sorra", "ARTIFICIAL": "Gespa artificial", "INDOOR": "Interior", "OTHER": "Altra"},
   "doorFlow": {"IN": "entrada", "OUT": "sortida", "BOTH": "entrada i sortida"},
   "doorSide": {"NORTH": "Nord", "SOUTH": "Sud", "EAST": "Est", "WEST": "Oest"},
-  "courseWarningRule": {"outside-ring": "Fora de la pista", "border-clearance": "Marge al perímetre", "course-no-go": "Zona no-go del recorregut", "ring-no-go": "Zona no-go de la pista", "door-clearance": "Distància a la porta", "course-larger-than-ring": "Recorregut més gran que la pista", "obstacle-inventory": "Inventari d'obstacles"}
+  "courseWarningRule": {"outside-ring": "Fora de la pista", "border-clearance": "Marge al perímetre", "course-no-go": "Zona no-go del recorregut", "ring-no-go": "Zona no-go de la pista", "door-clearance": "Distància a la porta", "course-larger-than-ring": "Recorregut més gran que la pista", "obstacle-inventory": "Inventari d'obstacles"},
+  "buildObstacleStatus": {"NOT_PLACED": "pendent", "CURRENT": "ara", "PLACED": "col·locat", "SKIPPED": "saltat", "NEEDS_CHECK": "per revisar"},
+  "buildSessionStatus": {"NOT_STARTED": "sense començar", "IN_PROGRESS": "en curs", "COMPLETED": "acabada", "ABANDONED": "abandonada"}
 }

@@ -34,6 +34,7 @@ import { useTranslation } from "react-i18next";
 
 import "../booking/booking.css";
 import { navigateInApp, type Translate } from "../booking/shared";
+import { RegisterSetupLink } from "../courses/blocks";
 import "../training/training.css";
 import {
   addDays,
@@ -372,6 +373,7 @@ export function RingBlockPage({
           })}
         </div>
       )}
+      {ring === undefined ? null : <RegisterSetupLink ringId={ring.id} ringName={ring.name} />}
       {grid.status === "loading" ? (
         <Skeleton height="6rem" label={t("instructor:ringBlock.loading")} />
       ) : null}

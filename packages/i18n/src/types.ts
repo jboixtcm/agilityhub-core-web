@@ -21,6 +21,7 @@ export const namespaces = [
   "billing",
   "census",
   "console",
+  "courses",
   "enums",
   "history",
   "home",

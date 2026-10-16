@@ -1,6 +1,7 @@
 import {
   BRANDING_BOOT_TIMEOUT_MS,
   createApiClient,
+  createBuildEventsSubscriber,
   normalizeBranding,
   refreshBranding,
 } from "@agilityhub/api-client";
@@ -17,6 +18,7 @@ import { createRoot } from "react-dom/client";
 import { I18nextProvider } from "react-i18next";
 
 import { App } from "./App";
+import { configureBuildEvents } from "./courses/live-events";
 import { setPushRegistration } from "./notifications/push";
 import "./styles.css";
 
@@ -76,6 +78,18 @@ async function bootstrap(root: HTMLElement) {
     mockMode: mockEnabled,
     ...(mockEnabled ? { mockRefreshTokenStore: new MemoryRefreshTokenStore() } : {}),
   });
+  // S16 R-16-11 (E9-W04): the build session's live events through the core's SSE stream, which
+  // takes the access token as a query parameter (an EventSource sends no header). Mock mode has
+  // no stream: the store polls `GET /build-sessions/{id}` instead (INC-60).
+  if (!mockEnabled) {
+    configureBuildEvents(
+      createBuildEventsSubscriber({
+        eventsUrl: (sessionId) =>
+          `${apiBaseUrl}/build-sessions/${encodeURIComponent(sessionId)}/events`,
+        getAccessToken: () => authClient.getAccessToken(),
+      }),
+    );
+  }
   const apiClient = createAuthenticatedApiClient(authClient, {
     baseUrl: apiBaseUrl,
     getLocale: () => i18n.resolvedLanguage ?? branding.defaultLocale,

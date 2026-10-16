@@ -14,10 +14,17 @@ import { refuse, selectItems, type ListSpec, listValues } from "./backoffice-han
 import { clubInstant } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
 import {
+  activeSetupOf,
   COURSE_FILES_ORIGIN,
   courseModels,
+  courseNameIn,
+  courseShownBy,
   courseState,
   courseStats,
+  instructorsPublishSetups,
+  readsAsMember,
+  setupsShownToMembers,
+  type BuildSession,
   type Course,
   type ObstacleInventory,
   type Placement,
@@ -108,9 +115,7 @@ function readerGuard(what: string): Response | "MEMBER" | "STAFF" {
     return "STAFF";
   }
   if (!impersonation && !roles.includes("MEMBER")) return apiError("FORBIDDEN", "Forbidden", 403);
-  return findParameter("courses.showSetupToMembers")?.value === false
-    ? apiError("NOT_FOUND", `${what} not found`, 404)
-    : "MEMBER";
+  return setupsShownToMembers() ? "MEMBER" : apiError("NOT_FOUND", `${what} not found`, 404);
 }
 
 function nowIso(): string {
@@ -212,10 +217,7 @@ function memberVisibleCourse(id: string): Course | Response {
     : apiError("COURSE_NOT_VISIBLE", "Course not visible", 404);
 }
 
-function localizedName(course: Course, locale: string): string {
-  const names = course.nameI18n ?? {};
-  return names[locale] ?? names.ca ?? Object.values(names)[0] ?? course.name;
-}
+const localizedName = courseNameIn;
 
 /**
  * R-16-17: `name` in the reader's language; `nameI18n` only to a caller who can edit it (never a
@@ -569,6 +571,161 @@ function setupForReader(
 /** A setup of the caller's club (another club's is `404 NOT_FOUND`). */
 function clubSetup(id: string): RingSetup | undefined {
   return callerClubOwnsTheWorld() ? courseState.setups.find((item) => item.id === id) : undefined;
+}
+
+/**
+ * R-16-07: registers an ACTIVE setup as `POST /ring-setups` stores it (what the request did not
+ * send is `null`); the ring's ACTIVE one, if any, becomes DISMANTLED in the same step.
+ */
+function registerSetup(source: Schemas["RingSetupRequest"]): Schemas["RingSetupCreated"] {
+  const at = nowIso();
+  const active = activeSetupOf(source.ringId);
+  const setup: RingSetup = {
+    agilityhubLevel: source.agilityhubLevel ?? null,
+    builtAt: at,
+    builtByAccountId: meId(),
+    courseId: source.courseId ?? null,
+    createdAt: at,
+    dismantledAt: null,
+    dismantledByAccountId: null,
+    expectedUntil: source.expectedUntil ?? null,
+    expiresAt: setupExpiry(source.expectedUntil),
+    id: nextId("setup"),
+    imageFileKey: source.imageFileKey ?? null,
+    imageUrl: source.imageFileKey == null ? null : courseFileUrl(source.imageFileKey),
+    kind: source.kind,
+    levelIds: [...source.levelIds],
+    notes: source.notes ?? null,
+    placementId: source.placementId ?? null,
+    ringId: source.ringId,
+    status: "ACTIVE",
+    view: "STAFF",
+  };
+  courseState.setups = [
+    setup,
+    ...courseState.setups.map((item) =>
+      item.id === active?.id
+        ? {
+            ...item,
+            dismantledAt: at,
+            dismantledByAccountId: meId(),
+            status: "DISMANTLED" as const,
+          }
+        : item,
+    ),
+  ];
+  return { replacedSetupId: active?.id ?? null, setup };
+}
+
+/**
+ * R-16-09 `MeRingSetupSummary` of the ring's ACTIVE setup (`null` without one): no builder, notes
+ * nor inventory; the photo as the thumbnail, else the shown course's; a viewer when there is a
+ * placement or a course with a model to draw.
+ */
+function meSetupSummary(ringId: string): Schemas["MeRingSetupSummary"] | null {
+  const active = activeSetupOf(ringId);
+  if (active === undefined) return null;
+  const course = courseShownBy(active);
+  const placement = active.placementId == null ? undefined : clubPlacement(active.placementId);
+  return {
+    builtAt: active.builtAt,
+    expectedUntil: active.expectedUntil ?? null,
+    hasViewer: placement !== undefined || course?.normalizedJson != null,
+    id: active.id,
+    kind: active.kind,
+    levelLabel: levelLabel(active.levelIds, active.agilityhubLevel ?? null),
+    thumbnailUrl: active.imageUrl ?? course?.thumbnailUrl ?? null,
+  };
+}
+
+// ---------------------------------------------------------------------------------------------
+// Build sessions (R-16-11). The event stream (`GET /build-sessions/{id}/events`) is not mocked:
+// MSW cannot serve an EventSource, so the app reads `GET /build-sessions/{id}` under the mocks.
+
+const BUILD_STRATEGIES = ["EQUIPMENT_TYPE", "CLOSER_OBSTACLE_ORDER", "FREE_BUILD"] as const;
+const BUILD_OBSTACLE_STATUSES = ["NOT_PLACED", "CURRENT", "PLACED", "SKIPPED", "NEEDS_CHECK"];
+/** The join code's characters: uppercase letters and digits, without the look-alikes 0/O, 1/I. */
+const JOIN_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+/** A deterministic pseudo-random sequence (an LCG over the world's sequence). */
+function drawn(length: number, alphabet: string): string {
+  courseState.sequence += 1;
+  let seed = Math.imul(courseState.sequence, 2654435761) >>> 0;
+  let value = "";
+  for (let index = 0; index < length; index += 1) {
+    seed = (Math.imul(seed, 1103515245) + 12345) >>> 0;
+    value += alphabet.charAt((seed >>> 8) % alphabet.length);
+  }
+  return value;
+}
+
+/** Open (NOT_STARTED or IN_PROGRESS) and younger than `courses.buildSessionMaxHours` (12). */
+function sessionLive(session: BuildSession): boolean {
+  if (session.status !== "NOT_STARTED" && session.status !== "IN_PROGRESS") return false;
+  const hours = Number(findParameter("courses.buildSessionMaxHours")?.value ?? 12);
+  return session.startedAt == null || Date.now() - Date.parse(session.startedAt) < hours * 3.6e6;
+}
+
+/** A six-character join code no open session of the club holds (drawn again otherwise). */
+function joinCode(): string {
+  const taken = new Set(courseState.buildSessions.filter(sessionLive).map((item) => item.joinCode));
+  for (;;) {
+    const code = drawn(6, JOIN_ALPHABET);
+    if (!taken.has(code)) return code;
+  }
+}
+
+/** A build session of the caller's club (another club's is `404 NOT_FOUND`). */
+function clubBuildSession(id: string): BuildSession | undefined {
+  return callerClubOwnsTheWorld()
+    ? courseState.buildSessions.find((item) => item.id === id)
+    : undefined;
+}
+
+function saveBuildSession(next: BuildSession): BuildSession {
+  courseState.buildSessions = courseState.buildSessions.map((item) =>
+    item.id === next.id ? next : item,
+  );
+  return next;
+}
+
+/** R-16-07 for `finish`: the course's discipline names the setup's kind. */
+function setupKind(discipline: Course["discipline"]): RingSetup["kind"] {
+  return discipline === "AGILITY" || discipline === "JUMPING" ? discipline : "FUN";
+}
+
+/**
+ * R-16-11 `finish`'s setup (ruling E118): an ADMIN, or an INSTRUCTOR while
+ * `courses.allowInstructorPublish`, refreshes the ring's ACTIVE setup when it already shows this
+ * placement (as a renewal: builtAt, builtByAccountId, the same expectedUntil, a new expiresAt), or
+ * else registers one as `POST /ring-setups` does (the placement as its source, the course's levels);
+ * an INSTRUCTOR with the switch off registers none (`null`).
+ */
+function finishedSetup(session: BuildSession, course: Course): Response | string | null {
+  if (!isAdmin() && !instructorsPublishSetups()) return null;
+  const active = activeSetupOf(session.ringId);
+  if (active?.placementId === session.placementId) {
+    const refreshed: RingSetup = {
+      ...active,
+      builtAt: nowIso(),
+      builtByAccountId: meId(),
+      expiresAt: setupExpiry(active.expectedUntil),
+    };
+    courseState.setups = courseState.setups.map((item) =>
+      item.id === active.id ? refreshed : item,
+    );
+    return active.id;
+  }
+  if (courseState.geometries[session.ringId] === undefined) {
+    return apiError("RING_WITHOUT_GEOMETRY", "Ring without geometry", 422);
+  }
+  return registerSetup({
+    agilityhubLevel: course.agilityhubLevel ?? null,
+    kind: setupKind(course.discipline),
+    levelIds: levelsEnabled() ? [...course.levelIds] : [],
+    placementId: session.placementId,
+    ringId: session.ringId,
+  }).setup.id;
 }
 
 /**
@@ -1162,9 +1319,7 @@ export const courseHandlers = [
   http.post("*/api/v1/ring-setups", async ({ request }) => {
     const refused = guard();
     if (refused !== undefined) return refused;
-    if (!isAdmin() && findParameter("courses.allowInstructorPublish")?.value === false) {
-      return apiError("FORBIDDEN", "Forbidden", 403);
-    }
+    if (!isAdmin() && !instructorsPublishSetups()) return apiError("FORBIDDEN", "Forbidden", 403);
     const text = await request.text();
     return keyed(request, text, () => {
       const body = JSON.parse(text) as Schemas["RingSetupRequest"];
@@ -1201,48 +1356,9 @@ export const courseHandlers = [
       if (body.expectedUntil != null && body.expectedUntil < clubLocalDate()) {
         return fieldError("expectedUntil", "INVALID");
       }
-      const at = nowIso();
-      const active = courseState.setups.find(
-        (setup) => setup.ringId === body.ringId && setup.status === "ACTIVE",
-      );
-      const setup: RingSetup = {
-        agilityhubLevel: body.agilityhubLevel ?? null,
-        builtAt: at,
-        builtByAccountId: meId(),
-        courseId: body.courseId ?? null,
-        createdAt: at,
-        dismantledAt: null,
-        dismantledByAccountId: null,
-        expectedUntil: body.expectedUntil ?? null,
-        expiresAt: setupExpiry(body.expectedUntil),
-        id: nextId("setup"),
-        imageFileKey: body.imageFileKey ?? null,
-        imageUrl: body.imageFileKey == null ? null : courseFileUrl(body.imageFileKey),
-        kind: body.kind,
-        levelIds: [...body.levelIds],
-        notes: body.notes ?? null,
-        placementId: body.placementId ?? null,
-        ringId: body.ringId,
-        status: "ACTIVE",
-        view: "STAFF",
-      };
-      courseState.setups = [
-        setup,
-        ...courseState.setups.map((item) =>
-          item.id === active?.id
-            ? {
-                ...item,
-                dismantledAt: at,
-                dismantledByAccountId: meId(),
-                status: "DISMANTLED" as const,
-              }
-            : item,
-        ),
-      ];
-      return HttpResponse.json<Schemas["RingSetupCreated"]>(
-        { replacedSetupId: active?.id ?? null, setup },
-        { status: 201 },
-      );
+      return HttpResponse.json<Schemas["RingSetupCreated"]>(registerSetup(body), {
+        status: 201,
+      });
     });
   }),
   http.post("*/api/v1/ring-setups/:id/dismantle", async ({ params, request }) => {
@@ -1286,6 +1402,192 @@ export const courseHandlers = [
       };
       courseState.setups = courseState.setups.map((item) => (item.id === setup.id ? next : item));
       return HttpResponse.json(next);
+    });
+  }),
+
+  // ---- What the member reads (R-16-09; screens 08, 10, 07) ------------------------------------
+  // `ringIds` as openapi-fetch sends an array (`ringIds=a&ringIds=b`) or comma-separated.
+  http.get("*/api/v1/me/ring-setups", ({ request }) => {
+    const current = scenario();
+    if (!current.branding.modules.includes("COURSES")) {
+      return apiError("MODULE_DISABLED", "Module disabled", 404);
+    }
+    const roles = current.me.membership?.roles ?? [];
+    if (
+      current.me.impersonation === undefined &&
+      !roles.some((role) => role === "MEMBER" || role === "INSTRUCTOR")
+    ) {
+      return apiError("FORBIDDEN", "Forbidden", 403);
+    }
+    const requested = new URL(request.url).searchParams
+      .getAll("ringIds")
+      .flatMap((value) => value.split(","))
+      .map((value) => value.trim())
+      .filter((value) => value !== "");
+    const rings = [];
+    if (requested.length > 0) {
+      for (const id of requested) {
+        const ring = ringOfClub(id);
+        if (ring === undefined) return apiError("NOT_FOUND", "Ring not found", 404);
+        rings.push(ring);
+      }
+    } else if (callerClubOwnsTheWorld()) {
+      rings.push(
+        ...catalogState.rings
+          .filter((ring) => ring.active)
+          .sort((left, right) => left.order - right.order),
+      );
+    }
+    // A MEMBER (an impersonation included) reads every ring without its setup while
+    // `courses.showSetupToMembers` is off; an INSTRUCTOR's projection is unchanged.
+    const hidden = readsAsMember() && !setupsShownToMembers();
+    return HttpResponse.json<Schemas["MeRingSetup"][]>(
+      rings.map((ring) => ({ ringId: ring.id, setup: hidden ? null : meSetupSummary(ring.id) })),
+    );
+  }),
+
+  // ---- Build sessions (R-16-11) ------------------------------------------------------------------
+  http.post("*/api/v1/build-sessions", async ({ request }) => {
+    const refused = guard();
+    if (refused !== undefined) return refused;
+    const text = await request.text();
+    return keyed(request, text, () => {
+      const body = (text === "" ? {} : JSON.parse(text)) as Partial<
+        Schemas["BuildSessionRequest"]
+      >;
+      if (typeof body.placementId !== "string" || body.placementId === "") {
+        return fieldError("placementId", "REQUIRED");
+      }
+      if (typeof body.live !== "boolean") return fieldError("live", "REQUIRED");
+      const strategy = body.selectedStrategy ?? "EQUIPMENT_TYPE";
+      if (!BUILD_STRATEGIES.includes(strategy)) return fieldError("selectedStrategy", "INVALID");
+      const placement = clubPlacement(body.placementId);
+      if (placement === undefined) return apiError("NOT_FOUND", "Placement not found", 404);
+      const course = findCourse(placement.courseId);
+      if (course === undefined || !readable(course)) {
+        return apiError("COURSE_NOT_VISIBLE", "Course not visible", 404);
+      }
+      const session: BuildSession = {
+        buildSheetFileKey: placement.buildSheetFileKey ?? null,
+        finishedAt: null,
+        id: nextId("build-session"),
+        joinCode: joinCode(),
+        joinToken: drawn(32, "0123456789abcdef"),
+        joinTokenRotatedAt: null,
+        lastKnownMarkerId: null,
+        live: body.live,
+        localCacheVersion: 0,
+        obstacles: placement.resolvedObstacles.map((obstacle) => ({
+          at: null,
+          byAccountId: null,
+          lastUpdatedClientSessionId: null,
+          obstacleId: obstacle.obstacleId,
+          status: "NOT_PLACED" as const,
+        })),
+        participants: [],
+        placementId: placement.id,
+        ringId: placement.ringId,
+        selectedStrategy: strategy,
+        setupId: null,
+        startedAt: nowIso(),
+        startedByAccountId: meId(),
+        status: "NOT_STARTED",
+        version: 1,
+      };
+      courseState.buildSessions.push(session);
+      return HttpResponse.json(session, { status: 201 });
+    });
+  }),
+  http.post("*/api/v1/build-sessions/join", async ({ request }) => {
+    const refused = guard();
+    if (refused !== undefined) return refused;
+    const body = (await request.json()) as Partial<Schemas["BuildJoinRequest"]>;
+    if (typeof body.code !== "string" || body.code.trim() === "") {
+      return fieldError("code", "REQUIRED");
+    }
+    const code = body.code.trim();
+    const open = callerClubOwnsTheWorld() ? courseState.buildSessions.filter(sessionLive) : [];
+    const byToken = open.find((item) => item.joinToken === code);
+    const session = byToken ?? open.find((item) => item.joinCode === code.toUpperCase());
+    if (session === undefined) return apiError("NOT_FOUND", "Build session not found", 404);
+    if (session.participants.some((participant) => participant.accountId === meId())) {
+      return HttpResponse.json(session);
+    }
+    return HttpResponse.json(
+      saveBuildSession({
+        ...session,
+        participants: [
+          ...session.participants,
+          { accountId: meId(), joinedAt: nowIso(), joinedVia: byToken === undefined ? "CODE" : "QR" },
+        ],
+      }),
+    );
+  }),
+  http.get("*/api/v1/build-sessions/:id", ({ params }) => {
+    const refused = guard();
+    if (refused !== undefined) return refused;
+    const session = clubBuildSession(String(params.id));
+    return session === undefined
+      ? apiError("NOT_FOUND", "Build session not found", 404)
+      : HttpResponse.json(session);
+  }),
+  // Last write wins per obstacle: `version` is accepted and never compared.
+  http.patch("*/api/v1/build-sessions/:id/obstacles/:obstacleId", async ({ params, request }) => {
+    const refused = guard();
+    if (refused !== undefined) return refused;
+    const body = (await request.json()) as Partial<Schemas["BuildObstacleRequest"]>;
+    if (typeof body.status !== "string" || !BUILD_OBSTACLE_STATUSES.includes(body.status)) {
+      return fieldError("status", body.status === undefined ? "REQUIRED" : "INVALID");
+    }
+    const status = body.status;
+    const session = clubBuildSession(String(params.id));
+    if (session === undefined) return apiError("NOT_FOUND", "Build session not found", 404);
+    if (!sessionLive(session)) {
+      return apiError("BUILD_SESSION_FINISHED", "Build session finished", 422);
+    }
+    const obstacleId = String(params.obstacleId);
+    if (!session.obstacles.some((obstacle) => obstacle.obstacleId === obstacleId)) {
+      return apiError("NOT_FOUND", "Obstacle not found", 404);
+    }
+    const at = nowIso();
+    return HttpResponse.json(
+      saveBuildSession({
+        ...session,
+        obstacles: session.obstacles.map((obstacle) =>
+          obstacle.obstacleId === obstacleId
+            ? { ...obstacle, at, byAccountId: meId(), status }
+            : obstacle,
+        ),
+        status: "IN_PROGRESS",
+        version: session.version + 1,
+      }),
+    );
+  }),
+  http.post("*/api/v1/build-sessions/:id/finish", async ({ params, request }) => {
+    const refused = guard();
+    if (refused !== undefined) return refused;
+    const text = await request.text();
+    return keyed(request, text, () => {
+      const session = clubBuildSession(String(params.id));
+      if (session === undefined) return apiError("NOT_FOUND", "Build session not found", 404);
+      if (!sessionLive(session)) {
+        return apiError("BUILD_SESSION_FINISHED", "Build session finished", 422);
+      }
+      const course = findCourse(clubPlacement(session.placementId)?.courseId ?? "");
+      if (course === undefined || !readable(course)) {
+        return apiError("COURSE_NOT_VISIBLE", "Course not visible", 404);
+      }
+      const setupId = finishedSetup(session, course);
+      if (setupId instanceof Response) return setupId;
+      return HttpResponse.json(
+        saveBuildSession({
+          ...session,
+          finishedAt: nowIso(),
+          setupId,
+          status: "COMPLETED",
+          version: session.version + 1,
+        }),
+      );
     });
   }),
 ];
