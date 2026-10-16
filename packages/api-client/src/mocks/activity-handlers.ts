@@ -107,7 +107,13 @@ function notFound() {
 }
 
 function resource(activity: StoredActivity, request: Request) {
-  return activityResource(activity, readerLocale(request), isAdmin(), hasModule("WAITLIST"));
+  return activityResource(
+    activity,
+    readerLocale(request),
+    isAdmin(),
+    hasModule("WAITLIST"),
+    hasModule("COURSES"),
+  );
 }
 
 function normalized(value: string): string {

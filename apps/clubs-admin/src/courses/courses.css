@@ -1,0 +1,357 @@
+/* S16 D18 «Biblioteca de recorreguts» and D16 «Geometria» (E9-W03): no mockup; the back office's
+   cards and lists, and the club's tokens only. */
+
+.courses-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ah-space-4);
+  min-width: 0;
+}
+
+.courses-page__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ah-space-4);
+}
+
+.courses-page__header h1 {
+  margin: 0;
+  font-family: var(--ah-font-display);
+  font-size: 1.5rem;
+}
+
+.courses-page__header p {
+  margin: var(--ah-space-1) 0 0;
+}
+
+.courses-muted {
+  color: var(--ah-color-text-muted);
+  font-size: 0.86rem;
+}
+
+.courses-back {
+  display: inline-flex;
+  width: fit-content;
+  color: var(--ah-color-text-muted);
+  font-size: 0.86rem;
+  text-decoration: none;
+}
+
+.courses-back:hover,
+.courses-back:focus-visible {
+  color: var(--ah-color-text);
+}
+
+.courses-notice {
+  margin: 0;
+  padding: var(--ah-space-3) var(--ah-space-4);
+  border: 1px solid var(--ah-color-success);
+  border-radius: var(--ah-radius-md);
+  color: var(--ah-color-text);
+  background: var(--ah-color-surface);
+}
+
+.courses-warning {
+  margin: 0;
+  padding: var(--ah-space-2) var(--ah-space-3);
+  border-left: 3px solid var(--ah-color-warning);
+  border-radius: var(--ah-radius-sm);
+  color: var(--ah-color-text);
+  background: var(--ah-color-surface-2);
+}
+
+/* The «Nou recorregut» menu. */
+.courses-menu {
+  position: relative;
+}
+
+.courses-menu__list {
+  position: absolute;
+  z-index: 5;
+  right: 0;
+  display: grid;
+  min-width: 18rem;
+  margin-top: var(--ah-space-2);
+  padding: var(--ah-space-2);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+  background: var(--ah-color-surface);
+  box-shadow: var(--ah-shadow-lg);
+}
+
+.courses-menu__list button {
+  padding: var(--ah-space-2) var(--ah-space-3);
+  border: 0;
+  border-radius: var(--ah-radius-sm);
+  color: var(--ah-color-text);
+  text-align: left;
+  background: transparent;
+  cursor: pointer;
+}
+
+.courses-menu__list button:hover,
+.courses-menu__list button:focus-visible {
+  background: var(--ah-color-surface-2);
+}
+
+/* The owner chips («Del club · AgilityHub · Meus»). */
+.courses-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+}
+
+.courses-chip {
+  padding: var(--ah-space-1) var(--ah-space-3);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-full);
+  color: var(--ah-color-text);
+  background: var(--ah-color-surface);
+  cursor: pointer;
+}
+
+.courses-chip[aria-pressed="true"] {
+  border-color: var(--ah-color-primary);
+  color: var(--ah-color-primary-fg);
+  background: var(--ah-color-primary);
+}
+
+.courses-chips-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.courses-name-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--ah-space-3);
+}
+
+.courses-name-cell > span {
+  display: grid;
+}
+
+.courses-name-cell small {
+  color: var(--ah-color-text-muted);
+}
+
+.courses-thumb {
+  display: inline-grid;
+  flex: none;
+  width: 4rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-sm);
+  color: var(--ah-color-course-text);
+  background: var(--ah-color-course-floor);
+  object-fit: contain;
+}
+
+.courses-thumb--empty {
+  color: var(--ah-color-text-muted);
+  background: var(--ah-color-surface-2);
+}
+
+.courses-card {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.courses-card h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.courses-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+}
+
+.courses-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+}
+
+.courses-form {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.courses-form--grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.courses-form--grid > :last-child,
+.courses-form--grid > [role="alert"],
+.courses-form--grid > [role="status"] {
+  grid-column: 1 / -1;
+}
+
+.courses-form__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--ah-space-3);
+}
+
+.courses-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ah-space-2);
+}
+
+.courses-detail__grid,
+.courses-editor__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(18rem, 2fr);
+  align-items: start;
+  gap: var(--ah-space-4);
+}
+
+.courses-detail__side,
+.courses-editor__side {
+  display: grid;
+  gap: var(--ah-space-4);
+}
+
+.courses-image {
+  width: 100%;
+  border-radius: var(--ah-radius-md);
+  color: var(--ah-color-course-text);
+  background: var(--ah-color-course-floor);
+}
+
+.courses-viewer-3d {
+  min-height: 24rem;
+}
+
+.courses-share__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-3) var(--ah-space-4);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+  background: var(--ah-color-surface);
+}
+
+.courses-placements,
+.courses-setups {
+  display: grid;
+  gap: var(--ah-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.courses-placements li,
+.courses-setups li {
+  display: grid;
+  gap: var(--ah-space-2);
+  padding: var(--ah-space-3);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
+.courses-placements li > div:first-child,
+.courses-setups li > div:first-child {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.courses-placements__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ah-space-2);
+}
+
+.courses-blocked {
+  display: grid;
+  gap: var(--ah-space-2);
+  padding: var(--ah-space-3);
+  border-left: 3px solid var(--ah-color-danger);
+  background: var(--ah-color-surface-2);
+}
+
+.courses-blocked p {
+  margin: 0;
+}
+
+/* D16 «Geometria». */
+.courses-geometry {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(16rem, 2fr);
+  align-items: start;
+  gap: var(--ah-space-4);
+}
+
+.courses-rows {
+  display: grid;
+  gap: var(--ah-space-2);
+  margin: 0;
+  padding: var(--ah-space-3);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+}
+
+.courses-rows legend {
+  padding: 0 var(--ah-space-1);
+  font-weight: 600;
+}
+
+.courses-rows p {
+  margin: 0;
+}
+
+.courses-rows__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+  align-items: center;
+  gap: var(--ah-space-2);
+}
+
+.courses-rows__check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ah-space-1);
+}
+
+.courses-input--short {
+  max-width: 6rem;
+}
+
+/* The door editor lays its form and preview side by side: each editor takes the full width. */
+.courses-geometry-page__editors {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ah-space-4);
+}
+
+.courses-warning a {
+  color: var(--ah-color-primary);
+  font-weight: 600;
+}
+
+@media (width < 1100px) {
+  .courses-detail__grid,
+  .courses-editor__grid,
+  .courses-geometry {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .courses-form--grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -14,6 +14,7 @@ import {
   type RingBlock,
 } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
+import { classPlacementRefusal } from "./fixtures/courses";
 import { resetDayGridState } from "./fixtures/day-grid";
 import {
   addDays,
@@ -285,6 +286,25 @@ function classProblem(
     return apiError("DESCRIPTION_REQUIRED", "A description is required", 422);
   }
   return undefined;
+}
+
+/** S16 R-16-13 (E9-T03): a class's planned placement, refused as the api refuses it. */
+export function classPlacementProblem(
+  placementId: string | null | undefined,
+  ringId: string | null | undefined,
+) {
+  const refusal = classPlacementRefusal(
+    placementId,
+    ringId,
+    currentMockScenario().branding.modules.includes("COURSES"),
+  );
+  if (refusal === undefined) return undefined;
+  return apiError(
+    refusal.code,
+    refusal.code,
+    refusal.status,
+    refusal.fieldErrors === undefined ? {} : { fieldErrors: refusal.fieldErrors },
+  );
 }
 
 export function manualDescription(value: string | null | undefined): string | null {
@@ -562,12 +582,15 @@ export const planningHandlers = [
     }
     const body = (await request.json()) as TemplateClassCreateRequest;
     const description = manualDescription(body.description);
-    const problem = classProblem(template, { ...body, description });
+    const problem =
+      classProblem(template, { ...body, description }) ??
+      classPlacementProblem(body.placementId, body.ringId ?? null);
     if (problem !== undefined) {
       return problem;
     }
     const manualCapacity = body.capacity ?? undefined;
     const item: TemplateClass = {
+      ...(body.placementId == null ? {} : { placementId: body.placementId }),
       bandId: body.bandId,
       capacity: manualCapacity ?? autoCapacity(body.levelIds),
       capacityMode: manualCapacity === undefined ? "AUTO" : "MANUAL",
@@ -603,6 +626,7 @@ export const planningHandlers = [
       ...(body.instructorIds === undefined ? {} : { instructorIds: [...body.instructorIds] }),
       ...(body.ringId === undefined ? {} : { ringId: body.ringId }),
       ...("description" in body ? { description: manualDescription(body.description) } : {}),
+      ...("placementId" in body ? { placementId: body.placementId ?? null } : {}),
       levelIds: [...levelIds],
     };
     if ("capacity" in body) {
@@ -612,7 +636,12 @@ export const planningHandlers = [
     } else if (next.capacityMode === "AUTO") {
       next.capacity = autoCapacity(levelIds);
     }
-    const problem = classProblem(template, next);
+    // A new ring is checked against the kept placement (E9-T03).
+    const problem =
+      classProblem(template, next) ??
+      ("placementId" in body || body.ringId !== undefined
+        ? classPlacementProblem(next.placementId, next.ringId ?? null)
+        : undefined);
     if (problem !== undefined) {
       return problem;
     }

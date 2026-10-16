@@ -1,11 +1,10 @@
 import {
+  coursePathLengthMeters,
   doorPolygonFromEdge,
-  placedObstacleHeadingDegrees,
-  placeObstacleInRing,
-  type CourseData,
   type CoursePlacement,
   type ObstacleType,
 } from "@agilityhub/course-core";
+import { resolvePlacedObstacles } from "@agilityhub/course-ui";
 import type {
   CreateCalibrationLogInput,
   CreateMarkerInput,
@@ -23,6 +22,7 @@ import type {
   SavePlacementInput,
   SaveRingDoorInput,
   UpdateMarkerPatch,
+  UpdatePlacementInput,
   UpsertBuildObstacleStatusInput,
   UploadCourseInput,
 } from "@agilityhub/course-ui";
@@ -77,48 +77,81 @@ function placementMode(
   return "PRESERVE_METERS";
 }
 
-function resolvedObstacles(course: CourseData, placement: CoursePlacement) {
-  const numbers = new Map<string, number[]>();
-  for (const number of course.numbers) {
-    if (number.linkedObstacleSourceId === null || number.sequenceNumber === null) continue;
-    const current = numbers.get(number.linkedObstacleSourceId) ?? [];
-    current.push(number.sequenceNumber);
-    numbers.set(number.linkedObstacleSourceId, current);
-  }
-  return course.obstacles.flatMap((obstacle) => {
-    const point = placeObstacleInRing(obstacle, placement, course);
-    return point === null
-      ? []
-      : [
-          {
-            numbers: numbers.get(obstacle.sourceId) ?? [],
-            obstacleId: obstacle.sourceId,
-            // The ring-frame Y-up heading both planners render (R-16-01/05, one convention).
-            rotationDeg: placedObstacleHeadingDegrees(obstacle.rotationDegrees, placement),
-            type: obstacle.obstacleType,
-            x: point.x,
-            y: point.y,
-          },
-        ];
-  });
-}
-
 function plannerCourse(course: ApiCourse): PlannerCourse {
   return { id: course.id, name: course.name, version: course.version };
+}
+
+function coursePlacementMode(
+  value: ApiPlacement["placementMode"],
+): CoursePlacement["placementMode"] {
+  if (value === "CENTERED") return "centered";
+  if (value === "FIT_TO_RING") return "fitToRing";
+  return "preserveMeters";
 }
 
 function plannerPlacement(placement: ApiPlacement): PlannerPlacement {
   return {
     activityId: placement.activityId ?? null,
     courseId: placement.courseId,
+    courseVersion: placement.courseVersion,
     displayName: placement.displayName ?? null,
     id: placement.id,
     mode: placement.mode,
     name: placement.name ?? null,
+    placement: {
+      flipX: placement.transform.flipX,
+      flipY: placement.transform.flipY,
+      offsetXMeters: placement.transform.offsetXM,
+      offsetYMeters: placement.transform.offsetYM,
+      placementMode: coursePlacementMode(placement.placementMode),
+      rotationDegrees: placement.transform.rotationDeg,
+    },
     ringId: placement.ringId,
     scheduledAt: placement.scheduledAt ?? null,
+    stale: placement.stale,
     status: placement.status,
+    updatedAt: placement.updatedAt,
     version: placement.version,
+  };
+}
+
+type PlacementBody = Omit<components["schemas"]["PlacementRequest"], "force">;
+
+/** The body `POST /placements` and `PUT /placements/{id}` share (R-16-05: course-core computes). */
+function placementBody(input: Omit<SavePlacementInput, "submissionKey">): PlacementBody {
+  return {
+    activityId: input.activityId ?? null,
+    courseId: input.courseId,
+    courseVersion: input.courseVersion,
+    displayName: input.displayName ?? null,
+    grades: input.grades === undefined ? null : [...input.grades],
+    mode:
+      input.mode === "event"
+        ? "EVENT"
+        : input.mode === "training"
+          ? "TRAINING"
+          : input.mode === "free-floating"
+            ? "FREE_FLOATING"
+            : null,
+    name: input.name ?? null,
+    placementMode: placementMode(input.placement.placementMode),
+    resolvedObstacles: resolvePlacedObstacles(input.course, input.placement).map((obstacle) => ({
+      ...obstacle,
+      numbers: [...obstacle.numbers],
+    })),
+    ringId: input.ringId,
+    scheduledAt: input.scheduledAt ?? null,
+    sizes: input.sizes === undefined ? null : [...input.sizes],
+    status: "READY_TO_BUILD",
+    transform: {
+      flipX: input.placement.flipX,
+      flipY: input.placement.flipY,
+      offsetXM: input.placement.offsetXMeters,
+      offsetYM: input.placement.offsetYMeters,
+      rotationDeg: input.placement.rotationDegrees,
+    },
+    warningThresholdM: input.thresholdMeters ?? null,
+    warnings: input.warnings.map((warning) => ({ ...warning })),
   };
 }
 
@@ -283,7 +316,9 @@ export class CoreApiStore implements PlannerStore {
 
   constructor(options: CoreApiStoreOptions) {
     this.#client = options.client ?? apiClient;
-    this.#uploadFetch = options.uploadFetch ?? globalThis.fetch;
+    // A browser's `fetch` throws «Illegal invocation» when called as another object's method:
+    // the default goes through `globalThis` at call time (E9-W03, found by the D18 e2e).
+    this.#uploadFetch = options.uploadFetch ?? ((input, init) => globalThis.fetch(input, init));
     this.#locale = options.venue.locale ?? "ca";
     this.#subscribeBuildEvents = options.subscribeBuildEvents;
     this.#venue = {
@@ -445,6 +480,8 @@ export class CoreApiStore implements PlannerStore {
       levelIds: [],
       name: { [this.#locale]: input.courseData.title },
       normalizedJson: input.courseData,
+      // stats.pathLengthM is course-core's (R-16-01: the api computes no geometry).
+      pathLengthM: coursePathLengthMeters(input.courseData),
       schemaVersion: 1,
       source: "SMARTER",
       sourceFileKey: upload.fileKey,
@@ -458,41 +495,27 @@ export class CoreApiStore implements PlannerStore {
   async savePlacement(input: SavePlacementInput): Promise<PlannerPlacement> {
     const result = await this.#client.POST("/placements", {
       body: {
-        activityId: input.activityId ?? null,
-        courseId: input.courseId,
-        courseVersion: input.courseVersion,
-        displayName: input.displayName ?? null,
-        grades: input.grades === undefined ? null : [...input.grades],
-        mode:
-          input.mode === "event"
-            ? "EVENT"
-            : input.mode === "training"
-              ? "TRAINING"
-              : input.mode === "free-floating"
-                ? "FREE_FLOATING"
-                : null,
-        name: input.name ?? null,
+        ...placementBody(input),
         // R-16-05: only an ADMIN's confirmed retry overrides a critical warning.
         ...(input.force === true ? { force: true } : {}),
-        placementMode: placementMode(input.placement.placementMode),
-        resolvedObstacles: resolvedObstacles(input.course, input.placement),
-        ringId: input.ringId,
-        scheduledAt: input.scheduledAt ?? null,
-        sizes: input.sizes === undefined ? null : [...input.sizes],
-        status: "READY_TO_BUILD",
-        transform: {
-          flipX: input.placement.flipX,
-          flipY: input.placement.flipY,
-          offsetXM: input.placement.offsetXMeters,
-          offsetYM: input.placement.offsetYMeters,
-          rotationDeg: input.placement.rotationDegrees,
-        },
-        warningThresholdM: input.thresholdMeters,
-        warnings: input.warnings.map((warning) => ({ ...warning })),
       },
       headers: { "Idempotency-Key": input.submissionKey },
     });
     return plannerPlacement(required(result.data, "createPlacement"));
+  }
+
+  async updatePlacement(input: UpdatePlacementInput): Promise<PlannerPlacement> {
+    const result = await this.#client.PUT("/placements/{id}", {
+      body: {
+        ...placementBody(input),
+        ...(input.force === true ? { force: true } : {}),
+        // The version the user edited (R-16-06's recalculation included): another editor's
+        // save in between answers 409 STALE_VERSION.
+        version: input.version,
+      },
+      params: { path: { id: input.placementId } },
+    });
+    return plannerPlacement(required(result.data, "putPlacement"));
   }
 
   async listCalendarPlacements(
@@ -536,7 +559,12 @@ export class CoreApiStore implements PlannerStore {
       yM: input.yMeters,
       zM: input.zMeters ?? 0,
     };
-    const saved = await this.#putGeometry(input.ringId, current, [...current.markers, marker]);
+    const saved = await this.#putGeometry(
+      input.ringId,
+      current,
+      [...current.markers, marker],
+      input.geometryVersion,
+    );
     return plannerMarker(
       required(
         saved.markers.find((candidate) => candidate.id === marker.id),
@@ -578,6 +606,7 @@ export class CoreApiStore implements PlannerStore {
       ringId,
       current,
       current.markers.map((marker) => (marker.id === markerId ? edited : marker)),
+      patch.geometryVersion,
     );
     return plannerMarker(
       required(
@@ -697,13 +726,23 @@ export class CoreApiStore implements PlannerStore {
     );
   }
 
+  /**
+   * Writes `markers` over the geometry just read. `userVersion` is the version the user read
+   * (E9-W02 review #2): when another editor saved in between it differs from `current.version`,
+   * and sending it makes the api answer `409 STALE_VERSION` instead of overwriting their markers
+   * with this edit rebased on values the user never saw.
+   */
   async #putGeometry(
     ringId: string,
     current: ApiGeometry,
     markers: ApiGeometryRequest["markers"],
+    userVersion?: number,
   ): Promise<ApiGeometry> {
     const result = await this.#client.PUT("/rings/{id}/geometry", {
-      body: ringGeometryRequest(current, { markers }),
+      body: {
+        ...ringGeometryRequest(current, { markers }),
+        version: userVersion ?? current.version,
+      },
       params: { path: { id: ringId } },
     });
     const saved = required(result.data, "putRingGeometry");
@@ -719,26 +758,33 @@ export class CoreApiStore implements PlannerStore {
     return saved;
   }
 
+  /**
+   * The ring with its geometry and its effective inventory; `null` for a ring without geometry
+   * (`GET /rings/{id}/geometry` → 404). A ring with geometry but no inventory, its own or the
+   * club's (`GET /obstacle-inventories/ring:{id}` → 404, R-16-12), is still a ring: it has an
+   * empty inventory, so placements skip the inventory checks.
+   */
   async #hydrateRing(base: ApiRing): Promise<PlannerRing | null> {
-    try {
-      const [geometryResult, inventoryResult] = await Promise.all([
-        this.#client.GET("/rings/{id}/geometry", { params: { path: { id: base.id } } }),
-        this.#client.GET("/obstacle-inventories/{scope}", {
-          params: { path: { scope: `ring:${base.id}` } },
-        }),
-      ]);
-      const ring = mapGeometry(
-        required(geometryResult.data, "ringGeometry"),
-        base.id,
-        this.#venue.id,
-        base,
-        required(inventoryResult.data, "getObstacleInventory").items,
-      );
-      this.#ringCache.set(base.id, ring);
-      return ring;
-    } catch (error) {
-      if (isApiError(error) && error.status === 404) return null;
-      throw error;
-    }
+    const notFoundAs =
+      <T>(fallback: T) =>
+      (error: unknown): T => {
+        if (isApiError(error) && error.status === 404) return fallback;
+        throw error;
+      };
+    const [geometry, inventory] = await Promise.all([
+      this.#client
+        .GET("/rings/{id}/geometry", { params: { path: { id: base.id } } })
+        .then((result) => required(result.data, "ringGeometry"), notFoundAs(null)),
+      this.#client
+        .GET("/obstacle-inventories/{scope}", { params: { path: { scope: `ring:${base.id}` } } })
+        .then(
+          (result) => required(result.data, "getObstacleInventory").items,
+          notFoundAs<ApiInventory["items"]>([]),
+        ),
+    ]);
+    if (geometry === null) return null;
+    const ring = mapGeometry(geometry, base.id, this.#venue.id, base, inventory);
+    this.#ringCache.set(base.id, ring);
+    return ring;
   }
 }

@@ -2,6 +2,7 @@ import type { components } from "../../generated/schema";
 
 import { clubInstant, clubTimeZone } from "./calendar";
 import { catalogState } from "./catalogs";
+import { activityPlacementIds } from "./courses";
 
 export type Activity = components["schemas"]["Activity"];
 export type ActivityListItem = components["schemas"]["ActivityListItem"];
@@ -603,6 +604,7 @@ export function activityResource(
   locale: string,
   admin: boolean,
   waitlistModule: boolean,
+  coursesModule = false,
 ): Activity {
   const window = registrationWindow(activity);
   return {
@@ -625,7 +627,8 @@ export function activityResource(
     longDescriptionI18n: activity.longDescriptionI18n,
     maxPlaces: activity.maxPlaces,
     minPlaces: activity.minPlaces,
-    placementIds: [],
+    // S16 R-16-13: the activity's placements, only with COURSES (E9-T03).
+    ...(coursesModule ? { placementIds: activityPlacementIds(activity.id) } : {}),
     priceTiers: [],
     publicUrl: `${PUBLIC_SITE}/activitat/${activity.slug}`,
     publishedAt: activity.publishedAt,

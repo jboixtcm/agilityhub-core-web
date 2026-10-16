@@ -11,7 +11,7 @@ import {
   type CoursePlacement,
   type Warning,
 } from '@agilityhub/course-core';
-import { useMemo } from 'react';
+import { useMemo, useRef, type PointerEvent as ReactPointerEvent } from 'react';
 
 import type { PlannerRing } from '../lib/planner-state.js';
 
@@ -29,7 +29,16 @@ interface Props {
     readonly exit: string;
   };
   onSelectObstacle: (id: string | null) => void;
+  /**
+   * D18's placement editor (T-16-04): dragging the plan moves the course by the dragged distance
+   * in the ring's frame (metres, +Y up), one call per pointer move. The keyboard path is
+   * `PlacementControls`. Absent = a read-only viewer.
+   */
+  onDragPlacement?: (dxMeters: number, dyMeters: number) => void;
 }
+
+/** Pointer travel (px) before a press on the plan counts as a drag rather than a click. */
+const DRAG_THRESHOLD_PX = 3;
 
 const COLORS = {
   ring: 'var(--ah-color-course-ring)',
@@ -232,10 +241,13 @@ export function PlannerCanvas({
   selectedObstacleId,
   labels,
   onSelectObstacle,
+  onDragPlacement,
 }: Props) {
   const margin = 1.5; // m of breathing room around the ring rect
   const ringW = ring.length_m;
   const ringH = ring.width_m;
+  const drag = useRef<{ x: number; y: number; moved: boolean; pointerId: number } | null>(null);
+  const suppressClick = useRef(false);
 
   // Obstacles + their footprints in ring frame. placeObstacleInRing /
   // placeControlPointsInRing internally route through placeCoursePoint,
@@ -282,6 +294,39 @@ export function PlannerCanvas({
   const viewW = ringW + 2 * margin;
   const viewH = ringH + 2 * margin;
 
+  // The SVG keeps its aspect ratio (`xMidYMid meet`), so one screen pixel is the larger of the
+  // two axis ratios in metres. Screen Y grows downwards; the ring's +Y is up.
+  function onPointerDown(event: ReactPointerEvent<SVGSVGElement>) {
+    if (onDragPlacement === undefined || event.button !== 0) return;
+    drag.current = { x: event.clientX, y: event.clientY, moved: false, pointerId: event.pointerId };
+    suppressClick.current = false;
+  }
+
+  function onPointerMove(event: ReactPointerEvent<SVGSVGElement>) {
+    const current = drag.current;
+    if (onDragPlacement === undefined || current === null) return;
+    const dxPx = event.clientX - current.x;
+    const dyPx = event.clientY - current.y;
+    if (!current.moved && Math.hypot(dxPx, dyPx) < DRAG_THRESHOLD_PX) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
+    if (!current.moved) {
+      try {
+        event.currentTarget.setPointerCapture(current.pointerId);
+      } catch {
+        // No pointer capture (a test DOM, an old browser): the drag still follows the moves.
+      }
+    }
+    const metresPerPx = Math.max(viewW / rect.width, viewH / rect.height);
+    drag.current = { ...current, x: event.clientX, y: event.clientY, moved: true };
+    onDragPlacement(dxPx * metresPerPx, -dyPx * metresPerPx);
+  }
+
+  function onPointerEnd() {
+    suppressClick.current = drag.current?.moved === true;
+    drag.current = null;
+  }
+
   return (
     <div className="w-full aspect-square max-h-[80vh] bg-surface-2 border border-border rounded-2xl overflow-hidden">
       <svg
@@ -290,6 +335,18 @@ export function PlannerCanvas({
         className="w-full h-full"
         role="img"
         aria-label={labels.ariaLabel}
+        style={onDragPlacement === undefined ? undefined : { cursor: 'grab', touchAction: 'none' }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerEnd}
+        onPointerCancel={onPointerEnd}
+        onClickCapture={(event) => {
+          // A drag that ends over an obstacle is not a click on it.
+          if (suppressClick.current) {
+            suppressClick.current = false;
+            event.stopPropagation();
+          }
+        }}
       >
         {/* Flip Y so +Y is visually up. Everything inside this <g> works in
             ring frame. */}

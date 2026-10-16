@@ -1,0 +1,839 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/course-handlers.test.ts (10 tests | 2 failed) 203ms
+   ❯ E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) (10)
+     × R-16-13 a class's placementId: the class's own ring (422 PLACEMENT_RING_MISMATCH), kept across a ring change only on that ring, refused without COURSES 11ms
+     × R-16-13 an activity lists its placements only with COURSES 5ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 8 passed (10)
+   Start at  08:01:22
+   Duration  1.39s (transform 54%, import 30%, tests 16%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > R-16-13 a class's placementId: the class's own ring (422 PLACEMENT_RING_MISMATCH), kept across a ring change only on that ring, refused without COURSES
+AssertionError: expected { body: { active: true, …(10) }, …(1) } to match object { …(2) }
+(11 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "code": "PLACEMENT_RING_MISMATCH",
++     "active": true,
++     "bands": [
++       {
++         "endTime": "09:30",
++         "id": "tpl-a-b0830",
++         "startTime": "08:30",
++       },
++       {
++         "endTime": "10:30",
++         "id": "tpl-a-b0930",
++         "startTime": "09:30",
++       },
++       {
++         "endTime": "17:30",
++         "id": "tpl-a-b1630",
++         "startTime": "16:30",
++       },
++       {
++         "endTime": "18:40",
++         "id": "tpl-a-b1740",
++         "startTime": "17:40",
++       },
++       {
++         "endTime": "19:50",
++         "id": "tpl-a-b1850",
++         "startTime": "18:50",
++       },
++       {
++         "endTime": "21:00",
++         "id": "tpl-a-b2000",
++         "startTime": "20:00",
++       },
++     ],
++     "canGenerate": true,
++     "classes": [
++       {
++         "bandId": "tpl-a-b0830",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "A",
++         "id": "tpl-a-c0830-mon-0",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-a",
++         ],
++         "ringId": "ring-petita",
++       },
++       {
++         "bandId": "tpl-a-b0830",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "B+C",
++         "id": "tpl-a-c0830-mon-1",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-marc",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++         ],
++         "ringId": "ring-muntanya",
++       },
++       {
++         "bandId": "tpl-a-b0830",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "F i sup.",
++         "id": "tpl-a-c0830-mon-2",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-anna",
++         ],
++         "levelIds": [
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b0830",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "TUESDAY",
++         "description": null,
++         "displayDescription": "F i sup.",
++         "id": "tpl-a-c0830-tue-3",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b0830",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "WEDNESDAY",
++         "description": null,
++         "displayDescription": "B+C",
++         "id": "tpl-a-c0830-wed-4",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-marc",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++         ],
++         "ringId": "ring-muntanya",
++       },
++       {
++         "bandId": "tpl-a-b0830",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "THURSDAY",
++         "description": null,
++         "displayDescription": "C+D+E",
++         "id": "tpl-a-c0830-thu-5",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-c",
++           "level-d",
++           "level-e",
++         ],
++         "ringId": "ring-carretera",
++       },
++       {
++         "bandId": "tpl-a-b0830",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "FRIDAY",
++         "description": null,
++         "displayDescription": "E i sup.",
++         "id": "tpl-a-c0830-fri-6",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-e",
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-carretera",
+        },
+-   "status": 422,
++       {
++         "bandId": "tpl-a-b0930",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "A+B",
++         "id": "tpl-a-c0930-mon-0",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-a",
++           "level-b",
++         ],
++         "ringId": "ring-petita",
++       },
++       {
++         "bandId": "tpl-a-b0930",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "D i sup.",
++         "id": "tpl-a-c0930-mon-1",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-anna",
++         ],
++         "levelIds": [
++           "level-d",
++           "level-e",
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b0930",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "TUESDAY",
++         "description": null,
++         "displayDescription": "B+C+D",
++         "id": "tpl-a-c0930-tue-2",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++           "level-d",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b0930",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "WEDNESDAY",
++         "description": null,
++         "displayDescription": "C+D+E",
++         "id": "tpl-a-c0930-wed-3",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-marc",
++         ],
++         "levelIds": [
++           "level-c",
++           "level-d",
++           "level-e",
++         ],
++         "ringId": "ring-carretera",
++       },
++       {
++         "bandId": "tpl-a-b0930",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "THURSDAY",
++         "description": null,
++         "displayDescription": "B+C",
++         "id": "tpl-a-c0930-thu-4",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b0930",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "FRIDAY",
++         "description": null,
++         "displayDescription": "A+B",
++         "id": "tpl-a-c0930-fri-5",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-a",
++           "level-b",
++         ],
++         "ringId": "ring-petita",
++       },
++       {
++         "bandId": "tpl-a-b1630",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "A+B",
++         "id": "tpl-a-c1630-mon-0",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-a",
++           "level-b",
++         ],
++         "ringId": "ring-petita",
++       },
++       {
++         "bandId": "tpl-a-b1630",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "WEDNESDAY",
++         "description": null,
++         "displayDescription": "B+C",
++         "id": "tpl-a-c1630-wed-1",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b1630",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "THURSDAY",
++         "description": null,
++         "displayDescription": "C i sup.",
++         "id": "tpl-a-c1630-thu-2",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-c",
++           "level-d",
++           "level-e",
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-muntanya",
++       },
++       {
++         "bandId": "tpl-a-b1740",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "C+D+E",
++         "id": "tpl-a-c1740-mon-0",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-c",
++           "level-d",
++           "level-e",
++         ],
++         "ringId": "ring-carretera",
++       },
++       {
++         "bandId": "tpl-a-b1740",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "TUESDAY",
++         "description": null,
++         "displayDescription": "F i sup.",
++         "id": "tpl-a-c1740-tue-1",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-anna",
++         ],
++         "levelIds": [
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b1740",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "WEDNESDAY",
++         "description": null,
++         "displayDescription": "A",
++         "id": "tpl-a-c1740-wed-2",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-a",
++         ],
++         "ringId": "ring-petita",
++       },
++       {
++         "bandId": "tpl-a-b1740",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "THURSDAY",
++         "description": null,
++         "displayDescription": "B+C",
++         "id": "tpl-a-c1740-thu-3",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++         ],
++         "ringId": "ring-muntanya",
++       },
++       {
++         "bandId": "tpl-a-b1740",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "THURSDAY",
++         "description": null,
++         "displayDescription": "F i sup.",
++         "id": "tpl-a-c1740-thu-4",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-anna",
++         ],
++         "levelIds": [
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b1850",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "B+C",
++         "id": "tpl-a-c1850-mon-0",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-marc",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++         ],
++         "ringId": "ring-muntanya",
++       },
++       {
++         "bandId": "tpl-a-b1850",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "F i sup.",
++         "id": "tpl-a-c1850-mon-1",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-anna",
++         ],
++         "levelIds": [
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b1850",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "Cadells",
++         "id": "tpl-a-c1850-mon-2",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-p",
++         ],
++         "ringId": "ring-cadells",
++       },
++       {
++         "bandId": "tpl-a-b1850",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "TUESDAY",
++         "description": null,
++         "displayDescription": "A",
++         "id": "tpl-a-c1850-tue-3",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-a",
++         ],
++         "ringId": "ring-petita",
++       },
++       {
++         "bandId": "tpl-a-b1850",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "WEDNESDAY",
++         "description": null,
++         "displayDescription": "B+C",
++         "id": "tpl-a-c1850-wed-4",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-marc",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++         ],
++         "ringId": "ring-muntanya",
++       },
++       {
++         "bandId": "tpl-a-b1850",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "WEDNESDAY",
++         "description": null,
++         "displayDescription": "F i sup.",
++         "id": "tpl-a-c1850-wed-5",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-sergio",
++         ],
++         "levelIds": [
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-carretera",
++       },
++       {
++         "bandId": "tpl-a-b1850",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "WEDNESDAY",
++         "description": null,
++         "displayDescription": "Cadells",
++         "id": "tpl-a-c1850-wed-6",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-p",
++         ],
++         "ringId": "ring-cadells",
++       },
++       {
++         "bandId": "tpl-a-b1850",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "THURSDAY",
++         "description": null,
++         "displayDescription": "C+D+E",
++         "id": "tpl-a-c1850-thu-7",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-c",
++           "level-d",
++           "level-e",
++         ],
++         "ringId": "ring-carretera",
++       },
++       {
++         "bandId": "tpl-a-b1850",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "THURSDAY",
++         "description": null,
++         "displayDescription": "A",
++         "id": "tpl-a-c1850-thu-8",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-anna",
++         ],
++         "levelIds": [
++           "level-a",
++         ],
++         "ringId": "ring-petita",
++       },
++       {
++         "bandId": "tpl-a-b2000",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "B+C",
++         "id": "tpl-a-c2000-mon-0",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-marc",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++         ],
++         "ringId": "ring-muntanya",
++       },
++       {
++         "bandId": "tpl-a-b2000",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": null,
++         "displayDescription": "F i sup.",
++         "id": "tpl-a-c2000-mon-1",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-sergio",
++         ],
++         "levelIds": [
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b2000",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "MONDAY",
++         "description": "Obed. urbana",
++         "displayDescription": "Obed. urbana",
++         "id": "tpl-a-c2000-mon-2",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++         ],
++         "ringId": null,
++       },
++       {
++         "bandId": "tpl-a-b2000",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "TUESDAY",
++         "description": null,
++         "displayDescription": "A+B",
++         "id": "tpl-a-c2000-tue-3",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-a",
++           "level-b",
++         ],
++         "ringId": "ring-petita",
++       },
++       {
++         "bandId": "tpl-a-b2000",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "TUESDAY",
++         "description": null,
++         "displayDescription": "B+C",
++         "id": "tpl-a-c2000-tue-4",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-marc",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++         ],
++         "ringId": "ring-muntanya",
++       },
++       {
++         "bandId": "tpl-a-b2000",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "TUESDAY",
++         "description": null,
++         "displayDescription": "F i sup.",
++         "id": "tpl-a-c2000-tue-5",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-anna",
++         ],
++         "levelIds": [
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b2000",
++         "capacity": 5,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "WEDNESDAY",
++         "description": null,
++         "displayDescription": "B+C",
++         "id": "tpl-a-c2000-wed-6",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-marc",
++         ],
++         "levelIds": [
++           "level-b",
++           "level-c",
++         ],
++         "ringId": "ring-central",
++       },
++       {
++         "bandId": "tpl-a-b2000",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "WEDNESDAY",
++         "description": null,
++         "displayDescription": "F i sup.",
++         "id": "tpl-a-c2000-wed-7",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-sergio",
++         ],
++         "levelIds": [
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-carretera",
++       },
++       {
++         "bandId": "tpl-a-b2000",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "WEDNESDAY",
++         "description": null,
++         "displayDescription": "C+D+E",
++         "id": "tpl-a-c2000-wed-8",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-anna",
++         ],
++         "levelIds": [
++           "level-c",
++           "level-d",
++           "level-e",
++         ],
++         "ringId": "ring-petita",
++       },
++       {
++         "bandId": "tpl-a-b2000",
++         "capacity": 4,
++         "capacityMode": "AUTO",
++         "dayOfWeek": "THURSDAY",
++         "description": null,
++         "displayDescription": "D i sup.",
++         "id": "tpl-a-c2000-thu-9",
++         "inconsistencyIds": [],
++         "instructorIds": [
++           "instructor-laura",
++         ],
++         "levelIds": [
++           "level-d",
++           "level-e",
++           "level-f",
++           "level-g",
++         ],
++         "ringId": "ring-muntanya",
++       },
++     ],
++     "days": [
++       "MONDAY",
++       "TUESDAY",
++       "WEDNESDAY",
++       "THURSDAY",
++       "FRIDAY",
++     ],
++     "id": "template-setmana-a",
++     "inconsistencies": [],
++     "kind": "WEEKDAYS",
++     "name": "Setmana A",
++     "notes": null,
++     "version": 2,
++   },
++   "status": 200,
+  }
+
+ ❯ src/mocks/course-handlers.test.ts:510:19
+    508|       version: template.version,
+    509|     });
+    510|     expect(wrong).toMatchObject({ body: { code: "PLACEMENT_RING_MISMAT…
+       |                   ^
+    511|     const planned = await call<Schemas["WeekTemplate"]>("admin", "PATC…
+    512|       placementId: PLACEMENT_IDS.muntanyaJumping,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > R-16-13 an activity lists its placements only with COURSES
+AssertionError: expected [] to deeply equal [ 'placement-central-lliga' ]
+
+- Expected
++ Received
+
+- [
+-   "placement-central-lliga",
+- ]
++ []
+
+ ❯ src/mocks/course-handlers.test.ts:543:43
+    541|       "/activities/activity-lliga-social-3",
+    542|     );
+    543|     expect(withCourses.body.placementIds).toEqual([PLACEMENT_IDS.centr…
+       |                                           ^
+    544|     const without = await call<Schemas["Activity"]>(
+    545|       "adminNoCourses",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

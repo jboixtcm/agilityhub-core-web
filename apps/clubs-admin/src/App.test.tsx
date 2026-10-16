@@ -204,6 +204,71 @@ describe("T-02-14 clubs-admin shell", () => {
   });
 });
 
+describe("E9-W03 R-16-15: D18 and D16 «Geometria» belong to COURSES", () => {
+  it("R-16-15 the course routes are registered and gated by COURSES; the menu entry stays lit inside them", async () => {
+    expect(ADMIN_ROUTES.map((route) => route.path)).toEqual(
+      expect.arrayContaining([
+        "/recorreguts",
+        "/recorreguts/:id",
+        "/recorreguts/:id/col-locacio",
+        "/pistes/:id/geometria",
+      ]),
+    );
+    for (const path of [
+      "/recorreguts",
+      "/recorreguts/:id",
+      "/recorreguts/:id/col-locacio",
+      "/pistes/:id/geometria",
+    ]) {
+      expect(requiredModulesForUiItem("routes", path)).toEqual(["COURSES"]);
+    }
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["shell"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={branding}>
+          <AdminNavigation
+            modules={branding.modules}
+            pathname="/recorreguts/course-1/col-locacio"
+            roles={["INSTRUCTOR"]}
+          />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    expect(screen.getByRole("link", { name: "Recorreguts" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    cleanup();
+    const modules = branding.modules.filter((module) => module !== "COURSES");
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BrandingProvider branding={{ ...branding, modules }}>
+          <AdminNavigation modules={modules} pathname="/tauler" roles={["ADMIN"]} />
+        </BrandingProvider>
+      </I18nextProvider>,
+    );
+    expect(screen.queryByRole("link", { name: "Recorreguts" })).not.toBeInTheDocument();
+  });
+
+  it("R-16-15 without COURSES a ring's geometry page shows the module's refusal, never the editor", async () => {
+    const modules = branding.modules.filter((module) => module !== "COURSES");
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/pistes/ring-muntanya/geometria");
+    await renderApplication(client, { ...branding, modules });
+    await waitFor(() => {
+      expect(screen.getByRole("link", { name: "Pistes" })).toBeVisible();
+    });
+    expect(screen.queryByRole("heading", { name: /^Geometria/u })).not.toBeInTheDocument();
+    window.history.pushState(null, "", "/");
+  });
+});
+
 describe("E8-W01 step 1: D6 «Facturació» is ADMIN only and belongs to BILLING (MATRIU_PERMISOS, R-12-28)", () => {
   async function renderBillingNavigation(
     roles: ("ADMIN" | "INSTRUCTOR")[],

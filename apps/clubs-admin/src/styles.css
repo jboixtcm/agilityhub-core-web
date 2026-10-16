@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "@agilityhub/ui/tokens.css";
 
+/* course-ui's planner components (D18, D16 «Geometria», E9-W03) are styled with Tailwind. */
+@source "../../../packages/course-ui/src";
+
 * {
   box-sizing: border-box;
 }

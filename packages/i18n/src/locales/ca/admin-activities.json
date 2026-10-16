@@ -212,5 +212,18 @@
       "registeredAt": "Data d'inscripció",
       "memberId": "Abonat"
     }
+  },
+  "placements": {
+    "title": "Col·locacions",
+    "add": "Afegeix",
+    "addTitle": "Afegeix una col·locació",
+    "course": "Recorregut",
+    "place": "Col·loca'l",
+    "noCourses": "El club encara no té cap recorregut a la biblioteca.",
+    "empty": "Aquesta activitat encara no té cap recorregut col·locat.",
+    "loading": "Carregant les col·locacions",
+    "error": "No s'han pogut carregar les col·locacions.",
+    "row": "{course} · {ring}",
+    "rowNamed": "{course} · {ring} · {name}"
   }
 }

@@ -22,6 +22,7 @@ import {
 import { bookingHandlers, bookingState, resetBookingMockState } from "./booking-handlers";
 import { calendarHandlers } from "./calendar-handlers";
 import { consoleHandlers, resetConsoleMockState } from "./console-handlers";
+import { courseHandlers, resetCourseKeys } from "./course-handlers";
 import { dayGridHandlers } from "./day-grid-handlers";
 import { activityState, resetActivityState } from "./fixtures/activities";
 import { AGENDA_MOCK_NOW, AGENDA_SELECTED_CLASS_ID } from "./fixtures/agenda";
@@ -56,6 +57,13 @@ import {
   type SavedView,
 } from "./fixtures/census";
 import { CONSOLE_CLUB_IDS, consoleState } from "./fixtures/console";
+import {
+  COURSE_IDS,
+  courseState,
+  PLACEMENT_IDS,
+  resetCourseState,
+  SETUP_IDS,
+} from "./fixtures/courses";
 import dashboardFixture from "./fixtures/dashboard.json";
 import exportJobsFixture from "./fixtures/export-jobs.json";
 import { INBOX_ALL_READ_AT } from "./fixtures/followup";
@@ -3579,6 +3587,13 @@ export const handlers = [
     catalogState.rings = ordered;
     return HttpResponse.json(catalogResponse(orderedCatalog(catalogState.rings)));
   }),
+  // S05 `GET /rings/{id}` (E9-W03: D16 «Geometria» and the course store read one ring).
+  http.get("*/api/v1/rings/:id", ({ params }) => {
+    const ring = catalogState.rings.find((candidate) => candidate.id === String(params.id));
+    return ring === undefined || !callerClubOwnsTheWorld()
+      ? apiError("NOT_FOUND", "Ring not found", 404)
+      : HttpResponse.json(ring);
+  }),
   http.patch("*/api/v1/rings/:id", async ({ params, request }) => {
     const ring = catalogState.rings.find((candidate) => candidate.id === String(params.id));
     if (ring === undefined) {
@@ -4255,6 +4270,8 @@ export const handlers = [
   // through to its own handlers.
   ...backofficeHandlers,
   ...planningHandlers,
+  // S16 (E9-W03): D18, the placement editor, D16 «Geometria», the setups history.
+  ...courseHandlers,
   ...dayGridHandlers,
   // S09 (E5-W02) before the calendar world: a ring block on a mockup day is answered here.
   ...trainingHandlers,
@@ -4274,8 +4291,19 @@ export const handlers = [
   ),
 ];
 
+/** The S16 world (E9-W03): courses, placements, geometry, inventory, setups and their keys. */
+function resetCourseMockState(): void {
+  resetCourseState();
+  resetCourseKeys();
+}
+
 export {
   activityState,
+  COURSE_IDS,
+  courseState,
+  PLACEMENT_IDS,
+  resetCourseMockState,
+  SETUP_IDS,
   AGENDA_MOCK_NOW,
   AGENDA_SELECTED_CLASS_ID,
   ATTENDANCE_MOCK_NOW,

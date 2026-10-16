@@ -42,6 +42,7 @@ import {
   timeOptions,
 } from "../planning/calendar-shared";
 
+import { ActivityPlacementsCard } from "./ActivityPlacementsCard";
 import { CancelActivityModal } from "./CancelActivityModal";
 import { type ConflictDialogMode, PublishConflictsDialog } from "./PublishConflictsDialog";
 import {
@@ -1611,6 +1612,17 @@ export function ActivityPage({
           </div>
         </Card>
       </div>
+      {/* S16 R-16-13: the activity's placements, only with COURSES (R-16-15). */}
+      {branding.modules.includes("COURSES") ? (
+        <ActivityPlacementsCard
+          activityId={activity.id}
+          client={client}
+          onNavigate={onNavigate}
+          placementIds={activity.placementIds ?? []}
+          readOnly={readOnly}
+          rings={rings}
+        />
+      ) : null}
 
       {confirmPublish ? (
         <Modal

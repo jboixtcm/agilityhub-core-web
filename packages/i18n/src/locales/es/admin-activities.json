@@ -212,5 +212,18 @@
       "registeredAt": "Fecha de inscripción",
       "memberId": "Abonado"
     }
+  },
+  "placements": {
+    "title": "Colocaciones",
+    "add": "Añadir",
+    "addTitle": "Añadir una colocación",
+    "course": "Recorrido",
+    "place": "Colocarlo",
+    "noCourses": "El club todavía no tiene ningún recorrido en la biblioteca.",
+    "empty": "Esta actividad todavía no tiene ningún recorrido colocado.",
+    "loading": "Cargando las colocaciones",
+    "error": "No se han podido cargar las colocaciones.",
+    "row": "{course} · {ring}",
+    "rowNamed": "{course} · {ring} · {name}"
   }
 }

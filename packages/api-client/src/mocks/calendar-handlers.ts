@@ -28,6 +28,7 @@ import { findParameter } from "./fixtures/settings";
 import {
   apiError,
   autoCapacity,
+  classPlacementProblem,
   levelsEnabled,
   manualDescription,
   maxInstructors,
@@ -691,6 +692,7 @@ export const calendarHandlers = [
     const ringId = body.ringId ?? null;
     const problem =
       sessionProblem({ ...body, description, ringId }) ??
+      classPlacementProblem(body.placementId, ringId) ??
       ringBookingsProblem(ringId, body.date, body.startTime, body.endTime, body.cancelBookings);
     if (problem !== undefined) return problem;
     const monday = mondayOf(body.date);
@@ -715,6 +717,7 @@ export const calendarHandlers = [
       state: week.state === "VALIDATED" ? "ACTIVE" : "DRAFT",
       weekId: week.id,
     });
+    if (body.placementId != null) session.placementId = body.placementId;
     planningState.sessions.push(session);
     return HttpResponse.json(sessionResponse(session), { status: 201 });
   }),
@@ -771,6 +774,7 @@ export const calendarHandlers = [
       ...(body.endTime === undefined ? {} : { endTime: body.endTime }),
       ...(body.notes === undefined ? {} : { notes: body.notes }),
       ...(body.riskExempt === undefined ? {} : { riskExempt: body.riskExempt }),
+      ...("placementId" in body ? { placementId: body.placementId ?? null } : {}),
       description,
       levelIds: [...levelIds],
       version: current.version + 1,
@@ -788,11 +792,16 @@ export const calendarHandlers = [
       });
     }
     if (!onlyNotes) {
-      const problem = sessionProblem({
-        ...next,
-        description: next.description ?? null,
-        ringId: next.ringId ?? null,
-      });
+      const problem =
+        sessionProblem({
+          ...next,
+          description: next.description ?? null,
+          ringId: next.ringId ?? null,
+        }) ??
+        // A new ring is checked against the kept placement (E9-T03).
+        ("placementId" in body || body.ringId !== undefined
+          ? classPlacementProblem(next.placementId, next.ringId ?? null)
+          : undefined);
       if (problem !== undefined) return problem;
     }
     if (body.ringId !== undefined || body.startTime !== undefined || body.endTime !== undefined) {

@@ -357,5 +357,14 @@
   "memberDisplayStatus": {"INACTIVE_PERIOD": "inactiva", "INACTIVE_PERIOD_DATED": "inactiva hasta {date}", "LEAVE_SCHEDULED": "baja prevista {date}"},
   "finishReason": {"SCHEDULED": "finalización prevista", "ADMIN": "decisión del club", "LEAVE": "baja"},
   "cancelReason": {"WITHDRAWN": "retirada", "EXPIRED": "caducada", "LEAVE": "baja", "MEMBER": "por el abonado", "ADMIN": "por el club", "SYSTEM": "por el sistema"},
+  "courseDiscipline": {"AGILITY": "Agility", "JUMPING": "Jumping", "OTHER": "Otros"},
+  "courseSource": {"SMARTER": "Smarter", "EDITOR": "Editor", "IMAGE": "Plano o foto", "AGILITYHUB_COPY": "Copia de AgilityHub"},
+  "agilityhubLevel": {"EASY": "Fácil", "MEDIUM": "Medio", "HARD": "Difícil"},
+  "setupKind": {"AGILITY": "Agility", "JUMPING": "Jumping", "FUN": "Fun", "OBSTACLE_DRILL": "Trabajo de obstáculo", "EMPTY": "Vacía"},
+  "setupStatus": {"ACTIVE": "Montado", "EXPIRED": "Caducado", "DISMANTLED": "Desmontado"},
+  "obstacleType": {"Jump": "Salto", "DoubleJump": "Salto doble", "Tunnel3m": "Túnel de 3 m", "Tunnel4m": "Túnel de 4 m", "Tunnel5m": "Túnel de 5 m", "Tunnel6m": "Túnel de 6 m", "DogWalk": "Pasarela", "AFrame": "Empalizada", "Seesaw": "Balancín", "Weave": "Eslalon", "LongJump": "Salto de longitud", "Wall": "Muro", "Tire": "Rueda", "Unknown": "Desconocido"},
+  "ringSurface": {"GRASS": "Césped", "SAND": "Arena", "ARTIFICIAL": "Césped artificial", "INDOOR": "Interior", "OTHER": "Otra"},
+  "doorFlow": {"IN": "entrada", "OUT": "salida", "BOTH": "entrada y salida"},
+  "doorSide": {"NORTH": "Norte", "SOUTH": "Sur", "EAST": "Este", "WEST": "Oeste"},
   "courseWarningRule": {"outside-ring": "Fuera de la pista", "border-clearance": "Margen al perímetro", "course-no-go": "Zona no-go del recorrido", "ring-no-go": "Zona no-go de la pista", "door-clearance": "Distancia a la puerta", "course-larger-than-ring": "Recorrido más grande que la pista", "obstacle-inventory": "Inventario de obstáculos"}
 }

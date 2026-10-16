@@ -78,6 +78,8 @@ import { TrainingRegisterPage } from "./training/TrainingRegisterPage";
 
 // D19 (S17): the platform console is its own chunk; club admins never download it.
 const ConsolePage = lazy(() => import("./console/ConsolePage"));
+// D18 and D16 «Geometria» (S16, E9-W03): the course planner's chunk.
+const CoursesRoute = lazy(() => import("./courses/CoursesRoute"));
 
 interface AdminRouteDefinition {
   path: string;
@@ -129,12 +131,15 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   { path: "/alumnes/:id", roles: ["INSTRUCTOR", "ADMIN"] },
   // Screen D14 (S10 §2: INSTRUCTOR and ADMIN).
   { path: "/seguiment", roles: ["INSTRUCTOR", "ADMIN"] },
-  // Screen D16.
+  // Screen D16, and its «Geometria» block (S16 §2, module COURSES through `modules.ts`).
   { path: "/pistes", roles: ["ADMIN"] },
+  { path: "/pistes/:id/geometria", roles: ["ADMIN"] },
   // Screen D17.
   { path: "/equip", roles: ["ADMIN"] },
-  // Screen D18.
+  // Screen D18: the library, a course and its placement editor (S16 §2, E9-W03).
   { path: "/recorreguts", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/recorreguts/:id", roles: ["INSTRUCTOR", "ADMIN"] },
+  { path: "/recorreguts/:id/col-locacio", roles: ["INSTRUCTOR", "ADMIN"] },
   // New inactivity page from S13.
   { path: "/inactivitats", roles: ["ADMIN"] },
   // Role-gated entry without a mockup.
@@ -439,6 +444,12 @@ export function AdminNavigation({
             (entry.id === "announcements" && matchesPath(pathname, "/notificacions")) ||
             // The remittances page belongs to «Facturació» (S12 §2).
             (entry.id === "billing" && matchesPath(pathname, "/facturacio/remeses")) ||
+            // A course and its placement editor belong to «Recorreguts»; a ring's geometry to
+            // «Pistes» (S16 §2).
+            (entry.id === "courses" &&
+              (matchesPath(pathname, "/recorreguts/:id") ||
+                matchesPath(pathname, "/recorreguts/:id/col-locacio"))) ||
+            (entry.id === "rings" && matchesPath(pathname, "/pistes/:id/geometria")) ||
             // Every D19 page (list, record, wizard) keeps «Consola» lit.
             (entry.id === "console" && matchesPath(pathname, "/consola/*")),
           ...(entry.count === undefined ? {} : { count: entry.count }),
@@ -612,6 +623,14 @@ function routeContent(
   }
   if (route.path === "/pistes") {
     return <RingsPage client={client} />;
+  }
+  if (route.path.startsWith("/recorreguts") || route.path === "/pistes/:id/geometria") {
+    // D18 and D16 «Geometria» (S16): their own chunk, with course-core and course-ui.
+    return (
+      <Suspense fallback={null}>
+        <CoursesRoute client={client} onNavigate={onNavigate} pathname={pathname} search={search} />
+      </Suspense>
+    );
   }
   if (route.path === "/equip") {
     return <TeamPage client={client} />;

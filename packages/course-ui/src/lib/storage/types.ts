@@ -103,7 +103,11 @@ export interface SavePlacementInput {
   readonly ringId: string;
   readonly placement: CoursePlacement;
   readonly warnings: readonly Warning[];
-  readonly thresholdMeters: number;
+  /**
+   * The placement's `warningThresholdM`; `null` (or absent) lets the api apply the club's
+   * `courses.defaultWarningThresholdM` (R-16-05), which an INSTRUCTOR cannot read.
+   */
+  readonly thresholdMeters?: number | null;
   readonly name?: string;
   readonly scheduledAt?: string | null;
   readonly activityId?: string | null;
@@ -120,17 +124,33 @@ export interface SavePlacementInput {
   readonly force?: boolean;
 }
 
+/**
+ * `PUT /placements/{id}`: the placement recalculated (a stale one after a geometry change,
+ * R-16-06, or the user's new transform) at the `version` the user edited, so another editor's
+ * save in between answers `409 STALE_VERSION`. The api keeps its ring and its course.
+ */
+export interface UpdatePlacementInput extends Omit<SavePlacementInput, "submissionKey"> {
+  readonly placementId: string;
+  readonly version: number;
+}
+
 export interface PlannerPlacement {
   readonly id: string;
   readonly version: number;
   readonly ringId: string;
   readonly courseId: string;
+  readonly courseVersion: number;
   readonly activityId: string | null;
   readonly displayName: string | null;
   readonly name: string | null;
   readonly scheduledAt: string | null;
   readonly mode: "EVENT" | "TRAINING" | "FREE_FLOATING";
   readonly status: "DRAFT" | "READY_TO_BUILD" | "ARCHIVED";
+  /** The stored transform, in course-core's shape (what the editor reopens). */
+  readonly placement: CoursePlacement;
+  /** R-16-06: the ring's geometry changed after the placement was resolved. */
+  readonly stale: boolean;
+  readonly updatedAt: string;
 }
 
 export interface ListCalendarPlacementsInput {
@@ -141,6 +161,12 @@ export interface ListCalendarPlacementsInput {
 
 export interface CreateMarkerInput {
   readonly ringId: string;
+  /**
+   * The geometry version the user read (`PlannerRing.geometry_version`): another editor's save in
+   * between answers `409 STALE_VERSION` instead of being overwritten (R-16-04). Without it the
+   * write is based on the geometry read just before it.
+   */
+  readonly geometryVersion?: number;
   readonly label: string;
   readonly markerUid: string;
   readonly role: string;
@@ -156,6 +182,8 @@ export interface CreateMarkerInput {
 }
 
 export interface UpdateMarkerPatch {
+  /** The geometry version the user read; see `CreateMarkerInput.geometryVersion`. */
+  readonly geometryVersion?: number;
   readonly label?: string;
   readonly role?: string;
   readonly xMeters?: number;
@@ -262,6 +290,7 @@ export interface PlannerStore {
   ): Promise<PlannerRing>;
   uploadSmarterFile(input: UploadCourseInput): Promise<{ readonly course: PlannerCourse }>;
   savePlacement(input: SavePlacementInput): Promise<PlannerPlacement>;
+  updatePlacement(input: UpdatePlacementInput): Promise<PlannerPlacement>;
   listCalendarPlacements(input?: ListCalendarPlacementsInput): Promise<readonly PlannerPlacement[]>;
   listMarkers(ringId: string): Promise<readonly PlannerRingMarker[]>;
   createMarker(input: CreateMarkerInput): Promise<PlannerRingMarker>;

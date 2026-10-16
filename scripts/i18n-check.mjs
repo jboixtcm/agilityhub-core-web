@@ -139,6 +139,21 @@ for (const [key, file] of usedKeys) {
 }
 
 const dynamicKeyPrefixes = [
+  // S16 (E9-W03): D18 and D16 «Geometria», rendered by the api's enums (owners, geometry rules)
+  // and course-core's (obstacle types), and the zone fields of the geometry form.
+  "admin-courses:geometry.rule.",
+  "admin-courses:geometry.zone.",
+  "admin-courses:list.owner.",
+  "admin-courses:list.ownerType.",
+  "enums:agilityhubLevel.",
+  "enums:courseDiscipline.",
+  "enums:courseSource.",
+  "enums:doorFlow.",
+  "enums:doorSide.",
+  "enums:obstacleType.",
+  "enums:ringSurface.",
+  "enums:setupKind.",
+  "enums:setupStatus.",
   "admin-activities:cancelModal.channel.",
   "admin-activities:registrants.filters.",
   "admin-census:signupReview.fields.",

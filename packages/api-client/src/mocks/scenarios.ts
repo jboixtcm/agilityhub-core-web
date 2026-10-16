@@ -136,7 +136,10 @@ const scenarios = {
   },
   /** D19 on the product host with a dark theme (the 1280 px dark screenshots). */
   platformDark: {
-    branding: { ...productBranding, theme: { ...canic.theme, logoDarkUrl: null, logoUrl: null, markUrl: null } },
+    branding: {
+      ...productBranding,
+      theme: { ...canic.theme, logoDarkUrl: null, logoUrl: null, markUrl: null },
+    },
     me: platformMe,
     sessions: accountSessions,
   },
@@ -486,6 +489,12 @@ const scenarios = {
   /** S10 §9 (D12): an ADMIN of a club without FREE_TRAINING (no `TRAINING` cells). */
   agendaNoTraining: {
     branding: { ...canic, modules: canic.modules.filter((module) => module !== "FREE_TRAINING") },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  /** S16 R-16-15 (E9-W03): an ADMIN of a club without COURSES (no D18, geometry, selectors). */
+  adminNoCourses: {
+    branding: { ...canic, modules: canic.modules.filter((module) => module !== "COURSES") },
     me: meAdmin as Me,
     sessions: accountSessions,
   },

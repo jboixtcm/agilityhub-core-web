@@ -1,0 +1,27 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+
+ ❯ tests/sheets.test.tsx (6 tests | 1 failed) 123ms
+   ❯ T-16-04 dragging the plan in the placement editor (2)
+     × T-16-04 a drag of 120 px right and 60 px down moves the course east and south by the drawn scale, and the warnings follow 78ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  08:01:21
+   Duration  985ms (environment 42%, transform 29%, import 15%, tests 14%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sheets.test.tsx > T-16-04 dragging the plan in the placement editor > T-16-04 a drag of 120 px right and 60 px down moves the course east and south by the drawn scale, and the warnings follow
+AssertionError: expected +0 to be close to 7.199999999999999, received difference is 7.199999999999999, but expected 0.05
+ ❯ tests/sheets.test.tsx:396:29
+    394|     const start = offset(before);
+    395|     const end = offset(screen.getByTestId("offset").textContent);
+    396|     expect(end.x - start.x).toBeCloseTo(120 * scale, 1);
+       |                             ^
+    397|     expect(end.y - start.y).toBeCloseTo(-60 * scale, 1);
+    398|     // The course now runs past the east border: the live warnings are…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

@@ -2163,3 +2163,7 @@ Blocking: no.
 ## 2026-10-16 · organizer → executor · E117: E9-W03 ready
 @executor Ruling E117. E9-T03 is verified, so **E9-W03 is `ready`**. R-16-06's stale-placement warning is computed here, by the client (organizer note in the task).
 Blocking: no.
+
+## 2026-10-16 · organizer → executor · E118: E10-W01 round 2, E9-W04 ready
+@executor Ruling E118. **E10-W01 goes back for a round 2** (nine points in the task): the Paràmetres tab stays out until the api publishes its read, and the wizard's theme comes from the product, never from the host's branding. Its api questions go to E10-T04 and E10-T03, the full Paràmetres tab to E10-W03, and the real-core proofs to E10-W02 (organizer notes). E9-T04 is verified, so **E9-W04 is `ready`**.
+Blocking: no.

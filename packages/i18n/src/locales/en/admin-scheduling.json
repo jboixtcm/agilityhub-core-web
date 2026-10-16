@@ -263,5 +263,12 @@
       "confirm": "Remove from the list",
       "cancel": "Cancel"
     }
+  },
+  "plannedCourse": {
+    "label": "Planned course",
+    "none": "None",
+    "loading": "Loading…",
+    "unknown": "A placement of another ring",
+    "error": "The ring's courses could not be loaded."
   }
 }

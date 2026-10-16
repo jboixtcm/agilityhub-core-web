@@ -263,5 +263,12 @@
       "confirm": "Quita de la lista",
       "cancel": "Cancela"
     }
+  },
+  "plannedCourse": {
+    "label": "Recorrido previsto",
+    "none": "Ninguno",
+    "loading": "Cargando…",
+    "unknown": "Una colocación de otra pista",
+    "error": "No se han podido cargar los recorridos de la pista."
   }
 }

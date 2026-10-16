@@ -24,6 +24,19 @@ export {
   type PlannerAction,
   type PlannerState,
 } from "./lib/planner-state";
+export {
+  nearestMarkers,
+  renderBuildSheetPdf,
+  type BuildSheetInput,
+  type BuildSheetLabels,
+} from "./lib/pdf/build-sheet";
+export { SHEET_PAPER, type SheetPaper } from "./lib/pdf/layout";
+export {
+  renderMarkerSheetPdf,
+  type MarkerSheetInput,
+  type MarkerSheetLabels,
+} from "./lib/pdf/marker-sheet";
+export { resolvePlacedObstacles, type ResolvedObstacle } from "./lib/resolved-obstacles";
 export { configurePlannerStore, getPlannerStore } from "./lib/storage/get-store";
 export type {
   CreateCalibrationLogInput,
@@ -42,6 +55,7 @@ export type {
   SavePlacementInput,
   SaveRingDoorInput,
   UpdateMarkerPatch,
+  UpdatePlacementInput,
   UpsertBuildObstacleStatusInput,
   UploadCourseInput,
 } from "./lib/storage/types";

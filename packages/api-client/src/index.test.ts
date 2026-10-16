@@ -650,7 +650,9 @@ describe("MSW bootstrap handlers", () => {
     // page) and GET /billing/exports and GET /invoices/export (handlers.ts).
     // E8-W03 round 2: + the published member plan-change handler.
     // E10-W01: + the 25 `/platform/*` handlers of console-handlers.ts (S17's D19 console).
-    expect(handlers).toHaveLength(347);
+    // E9-W03: + the 28 S16 handlers of course-handlers.ts (courses and their uploads and files,
+    // placements and the build sheet, ring geometry, inventories, setups) and S05's `GET /rings/{id}`.
+    expect(handlers).toHaveLength(376);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

@@ -36,6 +36,8 @@ export interface FakeCoreApi {
   readonly fetch: typeof globalThis.fetch;
   readonly uploadFetch: typeof globalThis.fetch;
   geometry: Schemas["RingGeometry"];
+  /** The ring's effective inventory; `null` = none, its own or the club's (`404`, R-16-12). */
+  inventory: Schemas["ObstacleInventory"] | null;
   readonly placements: Schemas["Placement"][];
   readonly courses: Schemas["Course"][];
   /** The next answer to `METHOD path` is committed by the api but lost on the way back. */
@@ -216,6 +218,12 @@ export function createFakeCoreApi({ maxSizeMb = 25 }: { maxSizeMb?: number } = {
       return response;
     },
     geometry: fakeGeometry(),
+    inventory: {
+      items: [{ count: 12, type: "Jump" }],
+      ringId: "ring-1",
+      scope: "RING",
+      updatedAt: NOW,
+    },
     loseNextAnswer: (method, path) => {
       lost.add(`${method} ${path}`);
     },
@@ -271,13 +279,9 @@ export function createFakeCoreApi({ maxSizeMb = 25 }: { maxSizeMb?: number } = {
       return { body: api.geometry, status: 200 };
     }
     if (method === "GET" && path === "/obstacle-inventories/ring:ring-1") {
-      const inventory: Schemas["ObstacleInventory"] = {
-        items: [{ count: 12, type: "Jump" }],
-        ringId: "ring-1",
-        scope: "RING",
-        updatedAt: NOW,
-      };
-      return { body: inventory, status: 200 };
+      return api.inventory === null
+        ? failure(404, "NOT_FOUND")
+        : { body: api.inventory, status: 200 };
     }
     if (method === "PUT" && path === "/rings/ring-1/geometry") {
       const request = body as Schemas["RingGeometryRequest"];
@@ -320,6 +324,24 @@ export function createFakeCoreApi({ maxSizeMb = 25 }: { maxSizeMb?: number } = {
       const placement = placementFrom(`placement-${String(placements.length + 1)}`, request);
       placements.push(placement);
       return { body: placement, status: 201 };
+    }
+    const placementPath = /^\/placements\/([^/]+)$/u.exec(path);
+    if (method === "PUT" && placementPath !== null) {
+      // The published rules: the stored version (else STALE_VERSION), the same ring (else
+      // PLACEMENT_RING_MISMATCH); the stored placement is no longer stale (R-16-06).
+      const request = body as Schemas["PlacementUpdateRequest"];
+      const index = placements.findIndex((candidate) => candidate.id === placementPath[1]);
+      const current = placements[index];
+      if (current === undefined) return failure(404, "NOT_FOUND");
+      if (request.version !== current.version) return failure(409, "STALE_VERSION");
+      if (request.ringId !== current.ringId) return failure(422, "PLACEMENT_RING_MISMATCH");
+      const updated: Schemas["Placement"] = {
+        ...placementFrom(current.id, request),
+        createdAt: current.createdAt,
+        version: current.version + 1,
+      };
+      placements[index] = updated;
+      return { body: updated, status: 200 };
     }
     if (method === "POST" && path === "/build-sessions/session-1/finish") {
       finishedAt ??= NOW;

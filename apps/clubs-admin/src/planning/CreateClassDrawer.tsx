@@ -29,6 +29,7 @@ import {
   useCalendarErrorMessage,
 } from "./calendar-shared";
 import { automaticDescription } from "./description";
+import { PlannedCourseSelect, useCoursesModule } from "./PlannedCourseSelect";
 import { RingBookingList } from "./SelectedClassCard";
 import {
   clubToday,
@@ -48,6 +49,8 @@ const fieldByCode: Readonly<Record<string, FieldKey>> = {
   INVALID_TIME_RANGE: "time",
   LEVEL_REQUIRED: "levelIds",
   OUTSIDE_OPENING_HOURS: "time",
+  // S16 R-16-13: the planned course is not of the chosen ring; said under the ring.
+  PLACEMENT_RING_MISMATCH: "ringId",
   RING_BLOCKED: "ringId",
   TOO_MANY_INSTRUCTORS: "instructorIds",
 };
@@ -153,6 +156,9 @@ export function CreateClassDrawer({
     moveStart(clampTime(startTime, options.starts), options.ends);
   };
   const [ringId, setRingId] = useState<string | null>(null);
+  // S16 R-16-13 «Recorregut previst»: a placement of the chosen ring (a new ring drops it).
+  const coursesModule = useCoursesModule();
+  const [plannedCourseId, setPlannedCourseId] = useState<string | null>(null);
   const [levelIds, setLevelIds] = useState<string[]>([]);
   const [instructorIds, setInstructorIds] = useState<string[]>(() => {
     const first = activeInstructors[0];
@@ -213,6 +219,7 @@ export function CreateClassDrawer({
           endTime,
           instructorIds,
           levelIds,
+          ...(plannedCourseId === null ? {} : { placementId: plannedCourseId }),
           ringId,
           startTime,
           ...(cancelBookings ? { cancelBookings: true } : {}),
@@ -395,6 +402,7 @@ export function CreateClassDrawer({
                 className="planning-chip planning-chip--dot"
                 key={ring.id}
                 onClick={() => {
+                  if (ring.id !== ringId) setPlannedCourseId(null);
                   setRingId(ring.id);
                   dropBookings();
                 }}
@@ -409,6 +417,7 @@ export function CreateClassDrawer({
               aria-checked={ringId === null}
               className="planning-chip"
               onClick={() => {
+                setPlannedCourseId(null);
                 setRingId(null);
                 dropBookings();
               }}
@@ -420,6 +429,20 @@ export function CreateClassDrawer({
           </div>
           {listError(errors.ringId)}
         </fieldset>
+        {coursesModule && ringId !== null ? (
+          <FormField
+            id="calendar-create-planned-course"
+            label={t("admin-scheduling:plannedCourse.label")}
+          >
+            <PlannedCourseSelect
+              client={client}
+              id="calendar-create-planned-course"
+              onChange={setPlannedCourseId}
+              ringId={ringId}
+              value={plannedCourseId}
+            />
+          </FormField>
+        ) : null}
         {settings.levelsEnabled ? (
           <fieldset className="planning-form__fieldset">
             <legend>{t("admin-scheduling:classCard.levels")}</legend>

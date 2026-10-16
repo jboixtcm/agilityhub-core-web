@@ -212,5 +212,18 @@
       "registeredAt": "Registration date",
       "memberId": "Member"
     }
+  },
+  "placements": {
+    "title": "Placements",
+    "add": "Add",
+    "addTitle": "Add a placement",
+    "course": "Course",
+    "place": "Place it",
+    "noCourses": "The club has no course in its library yet.",
+    "empty": "No course has been placed for this activity yet.",
+    "loading": "Loading the placements",
+    "error": "The placements could not be loaded.",
+    "row": "{course} · {ring}",
+    "rowNamed": "{course} · {ring} · {name}"
   }
 }

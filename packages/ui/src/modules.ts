@@ -77,6 +77,10 @@ export const moduleUi = {
       "/instructor/pistes/:ringId/muntat",
       "/instructor/muntatge/:sessionId",
       "/recorreguts",
+      // E9-W03: a course of D18, its placement editor and D16's «Geometria» of a ring.
+      "/recorreguts/:id",
+      "/recorreguts/:id/col-locacio",
+      "/pistes/:id/geometria",
     ],
     tabs: [],
   },
@@ -123,8 +127,7 @@ export function moduleDependents(
 ): ClubModule[] {
   return clubModules.filter(
     (candidate) =>
-      enabledModules.includes(candidate) &&
-      (moduleDependencies[candidate] ?? []).includes(module),
+      enabledModules.includes(candidate) && (moduleDependencies[candidate] ?? []).includes(module),
   );
 }
 

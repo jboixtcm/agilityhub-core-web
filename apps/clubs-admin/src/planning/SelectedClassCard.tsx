@@ -29,6 +29,7 @@ import {
 import type { ClassHeading } from "./CancelClassModal";
 import { ClassRegistrantsPanel } from "./ClassRegistrantsPanel";
 import { automaticDescription } from "./description";
+import { PlannedCourseSelect, useCoursesModule } from "./PlannedCourseSelect";
 import type { PlanningCatalogs } from "./shared";
 
 type ClassSessionPatch = components["schemas"]["ClassSessionPatchRequest"];
@@ -48,6 +49,8 @@ interface DraftValues {
   instructorIds: string[];
   levelIds: string[];
   notes: string;
+  /** S16 R-16-13 «Recorregut previst». */
+  placementId: string | null;
   ringId: string | null;
   startTime: string;
 }
@@ -59,6 +62,7 @@ function initialValues(session: ClassSession): DraftValues {
     instructorIds: [...session.instructorIds],
     levelIds: [...session.levelIds],
     notes: session.notes ?? "",
+    placementId: session.placementId ?? null,
     ringId: session.ringId ?? null,
     startTime: session.startTime,
   };
@@ -75,6 +79,7 @@ function diffOf(session: ClassSession, values: DraftValues, editable: boolean): 
   if (notes !== (session.notes ?? null)) patch.notes = notes;
   if (!editable) return patch;
   if (values.ringId !== (session.ringId ?? null)) patch.ringId = values.ringId;
+  if (values.placementId !== (session.placementId ?? null)) patch.placementId = values.placementId;
   if (!sameSet(values.levelIds, session.levelIds)) patch.levelIds = values.levelIds;
   if (!sameSet(values.instructorIds, session.instructorIds)) {
     patch.instructorIds = values.instructorIds;
@@ -227,6 +232,7 @@ export function SelectedClassCard({
 }) {
   const { t } = useTranslation(["admin-scheduling", "enums", "errors"]);
   const errorMessage = useCalendarErrorMessage();
+  const coursesModule = useCoursesModule();
   const [values, setValues] = useState(() => initialValues(session));
   const [pending, setPending] = useState(false);
   // A save or a conflict waits for the refetch that brings the new version and remounts the card.
@@ -398,7 +404,8 @@ export function SelectedClassCard({
               disabled={chipsDisabled}
               onChange={(event) => {
                 const value = event.currentTarget.value;
-                set({ ringId: value === "" ? null : value });
+                // A placement belongs to its ring (R-16-13): a new ring drops the planned course.
+                set({ placementId: null, ringId: value === "" ? null : value });
               }}
               value={chips.ringId ?? ""}
             >
@@ -410,6 +417,22 @@ export function SelectedClassCard({
               <option value="">{t("admin-scheduling:classCard.noRing")}</option>
             </Select>
           </label>
+          {coursesModule && chips.ringId !== null ? (
+            <label className={chipClass("calendar-chip calendar-chip--select")}>
+              <span className="calendar-chip__label">
+                {t("admin-scheduling:plannedCourse.label")}
+              </span>
+              <PlannedCourseSelect
+                client={client}
+                disabled={chipsDisabled}
+                onChange={(placementId) => {
+                  set({ placementId });
+                }}
+                ringId={chips.ringId}
+                value={chips.placementId}
+              />
+            </label>
+          ) : null}
           {settings.levelsEnabled ? (
             <MultiChip
               disabled={chipsDisabled}

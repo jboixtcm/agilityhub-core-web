@@ -2,13 +2,14 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import {
+  coursePathLengthMeters,
   makeWarning,
   parseSmarterTxt,
   type CourseData,
   type CoursePlacement,
 } from "@agilityhub/course-core";
 import type { SavePlacementInput } from "@agilityhub/course-ui";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { isApiError } from "./api-error";
 import { createApiClient } from "./client";
@@ -325,5 +326,180 @@ describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () =>
       status: "COMPLETED",
     });
     expect(again).toEqual(finished);
+  });
+});
+
+describe("E9-W03: the store D16 and D18 use", () => {
+  it("E9-W02 review #2 / R-16-04 a marker save after another editor's save answers 409 STALE_VERSION and their markers survive", async () => {
+    const api = createFakeCoreApi();
+    const store = storeOn(api);
+    const read = await store.getRing("ring-1");
+    if (read === null) throw new Error("RING_NOT_FOUND");
+    expect(read.geometry_version).toBe(3);
+
+    // Another editor moves marker A and adds marker B (geometry v3 → v4).
+    api.saveGeometryElsewhere((geometry) => {
+      const [first] = geometry.markers;
+      if (first === undefined) throw new Error("MARKER_NOT_FOUND");
+      return {
+        ...geometry,
+        markers: [
+          { ...first, xM: 1 },
+          { ...first, id: "marker-b", label: "B", markerUid: "marker-b", xM: 40 },
+        ],
+      };
+    });
+
+    // The user, still on v3, renames A: the edit carries the version the user read.
+    const renamed = await rejection(
+      store.updateMarker("ring-1", "marker-a", {
+        geometryVersion: read.geometry_version,
+        label: "A1",
+      }),
+    );
+    expect(isApiError(renamed, "STALE_VERSION")).toBe(true);
+    expect(renamed).toMatchObject({ details: null, status: 409 });
+    expect(api.requests.at(-1)?.body).toMatchObject({ version: 3 });
+
+    // Creating a marker on the stale read is refused the same way.
+    const created = await rejection(
+      store.createMarker({
+        geometryVersion: read.geometry_version,
+        label: "C",
+        markerUid: "marker-c",
+        physicalHeightMeters: 0.19,
+        physicalWidthMeters: 0.19,
+        ringId: "ring-1",
+        role: "corner",
+        xMeters: 40,
+        yMeters: 20,
+      }),
+    );
+    expect(isApiError(created, "STALE_VERSION")).toBe(true);
+
+    // Their markers are intact.
+    expect(api.geometry.version).toBe(4);
+    expect(api.geometry.markers.map((item) => [item.id, item.label, item.xM])).toEqual([
+      ["marker-a", "A", 1],
+      ["marker-b", "B", 40],
+    ]);
+
+    // On the latest read the rename goes through and keeps their move and their marker.
+    const latest = await store.getRing("ring-1");
+    if (latest === null) throw new Error("RING_NOT_FOUND");
+    const saved = await store.updateMarker("ring-1", "marker-a", {
+      geometryVersion: latest.geometry_version,
+      label: "A1",
+    });
+    expect(saved).toMatchObject({ label: "A1", x_m: 1 });
+    expect(api.geometry.markers.map((item) => [item.id, item.label])).toEqual([
+      ["marker-a", "A1"],
+      ["marker-b", "B"],
+    ]);
+  });
+
+  it("R-16-01 an import sends course-core's path length (pathLengthM, E9-T03): the api computes no geometry", async () => {
+    const api = createFakeCoreApi();
+    await storeOn(api).uploadSmarterFile({
+      bytes,
+      courseData: course,
+      filename: "jp-s-sw.txt",
+      submissionKey: "upload-key-path",
+    });
+    const body = api.requests.at(-1)?.body as components["schemas"]["CourseRequest"];
+    expect(body.pathLengthM).toBe(coursePathLengthMeters(course));
+    expect(body.pathLengthM).toBeGreaterThan(0);
+  });
+
+  it("R-16-02 without an injected uploadFetch the signed PUT goes through the global fetch, called as a browser requires", async () => {
+    const api = createFakeCoreApi();
+    const puts: string[] = [];
+    // A browser's fetch refuses any receiver but the global object («Illegal invocation»).
+    vi.stubGlobal("fetch", function strictFetch(this: unknown, input: RequestInfo | URL) {
+      if (this !== undefined && this !== globalThis) {
+        return Promise.reject(new TypeError("Failed to execute 'fetch': Illegal invocation"));
+      }
+      puts.push(input instanceof Request ? input.url : String(input));
+      return Promise.resolve(new Response(null, { status: 200 }));
+    });
+    try {
+      const store = new CoreApiStore({
+        client: createApiClient({ baseUrl: "https://core.test", fetch: api.fetch }),
+        venue: { id: "club-1", locale: "ca", name: "Club", slug: "club" },
+      });
+      await store.uploadSmarterFile({
+        bytes,
+        courseData: course,
+        filename: "jp-s-sw.txt",
+        submissionKey: "upload-key-browser",
+      });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+    expect(puts).toEqual(["https://files.test/upload/source-1"]);
+    expect(api.courses).toHaveLength(1);
+  });
+
+  it("R-16-12 a ring with geometry and no inventory (404) is still offered, with an empty inventory", async () => {
+    const api = createFakeCoreApi();
+    api.inventory = null;
+    const store = storeOn(api);
+    const ring = await store.getRing("ring-1");
+    expect(ring).toMatchObject({ geometry_version: 3, id: "ring-1", obstacle_inventory: [] });
+  });
+
+  it("R-16-06 updatePlacement PUTs the recalculated placement at the version the user edited; a newer save answers STALE_VERSION", async () => {
+    const api = createFakeCoreApi();
+    const store = storeOn(api);
+    const created = await store.savePlacement(placementInput());
+    expect(created).toMatchObject({
+      courseVersion: 1,
+      placement: centred,
+      stale: false,
+      version: 1,
+    });
+
+    const moved: CoursePlacement = {
+      ...centred,
+      offsetXMeters: 22,
+      placementMode: "preserveMeters",
+    };
+    const updated = await store.updatePlacement({
+      ...placementInput({ placement: moved }),
+      placementId: created.id,
+      version: created.version,
+    });
+    const request = api.requests.at(-1);
+    expect(request).toMatchObject({
+      idempotencyKey: null,
+      method: "PUT",
+      path: "/placements/placement-1",
+    });
+    expect(request?.body).toMatchObject({
+      courseId: "course-1",
+      placementMode: "PRESERVE_METERS",
+      ringId: "ring-1",
+      transform: { offsetXM: 22 },
+      version: 1,
+    });
+    expect(request?.body).not.toHaveProperty("force");
+    expect(updated).toMatchObject({ placement: moved, version: 2 });
+
+    // The same stale version again: another editor's save in between is never overwritten.
+    const stale = await rejection(
+      store.updatePlacement({
+        ...placementInput({ placement: centred }),
+        placementId: created.id,
+        version: created.version,
+      }),
+    );
+    expect(isApiError(stale, "STALE_VERSION")).toBe(true);
+    expect(api.placements[0]?.transform.offsetXM).toBe(22);
+  });
+
+  it("R-16-05 a placement without a known threshold sends warningThresholdM: null (the club's default applies)", async () => {
+    const api = createFakeCoreApi();
+    await storeOn(api).savePlacement(placementInput({ thresholdMeters: null }));
+    expect(api.requests.at(-1)?.body).toMatchObject({ warningThresholdM: null });
   });
 });

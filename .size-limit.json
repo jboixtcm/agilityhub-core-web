@@ -8,12 +8,16 @@
   {
     "name": "clubs all JavaScript",
     "path": "apps/clubs/dist/assets/*.js",
-    "limit": "420 kB",
+    "limit": "470 kB",
     "gzip": true
   },
   {
     "name": "clubs-admin initial JavaScript",
-    "path": "apps/clubs-admin/dist/assets/index-*.js",
+    "path": [
+      "apps/clubs-admin/dist/assets/index-*.js",
+      "apps/clubs-admin/dist/assets/list-helpers-*.js",
+      "apps/clubs-admin/dist/assets/jsx-runtime-*.js"
+    ],
     "limit": "460 kB",
     "gzip": true
   },
@@ -22,9 +26,23 @@
     "path": [
       "apps/clubs-admin/dist/assets/*.js",
       "!apps/clubs-admin/dist/assets/ConsolePage-*.js",
-      "!apps/clubs-admin/dist/assets/console-*.js"
+      "!apps/clubs-admin/dist/assets/console-*.js",
+      "!apps/clubs-admin/dist/assets/CoursesRoute-*.js",
+      "!apps/clubs-admin/dist/assets/CourseViewer3D-*.js"
     ],
     "limit": "660 kB",
+    "gzip": true
+  },
+  {
+    "name": "clubs-admin courses JavaScript (D18, D16 «Geometria», lazy, COURSES only)",
+    "path": "apps/clubs-admin/dist/assets/CoursesRoute-*.js",
+    "limit": "66 kB",
+    "gzip": true
+  },
+  {
+    "name": "clubs-admin course 3D viewer JavaScript (D18's 3D tab, lazy, three.js)",
+    "path": "apps/clubs-admin/dist/assets/CourseViewer3D-*.js",
+    "limit": "167 kB",
     "gzip": true
   },
   {

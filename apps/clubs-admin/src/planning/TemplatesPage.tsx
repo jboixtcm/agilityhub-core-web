@@ -1209,6 +1209,7 @@ export function TemplatesPage({
         description,
         instructorIds: values.instructorIds,
         levelIds: values.levelIds,
+        ...(values.placementId === null ? {} : { placementId: values.placementId }),
         ringId: values.ringId,
       },
       params: { path: { id: current.id } },
@@ -1679,6 +1680,7 @@ export function TemplatesPage({
         settings.data === undefined ? null : (
           <ClassForm
             bands={sortedBands(current.bands)}
+            client={client}
             key={card.key}
             days={current.days}
             instructors={cat.instructors}

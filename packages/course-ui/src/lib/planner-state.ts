@@ -81,6 +81,8 @@ export type PlannerAction =
   | { type: 'SET_COURSE'; course: CourseData; courseDbId: string; filename: string }
   | { type: 'SET_VENUE'; venue: PlannerVenue }
   | { type: 'SET_RING'; ring: PlannerRing }
+  /** Reopens a stored placement (D18's editor on an existing `Placement`) as it was saved. */
+  | { type: 'SET_PLACEMENT'; placement: CoursePlacement }
   | { type: 'NUDGE'; dxMeters: number; dyMeters: number }
   | { type: 'ROTATE'; deltaDegrees: number }
   | { type: 'FLIP_X' }
@@ -157,6 +159,9 @@ export function plannerReducer(state: PlannerState, action: PlannerAction): Plan
       const placement = centerCourseInRing(state.course, ringToCore(action.ring));
       return { ...state, ring: action.ring, placement };
     }
+
+    case 'SET_PLACEMENT':
+      return { ...state, placement: action.placement };
 
     case 'NUDGE': {
       return {

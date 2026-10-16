@@ -1,5 +1,6 @@
 export * from './heading.js';
 export * from './obstacle-footprint.js';
+export * from './path.js';
 export * from './placement.js';
 export * from './primitives.js';
 export * from './ring.js';

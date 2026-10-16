@@ -1,7 +1,47 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { loadEnv } from "vite";
+import { loadEnv, type Plugin } from "vite";
 import { configDefaults, defineConfig } from "vitest/config";
+
+/** course-ui's FBX models (D18's 3D tab, E9-W03), published at `/obstacle-models` as Planner3D reads them. */
+const OBSTACLE_MODELS = resolve(
+  import.meta.dirname,
+  "../../packages/course-ui/assets/obstacle-models",
+);
+
+function obstacleModels(): Plugin {
+  return {
+    configureServer(server) {
+      server.middlewares.use("/obstacle-models", (request, response, next) => {
+        const file = (request.url ?? "").split("?")[0]?.replace(/^\//u, "") ?? "";
+        if (!/^[\w.-]+\.fbx$/u.test(file)) {
+          next();
+          return;
+        }
+        try {
+          const data = readFileSync(resolve(OBSTACLE_MODELS, file));
+          response.setHeader("Content-Type", "application/octet-stream");
+          response.end(data);
+        } catch {
+          next();
+        }
+      });
+    },
+    generateBundle() {
+      for (const file of readdirSync(OBSTACLE_MODELS).filter((name) => name.endsWith(".fbx"))) {
+        this.emitFile({
+          fileName: `obstacle-models/${file}`,
+          source: readFileSync(resolve(OBSTACLE_MODELS, file)),
+          type: "asset",
+        });
+      }
+    },
+    name: "course-ui-obstacle-models",
+  };
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
@@ -21,7 +61,7 @@ export default defineConfig(({ mode }) => {
         };
 
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), obstacleModels()],
     server: mockEnabled
       ? {}
       : {

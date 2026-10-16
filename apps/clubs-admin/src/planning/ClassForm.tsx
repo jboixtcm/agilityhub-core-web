@@ -1,3 +1,4 @@
+import type { ApiClient } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Button, Card, FormField, Input, Select } from "@agilityhub/ui";
 import {
@@ -11,6 +12,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { automaticDescription } from "./description";
+import { PlannedCourseSelect, useCoursesModule } from "./PlannedCourseSelect";
 import {
   DroppedChangeError,
   errorCode,
@@ -32,6 +34,8 @@ export interface ClassFormValues {
   description: string;
   instructorIds: string[];
   levelIds: string[];
+  /** S16 R-16-13 «Recorregut previst»: a placement of the class's ring, or none. */
+  placementId: string | null;
   ringId: string | null;
 }
 
@@ -43,6 +47,7 @@ export interface ClassFormPatch {
   description?: string | null;
   instructorIds?: string[];
   levelIds?: string[];
+  placementId?: string | null;
   ringId?: string | null;
 }
 
@@ -56,7 +61,14 @@ export type ClassFormMode =
   | { kind: "edit"; item: TemplateClass };
 
 type FieldKey =
-  "bandId" | "capacity" | "dayOfWeek" | "description" | "instructorIds" | "levelIds" | "general";
+  | "bandId"
+  | "capacity"
+  | "dayOfWeek"
+  | "description"
+  | "instructorIds"
+  | "levelIds"
+  | "placementId"
+  | "general";
 
 const knownFields: ReadonlySet<string> = new Set<FieldKey>([
   "bandId",
@@ -66,11 +78,13 @@ const knownFields: ReadonlySet<string> = new Set<FieldKey>([
   "general",
   "instructorIds",
   "levelIds",
+  "placementId",
 ]);
 
 const fieldByCode: Readonly<Record<string, FieldKey>> = {
   DESCRIPTION_REQUIRED: "description",
   LEVEL_REQUIRED: "levelIds",
+  PLACEMENT_RING_MISMATCH: "placementId",
   TOO_MANY_INSTRUCTORS: "instructorIds",
 };
 
@@ -93,6 +107,7 @@ function initialValues(
       description: mode.item.description ?? "",
       instructorIds: [...mode.item.instructorIds],
       levelIds: [...mode.item.levelIds],
+      placementId: mode.item.placementId ?? null,
       ringId: mode.item.ringId ?? null,
     };
   }
@@ -105,12 +120,15 @@ function initialValues(
     instructorIds:
       maxInstructors === 1 && firstInstructor !== undefined ? [firstInstructor.id] : [],
     levelIds: [],
+    placementId: null,
     ringId: null,
   };
 }
 
 export interface ClassFormProps {
   bands: readonly TimeBand[];
+  /** With COURSES, «Recorregut previst» reads the placements of the ring through it. */
+  client?: ApiClient | undefined;
   days: readonly DayOfWeek[];
   instructors: readonly Instructor[];
   levels: readonly Level[];
@@ -134,6 +152,7 @@ export const CLASS_CARD_ID = "planning-class-card";
  */
 export function ClassForm({
   bands,
+  client,
   days,
   instructors,
   levels,
@@ -148,6 +167,7 @@ export function ClassForm({
 }: ClassFormProps) {
   const { t } = useTranslation(["admin-scheduling", "errors"]);
   const { formatPlainDate } = useClubFormats();
+  const coursesModule = useCoursesModule();
   const [values, setValues] = useState<ClassFormValues>(() =>
     initialValues(mode, bands, days, instructors, maxInstructors),
   );
@@ -240,6 +260,17 @@ export function ClassForm({
         setErrors((shown) => (Object.keys(shown).length > 0 ? shown : refusal));
       }
     }
+  };
+
+  /**
+   * A new ring drops the planned course: a placement belongs to its ring (R-16-13, the api answers
+   * PLACEMENT_RING_MISMATCH otherwise), so both travel in one change.
+   */
+  const changeRing = (ringId: string | null) => {
+    void change(
+      { ringId, ...(values.placementId === null ? {} : { placementId: null }) },
+      { placementId: null, ringId },
+    );
   };
 
   const toggleLevel = (levelId: string) => {
@@ -417,7 +448,9 @@ export function ClassForm({
                 aria-checked={values.ringId === ring.id}
                 className="planning-chip planning-chip--dot"
                 key={ring.id}
-                onClick={() => void change({ ringId: ring.id }, { ringId: ring.id })}
+                onClick={() => {
+                  changeRing(ring.id);
+                }}
                 role="radio"
                 style={colorStyle(ring.color)}
                 type="button"
@@ -428,7 +461,9 @@ export function ClassForm({
             <button
               aria-checked={values.ringId === null}
               className="planning-chip"
-              onClick={() => void change({ ringId: null }, { ringId: null })}
+              onClick={() => {
+                changeRing(null);
+              }}
               role="radio"
               type="button"
             >
@@ -436,6 +471,22 @@ export function ClassForm({
             </button>
           </div>
         </fieldset>
+
+        {client !== undefined && coursesModule && values.ringId !== null ? (
+          <FormField
+            {...errorProp(errors.placementId)}
+            id={`${idPrefix}-planned-course`}
+            label={t("admin-scheduling:plannedCourse.label")}
+          >
+            <PlannedCourseSelect
+              client={client}
+              id={`${idPrefix}-planned-course`}
+              onChange={(placementId) => void change({ placementId }, { placementId })}
+              ringId={values.ringId}
+              value={values.placementId}
+            />
+          </FormField>
+        ) : null}
 
         {levelsEnabled ? (
           <fieldset className="planning-class-form__row">

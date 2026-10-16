@@ -942,7 +942,7 @@ export interface paths {
         put?: never;
         /**
          * createBuildSession
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11: starts a build session on a placement of the club (NOT_FOUND) whose course the caller can read (COURSE_NOT_VISIBLE): status NOT_STARTED, startedAt now, one obstacle per resolved obstacle of the placement, all NOT_PLACED; selectedStrategy defaults to EQUIPMENT_TYPE. joinCode (six characters, unique among the club's open sessions) is what another phone types and joinToken what its QR carries (POST /build-sessions/join). Publishes BuildSessionStarted.
          */
         post: operations["createBuildSession"];
         delete?: never;
@@ -962,7 +962,7 @@ export interface paths {
         put?: never;
         /**
          * joinBuildSession
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11 (S16 §14.2): code is an open session's joinCode (case-insensitive; joinedVia CODE) or the joinToken of its QR (joinedVia QR); the caller becomes a participant once (a second join returns the session unchanged). No open session of the club with that code, or one open for courses.buildSessionMaxHours or longer → NOT_FOUND.
          */
         post: operations["joinBuildSession"];
         delete?: never;
@@ -980,7 +980,7 @@ export interface paths {
         };
         /**
          * getBuildSession
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11: a build session of the club, open or closed. A live client reads it again whenever its event stream reconnects.
          */
         get: operations["getBuildSession"];
         put?: never;
@@ -1000,7 +1000,7 @@ export interface paths {
         };
         /**
          * buildSessionEvents
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED. Events: obstacle, finished; heartbeat every 20 seconds. Bearer authentication.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11 live mode: a text/event-stream of the session's changes. Event obstacle {sessionId, obstacleId, status, byAccountId, at, version} for each changed obstacle; event finished {sessionId, status, finishedAt, version} when the session closes (COMPLETED or ABANDONED), after which the stream ends (a closed session gets it at once); each event id is the session version. A comment line every 20 seconds is the heartbeat. Authentication: the bearer header, or the access_token query parameter, which only this operation accepts (a browser EventSource sends no header). After a reconnection, read GET /build-sessions/{id} for the state.
          */
         get: operations["buildSessionEvents"];
         put?: never;
@@ -1020,7 +1020,7 @@ export interface paths {
         };
         /**
          * exportBuildSession
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. S16 §14.1 (E77): BuildSessionExportV1, the Unity app's contract, kept byte for byte with the planner's spellings (snake_case keys and values, placement_mode in camelCase, normalized_json and warnings_json as stored). judge_id and event_id are null, venue_id is the club's venue, is_training comes from the placement's mode. The ring needs its geometry (RING_WITHOUT_GEOMETRY) with the six markers A–F the app calibrates with (GEOMETRY_INVALID {violations: [{path: markers, rule: TOO_FEW_MARKERS}]}); a course no longer readable → COURSE_NOT_VISIBLE. The server checks the result against the schema: a failed check is a server error (500 INTERNAL_ERROR).
          */
         get: operations["exportBuildSession"];
         put?: never;
@@ -1042,7 +1042,7 @@ export interface paths {
         put?: never;
         /**
          * finishBuildSession
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR (while courses.allowInstructorPublish, else FORBIDDEN), ADMIN. Module: COURSES. R-16-11: the session becomes COMPLETED (finishedAt) and the ring's setup is registered as POST /ring-setups does: kind from the course's discipline (AGILITY, JUMPING, else FUN), the placement as its source, the course's levels. When the ring's active setup already shows this placement it is refreshed instead (builtAt, builtByAccountId and a new expiresAt; no event). A closed or outlived session → BUILD_SESSION_FINISHED; a course no longer readable → COURSE_NOT_VISIBLE. Publishes BuildSessionFinished and ends the session's streams with a finished event.
          */
         post: operations["finishBuildSession"];
         delete?: never;
@@ -1066,7 +1066,7 @@ export interface paths {
         head?: never;
         /**
          * patchBuildObstacle
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11: the obstacle takes the status, with byAccountId and at; the last write wins per obstacle (version is accepted and not compared), and the first change makes the session IN_PROGRESS; taps of several phones at once all apply (a write conflict is retried, STALE_VERSION only when the retries run out). An obstacle the session does not list → NOT_FOUND. A COMPLETED or ABANDONED session, or one open for courses.buildSessionMaxHours or longer → BUILD_SESSION_FINISHED. Publishes BuildSessionProgress and an obstacle event on the session's stream; the response carries the new session version.
          */
         patch: operations["patchBuildObstacle"];
         trace?: never;
@@ -1186,7 +1186,7 @@ export interface paths {
         put?: never;
         /**
          * createClass
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. In a VALIDATED week the class is ACTIVE; otherwise it is a DRAFT and its week's `version` goes up by one, so a concurrent validation of the week runs again and validates it too (T-06-23, E5-T28).
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. In a VALIDATED week the class is ACTIVE; otherwise it is a DRAFT and its week's `version` goes up by one, so a concurrent validation of the week runs again and validates it too (T-06-23, E5-T28). placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring.
          */
         post: operations["createClass"];
         delete?: never;
@@ -1214,7 +1214,7 @@ export interface paths {
         head?: never;
         /**
          * patchClass
-         * @description Roles: ADMIN. Tenant and role guards apply. The date field is forbidden (400 VALIDATION_ERROR). Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply. The date field is forbidden (400 VALIDATION_ERROR). Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement.
          */
         patch: operations["patchClass"];
         trace?: never;
@@ -1538,7 +1538,7 @@ export interface paths {
         put?: never;
         /**
          * createCourse
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. Creates a CLUB course. S16 §3: club-owned courses cannot use PUBLIC visibility (VALIDATION_ERROR). R-16-01: normalizedJson (required unless source = IMAGE, else COURSE_MODEL_INVALID) is validated against course-data.v1 with schemaVersion 1; the server reads designLengthM, designWidthM, canvas, origin, courseGrade, courseType and stats from it. source = IMAGE requires imageFileKey; AGILITYHUB_COPY only comes from copy-to-club (VALIDATION_ERROR). File keys must be this club's uploads of the matching purpose (sourceFileKey SMARTER_SOURCE, imageFileKey COURSE_IMAGE, thumbnailFileKey THUMBNAIL), else NOT_FOUND. name: enabled club locales (LOCALE_NOT_ENABLED). levelIds: this club's levels (NOT_FOUND), none while levels.enabled = false (LEVELS_DISABLED). Publishes CourseImported (SMARTER) or CourseCreated.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. Creates a CLUB course. S16 §3: club-owned courses cannot use PUBLIC visibility (VALIDATION_ERROR). R-16-01: normalizedJson (required unless source = IMAGE, else COURSE_MODEL_INVALID) is validated against course-data.v1 with schemaVersion 1; the server reads designLengthM, designWidthM, canvas, origin, courseGrade, courseType and stats from it. source = IMAGE requires imageFileKey; AGILITYHUB_COPY only comes from copy-to-club (VALIDATION_ERROR). File keys must be this club's uploads of the matching purpose (sourceFileKey SMARTER_SOURCE, imageFileKey COURSE_IMAGE, thumbnailFileKey THUMBNAIL), else NOT_FOUND. name: enabled club locales (LOCALE_NOT_ENABLED). levelIds: none while levels.enabled = false (LEVELS_DISABLED), else this club's levels (NOT_FOUND). Publishes CourseImported (SMARTER) or CourseCreated.
          */
         post: operations["createCourse"];
         delete?: never;
@@ -1558,7 +1558,7 @@ export interface paths {
         put?: never;
         /**
          * courseUploadUrl
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-16: contentType ∈ files.allowedTypes and fit for the purpose (SMARTER_SOURCE text/plain only; COURSE_IMAGE and THUMBNAIL image/*; BUILD_SHEET application/pdf) → else FILE_TYPE_NOT_ALLOWED; 0 < size ≤ files.maxSizeMb, and ≤ 512 KB for SMARTER_SOURCE (R-16-02) → else FILE_TOO_LARGE (CourseFileTooLargeDetails {maxSizeBytes}). fileKey = {clubId}/courses/{uuid}; the uploadUrl is signed and expires after 5 minutes (PUT with the same Content-Type).
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-16: contentType ∈ files.allowedTypes and fit for the purpose (SMARTER_SOURCE text/plain only; COURSE_IMAGE and THUMBNAIL image/*; BUILD_SHEET application/pdf) → else FILE_TYPE_NOT_ALLOWED; 0 < size ≤ files.maxSizeMb, and ≤ 512 KB for SMARTER_SOURCE (R-16-02) → else FILE_TOO_LARGE (CourseFileTooLargeDetails {maxSizeMb}: 0.5 for SMARTER_SOURCE). fileKey = {clubId}/courses/{uuid}; the uploadUrl is signed and expires after 5 minutes (PUT with the same Content-Type).
          */
         post: operations["courseUploadUrl"];
         delete?: never;
@@ -1576,7 +1576,7 @@ export interface paths {
         };
         /**
          * getCourse
-         * @description Roles: MEMBER, INSTRUCTOR, ADMIN. Module: COURSES. MEMBER reads (including impersonation) require courses.showSetupToMembers; otherwise NOT_FOUND. Course visibility (R-16-03) still applies: another club's or a deleted course is NOT_FOUND, one the caller cannot read COURSE_NOT_VISIBLE. name is resolved in the request's language with the club's default as fallback (R-16-17); nameI18n is sent only to a caller who can edit the course.
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN. Module: COURSES. MEMBER reads (including impersonation) require courses.showSetupToMembers; otherwise NOT_FOUND. R-16-03: another club's or a deleted course is NOT_FOUND. INSTRUCTOR and ADMIN read their club's CLUB courses (a PRIVATE one only its author), PUBLIC courses and their own account courses. A MEMBER reads a PUBLIC course and, R-16-16, any course (a CLUB one included) that an ACTIVE setup of the club shows, directly (courseId) or through its placement; any other course is COURSE_NOT_VISIBLE. name is resolved in the request's language with the club's default as fallback (R-16-17); nameI18n is sent only to a caller who can edit the course.
          */
         get: operations["getCourse"];
         put?: never;
@@ -3748,7 +3748,7 @@ export interface paths {
         };
         /**
          * myRingSetups
-         * @description Roles: MEMBER, INSTRUCTOR. Module: COURSES. R-16-09: when courses.showSetupToMembers is false, the MEMBER list remains accessible with setup = null for every ring; the INSTRUCTOR projection is unchanged. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: MEMBER, INSTRUCTOR. Module: COURSES. R-16-09: one item per ring — the given ringIds (each a ring of the club, else NOT_FOUND), in that order, else the club's active rings in catalog order — with its ACTIVE setup's summary, or setup = null («Sense recorregut registrat»). levelLabel: the club levels' codes joined by an en dash, else the agilityhubLevel; thumbnailUrl: the setup's photo, else the shown course's thumbnail (signed); hasViewer: a placement or a course with a model to draw. No builtBy, notes nor inventory. When courses.showSetupToMembers is false, the MEMBER list remains accessible with setup = null for every ring; the INSTRUCTOR projection is unchanged.
          */
         get: operations["myRingSetups"];
         put?: never;
@@ -4680,13 +4680,13 @@ export interface paths {
         };
         /**
          * listPlacements
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. The club's placements, filtered by every given ringId, courseId and activityId (each must be the club's, a course the caller can read), most recently updated first. stale = the ring's geometry changed after the placement was resolved (R-16-06); classSessionIds = the S06 classes that plan it.
          */
         get: operations["listPlacements"];
         put?: never;
         /**
          * createPlacement
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-05: courseId names a course the caller can read (COURSE_NOT_VISIBLE) with a model (else VALIDATION_ERROR fieldErrors[{courseId, COURSE_MODEL_INVALID}]) at its current version (courseVersion, else STALE_VERSION); ringId a ring of the club with a geometry (RING_WITHOUT_GEOMETRY); activityId an activity of the club and only with ACTIVITIES (else VALIDATION_ERROR fieldErrors[{activityId, MODULE_DISABLED}]). resolvedObstacles and warnings are course-core's, stored as sent (the core never recalculates the geometry). With a critical warning the placement needs force = true by an ADMIN (an INSTRUCTOR with force → FORBIDDEN), else PLACEMENT_BLOCKED (PlacementBlockedDetails: the critical warnings); a forced one audits COURSE_FORCED_PLACEMENT. warningThresholdM defaults to courses.defaultWarningThresholdM; status defaults to DRAFT and mode to TRAINING. Publishes PlacementCreated{placementId, ringId, courseId, warnings[]}.
          */
         post: operations["createPlacement"];
         delete?: never;
@@ -4704,12 +4704,12 @@ export interface paths {
         };
         /**
          * getPlacement
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. The placement with its resolvedObstacles in the ring's frame (metres, what the AR app reads) and stale (R-16-06: the client recalculates a stale placement and PUTs it).
          */
         get: operations["getPlacement"];
         /**
          * putPlacement
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. Replaces the placement at its stored version (STALE_VERSION). It keeps its ring (another ringId → PLACEMENT_RING_MISMATCH) and its course (another courseId → VALIDATION_ERROR). R-16-05: courseId names a course the caller can read (COURSE_NOT_VISIBLE) with a model (else VALIDATION_ERROR fieldErrors[{courseId, COURSE_MODEL_INVALID}]) at its current version (courseVersion, else STALE_VERSION); ringId a ring of the club with a geometry (RING_WITHOUT_GEOMETRY); activityId an activity of the club and only with ACTIVITIES (else VALIDATION_ERROR fieldErrors[{activityId, MODULE_DISABLED}]). resolvedObstacles and warnings are course-core's, stored as sent (the core never recalculates the geometry). With a critical warning the placement needs force = true by an ADMIN (an INSTRUCTOR with force → FORBIDDEN), else PLACEMENT_BLOCKED (PlacementBlockedDetails: the critical warnings); a forced one audits COURSE_FORCED_PLACEMENT. warningThresholdM defaults to courses.defaultWarningThresholdM; status defaults to DRAFT and mode to TRAINING. The stored placement is no longer stale (R-16-06); publishes PlacementUpdated{placementId, stale: false}.
          */
         put: operations["putPlacement"];
         post?: never;
@@ -5846,7 +5846,7 @@ export interface paths {
         put?: never;
         /**
          * createRingSetup
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR (while courses.allowInstructorPublish, else FORBIDDEN), ADMIN. Module: COURSES. R-16-07: registers what is set up on the ring. A kind other than EMPTY needs a source — placementId, courseId or imageFileKey (SETUP_SOURCE_REQUIRED); EMPTY (the ring is empty) names none (VALIDATION_ERROR). placementId: only on a ring with a geometry (RING_WITHOUT_GEOMETRY), a placement of that ring (PLACEMENT_RING_MISMATCH); with a courseId too, it must be the placement's course (VALIDATION_ERROR). courseId: a course the caller can read. imageFileKey: this club's COURSE_IMAGE upload (else NOT_FOUND). levelIds: none while levels.enabled = false (LEVELS_DISABLED), else this club's levels (NOT_FOUND). expectedUntil: the last club-local day the setup is shown, today or later (VALIDATION_ERROR). expiresAt = the earlier of the start of the day after expectedUntil and the start of the day courses.setupAutoExpireDays after today, in the club's time zone. The ring's active setup, if any, becomes DISMANTLED (replacedSetupId) in the same transaction and Ring.activeSetupId names the new one; a concurrent registration on the ring → STALE_VERSION. Publishes RingSetupChanged{ACTIVE} (N-31 when messaging.notifyNewRingSetup and kind ≠ EMPTY) and audits RING_SETUP_REGISTERED.
          */
         post: operations["createRingSetup"];
         delete?: never;
@@ -5864,7 +5864,7 @@ export interface paths {
         };
         /**
          * getRingSetup
-         * @description Roles: MEMBER, INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN. Module: COURSES. R-16-09: INSTRUCTOR and ADMIN read any setup of the club (view STAFF); a MEMBER (impersonation included) reads only an ACTIVE one while courses.showSetupToMembers (else NOT_FOUND), without builtByAccountId, dismantledByAccountId or notes (view MEMBER). imageUrl is a short-lived signed URL of imageFileKey.
          */
         get: operations["getRingSetup"];
         put?: never;
@@ -5886,7 +5886,7 @@ export interface paths {
         put?: never;
         /**
          * dismantleRingSetup
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-08: an ACTIVE setup becomes DISMANTLED (dismantledAt, dismantledByAccountId), Ring.activeSetupId = null, and RingSetupChanged{DISMANTLED} is published; any other status → INVALID_STATE. A concurrent write of the setup or of its ring (an expiry, a replacement) → STALE_VERSION.
          */
         post: operations["dismantleRingSetup"];
         delete?: never;
@@ -5906,7 +5906,7 @@ export interface paths {
         put?: never;
         /**
          * renewRingSetup
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-08: an ACTIVE setup (else INVALID_STATE) gets a new expiresAt counted from today, as registering does, with the given expectedUntil (null = none; an earlier day than today → VALIDATION_ERROR). It stays ACTIVE: no event. A concurrent write of the setup → STALE_VERSION.
          */
         post: operations["renewRingSetup"];
         delete?: never;
@@ -6039,26 +6039,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/rings/{id}/marker-sheet": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * markerSheet
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
-         */
-        get: operations["markerSheet"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/rings/{id}/setups": {
         parameters: {
             query?: never;
@@ -6068,7 +6048,7 @@ export interface paths {
         };
         /**
          * ringSetupHistory
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-08: every setup of the ring (ACTIVE, EXPIRED and DISMANTLED), newest builtAt first; page from 0.
          */
         get: operations["ringSetupHistory"];
         put?: never;
@@ -6738,7 +6718,7 @@ export interface paths {
         put?: never;
         /**
          * createTemplateClass
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring.
          */
         post: operations["createTemplateClass"];
         delete?: never;
@@ -6766,7 +6746,7 @@ export interface paths {
         head?: never;
         /**
          * patchTemplateClass
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement.
          */
         patch: operations["patchTemplateClass"];
         trace?: never;
@@ -9049,6 +9029,8 @@ export interface components {
             endTime: string;
             instructorIds: string[];
             levelIds: string[];
+            /** @description Only with COURSES (else VALIDATION_ERROR fieldErrors[{placementId, MODULE_DISABLED}]): a placement of the club (NOT_FOUND) on the class's own ring (PLACEMENT_RING_MISMATCH, also for a class without a ring); null = none. */
+            placementId?: string | null;
             ringId?: string | null;
             startTime: string;
         };
@@ -9119,6 +9101,8 @@ export interface components {
             instructorIds?: string[];
             levelIds?: string[];
             notes?: string | null;
+            /** @description Only with COURSES (else VALIDATION_ERROR fieldErrors[{placementId, MODULE_DISABLED}]): a placement of the club (NOT_FOUND) on the class's own ring (PLACEMENT_RING_MISMATCH, also for a class without a ring); null = none. */
+            placementId?: string | null;
             ringId?: string | null;
             riskExempt?: boolean;
             startTime?: string;
@@ -9807,8 +9791,11 @@ export interface components {
             units: "M" | "FT";
         };
         CourseFileTooLargeDetails: {
-            /** Format: int64 */
-            maxSizeBytes: number;
+            /**
+             * Format: double
+             * @description files.maxSizeMb, or 0.5 (512 KB) for SMARTER_SOURCE
+             */
+            maxSizeMb: number;
         };
         CourseListItem: {
             activeOnRings?: components["schemas"]["ActiveRing"][];
@@ -9856,6 +9843,11 @@ export interface components {
             };
             normalizedJson?: components["schemas"]["CourseDataV1"] | null;
             notes?: string | null;
+            /**
+             * Format: double
+             * @description course-core's path length of the model sent with it (stats.pathLengthM; the back computes no geometry, R-16-01). Only with a model (else VALIDATION_ERROR); a new model without it stores 0, and null or absent keeps the stored value otherwise.
+             */
+            pathLengthM?: number | null;
             /** Format: int32 */
             schemaVersion?: number | null;
             /** @enum {string|null} */
@@ -9886,6 +9878,11 @@ export interface components {
             };
             normalizedJson?: components["schemas"]["CourseDataV1"] | null;
             notes?: string | null;
+            /**
+             * Format: double
+             * @description course-core's path length of the model sent with it (stats.pathLengthM; the back computes no geometry, R-16-01). Only with a model (else VALIDATION_ERROR); a new model without it stores 0, and null or absent keeps the stored value otherwise.
+             */
+            pathLengthM?: number | null;
             /** Format: int32 */
             schemaVersion?: number | null;
             /** @enum {string|null} */
@@ -15564,6 +15561,8 @@ export interface components {
             description?: string | null;
             instructorIds: string[];
             levelIds: string[];
+            /** @description Only with COURSES (else VALIDATION_ERROR fieldErrors[{placementId, MODULE_DISABLED}]): a placement of the club (NOT_FOUND) on the class's own ring (PLACEMENT_RING_MISMATCH, also for a class without a ring); null = none. */
+            placementId?: string | null;
             ringId?: string | null;
         };
         TemplateClassPatchRequest: {
@@ -15575,6 +15574,8 @@ export interface components {
             description?: string | null;
             instructorIds?: string[];
             levelIds?: string[];
+            /** @description Only with COURSES (else VALIDATION_ERROR fieldErrors[{placementId, MODULE_DISABLED}]): a placement of the club (NOT_FOUND) on the class's own ring (PLACEMENT_RING_MISMATCH, also for a class without a ring); null = none. */
+            placementId?: string | null;
             ringId?: string | null;
             /** Format: int64 */
             version: number;
@@ -23269,7 +23270,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description NOT_FOUND, MODULE_DISABLED */
+            /** @description NOT_FOUND, MODULE_DISABLED, COURSE_NOT_VISIBLE */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -23278,7 +23279,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -23403,7 +23404,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -23604,7 +23605,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description S16 org.springframework.web.servlet.mvc.method.annotation.SseEmitter */
+            /** @description S16 build session events */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -23763,7 +23764,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description NOT_FOUND, MODULE_DISABLED */
+            /** @description NOT_FOUND, MODULE_DISABLED, COURSE_NOT_VISIBLE */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -23781,7 +23782,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Entity */
+            /** @description RING_WITHOUT_GEOMETRY, GEOMETRY_INVALID */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -23888,7 +23889,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description NOT_FOUND, MODULE_DISABLED */
+            /** @description NOT_FOUND, MODULE_DISABLED, COURSE_NOT_VISIBLE */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -23897,7 +23898,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -24917,7 +24918,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description OUTSIDE_OPENING_HOURS, TOO_MANY_INSTRUCTORS, LEVEL_REQUIRED, DESCRIPTION_REQUIRED, RING_HAS_BOOKINGS, RING_BLOCKED */
+            /** @description OUTSIDE_OPENING_HOURS, TOO_MANY_INSTRUCTORS, LEVEL_REQUIRED, DESCRIPTION_REQUIRED, RING_HAS_BOOKINGS, RING_BLOCKED, PLACEMENT_RING_MISMATCH */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -25167,7 +25168,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description CAPACITY_BELOW_BOOKINGS, OUTSIDE_OPENING_HOURS, TOO_MANY_INSTRUCTORS, LEVEL_REQUIRED, DESCRIPTION_REQUIRED, RING_HAS_BOOKINGS, RING_BLOCKED */
+            /** @description CAPACITY_BELOW_BOOKINGS, OUTSIDE_OPENING_HOURS, TOO_MANY_INSTRUCTORS, LEVEL_REQUIRED, DESCRIPTION_REQUIRED, RING_HAS_BOOKINGS, RING_BLOCKED, PLACEMENT_RING_MISMATCH */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -27912,7 +27913,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Entity */
+            /** @description LEVELS_DISABLED */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -28410,7 +28411,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Unprocessable Entity */
+            /** @description LEVELS_DISABLED */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -51552,7 +51553,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -60383,7 +60384,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -60392,7 +60393,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description RING_WITHOUT_GEOMETRY, PLACEMENT_RING_MISMATCH, SETUP_SOURCE_REQUIRED */
+            /** @description RING_WITHOUT_GEOMETRY, PLACEMENT_RING_MISMATCH, SETUP_SOURCE_REQUIRED, LEVELS_DISABLED */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -60631,7 +60632,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE */
+            /** @description INVALID_STATE, STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -60760,7 +60761,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE */
+            /** @description INVALID_STATE, STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -62128,129 +62129,6 @@ export interface operations {
                 };
             };
             /** @description RING_GEOMETRY_IN_USE, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Unprocessable Entity */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Too Many Requests */
-            429: {
-                headers: {
-                    /** @description Seconds before retrying */
-                    "Retry-After"?: number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description NOT_IMPLEMENTED */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Client error */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Server error */
-            "5XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-        };
-    };
-    markerSheet: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description S16 byte[] */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/pdf": string;
-                };
-            };
-            /** @description VALIDATION_ERROR */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Unauthorized */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description FORBIDDEN, IMPERSONATION_DENIED */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description NOT_FOUND, MODULE_DISABLED */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Conflict */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -67795,7 +67673,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description TOO_MANY_INSTRUCTORS, LEVEL_REQUIRED, DESCRIPTION_REQUIRED */
+            /** @description TOO_MANY_INSTRUCTORS, LEVEL_REQUIRED, DESCRIPTION_REQUIRED, PLACEMENT_RING_MISMATCH */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -68045,7 +67923,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description TOO_MANY_INSTRUCTORS, LEVEL_REQUIRED, DESCRIPTION_REQUIRED */
+            /** @description TOO_MANY_INSTRUCTORS, LEVEL_REQUIRED, DESCRIPTION_REQUIRED, PLACEMENT_RING_MISMATCH */
             422: {
                 headers: {
                     [name: string]: unknown;
