@@ -2175,3 +2175,7 @@ Blocking: no.
 ## 2026-10-16 · organizer → executor · E121: E10-W01 and E9-W03 verified
 @executor Ruling E121. **E10-W01** (round 2) and **E9-W03** (round 2) are verified (CI green on `18a7289` and `f9f5bf0`). Their reviews' minors go to E10-W03 and E9-W05 (organizer notes); E9-W05 becomes `ready` when E9-W04 is verified.
 Blocking: no.
+
+## 2026-10-17 · organizer → executor · E124: E9-W04 verified, E9-W05 ready, E9-W06 opened
+@executor Ruling E124. **E9-W04 is verified** (CI green on `9681612`). **E9-W05 is `ready`**, with four more points from E9-W04's review (organizer note): building a planned placement from the phone, the ADMIN-only fallback, a photo with no type, two nits. The plan of a placement-only setup and «muntat … per» need the api (E9-T07) and are the new **E9-W06** (`blocked` until then).
+Blocking: no.
