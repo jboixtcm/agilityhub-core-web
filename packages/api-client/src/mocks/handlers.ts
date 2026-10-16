@@ -4286,6 +4286,7 @@ export {
   catalogState,
   CONSOLE_CLUB_IDS,
   consoleState,
+  currentMockScenario,
   ERASED_MEMBER_ID,
   JOBS_MOCK_NOW,
   mockExportBody,

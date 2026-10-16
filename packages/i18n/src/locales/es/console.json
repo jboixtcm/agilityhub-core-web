@@ -1,0 +1,557 @@
+{
+  "access": {
+    "description": "Este acceso es solo para el equipo AgilityHub.",
+    "title": "Consola de clubes"
+  },
+  "audit": {
+    "change": "{path}: {before} → {after}",
+    "description": "Acciones de configuración del club hechas desde la plataforma o por el propio club. No incluye las acciones sobre abonados.",
+    "empty": "Todavía no hay ninguna acción de configuración.",
+    "next": "Siguiente",
+    "page": "Página {page} de {total}",
+    "previous": "Anterior",
+    "title": "Auditoría"
+  },
+  "catalogs": {
+    "clone": "Clona de un club plantilla",
+    "cloning": "Clonando",
+    "copied": "Se ha copiado: {summary}.",
+    "copiedPart": "{part} {count}",
+    "currencyWarning": "La plantilla cobra en {template} y el club en {club}: las modalidades y los precios no se pueden copiar.",
+    "description": "Copia niveles, pistas, modalidades con los precios vigentes, preguntas frecuentes y plantillas de comunicado de un club plantilla.",
+    "emptyOnly": "Solo se copian las partes que el club todavía tiene vacías.",
+    "localeFallback": "Algunos textos no existían en el idioma predeterminado del club: se han copiado desde otro idioma. Revísalos.",
+    "localeWarning": "La plantilla no tiene textos en {locales}: habrá que completarlos en el club.",
+    "noTemplates": "No hay ningún club plantilla.",
+    "parts": {
+      "FAQ": "Preguntas frecuentes",
+      "LEVELS": "Niveles",
+      "MESSAGE_TEMPLATES": "Plantillas de comunicado",
+      "PLANS": "Modalidades y precios",
+      "RINGS": "Pistas"
+    },
+    "partsLabel": "Qué se copia",
+    "template": "Club plantilla",
+    "templateOption": "{name} · {locales} · {currency}",
+    "title": "Catálogos base"
+  },
+  "checklist": {
+    "count": "{done}/{total}",
+    "done": "hecho",
+    "goToStatus": "Activa el club",
+    "items": {
+      "branding": "Marca: logo y colores propios",
+      "dns": "Dominios verificados",
+      "faq": "Preguntas frecuentes",
+      "firstAdmin": "Primer administrador con acceso",
+      "legal": "Política de privacidad",
+      "sepa": "Proveedor de pago configurado",
+      "templates": "Plantillas de comunicado"
+    },
+    "missing": "faltan: {items}",
+    "pending": "pendiente",
+    "ready": "La checklist está completa.",
+    "title": "Checklist de onboarding"
+  },
+  "common": {
+    "cancel": "Cancela",
+    "close": "Cierra",
+    "discard": "Descarta los cambios",
+    "loading": "Cargando",
+    "no": "No",
+    "retry": "Vuelve a intentarlo",
+    "save": "GUARDA",
+    "saved": "Cambios guardados.",
+    "saving": "Guardando",
+    "yes": "Sí"
+  },
+  "countryProfile": {
+    "ES": "España",
+    "GENERIC": "Genérico"
+  },
+  "errors": {
+    "catalogNotEmpty": "{part}: el club ya tiene. Solo se copian las partes vacías.",
+    "fileTooLarge": "El archivo es demasiado grande: como máximo {maxSizeMb} MB.",
+    "generic": "No se ha podido completar la acción. Vuelve a intentarlo.",
+    "moduleDependency": "Para activar {module} hay que activar {requires}.",
+    "providerInUse": "{count, plural, one {Hay # abonado que paga con este proveedor.} other {Hay # abonados que pagan con este proveedor.}}",
+    "stale": "Alguien ha cambiado el club mientras tanto. Hemos cargado la versión actual con tus cambios encima: revísala y vuelve a guardar."
+  },
+  "fieldErrors": {
+    "INVALID_VALUE": "Este valor no es válido.",
+    "REQUIRED": "Este campo es obligatorio."
+  },
+  "identity": {
+    "addressTitle": "Dirección",
+    "fields": {
+      "city": "Población",
+      "contactEmail": "Correo de contacto",
+      "contactPhone": "Teléfono de contacto",
+      "country": "País",
+      "displayCity": "Población que se muestra",
+      "legalName": "Nombre legal",
+      "name": "Nombre",
+      "notes": "Notas internas",
+      "postalCode": "Código postal",
+      "region": "Provincia",
+      "slug": "Slug",
+      "street": "Dirección",
+      "taxId": "NIF",
+      "template": "Club plantilla",
+      "websiteUrl": "Web"
+    },
+    "notesHelp": "Solo las ve el equipo AgilityHub.",
+    "platformTitle": "Plataforma",
+    "slugHelp": "No se puede cambiar una vez creado el club.",
+    "templateHelp": "Un club plantilla no opera: sirve de origen para clonar catálogos.",
+    "title": "Identidad"
+  },
+  "legal": {
+    "currentVersion": "Versión vigente de los textos legales: {version}",
+    "imageConsentText": "Texto de consentimiento de imagen ({locale})",
+    "newVersion": "Versión nueva",
+    "noVersion": "Todavía no se ha publicado ninguna versión de los textos legales.",
+    "privacyPolicyUrl": "URL de la política de privacidad",
+    "publish": "Publica una versión nueva",
+    "publishConfirm": "PUBLICA",
+    "publishTitle": "Publica una versión nueva de los textos legales",
+    "reconsentPolicy": "Los abonados verán un aviso en la app para revisar los textos nuevos. No se les bloquea el acceso.",
+    "title": "Legal",
+    "versionHelp": "Cada versión queda registrada con los consentimientos que se dan.",
+    "versionTitle": "Versión de los textos legales"
+  },
+  "list": {
+    "allStatuses": "Todos los estados",
+    "caption": "Clubes de la plataforma",
+    "columns": {
+      "checklist": "Checklist",
+      "countryProfile": "País",
+      "countryTimeZone": "País y huso",
+      "lastAdminAccessAt": "Último acceso de un admin",
+      "membersActive": "Abonados activos",
+      "module": "Módulo",
+      "modules": "Módulos",
+      "name": "Nombre",
+      "slug": "Slug",
+      "smsSentMonth": "SMS del mes",
+      "status": "Estado",
+      "storageBytes": "Almacenamiento",
+      "template": "Club plantilla"
+    },
+    "countryTimeZone": "{country} · {timeZone}",
+    "description": "Los clubes de la plataforma, su estado y el uso del mes.",
+    "emptyDescription": "Cambia la búsqueda o los filtros, o crea un club nuevo.",
+    "emptyTitle": "Ningún club",
+    "error": "No se han podido cargar los clubes.",
+    "never": "nunca",
+    "newClub": "Nuevo club",
+    "noModules": "ninguno",
+    "none": "—",
+    "openRecord": "Abre la ficha de {name}",
+    "search": "Busca por nombre o slug",
+    "templateClub": "plantilla",
+    "title": "Consola de clubes"
+  },
+  "locales": {
+    "ca": "Catalán",
+    "en": "Inglés",
+    "es": "Castellano"
+  },
+  "localization": {
+    "confirm": "GUARDA LOS CAMBIOS",
+    "confirmIntro": "Antes de guardar, revisa qué cambia para el club:",
+    "confirmTitle": "Cambios de localización",
+    "consequences": {
+      "countryProfile": "El perfil de país cambia las validaciones de documentos, códigos postales y fiscalidad de los formularios del club.",
+      "currency": "La moneda pasa de {from} a {to}: los precios vigentes no se convierten y habrá que revisar las modalidades.",
+      "defaultLocale": "Los textos que no existan en un idioma se mostrarán en el nuevo idioma predeterminado.",
+      "localesAdded": "Los textos del club (páginas, plantillas, preguntas) se tendrán que completar en los idiomas nuevos.",
+      "localesRemoved": "Los abonados ya no podrán elegir {locales}; los textos en ese idioma se conservan pero no se muestran.",
+      "timeZone": "El huso horario pasa de {from} a {to}: todos los horarios del club se leerán en el huso nuevo."
+    },
+    "currencyHelp": "Código ISO de tres letras, por ejemplo EUR.",
+    "defaultNotListed": "El idioma predeterminado tiene que ser uno de los idiomas del club.",
+    "description": "Los cambios en esta pestaña afectan a todo el club: antes de guardar se muestran las consecuencias.",
+    "fields": {
+      "countryProfile": "Perfil de país",
+      "currency": "Moneda",
+      "defaultLocale": "Idioma predeterminado",
+      "locales": "Idiomas",
+      "timeZone": "Huso horario"
+    },
+    "timeZoneHelp": "Identificador IANA, por ejemplo Europe/Madrid.",
+    "title": "Localización"
+  },
+  "modules": {
+    "ACTIVITIES": {
+      "help": "Actividades con inscripción (cursillos, salidas) y el bloqueo de pistas que usan.",
+      "label": "Actividades"
+    },
+    "BILLING": {
+      "help": "Recibos, remesas, cobros y el método de pago en el alta.",
+      "label": "Facturación"
+    },
+    "COURSES": {
+      "help": "Biblioteca de recorridos, geometría de las pistas y sesiones de montaje.",
+      "label": "Recorridos"
+    },
+    "FAMILY_GROUP": {
+      "help": "Perros de varios abonados agrupados con un pagador único.",
+      "label": "Grupo familiar"
+    },
+    "FAQ": {
+      "help": "La página de preguntas frecuentes de la app.",
+      "label": "Preguntas frecuentes"
+    },
+    "FREE_TRAINING": {
+      "help": "Reserva de pista para entrenar sin clase, según el nivel del perro.",
+      "label": "Entrenamientos libres"
+    },
+    "INACTIVITY": {
+      "help": "Periodos de inactividad que piden los abonados y su cuota.",
+      "label": "Inactividad"
+    },
+    "LEARN_LINK": {
+      "help": "El acceso a Learn desde el menú de la app.",
+      "label": "Enlace a Learn"
+    },
+    "PACKS": {
+      "help": "Modalidades de packs de sesiones con su saldo.",
+      "label": "Packs"
+    },
+    "PUSH": {
+      "help": "Notificaciones web en el dispositivo del abonado.",
+      "label": "Notificaciones push"
+    },
+    "SINGLE_CLASS": {
+      "help": "Clases sueltas que se pagan por reserva o por asistencia.",
+      "label": "Clases sueltas"
+    },
+    "SMS": {
+      "help": "El canal SMS de los avisos y comunicados.",
+      "label": "SMS"
+    },
+    "SOCIAL_LEAGUE": {
+      "help": "Resultados de la liga social del club.",
+      "label": "Liga social"
+    },
+    "STATS": {
+      "help": "Estadísticas del abonado en la app.",
+      "label": "Estadísticas"
+    },
+    "TASKS": {
+      "help": "Tareas, notas de los instructores, observaciones y el seguimiento de alumnos.",
+      "label": "Tareas y seguimiento"
+    },
+    "WAITLIST": {
+      "help": "Lista de espera de las clases completas.",
+      "label": "Lista de espera"
+    }
+  },
+  "modulesTab": {
+    "description": "Activa los módulos del club. Cada módulo dice qué activa y de cuáles depende.",
+    "noDataLoss": "Desactivar un módulo no borra ningún dato: si se vuelve a activar, todo vuelve a aparecer.",
+    "presets": "Configuraciones predefinidas",
+    "requiredBy": "Dependen de él: {modules}",
+    "requires": "Hay que activar antes: {modules}",
+    "title": "Módulos"
+  },
+  "parameters": {
+    "default": "Por defecto: {value}",
+    "note": "Se muestra el valor por defecto de cada parámetro; el valor que guardes desde aquí se muestra hasta que salgas de la pestaña.",
+    "platformOnly": "solo plataforma",
+    "saved": "{label}: valor guardado.",
+    "savedNow": "guardado ahora"
+  },
+  "payments": {
+    "billingOff": "El módulo Facturación no está activo: los proveedores se pueden configurar pero no se usan hasta que se active.",
+    "configured": "configurado",
+    "disabled": "desactivado",
+    "enabled": "activado",
+    "enabledLabel": "Proveedor activado",
+    "manual": {
+      "defaultRequired": "Hace falta el texto en el idioma predeterminado del club.",
+      "description": "Instrucciones para pagar en efectivo o por transferencia, que se muestran en el alta.",
+      "instructions": "Instrucciones ({locale})",
+      "title": "Pago manual"
+    },
+    "notConfigured": "sin configurar",
+    "remove": "Retira el proveedor",
+    "removeConfirm": "Se borrará su configuración. Si hay abonados que lo usan, no se podrá retirar.",
+    "removeTitle": "Retira {name}",
+    "sepa": {
+      "creditorId": "Identificador de acreedor",
+      "creditorName": "Nombre del acreedor",
+      "iban": "IBAN",
+      "ibanHelpNew": "Solo de escritura: una vez guardado no se vuelve a mostrar.",
+      "ibanHelpStored": "IBAN guardado: {masked}. Déjalo en blanco para mantenerlo.",
+      "invoiceSeriesPattern": "Serie de facturas",
+      "suffix": "Sufijo",
+      "title": "Domiciliación SEPA"
+    },
+    "stripe": {
+      "configuredSummary": "configurada",
+      "last4": "clave pública …{last4}",
+      "lastTest": "última prueba OK {at}",
+      "mode": "Modo",
+      "modes": {
+        "live": "live",
+        "test": "test"
+      },
+      "neverTested": "sin probar",
+      "publishableHelp": "La clave pública (pk_…). Hay que volver a escribirla cada vez que se guarda.",
+      "publishableKey": "Clave pública",
+      "secretKey": "Clave secreta",
+      "test": "Prueba la conexión",
+      "testing": "Probando",
+      "testOk": "Conexión correcta con la cuenta {account} ({mode}).",
+      "title": "Stripe",
+      "webhookSecret": "Secreto del webhook"
+    },
+    "writeOnly": "Solo de escritura: una vez guardada no se vuelve a mostrar.",
+    "writeOnlyKept": "Guardada. Déjalo en blanco para mantenerla."
+  },
+  "presets": {
+    "CANIC": "Como el club piloto",
+    "COMPLET": "Completo",
+    "MINIM": "Mínimo"
+  },
+  "processes": {
+    "columns": {
+      "actions": "Acciones",
+      "enabled": "Activo",
+      "health": "Salud",
+      "lastRun": "Última ejecución",
+      "name": "Proceso"
+    },
+    "description": "Los procesos automáticos del club, la última ejecución y su salud. Se pueden simular o ejecutar ahora.",
+    "empty": "El club no tiene ningún proceso activo.",
+    "health": {
+      "ALERT": "alerta",
+      "OK": "correcto",
+      "WARN": "aviso"
+    },
+    "title": "Procesos"
+  },
+  "record": {
+    "back": "Clubes",
+    "created": "Se ha creado el club {name}. Completa la checklist de onboarding para activarlo.",
+    "tabsLabel": "Secciones de la ficha del club"
+  },
+  "status": {
+    "ACTIVE": "Activo",
+    "ONBOARDING": "En puesta en marcha",
+    "SUSPENDED": "Suspendido"
+  },
+  "statusTab": {
+    "actions": {
+      "ACTIVE": "Suspende el club",
+      "ONBOARDING": "Activa el club",
+      "SUSPENDED": "Reactiva el club"
+    },
+    "changed": "Se ha cambiado el estado del club.",
+    "checklistComplete": "La checklist de onboarding está completa: el club se puede activar.",
+    "checklistIncomplete": "Todavía faltan puntos de la checklist: {items}. El club se puede activar igualmente.",
+    "current": "Estado actual:",
+    "description": "La activación es siempre manual. Cada cambio de estado queda en la auditoría.",
+    "meaning": {
+      "ACTIVE": "El club opera con normalidad.",
+      "ONBOARDING": "El club ya funciona y los administradores ven un banner de puesta en marcha.",
+      "SUSPENDED": "Los accesos al club se rechazan y los procesos no se ejecutan."
+    },
+    "reason": "Motivo de la suspensión",
+    "suspendEffects": "Al suspender: se rechazan los accesos al club, los procesos automáticos se saltan y los cobros en línea quedan en cola hasta que se reactive.",
+    "title": "Estado"
+  },
+  "tabs": {
+    "auditoria": "Auditoría",
+    "catalegs": "Catálogos base",
+    "equip": "Equipo",
+    "estat": "Estado",
+    "identitat": "Identidad",
+    "legal": "Legal",
+    "localitzacio": "Localización",
+    "moduls": "Módulos",
+    "pagaments": "Pagos",
+    "parametres": "Parámetros",
+    "processos": "Procesos",
+    "tema": "Tema",
+    "us": "Uso"
+  },
+  "team": {
+    "caption": "Administradores del club",
+    "columns": {
+      "actions": "Acciones",
+      "email": "Correo",
+      "lastAccess": "Último acceso",
+      "name": "Nombre",
+      "platformAdmin": "Admin de plataforma",
+      "status": "Estado"
+    },
+    "description": "Los administradores del club. Un club tiene que tener siempre al menos un administrador.",
+    "email": "Correo electrónico",
+    "empty": "El club todavía no tiene ningún administrador.",
+    "invite": "INVITA",
+    "invited": "Se ha enviado la invitación a {email}.",
+    "inviteHelp": "Se crea la cuenta si hace falta, se le da el rol de administrador y recibe un enlace de acceso por correo.",
+    "inviteTitle": "Invita a un administrador",
+    "inviting": "Invitando",
+    "membership": {
+      "ACTIVE": "activo",
+      "SUSPENDED": "retirado"
+    },
+    "name": "Nombre",
+    "platformAdminFor": "{name} es admin de plataforma",
+    "remove": "Retira",
+    "removeConfirm": "Dejará de ser administrador del club. Sus datos y su cuenta se conservan.",
+    "removeTitle": "Retira a {name}",
+    "title": "Equipo"
+  },
+  "theme": {
+    "addRingColor": "Añade un color",
+    "colors": {
+      "background": "Fondo",
+      "border": "Bordes",
+      "danger": "Error",
+      "info": "Información",
+      "onPrimary": "Texto sobre el principal",
+      "primary": "Principal",
+      "success": "Correcto",
+      "surface": "Superficie",
+      "surfaceAlt": "Superficie alternativa",
+      "text": "Texto",
+      "textMuted": "Texto secundario",
+      "warning": "Aviso"
+    },
+    "colorsHelp": "Los colores del tema del club. El contraste del texto tiene que cumplir el nivel AA (4,5:1).",
+    "colorsTitle": "Colores",
+    "contrastBlocked": "Hay colores sin suficiente contraste: corrígelos antes de guardar.",
+    "contrastFail": "{ratio}:1 · no cumple AA",
+    "contrastFailure": "Contraste {ratio}:1 sobre «{background}»: hace falta como mínimo 4,5:1.",
+    "contrastPair": "{foreground} sobre {background}",
+    "contrastPass": "{ratio}:1 · AA",
+    "contrastTitle": "Contraste AA",
+    "fontFamily": "Tipografía",
+    "logoAlt": {
+      "logo": "Logo",
+      "logoDark": "Logo para modo oscuro",
+      "mark": "Marca"
+    },
+    "logoPending": "{name} se publicará al guardar.",
+    "logos": {
+      "logo": "Logo",
+      "logoDark": "Logo para modo oscuro",
+      "mark": "Marca (versión pequeña)"
+    },
+    "logosHelp": "Imágenes del club. El logo se usa en las pantallas de acceso; la marca, en la cabecera.",
+    "logosTitle": "Logos",
+    "mode": "Modo",
+    "modes": {
+      "auto": "Automático",
+      "dark": "Oscuro",
+      "light": "Claro"
+    },
+    "noLogo": "sin imagen",
+    "preview": {
+      "book": "RESERVA",
+      "booked": "reservada",
+      "calendar": "Calendario",
+      "classes": "Clases",
+      "clubs": "App de los abonados",
+      "clubsAdmin": "Backoffice",
+      "dashboard": "Panel",
+      "full": "completa",
+      "home": "Inicio",
+      "kpi": "12 preinscripciones pendientes",
+      "members": "Abonados",
+      "nextClass": "Próxima clase",
+      "primary": "Principal",
+      "profile": "Perfil",
+      "secondary": "Secundario",
+      "waitlist": "en espera",
+      "when": "Martes 18:00 · Pista 1"
+    },
+    "previewTitle": "Previsualización",
+    "radius": "Radio de los bordes",
+    "radiusHelp": "En píxeles, por ejemplo 8px.",
+    "removeLogo": "Quita la imagen",
+    "removeRingColor": "Quita el color {index}",
+    "ringColor": "Color de pista {index}",
+    "ringPalette": "Colores de las pistas",
+    "typographyTitle": "Tipografía y forma",
+    "uploadFailed": "No se ha podido subir la imagen.",
+    "uploading": "Subiendo la imagen"
+  },
+  "usage": {
+    "description": "Contadores agregados del mes; la consola no muestra datos de abonados.",
+    "membersActive": "Abonados activos",
+    "month": "Mes",
+    "smsSentMonth": "SMS enviados",
+    "storage": "Almacenamiento",
+    "title": "Uso"
+  },
+  "wizard": {
+    "adminHelp": "Recibirá una invitación por correo con un enlace de acceso como administrador del club.",
+    "catalogsHelp": "Los catálogos del club nuevo se pueden copiar de un club plantilla, o empezar vacíos.",
+    "create": "CREA EL CLUB",
+    "creating": "Creando el club",
+    "definitionTitle": "Archivo club-as-code",
+    "description": "Ocho pasos para crear un club. Se crea en puesta en marcha y después se completa la checklist de onboarding.",
+    "discardDraft": "Descarta el borrador",
+    "draftRestored": "Se ha recuperado el borrador guardado en este dispositivo. Los datos personales no se guardan.",
+    "draftSaved": "Borrador guardado en este dispositivo, sin los datos personales.",
+    "enableProvider": "Activa {name}",
+    "ibanLater": "El IBAN se guarda en la pestaña Pagos de la ficha, una vez creado el club.",
+    "invoiceSeriesHelp": "Opcional, por ejemplo '{YYYY}'.",
+    "logoLater": "Los logos se suben en la pestaña Tema de la ficha, una vez creado el club.",
+    "next": "SIGUIENTE",
+    "noTemplate": "Ninguno: catálogos vacíos",
+    "paymentsLater": "Los pagos se pueden dejar para más tarde: se configuran en la ficha del club.",
+    "presetHelp": {
+      "CANIC": "Los módulos del club piloto: todos salvo clases sueltas, estadísticas y liga social.",
+      "COMPLET": "Todos los módulos salvo estadísticas y liga social.",
+      "MINIM": "Solo lista de espera, preguntas frecuentes y notificaciones push."
+    },
+    "presetModules": "Módulos que se activan",
+    "previous": "Atrás",
+    "problems": {
+      "admin": {
+        "email": "Escribe un correo electrónico válido.",
+        "name": "Escribe el nombre del administrador."
+      },
+      "identity": {
+        "name": "Escribe el nombre del club.",
+        "slug": "Entre 3 y 40 caracteres: minúsculas, números y guiones."
+      },
+      "localization": {
+        "currency": "Código ISO de tres letras, por ejemplo EUR.",
+        "defaultLocale": "El idioma predeterminado tiene que ser uno de los idiomas del club.",
+        "locales": "Elige como mínimo un idioma.",
+        "timeZone": "Escribe el huso horario del club."
+      },
+      "theme": {
+        "contrast": "No tiene suficiente contraste (hace falta 4,5:1)."
+      }
+    },
+    "saveDraft": "Guarda como borrador",
+    "secretsLater": "Las claves secretas se guardan en la pestaña Pagos de la ficha.",
+    "slugHelp": "Se propone a partir del nombre. No se puede cambiar una vez creado el club.",
+    "stepTitle": "Paso {position} de {total} · {name}",
+    "steps": {
+      "admin": "Primer administrador",
+      "catalogs": "Catálogos base",
+      "identity": "Identidad",
+      "localization": "Localización",
+      "modules": "Módulos",
+      "payments": "Pagos",
+      "review": "Revisión",
+      "theme": "Tema"
+    },
+    "stepsLabel": "Pasos del asistente",
+    "themeCustom": "Colores del club",
+    "themeProduct": "Tema AgilityHub",
+    "themeSource": "Tema",
+    "title": "Nuevo club",
+    "unnamed": "Club nuevo"
+  }
+}

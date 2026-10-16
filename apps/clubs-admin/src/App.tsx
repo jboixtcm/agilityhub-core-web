@@ -3,12 +3,12 @@ import {
   type AuthClient,
   createAuthenticatedApiClient,
   OnboardingExperience,
-  RequireAuth,
   RequireModule,
+  RequirePlatformRole,
   RequireRole,
   useSession,
 } from "@agilityhub/auth";
-import type { Role } from "@agilityhub/auth";
+import type { PlatformRole, Role } from "@agilityhub/auth";
 import { LOCALE_STORAGE_KEY, productLocales } from "@agilityhub/i18n";
 import {
   Button,
@@ -26,7 +26,9 @@ import {
   useBranding,
 } from "@agilityhub/ui";
 import {
+  lazy,
   type ReactNode,
+  Suspense,
   type SyntheticEvent,
   useCallback,
   useContext,
@@ -50,6 +52,7 @@ import { TeamPage } from "./catalogs/TeamPage";
 import { DogsPage, MembersPage } from "./census/CensusListPage";
 import { DogRecordPage, MemberRecordPage } from "./census/CensusRecordPage";
 import { InactivityLeavePage } from "./census/InactivityLeavePage";
+import { ConsoleForbidden } from "./console/ConsoleForbidden";
 import { CountersRefreshContext } from "./dashboard/counters";
 import { DashboardPage } from "./dashboard/DashboardPage";
 import { SignupReviewPage } from "./dashboard/SignupReviewPage";
@@ -72,6 +75,9 @@ import { parseDay } from "./planning/shared";
 import { TemplateDayPage } from "./planning/TemplateDayPage";
 import { TemplatesPage } from "./planning/TemplatesPage";
 import { TrainingRegisterPage } from "./training/TrainingRegisterPage";
+
+// D19 (S17): the platform console is its own chunk; club admins never download it.
+const ConsolePage = lazy(() => import("./console/ConsolePage"));
 
 interface AdminRouteDefinition {
   path: string;
@@ -133,7 +139,7 @@ export const ADMIN_ROUTES: readonly AdminRouteDefinition[] = [
   { path: "/inactivitats", roles: ["ADMIN"] },
   // Role-gated entry without a mockup.
   { path: "/auditoria", roles: ["ADMIN"] },
-  // Screen D19.
+  // Screen D19 (S17 §2): `/consola/clubs`, `/consola/clubs/nou`, `/consola/clubs/:id/{tab}`.
   { path: "/consola/*", platformOnly: true },
 ];
 
@@ -216,6 +222,7 @@ export function AdminNavigation({
   instructorEntriesDenied = false,
   modules,
   pathname,
+  platformRoles = [],
   roles,
 }: {
   counters?: components["schemas"]["DashboardCounters"];
@@ -225,15 +232,18 @@ export function AdminNavigation({
   instructorEntriesDenied?: boolean;
   modules: readonly string[];
   pathname: string;
+  /** The account's global roles (S17 §2): `AGILITYHUB_ADMIN` adds «Consola», whatever the club. */
+  platformRoles?: readonly PlatformRole[];
   roles: readonly Role[];
 }) {
   const { t } = useTranslation("shell");
-  const hasPlatformRole = (roles as readonly string[]).includes("AGILITYHUB_ADMIN");
+  const hasPlatformRole = platformRoles.includes("AGILITYHUB_ADMIN");
   const unreadFollowUp = followUpUnread ?? counters?.followUpUnread;
+  // S14 R-14-08 (E8-T13): the menu counts the pending inactivity and leave requests.
   const lifecycleRequests =
-    counters?.pendingInactivityRequests === undefined && counters?.pendingLeaveRequests === undefined
-      ? counters?.pendingRequests
-      : (counters.pendingInactivityRequests ?? 0) + (counters.pendingLeaveRequests ?? 0);
+    counters === undefined
+      ? undefined
+      : counters.pendingInactivityRequests + counters.pendingLeaveRequests;
   const definitions: GatedSidebarGroup[] = [
     {
       label: t("shell:nav.dashboard"),
@@ -389,8 +399,15 @@ export function AdminNavigation({
           label: t("shell:nav.audit"),
           roles: ["ADMIN"],
         },
+      ],
+    },
+    {
+      // D19 (S17 §2): the platform's own group, by the account's global role and no club role (a
+      // platform admin may have no membership in any club, R-01-17).
+      label: t("shell:nav.platform"),
+      entries: [
         {
-          href: "/consola",
+          href: "/consola/clubs",
           icon: "globe",
           id: "console",
           label: t("shell:nav.console"),
@@ -409,11 +426,9 @@ export function AdminNavigation({
         .filter((entry) => isModuleUiItemEnabled(modules, "menuEntries", entry.id))
         .filter((entry) => !instructorEntriesDenied || !INSTRUCTOR_ONLY_ENTRIES.includes(entry.id))
         .filter((entry) => {
+          if (entry.platformOnly === true) return hasPlatformRole;
           const required = entry.roles ?? group.roles;
-          return (
-            (required === undefined || required.some((role) => roles.includes(role))) &&
-            (entry.platformOnly !== true || hasPlatformRole)
-          );
+          return required === undefined || required.some((role) => roles.includes(role));
         })
         .map((entry) => ({
           active:
@@ -423,7 +438,9 @@ export function AdminNavigation({
             // The notification log belongs to «Comunicats» (S11 §2).
             (entry.id === "announcements" && matchesPath(pathname, "/notificacions")) ||
             // The remittances page belongs to «Facturació» (S12 §2).
-            (entry.id === "billing" && matchesPath(pathname, "/facturacio/remeses")),
+            (entry.id === "billing" && matchesPath(pathname, "/facturacio/remeses")) ||
+            // Every D19 page (list, record, wizard) keeps «Consola» lit.
+            (entry.id === "console" && matchesPath(pathname, "/consola/*")),
           ...(entry.count === undefined ? {} : { count: entry.count }),
           href: entry.href,
           icon: entry.icon,
@@ -433,12 +450,6 @@ export function AdminNavigation({
     .filter((group) => group.entries.length > 0);
 
   return <Sidebar groups={groups} label={t("shell:nav.admin")} />;
-}
-
-function PlatformRoleGuard({ children }: { children: ReactNode }) {
-  const session = useSession();
-  const allowed = (session.roles as readonly string[]).includes("AGILITYHUB_ADMIN");
-  return <RequireAuth>{allowed ? children : null}</RequireAuth>;
 }
 
 function PlanningTemplatesRoute({
@@ -515,7 +526,16 @@ function routeContent(
   client: ReturnType<typeof createAuthenticatedApiClient>,
   onNavigate: (path: string) => void,
   pathname: string,
+  search = "",
 ) {
+  if (route.path === "/consola/*") {
+    // D19 (S17 §2): the platform console, without a club context.
+    return (
+      <Suspense fallback={null}>
+        <ConsolePage client={client} onNavigate={onNavigate} pathname={pathname} search={search} />
+      </Suspense>
+    );
+  }
   if (route.path.startsWith("/activitats")) {
     return (
       <ActivitiesRoute client={client} onNavigate={onNavigate} pathname={pathname} route={route} />
@@ -627,7 +647,12 @@ function gatedRoute(route: AdminRouteDefinition, content: ReactNode): ReactNode 
     content = <RequireModule module={module}>{content}</RequireModule>;
   });
   if (route.platformOnly === true) {
-    return <PlatformRoleGuard>{content}</PlatformRoleGuard>;
+    // S17 §2: the account's global role; any other account gets the console's refusal.
+    return (
+      <RequirePlatformRole denied={<ConsoleForbidden />} platformRole="AGILITYHUB_ADMIN">
+        {content}
+      </RequirePlatformRole>
+    );
   }
   return <RequireRole roles={route.roles ?? ["ADMIN"]}>{content}</RequireRole>;
 }
@@ -697,15 +722,18 @@ function AdminShell({
         </div>
         <div className="admin-shell__actions">
           <LanguageSelector />
-          <button
-            aria-label={t("admin-audit:exports.open")}
-            onClick={() => {
-              openExports();
-            }}
-            type="button"
-          >
-            <Icon aria-hidden="true" name="export" />
-          </button>
+          {/* The exports are a club's (S14): a platform account without a club role has none. */}
+          {session.roles.includes("ADMIN") ? (
+            <button
+              aria-label={t("admin-audit:exports.open")}
+              onClick={() => {
+                openExports();
+              }}
+              type="button"
+            >
+              <Icon aria-hidden="true" name="export" />
+            </button>
+          ) : null}
           <button aria-label={t("shell:header.userMenu")} type="button">
             <Icon aria-hidden="true" name="user" />
           </button>
@@ -717,6 +745,7 @@ function AdminShell({
         instructorEntriesDenied={unreadFollowUp.denied}
         modules={branding.modules}
         pathname={pathname}
+        platformRoles={session.platformRoles}
         roles={session.roles}
       />
       <main className="admin-shell__content">
@@ -730,6 +759,18 @@ function AdminShell({
       </main>
     </div>
   );
+}
+
+/**
+ * Where a signed-in account lands: D1, or D19 for a platform account without a club role (S17 §2
+ * row «Entrada»: the console has no club context).
+ */
+function landingPath(authClient: AuthClient): string {
+  const me = authClient.getMe();
+  const clubRoles = me?.membership?.roles ?? [];
+  return clubRoles.length === 0 && me?.account.platformRoles.includes("AGILITYHUB_ADMIN") === true
+    ? "/consola/clubs"
+    : "/tauler";
 }
 
 function AccessPage({ authClient }: { authClient: AuthClient }) {
@@ -750,8 +791,8 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
   const [handoffUnanswered, setHandoffUnanswered] = useState(false);
 
   const enterHandoff = useCallback(() => {
-    window.location.assign("/tauler");
-  }, []);
+    window.location.assign(landingPath(authClient));
+  }, [authClient]);
   const failHandoff = useCallback(
     (cause: unknown) => {
       const transient =
@@ -828,7 +869,7 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
     setPending("login");
     try {
       await authClient.login(email, password);
-      window.location.assign("/tauler");
+      window.location.assign(landingPath(authClient));
     } catch {
       setError(t("auth:access.genericError"));
       setPending(null);
@@ -941,7 +982,9 @@ export function App({ authClient }: { authClient: AuthClient }) {
       window.removeEventListener("popstate", handlePopState);
     };
   }, []);
-  const pathname = new URL(location, window.location.origin).pathname;
+  const url = new URL(location, window.location.origin);
+  const pathname = url.pathname;
+  const session = useSession();
 
   if (import.meta.env.DEV && pathname === "/_gallery") {
     return <Gallery />;
@@ -954,12 +997,15 @@ export function App({ authClient }: { authClient: AuthClient }) {
     return <AccessPage authClient={authClient} />;
   }
 
-  const route = currentRoute(pathname) ?? currentRoute("/tauler");
+  // An unknown path lands where the account belongs: D1, or D19 for a platform-only account.
+  const platformOnly =
+    session.roles.length === 0 && session.platformRoles.includes("AGILITYHUB_ADMIN");
+  const route = currentRoute(pathname) ?? currentRoute(platformOnly ? "/consola" : "/tauler");
   return route === undefined ? null : (
     <OnboardingExperience authClient={authClient} presentation="modal">
       <ExportJobsProvider client={client}>
         <AdminShell client={client} pathname={pathname}>
-          {gatedRoute(route, routeContent(route, client, navigate, pathname))}
+          {gatedRoute(route, routeContent(route, client, navigate, pathname, url.search))}
         </AdminShell>
       </ExportJobsProvider>
     </OnboardingExperience>

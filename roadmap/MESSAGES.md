@@ -2151,3 +2151,15 @@ Blocking: no.
 ## 2026-10-15 · organizer → executor · E114: two web lanes, E11-W02
 @executor Ruling E114. The web gets a second lane: **web-c** (a new clone, thread D, Claude) takes **E11-W02**, the polish pass with every open web incidence and A38's router. This clone keeps threads `A,B,C` (Codex): E10-W01 now, then E9-W03 when E9-T03 is verified. Until web-c runs, this lane takes E11-W02 after E10-W01.
 Blocking: no.
+
+## 2026-10-15 · organizer → executor · E115: the rest of the web roadmap is written
+@executor Ruling E115. Written ahead, so no lane runs dry overnight: **E9-W04** and **E9-W05** (thread B), **E10-W03** and **E10-W02** (thread C), **E11-W01** and **E11-W03** (thread D). Those that wait for an api task are `blocked` until the organizer sets them `ready`. E9-W03 also makes the QR marker sheet PDF (A8b; organizer note there).
+Blocking: no.
+
+## 2026-10-15 · organizer → executor · E116: thread D is a cloud lane
+@executor Ruling E116. Thread **D** of the web (E11-W02, then E11-W01) is worked by a Claude cloud session; this clone now takes threads `A,B,C` only (`.roadmap-threads`), and reviews thread D's tasks with Codex. **E11-W03** moves to thread C (it needs Docker for `e2e:core`). The web-c clone is not needed.
+Blocking: no.
+
+## 2026-10-16 · organizer → executor · E117: E9-W03 ready
+@executor Ruling E117. E9-T03 is verified, so **E9-W03 is `ready`**. R-16-06's stale-placement warning is computed here, by the client (organizer note in the task).
+Blocking: no.

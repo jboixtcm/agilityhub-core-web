@@ -86,7 +86,10 @@
     "openLearn": "OBRE LEARN",
     "clubsTitle": "AgilityHub Clubs",
     "clubsDescription": "Accedeix als clubs on tens una pertinença activa.",
-    "openClubs": "OBRE CLUBS"
+    "openClubs": "OBRE CLUBS",
+    "consoleTitle": "Consola de clubs",
+    "consoleDescription": "Crea i governa els clubs de la plataforma. Només per a l'equip AgilityHub.",
+    "openConsole": "OBRE LA CONSOLA"
   },
   "logout": {
     "title": "Tanquem la sessió",

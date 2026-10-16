@@ -736,7 +736,7 @@ function ProductCard({
 }: {
   description: string;
   href: string;
-  icon: "grid" | "paw";
+  icon: "globe" | "grid" | "paw";
   link: string;
   title: string;
 }) {
@@ -757,8 +757,12 @@ function ProductCard({
   );
 }
 
+/** S17 §2 row «Entrada»: the product host of the club console, without any club alias. */
+const CONSOLE_URL = "https://clubsadmin.agilitydoghub.com/consola/clubs";
+
 function ProductsPage({ navigate }: PageProps) {
   const { t } = useTranslation("id");
+  const { platformRoles } = useSession();
   return (
     <ProtectedPage navigate={navigate}>
       <main className="id-page">
@@ -779,6 +783,16 @@ function ProductsPage({ navigate }: PageProps) {
               link={t("id:products.openClubs")}
               title={t("id:products.clubsTitle")}
             />
+            {/* D19 (S17): only the AgilityHub team (`AGILITYHUB_ADMIN`) sees the console. */}
+            {platformRoles.includes("AGILITYHUB_ADMIN") ? (
+              <ProductCard
+                description={t("id:products.consoleDescription")}
+                href={CONSOLE_URL}
+                icon="globe"
+                link={t("id:products.openConsole")}
+                title={t("id:products.consoleTitle")}
+              />
+            ) : null}
           </div>
         </div>
       </main>

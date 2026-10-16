@@ -1,0 +1,557 @@
+{
+  "access": {
+    "description": "Aquest accés és només per a l'equip AgilityHub.",
+    "title": "Consola de clubs"
+  },
+  "audit": {
+    "change": "{path}: {before} → {after}",
+    "description": "Accions de configuració del club fetes des de la plataforma o pel mateix club. No inclou les accions sobre abonats.",
+    "empty": "Encara no hi ha cap acció de configuració.",
+    "next": "Següent",
+    "page": "Pàgina {page} de {total}",
+    "previous": "Anterior",
+    "title": "Auditoria"
+  },
+  "catalogs": {
+    "clone": "Clona d'un club plantilla",
+    "cloning": "Clonant",
+    "copied": "S'ha copiat: {summary}.",
+    "copiedPart": "{part} {count}",
+    "currencyWarning": "La plantilla cobra en {template} i el club en {club}: les modalitats i els preus no es poden copiar.",
+    "description": "Copia nivells, pistes, modalitats amb els preus vigents, preguntes freqüents i plantilles de comunicat d'un club plantilla.",
+    "emptyOnly": "Només es copien les parts que el club encara té buides.",
+    "localeFallback": "Alguns textos no existien en l'idioma predeterminat del club: s'hi han copiat des d'un altre idioma. Revisa'ls.",
+    "localeWarning": "La plantilla no té textos en {locales}: caldrà completar-los al club.",
+    "noTemplates": "No hi ha cap club plantilla.",
+    "parts": {
+      "FAQ": "Preguntes freqüents",
+      "LEVELS": "Nivells",
+      "MESSAGE_TEMPLATES": "Plantilles de comunicat",
+      "PLANS": "Modalitats i preus",
+      "RINGS": "Pistes"
+    },
+    "partsLabel": "Què es copia",
+    "template": "Club plantilla",
+    "templateOption": "{name} · {locales} · {currency}",
+    "title": "Catàlegs base"
+  },
+  "checklist": {
+    "count": "{done}/{total}",
+    "done": "fet",
+    "goToStatus": "Activa el club",
+    "items": {
+      "branding": "Marca: logo i colors propis",
+      "dns": "Dominis verificats",
+      "faq": "Preguntes freqüents",
+      "firstAdmin": "Primer administrador amb accés",
+      "legal": "Política de privacitat",
+      "sepa": "Proveïdor de pagament configurat",
+      "templates": "Plantilles de comunicat"
+    },
+    "missing": "falten: {items}",
+    "pending": "pendent",
+    "ready": "La checklist és completa.",
+    "title": "Checklist d'onboarding"
+  },
+  "common": {
+    "cancel": "Cancel·la",
+    "close": "Tanca",
+    "discard": "Descarta els canvis",
+    "loading": "Carregant",
+    "no": "No",
+    "retry": "Torna-ho a provar",
+    "save": "DESA",
+    "saved": "Canvis desats.",
+    "saving": "Desant",
+    "yes": "Sí"
+  },
+  "countryProfile": {
+    "ES": "Espanya",
+    "GENERIC": "Genèric"
+  },
+  "errors": {
+    "catalogNotEmpty": "{part}: el club ja en té. Només es copien les parts buides.",
+    "fileTooLarge": "El fitxer és massa gran: com a màxim {maxSizeMb} MB.",
+    "generic": "No s'ha pogut completar l'acció. Torna-ho a provar.",
+    "moduleDependency": "Per activar {module} cal activar {requires}.",
+    "providerInUse": "{count, plural, one {Hi ha # abonat que paga amb aquest proveïdor.} other {Hi ha # abonats que paguen amb aquest proveïdor.}}",
+    "stale": "Algú ha canviat el club mentrestant. Hem carregat la versió actual amb els teus canvis a sobre: revisa-la i torna a desar."
+  },
+  "fieldErrors": {
+    "INVALID_VALUE": "Aquest valor no és vàlid.",
+    "REQUIRED": "Aquest camp és obligatori."
+  },
+  "identity": {
+    "addressTitle": "Adreça",
+    "fields": {
+      "city": "Població",
+      "contactEmail": "Correu de contacte",
+      "contactPhone": "Telèfon de contacte",
+      "country": "País",
+      "displayCity": "Població que es mostra",
+      "legalName": "Nom legal",
+      "name": "Nom",
+      "notes": "Notes internes",
+      "postalCode": "Codi postal",
+      "region": "Província",
+      "slug": "Slug",
+      "street": "Adreça",
+      "taxId": "NIF",
+      "template": "Club plantilla",
+      "websiteUrl": "Web"
+    },
+    "notesHelp": "Només les veu l'equip AgilityHub.",
+    "platformTitle": "Plataforma",
+    "slugHelp": "No es pot canviar un cop creat el club.",
+    "templateHelp": "Un club plantilla no opera: serveix d'origen per clonar catàlegs.",
+    "title": "Identitat"
+  },
+  "legal": {
+    "currentVersion": "Versió vigent dels textos legals: {version}",
+    "imageConsentText": "Text de consentiment d'imatge ({locale})",
+    "newVersion": "Versió nova",
+    "noVersion": "Encara no s'ha publicat cap versió dels textos legals.",
+    "privacyPolicyUrl": "URL de la política de privacitat",
+    "publish": "Publica una versió nova",
+    "publishConfirm": "PUBLICA",
+    "publishTitle": "Publica una versió nova dels textos legals",
+    "reconsentPolicy": "Els abonats veuran un avís a l'app per revisar els textos nous. No se'ls bloqueja l'accés.",
+    "title": "Legal",
+    "versionHelp": "Cada versió queda registrada amb els consentiments que s'hi donen.",
+    "versionTitle": "Versió dels textos legals"
+  },
+  "list": {
+    "allStatuses": "Tots els estats",
+    "caption": "Clubs de la plataforma",
+    "columns": {
+      "checklist": "Checklist",
+      "countryProfile": "País",
+      "countryTimeZone": "País i fus",
+      "lastAdminAccessAt": "Últim accés d'un admin",
+      "membersActive": "Abonats actius",
+      "module": "Mòdul",
+      "modules": "Mòduls",
+      "name": "Nom",
+      "slug": "Slug",
+      "smsSentMonth": "SMS del mes",
+      "status": "Estat",
+      "storageBytes": "Emmagatzematge",
+      "template": "Club plantilla"
+    },
+    "countryTimeZone": "{country} · {timeZone}",
+    "description": "Els clubs de la plataforma, el seu estat i l'ús del mes.",
+    "emptyDescription": "Canvia la cerca o els filtres, o crea un club nou.",
+    "emptyTitle": "Cap club",
+    "error": "No s'han pogut carregar els clubs.",
+    "never": "mai",
+    "newClub": "Nou club",
+    "noModules": "cap",
+    "none": "—",
+    "openRecord": "Obre la fitxa de {name}",
+    "search": "Cerca per nom o slug",
+    "templateClub": "plantilla",
+    "title": "Consola de clubs"
+  },
+  "locales": {
+    "ca": "Català",
+    "en": "Anglès",
+    "es": "Castellà"
+  },
+  "localization": {
+    "confirm": "DESA ELS CANVIS",
+    "confirmIntro": "Abans de desar, revisa què canvia per al club:",
+    "confirmTitle": "Canvis de localització",
+    "consequences": {
+      "countryProfile": "El perfil de país canvia les validacions de documents, codis postals i fiscalitat dels formularis del club.",
+      "currency": "La moneda passa de {from} a {to}: els preus vigents no es converteixen i caldrà revisar les modalitats.",
+      "defaultLocale": "Els textos que no existeixin en un idioma es mostraran en el nou idioma predeterminat.",
+      "localesAdded": "Els textos del club (pàgines, plantilles, preguntes) s'hauran de completar en els idiomes nous.",
+      "localesRemoved": "Els abonats ja no podran triar {locales}; els textos en aquest idioma es conserven però no es mostren.",
+      "timeZone": "El fus horari passa de {from} a {to}: tots els horaris del club es llegiran en el fus nou."
+    },
+    "currencyHelp": "Codi ISO de tres lletres, per exemple EUR.",
+    "defaultNotListed": "L'idioma predeterminat ha de ser un dels idiomes del club.",
+    "description": "Els canvis en aquesta pestanya afecten tot el club: abans de desar es mostren les conseqüències.",
+    "fields": {
+      "countryProfile": "Perfil de país",
+      "currency": "Moneda",
+      "defaultLocale": "Idioma predeterminat",
+      "locales": "Idiomes",
+      "timeZone": "Fus horari"
+    },
+    "timeZoneHelp": "Identificador IANA, per exemple Europe/Madrid.",
+    "title": "Localització"
+  },
+  "modules": {
+    "ACTIVITIES": {
+      "help": "Activitats amb inscripció (cursets, sortides) i el bloqueig de pistes que fan servir.",
+      "label": "Activitats"
+    },
+    "BILLING": {
+      "help": "Rebuts, remeses, cobraments i el mètode de pagament a l'alta.",
+      "label": "Facturació"
+    },
+    "COURSES": {
+      "help": "Biblioteca de recorreguts, geometria de les pistes i sessions de muntatge.",
+      "label": "Recorreguts"
+    },
+    "FAMILY_GROUP": {
+      "help": "Gossos de diversos abonats agrupats amb un pagador únic.",
+      "label": "Grup familiar"
+    },
+    "FAQ": {
+      "help": "La pàgina de preguntes freqüents de l'app.",
+      "label": "Preguntes freqüents"
+    },
+    "FREE_TRAINING": {
+      "help": "Reserva de pista per entrenar sense classe, segons el nivell del gos.",
+      "label": "Entrenaments lliures"
+    },
+    "INACTIVITY": {
+      "help": "Períodes d'inactivitat que demanen els abonats i la seva quota.",
+      "label": "Inactivitat"
+    },
+    "LEARN_LINK": {
+      "help": "L'accés a Learn des del menú de l'app.",
+      "label": "Enllaç a Learn"
+    },
+    "PACKS": {
+      "help": "Modalitats de packs de sessions amb el seu saldo.",
+      "label": "Packs"
+    },
+    "PUSH": {
+      "help": "Notificacions web al dispositiu de l'abonat.",
+      "label": "Notificacions push"
+    },
+    "SINGLE_CLASS": {
+      "help": "Classes soltes que es paguen per reserva o per assistència.",
+      "label": "Classes soltes"
+    },
+    "SMS": {
+      "help": "El canal SMS dels avisos i comunicats.",
+      "label": "SMS"
+    },
+    "SOCIAL_LEAGUE": {
+      "help": "Resultats de la lliga social del club.",
+      "label": "Lliga social"
+    },
+    "STATS": {
+      "help": "Estadístiques de l'abonat a l'app.",
+      "label": "Estadístiques"
+    },
+    "TASKS": {
+      "help": "Tasques, notes dels instructors, observacions i el seguiment d'alumnes.",
+      "label": "Tasques i seguiment"
+    },
+    "WAITLIST": {
+      "help": "Llista d'espera de les classes completes.",
+      "label": "Llista d'espera"
+    }
+  },
+  "modulesTab": {
+    "description": "Activa els mòduls del club. Cada mòdul diu què activa i de quins depèn.",
+    "noDataLoss": "Desactivar un mòdul no esborra cap dada: si es torna a activar, tot torna a aparèixer.",
+    "presets": "Configuracions predefinides",
+    "requiredBy": "En depèn: {modules}",
+    "requires": "Cal activar abans: {modules}",
+    "title": "Mòduls"
+  },
+  "parameters": {
+    "default": "Per defecte: {value}",
+    "note": "Es mostra el valor per defecte de cada paràmetre; el valor que hi desis des d'aquí es mostra fins que surts de la pestanya.",
+    "platformOnly": "només plataforma",
+    "saved": "{label}: valor desat.",
+    "savedNow": "desat ara"
+  },
+  "payments": {
+    "billingOff": "El mòdul Facturació no està actiu: els proveïdors es poden configurar però no es fan servir fins que s'activi.",
+    "configured": "configurat",
+    "disabled": "desactivat",
+    "enabled": "activat",
+    "enabledLabel": "Proveïdor activat",
+    "manual": {
+      "defaultRequired": "Cal el text en l'idioma predeterminat del club.",
+      "description": "Instruccions per pagar en efectiu o per transferència, que es mostren a l'alta.",
+      "instructions": "Instruccions ({locale})",
+      "title": "Pagament manual"
+    },
+    "notConfigured": "sense configurar",
+    "remove": "Retira el proveïdor",
+    "removeConfirm": "Se n'esborrarà la configuració. Si hi ha abonats que l'utilitzen, no es podrà retirar.",
+    "removeTitle": "Retira {name}",
+    "sepa": {
+      "creditorId": "Identificador de creditor",
+      "creditorName": "Nom del creditor",
+      "iban": "IBAN",
+      "ibanHelpNew": "Només d'escriptura: un cop desat no es torna a mostrar.",
+      "ibanHelpStored": "IBAN desat: {masked}. Deixa-ho en blanc per mantenir-lo.",
+      "invoiceSeriesPattern": "Sèrie de factures",
+      "suffix": "Sufix",
+      "title": "Domiciliació SEPA"
+    },
+    "stripe": {
+      "configuredSummary": "configurada",
+      "last4": "clau pública …{last4}",
+      "lastTest": "última prova OK {at}",
+      "mode": "Mode",
+      "modes": {
+        "live": "live",
+        "test": "test"
+      },
+      "neverTested": "sense provar",
+      "publishableHelp": "La clau pública (pk_…). Cal tornar-la a escriure cada cop que es desa.",
+      "publishableKey": "Clau pública",
+      "secretKey": "Clau secreta",
+      "test": "Prova la connexió",
+      "testing": "Provant",
+      "testOk": "Connexió correcta amb el compte {account} ({mode}).",
+      "title": "Stripe",
+      "webhookSecret": "Secret del webhook"
+    },
+    "writeOnly": "Només d'escriptura: un cop desada no es torna a mostrar.",
+    "writeOnlyKept": "Desada. Deixa-ho en blanc per mantenir-la."
+  },
+  "presets": {
+    "CANIC": "Com el club pilot",
+    "COMPLET": "Complet",
+    "MINIM": "Mínim"
+  },
+  "processes": {
+    "columns": {
+      "actions": "Accions",
+      "enabled": "Actiu",
+      "health": "Salut",
+      "lastRun": "Última execució",
+      "name": "Procés"
+    },
+    "description": "Els processos automàtics del club, l'última execució i la seva salut. Es poden simular o executar ara.",
+    "empty": "El club no té cap procés actiu.",
+    "health": {
+      "ALERT": "alerta",
+      "OK": "correcte",
+      "WARN": "avís"
+    },
+    "title": "Processos"
+  },
+  "record": {
+    "back": "Clubs",
+    "created": "S'ha creat el club {name}. Completa la checklist d'onboarding per activar-lo.",
+    "tabsLabel": "Seccions de la fitxa del club"
+  },
+  "status": {
+    "ACTIVE": "Actiu",
+    "ONBOARDING": "En posada en marxa",
+    "SUSPENDED": "Suspès"
+  },
+  "statusTab": {
+    "actions": {
+      "ACTIVE": "Suspèn el club",
+      "ONBOARDING": "Activa el club",
+      "SUSPENDED": "Reactiva el club"
+    },
+    "changed": "S'ha canviat l'estat del club.",
+    "checklistComplete": "La checklist d'onboarding és completa: el club es pot activar.",
+    "checklistIncomplete": "Encara falten punts de la checklist: {items}. El club es pot activar igualment.",
+    "current": "Estat actual:",
+    "description": "L'activació és sempre manual. Cada canvi d'estat queda a l'auditoria.",
+    "meaning": {
+      "ACTIVE": "El club opera amb normalitat.",
+      "ONBOARDING": "El club ja funciona i els administradors veuen un bàner de posada en marxa.",
+      "SUSPENDED": "Els accessos al club es rebutgen i els processos no s'executen."
+    },
+    "reason": "Motiu de la suspensió",
+    "suspendEffects": "En suspendre: es rebutgen els accessos al club, els processos automàtics se salten i els cobraments en línia queden en cua fins que es reactivi.",
+    "title": "Estat"
+  },
+  "tabs": {
+    "auditoria": "Auditoria",
+    "catalegs": "Catàlegs base",
+    "equip": "Equip",
+    "estat": "Estat",
+    "identitat": "Identitat",
+    "legal": "Legal",
+    "localitzacio": "Localització",
+    "moduls": "Mòduls",
+    "pagaments": "Pagaments",
+    "parametres": "Paràmetres",
+    "processos": "Processos",
+    "tema": "Tema",
+    "us": "Ús"
+  },
+  "team": {
+    "caption": "Administradors del club",
+    "columns": {
+      "actions": "Accions",
+      "email": "Correu",
+      "lastAccess": "Últim accés",
+      "name": "Nom",
+      "platformAdmin": "Admin de plataforma",
+      "status": "Estat"
+    },
+    "description": "Els administradors del club. Un club ha de tenir sempre almenys un administrador.",
+    "email": "Correu electrònic",
+    "empty": "El club encara no té cap administrador.",
+    "invite": "CONVIDA",
+    "invited": "S'ha enviat la invitació a {email}.",
+    "inviteHelp": "Es crea el compte si cal, se li dona el rol d'administrador i rep un enllaç d'accés per correu.",
+    "inviteTitle": "Convida un administrador",
+    "inviting": "Convidant",
+    "membership": {
+      "ACTIVE": "actiu",
+      "SUSPENDED": "retirat"
+    },
+    "name": "Nom",
+    "platformAdminFor": "{name} és admin de plataforma",
+    "remove": "Retira",
+    "removeConfirm": "Deixarà de ser administrador del club. Les seves dades i el seu compte es conserven.",
+    "removeTitle": "Retira {name}",
+    "title": "Equip"
+  },
+  "theme": {
+    "addRingColor": "Afegeix un color",
+    "colors": {
+      "background": "Fons",
+      "border": "Vores",
+      "danger": "Error",
+      "info": "Informació",
+      "onPrimary": "Text sobre el principal",
+      "primary": "Principal",
+      "success": "Correcte",
+      "surface": "Superfície",
+      "surfaceAlt": "Superfície alternativa",
+      "text": "Text",
+      "textMuted": "Text secundari",
+      "warning": "Avís"
+    },
+    "colorsHelp": "Els colors del tema del club. El contrast del text ha de complir el nivell AA (4,5:1).",
+    "colorsTitle": "Colors",
+    "contrastBlocked": "Hi ha colors sense prou contrast: corregeix-los abans de desar.",
+    "contrastFail": "{ratio}:1 · no compleix AA",
+    "contrastFailure": "Contrast {ratio}:1 sobre «{background}»: cal com a mínim 4,5:1.",
+    "contrastPair": "{foreground} sobre {background}",
+    "contrastPass": "{ratio}:1 · AA",
+    "contrastTitle": "Contrast AA",
+    "fontFamily": "Tipografia",
+    "logoAlt": {
+      "logo": "Logo",
+      "logoDark": "Logo per a mode fosc",
+      "mark": "Marca"
+    },
+    "logoPending": "{name} es publicarà en desar.",
+    "logos": {
+      "logo": "Logo",
+      "logoDark": "Logo per a mode fosc",
+      "mark": "Marca (versió petita)"
+    },
+    "logosHelp": "Imatges del club. El logo es fa servir a les pantalles d'accés; la marca, a la capçalera.",
+    "logosTitle": "Logos",
+    "mode": "Mode",
+    "modes": {
+      "auto": "Automàtic",
+      "dark": "Fosc",
+      "light": "Clar"
+    },
+    "noLogo": "sense imatge",
+    "preview": {
+      "book": "RESERVA",
+      "booked": "reservada",
+      "calendar": "Calendari",
+      "classes": "Classes",
+      "clubs": "App dels abonats",
+      "clubsAdmin": "Backoffice",
+      "dashboard": "Tauler",
+      "full": "completa",
+      "home": "Inici",
+      "kpi": "12 preinscripcions pendents",
+      "members": "Abonats",
+      "nextClass": "Propera classe",
+      "primary": "Principal",
+      "profile": "Perfil",
+      "secondary": "Secundari",
+      "waitlist": "en espera",
+      "when": "Dimarts 18:00 · Pista 1"
+    },
+    "previewTitle": "Previsualització",
+    "radius": "Radi de les vores",
+    "radiusHelp": "En píxels, per exemple 8px.",
+    "removeLogo": "Treu la imatge",
+    "removeRingColor": "Treu el color {index}",
+    "ringColor": "Color de pista {index}",
+    "ringPalette": "Colors de les pistes",
+    "typographyTitle": "Tipografia i forma",
+    "uploadFailed": "No s'ha pogut pujar la imatge.",
+    "uploading": "Pujant la imatge"
+  },
+  "usage": {
+    "description": "Comptadors agregats del mes; la consola no mostra dades d'abonats.",
+    "membersActive": "Abonats actius",
+    "month": "Mes",
+    "smsSentMonth": "SMS enviats",
+    "storage": "Emmagatzematge",
+    "title": "Ús"
+  },
+  "wizard": {
+    "adminHelp": "Rebrà una invitació per correu amb un enllaç d'accés com a administrador del club.",
+    "catalogsHelp": "Els catàlegs del club nou es poden copiar d'un club plantilla, o començar buits.",
+    "create": "CREA EL CLUB",
+    "creating": "Creant el club",
+    "definitionTitle": "Fitxer club-as-code",
+    "description": "Vuit passos per crear un club. Es crea en posada en marxa i després es completa la checklist d'onboarding.",
+    "discardDraft": "Descarta l'esborrany",
+    "draftRestored": "S'ha recuperat l'esborrany desat en aquest dispositiu. Les dades personals no s'hi desen.",
+    "draftSaved": "Esborrany desat en aquest dispositiu, sense les dades personals.",
+    "enableProvider": "Activa {name}",
+    "ibanLater": "L'IBAN es desa a la pestanya Pagaments de la fitxa, un cop creat el club.",
+    "invoiceSeriesHelp": "Opcional, per exemple '{YYYY}'.",
+    "logoLater": "Els logos es pugen a la pestanya Tema de la fitxa, un cop creat el club.",
+    "next": "SEGÜENT",
+    "noTemplate": "Cap: catàlegs buits",
+    "paymentsLater": "Els pagaments es poden deixar per més tard: es configuren a la fitxa del club.",
+    "presetHelp": {
+      "CANIC": "Els mòduls del club pilot: tots llevat de classes soltes, estadístiques i lliga social.",
+      "COMPLET": "Tots els mòduls llevat d'estadístiques i lliga social.",
+      "MINIM": "Només llista d'espera, preguntes freqüents i notificacions push."
+    },
+    "presetModules": "Mòduls que s'activen",
+    "previous": "Enrere",
+    "problems": {
+      "admin": {
+        "email": "Escriu un correu electrònic vàlid.",
+        "name": "Escriu el nom de l'administrador."
+      },
+      "identity": {
+        "name": "Escriu el nom del club.",
+        "slug": "Entre 3 i 40 caràcters: minúscules, números i guions."
+      },
+      "localization": {
+        "currency": "Codi ISO de tres lletres, per exemple EUR.",
+        "defaultLocale": "L'idioma predeterminat ha de ser un dels idiomes del club.",
+        "locales": "Tria com a mínim un idioma.",
+        "timeZone": "Escriu el fus horari del club."
+      },
+      "theme": {
+        "contrast": "No té prou contrast (cal 4,5:1)."
+      }
+    },
+    "saveDraft": "Desa com a esborrany",
+    "secretsLater": "Les claus secretes es desen a la pestanya Pagaments de la fitxa.",
+    "slugHelp": "Es proposa a partir del nom. No es pot canviar un cop creat el club.",
+    "stepTitle": "Pas {position} de {total} · {name}",
+    "steps": {
+      "admin": "Primer administrador",
+      "catalogs": "Catàlegs base",
+      "identity": "Identitat",
+      "localization": "Localització",
+      "modules": "Mòduls",
+      "payments": "Pagaments",
+      "review": "Revisió",
+      "theme": "Tema"
+    },
+    "stepsLabel": "Passos de l'assistent",
+    "themeCustom": "Colors del club",
+    "themeProduct": "Tema AgilityHub",
+    "themeSource": "Tema",
+    "title": "Nou club",
+    "unnamed": "Club nou"
+  }
+}

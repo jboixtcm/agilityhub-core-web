@@ -63,7 +63,7 @@ function json(value: unknown, status = 200): Response {
   });
 }
 
-function testFetcher() {
+function testFetcher(account: Me = me) {
   const requests: RecordedRequest[] = [];
   const fetcher = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const request = input instanceof Request ? input : new Request(input, init);
@@ -81,7 +81,7 @@ function testFetcher() {
       });
     }
     if (pathname === "/api/v1/me" && request.method === "GET") {
-      return json(me);
+      return json(account);
     }
     if (pathname === "/api/v1/me" && request.method === "PATCH") {
       const patch = JSON.parse(body) as components["schemas"]["AccountPatchRequest"];
@@ -341,6 +341,8 @@ describe("T-01-22 apps/id", () => {
       "href",
       "https://learn.agilitydoghub.com",
     );
+    // E10-W01 step 1: the club console is the AgilityHub team's only (S17 §2 row «Entrada»).
+    expect(screen.queryByRole("link", { name: /OBRE LA CONSOLA/u })).toBeNull();
     cleanup();
 
     window.history.replaceState(null, "", "/logout");
@@ -351,5 +353,22 @@ describe("T-01-22 apps/id", () => {
         `/connect/logout?post_logout_redirect_uri=${encodeURIComponent(`${window.location.origin}/login`)}`,
       );
     });
+  });
+
+  it("E10-W01 step 1: an AGILITYHUB_ADMIN without a club sees the club console among the products (S17 §2 «Entrada»)", async () => {
+    const platformAccount: Me = {
+      account: { ...me.account, platformRoles: ["AGILITYHUB_ADMIN"] },
+      features: [],
+    };
+    const { fetcher } = testFetcher(platformAccount);
+    const client = createClient(fetcher);
+    await client.login("pol.ferrer@example.test", "secret-password");
+    window.history.replaceState(null, "", "/products");
+    await renderApp(client);
+    expect(await screen.findByRole("heading", { name: "Consola de clubs" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /OBRE LA CONSOLA/u })).toHaveAttribute(
+      "href",
+      "https://clubsadmin.agilitydoghub.com/consola/clubs",
+    );
   });
 });

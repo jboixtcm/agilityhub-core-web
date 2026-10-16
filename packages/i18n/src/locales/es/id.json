@@ -86,7 +86,10 @@
     "openLearn": "ABRIR LEARN",
     "clubsTitle": "AgilityHub Clubs",
     "clubsDescription": "Accede a los clubs donde tienes una pertenencia activa.",
-    "openClubs": "ABRIR CLUBS"
+    "openClubs": "ABRIR CLUBS",
+    "consoleTitle": "Consola de clubes",
+    "consoleDescription": "Crea y gestiona los clubes de la plataforma. Solo para el equipo AgilityHub.",
+    "openConsole": "ABRE LA CONSOLA"
   },
   "logout": {
     "title": "Cerramos la sesión",

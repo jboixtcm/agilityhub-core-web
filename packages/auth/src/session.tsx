@@ -46,7 +46,8 @@ interface RequirePlatformRoleProps extends RequireAuthProps {
    * AgilityHub»); `fallback` stays the loading state, so the refusal never flashes before `/me`.
    */
   denied?: ReactNode;
-  role: PlatformRole;
+  /** The global role required (a prop named `role` would read as an ARIA role). */
+  platformRole: PlatformRole;
 }
 
 interface RequireModuleProps {
@@ -197,12 +198,12 @@ export function RequirePlatformRole({
   denied,
   fallback = null,
   navigate,
-  role,
+  platformRole,
 }: RequirePlatformRoleProps) {
   const session = useSession();
   return (
     <RequireAuth fallback={fallback} {...(navigate === undefined ? {} : { navigate })}>
-      {session.platformRoles.includes(role) ? children : (denied ?? fallback)}
+      {session.platformRoles.includes(platformRole) ? children : (denied ?? fallback)}
     </RequireAuth>
   );
 }

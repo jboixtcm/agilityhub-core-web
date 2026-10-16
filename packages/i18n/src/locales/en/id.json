@@ -86,7 +86,10 @@
     "openLearn": "OPEN LEARN",
     "clubsTitle": "AgilityHub Clubs",
     "clubsDescription": "Access the clubs where you have an active membership.",
-    "openClubs": "OPEN CLUBS"
+    "openClubs": "OPEN CLUBS",
+    "consoleTitle": "Club console",
+    "consoleDescription": "Create and govern the platform's clubs. For the AgilityHub team only.",
+    "openConsole": "OPEN THE CONSOLE"
   },
   "logout": {
     "title": "Signing you out",

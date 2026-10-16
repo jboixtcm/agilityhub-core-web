@@ -51,7 +51,11 @@ export interface AppliedUniversalFilter extends UniversalFilter {
 }
 
 export interface UniversalFilterValue {
-  count: number;
+  /**
+   * How many rows have the value (`GET /{list}/filter-values`). Omitted by a list whose contract
+   * publishes no counts (S17's console: its filter values are the contract's enums): no «(n)».
+   */
+  count?: number;
   label: string;
   value: string;
 }
@@ -723,7 +727,9 @@ export function UniversalList<Row>({
                   ) : (
                     filterValues.map((value) => (
                       <option key={value.value} value={value.value}>
-                        {`${value.label} (${String(value.count)})`}
+                        {value.count === undefined
+                          ? value.label
+                          : `${value.label} (${String(value.count)})`}
                       </option>
                     ))
                   )}

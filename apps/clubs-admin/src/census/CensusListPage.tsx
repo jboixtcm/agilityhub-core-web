@@ -140,7 +140,7 @@ function toUniversalSavedView(view: SavedView): UniversalListSavedView {
     name: view.name,
     shared: view.shared,
     sort: [...view.sort],
-    system: view.system === true,
+    system: view.system,
   };
 }
 

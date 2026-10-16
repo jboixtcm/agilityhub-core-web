@@ -177,7 +177,7 @@ describe("T-01-21 session and guards", () => {
       ...memberMe,
       account: { ...memberMe.account, platformRoles: ["AGILITYHUB_ADMIN"] },
     };
-    const { membership: _membership, ...withoutMembership } = platformMe;
+    const withoutMembership: Me = { account: platformMe.account, features: platformMe.features };
     for (const [me, expected] of [
       [memberMe, "Denied console"],
       [platformMe, "Console content"],
@@ -196,7 +196,7 @@ describe("T-01-21 session and guards", () => {
           <RequirePlatformRole
             denied={<p>Denied console</p>}
             fallback={<p>Loading console</p>}
-            role="AGILITYHUB_ADMIN"
+            platformRole="AGILITYHUB_ADMIN"
           >
             <p>Console content</p>
           </RequirePlatformRole>
@@ -222,7 +222,7 @@ describe("T-01-21 session and guards", () => {
           denied={<p>Denied console</p>}
           fallback={<p>Loading console</p>}
           navigate={() => undefined}
-          role="AGILITYHUB_ADMIN"
+          platformRole="AGILITYHUB_ADMIN"
         >
           <p>Console content</p>
         </RequirePlatformRole>
@@ -250,7 +250,7 @@ describe("T-01-21 session and guards", () => {
     await client.login("biel.roca@example.test", "secret-password");
     render(
       <SessionProvider client={client}>
-        <RequirePlatformRole fallback={<p>Denied console</p>} role="AGILITYHUB_ADMIN">
+        <RequirePlatformRole fallback={<p>Denied console</p>} platformRole="AGILITYHUB_ADMIN">
           <p>Console content</p>
         </RequirePlatformRole>
       </SessionProvider>,

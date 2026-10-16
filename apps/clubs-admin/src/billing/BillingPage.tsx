@@ -551,7 +551,7 @@ export function BillingPage({
         const known = values.get(entry.value);
         values.set(entry.value, { ...entry, count: (known?.count ?? 0) + 1 });
       }
-      return [...values.values()].sort((left, right) => right.count - left.count);
+      return [...values.values()].sort((left, right) => (right.count ?? 0) - (left.count ?? 0));
     },
     [
       kindOptions,

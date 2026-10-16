@@ -153,7 +153,8 @@ function openingHoursSummary(value: unknown, t: Translate): string {
     .join(" · ");
 }
 
-function valueSummary(
+/** The row's value in words (D11; S17's console reuses it for a club it is not signed into). */
+export function valueSummary(
   parameter: Parameter,
   locale: string,
   formats: ReturnType<typeof useClubFormats>,
@@ -283,18 +284,29 @@ function validateOpeningHours(value: OpeningHours): boolean {
   });
 }
 
-function ParameterControl({
+/**
+ * The typed editor of one parameter (D11). S17's console reuses it for another club: `label` is
+ * the catalog's own when D11 has none, and `locales`/`defaultLocale` are the target club's
+ * (R-17-13: a `LocalizedText` is edited in the languages of the club it belongs to).
+ */
+export function ParameterControl({
+  defaultLocale,
   draft,
   jsonText,
+  label: labelOverride,
   locale,
+  locales,
   onDraftChange,
   onJsonTextChange,
   onLocaleChange,
   parameter,
 }: {
+  defaultLocale?: string;
   draft: unknown;
   jsonText: string;
+  label?: string;
   locale: string;
+  locales?: readonly string[];
   onDraftChange: (value: unknown) => void;
   onJsonTextChange: (value: string) => void;
   onLocaleChange: (locale: string) => void;
@@ -302,7 +314,7 @@ function ParameterControl({
 }) {
   const branding = useBranding();
   const { t } = useTranslation("admin-settings");
-  const label = parameterLabel(t, parameter.key);
+  const label = labelOverride ?? parameterLabel(t, parameter.key);
   const type = parameterType(parameter.type);
 
   if (parameter.key === "club.openingHours") {
@@ -513,14 +525,18 @@ function ParameterControl({
     const values = localizedValue(draft);
     return (
       <div className="settings-editor__localized">
-        <LocaleTabs locale={locale} locales={branding.locales} onChange={onLocaleChange} />
+        <LocaleTabs
+          locale={locale}
+          locales={locales ?? branding.locales}
+          onChange={onLocaleChange}
+        />
         <FormField id="parameter-value" label={label}>
           <Textarea
             id="parameter-value"
             onChange={(event) => {
               onDraftChange({ ...values, [locale]: event.currentTarget.value });
             }}
-            required={locale === branding.defaultLocale}
+            required={locale === (defaultLocale ?? branding.defaultLocale)}
             value={values[locale] ?? ""}
           />
         </FormField>

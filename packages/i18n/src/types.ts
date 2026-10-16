@@ -19,6 +19,7 @@ export const namespaces = [
   "booking",
   "billing",
   "census",
+  "console",
   "enums",
   "history",
   "home",

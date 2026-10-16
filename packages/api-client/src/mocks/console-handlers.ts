@@ -32,7 +32,6 @@ type JobRun = components["schemas"]["JobRun"];
 type ClubModule = PlatformClub["modules"][number];
 type Filter = components["schemas"]["Filter"];
 
-
 /** `x-fields` of `GET /platform/clubs` in the adopted snapshot (E10-T01). */
 const PLATFORM_CLUB_FIELDS = [
   "id",
@@ -76,7 +75,9 @@ const ALL_MODULES: ClubModule[] = [
   "SOCIAL_LEAGUE",
 ];
 const PRESETS: Record<"CANIC" | "COMPLET" | "MINIM", ClubModule[]> = {
-  CANIC: ALL_MODULES.filter((module) => !["SINGLE_CLASS", "STATS", "SOCIAL_LEAGUE"].includes(module)),
+  CANIC: ALL_MODULES.filter(
+    (module) => !["SINGLE_CLASS", "STATS", "SOCIAL_LEAGUE"].includes(module),
+  ),
   COMPLET: ALL_MODULES.filter((module) => !["STATS", "SOCIAL_LEAGUE"].includes(module)),
   MINIM: ["WAITLIST", "FAQ", "PUSH"],
 };
@@ -145,8 +146,7 @@ function withChecklist(club: PlatformClub): PlatformClub {
     ...club,
     onboardingChecklist: {
       ...club.onboardingChecklist,
-      dns:
-        club.domains.length > 0 && club.domains.every((domain) => domain.status === "VERIFIED"),
+      dns: club.domains.length > 0 && club.domains.every((domain) => domain.status === "VERIFIED"),
       legal: (club.legal?.privacyPolicyUrl ?? "") !== "",
       sepa: !billing || anyProvider,
     },
@@ -244,7 +244,9 @@ function providerSummary(
   if (provider === "SEPA_XML") {
     const iban = body.iban?.replaceAll(" ", "");
     const masked =
-      iban === undefined ? previous.ibanMasked : `${iban.slice(0, 2)}·· ···· ···· ···· ···· ${iban.slice(-4)}`;
+      iban === undefined
+        ? previous.ibanMasked
+        : `${iban.slice(0, 2)}·· ···· ···· ···· ···· ${iban.slice(-4)}`;
     return {
       ...previous,
       configured: true,
@@ -273,10 +275,13 @@ function providerInvalid(field: string) {
   return apiError("PROVIDER_CONFIG_INVALID", "Provider configuration is invalid", 422, { field });
 }
 
-function definitionErrors(body: ClubDefinition): { code: "INVALID_VALUE" | "REQUIRED"; field: string }[] {
+function definitionErrors(
+  body: ClubDefinition,
+): { code: "INVALID_VALUE" | "REQUIRED"; field: string }[] {
   const errors: { code: "INVALID_VALUE" | "REQUIRED"; field: string }[] = [];
   const required = (field: string, value: unknown) => {
-    if (value === undefined || value === null || value === "") errors.push({ code: "REQUIRED", field });
+    if (value === undefined || value === null || value === "")
+      errors.push({ code: "REQUIRED", field });
   };
   required("club.name", body.club.name.trim());
   required("club.slug", body.club.slug);
@@ -291,14 +296,18 @@ function definitionErrors(body: ClubDefinition): { code: "INVALID_VALUE" | "REQU
   if (!body.club.locales.includes(body.club.defaultLocale)) {
     errors.push({ code: "INVALID_VALUE", field: "club.defaultLocale" });
   }
-  if (body.club.contactEmail !== undefined && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/u.test(body.club.contactEmail)) {
+  if (
+    body.club.contactEmail !== undefined &&
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/u.test(body.club.contactEmail)
+  ) {
     errors.push({ code: "INVALID_VALUE", field: "club.contactEmail" });
   }
   (body.admins ?? []).forEach((admin, index) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/u.test(admin.email)) {
       errors.push({ code: "INVALID_VALUE", field: `admins[${String(index)}].email` });
     }
-    if (admin.name.trim() === "") errors.push({ code: "REQUIRED", field: `admins[${String(index)}].name` });
+    if (admin.name.trim() === "")
+      errors.push({ code: "REQUIRED", field: `admins[${String(index)}].name` });
   });
   if ((body.preset === undefined) === (body.modules === undefined)) {
     errors.push({ code: "REQUIRED", field: "modules" });
@@ -391,7 +400,12 @@ function createdClub(body: ClubDefinition): PlatformClub {
     paymentProviders: {
       MANUAL:
         manual?.enabled === true
-          ? { ...empty, configured: manual.instructions !== undefined, enabled: true, instructions: manual.instructions ?? null }
+          ? {
+              ...empty,
+              configured: manual.instructions !== undefined,
+              enabled: true,
+              instructions: manual.instructions ?? null,
+            }
           : empty,
       SEPA_XML:
         sepa?.enabled === true
@@ -405,9 +419,7 @@ function createdClub(body: ClubDefinition): PlatformClub {
             }
           : empty,
       STRIPE:
-        stripe?.enabled === true
-          ? { ...empty, enabled: true, mode: stripe.mode ?? null }
-          : empty,
+        stripe?.enabled === true ? { ...empty, enabled: true, mode: stripe.mode ?? null } : empty,
     },
     slug: body.club.slug,
     status: "ONBOARDING",
@@ -471,7 +483,11 @@ export const consoleHandlers = [
     const sorts = url.searchParams.getAll("sort");
     for (const sort of sorts) {
       const [field, direction = "asc"] = sort.split(",");
-      if (field === undefined || !SORTABLE.includes(field) || !["asc", "desc"].includes(direction)) {
+      if (
+        field === undefined ||
+        !SORTABLE.includes(field) ||
+        !["asc", "desc"].includes(direction)
+      ) {
         return apiError("INVALID_FILTER", `Invalid sort ${sort}`, 400);
       }
     }
@@ -489,8 +505,8 @@ export const consoleHandlers = [
       )
       .filter((item) => filters.every((filter) => matches(item, filter)))
       .sort((left, right) => {
-        const order = String(left[sortField as "name"] ?? "").localeCompare(
-          String(right[sortField as "name"] ?? ""),
+        const order = (left[sortField as "name"] ?? "").localeCompare(
+          right[sortField as "name"] ?? "",
           "ca",
         );
         return sortDirection === "desc" ? -order : order;
@@ -509,7 +525,9 @@ export const consoleHandlers = [
     const denied = refused();
     if (denied !== undefined) return denied;
     const body = (await request.json()) as ClubDefinition;
-    if (body.apiVersion !== "agilityhub.club/v1") return fieldError("apiVersion");
+    if ((body as { apiVersion?: unknown }).apiVersion !== "agilityhub.club/v1") {
+      return fieldError("apiVersion");
+    }
     const errors = definitionErrors(body);
     if (errors.length > 0) {
       return apiError("VALIDATION_ERROR", "Validation failed", 400, { fieldErrors: errors });
@@ -524,7 +542,8 @@ export const consoleHandlers = [
     if (
       template !== undefined &&
       !consoleState.clubs.some(
-        (candidate) => candidate.template && (candidate.id === template || candidate.slug === template),
+        (candidate) =>
+          candidate.template && (candidate.id === template || candidate.slug === template),
       )
     ) {
       return apiError("TEMPLATE_CLUB_NOT_FOUND", "Template club not found", 404);
@@ -532,9 +551,13 @@ export const consoleHandlers = [
     const club = createdClub(body);
     return HttpResponse.json({ checklist: club.onboardingChecklist, club }, { status: 201 });
   }),
-  http.get("*/api/v1/platform/club-templates", () => refused() ?? HttpResponse.json(clubTemplates())),
-  http.get("*/api/v1/platform/parameter-catalog", () =>
-    refused() ?? HttpResponse.json(consoleParameterCatalog),
+  http.get(
+    "*/api/v1/platform/club-templates",
+    () => refused() ?? HttpResponse.json(clubTemplates()),
+  ),
+  http.get(
+    "*/api/v1/platform/parameter-catalog",
+    () => refused() ?? HttpResponse.json(consoleParameterCatalog),
   ),
   http.get("*/api/v1/platform/jobs/overview", ({ request }) => {
     const denied = refused();
@@ -613,9 +636,11 @@ export const consoleHandlers = [
     if (denied !== undefined) return denied;
     const club = findClub(params.id);
     if (club === undefined) return clubNotFound();
-    const body = (await request.json()) as PlatformClubPatch & { legal?: unknown };
+    const raw = (await request.json()) as Record<string, unknown>;
+    const body = raw as PlatformClubPatch;
     if (body.version !== club.version) return stale();
-    if ("legal" in body && body.legal === null) return fieldError("legal");
+    // `legal: null` is refused (PlatformClubPatch: omit it to keep the current texts).
+    if ("legal" in raw && raw.legal === null) return fieldError("legal");
     if (body.name?.trim() === "") return fieldError("name", "REQUIRED");
     if (
       typeof body.contactEmail === "string" &&
@@ -624,10 +649,12 @@ export const consoleHandlers = [
     ) {
       return fieldError("contactEmail");
     }
-    if (body.locales !== undefined && body.locales.length === 0) return fieldError("locales", "REQUIRED");
+    if (body.locales?.length === 0) return fieldError("locales", "REQUIRED");
     const locales = body.locales ?? club.locales;
-    if (!locales.includes(body.defaultLocale ?? club.defaultLocale)) return fieldError("defaultLocale");
-    if (body.currency !== undefined && !/^[A-Z]{3}$/u.test(body.currency)) return fieldError("currency");
+    if (!locales.includes(body.defaultLocale ?? club.defaultLocale))
+      return fieldError("defaultLocale");
+    if (body.currency !== undefined && !/^[A-Z]{3}$/u.test(body.currency))
+      return fieldError("currency");
     if (
       body.timeZone !== undefined &&
       body.timeZone !== club.timeZone &&
@@ -635,13 +662,64 @@ export const consoleHandlers = [
     ) {
       return apiError("TIMEZONE_CHANGE_BLOCKED", "The club has future classes", 422);
     }
-    const { version: _version, legal, ...changes } = body;
-    return HttpResponse.json(
-      touch(club, {
-        ...(changes as Partial<PlatformClub>),
-        ...(legal === undefined ? {} : { legal: legal as PlatformClub["legal"] }),
-      }),
-    );
+    const update = Object.fromEntries(
+      Object.entries(raw).filter(([key]) => key !== "version"),
+    ) as Partial<PlatformClub>;
+    return HttpResponse.json(touch(club, update));
+  }),
+  http.put("*/api/v1/platform/clubs/:id/parameters/:key", async ({ params, request }) => {
+    const denied = refused();
+    if (denied !== undefined) return denied;
+    const club = findClub(params.id);
+    if (club === undefined) return clubNotFound();
+    const key = String(params.key);
+    const definition = consoleParameterCatalog.find((candidate) => candidate.key === key);
+    if (definition === undefined) {
+      return apiError("UNKNOWN_PARAMETER", "Unknown parameter", 400, { key });
+    }
+    if (
+      !definition.modules.every((module) => (club.modules as readonly string[]).includes(module))
+    ) {
+      return apiError("MODULE_DISABLED", "Module disabled", 404);
+    }
+    const body = (await request.json()) as components["schemas"]["ParameterUpdate"];
+    const stored = consoleState.parameters[club.id]?.[key];
+    if (body.version !== (stored?.version ?? 0)) return stale();
+    // S02 R-02-04: the catalog's type and bounds (the platform writes `PLATFORM` keys too).
+    const numeric = ["int", "duration"].includes(definition.type);
+    const { max, min } = definition.constraints as { max?: number; min?: number };
+    if (
+      (numeric && (typeof body.value !== "number" || !Number.isInteger(body.value))) ||
+      (definition.type === "bool" && typeof body.value !== "boolean") ||
+      (typeof body.value === "number" &&
+        ((min !== undefined && body.value < min) || (max !== undefined && body.value > max)))
+    ) {
+      return apiError("PARAMETER_INVALID", "Parameter value is invalid", 400, { key });
+    }
+    const parameter: components["schemas"]["Parameter"] = {
+      block: definition.block,
+      constraints: definition.constraints,
+      default: definition.default,
+      editableBy: definition.editableBy,
+      help: definition.help,
+      history: [
+        ...(stored?.history ?? []),
+        {
+          changedAt: now(),
+          changedByAccountId: currentMockScenario().me.account.id,
+          ...(body.reason === undefined || body.reason === "" ? {} : { reason: body.reason }),
+          value: body.value,
+        },
+      ],
+      isOverride: true,
+      key,
+      label: definition.label,
+      type: definition.type,
+      value: body.value,
+      version: (stored?.version ?? 0) + 1,
+    };
+    consoleState.parameters[club.id] = { ...consoleState.parameters[club.id], [key]: parameter };
+    return HttpResponse.json(parameter);
   }),
   http.get("*/api/v1/platform/clubs/:id/checklist", ({ params }) => {
     const denied = refused();
@@ -675,7 +753,8 @@ export const consoleHandlers = [
     if (club === undefined) return clubNotFound();
     const body = (await request.json()) as PlatformModulesRequest;
     if (body.version !== club.version) return stale();
-    if ((body.preset === undefined) === (body.modules === undefined)) return fieldError("modules", "REQUIRED");
+    if ((body.preset === undefined) === (body.modules === undefined))
+      return fieldError("modules", "REQUIRED");
     const modules = body.modules ?? PRESETS[body.preset ?? "MINIM"];
     const dependency = dependencyError(modules);
     if (dependency !== undefined) return dependency;
@@ -788,44 +867,48 @@ export const consoleHandlers = [
       ok: true,
     });
   }),
-  http.put("*/api/v1/platform/clubs/:id/payment-providers/:provider", async ({ params, request }) => {
-    const denied = refused();
-    if (denied !== undefined) return denied;
-    const club = findClub(params.id);
-    if (club === undefined) return clubNotFound();
-    const provider = String(params.provider);
-    const body = (await request.json()) as PlatformProviderRequest;
-    if (body.version !== club.version) return stale();
-    const previous = club.paymentProviders[provider];
-    if (previous === undefined) return fieldError("provider");
-    if (provider === "STRIPE") {
-      if (body.publishableKey?.startsWith("pk_") !== true) return providerInvalid("publishableKey");
-      if (body.mode === undefined) return providerInvalid("mode");
-      if (body.secretKey !== undefined && !body.secretKey.startsWith("sk_")) {
-        return providerInvalid("secretKey");
+  http.put(
+    "*/api/v1/platform/clubs/:id/payment-providers/:provider",
+    async ({ params, request }) => {
+      const denied = refused();
+      if (denied !== undefined) return denied;
+      const club = findClub(params.id);
+      if (club === undefined) return clubNotFound();
+      const provider = String(params.provider);
+      const body = (await request.json()) as PlatformProviderRequest;
+      if (body.version !== club.version) return stale();
+      const previous = club.paymentProviders[provider];
+      if (previous === undefined) return fieldError("provider");
+      if (provider === "STRIPE") {
+        if (body.publishableKey?.startsWith("pk_") !== true)
+          return providerInvalid("publishableKey");
+        if (body.mode === undefined) return providerInvalid("mode");
+        if (body.secretKey !== undefined && !body.secretKey.startsWith("sk_")) {
+          return providerInvalid("secretKey");
+        }
+        if (body.secretKey === undefined && !stripeSecrets.has(club.id)) {
+          return providerInvalid("secretKey");
+        }
+        if (body.secretKey !== undefined) stripeSecrets.set(club.id, body.secretKey);
       }
-      if (body.secretKey === undefined && !stripeSecrets.has(club.id)) {
-        return providerInvalid("secretKey");
+      if (provider === "SEPA_XML") {
+        for (const field of ["creditorName", "creditorId", "suffix"] as const) {
+          if ((body[field] ?? "").trim() === "") return providerInvalid(field);
+        }
+        const iban = body.iban?.replaceAll(" ", "");
+        if (iban === undefined && !previous.configured) return providerInvalid("iban");
+        if (iban !== undefined && !/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/u.test(iban)) {
+          return providerInvalid("iban");
+        }
       }
-      if (body.secretKey !== undefined) stripeSecrets.set(club.id, body.secretKey);
-    }
-    if (provider === "SEPA_XML") {
-      for (const field of ["creditorName", "creditorId", "suffix"] as const) {
-        if ((body[field] ?? "").trim() === "") return providerInvalid(field);
+      if (provider === "MANUAL" && (body.instructions?.[club.defaultLocale] ?? "").trim() === "") {
+        return providerInvalid(`instructions.${club.defaultLocale}`);
       }
-      const iban = body.iban?.replaceAll(" ", "");
-      if (iban === undefined && !previous.configured) return providerInvalid("iban");
-      if (iban !== undefined && !/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/u.test(iban)) {
-        return providerInvalid("iban");
-      }
-    }
-    if (provider === "MANUAL" && (body.instructions?.[club.defaultLocale] ?? "").trim() === "") {
-      return providerInvalid(`instructions.${club.defaultLocale}`);
-    }
-    const summary = providerSummary(provider, body, previous);
-    touch(club, { paymentProviders: { ...club.paymentProviders, [provider]: summary } });
-    return HttpResponse.json(summary);
-  }),
+      const summary = providerSummary(provider, body, previous);
+      touch(club, { paymentProviders: { ...club.paymentProviders, [provider]: summary } });
+      return HttpResponse.json(summary);
+    },
+  ),
   http.delete("*/api/v1/platform/clubs/:id/payment-providers/:provider", ({ params, request }) => {
     const denied = refused();
     if (denied !== undefined) return denied;
@@ -878,14 +961,18 @@ export const consoleHandlers = [
     const missingDefault = !source.locales.includes(club.defaultLocale);
     return HttpResponse.json({
       copied: Object.fromEntries(body.parts.map((part) => [part, CATALOG_COUNTS[part] ?? 0])),
-      warnings: missingDefault ? [`defaultLocale ${club.defaultLocale} copied from ${source.defaultLocale}`] : [],
+      warnings: missingDefault
+        ? [`defaultLocale ${club.defaultLocale} copied from ${source.defaultLocale}`]
+        : [],
     });
   }),
   http.get("*/api/v1/platform/clubs/:id/admins", ({ params }) => {
     const denied = refused();
     if (denied !== undefined) return denied;
     const club = findClub(params.id);
-    return club === undefined ? clubNotFound() : HttpResponse.json(consoleState.admins[club.id] ?? []);
+    return club === undefined
+      ? clubNotFound()
+      : HttpResponse.json(consoleState.admins[club.id] ?? []);
   }),
   http.post("*/api/v1/platform/clubs/:id/admins", async ({ params, request }) => {
     const denied = refused();
@@ -935,7 +1022,9 @@ export const consoleHandlers = [
   http.get("*/api/v1/platform/accounts/:id/platform-roles", ({ params }) => {
     const denied = refused();
     if (denied !== undefined) return denied;
-    return HttpResponse.json({ platformRoles: consoleState.platformRoles[String(params.id)] ?? [] });
+    return HttpResponse.json({
+      platformRoles: consoleState.platformRoles[String(params.id)] ?? [],
+    });
   }),
   http.put("*/api/v1/platform/accounts/:id/platform-roles", async ({ params, request }) => {
     const denied = refused();

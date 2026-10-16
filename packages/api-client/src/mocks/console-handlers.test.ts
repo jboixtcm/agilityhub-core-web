@@ -125,8 +125,9 @@ describe("E10-W01 · the console's mock world follows the E10-T01 contract", () 
       status: 403,
     });
     use("impersonated");
-    expect(await failure(client.GET("/platform/clubs/{id}", { params: { path: { id: canic } } })))
-      .toMatchObject({ status: 403 });
+    expect(
+      await failure(client.GET("/platform/clubs/{id}", { params: { path: { id: canic } } })),
+    ).toMatchObject({ status: 403 });
   });
 
   it("lists with filters, sort, q, fields (only the asked keys plus the id) and echoes appliedFilters", async () => {
@@ -274,7 +275,10 @@ describe("E10-W01 · the console's mock world follows the E10-T01 contract", () 
     expect(
       await failure(
         client.DELETE("/platform/clubs/{id}/payment-providers/{provider}", {
-          params: { path: { id: canic, provider: "SEPA_XML" }, query: { version: current.version } },
+          params: {
+            path: { id: canic, provider: "SEPA_XML" },
+            query: { version: current.version },
+          },
         }),
       ),
     ).toMatchObject({ code: "PROVIDER_IN_USE", details: { count: 164 }, status: 409 });
@@ -351,22 +355,27 @@ describe("E10-W01 · the console's mock world follows the E10-T01 contract", () 
     const invalid = definition({
       admins: [{ email: "not-an-email", locale: "ca", name: "Laia Costa" }],
     });
-    expect(await failure(post({ ...invalid, club: { ...invalid.club, slug: "A" } }))).toMatchObject({
-      code: "VALIDATION_ERROR",
-      details: {
-        fieldErrors: [
-          { code: "INVALID_VALUE", field: "club.slug" },
-          { code: "INVALID_VALUE", field: "admins[0].email" },
-        ],
+    expect(await failure(post({ ...invalid, club: { ...invalid.club, slug: "A" } }))).toMatchObject(
+      {
+        code: "VALIDATION_ERROR",
+        details: {
+          fieldErrors: [
+            { code: "INVALID_VALUE", field: "club.slug" },
+            { code: "INVALID_VALUE", field: "admins[0].email" },
+          ],
+        },
+        status: 400,
       },
-      status: 400,
-    });
+    );
     const taken = definition();
-    expect(await failure(post({ ...taken, club: { ...taken.club, slug: "canic" } }))).toMatchObject({
-      code: "SLUG_TAKEN",
-      status: 409,
-    });
-    const { preset: _preset, ...withoutPreset } = definition();
+    expect(await failure(post({ ...taken, club: { ...taken.club, slug: "canic" } }))).toMatchObject(
+      {
+        code: "SLUG_TAKEN",
+        status: 409,
+      },
+    );
+    const { preset, ...withoutPreset } = definition();
+    expect(preset).toBe("MINIM");
     expect(await failure(post({ ...withoutPreset, modules: ["PACKS"] }))).toMatchObject({
       code: "MODULE_DEPENDENCY",
       status: 422,
@@ -375,5 +384,40 @@ describe("E10-W01 · the console's mock world follows the E10-T01 contract", () 
     expectValid("PlatformClubCreated", created.data);
     expect(created.data?.club).toMatchObject({ slug: "serralada", status: "ONBOARDING" });
     expect(created.data?.checklist).toMatchObject({ firstAdmin: false, templates: true });
+  });
+
+  it("parameters: PLATFORM keys are written per club and per key version, bounds are PARAMETER_INVALID", async () => {
+    const put = (key: string, value: unknown, version: number) =>
+      client.PUT("/platform/clubs/{id}/parameters/{key}", {
+        body: { reason: "Ajust de plataforma", value, version },
+        params: { path: { id: minim, key } },
+      });
+    expect(await failure(put("unknown.key", 1, 0))).toMatchObject({
+      code: "UNKNOWN_PARAMETER",
+      status: 400,
+    });
+    expect(await failure(put("auth.sessionDays", 0, 0))).toMatchObject({
+      code: "PARAMETER_INVALID",
+      status: 400,
+    });
+    const saved = await put("auth.sessionDays", 45, 0);
+    expectValid("Parameter", saved.data);
+    expect(saved.data).toMatchObject({
+      editableBy: "PLATFORM",
+      isOverride: true,
+      value: 45,
+      version: 1,
+    });
+    expect(await failure(put("auth.sessionDays", 60, 0))).toMatchObject({
+      code: "STALE_VERSION",
+      status: 409,
+    });
+    expect((await put("auth.sessionDays", 60, 1)).data).toMatchObject({ value: 60, version: 2 });
+    // Another club's key keeps its own version.
+    const other = await client.PUT("/platform/clubs/{id}/parameters/{key}", {
+      body: { value: 30, version: 0 },
+      params: { path: { id: canic, key: "auth.sessionDays" } },
+    });
+    expect(other.data).toMatchObject({ version: 1 });
   });
 });

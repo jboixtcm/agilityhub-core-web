@@ -369,6 +369,11 @@ function initialAudit(): AuditEntryListItem[] {
 
 export interface ConsoleState {
   admins: Record<string, PlatformAdmin[]>;
+  /**
+   * The parameters the console wrote, by club and key (a key never written is the catalog's
+   * default at version 0): `PUT /platform/clubs/{id}/parameters/{key}` answers the `Parameter`.
+   */
+  parameters: Record<string, Record<string, components["schemas"]["Parameter"]>>;
   audit: AuditEntryListItem[];
   /** Catalog parts each club already has (R-17-08: a clone only fills empty parts). */
   catalogParts: Record<string, string[]>;
@@ -391,6 +396,7 @@ function initialState(): ConsoleState {
     },
     clubs: initialClubs(),
     jobs: initialJobs(),
+    parameters: {},
     platformRoles: { [CONSOLE_PLATFORM_ACCOUNT_ID]: ["AGILITYHUB_ADMIN"] },
     uploads: {},
   };

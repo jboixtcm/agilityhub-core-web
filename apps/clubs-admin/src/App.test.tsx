@@ -1,4 +1,8 @@
-import { mockScenario, resetOnboardingMockState } from "@agilityhub/api-client/mocks";
+import {
+  currentMockScenario,
+  mockScenario,
+  resetOnboardingMockState,
+} from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import {
@@ -572,5 +576,59 @@ describe("T-01-26 clubs-admin onboarding", () => {
     ).toBeVisible();
     expect(screen.queryByRole("button", { name: "Més tard" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Tanca" })).not.toBeInTheDocument();
+  });
+});
+
+describe("E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMIN only)", () => {
+  async function renderPlatform(path: string) {
+    mockScenario("platform");
+    const client = authClient();
+    await client.login("pol.ferrer@example.test", "secret-password");
+    window.history.pushState(null, "", path);
+    await renderApplication(client, currentMockScenario().branding);
+  }
+
+  it("a club ADMIN without the platform role gets the console's refusal and no «Consola» entry", async () => {
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/consola/clubs");
+    await renderApplication(client);
+    expect(
+      await screen.findByText("Aquest accés és només per a l'equip AgilityHub."),
+    ).toBeVisible();
+    expect(screen.queryByRole("link", { name: "Consola" })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Plataforma" })).toBeNull();
+  });
+
+  it("a platform account without a club opens D19 from «Plataforma › Consola», lit on every console page", async () => {
+    await renderPlatform("/consola/clubs/nou");
+    const entry = await screen.findByRole("link", { name: "Consola" });
+    expect(entry).toHaveAttribute("href", "/consola/clubs");
+    expect(entry).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("heading", { name: "Plataforma" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "Nou club" })).toBeVisible();
+    // No club role: no club entries and no club exports.
+    expect(screen.queryByRole("link", { name: "Tauler" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Exportacions" })).toBeNull();
+  });
+
+  it("an unknown path lands a platform-only account on the console list, never on D1", async () => {
+    await renderPlatform("/");
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Consola de clubs" }),
+    ).toBeVisible();
+    expect(screen.queryByText("Aquest accés és només per a l'equip AgilityHub.")).toBeNull();
+  });
+
+  it("an impersonation never carries the actor's platform role into the console (R-01-16)", async () => {
+    mockScenario("impersonated");
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/consola/clubs");
+    await renderApplication(client);
+    await waitFor(() => {
+      expect(screen.queryByRole("heading", { level: 1, name: "Consola de clubs" })).toBeNull();
+    });
+    expect(screen.queryByRole("link", { name: "Consola" })).toBeNull();
   });
 });

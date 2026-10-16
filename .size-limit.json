@@ -19,8 +19,21 @@
   },
   {
     "name": "clubs-admin all JavaScript",
-    "path": "apps/clubs-admin/dist/assets/*.js",
+    "path": [
+      "apps/clubs-admin/dist/assets/*.js",
+      "!apps/clubs-admin/dist/assets/ConsolePage-*.js",
+      "!apps/clubs-admin/dist/assets/console-*.js"
+    ],
     "limit": "660 kB",
+    "gzip": true
+  },
+  {
+    "name": "clubs-admin platform console JavaScript (D19, lazy, AGILITYHUB_ADMIN only)",
+    "path": [
+      "apps/clubs-admin/dist/assets/ConsolePage-*.js",
+      "apps/clubs-admin/dist/assets/console-*.js"
+    ],
+    "limit": "45 kB",
     "gzip": true
   },
   {

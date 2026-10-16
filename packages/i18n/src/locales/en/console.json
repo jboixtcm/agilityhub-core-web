@@ -1,0 +1,557 @@
+{
+  "access": {
+    "description": "This access is for the AgilityHub team only.",
+    "title": "Club console"
+  },
+  "audit": {
+    "change": "{path}: {before} → {after}",
+    "description": "Configuration actions on the club, made from the platform or by the club itself. Actions on members are not included.",
+    "empty": "There are no configuration actions yet.",
+    "next": "Next",
+    "page": "Page {page} of {total}",
+    "previous": "Previous",
+    "title": "Audit"
+  },
+  "catalogs": {
+    "clone": "Clone from a template club",
+    "cloning": "Cloning",
+    "copied": "Copied: {summary}.",
+    "copiedPart": "{part} {count}",
+    "currencyWarning": "The template charges in {template} and the club in {club}: plans and prices cannot be copied.",
+    "description": "Copies levels, rings, plans with their current prices, frequently asked questions and message templates from a template club.",
+    "emptyOnly": "Only the parts the club still has empty are copied.",
+    "localeFallback": "Some texts did not exist in the club's default language: they were copied from another language. Review them.",
+    "localeWarning": "The template has no texts in {locales}: they will have to be completed in the club.",
+    "noTemplates": "There is no template club.",
+    "parts": {
+      "FAQ": "Frequently asked questions",
+      "LEVELS": "Levels",
+      "MESSAGE_TEMPLATES": "Message templates",
+      "PLANS": "Plans and prices",
+      "RINGS": "Rings"
+    },
+    "partsLabel": "What is copied",
+    "template": "Template club",
+    "templateOption": "{name} · {locales} · {currency}",
+    "title": "Base catalogs"
+  },
+  "checklist": {
+    "count": "{done}/{total}",
+    "done": "done",
+    "goToStatus": "Activate the club",
+    "items": {
+      "branding": "Brand: own logo and colours",
+      "dns": "Verified domains",
+      "faq": "Frequently asked questions",
+      "firstAdmin": "First administrator with access",
+      "legal": "Privacy policy",
+      "sepa": "Payment provider configured",
+      "templates": "Message templates"
+    },
+    "missing": "missing: {items}",
+    "pending": "pending",
+    "ready": "The checklist is complete.",
+    "title": "Onboarding checklist"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "discard": "Discard changes",
+    "loading": "Loading",
+    "no": "No",
+    "retry": "Try again",
+    "save": "SAVE",
+    "saved": "Changes saved.",
+    "saving": "Saving",
+    "yes": "Yes"
+  },
+  "countryProfile": {
+    "ES": "Spain",
+    "GENERIC": "Generic"
+  },
+  "errors": {
+    "catalogNotEmpty": "{part}: the club already has some. Only empty parts are copied.",
+    "fileTooLarge": "The file is too large: {maxSizeMb} MB at most.",
+    "generic": "The action could not be completed. Try again.",
+    "moduleDependency": "To turn on {module}, {requires} must be on.",
+    "providerInUse": "{count, plural, one {# member pays with this provider.} other {# members pay with this provider.}}",
+    "stale": "Someone changed the club meanwhile. We loaded the current version with your changes on top: review it and save again."
+  },
+  "fieldErrors": {
+    "INVALID_VALUE": "This value is not valid.",
+    "REQUIRED": "This field is required."
+  },
+  "identity": {
+    "addressTitle": "Address",
+    "fields": {
+      "city": "Town",
+      "contactEmail": "Contact email",
+      "contactPhone": "Contact phone",
+      "country": "Country",
+      "displayCity": "Town shown",
+      "legalName": "Legal name",
+      "name": "Name",
+      "notes": "Internal notes",
+      "postalCode": "Postal code",
+      "region": "Province",
+      "slug": "Slug",
+      "street": "Address",
+      "taxId": "Tax ID",
+      "template": "Template club",
+      "websiteUrl": "Website"
+    },
+    "notesHelp": "Only the AgilityHub team sees them.",
+    "platformTitle": "Platform",
+    "slugHelp": "It cannot change once the club is created.",
+    "templateHelp": "A template club does not operate: it is a source to clone catalogs from.",
+    "title": "Identity"
+  },
+  "legal": {
+    "currentVersion": "Current version of the legal texts: {version}",
+    "imageConsentText": "Image consent text ({locale})",
+    "newVersion": "New version",
+    "noVersion": "No version of the legal texts has been published yet.",
+    "privacyPolicyUrl": "Privacy policy URL",
+    "publish": "Publish a new version",
+    "publishConfirm": "PUBLISH",
+    "publishTitle": "Publish a new version of the legal texts",
+    "reconsentPolicy": "Members will see a notice in the app to review the new texts. Their access is not blocked.",
+    "title": "Legal",
+    "versionHelp": "Each version is recorded with the consents given to it.",
+    "versionTitle": "Legal texts version"
+  },
+  "list": {
+    "allStatuses": "All statuses",
+    "caption": "Platform clubs",
+    "columns": {
+      "checklist": "Checklist",
+      "countryProfile": "Country",
+      "countryTimeZone": "Country and time zone",
+      "lastAdminAccessAt": "Last admin access",
+      "membersActive": "Active members",
+      "module": "Module",
+      "modules": "Modules",
+      "name": "Name",
+      "slug": "Slug",
+      "smsSentMonth": "SMS this month",
+      "status": "Status",
+      "storageBytes": "Storage",
+      "template": "Template club"
+    },
+    "countryTimeZone": "{country} · {timeZone}",
+    "description": "The platform's clubs, their status and this month's usage.",
+    "emptyDescription": "Change the search or the filters, or create a new club.",
+    "emptyTitle": "No clubs",
+    "error": "The clubs could not be loaded.",
+    "never": "never",
+    "newClub": "New club",
+    "noModules": "none",
+    "none": "—",
+    "openRecord": "Open the record of {name}",
+    "search": "Search by name or slug",
+    "templateClub": "template",
+    "title": "Club console"
+  },
+  "locales": {
+    "ca": "Catalan",
+    "en": "English",
+    "es": "Spanish"
+  },
+  "localization": {
+    "confirm": "SAVE THE CHANGES",
+    "confirmIntro": "Before saving, review what changes for the club:",
+    "confirmTitle": "Localization changes",
+    "consequences": {
+      "countryProfile": "The country profile changes how the club's forms validate documents, postal codes and taxes.",
+      "currency": "The currency changes from {from} to {to}: current prices are not converted and the plans will need a review.",
+      "defaultLocale": "Texts missing in a language will be shown in the new default language.",
+      "localesAdded": "The club's texts (pages, templates, questions) will need completing in the new languages.",
+      "localesRemoved": "Members will no longer be able to choose {locales}; texts in that language are kept but not shown.",
+      "timeZone": "The time zone changes from {from} to {to}: every schedule of the club will be read in the new zone."
+    },
+    "currencyHelp": "Three-letter ISO code, for example EUR.",
+    "defaultNotListed": "The default language must be one of the club's languages.",
+    "description": "Changes in this tab affect the whole club: their consequences are shown before saving.",
+    "fields": {
+      "countryProfile": "Country profile",
+      "currency": "Currency",
+      "defaultLocale": "Default language",
+      "locales": "Languages",
+      "timeZone": "Time zone"
+    },
+    "timeZoneHelp": "IANA identifier, for example Europe/Madrid.",
+    "title": "Localization"
+  },
+  "modules": {
+    "ACTIVITIES": {
+      "help": "Activities with registration (courses, outings) and the rings they block.",
+      "label": "Activities"
+    },
+    "BILLING": {
+      "help": "Receipts, remittances, collections and the payment method at signup.",
+      "label": "Billing"
+    },
+    "COURSES": {
+      "help": "Course library, ring geometry and build sessions.",
+      "label": "Courses"
+    },
+    "FAMILY_GROUP": {
+      "help": "Dogs of several members grouped under one payer.",
+      "label": "Family group"
+    },
+    "FAQ": {
+      "help": "The app's frequently asked questions page.",
+      "label": "Frequently asked questions"
+    },
+    "FREE_TRAINING": {
+      "help": "Ring booking to train without a class, by the dog's level.",
+      "label": "Free training"
+    },
+    "INACTIVITY": {
+      "help": "Inactivity periods members ask for, and their fee.",
+      "label": "Inactivity"
+    },
+    "LEARN_LINK": {
+      "help": "The access to Learn from the app's menu.",
+      "label": "Learn link"
+    },
+    "PACKS": {
+      "help": "Session pack plans with their balance.",
+      "label": "Packs"
+    },
+    "PUSH": {
+      "help": "Web notifications on the member's device.",
+      "label": "Push notifications"
+    },
+    "SINGLE_CLASS": {
+      "help": "Single classes paid per booking or per attendance.",
+      "label": "Single classes"
+    },
+    "SMS": {
+      "help": "The SMS channel of notices and announcements.",
+      "label": "SMS"
+    },
+    "SOCIAL_LEAGUE": {
+      "help": "Results of the club's social league.",
+      "label": "Social league"
+    },
+    "STATS": {
+      "help": "The member's statistics in the app.",
+      "label": "Statistics"
+    },
+    "TASKS": {
+      "help": "Tasks, instructors' notes, observations and student follow-up.",
+      "label": "Tasks and follow-up"
+    },
+    "WAITLIST": {
+      "help": "Waiting list of full classes.",
+      "label": "Waiting list"
+    }
+  },
+  "modulesTab": {
+    "description": "Turn the club's modules on. Each module says what it turns on and what it depends on.",
+    "noDataLoss": "Turning a module off deletes no data: turned on again, everything shows again.",
+    "presets": "Predefined configurations",
+    "requiredBy": "Depending on it: {modules}",
+    "requires": "Turn on first: {modules}",
+    "title": "Modules"
+  },
+  "parameters": {
+    "default": "Default: {value}",
+    "note": "Each parameter shows its default value; a value you save here is shown until you leave the tab.",
+    "platformOnly": "platform only",
+    "saved": "{label}: value saved.",
+    "savedNow": "saved now"
+  },
+  "payments": {
+    "billingOff": "The Billing module is off: providers can be configured but are not used until it is turned on.",
+    "configured": "configured",
+    "disabled": "off",
+    "enabled": "on",
+    "enabledLabel": "Provider on",
+    "manual": {
+      "defaultRequired": "The text in the club's default language is required.",
+      "description": "Instructions to pay in cash or by transfer, shown at signup.",
+      "instructions": "Instructions ({locale})",
+      "title": "Manual payment"
+    },
+    "notConfigured": "not configured",
+    "remove": "Remove the provider",
+    "removeConfirm": "Its configuration will be deleted. If members use it, it cannot be removed.",
+    "removeTitle": "Remove {name}",
+    "sepa": {
+      "creditorId": "Creditor identifier",
+      "creditorName": "Creditor name",
+      "iban": "IBAN",
+      "ibanHelpNew": "Write-only: once saved it is never shown again.",
+      "ibanHelpStored": "Stored IBAN: {masked}. Leave it blank to keep it.",
+      "invoiceSeriesPattern": "Invoice series",
+      "suffix": "Suffix",
+      "title": "SEPA direct debit"
+    },
+    "stripe": {
+      "configuredSummary": "configured",
+      "last4": "publishable key …{last4}",
+      "lastTest": "last test OK {at}",
+      "mode": "Mode",
+      "modes": {
+        "live": "live",
+        "test": "test"
+      },
+      "neverTested": "not tested",
+      "publishableHelp": "The publishable key (pk_…). It must be typed again on each save.",
+      "publishableKey": "Publishable key",
+      "secretKey": "Secret key",
+      "test": "Test the connection",
+      "testing": "Testing",
+      "testOk": "Connection OK with the account {account} ({mode}).",
+      "title": "Stripe",
+      "webhookSecret": "Webhook secret"
+    },
+    "writeOnly": "Write-only: once saved it is never shown again.",
+    "writeOnlyKept": "Saved. Leave it blank to keep it."
+  },
+  "presets": {
+    "CANIC": "Like the pilot club",
+    "COMPLET": "Full",
+    "MINIM": "Minimal"
+  },
+  "processes": {
+    "columns": {
+      "actions": "Actions",
+      "enabled": "On",
+      "health": "Health",
+      "lastRun": "Last run",
+      "name": "Process"
+    },
+    "description": "The club's automatic processes, their last run and their health. They can be simulated or run now.",
+    "empty": "The club has no active process.",
+    "health": {
+      "ALERT": "alert",
+      "OK": "OK",
+      "WARN": "warning"
+    },
+    "title": "Processes"
+  },
+  "record": {
+    "back": "Clubs",
+    "created": "The club {name} was created. Complete the onboarding checklist to activate it.",
+    "tabsLabel": "Sections of the club record"
+  },
+  "status": {
+    "ACTIVE": "Active",
+    "ONBOARDING": "Onboarding",
+    "SUSPENDED": "Suspended"
+  },
+  "statusTab": {
+    "actions": {
+      "ACTIVE": "Suspend the club",
+      "ONBOARDING": "Activate the club",
+      "SUSPENDED": "Reactivate the club"
+    },
+    "changed": "The club's status changed.",
+    "checklistComplete": "The onboarding checklist is complete: the club can be activated.",
+    "checklistIncomplete": "Checklist items are still missing: {items}. The club can be activated anyway.",
+    "current": "Current status:",
+    "description": "Activation is always manual. Every status change is audited.",
+    "meaning": {
+      "ACTIVE": "The club operates normally.",
+      "ONBOARDING": "The club already works and its administrators see an onboarding banner.",
+      "SUSPENDED": "Access to the club is refused and processes do not run."
+    },
+    "reason": "Reason for the suspension",
+    "suspendEffects": "On suspension: access to the club is refused, automatic processes are skipped and online payments queue until it is reactivated.",
+    "title": "Status"
+  },
+  "tabs": {
+    "auditoria": "Audit",
+    "catalegs": "Base catalogs",
+    "equip": "Team",
+    "estat": "Status",
+    "identitat": "Identity",
+    "legal": "Legal",
+    "localitzacio": "Localization",
+    "moduls": "Modules",
+    "pagaments": "Payments",
+    "parametres": "Parameters",
+    "processos": "Processes",
+    "tema": "Theme",
+    "us": "Usage"
+  },
+  "team": {
+    "caption": "Club administrators",
+    "columns": {
+      "actions": "Actions",
+      "email": "Email",
+      "lastAccess": "Last access",
+      "name": "Name",
+      "platformAdmin": "Platform admin",
+      "status": "Status"
+    },
+    "description": "The club's administrators. A club must always keep at least one administrator.",
+    "email": "Email",
+    "empty": "The club has no administrator yet.",
+    "invite": "INVITE",
+    "invited": "The invitation was sent to {email}.",
+    "inviteHelp": "The account is created if needed, given the administrator role, and gets an access link by email.",
+    "inviteTitle": "Invite an administrator",
+    "inviting": "Inviting",
+    "membership": {
+      "ACTIVE": "active",
+      "SUSPENDED": "removed"
+    },
+    "name": "Name",
+    "platformAdminFor": "{name} is a platform admin",
+    "remove": "Remove",
+    "removeConfirm": "They will no longer administer the club. Their data and account are kept.",
+    "removeTitle": "Remove {name}",
+    "title": "Team"
+  },
+  "theme": {
+    "addRingColor": "Add a colour",
+    "colors": {
+      "background": "Background",
+      "border": "Borders",
+      "danger": "Error",
+      "info": "Information",
+      "onPrimary": "Text on primary",
+      "primary": "Primary",
+      "success": "Success",
+      "surface": "Surface",
+      "surfaceAlt": "Alternative surface",
+      "text": "Text",
+      "textMuted": "Secondary text",
+      "warning": "Warning"
+    },
+    "colorsHelp": "The club theme's colours. Text contrast must meet level AA (4.5:1).",
+    "colorsTitle": "Colours",
+    "contrastBlocked": "Some colours lack contrast: fix them before saving.",
+    "contrastFail": "{ratio}:1 · fails AA",
+    "contrastFailure": "Contrast {ratio}:1 on «{background}»: at least 4.5:1 is needed.",
+    "contrastPair": "{foreground} on {background}",
+    "contrastPass": "{ratio}:1 · AA",
+    "contrastTitle": "AA contrast",
+    "fontFamily": "Typeface",
+    "logoAlt": {
+      "logo": "Logo",
+      "logoDark": "Dark mode logo",
+      "mark": "Mark"
+    },
+    "logoPending": "{name} will be published on save.",
+    "logos": {
+      "logo": "Logo",
+      "logoDark": "Dark mode logo",
+      "mark": "Mark (small version)"
+    },
+    "logosHelp": "The club's images. The logo is used on the access screens; the mark, in the header.",
+    "logosTitle": "Logos",
+    "mode": "Mode",
+    "modes": {
+      "auto": "Automatic",
+      "dark": "Dark",
+      "light": "Light"
+    },
+    "noLogo": "no image",
+    "preview": {
+      "book": "BOOK",
+      "booked": "booked",
+      "calendar": "Calendar",
+      "classes": "Classes",
+      "clubs": "Members' app",
+      "clubsAdmin": "Back office",
+      "dashboard": "Dashboard",
+      "full": "full",
+      "home": "Home",
+      "kpi": "12 pending pre-registrations",
+      "members": "Members",
+      "nextClass": "Next class",
+      "primary": "Primary",
+      "profile": "Profile",
+      "secondary": "Secondary",
+      "waitlist": "waiting",
+      "when": "Tuesday 18:00 · Ring 1"
+    },
+    "previewTitle": "Preview",
+    "radius": "Corner radius",
+    "radiusHelp": "In pixels, for example 8px.",
+    "removeLogo": "Remove the image",
+    "removeRingColor": "Remove colour {index}",
+    "ringColor": "Ring colour {index}",
+    "ringPalette": "Ring colours",
+    "typographyTitle": "Typeface and shape",
+    "uploadFailed": "The image could not be uploaded.",
+    "uploading": "Uploading the image"
+  },
+  "usage": {
+    "description": "The month's aggregate counters; the console shows no member data.",
+    "membersActive": "Active members",
+    "month": "Month",
+    "smsSentMonth": "SMS sent",
+    "storage": "Storage",
+    "title": "Usage"
+  },
+  "wizard": {
+    "adminHelp": "They will get an email invitation with an access link as the club's administrator.",
+    "catalogsHelp": "The new club's catalogs can be copied from a template club, or start empty.",
+    "create": "CREATE THE CLUB",
+    "creating": "Creating the club",
+    "definitionTitle": "Club-as-code file",
+    "description": "Eight steps to create a club. It is created in onboarding, then the onboarding checklist is completed.",
+    "discardDraft": "Discard the draft",
+    "draftRestored": "The draft saved on this device was restored. Personal data is not saved in it.",
+    "draftSaved": "Draft saved on this device, without the personal data.",
+    "enableProvider": "Turn on {name}",
+    "ibanLater": "The IBAN is saved in the record's Payments tab once the club is created.",
+    "invoiceSeriesHelp": "Optional, for example '{YYYY}'.",
+    "logoLater": "Logos are uploaded in the record's Theme tab once the club is created.",
+    "next": "NEXT",
+    "noTemplate": "None: empty catalogs",
+    "paymentsLater": "Payments can be left for later: they are configured in the club's record.",
+    "presetHelp": {
+      "CANIC": "The pilot club's modules: all but single classes, statistics and social league.",
+      "COMPLET": "Every module but statistics and social league.",
+      "MINIM": "Only waiting list, frequently asked questions and push notifications."
+    },
+    "presetModules": "Modules turned on",
+    "previous": "Back",
+    "problems": {
+      "admin": {
+        "email": "Type a valid email address.",
+        "name": "Type the administrator's name."
+      },
+      "identity": {
+        "name": "Type the club's name.",
+        "slug": "3 to 40 characters: lower case, digits and dashes."
+      },
+      "localization": {
+        "currency": "Three-letter ISO code, for example EUR.",
+        "defaultLocale": "The default language must be one of the club's languages.",
+        "locales": "Choose at least one language.",
+        "timeZone": "Type the club's time zone."
+      },
+      "theme": {
+        "contrast": "Not enough contrast (4.5:1 needed)."
+      }
+    },
+    "saveDraft": "Save as draft",
+    "secretsLater": "The secret keys are saved in the record's Payments tab.",
+    "slugHelp": "Proposed from the name. It cannot change once the club is created.",
+    "stepTitle": "Step {position} of {total} · {name}",
+    "steps": {
+      "admin": "First administrator",
+      "catalogs": "Base catalogs",
+      "identity": "Identity",
+      "localization": "Localization",
+      "modules": "Modules",
+      "payments": "Payments",
+      "review": "Review",
+      "theme": "Theme"
+    },
+    "stepsLabel": "Wizard steps",
+    "themeCustom": "Club colours",
+    "themeProduct": "AgilityHub theme",
+    "themeSource": "Theme",
+    "title": "New club",
+    "unnamed": "New club"
+  }
+}

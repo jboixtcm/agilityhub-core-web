@@ -189,6 +189,27 @@ check_e8_seed_totals() {
   echo "E8 seed totals: Cànic billing/lifecycle and FIFO card scenarios asserted"
 }
 
+# E10-W01: the demo seed has no platform account, so the E10 stage (and only it, on its own fresh
+# stack) gives the seeded club admin the global role S17's console needs (`Account.platformRoles`,
+# S01 §3). The account's field names go to the evidence, so a run proves the field it set.
+grant_platform_admin() {
+  docker compose -f "$compose_file" exec -T mongo mongosh --quiet \
+    mongodb://localhost:27017/agilityhub_e1_web --eval '
+      const result = db.accounts.updateOne(
+        {email: "admin@example.test"},
+        {$set: {platformRoles: ["AGILITYHUB_ADMIN"]}}
+      );
+      const account = db.accounts.findOne({email: "admin@example.test"});
+      print(EJSON.stringify({
+        fields: account === null ? [] : Object.keys(account).sort(),
+        matched: result.matchedCount,
+        modified: result.modifiedCount,
+        platformRoles: account?.platformRoles ?? null
+      }));
+      if (result.matchedCount !== 1) { quit(1); }
+    ' | tee "$evidence_directory/e10-platform-role.json"
+}
+
 run_core_suite() {
   # `run_stage` calls it as `run_core_suite <stage> || …`, which turns `set -e` off in here: a core
   # that does not start stops the stage (its seed log is kept all the same).
@@ -202,6 +223,9 @@ run_core_suite() {
   fi
   if [[ "$CORE_TEST_FILES" == *e8-core* ]]; then
     check_e8_seed_totals "$1" || return $?
+  fi
+  if [[ "$CORE_TEST_FILES" == *e10-core* ]]; then
+    grant_platform_admin || return $?
   fi
   # E4-W16 round 2: `--no-deps`, because the stack is already up and seeded. Without it `run` walks
   # `depends_on` (core → activate-demo-club → seed) and starts the exited seed again next to the
@@ -505,6 +529,12 @@ if [[ "$staged" == true ]]; then
   export CORE_TEST_FILES="e8-core.spec.ts"
   export SEED_WEEK_START="$E8_WEEK_START"
   run_e8_with_card_watcher run_stage e8
+  cleanup
+  # E10-W01: S17's club console (list, one record tab, the «Nou club» wizard) on its own fresh
+  # seed, with the platform role granted by `grant_platform_admin`.
+  export CORE_TEST_FILES="e10-core.spec.ts"
+  export SEED_WEEK_START="$E4_WEEK_START"
+  run_stage e10
 else
   export CORE_TEST_FILES="$2"
   if [[ "$2" == *e5-core* || "$2" == *e6-core* || "$2" == *e7-core* ]]; then
