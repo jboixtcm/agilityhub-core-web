@@ -145,6 +145,8 @@
     "error": "No s'han pogut carregar els clubs.",
     "never": "mai",
     "newClub": "Nou club",
+    "moreModules": "+{count}",
+    "moreModulesLabel": "{count, plural, one {# mòdul més} other {# mòduls més}}: {modules}",
     "noModules": "cap",
     "none": "—",
     "openRecord": "Obre la fitxa de {name}",
@@ -256,13 +258,6 @@
     "requires": "Cal activar abans: {modules}",
     "title": "Mòduls"
   },
-  "parameters": {
-    "default": "Per defecte: {value}",
-    "note": "Es mostra el valor per defecte de cada paràmetre; el valor que hi desis des d'aquí es mostra fins que surts de la pestanya.",
-    "platformOnly": "només plataforma",
-    "saved": "{label}: valor desat.",
-    "savedNow": "desat ara"
-  },
   "payments": {
     "billingOff": "El mòdul Facturació no està actiu: els proveïdors es poden configurar però no es fan servir fins que s'activi.",
     "configured": "configurat",
@@ -336,6 +331,7 @@
   "record": {
     "back": "Clubs",
     "created": "S'ha creat el club {name}. Completa la checklist d'onboarding per activar-lo.",
+    "reloadFailed": "No s'ha pogut tornar a llegir el club: les dades que es mostren poden no ser les últimes. Torna-ho a provar abans de fer cap altre canvi.",
     "tabsLabel": "Seccions de la fitxa del club"
   },
   "status": {
@@ -373,7 +369,6 @@
     "localitzacio": "Localització",
     "moduls": "Mòduls",
     "pagaments": "Pagaments",
-    "parametres": "Paràmetres",
     "processos": "Processos",
     "tema": "Tema",
     "us": "Ús"
@@ -409,6 +404,8 @@
   },
   "theme": {
     "addRingColor": "Afegeix un color",
+    "chooseLogo": "Tria una imatge",
+    "chooseLogoLabel": "Tria una imatge: {logo}",
     "colors": {
       "background": "Fons",
       "border": "Vores",

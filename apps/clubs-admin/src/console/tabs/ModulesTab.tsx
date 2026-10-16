@@ -16,6 +16,7 @@ import {
   consoleErrorMessage,
   CONSOLE_MODULES,
   FormMessage,
+  inCatalogOrder,
   SectionCard,
   useRebasedDraft,
   useWriteState,
@@ -36,7 +37,7 @@ export const MODULE_PRESETS = [
 export function ModulesTab({ client, club, onReload }: ConsoleTabProps) {
   const { t } = useTranslation(["console", "errors", "common"]);
   const form = useRebasedDraft(
-    { modules: [...club.modules] as string[] },
+    { modules: inCatalogOrder<string>(club.modules, CONSOLE_MODULES) },
     `${club.id}:${String(club.version)}`,
   );
   const write = useWriteState();

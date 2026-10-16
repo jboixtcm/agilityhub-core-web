@@ -15,7 +15,6 @@ import {
   Select,
   Switch,
   Textarea,
-  useBranding,
 } from "@agilityhub/ui";
 import { type ReactNode, type SyntheticEvent, useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -37,6 +36,7 @@ import {
   type WizardLocale,
   type WizardStep,
 } from "./club-definition";
+import { productTheme } from "./product-theme";
 import {
   CLUB_LOCALES,
   CONSOLE_MODULES,
@@ -95,20 +95,15 @@ export function NewClubWizard({
   onNavigate: ConsoleNavigate;
 }) {
   const { t } = useTranslation(["console", "errors", "common"]);
-  const branding = useBranding();
-  const product = useMemo(
-    () => ({
-      colors: branding.theme.colors,
-      fontFamily: branding.theme.fontFamily,
-      mode: branding.theme.mode,
-      radius: branding.theme.radius,
-      ringPalette: branding.theme.ringPalette,
-    }),
-    [branding.theme],
-  );
-  const fresh = useMemo(() => emptyDraft(product), [product]);
+  // The product's own theme, never the host's branding (a club's admin host would leak its theme).
+  const fresh = useMemo(() => emptyDraft(productTheme("light")), []);
   const [restored] = useState(() => readStoredDraft(browserStorage(), fresh));
-  const [draft, setDraft] = useState<WizardDraft>(restored ?? fresh);
+  const [draft, setDraft] = useState<WizardDraft>(() =>
+    restored?.theme.source === "product"
+      ? // A kept draft takes the product's current preset, never the colours it was saved with.
+        { ...restored, theme: productThemeValues(productTheme(restored.theme.mode)) }
+      : (restored ?? fresh),
+  );
   const [step, setStep] = useState<WizardStep>("identity");
   const [shownProblems, setShownProblems] = useState<string[]>([]);
   const [notice, setNotice] = useState<string | undefined>(
@@ -596,7 +591,7 @@ export function NewClubWizard({
                 ...current,
                 theme:
                   value === "product"
-                    ? { ...productThemeValues(product), mode: current.theme.mode }
+                    ? productThemeValues(productTheme(current.theme.mode))
                     : { ...current.theme, source: "custom" },
               }));
             }}
@@ -616,7 +611,14 @@ export function NewClubWizard({
                     : event.currentTarget.value === "auto"
                       ? "auto"
                       : "light";
-                update((current) => ({ ...current, theme: { ...current.theme, mode } }));
+                // «Preset AgilityHub» has a light and a dark palette (S17 §5): the mode picks it.
+                update((current) => ({
+                  ...current,
+                  theme:
+                    current.theme.source === "product"
+                      ? productThemeValues(productTheme(mode))
+                      : { ...current.theme, mode },
+                }));
               }}
               value={draft.theme.mode}
             >

@@ -10,6 +10,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from
 
 import { WIZARD_DRAFT_KEY } from "./club-definition";
 import { API_BASE, captureRequests, renderConsole } from "./console-test-utils";
+import { productTheme } from "./product-theme";
 
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
@@ -56,6 +57,19 @@ async function toReview() {
   next();
   await step("Tema", 5);
   next();
+  await step("Catàlegs base", 6);
+  next();
+  await step("Primer administrador", 7);
+  fireEvent.change(screen.getByLabelText("Correu electrònic"), {
+    target: { value: "laia.costa@example.test" },
+  });
+  fireEvent.change(screen.getByLabelText("Nom"), { target: { value: "Laia Costa" } });
+  next();
+  await step("Revisió", 8);
+}
+
+/** From the theme step's [SEGÜENT] to the review, with a first admin. */
+async function toAdmin() {
   await step("Catàlegs base", 6);
   next();
   await step("Primer administrador", 7);
@@ -183,6 +197,75 @@ describe("T-17-12 · «Nou club» wizard (S17 §2 «D19 Assistent»)", () => {
     expect(screen.getByLabelText("Correu electrònic").closest(".ah-form-field")).toHaveTextContent(
       "Aquest valor no és vàlid.",
     );
+  });
+
+  it("E10-W01 round 2 #2: on a club's admin host the new club gets the product's theme, never the host's", async () => {
+    const posts = captureRequests(
+      (method, url) => method === "POST" && url.pathname.endsWith("/platform/clubs"),
+    );
+    await renderConsole("/consola/clubs/nou", { hostBranding: "admin" });
+    const light = productTheme("light");
+    // The host really is a club's: its branding is applied to the page, and it is not the product's.
+    const page = getComputedStyle(document.documentElement);
+    expect(page.getPropertyValue("--ah-color-primary").trim().toLowerCase()).not.toBe(
+      light.colors.primary,
+    );
+    expect(page.getPropertyValue("--ah-color-primary").trim()).not.toBe("");
+    await fillIdentity("Club Agility Serralada");
+    next();
+    await step("Localització", 2);
+    next();
+    await step("Mòduls", 3);
+    next();
+    await step("Pagaments", 4);
+    next();
+    await step("Tema", 5);
+    expect(screen.getByRole("radio", { name: "Tema AgilityHub" })).toBeChecked();
+    next();
+    await toAdmin();
+    fireEvent.click(screen.getByRole("button", { name: "CREA EL CLUB" }));
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Club Agility Serralada" }),
+    ).toBeInTheDocument();
+    expect(posts).toHaveLength(1);
+    expect((posts[0]?.body as { theme: unknown }).theme).toEqual({
+      colors: light.colors,
+      fontFamily: light.fontFamily,
+      mode: "light",
+      radius: light.radius,
+      ringPalette: [],
+    });
+  });
+
+  it("E10-W01 round 2 #2: the preset's dark mode sends the product's dark palette, and back", async () => {
+    const posts = captureRequests(
+      (method, url) => method === "POST" && url.pathname.endsWith("/platform/clubs"),
+    );
+    await renderConsole("/consola/clubs/nou", { hostBranding: "admin" });
+    await fillIdentity("Club Agility Serralada");
+    next();
+    await step("Localització", 2);
+    next();
+    await step("Mòduls", 3);
+    next();
+    await step("Pagaments", 4);
+    next();
+    await step("Tema", 5);
+    fireEvent.change(screen.getByLabelText("Mode"), { target: { value: "dark" } });
+    fireEvent.change(screen.getByLabelText("Mode"), { target: { value: "light" } });
+    fireEvent.change(screen.getByLabelText("Mode"), { target: { value: "dark" } });
+    next();
+    await toAdmin();
+    fireEvent.click(screen.getByRole("button", { name: "CREA EL CLUB" }));
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Club Agility Serralada" }),
+    ).toBeInTheDocument();
+    const dark = productTheme("dark");
+    expect(dark.colors.background).not.toBe(productTheme("light").colors.background);
+    expect((posts[0]?.body as { theme: unknown }).theme).toMatchObject({
+      colors: dark.colors,
+      mode: "dark",
+    });
   });
 
   it("the draft is kept on this device without personal data, and restored", async () => {

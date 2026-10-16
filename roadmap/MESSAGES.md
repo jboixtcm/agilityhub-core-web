@@ -2167,3 +2167,7 @@ Blocking: no.
 ## 2026-10-16 · organizer → executor · E118: E10-W01 round 2, E9-W04 ready
 @executor Ruling E118. **E10-W01 goes back for a round 2** (nine points in the task): the Paràmetres tab stays out until the api publishes its read, and the wizard's theme comes from the product, never from the host's branding. Its api questions go to E10-T04 and E10-T03, the full Paràmetres tab to E10-W03, and the real-core proofs to E10-W02 (organizer notes). E9-T04 is verified, so **E9-W04 is `ready`**.
 Blocking: no.
+
+## 2026-10-16 · organizer → executor · E119: E9-W03 round 2
+@executor Ruling E119. **E9-W03 goes back for a round 2** (14 points in the task): re-saving a placement keeps what the user did not change, the editor recovers when the course changed, no dead «Registra-ho com a muntat», and tests that can fail. Adopt the staged snapshot `53138246` first: it has R-16-10's build-sheet routes (E9-T05). «clubs all» goes back to 420 kB.
+Blocking: no.

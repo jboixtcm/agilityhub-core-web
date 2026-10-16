@@ -145,6 +145,8 @@
     "error": "No se han podido cargar los clubes.",
     "never": "nunca",
     "newClub": "Nuevo club",
+    "moreModules": "+{count}",
+    "moreModulesLabel": "{count, plural, one {# módulo más} other {# módulos más}}: {modules}",
     "noModules": "ninguno",
     "none": "—",
     "openRecord": "Abre la ficha de {name}",
@@ -256,13 +258,6 @@
     "requires": "Hay que activar antes: {modules}",
     "title": "Módulos"
   },
-  "parameters": {
-    "default": "Por defecto: {value}",
-    "note": "Se muestra el valor por defecto de cada parámetro; el valor que guardes desde aquí se muestra hasta que salgas de la pestaña.",
-    "platformOnly": "solo plataforma",
-    "saved": "{label}: valor guardado.",
-    "savedNow": "guardado ahora"
-  },
   "payments": {
     "billingOff": "El módulo Facturación no está activo: los proveedores se pueden configurar pero no se usan hasta que se active.",
     "configured": "configurado",
@@ -336,6 +331,7 @@
   "record": {
     "back": "Clubes",
     "created": "Se ha creado el club {name}. Completa la checklist de onboarding para activarlo.",
+    "reloadFailed": "No se ha podido volver a leer el club: los datos que se muestran pueden no ser los últimos. Vuelve a intentarlo antes de hacer ningún otro cambio.",
     "tabsLabel": "Secciones de la ficha del club"
   },
   "status": {
@@ -373,7 +369,6 @@
     "localitzacio": "Localización",
     "moduls": "Módulos",
     "pagaments": "Pagos",
-    "parametres": "Parámetros",
     "processos": "Procesos",
     "tema": "Tema",
     "us": "Uso"
@@ -409,6 +404,8 @@
   },
   "theme": {
     "addRingColor": "Añade un color",
+    "chooseLogo": "Elige una imagen",
+    "chooseLogoLabel": "Elige una imagen: {logo}",
     "colors": {
       "background": "Fondo",
       "border": "Bordes",

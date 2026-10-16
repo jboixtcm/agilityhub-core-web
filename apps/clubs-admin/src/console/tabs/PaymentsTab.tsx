@@ -354,8 +354,9 @@ function StripeCard(props: ConsoleTabProps) {
                 <option value="live">{t("console:payments.stripe.modes.live")}</option>
               </Select>
             </FormField>
+            {/* `new-password`: browsers ignore `off` on passwords and would offer to save the secret. */}
             <TextField
-              autoComplete="off"
+              autoComplete="new-password"
               error={fields.secretKey}
               help={
                 summary.configured
@@ -370,7 +371,7 @@ function StripeCard(props: ConsoleTabProps) {
               value={secretKey}
             />
             <TextField
-              autoComplete="off"
+              autoComplete="new-password"
               error={fields.webhookSecret}
               help={
                 summary.configured

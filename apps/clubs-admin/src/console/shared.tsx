@@ -18,7 +18,11 @@ export type ClubStatus = PlatformClub["status"];
 export type ConsoleNavigate = (path: string) => void;
 type Translate = ReturnType<typeof useTranslation>["t"];
 
-/** S17 §2 row «D19 Fitxa»: the record's tabs, in the spec's order, by their route segment. */
+/**
+ * S17 §2 row «D19 Fitxa»: the record's tabs, in the spec's order, by their route segment.
+ * «Paràmetres» stays out until the api publishes a club's parameters for the platform (E10-T04,
+ * then E10-W03): without that read the tab could only show the catalog's defaults as the club's.
+ */
 export const CONSOLE_TABS = [
   "identitat",
   "localitzacio",
@@ -26,7 +30,6 @@ export const CONSOLE_TABS = [
   "moduls",
   "pagaments",
   "legal",
-  "parametres",
   "catalegs",
   "equip",
   "processos",
@@ -123,16 +126,35 @@ export function ChecklistSummary({ checklist }: { checklist: OnboardingChecklist
   );
 }
 
+/** The list's module chips: the first ones, then «+k» naming the rest (the cell keeps its width). */
+export const MODULE_CHIPS_SHOWN = 3;
+
 export function ModuleChips({ modules }: { modules: readonly string[] | undefined }) {
   const { t } = useTranslation("console");
   if (modules === undefined || modules.length === 0) {
     return <span className="console-muted">{t("console:list.noModules")}</span>;
   }
+  const ordered = inCatalogOrder(modules, CONSOLE_MODULES);
+  const label = (module: string) => t(`console:modules.${module}.label`);
+  const rest = ordered.slice(MODULE_CHIPS_SHOWN);
   return (
     <span className="console-chips">
-      {modules.map((module) => (
-        <Chip key={module}>{t(`console:modules.${module}.label`)}</Chip>
+      {ordered.slice(0, MODULE_CHIPS_SHOWN).map((module) => (
+        <Chip key={module}>{label(module)}</Chip>
       ))}
+      {rest.length === 0 ? null : (
+        <Chip
+          aria-label={t("console:list.moreModulesLabel", {
+            count: rest.length,
+            modules: rest.map(label).join(", "),
+          })}
+          className="console-chips__more"
+          role="img"
+          title={rest.map(label).join(", ")}
+        >
+          {t("console:list.moreModules", { count: rest.length })}
+        </Chip>
+      )}
     </span>
   );
 }
@@ -296,6 +318,21 @@ export function useRebasedDraft<Values extends Record<string, unknown>>(
     },
     setField,
   };
+}
+
+/**
+ * A set (`modules`, `locales`) in its catalog's order, unknown values last: the order the api
+ * answers in never makes a form dirty, and toggling a value on and off leaves it clean.
+ */
+export function inCatalogOrder<Value extends string>(
+  values: readonly Value[],
+  catalog: readonly string[],
+): Value[] {
+  const rank = (value: string) => {
+    const index = catalog.indexOf(value);
+    return index === -1 ? catalog.length : index;
+  };
+  return [...values].sort((left, right) => rank(left) - rank(right));
 }
 
 export function sameValue(left: unknown, right: unknown): boolean {

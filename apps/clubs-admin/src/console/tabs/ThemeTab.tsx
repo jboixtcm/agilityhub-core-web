@@ -254,6 +254,7 @@ export function ThemeTab({ client, club, onReload }: ConsoleTabProps) {
 
   // The previews of picked files are released when the tab goes (a replaced one at once).
   const previews = useRef(new Set<string>());
+  const fileInputs = useRef<Partial<Record<LogoSlot, HTMLInputElement | null>>>({});
   useEffect(() => {
     const created = previews.current;
     return () => {
@@ -515,8 +516,11 @@ export function ThemeTab({ client, club, onReload }: ConsoleTabProps) {
                       ? { help: t("console:theme.logoPending", { name: change.name }) }
                       : {})}
                   >
-                    <Input
+                    {/* The browser's own picker text is never translated: a labelled button opens
+                        the hidden input (round 2 #8). */}
+                    <input
                       accept="image/*"
+                      className="ah-sr-only"
                       disabled={uploading !== undefined}
                       id={`console-theme-${slot}`}
                       onChange={(event) => {
@@ -524,8 +528,22 @@ export function ThemeTab({ client, club, onReload }: ConsoleTabProps) {
                         event.currentTarget.value = "";
                         if (file !== undefined) void upload(slot, file);
                       }}
+                      ref={(input) => {
+                        fileInputs.current[slot] = input;
+                      }}
+                      tabIndex={-1}
                       type="file"
                     />
+                    <Button
+                      aria-label={t("console:theme.chooseLogoLabel", {
+                        logo: t(`console:theme.logos.${slot}`),
+                      })}
+                      disabled={uploading !== undefined}
+                      onClick={() => fileInputs.current[slot]?.click()}
+                      variant="secondary"
+                    >
+                      {t("console:theme.chooseLogo")}
+                    </Button>
                   </FormField>
                   <Button
                     disabled={current === undefined || uploading !== undefined}

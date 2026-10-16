@@ -2,9 +2,9 @@
 
 Rendered: 2026-10-16 · Tasks: 91 · — 0 not_open · ☐ 3 ready · ▶ 0 in_progress · 🔎 1 awaiting_verification · 🔁 1 changes_requested · ⛔ 4 blocked · ✅ 82 verified
 
-**Next task for the executor**: `E10-W01` — D19 club console in clubs-admin — list, club record tabs, «Nou club» wizard, theme preview (WP-17-C, cut #1)
+**Next task for the executor**: `E9-W03` — clubs-admin courses — D18 /recorreguts, detail 2D/3D, placement editor, build-sheet PDF, D16 «Geometria», D7 «Col·locacions», D3/D4 «Recorregut previst» (WP-16-E′)
 
-**Next per thread**: B `E9-W04` · C `E10-W01` · D `E11-W02`
+**Next per thread**: B `E9-W03` · C none · D `E11-W02`
 
 ## E0
 
@@ -137,7 +137,7 @@ Rendered: 2026-10-16 · Tasks: 91 · — 0 not_open · ☐ 3 ready · ▶ 0 in_p
 |---|---|---|---|---|---|---|---|
 | [E9-W01](tasks/E9-W01.md) | The `course-core` JSON Schemas for the core (S16 WP-16-A′) — `course-data.v1.schema.json` from `courseDataSchema` and `build-session-export.v1.schema.json` from `buildSessionExportV1Schema`, generated with zod-to-json-schema (draft-07), committed with a drift check, and every Smarter fixture validated against them (T-16-03) | B | ✅ `verified` | E0-W08 | — | 2026-10-01 | — |
 | [E9-W02](tasks/E9-W02.md) | packages/course-ui port and CoreApiStore implements PlannerStore — WP-16-B′ | B | ✅ `verified` | E0-W08, external:api:E9-T01 | — | 2026-10-15 | — |
-| [E9-W03](tasks/E9-W03.md) | clubs-admin courses — D18 /recorreguts, detail 2D/3D, placement editor, build-sheet PDF, D16 «Geometria», D7 «Col·locacions», D3/D4 «Recorregut previst» (WP-16-E′) | B | 🔎 `awaiting_verification` | E9-W02, external:api:E9-T03 | — | 2026-10-16 | organizer: verify |
+| [E9-W03](tasks/E9-W03.md) | clubs-admin courses — D18 /recorreguts, detail 2D/3D, placement editor, build-sheet PDF, D16 «Geometria», D7 «Col·locacions», D3/D4 «Recorregut previst» (WP-16-E′) | B | 🔁 `changes_requested` | E9-W02, external:api:E9-T03 | — | 2026-10-16 | executor: apply corrections |
 | [E9-W04](tasks/E9-W04.md) | clubs app — the course viewer, «Registra què hi ha muntat», the mobile build session and the blocks in 08, 10, 23, 07 and D12 (WP-16-F′) | B | ☐ `ready` | E9-W02, external:api:E9-T03, external:api:E9-T04 | — | 2026-10-16 | executor: start |
 | [E9-W05](tasks/E9-W05.md) | E9 integration (front) — snapshot, `e2e:core`, screenshots for Josep (no mockups), the E9 gate checks | B | ⛔ `blocked` | E9-W03, E9-W04, external:api:E9-T05 | — | 2026-10-15 | see MESSAGES.md |
 
@@ -145,7 +145,7 @@ Rendered: 2026-10-16 · Tasks: 91 · — 0 not_open · ☐ 3 ready · ▶ 0 in_p
 
 | ID | Title | Thread | Status | Depends on | Branch / PR | Updated | Next action |
 |---|---|---|---|---|---|---|---|
-| [E10-W01](tasks/E10-W01.md) | D19 club console in clubs-admin — list, club record tabs, «Nou club» wizard, theme preview (WP-17-C, cut #1) | C | 🔁 `changes_requested` | external:api:E10-T01 | — | 2026-10-16 | executor: apply corrections |
+| [E10-W01](tasks/E10-W01.md) | D19 club console in clubs-admin — list, club record tabs, «Nou club» wizard, theme preview (WP-17-C, cut #1) | C | 🔎 `awaiting_verification` | external:api:E10-T01 | — | 2026-10-16 | organizer: verify |
 | [E10-W03](tasks/E10-W03.md) | The rest of D19 — the «Dominis» tab, the support access button and the public key, as E10-T04 publishes them | C | ⛔ `blocked` | E10-W01, external:api:E10-T04 | — | 2026-10-15 | see MESSAGES.md |
 | [E10-W02](tasks/E10-W02.md) | E10 integration (front) — the console against the real core and «a second club in under an hour» as a documented script | C | ⛔ `blocked` | E10-W01, E10-W03, external:api:E10-T03 | — | 2026-10-15 | see MESSAGES.md |
 

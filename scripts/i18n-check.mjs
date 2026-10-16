@@ -193,7 +193,11 @@ const dynamicKeyPrefixes = [
   "console:identity.fields.",
   "console:locales.",
   "console:modules.",
-  "console:payments.sepa.",
+  // Only the four SEPA fields the «Nou club» wizard labels by name, not the whole SEPA subtree.
+  "console:payments.sepa.creditorId",
+  "console:payments.sepa.creditorName",
+  "console:payments.sepa.invoiceSeriesPattern",
+  "console:payments.sepa.suffix",
   "console:payments.stripe.modes.",
   "console:presets.",
   "console:processes.health.",

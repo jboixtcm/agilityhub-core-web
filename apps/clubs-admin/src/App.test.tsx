@@ -685,6 +685,23 @@ describe("E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMI
     expect(screen.queryByText("Aquest accés és només per a l'equip AgilityHub.")).toBeNull();
   });
 
+  it("E10-W01 round 2 #6: an unknown path is replaced by /consola/clubs for a platform-only account", async () => {
+    await renderPlatform("/no-existeix");
+    const entries = window.history.length;
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Consola de clubs" }),
+    ).toBeVisible();
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/consola/clubs");
+    });
+    // Replaced, not pushed: [Enrere] never returns to the unknown path.
+    expect(window.history.length).toBe(entries);
+    expect(await screen.findByRole("link", { name: "Consola" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+  });
+
   it("an impersonation never carries the actor's platform role into the console (R-01-16)", async () => {
     mockScenario("impersonated");
     const client = authClient();

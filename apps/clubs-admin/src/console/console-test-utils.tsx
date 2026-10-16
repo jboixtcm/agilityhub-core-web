@@ -55,16 +55,21 @@ export function captureRequests(match: (method: string, url: URL) => boolean): C
 export async function renderConsole(
   path: string,
   {
+    hostBranding,
     locale = "ca",
     scenario = "platform",
-  }: { locale?: "ca" | "en" | "es"; scenario?: MockScenario } = {},
+  }: {
+    /** The scenario whose branding the host serves (a club's admin host), when not `scenario`'s. */
+    hostBranding?: MockScenario;
+    locale?: "ca" | "en" | "es";
+    scenario?: MockScenario;
+  } = {},
 ) {
+  mockScenario(hostBranding ?? scenario);
+  const host = currentMockScenario().branding as unknown as Branding;
   mockScenario(scenario);
   window.history.pushState(null, "", path);
-  const branding = {
-    ...(currentMockScenario().branding as unknown as Branding),
-    locales: ["ca", "es", "en"],
-  };
+  const branding = { ...host, locales: ["ca", "es", "en"] };
   const i18n = await createI18n({
     branding,
     browserLanguages: [locale],

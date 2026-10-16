@@ -145,6 +145,8 @@
     "error": "The clubs could not be loaded.",
     "never": "never",
     "newClub": "New club",
+    "moreModules": "+{count}",
+    "moreModulesLabel": "{count, plural, one {# more module} other {# more modules}}: {modules}",
     "noModules": "none",
     "none": "—",
     "openRecord": "Open the record of {name}",
@@ -256,13 +258,6 @@
     "requires": "Turn on first: {modules}",
     "title": "Modules"
   },
-  "parameters": {
-    "default": "Default: {value}",
-    "note": "Each parameter shows its default value; a value you save here is shown until you leave the tab.",
-    "platformOnly": "platform only",
-    "saved": "{label}: value saved.",
-    "savedNow": "saved now"
-  },
   "payments": {
     "billingOff": "The Billing module is off: providers can be configured but are not used until it is turned on.",
     "configured": "configured",
@@ -336,6 +331,7 @@
   "record": {
     "back": "Clubs",
     "created": "The club {name} was created. Complete the onboarding checklist to activate it.",
+    "reloadFailed": "The club could not be read again: what is shown may not be the latest. Try again before making any other change.",
     "tabsLabel": "Sections of the club record"
   },
   "status": {
@@ -373,7 +369,6 @@
     "localitzacio": "Localization",
     "moduls": "Modules",
     "pagaments": "Payments",
-    "parametres": "Parameters",
     "processos": "Processes",
     "tema": "Theme",
     "us": "Usage"
@@ -409,6 +404,8 @@
   },
   "theme": {
     "addRingColor": "Add a colour",
+    "chooseLogo": "Choose an image",
+    "chooseLogoLabel": "Choose an image: {logo}",
     "colors": {
       "background": "Background",
       "border": "Borders",

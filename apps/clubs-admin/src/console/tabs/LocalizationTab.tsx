@@ -11,6 +11,7 @@ import {
   fieldErrorMap,
   FormMessage,
   formErrorMessage,
+  inCatalogOrder,
   type PlatformClub,
   SectionCard,
   useRebasedDraft,
@@ -24,7 +25,7 @@ function localizationValues(club: PlatformClub) {
     countryProfile: club.countryProfile,
     currency: club.currency,
     defaultLocale: club.defaultLocale,
-    locales: [...club.locales],
+    locales: inCatalogOrder(club.locales, CLUB_LOCALES),
     timeZone: club.timeZone,
   };
 }

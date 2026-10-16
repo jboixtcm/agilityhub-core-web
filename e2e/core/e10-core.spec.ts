@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 import { type Page, type Response } from "@playwright/test";
@@ -48,6 +48,63 @@ async function navigateSpa(page: Page, path: string): Promise<void> {
     window.history.pushState(null, "", nextPath);
     window.dispatchEvent(new PopStateEvent("popstate"));
   }, path);
+}
+
+interface StoredTheme {
+  colors: Record<string, string>;
+  fontFamily: string;
+  mode: string;
+  radius: string;
+  ringPalette: string[];
+}
+
+const colorByToken: Record<string, string> = {
+  background: "background",
+  border: "border",
+  danger: "danger",
+  info: "info",
+  "on-primary": "onPrimary",
+  primary: "primary",
+  success: "success",
+  surface: "surface",
+  "surface-alt": "surfaceAlt",
+  text: "text",
+  "text-muted": "textMuted",
+  warning: "warning",
+};
+
+/** «Preset AgilityHub» light, from the `--ah-product-*` tokens the console reads. */
+function productLightTheme(): StoredTheme {
+  const tokens = new Map(
+    [
+      ...readFileSync(resolve(process.cwd(), "packages/ui/src/tokens.css"), "utf8").matchAll(
+        /--ah-product-([a-z-]+):\s*([^;]+);/gu,
+      ),
+    ].map(([, name = "", value = ""]) => [name, value.trim()]),
+  );
+  const read = (name: string) => tokens.get(name) ?? "";
+  return {
+    colors: Object.fromEntries(
+      Object.entries(colorByToken).map(([token, key]) => [key, read(`light-${token}`)]),
+    ),
+    fontFamily: read("font-family"),
+    mode: "light",
+    radius: read("radius"),
+    ringPalette: [],
+  };
+}
+
+function lowerColors(colors: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(colors).map(([key, value]) => [key, value.toLowerCase()]),
+  );
+}
+
+/** The host's own primary colour (its branding, applied to the page's root). */
+async function hostPrimary(page: Page): Promise<string> {
+  return page.evaluate(() =>
+    getComputedStyle(document.documentElement).getPropertyValue("--ah-color-primary").trim(),
+  );
 }
 
 /** The seeded club admin, given `AGILITYHUB_ADMIN` by `e2e-core.sh` (grant_platform_admin). */
@@ -150,6 +207,9 @@ test("E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou
     `slug: club-agility-prova-${suffix}`,
   );
   const created = page.waitForResponse(isPlatform("POST", /\/api\/v1\/platform\/clubs$/u));
+  const createdRecord = page.waitForResponse(
+    isPlatform("GET", /\/api\/v1\/platform\/clubs\/[^/]+$/u),
+  );
   await page.getByRole("button", { name: "CREA EL CLUB" }).click();
   const createdResponse = await created;
   expect(createdResponse.request().headers()["idempotency-key"]).toMatch(/[0-9a-f-]{36}/u);
@@ -159,6 +219,26 @@ test("E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou
     page.getByRole("heading", { level: 1, name: `Club Agility Prova ${suffix}` }),
   ).toBeVisible();
   await expect(page.getByRole("region", { name: "Checklist d'onboarding" })).toBeVisible();
+
+  // Round 2 #2: run on the Cànic's admin host, the new club gets the product's theme (the
+  // `--ah-product-light-*` tokens of packages/ui), never the host's branding.
+  const product = productLightTheme();
+  const sent = createdResponse.request().postDataJSON() as { theme: StoredTheme };
+  expect(sent.theme).toEqual(product);
+  const stored = ((await (await createdRecord).json()) as { theme: StoredTheme }).theme;
+  writeFileSync(
+    join(evidenceDirectory, "e10-core-created-theme.json"),
+    `${JSON.stringify({ hostPrimary: await hostPrimary(page), product, stored }, null, 2)}\n`,
+  );
+  expect(lowerColors(stored.colors)).toEqual(lowerColors(product.colors));
+  expect({ fontFamily: stored.fontFamily, mode: stored.mode, radius: stored.radius }).toEqual({
+    fontFamily: product.fontFamily,
+    mode: product.mode,
+    radius: product.radius,
+  });
+  expect((await hostPrimary(page)).toLowerCase()).not.toBe(
+    (product.colors.primary ?? "").toLowerCase(),
+  );
   await screenshot(page, "core-D19-fitxa-checklist-1280.png");
   await context.close();
 });

@@ -101,14 +101,32 @@
   display: none;
 }
 
+/* Round 2 #3: D19's ten columns scroll inside the table, never the page. The scroller is the
+   containing block of what is positioned inside it (an absolutely placed box whose containing
+   block was outside escaped the clip and widened the document to the table's 1903 px). */
+.console-page .ah-universal-list__table-wrap {
+  position: relative;
+}
+
+/* The filter button sits at the toolbar's right end here: its panel opens leftwards. */
+.console-page .ah-universal-list__filter-menu .ah-universal-list__menu-panel {
+  right: 0;
+  left: auto;
+}
+
+/* At most three chips and «+k» (round 2 #3): whole chips wrap, never a word cut by the cell. */
 .ah-universal-list .console-chips {
-  min-width: 16rem;
-  max-width: 22rem;
+  max-width: 17rem;
   white-space: normal;
 }
 
 .ah-universal-list .console-chips .ah-chip {
   font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.console-chips__more {
+  cursor: help;
 }
 
 .console-card {

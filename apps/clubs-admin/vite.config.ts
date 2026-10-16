@@ -73,6 +73,8 @@ export default defineConfig(({ mode }) => {
           },
         },
     test: {
+      // D19's «preset AgilityHub» reads the product theme from `tokens.css?raw` (E10-W01 round 2).
+      css: { include: [/packages\/ui\/src\/tokens\.css/u] },
       environment: "jsdom",
       exclude: [...configDefaults.exclude, "e2e/**"],
       hookTimeout: 15_000,

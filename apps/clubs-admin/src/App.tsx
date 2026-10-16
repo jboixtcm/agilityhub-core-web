@@ -1001,9 +1001,21 @@ export function App({ authClient }: { authClient: AuthClient }) {
       window.removeEventListener("popstate", handlePopState);
     };
   }, []);
-  const url = new URL(location, window.location.origin);
-  const pathname = url.pathname;
+  const requested = new URL(location, window.location.origin);
   const session = useSession();
+  const platformOnly =
+    session.roles.length === 0 && session.platformRoles.includes("AGILITYHUB_ADMIN");
+  // A platform-only account on an unknown path is shown D19's list and the address is replaced
+  // by it, so the address, the lit «Consola» entry and a reload agree (E10-W01 round 2 #6).
+  const strayPlatformPath =
+    platformOnly &&
+    currentRoute(requested.pathname) === undefined &&
+    !["/_gallery", "/acces", "/entrar"].includes(requested.pathname);
+  const url = strayPlatformPath ? new URL("/consola/clubs", window.location.origin) : requested;
+  const pathname = url.pathname;
+  useEffect(() => {
+    if (strayPlatformPath) window.history.replaceState(null, "", "/consola/clubs");
+  }, [strayPlatformPath]);
 
   if (import.meta.env.DEV && pathname === "/_gallery") {
     return <Gallery />;
@@ -1017,8 +1029,6 @@ export function App({ authClient }: { authClient: AuthClient }) {
   }
 
   // An unknown path lands where the account belongs: D1, or D19 for a platform-only account.
-  const platformOnly =
-    session.roles.length === 0 && session.platformRoles.includes("AGILITYHUB_ADMIN");
   const route = currentRoute(pathname) ?? currentRoute(platformOnly ? "/consola" : "/tauler");
   return route === undefined ? null : (
     <OnboardingExperience authClient={authClient} presentation="modal">

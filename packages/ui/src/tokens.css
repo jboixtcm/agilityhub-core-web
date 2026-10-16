@@ -97,6 +97,39 @@
   --ah-transition-fast: 150ms ease;
 }
 
+/* The product's own theme, «preset AgilityHub» light and dark (S17 §5: what the platform console's
+   «Nou club» wizard gives a new club). A club's branding never overrides these: `productTheme()`
+   reads them from this file, so a club created on another club's host never inherits its theme.
+   The hex values are the defaults above (`color-mix` resolved) and the dark block below. */
+:root {
+  --ah-product-light-primary: #1d1d1f;
+  --ah-product-light-on-primary: #ffffff;
+  --ah-product-light-background: #ffffff;
+  --ah-product-light-surface: #ffffff;
+  --ah-product-light-surface-alt: #f1f1f2;
+  --ah-product-light-text: #1d1d1f;
+  --ah-product-light-text-muted: #656567;
+  --ah-product-light-border: #d6d6d7;
+  --ah-product-light-success: #4caf7d;
+  --ah-product-light-warning: #e5b93c;
+  --ah-product-light-danger: #e05b5b;
+  --ah-product-light-info: #85b8e8;
+  --ah-product-dark-primary: #ffffff;
+  --ah-product-dark-on-primary: #0b0b0b;
+  --ah-product-dark-background: #0b0b0b;
+  --ah-product-dark-surface: #161616;
+  --ah-product-dark-surface-alt: #1e1e1e;
+  --ah-product-dark-text: #ffffff;
+  --ah-product-dark-text-muted: #b5b5b5;
+  --ah-product-dark-border: #2b2b2b;
+  --ah-product-dark-success: #4caf7d;
+  --ah-product-dark-warning: #e5b93c;
+  --ah-product-dark-danger: #e05b5b;
+  --ah-product-dark-info: #85b8e8;
+  --ah-product-font-family: Montserrat, system-ui, sans-serif;
+  --ah-product-radius: 8px;
+}
+
 :root[data-theme="light"] {
   color-scheme: light;
 }

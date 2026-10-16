@@ -51,8 +51,20 @@ describe("E10-W01 step 2 · D19 list (S17 §2 «D19 Llista», universal list)", 
     expect(cells.getByText("Actiu")).toBeInTheDocument();
     expect(cells.getByText("ES · Europe/Madrid")).toBeInTheDocument();
     expect(cells.getByText("168")).toBeInTheDocument();
-    expect(cells.getByText("Facturació")).toBeInTheDocument();
-    expect(cells.getByText("Recorreguts")).toBeInTheDocument();
+    // Round 2 #3: the first three modules (catalog order) and «+k» naming the rest.
+    const chips = canicRow.querySelectorAll(".console-chips .ah-chip");
+    expect([...chips].map((chip) => chip.textContent)).toEqual([
+      "Entrenaments lliures",
+      "Facturació",
+      "Packs",
+      `+${String(canic.modules.length - 3)}`,
+    ]);
+    expect(
+      cells.getByRole("img", {
+        name: new RegExp(`^${String(canic.modules.length - 3)} mòduls més: .*Recorreguts`, "u"),
+      }),
+    ).toBeInTheDocument();
+    expect(cells.queryByText("Recorreguts")).toBeNull();
     expect(cells.getByText("312")).toBeInTheDocument();
     expect(cells.getByText(formatBytes(canic.usage.storageBytes, "ca"))).toBeInTheDocument();
     expect(cells.getByText("7/7")).toBeInTheDocument();

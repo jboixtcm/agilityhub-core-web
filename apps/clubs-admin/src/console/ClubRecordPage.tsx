@@ -1,5 +1,5 @@
 import type { ApiClient } from "@agilityhub/api-client";
-import { Badge, Card, Icon, Skeleton } from "@agilityhub/ui";
+import { Badge, Button, Card, Icon, Skeleton } from "@agilityhub/ui";
 import type { MouseEvent, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -21,7 +21,6 @@ import { IdentityTab } from "./tabs/IdentityTab";
 import { LegalTab } from "./tabs/LegalTab";
 import { LocalizationTab } from "./tabs/LocalizationTab";
 import { ModulesTab } from "./tabs/ModulesTab";
-import { ParametersTab } from "./tabs/ParametersTab";
 import { PaymentsTab } from "./tabs/PaymentsTab";
 import { ProcessesTab } from "./tabs/ProcessesTab";
 import { StatusTab } from "./tabs/StatusTab";
@@ -53,8 +52,6 @@ function tabContent(tab: ConsoleTab, props: ConsoleTabProps): ReactNode {
       return <PaymentsTab {...props} />;
     case "legal":
       return <LegalTab {...props} />;
-    case "parametres":
-      return <ParametersTab {...props} />;
     case "catalegs":
       return <CatalogsTab {...props} />;
     case "equip":
@@ -190,6 +187,20 @@ export function ClubRecordPage({
           {t("console:record.created", { name: club.name })}
         </p>
       ) : null}
+      {record.error === undefined ? null : (
+        // A reread that failed (after a write, or a STALE_VERSION): the shown version may be old,
+        // so the next write would be refused with no hint why (round 2 #8).
+        <div className="console-message console-message--danger" role="alert">
+          <p>{t("console:record.reloadFailed")}</p>
+          <Button
+            disabled={record.loading}
+            onClick={() => void record.reload()}
+            variant="secondary"
+          >
+            {t("console:common.retry")}
+          </Button>
+        </div>
+      )}
       {club.status === "ONBOARDING" ? (
         <OnboardingChecklistCard club={club} onNavigate={onNavigate} />
       ) : null}

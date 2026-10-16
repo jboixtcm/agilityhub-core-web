@@ -48,16 +48,62 @@ for (const [scenario, mode] of [
     await expect(riera.getByText("Suspès")).toBeVisible();
     await expect(riera.getByText("GENERIC · Atlantic/Canary")).toBeVisible();
     // The shell keeps 1280 px: the ten columns scroll inside the list, never the page.
+    // Round 2 #3: the document itself (what a full-page capture measures) stays at 1280 px; any
+    // element reaching past it outside the table's own scroller is named in the failure.
     const widths = await page.evaluate(() => {
       const wrap = document.querySelector(".ah-universal-list__table-wrap");
+      const outside = [...document.querySelectorAll("body *")]
+        .filter((element) => !wrap?.contains(element))
+        // A closed menu's panel is laid out by Chromium but never shown (checked open below).
+        .filter((element) => element.closest("details:not([open]) > :not(summary)") === null)
+        .filter((element) => element.getBoundingClientRect().right > 1280)
+        .map((element) => {
+          const rect = element.getBoundingClientRect();
+          const details = element.closest("details");
+          return `${element.tagName.toLowerCase()}.${(element.getAttribute("class") ?? "").replace(/\s+/gu, ".")} [${String(Math.round(rect.left))}–${String(Math.round(rect.right))}, details open=${String(details?.open)}, visibility=${getComputedStyle(element).visibility}, parent=${element.parentElement?.getAttribute("class") ?? ""}, docWidth=${String(document.documentElement.scrollWidth)}]`;
+        });
       return {
         body: document.body.scrollWidth,
+        document: document.documentElement.scrollWidth,
+        outside,
         wrap: wrap?.getBoundingClientRect().right ?? 0,
       };
     });
+    expect(widths.outside, JSON.stringify(widths.outside)).toEqual([]);
+    expect(widths.document).toBeLessThanOrEqual(1280);
     expect(widths.body).toBeLessThanOrEqual(1280);
     expect(widths.wrap).toBeLessThanOrEqual(1280);
+    // No module chip is cut: three at most and «+k», each whole inside its cell.
+    const chipCells = await page.locator(".console-chips").evaluateAll((cells) =>
+      cells.map((cell) => ({
+        chips: cell.querySelectorAll(".ah-chip").length,
+        clipped: [...cell.querySelectorAll(".ah-chip")].some(
+          (chip) => chip.scrollWidth > chip.clientWidth + 1,
+        ),
+      })),
+    );
+    expect(chipCells.length).toBeGreaterThan(0);
+    for (const cell of chipCells) {
+      expect(cell.chips).toBeLessThanOrEqual(4);
+      expect(cell.clipped).toBe(false);
+    }
     await shot(page, `D19-llista-1280-${mode}.png`);
+    const captured = await page.evaluate(() => document.documentElement.scrollWidth);
+    expect(captured).toBeLessThanOrEqual(1280);
+    // The filter panel, open, stays inside the page too (its button is at the toolbar's end).
+    const filterMenu = page.locator(".ah-universal-list__filter-menu");
+    await filterMenu.locator("summary").click();
+    const panel = filterMenu.locator(".ah-universal-list__menu-panel");
+    await expect(panel).toBeVisible();
+    const panelBox = await panel.boundingBox();
+    expect(panelBox).not.toBeNull();
+    expect((panelBox?.x ?? 0) + (panelBox?.width ?? 0)).toBeLessThanOrEqual(1280);
+    expect(panelBox?.x ?? -1).toBeGreaterThanOrEqual(0);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      1280,
+    );
+    await filterMenu.locator("summary").click();
+    await expect(panel).toBeHidden();
     // The other columns (last admin access, SMS, storage, checklist), scrolled into view.
     await page.locator(".ah-universal-list__table-wrap").evaluate((wrap) => {
       wrap.scrollLeft = wrap.scrollWidth;

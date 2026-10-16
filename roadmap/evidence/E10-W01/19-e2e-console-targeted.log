@@ -1,0 +1,37 @@
+heavy.sh: 10:43 waiting for the host lock, held by: 10:41 agilityhub-core-api-c: ./mvnw -q -Pmutation -DtargetClasses=com.agilityhub.core.clubs.bookings.application.BookableClassesQuery,com.agilityhub.core.clubs.bookings.application.BookableClassesQuery$*,com.agilityhub.core.clubs.bookings.application.BookingActivityAdapter,com.agilityhub.core.clubs.bookings.application.BookingActivityAdapter$* -DtargetTests=com.agilityhub.core.*Test,com.agilityhub.core.clubs.bookings.*,com.agilityhub.core.clubs.census.application.Demo*IT,com.agilityhub.core.clubs.scheduling.*IT,com.agilityhub.core.clubs.training.*IT,com.agilityhub.core.clubs.activities.*IT -DmutationUnitSize=50 -DreportsDirectory=target/pit-reports/session10-176-session10-pit-bookings-b1-p1 -DhistoryInputFile=.local/pitest/session8-unit.bin -DhistoryOutputFile=.local/pitest/session10-176-session10-pit-bookings-b1-p1.bin test-compile org.pitest:pitest-maven:mutationCoverage
+heavy.sh: 10:55 got the host lock after 12 min 15 s
+
+> agilityhub-core-web@0.0.0 e2e:docker /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-docker.sh E10-W01 --grep\=D19 --pass-with-no-tests
+
+Running Playwright in mcr.microsoft.com/playwright:v1.63.0-noble
+Evidence copied back for: E10-W01
+Capture folder of the permanent mock specs: <the task of each spec>
+Playwright arguments: --workers=4 --grep=D19 --pass-with-no-tests
+Checkout copied into the container: 411M
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:12951
+    throw new Error(
+          ^
+
+Error: Error when performing the request to https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz; for troubleshooting help, see https://github.com/nodejs/corepack#troubleshooting
+    at fetch (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:12951:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async fetchUrlStream (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:12981:20)
+    at async download (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:13133:18)
+    at async installVersion (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:13229:55)
+    at async Engine.ensurePackageManager (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:13744:32)
+    at async Engine.executePackageManagerRequest (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:13855:25)
+    at async Object.runMain (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:14566:7) {
+  [cause]: [TypeError: fetch failed] {
+    [cause]: ConnectTimeoutError: Connect Timeout Error (attempted addresses: 104.16.9.34:443, 104.16.8.34:443, 104.16.3.34:443, 104.16.10.34:443, 104.16.7.34:443, 104.16.2.34:443, 104.16.4.34:443, 104.16.11.34:443, 104.16.5.34:443, 104.16.6.34:443, 104.16.0.34:443, 104.16.1.34:443, timeout: 10000ms)
+        at onConnectTimeout (node:internal/deps/undici/undici:1991:23)
+        at Immediate._onImmediate (node:internal/deps/undici/undici:1972:11)
+        at process.processImmediate (node:internal/timers:574:21) {
+      code: 'UND_ERR_CONNECT_TIMEOUT'
+    }
+  }
+}
+
+Node.js v24.20.0
+ ELIFECYCLE  Command failed with exit code 1.

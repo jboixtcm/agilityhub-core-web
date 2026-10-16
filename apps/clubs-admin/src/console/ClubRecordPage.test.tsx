@@ -61,7 +61,6 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
       "Mòduls",
       "Pagaments",
       "Legal",
-      "Paràmetres",
       "Catàlegs base",
       "Equip",
       "Processos",
@@ -223,6 +222,15 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     expect(
       screen.queryByText("Hi ha colors sense prou contrast: corregeix-los abans de desar."),
     ).toBeNull();
+    // Round 2 #8: a translated, labelled button opens the hidden picker (never the browser's text).
+    const picker = screen.getByLabelText<HTMLInputElement>("Logo");
+    expect(picker).toHaveAttribute("type", "file");
+    expect(picker).toHaveAttribute("tabindex", "-1");
+    expect(picker).toHaveClass("ah-sr-only");
+    const opened = vi.spyOn(picker, "click").mockImplementation(() => undefined);
+    fireEvent.click(screen.getByRole("button", { name: "Tria una imatge: Logo" }));
+    expect(opened).toHaveBeenCalledTimes(1);
+    expect(screen.getAllByRole("button", { name: /^Tria una imatge: / })).toHaveLength(3);
     fireEvent.change(screen.getByLabelText("Logo"), {
       target: { files: [new File(["logo"], "logo.png", { type: "image/png" })] },
     });
@@ -273,6 +281,87 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     await waitFor(() => {
       expect(puts[1]?.body).toEqual({ preset: "MINIM", version: 4 });
     });
+  });
+
+  it("E10-W01 round 2 #4: modules and locales compare as sets, whatever order the api answers in", async () => {
+    // The api lists the club's modules and languages in another order than the catalog's.
+    server.use(
+      http.get(`${API_BASE}/platform/clubs/:id`, () => {
+        const club = stored(MINIM);
+        return HttpResponse.json({
+          ...club,
+          locales: [...club.locales].reverse(),
+          modules: [...club.modules].reverse(),
+        });
+      }),
+    );
+    await openTab(MINIM, "moduls");
+    const save = () => screen.getByRole("button", { name: "DESA" });
+    expect(save()).toBeDisabled();
+    fireEvent.click(screen.getByRole("switch", { name: "Facturació" }));
+    expect(save()).toBeEnabled();
+    fireEvent.click(screen.getByRole("switch", { name: "Facturació" }));
+    expect(save()).toBeDisabled();
+    // A save whose reread answers in another order leaves the form clean.
+    fireEvent.click(screen.getByRole("switch", { name: "Facturació" }));
+    fireEvent.click(save());
+    expect(await screen.findByText("Canvis desats.")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(stored(MINIM).modules).toContain("BILLING");
+    });
+    await waitFor(() => {
+      expect(save()).toBeDisabled();
+    });
+    cleanup();
+    await openTab(MINIM, "localitzacio");
+    expect(save()).toBeDisabled();
+    fireEvent.click(screen.getByRole("checkbox", { name: "Anglès" }));
+    expect(save()).toBeEnabled();
+    fireEvent.click(screen.getByRole("checkbox", { name: "Anglès" }));
+    expect(save()).toBeDisabled();
+  });
+
+  it("E10-W01 round 2 #8: a failed reread after a successful write says so and retries", async () => {
+    let reads = 0;
+    server.use(
+      http.get(`${API_BASE}/platform/clubs/:id`, () => {
+        reads += 1;
+        if (reads === 1) return HttpResponse.json(stored(MINIM));
+        return HttpResponse.json(
+          {
+            code: "INTERNAL_ERROR",
+            details: null,
+            message: "Unexpected error",
+            traceId: "trace-console-reload",
+          },
+          { status: 500 },
+        );
+      }),
+    );
+    await openTab(MINIM, "moduls");
+    expect(screen.queryByRole("alert")).toBeNull();
+    fireEvent.click(screen.getByRole("switch", { name: "Facturació" }));
+    fireEvent.click(screen.getByRole("button", { name: "DESA" }));
+    expect(await screen.findByText("Canvis desats.")).toBeInTheDocument();
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent(
+      "No s'ha pogut tornar a llegir el club: les dades que es mostren poden no ser les últimes.",
+    );
+    server.resetHandlers();
+    fireEvent.click(within(alert).getByRole("button", { name: "Torna-ho a provar" }));
+    await waitFor(() => {
+      expect(screen.queryByText(/No s'ha pogut tornar a llegir el club/u)).toBeNull();
+    });
+    expect(screen.getByRole("switch", { name: "Facturació" })).toBeChecked();
+  });
+
+  it("E10-W01 round 2 #8: the Stripe secrets are never offered to the browser's password manager", async () => {
+    await openTab(CANIC, "pagaments");
+    for (const label of ["Clau secreta", "Secret del webhook"]) {
+      const field = screen.getByLabelText(label);
+      expect(field).toHaveAttribute("type", "password");
+      expect(field).toHaveAttribute("autocomplete", "new-password");
+    }
   });
 
   it("Mòduls: 422 MODULE_DEPENDENCY {module, requires} names both modules", async () => {
@@ -385,33 +474,16 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     });
   });
 
-  it("Paràmetres: D11's editor, PLATFORM keys editable, each write with the parameter's own version", async () => {
-    const puts = captureRequests(
-      (method, url) => method === "PUT" && url.pathname.includes("/parameters/"),
-    );
+  it("E10-W01 round 2 #1: no Paràmetres until the api publishes a club's parameters (no tab, no catalog read, no write)", async () => {
+    const parameterCalls = captureRequests((_, url) => url.pathname.includes("parameter"));
     await openTab(MINIM, "parametres");
-    const rows = await screen.findAllByRole("button", { name: /^Edita / });
-    expect(rows.length).toBeGreaterThan(0);
-    expect(screen.getAllByText("només plataforma").length).toBeGreaterThan(0);
-    const edit = rows[0];
-    if (edit === undefined) throw new TypeError("No parameter row");
-    fireEvent.click(edit);
-    const drawer = await screen.findByRole("dialog");
-    const input = within(drawer).getByRole("spinbutton");
-    fireEvent.change(input, { target: { value: "45" } });
-    fireEvent.click(within(drawer).getByRole("button", { name: "DESA" }));
-    expect(await screen.findByText(/valor desat\./u)).toBeInTheDocument();
-    expect(puts[0]?.body).toEqual({ value: 45, version: 0 });
-    expect(puts[0]?.url.pathname).toBe(
-      `/api/v1/platform/clubs/${MINIM}/parameters/auth.sessionDays`,
-    );
-    fireEvent.click(screen.getAllByRole("button", { name: /^Edita / })[0] ?? edit);
-    const again = await screen.findByRole("dialog");
-    fireEvent.change(within(again).getByRole("spinbutton"), { target: { value: "50" } });
-    fireEvent.click(within(again).getByRole("button", { name: "DESA" }));
-    await waitFor(() => {
-      expect(puts[1]?.body).toEqual({ value: 50, version: 1 });
-    });
+    const tabs = within(screen.getByRole("navigation", { name: "Seccions de la fitxa del club" }));
+    expect(tabs.queryByRole("link", { name: "Paràmetres" })).toBeNull();
+    // The old route opens the record's first tab, never a list of defaults shown as the club's.
+    expect(tabs.getByRole("link", { name: "Identitat" })).toHaveAttribute("aria-current", "page");
+    expect(screen.queryByText("només plataforma")).toBeNull();
+    expect(screen.queryByRole("button", { name: /^Edita / })).toBeNull();
+    expect(parameterCalls).toEqual([]);
   });
 
   it("Catàlegs base: only empty parts are cloned (409 CATALOG_NOT_EMPTY names the part), with one key per payload", async () => {
