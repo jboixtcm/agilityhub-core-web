@@ -224,6 +224,10 @@
     "loading": "Carregant les col·locacions",
     "error": "No s'han pogut carregar les col·locacions.",
     "row": "{course} · {ring}",
-    "rowNamed": "{course} · {ring} · {name}"
+    "rowNamed": "{course} · {ring} · {name}",
+    "sheet": "Full de muntatge",
+    "sheetPending": "Descarregant el full de muntatge",
+    "sheetFile": "full-de-muntatge-{course}.pdf",
+    "sheetFallback": "recorregut"
   }
 }

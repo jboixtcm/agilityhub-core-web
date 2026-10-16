@@ -1,5 +1,6 @@
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
-import { createClubFormats, createI18n, loadNamespace, productLocales } from "@agilityhub/i18n";
+import { createClubFormats, loadNamespace, productLocales } from "@agilityhub/i18n";
+import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { screen } from "@testing-library/react";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -78,7 +79,7 @@ describe("T-09-41 training and instructor vocabulary, locales and club time zone
   });
 
   it("keeps the exact ca literals of mockups 08 and 24 and the S09 §10 keys", async () => {
-    const i18n = await createI18n({
+    const i18n = await createClubsI18n({
       branding: brandingCanicFixture,
       browserLanguages: ["ca"],
       initialNamespaces: ["training", "instructor", "enums"],

@@ -11,15 +11,27 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import type { ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  onTestFinished,
+  vi,
+} from "vitest";
 
 import { ActivityPlacementsCard } from "../activities/ActivityPlacementsCard";
 
 import { defaultCalendarSettings } from "./calendar-shared";
 import { ClassForm, type ClassFormPatch } from "./ClassForm";
+import { CreateClassDrawer } from "./CreateClassDrawer";
 import { SelectedClassCard } from "./SelectedClassCard";
 
 const branding: Branding = {
@@ -104,6 +116,54 @@ function classForm(onChange: (patch: ClassFormPatch) => Promise<void>) {
   );
 }
 
+const catalogs = () => ({
+  instructors: catalogState.instructors,
+  levels: catalogState.levels,
+  rings: catalogState.rings,
+});
+
+function muntanyaSession() {
+  const session = planningState.sessions.find(
+    (item) =>
+      item.ringId === "ring-muntanya" && (item.state === "ACTIVE" || item.state === "DRAFT"),
+  );
+  if (session === undefined) throw new Error("SESSION_NOT_FOUND");
+  return session;
+}
+
+function selectedCard(session: ReturnType<typeof muntanyaSession>) {
+  return (
+    <SelectedClassCard
+      catalogs={catalogs()}
+      client={client()}
+      heading={{ day: "dl", description: "", instructors: "", ring: "Muntanya", time: "18:00" }}
+      onCancel={() => undefined}
+      onClose={() => undefined}
+      onConflict={() => Promise.resolve()}
+      onSaved={() => Promise.resolve()}
+      openingHours={undefined}
+      readOnly={false}
+      session={session}
+      settings={defaultCalendarSettings}
+      waitlistEnabled
+    />
+  );
+}
+
+function createDrawer() {
+  return (
+    <CreateClassDrawer
+      catalogs={catalogs()}
+      client={client()}
+      onClose={() => undefined}
+      onCreated={() => undefined}
+      openingHours={{ MONDAY: { close: "21:00", open: "17:00" } }}
+      settings={defaultCalendarSettings}
+      timeZone="Europe/Madrid"
+    />
+  );
+}
+
 describe("R-16-13 «Recorregut previst» of a class (D3 and D4, S16 §2)", () => {
   it("R-16-13 D3: the ring's placements are offered; a choice is one PATCH; a new ring drops it in the same change", async () => {
     const onChange = vi.fn<(patch: ClassFormPatch) => Promise<void>>(() => Promise.resolve());
@@ -135,10 +195,11 @@ describe("R-16-13 «Recorregut previst» of a class (D3 and D4, S16 §2)", () =>
     const select = await screen.findByRole("combobox", { name: "Recorregut previst" });
     await screen.findByRole("option", { name: "Jumping del dijous · Dijous tarda" });
     fireEvent.change(select, { target: { value: PLACEMENT_IDS.muntanyaJumping } });
-    const field = select.closest(".ah-form-field");
-    await waitFor(() => {
-      expect(field?.querySelector("[role='alert']")?.textContent).not.toBe("");
-    });
+    const field = select.closest<HTMLElement>(".ah-form-field");
+    if (field === null) throw new Error("FIELD_NOT_FOUND");
+    expect(await within(field).findByRole("alert")).toHaveTextContent(
+      "La col·locació no pertany a aquesta pista.",
+    );
     expect(select).toHaveValue("");
   });
 
@@ -191,6 +252,116 @@ describe("R-16-13 «Recorregut previst» of a class (D3 and D4, S16 §2)", () =>
       PLACEMENT_IDS.muntanyaJumping,
     );
   });
+
+  it("R-16-13 D4: a PLACEMENT_RING_MISMATCH is said under «Recorregut previst», not in the card's general alert", async () => {
+    server.use(
+      http.patch("*/api/v1/class-sessions/:id", () =>
+        HttpResponse.json(
+          {
+            code: "PLACEMENT_RING_MISMATCH",
+            details: null,
+            message: "Placement ring mismatch",
+            traceId: "trace",
+          },
+          { status: 422 },
+        ),
+      ),
+    );
+    await renderWith(selectedCard(muntanyaSession()));
+    await screen.findByRole("option", { name: "Jumping del dijous · Dijous tarda" });
+    const select = screen.getByRole("combobox", { name: "Recorregut previst" });
+    fireEvent.change(select, { target: { value: PLACEMENT_IDS.muntanyaJumping } });
+    fireEvent.click(screen.getByRole("button", { name: "ACCEPTA" }));
+    await waitFor(() => {
+      expect(select).toHaveAccessibleDescription("La col·locació no pertany a aquesta pista.");
+    });
+    expect(screen.getAllByRole("alert")).toHaveLength(1);
+  });
+
+  it("R-16-13 D4: a new ring drops the class's planned course in the same PATCH", async () => {
+    const session = muntanyaSession();
+    session.placementId = PLACEMENT_IDS.muntanyaJumping;
+    await renderWith(selectedCard(session));
+    await screen.findByRole("option", { name: "Jumping del dijous · Dijous tarda" });
+    fireEvent.change(screen.getByRole("combobox", { name: "Pista" }), {
+      target: { value: "ring-central" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "ACCEPTA" }));
+    await waitFor(() => {
+      expect(patches).toEqual([
+        { placementId: null, ringId: "ring-central", version: session.version },
+      ]);
+    });
+  });
+
+  it("R-16-15 D4: without COURSES the card has no «Recorregut previst»", async () => {
+    await renderWith(selectedCard(muntanyaSession()), withoutCourses);
+    await screen.findByRole("button", { name: "ACCEPTA" });
+    expect(screen.queryByRole("combobox", { name: "Recorregut previst" })).toBeNull();
+  });
+
+  it("R-16-13 D4 drawer: a new class carries its planned course in the POST; a new ring drops it; a mismatch is said under the field", async () => {
+    const posts: unknown[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      if (request.method === "POST" && request.url.endsWith("/class-sessions")) {
+        void request
+          .clone()
+          .json()
+          .then((body: unknown) => {
+            posts.push(body);
+          });
+      }
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+    });
+    await renderWith(createDrawer());
+    // A Monday (the only day this club opens here), far enough ahead.
+    fireEvent.change(await screen.findByRole("textbox", { name: "Data" }), {
+      target: { value: "26/04/2027" },
+    });
+    fireEvent.click(screen.getByRole("radio", { name: "Muntanya" }));
+    const select = await screen.findByRole("combobox", { name: "Recorregut previst" });
+    await screen.findByRole("option", { name: "Jumping del dijous · Dijous tarda" });
+    fireEvent.change(select, { target: { value: PLACEMENT_IDS.muntanyaJumping } });
+    // Another ring: the planned course goes, and its selector reads the new ring's placements.
+    fireEvent.click(screen.getByRole("radio", { name: "Central" }));
+    expect(await screen.findByRole("combobox", { name: "Recorregut previst" })).toHaveValue("");
+    fireEvent.click(screen.getByRole("radio", { name: "Muntanya" }));
+    await screen.findByRole("option", { name: "Jumping del dijous · Dijous tarda" });
+    fireEvent.change(screen.getByRole("combobox", { name: "Recorregut previst" }), {
+      target: { value: PLACEMENT_IDS.muntanyaJumping },
+    });
+    server.use(
+      http.post("*/api/v1/class-sessions", () =>
+        HttpResponse.json(
+          {
+            code: "PLACEMENT_RING_MISMATCH",
+            details: null,
+            message: "Placement ring mismatch",
+            traceId: "trace",
+          },
+          { status: 422 },
+        ),
+      ),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "CREA LA CLASSE" }));
+    const field = screen
+      .getByRole("combobox", { name: "Recorregut previst" })
+      .closest<HTMLElement>(".ah-form-field");
+    if (field === null) throw new Error("FIELD_NOT_FOUND");
+    expect(await within(field).findByRole("alert")).toHaveTextContent(
+      "La col·locació no pertany a aquesta pista.",
+    );
+    await waitFor(() => {
+      expect(posts).toHaveLength(1);
+    });
+    expect(posts[0]).toMatchObject({
+      placementId: PLACEMENT_IDS.muntanyaJumping,
+      ringId: "ring-muntanya",
+    });
+  });
 });
 
 describe("R-16-13 D7 «Col·locacions» of an activity (S16 §2)", () => {
@@ -222,6 +393,35 @@ describe("R-16-13 D7 «Col·locacions» of an activity (S16 §2)", () => {
     expect(onNavigate).toHaveBeenCalledWith(
       "/recorreguts/course-jumping-dijous/col-locacio?activitat=activity-lliga-social-3",
     );
+  });
+
+  it("R-16-10 D7 offers the build sheet a placement stores (GET build-sheet, application/pdf)", async () => {
+    const saved: Blob[] = [];
+    // The fetched blob comes from another realm (undici's), so it is kept as given.
+    vi.spyOn(URL, "createObjectURL").mockImplementation((blob) => {
+      saved.push(blob as Blob);
+      return "blob:mock";
+    });
+    vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => undefined);
+    vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(() => undefined);
+    await renderWith(
+      <ActivityPlacementsCard
+        activityId="activity-lliga-social-3"
+        client={client()}
+        onNavigate={() => undefined}
+        placementIds={[PLACEMENT_IDS.centralLeague]}
+        readOnly
+        rings={catalogState.rings}
+      />,
+    );
+    fireEvent.click(await screen.findByRole("button", { name: "Full de muntatge" }));
+    await waitFor(() => {
+      expect(saved).toHaveLength(1);
+    });
+    expect(saved[0]?.type).toBe("application/pdf");
+    const bytes = new Uint8Array(await (saved[0] ?? new Blob()).arrayBuffer());
+    expect(String.fromCharCode(...bytes.slice(0, 5))).toBe("%PDF-");
+    vi.restoreAllMocks();
   });
 
   it("an INSTRUCTOR reads the placements without [Afegeix] (D7 is read-only for them)", async () => {

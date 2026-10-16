@@ -25,7 +25,7 @@ export interface MarkerSheetLabels {
   readonly marker: (label: string) => string;
   /** Where it goes, e.g. «Posició a la pista: x 0,00 m · y 0,00 m». */
   readonly position: (marker: PlannerRingMarker) => string;
-  /** Its printed size, e.g. «Mida: 190 mm (amb el marge blanc)». */
+  /** Its stored size (= the printed one), e.g. «Mida: 190 mm (amb el marge blanc)». */
   readonly size: (millimetres: number) => string;
   /** Its identifiers, e.g. «Identificador: … · AprilTag 36h11 núm. 12». */
   readonly identifiers: (markerUid: string, tagId: number) => string;
@@ -43,17 +43,75 @@ export interface MarkerSheetInput {
   readonly labels: MarkerSheetLabels;
 }
 
+/**
+ * Why a ring has no marker sheet: no active marker to print, or active markers whose stored size
+ * does not fit the paper (`labels`, in the ring's order; `maxMillimetres` is the widest that fits).
+ */
+export type MarkerSheetProblem =
+  | { readonly kind: "no-active-marker" }
+  | {
+      readonly kind: "too-large";
+      readonly labels: readonly string[];
+      readonly maxMillimetres: number;
+    };
+
+/** `renderMarkerSheetPdf` refuses the sheet; `problem` says why (as `markerSheetProblem`). */
+export class MarkerSheetError extends Error {
+  readonly problem: MarkerSheetProblem;
+
+  constructor(problem: MarkerSheetProblem) {
+    super(`marker sheet: ${problem.kind}`);
+    this.name = "MarkerSheetError";
+    this.problem = problem;
+  }
+}
+
 const MARGIN = 12;
 /** The fiducial may use the page's width down to this side margin (190 mm on A4, as the planner). */
 const TAG_MARGIN = 10;
 
+/** The stored physical size of `marker`'s footprint in millimetres (to 0.1 mm, no float noise). */
+function storedMillimetres(marker: PlannerRingMarker): number {
+  return Math.round(marker.physical_width_m * 10_000) / 10;
+}
+
+/**
+ * Whether the active `markers` can be printed on `paper`, and why not. A marker is printed at its
+ * stored size or not at all: the AR app computes the pose from that size, so a smaller print
+ * would put the course in the wrong place.
+ */
+export function markerSheetProblem(
+  markers: readonly PlannerRingMarker[],
+  paper: SheetPaper = "a4",
+): MarkerSheetProblem | null {
+  const active = markers.filter((marker) => marker.is_active);
+  if (active.length === 0) return { kind: "no-active-marker" };
+  const maxMillimetres = Math.round((SHEET_PAPER[paper].widthMm - 2 * TAG_MARGIN) * 10) / 10;
+  const tooLarge = active.filter((marker) => storedMillimetres(marker) > maxMillimetres);
+  if (tooLarge.length > 0) {
+    return { kind: "too-large", labels: tooLarge.map((marker) => marker.label), maxMillimetres };
+  }
+  return null;
+}
+
+/**
+ * The sheet, one page per active marker with a tag id. Throws `MarkerSheetError` when
+ * `markerSheetProblem` reports one (or no active marker has a tag id): never an empty file, never
+ * a marker smaller than its stored size.
+ */
 export function renderMarkerSheetPdf(input: MarkerSheetInput): Uint8Array {
   const { labels } = input;
-  const size = SHEET_PAPER[input.paper ?? "a4"];
+  const paper = input.paper ?? "a4";
+  const size = SHEET_PAPER[paper];
   const content = size.widthMm - 2 * MARGIN;
+  const printable = input.markers.filter(
+    (marker) => marker.is_active && input.tagIds.has(marker.id),
+  );
+  const problem = markerSheetProblem(printable, paper);
+  if (problem !== null) throw new MarkerSheetError(problem);
   const document = new PdfDocument({ producer: labels.producer, title: labels.documentTitle });
 
-  for (const marker of input.markers.filter((candidate) => candidate.is_active)) {
+  for (const marker of printable) {
     const tagId = input.tagIds.get(marker.id);
     if (tagId === undefined) continue;
     const page = document.addPage(size);
@@ -62,9 +120,9 @@ export function renderMarkerSheetPdf(input: MarkerSheetInput): Uint8Array {
       sizePt: 9,
     });
 
-    // The fiducial: the 10 × 10 footprint at the stored physical size, never wider than the page
-    // (then the size line says the printed size, so nobody calibrates with the wrong one).
-    const footprint = Math.min(marker.physical_width_m * 1000, size.widthMm - 2 * TAG_MARGIN);
+    // The fiducial: the 10 × 10 footprint at exactly the stored physical size (it fits: checked
+    // above), which the size line repeats for whoever calibrates.
+    const footprint = marker.physical_width_m * 1000;
     const module = footprint / APRILTAG_36H11_TOTAL_WIDTH;
     const left = (size.widthMm - footprint) / 2;
     const top = MARGIN + 12;
@@ -91,7 +149,7 @@ export function renderMarkerSheetPdf(input: MarkerSheetInput): Uint8Array {
     y += 10;
     for (const line of [
       labels.position(marker),
-      labels.size(Math.round(footprint)),
+      labels.size(storedMillimetres(marker)),
       labels.identifiers(marker.marker_uid, tagId),
     ]) {
       page.text(size.widthMm / 2, y, fitText(line, content, 10, "regular"), {

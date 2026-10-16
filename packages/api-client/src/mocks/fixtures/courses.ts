@@ -631,6 +631,35 @@ function fixturePlacement(
   };
 }
 
+/** R-16-10: the build sheet the league placement has stored (D7 offers it). */
+const LEAGUE_BUILD_SHEET_KEY = `${COURSES_CLUB_ID}/courses/7c1e0b9a-3f52-4d8e-9a41-2b6f0c8d5e17`;
+
+/**
+ * The stored sheet's bytes: a one-page landscape A4 PDF with the ring's outline (a real PDF, so a
+ * browser opens it; the client renders the real sheet with course-ui).
+ */
+function leagueBuildSheetPdf(): Uint8Array {
+  const content = "1 w 96 120 650 470 re S";
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Contents 4 0 R >>",
+    `<< /Length ${String(content.length)} >>\nstream\n${content}\nendstream`,
+  ];
+  let pdf = "%PDF-1.4\n";
+  const offsets: number[] = [];
+  objects.forEach((body, index) => {
+    offsets.push(pdf.length);
+    pdf += `${String(index + 1)} 0 obj\n${body}\nendobj\n`;
+  });
+  const xref = pdf.length;
+  const size = String(objects.length + 1);
+  pdf += `xref\n0 ${size}\n0000000000 65535 f \n`;
+  pdf += offsets.map((offset) => `${String(offset).padStart(10, "0")} 00000 n \n`).join("");
+  pdf += `trailer\n<< /Size ${size} /Root 1 0 R >>\nstartxref\n${String(xref)}\n%%EOF\n`;
+  return new TextEncoder().encode(pdf);
+}
+
 function initialPlacements(geometries: Record<string, RingGeometry>): Placement[] {
   const muntanya = geometries["ring-muntanya"];
   const central = geometries["ring-central"];
@@ -646,6 +675,7 @@ function initialPlacements(geometries: Record<string, RingGeometry>): Placement[
     }),
     fixturePlacement(PLACEMENT_IDS.centralLeague, COURSE_IDS.agility, "ring-central", central, {
       activityId: LEAGUE_ACTIVITY_ID,
+      buildSheetFileKey: LEAGUE_BUILD_SHEET_KEY,
       mode: "EVENT",
       name: "Lliga social · recorregut 1",
       updatedAt: "2026-09-26T08:00:00Z",
@@ -717,10 +747,21 @@ function initialSetups(): RingSetup[] {
   ];
 }
 
+/** An upload of `POST /courses/upload-urls` and what the signed PUT stored. */
+export interface CourseFile {
+  bytes: Uint8Array | null;
+  /** The club the upload was granted to (R-16-16: another club's key is `NOT_FOUND`). */
+  clubId: string;
+  contentType: string;
+  /** R-16-10: the placement a BUILD_SHEET upload is bound to (`null` until it is). */
+  placementId: string | null;
+  purpose: string;
+}
+
 export interface CourseWorld {
   courses: Course[];
-  /** Uploaded files by `fileKey`: purpose, type and bytes (the S3 side of the upload URLs). */
-  files: Map<string, { contentType: string; purpose: string; bytes: Uint8Array | null }>;
+  /** Uploaded files by `fileKey` (the S3 side of the upload URLs). */
+  files: Map<string, CourseFile>;
   geometries: Record<string, RingGeometry>;
   inventories: Record<string, ObstacleInventory>;
   placements: Placement[];
@@ -732,7 +773,18 @@ function initialWorld(): CourseWorld {
   const geometries = initialGeometries();
   return {
     courses: initialCourses(),
-    files: new Map(),
+    files: new Map([
+      [
+        LEAGUE_BUILD_SHEET_KEY,
+        {
+          bytes: leagueBuildSheetPdf(),
+          clubId: COURSES_CLUB_ID,
+          contentType: "application/pdf",
+          placementId: PLACEMENT_IDS.centralLeague,
+          purpose: "BUILD_SHEET",
+        },
+      ],
+    ]),
     geometries,
     inventories: initialInventories(),
     placements: initialPlacements(geometries),

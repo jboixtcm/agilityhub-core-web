@@ -2,7 +2,7 @@ import { type components, createApiClient } from "@agilityhub/api-client";
 import { resetCatalogState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { createI18n } from "@agilityhub/i18n";
+import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
@@ -32,7 +32,7 @@ afterAll(() => {
 });
 
 async function renderInfo(runtimeBranding: Branding = branding) {
-  const i18n = await createI18n({
+  const i18n = await createClubsI18n({
     branding: runtimeBranding,
     browserLanguages: ["ca"],
     initialNamespaces: ["shell"],
@@ -79,7 +79,7 @@ describe("T-05-CP-07 screen 30 Info", () => {
       ...branding,
       modules: branding.modules.filter((module) => module !== "FAQ"),
     };
-    const i18n = await createI18n({
+    const i18n = await createClubsI18n({
       branding: withoutFaq,
       browserLanguages: ["ca"],
       initialNamespaces: ["shell"],

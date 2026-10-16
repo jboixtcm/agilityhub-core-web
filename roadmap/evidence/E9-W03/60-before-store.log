@@ -1,0 +1,156 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/core-api-store.payloads.test.ts (21 tests | 6 failed) 23ms
+   ❯ E9-W02 round 2: CoreApiStore payloads against the S16 contract (13)
+     × #4 R-16-05 a critical warning answers 422 PLACEMENT_BLOCKED {warnings}; the ADMIN's confirmed retry sends force: true 6ms
+     × R-16-05 savePlacement sends the complete published payload under the caller's key 1ms
+   ❯ E9-W03: the store D16 and D18 use (8)
+     × E9-W02 review #2 / R-16-04 a marker save after another editor's save answers 409 STALE_VERSION and their markers survive 1ms
+     × R-16-06 a stale placement is re-saved at the version the user edited and keeps what the user did not change (schedule, grades, sizes, threshold, status, mode) 1ms
+     × R-16-05 a new placement sends no status unless the user chose one (the api's default applies) 0ms
+     × R-16-10 attachBuildSheet uploads the PDF (BUILD_SHEET) and attaches its key; the stored sheet is read back as a PDF 0ms
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 15 passed (21)
+   Start at  14:10:29
+   Duration  423ms (transform 66%, import 26%, tests 7%, worker 1%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > #4 R-16-05 a critical warning answers 422 PLACEMENT_BLOCKED {warnings}; the ADMIN's confirmed retry sends force: true
+AssertionError: expected { activityId: null, …(13) } to match object { id: 'placement-1', …(2) }
+(17 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "id": "placement-1",
+    "ringId": "ring-1",
+-   "status": "DRAFT",
++   "status": "READY_TO_BUILD",
+  }
+
+ ❯ src/core-api-store.payloads.test.ts:255:19
+    253|       idempotencyKey: "placement-key-2",
+    254|     });
+    255|     expect(saved).toMatchObject({ id: "placement-1", ringId: "ring-1",…
+       |                   ^
+    256|   });
+    257|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > R-16-05 savePlacement sends the complete published payload under the caller's key
+AssertionError: expected { activityId: null, …(15) } to match object { activityId: null, …(14) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+@@ -8,11 +8,11 @@
+    "name": "Dijous",
+    "placementMode": "CENTERED",
+    "ringId": "ring-1",
+    "scheduledAt": "2026-10-22T16:00:00Z",
+    "sizes": null,
+-   "status": null,
++   "status": "READY_TO_BUILD",
+    "transform": {
+      "flipX": false,
+      "flipY": false,
+      "offsetXM": 20,
+      "offsetYM": 10,
+
+ ❯ src/core-api-store.payloads.test.ts:268:18
+    266|     expect(request?.idempotencyKey).toBe("placement-key-1");
+    267|     const body = request?.body as components["schemas"]["PlacementRequ…
+    268|     expect(body).toMatchObject({
+       |                  ^
+    269|       activityId: null,
+    270|       courseId: "course-1",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W03: the store D16 and D18 use > E9-W02 review #2 / R-16-04 a marker save after another editor's save answers 409 STALE_VERSION and their markers survive
+Error: EXPECTED_A_REJECTION
+ ❯ rejection src/core-api-store.payloads.test.ts:56:9
+     54|     return error;
+     55|   }
+     56|   throw new Error("EXPECTED_A_REJECTION");
+       |         ^
+     57| }
+     58|
+ ❯ src/core-api-store.payloads.test.ts:381:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W03: the store D16 and D18 use > R-16-06 a stale placement is re-saved at the version the user edited and keeps what the user did not change (schedule, grades, sizes, threshold, status, mode)
+AssertionError: expected { activityId: null, …(13) } to match object { grades: [ 'G2' ], …(6) }
+(16 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "grades": [
+-     "G2",
+-   ],
+    "mode": "FREE_FLOATING",
+    "scheduledAt": "2026-10-24T08:00:00Z",
+-   "sizes": [
+-     "S",
+-     "M",
+-   ],
+-   "status": "ARCHIVED",
++   "status": "READY_TO_BUILD",
+    "version": 1,
+-   "warningThresholdM": 2.5,
+  }
+
+ ❯ src/core-api-store.payloads.test.ts:476:20
+    474|     api.placements[0] = { ...storedApi, stale: true };
+    475|     const stored = { ...created, stale: true };
+    476|     expect(stored).toMatchObject({
+       |                    ^
+    477|       grades: ["G2"],
+    478|       mode: "FREE_FLOATING",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W03: the store D16 and D18 use > R-16-05 a new placement sends no status unless the user chose one (the api's default applies)
+AssertionError: expected { activityId: null, …(15) } to match object { status: null }
+(20 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "status": null,
++   "status": "READY_TO_BUILD",
+  }
+
+ ❯ src/core-api-store.payloads.test.ts:566:39
+    564|     const api = createFakeCoreApi();
+    565|     const saved = await storeOn(api).savePlacement(placementInput());
+    566|     expect(api.requests.at(-1)?.body).toMatchObject({ status: null });
+       |                                       ^
+    567|     expect(saved.status).toBe("DRAFT");
+    568|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W03: the store D16 and D18 use > R-16-10 attachBuildSheet uploads the PDF (BUILD_SHEET) and attaches its key; the stored sheet is read back as a PDF
+TypeError: store.attachBuildSheet is not a function
+ ❯ src/core-api-store.payloads.test.ts:576:34
+    574|     const pdf = new TextEncoder().encode("%PDF-1.4 fake sheet");
+    575|
+    576|     const attached = await store.attachBuildSheet(created.id, pdf);
+       |                                  ^
+    577|     expect(calls(api).slice(-2)).toEqual([
+    578|       "POST /courses/upload-urls",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+

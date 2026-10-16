@@ -134,6 +134,12 @@ test.describe("E9-W03 D18 «Biblioteca de recorreguts» and D16 «Geometria» (S
     const sheet = await download;
     expect(sheet.suggestedFilename()).toMatch(/-muntanya\.pdf$/u);
     await sheet.saveAs(resolve(evidenceDirectory, "full-de-muntatge.pdf"));
+    // R-16-10: the sheet is stored for the placement and offered back (GET build-sheet).
+    const storedDownload = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Full desat" }).click();
+    const stored = await storedDownload;
+    expect(stored.suggestedFilename()).toMatch(/-muntanya\.pdf$/u);
+    await stored.saveAs(resolve(evidenceDirectory, "full-de-muntatge-desat.pdf"));
 
     await page.getByRole("button", { name: "Registra-ho com a muntat" }).click();
     const setup = page.getByRole("dialog", { name: "Registra-ho com a muntat" });
@@ -203,6 +209,10 @@ test.describe("E9-W03 D18 «Biblioteca de recorreguts» and D16 «Geometria» (S
       card.getByRole("link", { name: "Agility C–D · Central · Lliga social · recorregut 1" }),
     ).toBeVisible();
     await card.scrollIntoViewIfNeeded();
+    // R-16-10: the league placement stores its build sheet; D7 offers it.
+    const download = page.waitForEvent("download");
+    await card.getByRole("button", { name: "Full de muntatge" }).click();
+    expect((await download).suggestedFilename()).toBe("full-de-muntatge-agility-c-d.pdf");
     await page.screenshot({ path: resolve(evidenceDirectory, "D7-col-locacions-1280.png") });
   });
 });

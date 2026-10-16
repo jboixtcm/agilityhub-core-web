@@ -224,6 +224,10 @@
     "loading": "Cargando las colocaciones",
     "error": "No se han podido cargar las colocaciones.",
     "row": "{course} · {ring}",
-    "rowNamed": "{course} · {ring} · {name}"
+    "rowNamed": "{course} · {ring} · {name}",
+    "sheet": "Hoja de montaje",
+    "sheetPending": "Descargando la hoja de montaje",
+    "sheetFile": "hoja-de-montaje-{course}.pdf",
+    "sheetFallback": "recorrido"
   }
 }

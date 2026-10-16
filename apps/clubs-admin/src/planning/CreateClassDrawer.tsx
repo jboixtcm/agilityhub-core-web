@@ -41,7 +41,14 @@ import {
 } from "./shared";
 
 type FieldKey =
-  "date" | "description" | "general" | "instructorIds" | "levelIds" | "ringId" | "time";
+  | "date"
+  | "description"
+  | "general"
+  | "instructorIds"
+  | "levelIds"
+  | "placementId"
+  | "ringId"
+  | "time";
 
 const fieldByCode: Readonly<Record<string, FieldKey>> = {
   DESCRIPTION_REQUIRED: "description",
@@ -49,8 +56,8 @@ const fieldByCode: Readonly<Record<string, FieldKey>> = {
   INVALID_TIME_RANGE: "time",
   LEVEL_REQUIRED: "levelIds",
   OUTSIDE_OPENING_HOURS: "time",
-  // S16 R-16-13: the planned course is not of the chosen ring; said under the ring.
-  PLACEMENT_RING_MISMATCH: "ringId",
+  // S16 R-16-13: the planned course is not of the chosen ring; said under «Recorregut previst».
+  PLACEMENT_RING_MISMATCH: "placementId",
   RING_BLOCKED: "ringId",
   TOO_MANY_INSTRUCTORS: "instructorIds",
 };
@@ -431,13 +438,21 @@ export function CreateClassDrawer({
         </fieldset>
         {coursesModule && ringId !== null ? (
           <FormField
+            {...errorProp(errors.placementId)}
             id="calendar-create-planned-course"
             label={t("admin-scheduling:plannedCourse.label")}
           >
             <PlannedCourseSelect
               client={client}
               id="calendar-create-planned-course"
-              onChange={setPlannedCourseId}
+              onChange={(value) => {
+                setPlannedCourseId(value);
+                setErrors((current) => {
+                  const next = { ...current };
+                  delete next.placementId;
+                  return next;
+                });
+              }}
               ringId={ringId}
               value={plannedCourseId}
             />

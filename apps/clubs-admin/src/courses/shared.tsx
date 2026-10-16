@@ -1,5 +1,6 @@
 import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
 import { CoreApiStore } from "@agilityhub/api-client/core-api-store";
+import { useSession } from "@agilityhub/auth";
 import {
   centerCourseInRing,
   type CourseData,
@@ -18,8 +19,10 @@ import {
 } from "@agilityhub/course-ui";
 import { useClubFormats, useCourseTexts } from "@agilityhub/i18n";
 import { useBranding } from "@agilityhub/ui";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { fileSlug } from "../file-names";
 
 export type Course = components["schemas"]["Course"];
 export type CourseListItem = components["schemas"]["CourseListItem"];
@@ -244,6 +247,7 @@ export function useSheetLabels() {
         markerDistance: (label, value) =>
           t("admin-courses:sheet.markerDistance", { label, metres: value }),
         metres,
+        listSeparator: t("admin-courses:sheet.listSeparator"),
         none: t("admin-courses:sheet.none"),
         notesTitle: t("admin-courses:sheet.notes"),
         obstacle: labels.obstacle,
@@ -252,6 +256,7 @@ export function useSheetLabels() {
         plan: t("admin-courses:sheet.plan"),
         producer: "AgilityHub",
         subheading,
+        unnumbered: t("admin-courses:sheet.unnumbered"),
       }),
       markers: (ringName: string): MarkerSheetLabels => ({
         documentTitle: t("admin-courses:markerSheet.title", { ring: ringName }),
@@ -273,15 +278,74 @@ export function pdfBlob(bytes: Uint8Array): Blob {
   return new Blob([bytes as BlobPart], { type: "application/pdf" });
 }
 
-/** A file name from a course or ring name: lower case, ASCII, dashes. */
-export function fileSlug(name: string): string {
-  const slug = name
-    .normalize("NFD")
-    .replaceAll(/\p{Diacritic}/gu, "")
-    .toLocaleLowerCase()
-    .replaceAll(/[^a-z0-9]+/gu, "-")
-    .replaceAll(/^-|-$/gu, "");
-  return slug === "" ? "recorregut" : slug;
+/** The PDFs' file names, in the reader's language (review #20: never a literal). */
+export function useSheetFileNames() {
+  const { t } = useTranslation("admin-courses");
+  return useMemo(() => {
+    const fallback = t("admin-courses:files.fallback");
+    return {
+      build: (courseName: string, ringName: string) =>
+        t("admin-courses:files.buildSheet", {
+          course: fileSlug(courseName, fallback),
+          ring: fileSlug(ringName, fallback),
+        }),
+      markers: (ringName: string) =>
+        t("admin-courses:files.markerSheet", { ring: fileSlug(ringName, fallback) }),
+    };
+  }, [t]);
+}
+
+/**
+ * Who is refused `POST /ring-setups` in this session (club and account): an INSTRUCTOR cannot read
+ * `courses.allowInstructorPublish` (MATRIU_PERMISOS: `/parameters` is ADMIN-only), so the api's
+ * `403 FORBIDDEN` is how the screen learns the switch is off; from then on the action is hidden.
+ */
+const setupRefusals = new Set<string>();
+
+/** Tests start from a fresh session. */
+export function forgetSetupRefusals(): void {
+  setupRefusals.clear();
+}
+
+/**
+ * R-16-07 «Registra-ho com a muntat» is offered only to whom the api lets register (AGENTS rule
+ * 3, no dead action): an ADMIN always; an INSTRUCTOR while `courses.allowInstructorPublish` is on.
+ * The parameter is read the way the activities read theirs; when the reader cannot read it (403),
+ * the action stays until the api refuses it once (`refused()`).
+ */
+export function useSetupPermission(client: ApiClient): {
+  allowed: boolean;
+  refused: () => void;
+} {
+  const session = useSession();
+  const branding = useBranding();
+  const admin = session.roles.includes("ADMIN");
+  const who = `${branding.club.slug}:${session.me?.account.id ?? ""}`;
+  const [switchOff, setSwitchOff] = useState(false);
+  const [, setRefusedAt] = useState(0);
+  useEffect(() => {
+    if (admin) return undefined;
+    let active = true;
+    client
+      .GET("/parameters/{key}", { params: { path: { key: "courses.allowInstructorPublish" } } })
+      .then(
+        (result) => {
+          if (active) setSwitchOff(result.data?.value === false);
+        },
+        () => undefined,
+      );
+    return () => {
+      active = false;
+    };
+  }, [admin, client]);
+  return {
+    allowed: admin || (!switchOff && !setupRefusals.has(who)),
+    refused: () => {
+      if (admin) return;
+      setupRefusals.add(who);
+      setRefusedAt((value) => value + 1);
+    },
+  };
 }
 
 /**

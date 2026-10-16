@@ -269,6 +269,7 @@
     "none": "Ninguno",
     "loading": "Cargando…",
     "unknown": "Una colocación de otra pista",
-    "error": "No se han podido cargar los recorridos de la pista."
+    "error": "No se han podido cargar los recorridos de la pista.",
+    "option": "{course} · {name}"
   }
 }

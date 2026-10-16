@@ -2,7 +2,7 @@ import { createApiClient } from "@agilityhub/api-client";
 import { mockScenario, resetPlanningState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { createI18n } from "@agilityhub/i18n";
+import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
@@ -49,7 +49,7 @@ afterAll(() => {
 
 async function renderToday(path = "/avui?date=2026-08-04", runtimeBranding: Branding = branding) {
   window.history.replaceState(null, "", path);
-  const i18n = await createI18n({
+  const i18n = await createClubsI18n({
     branding: runtimeBranding,
     browserLanguages: ["ca"],
     initialNamespaces: ["home", "enums", "instructor", "errors"],

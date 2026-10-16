@@ -28,6 +28,7 @@ import {
   type KeyboardEvent,
   type SyntheticEvent,
   useCallback,
+  useEffect,
   useId,
   useMemo,
   useState,
@@ -399,7 +400,11 @@ function ImageCourseModal({
 
 /** An applied filter's value as the list shows it (a list of values joined by commas). */
 function filterValue(value: unknown): string {
-  if (Array.isArray(value)) return value.map(filterValue).filter((item) => item !== "").join(",");
+  if (Array.isArray(value))
+    return value
+      .map(filterValue)
+      .filter((item) => item !== "")
+      .join(",");
   return typeof value === "string" || typeof value === "number" || typeof value === "boolean"
     ? String(value)
     : "";
@@ -437,6 +442,20 @@ export function CoursesPage({
     sort: ["updatedAt,desc"],
   });
   const [creating, setCreating] = useState<NewCourseKind>();
+  /** The club's levels, the values of the `levelId` filter (named, never shown by id). */
+  const [levels, setLevels] = useState<{ id: string; name: string }[]>([]);
+  useEffect(() => {
+    let current = true;
+    client.GET("/levels").then(
+      (result) => {
+        if (current) setLevels(result.data?.items ?? []);
+      },
+      () => undefined,
+    );
+    return () => {
+      current = false;
+    };
+  }, [client]);
   const { data, error, loading, retry } = useListData<CourseListItem>(async () => {
     const result = await client.GET("/courses", {
       params: {
@@ -475,9 +494,15 @@ export function CoursesPage({
         return t(`enums:agilityhubLevel.${value}`, { defaultValue: value });
       }
       if (field === "owner") return t(`admin-courses:list.owner.${value}`, { defaultValue: value });
+      if (field === "levelId") {
+        return value
+          .split(",")
+          .map((id) => levels.find((level) => level.id === id)?.name ?? id)
+          .join(t("admin-courses:list.separator"));
+      }
       return value;
     },
-    [t],
+    [levels, t],
   );
 
   const filterColumns: UniversalListFilterColumn[] = [
@@ -493,7 +518,25 @@ export function CoursesPage({
       operators: ENUM,
       type: "enum",
     },
+    // The club's levels (x-filterable `levelId`), only when the club has some.
+    ...(levels.length === 0
+      ? []
+      : [
+          {
+            key: "levelId",
+            label: t("admin-courses:list.columns.levelId"),
+            operators: ENUM,
+            type: "enum" as const,
+          },
+        ]),
     { key: "source", label: t("admin-courses:list.columns.source"), operators: ENUM, type: "enum" },
+    // A tag is matched whole (x-filterable `tag`).
+    {
+      key: "tag",
+      label: t("admin-courses:list.columns.tag"),
+      operators: ["eq"] as const,
+      type: "text",
+    },
     { key: "designerName", label: t("admin-courses:list.columns.designerName"), type: "text" },
     { key: "obstacleCount", label: t("admin-courses:list.columns.obstacleCount"), type: "number" },
   ];
@@ -508,10 +551,12 @@ export function CoursesPage({
             ? COURSE_SOURCES
             : field === "agilityhubLevel"
               ? AGILITYHUB_LEVELS
-              : [];
+              : field === "levelId"
+                ? levels.map((level) => level.id)
+                : [];
       return Promise.resolve(values.map((value) => ({ label: valueLabel(field, value), value })));
     },
-    [valueLabel],
+    [levels, valueLabel],
   );
 
   const applied = (data?.appliedFilters ?? [])

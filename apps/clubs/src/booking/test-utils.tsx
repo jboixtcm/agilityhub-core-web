@@ -8,7 +8,7 @@ import {
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
-import { createI18n } from "@agilityhub/i18n";
+import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, render } from "@testing-library/react";
 import type { ReactNode } from "react";
@@ -89,7 +89,7 @@ async function providers(
   { branding = canic, locale = "ca", scenario }: RenderOptions,
 ) {
   if (scenario !== undefined) mockScenario(scenario);
-  const i18n = await createI18n({
+  const i18n = await createClubsI18n({
     branding,
     browserLanguages: [locale],
     initialNamespaces: [

@@ -1,4 +1,4 @@
-import { type ApiClient, isApiError, saveFile } from "@agilityhub/api-client";
+import { type ApiClient, type components, isApiError, saveFile } from "@agilityhub/api-client";
 import {
   aprilTagIdFromMarkerUid,
   buildMarkerUid,
@@ -7,6 +7,7 @@ import {
   pickAprilTagId,
 } from "@agilityhub/course-core";
 import {
+  markerSheetProblem,
   type PlannerRing,
   renderMarkerSheetPdf,
   RingDoorEditor,
@@ -34,7 +35,6 @@ import { useTranslation } from "react-i18next";
 
 import {
   apiCode,
-  fileSlug,
   pdfBlob,
   type Placement,
   type Ring,
@@ -44,6 +44,7 @@ import {
   useCourseLabels,
   useCourseStore,
   useMetres,
+  useSheetFileNames,
   useSheetLabels,
 } from "./shared";
 
@@ -131,20 +132,25 @@ function valuesOf(geometry: RingGeometry): GeometryValues {
   };
 }
 
-/** A new geometry: 40 × 20 m and the six canonical markers A–F the AR export expects. */
+/** The six canonical markers A–F the AR export expects, laid out for a ring of that size. */
+function defaultMarkers(length: number, width: number, ids: readonly string[] = []): MarkerRow[] {
+  return canonicalLayout6(length, width).map((marker, index) => ({
+    aprilTagId: null,
+    id: ids[index] ?? newId("marker"),
+    isActive: true,
+    label: marker.label,
+    markerUid: "",
+    x: text(marker.xMeters),
+    y: text(marker.yMeters),
+  }));
+}
+
+/** A new geometry: 40 × 20 m and the six canonical markers. */
 function defaultValues(): GeometryValues {
   return {
     borderClearanceM: "1",
     lengthM: "40",
-    markers: canonicalLayout6(40, 20).map((marker) => ({
-      aprilTagId: null,
-      id: newId("marker"),
-      isActive: true,
-      label: marker.label,
-      markerUid: "",
-      x: text(marker.xMeters),
-      y: text(marker.yMeters),
-    })),
+    markers: defaultMarkers(40, 20),
     notes: "",
     orientationDeg: "",
     surface: "",
@@ -155,6 +161,98 @@ function defaultValues(): GeometryValues {
 
 function number(value: string): number {
   return Number(value.replace(",", "."));
+}
+
+/** A typed number, or `null` when the text is not one (never sent as `null` to the api). */
+function typed(value: string): number | null {
+  const parsed = number(value.trim());
+  return value.trim() === "" || !Number.isFinite(parsed) ? null : parsed;
+}
+
+/** Whether the rows are still the default markers of a `length × width` ring (none touched). */
+function untouchedDefaults(markers: readonly MarkerRow[], length: string, width: string) {
+  const l = typed(length);
+  const w = typed(width);
+  if (l === null || w === null || l <= 0 || w <= 0) return false;
+  const layout = defaultMarkers(l, w);
+  return (
+    markers.length === layout.length &&
+    markers.every(
+      (row, index) =>
+        row.markerUid === "" &&
+        row.isActive &&
+        row.label === layout[index]?.label &&
+        row.x === layout[index].x &&
+        row.y === layout[index].y,
+    )
+  );
+}
+
+/** The first letter A–Z no marker uses, so a removed letter is reused and none repeats. */
+function nextMarkerLabel(markers: readonly MarkerRow[]): string {
+  const used = new Set(markers.map((row) => row.label.trim().toUpperCase()));
+  for (let code = 65; code <= 90; code += 1) {
+    const letter = String.fromCharCode(code);
+    if (!used.has(letter)) return letter;
+  }
+  return "";
+}
+
+/** The api's `GEOMETRY_INVALID` violations, plus the form's own «not a number». */
+type Violation =
+  components["schemas"]["GeometryViolation"] | { path: string; rule: "NOT_A_NUMBER" };
+
+/**
+ * R-16-04 checked before sending, so a typo reads next to its cause instead of a generic error:
+ * numbers where numbers go, `width/length ∈ [10, 60]`, ≥ 3 active markers not on one line. The
+ * api checks everything again (`422 GEOMETRY_INVALID`).
+ */
+function precheck(values: GeometryValues): Violation[] {
+  const violations: Violation[] = [];
+  for (const path of ["lengthM", "widthM"] as const) {
+    const value = typed(values[path]);
+    if (value === null) violations.push({ path, rule: "NOT_A_NUMBER" });
+    else if (value < 10 || value > 60) violations.push({ path, rule: "OUT_OF_RANGE" });
+  }
+  const border = typed(values.borderClearanceM);
+  if (border === null) violations.push({ path: "borderClearanceM", rule: "NOT_A_NUMBER" });
+  else if (border < 0) violations.push({ path: "borderClearanceM", rule: "NEGATIVE" });
+  if (values.orientationDeg.trim() !== "" && typed(values.orientationDeg) === null) {
+    violations.push({ path: "orientationDeg", rule: "NOT_A_NUMBER" });
+  }
+  const active: { x: number; y: number }[] = [];
+  values.markers.forEach((row, index) => {
+    const x = typed(row.x);
+    const y = typed(row.y);
+    if (x === null || y === null) {
+      violations.push({ path: `markers[${String(index)}]`, rule: "NOT_A_NUMBER" });
+    } else if (row.isActive) {
+      active.push({ x, y });
+    }
+  });
+  const activeRows = values.markers.filter((row) => row.isActive).length;
+  if (activeRows < 3) violations.push({ path: "markers", rule: "TOO_FEW_MARKERS" });
+  else if (active.length === activeRows && collinear(active)) {
+    violations.push({ path: "markers", rule: "COLLINEAR_MARKERS" });
+  }
+  values.zones.forEach((zone, index) => {
+    const fields = [zone.x, zone.y, zone.width, zone.depth, zone.margin];
+    if (fields.some((value) => typed(value) === null)) {
+      violations.push({ path: `noGoZones[${String(index)}]`, rule: "NOT_A_NUMBER" });
+    }
+  });
+  return violations;
+}
+
+/** Every point on one line (cross products ≈ 0, 1 cm² tolerance). */
+function collinear(points: readonly { x: number; y: number }[]): boolean {
+  const [a] = points;
+  if (a === undefined) return true;
+  const b = points.find((point) => Math.hypot(point.x - a.x, point.y - a.y) > 1e-6);
+  if (b === undefined) return true;
+  return points.every(
+    (point) => Math.abs((b.x - a.x) * (point.y - a.y) - (b.y - a.y) * (point.x - a.x)) < 1e-4,
+  );
 }
 
 /**
@@ -318,7 +416,30 @@ function GeometryCard({
   }
 
   const update = (patch: Partial<GeometryValues>) => {
-    setValues((current) => ({ ...current, ...patch }));
+    setValues((current) => {
+      const next = { ...current, ...patch };
+      // A new geometry: while the six default markers are untouched they follow the typed size
+      // (review #11: a 22 × 30 ring never saves markers laid out for 40 × 20).
+      const resized = patch.lengthM !== undefined || patch.widthM !== undefined;
+      const length = typed(next.lengthM);
+      const width = typed(next.widthM);
+      if (
+        base === null &&
+        resized &&
+        length !== null &&
+        width !== null &&
+        length > 0 &&
+        width > 0 &&
+        untouchedDefaults(current.markers, current.lengthM, current.widthM)
+      ) {
+        next.markers = defaultMarkers(
+          length,
+          width,
+          current.markers.map((row) => row.id),
+        );
+      }
+      return next;
+    });
     setMessage(undefined);
   };
   const updateMarker = (id: string, patch: Partial<MarkerRow>) => {
@@ -328,7 +449,7 @@ function GeometryCard({
     update({ zones: values.zones.map((row) => (row.id === id ? { ...row, ...patch } : row)) });
   };
 
-  const violationLine = (violation: { path: string; rule: string }) => {
+  const violationLine = (violation: Violation) => {
     const index = /\[(\d+)\]/u.exec(violation.path)?.[1];
     const at = index === undefined ? undefined : Number(index);
     const field = violation.path.startsWith("markers")
@@ -349,15 +470,31 @@ function GeometryCard({
               ? t("admin-courses:geometry.width")
               : violation.path === "borderClearanceM"
                 ? t("admin-courses:geometry.borderClearance")
-                : violation.path;
+                : violation.path === "orientationDeg"
+                  ? t("admin-courses:geometry.orientation")
+                  : // A field this form does not name: said generically, never the raw path.
+                    t("admin-courses:geometry.otherField");
     return t("admin-courses:geometry.violation", {
       field,
-      rule: t(`admin-courses:geometry.rule.${violation.rule}`, { defaultValue: violation.rule }),
+      rule:
+        violation.rule === "NOT_A_NUMBER"
+          ? t("admin-courses:geometry.notANumber")
+          : t(`admin-courses:geometry.rule.${violation.rule}`, {
+              defaultValue: t("admin-courses:geometry.rule.other"),
+            }),
     });
   };
 
   const save = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const local = precheck(values);
+    if (local.length > 0) {
+      setMessage({
+        lines: [t("admin-courses:geometry.precheck"), ...local.map(violationLine)],
+        tone: "error",
+      });
+      return;
+    }
     setPending(true);
     setMessage(undefined);
     try {
@@ -379,8 +516,7 @@ function GeometryCard({
       onSaved();
     } catch (cause) {
       if (isApiError(cause, "GEOMETRY_INVALID")) {
-        const details = cause.details as
-          { violations?: { path: string; rule: string }[] } | undefined;
+        const details = cause.details as { violations?: Violation[] } | null | undefined;
         setMessage({
           lines: [errorText(cause), ...(details?.violations ?? []).map(violationLine)],
           tone: "error",
@@ -534,7 +670,7 @@ function GeometryCard({
                       aprilTagId: null,
                       id: newId("marker"),
                       isActive: true,
-                      label: String.fromCharCode(65 + values.markers.length),
+                      label: nextMarkerLabel(values.markers),
                       markerUid: "",
                       x: "0",
                       y: "0",
@@ -620,8 +756,8 @@ function GeometryCard({
               className={message.tone === "error" ? "ah-form-field__error" : "courses-notice"}
               role={message.tone === "error" ? "alert" : "status"}
             >
-              {message.lines.map((line) => (
-                <p key={line}>{line}</p>
+              {message.lines.map((line, index) => (
+                <p key={`${String(index)}-${line}`}>{line}</p>
               ))}
             </div>
           )}
@@ -676,9 +812,13 @@ function SetupsCard({
               setup.status === "ACTIVE" && placement?.stale === true ? placement : undefined;
             // The api keeps no reason for DISMANTLED: a setup dismantled the instant the next one
             // was built was replaced by it (R-16-07, one transaction).
+            const dismantledAt =
+              setup.dismantledAt == null ? Number.NaN : Date.parse(setup.dismantledAt);
             const replaced =
               setup.status === "DISMANTLED" &&
-              setups.some((other) => other.id !== setup.id && other.builtAt === setup.dismantledAt);
+              setups.some(
+                (other) => other.id !== setup.id && Date.parse(other.builtAt) === dismantledAt,
+              );
             return (
               <li key={setup.id}>
                 <div>
@@ -743,6 +883,7 @@ export function RingGeometryPage({
   const errorText = useCourseError();
   const metres = useMetres();
   const sheet = useSheetLabels();
+  const fileNames = useSheetFileNames();
   const labels = useInventoryLabels();
   const [ring, setRing] = useState<Ring>();
   const [geometry, setGeometry] = useState<RingGeometry | null>();
@@ -792,8 +933,20 @@ export function RingGeometryPage({
     };
   }, [client, reload, ringId, store]);
 
+  // A8b: a sheet prints every active marker at its stored size, or it is not offered (review #13).
+  const sheetProblem = planner === null ? null : markerSheetProblem(planner.markers);
+  const sheetProblemText =
+    sheetProblem === null
+      ? undefined
+      : sheetProblem.kind === "no-active-marker"
+        ? t("admin-courses:geometry.markerSheetNoMarker")
+        : t("admin-courses:geometry.markerSheetTooLarge", {
+            labels: sheetProblem.labels.join(t("admin-courses:sheet.listSeparator")),
+            mm: sheetProblem.maxMillimetres,
+          });
+
   const markerSheet = async () => {
-    if (planner === null || ring === undefined) return;
+    if (planner === null || ring === undefined || sheetProblem !== null) return;
     setSheetError(undefined);
     try {
       const tagIds = new Map<string, number>();
@@ -808,7 +961,7 @@ export function RingGeometryPage({
         markers: planner.markers,
         tagIds,
       });
-      saveFile(pdfBlob(bytes), `marcadors-${fileSlug(ring.name)}.pdf`);
+      saveFile(pdfBlob(bytes), fileNames.markers(ring.name));
     } catch (cause) {
       setSheetError(errorText(cause));
     }
@@ -899,10 +1052,22 @@ export function RingGeometryPage({
           <h1>{t("admin-courses:geometry.heading", { ring: ring.name })}</h1>
         </div>
         {geometry === null ? null : (
-          <Button onClick={() => void markerSheet()} variant="secondary">
-            <Icon aria-hidden="true" name="doc" />
-            {t("admin-courses:geometry.markerSheet")}
-          </Button>
+          <div className="courses-actions">
+            <Button
+              aria-describedby={sheetProblemText === undefined ? undefined : "marker-sheet-problem"}
+              disabled={sheetProblem !== null}
+              onClick={() => void markerSheet()}
+              variant="secondary"
+            >
+              <Icon aria-hidden="true" name="doc" />
+              {t("admin-courses:geometry.markerSheet")}
+            </Button>
+            {sheetProblemText === undefined ? null : (
+              <p className="courses-muted" id="marker-sheet-problem">
+                {sheetProblemText}
+              </p>
+            )}
+          </div>
         )}
       </header>
       {sheetError === undefined ? null : (

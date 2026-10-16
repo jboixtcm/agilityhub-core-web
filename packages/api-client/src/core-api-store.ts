@@ -1,10 +1,10 @@
 import {
   coursePathLengthMeters,
   doorPolygonFromEdge,
+  resolvePlacedObstacles,
   type CoursePlacement,
   type ObstacleType,
 } from "@agilityhub/course-core";
-import { resolvePlacedObstacles } from "@agilityhub/course-ui";
 import type {
   CreateCalibrationLogInput,
   CreateMarkerInput,
@@ -89,12 +89,15 @@ function coursePlacementMode(
   return "preserveMeters";
 }
 
-function plannerPlacement(placement: ApiPlacement): PlannerPlacement {
+/** A stored placement in course-ui's shape (what the editors reopen and re-save). */
+export function plannerPlacement(placement: ApiPlacement): PlannerPlacement {
   return {
     activityId: placement.activityId ?? null,
+    buildSheetFileKey: placement.buildSheetFileKey ?? null,
     courseId: placement.courseId,
     courseVersion: placement.courseVersion,
     displayName: placement.displayName ?? null,
+    grades: placement.grades,
     id: placement.id,
     mode: placement.mode,
     name: placement.name ?? null,
@@ -108,16 +111,44 @@ function plannerPlacement(placement: ApiPlacement): PlannerPlacement {
     },
     ringId: placement.ringId,
     scheduledAt: placement.scheduledAt ?? null,
+    sizes: placement.sizes,
     stale: placement.stale,
     status: placement.status,
     updatedAt: placement.updatedAt,
     version: placement.version,
+    warningThresholdM: placement.warningThresholdM,
   };
 }
 
 type PlacementBody = Omit<components["schemas"]["PlacementRequest"], "force">;
 
-/** The body `POST /placements` and `PUT /placements/{id}` share (R-16-05: course-core computes). */
+/** What course-core computes for a placement (R-16-05): transform, obstacles and warnings. */
+function placedGeometry(
+  course: SavePlacementInput["course"],
+  placement: CoursePlacement,
+  warnings: SavePlacementInput["warnings"],
+): Pick<PlacementBody, "placementMode" | "resolvedObstacles" | "transform" | "warnings"> {
+  return {
+    placementMode: placementMode(placement.placementMode),
+    resolvedObstacles: resolvePlacedObstacles(course, placement).map((obstacle) => ({
+      ...obstacle,
+      numbers: [...obstacle.numbers],
+    })),
+    transform: {
+      flipX: placement.flipX,
+      flipY: placement.flipY,
+      offsetXM: placement.offsetXMeters,
+      offsetYM: placement.offsetYMeters,
+      rotationDeg: placement.rotationDegrees,
+    },
+    warnings: warnings.map((warning) => ({ ...warning })),
+  };
+}
+
+/**
+ * The body of `POST /placements` (R-16-05): what the user placed; `status` only when the user
+ * chose one (the api's default is `DRAFT`).
+ */
 function placementBody(input: Omit<SavePlacementInput, "submissionKey">): PlacementBody {
   return {
     activityId: input.activityId ?? null,
@@ -134,24 +165,46 @@ function placementBody(input: Omit<SavePlacementInput, "submissionKey">): Placem
             ? "FREE_FLOATING"
             : null,
     name: input.name ?? null,
-    placementMode: placementMode(input.placement.placementMode),
-    resolvedObstacles: resolvePlacedObstacles(input.course, input.placement).map((obstacle) => ({
-      ...obstacle,
-      numbers: [...obstacle.numbers],
-    })),
+    ...placedGeometry(input.course, input.placement, input.warnings),
     ringId: input.ringId,
     scheduledAt: input.scheduledAt ?? null,
     sizes: input.sizes === undefined ? null : [...input.sizes],
-    status: "READY_TO_BUILD",
-    transform: {
-      flipX: input.placement.flipX,
-      flipY: input.placement.flipY,
-      offsetXM: input.placement.offsetXMeters,
-      offsetYM: input.placement.offsetYMeters,
-      rotationDeg: input.placement.rotationDegrees,
-    },
+    status: input.status ?? null,
     warningThresholdM: input.thresholdMeters ?? null,
-    warnings: input.warnings.map((warning) => ({ ...warning })),
+  };
+}
+
+/**
+ * The body of `PUT /placements/{id}`, which replaces the placement (a missing value takes the
+ * api's default): the stored placement the user read, with course-core's new geometry and only
+ * the fields the user edited (E9-W03 round 2, review #1).
+ */
+function placementUpdateBody(
+  input: UpdatePlacementInput,
+): Omit<components["schemas"]["PlacementUpdateRequest"], "force"> {
+  const { edits = {}, stored } = input;
+  // `null` is an edit (the user cleared the field); only `undefined` keeps the stored value.
+  const kept = <T>(edited: T | undefined, value: T): T => {
+    if (edited === undefined) return value;
+    return edited;
+  };
+  return {
+    activityId: kept(edits.activityId, stored.activityId),
+    courseId: stored.courseId,
+    courseVersion: input.courseVersion,
+    displayName: kept(edits.displayName, stored.displayName),
+    grades: [...kept(edits.grades, stored.grades)],
+    mode: kept(edits.mode, stored.mode),
+    name: kept(edits.name, stored.name),
+    ...placedGeometry(input.course, input.placement, input.warnings),
+    ringId: stored.ringId,
+    scheduledAt: kept(edits.scheduledAt, stored.scheduledAt),
+    sizes: [...kept(edits.sizes, stored.sizes)],
+    status: kept(edits.status, stored.status),
+    // The version the user edited (R-16-06's recalculation included): another editor's save in
+    // between answers 409 STALE_VERSION.
+    version: stored.version,
+    warningThresholdM: kept(edits.thresholdMeters, stored.warningThresholdM),
   };
 }
 
@@ -507,15 +560,48 @@ export class CoreApiStore implements PlannerStore {
   async updatePlacement(input: UpdatePlacementInput): Promise<PlannerPlacement> {
     const result = await this.#client.PUT("/placements/{id}", {
       body: {
-        ...placementBody(input),
+        ...placementUpdateBody(input),
         ...(input.force === true ? { force: true } : {}),
-        // The version the user edited (R-16-06's recalculation included): another editor's
-        // save in between answers 409 STALE_VERSION.
-        version: input.version,
       },
-      params: { path: { id: input.placementId } },
+      params: { path: { id: input.stored.id } },
     });
     return plannerPlacement(required(result.data, "putPlacement"));
+  }
+
+  /**
+   * R-16-10: stores the build sheet the browser made (course-ui) — a `BUILD_SHEET` upload
+   * (`application/pdf`, signed PUT), then `POST /placements/{id}/build-sheet {fileKey}`, which
+   * replaces the previous sheet and keeps the placement's version.
+   */
+  async attachBuildSheet(placementId: string, bytes: Uint8Array): Promise<PlannerPlacement> {
+    const upload = required(
+      (
+        await this.#client.POST("/courses/upload-urls", {
+          body: { contentType: "application/pdf", purpose: "BUILD_SHEET", size: bytes.byteLength },
+        })
+      ).data,
+      "buildSheetUploadUrl",
+    );
+    const uploaded = await this.#uploadFetch(upload.uploadUrl, {
+      body: new Blob([bytes as BlobPart], { type: "application/pdf" }),
+      headers: { "Content-Type": "application/pdf" },
+      method: "PUT",
+    });
+    if (!uploaded.ok) throw new Error(`BUILD_SHEET_UPLOAD_FAILED:${String(uploaded.status)}`);
+    const result = await this.#client.POST("/placements/{id}/build-sheet", {
+      body: { fileKey: upload.fileKey },
+      params: { path: { id: placementId } },
+    });
+    return plannerPlacement(required(result.data, "attachBuildSheet"));
+  }
+
+  /** R-16-10: the stored build sheet (`GET /placements/{id}/build-sheet`, `application/pdf`). */
+  async getBuildSheet(placementId: string): Promise<Blob> {
+    const result = await this.#client.GET("/placements/{id}/build-sheet", {
+      params: { path: { id: placementId } },
+      parseAs: "blob",
+    });
+    return required(result.data, "getBuildSheet");
   }
 
   async listCalendarPlacements(
@@ -617,8 +703,12 @@ export class CoreApiStore implements PlannerStore {
     );
   }
 
-  deactivateMarker(ringId: string, markerId: string): Promise<PlannerRingMarker> {
-    return this.updateMarker(ringId, markerId, { isActive: false });
+  deactivateMarker(
+    ringId: string,
+    markerId: string,
+    geometryVersion: number,
+  ): Promise<PlannerRingMarker> {
+    return this.updateMarker(ringId, markerId, { geometryVersion, isActive: false });
   }
 
   async listCalibrationLogs(ringId: string): Promise<readonly PlannerCalibrationLog[]> {

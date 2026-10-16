@@ -145,6 +145,16 @@
       "cancelling": "Cancelling the block",
       "loading": "Loading the block",
       "loadError": "The block could not be loaded."
+    },
+    "registrants": {
+      "title": "Booked ({booked}/{capacity})",
+      "empty": "Nobody has booked yet.",
+      "loading": "Loading the bookings…",
+      "loadError": "The bookings could not be loaded.",
+      "retry": "Try again",
+      "name": "{member} + {dog}",
+      "position": "{position}. {name}",
+      "waiting": "Waiting: {names}"
     }
   },
   "ringBlock": {

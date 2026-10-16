@@ -498,6 +498,22 @@ const scenarios = {
     me: meAdmin as Me,
     sessions: accountSessions,
   },
+  /**
+   * S16 R-16-16 / T-16-05 (E9-W03): an ADMIN of another club with COURSES on, so the course routes
+   * answer by tenant (404, its own empty world), not by module.
+   */
+  coursesOtherClub: {
+    branding: {
+      ...minimal,
+      locales: ["ca", "es", "en"],
+      modules: [...minimal.modules, "COURSES"],
+    },
+    me: {
+      ...admin,
+      membership: { ...adminMembership, clubId: "50000000-0000-4000-8000-000000000002" },
+    },
+    sessions: accountSessions,
+  },
   /** S10 R-10-13 (D14): the instructor has read every row already (counter 0, no highlight). */
   followupAllRead: {
     branding: canic,

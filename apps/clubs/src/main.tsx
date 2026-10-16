@@ -10,7 +10,7 @@ import {
   MemoryRefreshTokenStore,
   SessionProvider,
 } from "@agilityhub/auth";
-import { createI18n } from "@agilityhub/i18n";
+import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { applyBrandingTheme, BrandingProvider } from "@agilityhub/ui";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -64,7 +64,8 @@ async function bootstrap(root: HTMLElement) {
   const branding = normalizeBranding(source);
   applyBrandingTheme(branding.theme);
   document.title = branding.club.name;
-  const i18n = await createI18n({
+  // Only the students' namespaces are loadable here: no `admin-*` locale chunk in this build.
+  const i18n = await createClubsI18n({
     branding,
     initialNamespaces: ["common", "auth", "billing", "inactivity", "leave", "shell", "signup"],
   });

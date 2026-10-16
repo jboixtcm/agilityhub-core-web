@@ -791,6 +791,12 @@ export const calendarHandlers = [
         field: "capacity",
       });
     }
+    // Without COURSES a new ring drops the hidden planned placement (the snapshot's patchClass).
+    const courses = hasModule("COURSES");
+    const newRing = (next.ringId ?? null) !== (current.ringId ?? null);
+    if (!courses && !("placementId" in body) && newRing && next.placementId != null) {
+      next.placementId = null;
+    }
     if (!onlyNotes) {
       const problem =
         sessionProblem({
@@ -799,7 +805,7 @@ export const calendarHandlers = [
           ringId: next.ringId ?? null,
         }) ??
         // A new ring is checked against the kept placement (E9-T03).
-        ("placementId" in body || body.ringId !== undefined
+        ("placementId" in body || (courses && body.ringId !== undefined)
           ? classPlacementProblem(next.placementId, next.ringId ?? null)
           : undefined);
       if (problem !== undefined) return problem;

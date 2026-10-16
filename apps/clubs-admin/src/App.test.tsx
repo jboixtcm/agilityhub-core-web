@@ -261,10 +261,19 @@ describe("E9-W03 R-16-15: D18 and D16 «Geometria» belong to COURSES", () => {
     await client.login("aina.serra@example.test", "secret-password");
     window.history.pushState(null, "", "/pistes/ring-muntanya/geometria");
     await renderApplication(client, { ...branding, modules });
-    await waitFor(() => {
-      expect(screen.getByRole("link", { name: "Pistes" })).toBeVisible();
-    });
+    // RequireModule's refusal is what the page shows (not merely the editor not loaded yet).
+    expect(await screen.findByRole("heading", { level: 1, name: "No disponible" })).toBeVisible();
     expect(screen.queryByRole("heading", { name: /^Geometria/u })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Recorreguts" })).not.toBeInTheDocument();
+
+    // Control case: with COURSES the same address opens the editor.
+    cleanup();
+    window.history.pushState(null, "", "/pistes/ring-muntanya/geometria");
+    await renderApplication(client, branding);
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Geometria · Muntanya" }),
+    ).toBeVisible();
+    expect(screen.queryByRole("heading", { name: "No disponible" })).not.toBeInTheDocument();
     window.history.pushState(null, "", "/");
   });
 });

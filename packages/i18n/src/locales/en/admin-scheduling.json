@@ -269,6 +269,7 @@
     "none": "None",
     "loading": "Loading…",
     "unknown": "A placement of another ring",
-    "error": "The ring's courses could not be loaded."
+    "error": "The ring's courses could not be loaded.",
+    "option": "{course} · {name}"
   }
 }

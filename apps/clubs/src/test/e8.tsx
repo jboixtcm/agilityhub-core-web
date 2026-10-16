@@ -6,7 +6,7 @@ import {
 } from "@agilityhub/api-client/mocks";
 import brandingFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { createI18n } from "@agilityhub/i18n";
+import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider, ToastProvider } from "@agilityhub/ui";
 import { cleanup, render } from "@testing-library/react";
 import type { ReactNode } from "react";
@@ -48,11 +48,10 @@ export async function renderE8(
   const locale = options.locale ?? "ca";
   const branding = options.branding ?? e8Branding;
   if (options.scenario !== undefined) mockScenario(options.scenario);
-  const i18n = await createI18n({
+  const i18n = await createClubsI18n({
     branding,
     browserLanguages: [locale],
     initialNamespaces: [
-      "admin-census",
       "auth",
       "billing",
       "census",

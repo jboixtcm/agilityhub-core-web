@@ -224,6 +224,10 @@
     "loading": "Loading the placements",
     "error": "The placements could not be loaded.",
     "row": "{course} · {ring}",
-    "rowNamed": "{course} · {ring} · {name}"
+    "rowNamed": "{course} · {ring} · {name}",
+    "sheet": "Build sheet",
+    "sheetPending": "Downloading the build sheet",
+    "sheetFile": "build-sheet-{course}.pdf",
+    "sheetFallback": "course"
   }
 }

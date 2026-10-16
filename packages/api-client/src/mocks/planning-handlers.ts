@@ -636,10 +636,16 @@ export const planningHandlers = [
     } else if (next.capacityMode === "AUTO") {
       next.capacity = autoCapacity(levelIds);
     }
-    // A new ring is checked against the kept placement (E9-T03).
+    // Without COURSES a new ring drops the hidden planned placement (the snapshot's
+    // patchTemplateClass); with it, a new ring is checked against the kept placement (E9-T03).
+    const courses = currentMockScenario().branding.modules.includes("COURSES");
+    const newRing = (next.ringId ?? null) !== (current.ringId ?? null);
+    if (!courses && !("placementId" in body) && newRing && next.placementId != null) {
+      next.placementId = null;
+    }
     const problem =
       classProblem(template, next) ??
-      ("placementId" in body || body.ringId !== undefined
+      ("placementId" in body || (courses && body.ringId !== undefined)
         ? classPlacementProblem(next.placementId, next.ringId ?? null)
         : undefined);
     if (problem !== undefined) {

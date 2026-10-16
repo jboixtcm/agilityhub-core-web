@@ -1,5 +1,6 @@
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
-import { createI18n, loadNamespace, productLocales } from "@agilityhub/i18n";
+import { loadNamespace, productLocales } from "@agilityhub/i18n";
+import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { describe, expect, it } from "vitest";
 
 /** `CONVENCIONS_I18N.md` §1 (same list as `scripts/i18n-check.mjs`) + the mockup 10 annotation. */
@@ -36,7 +37,7 @@ describe("T-06-30 screens 10 / 23 vocabulary and ca literals", () => {
   });
 
   it("keeps the exact ca literals of mockups 10 and 23", async () => {
-    const i18n = await createI18n({
+    const i18n = await createClubsI18n({
       branding: brandingCanicFixture,
       browserLanguages: ["ca"],
       initialNamespaces: ["home", "instructor", "enums", "shell"],

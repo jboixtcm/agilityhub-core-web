@@ -269,6 +269,7 @@
     "none": "Cap",
     "loading": "Carregant…",
     "unknown": "Una col·locació d'una altra pista",
-    "error": "No s'han pogut carregar els recorreguts de la pista."
+    "error": "No s'han pogut carregar els recorreguts de la pista.",
+    "option": "{course} · {name}"
   }
 }

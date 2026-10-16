@@ -1,7 +1,9 @@
-import { type ApiClient, type components } from "@agilityhub/api-client";
+import { type ApiClient, type components, isApiError, saveFile } from "@agilityhub/api-client";
 import { Button, Card, FormField, Icon, Modal, Select, Skeleton } from "@agilityhub/ui";
 import { type SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { fileSlug } from "../file-names";
 
 type Placement = components["schemas"]["Placement"];
 type CourseListItem = components["schemas"]["CourseListItem"];
@@ -36,6 +38,7 @@ export function ActivityPlacementsCard({
   const { t } = useTranslation(["admin-activities", "errors"]);
   const [adding, setAdding] = useState(false);
   const [courseId, setCourseId] = useState("");
+  const [sheet, setSheet] = useState<{ id: string; error?: string }>();
   const key = `${activityId}|${placementIds.join(",")}`;
   /** The answer for the activity and placements it was read for (a change reads again). */
   const [read, setRead] = useState<{
@@ -80,6 +83,40 @@ export function ActivityPlacementsCard({
   const ringName = (id: string) => rings.find((ring) => ring.id === id)?.name ?? "";
   // A course of the club can be placed for the activity (the AgilityHub library is copied first).
   const placeable = courses.filter((course) => course.ownerType !== "AGILITYHUB");
+
+  /** R-16-10: the build sheet the placement stores, as the api keeps it (`application/pdf`). */
+  const downloadSheet = (placement: Placement) => {
+    setSheet({ id: placement.id });
+    client
+      .GET("/placements/{id}/build-sheet", {
+        params: { path: { id: placement.id } },
+        parseAs: "blob",
+      })
+      .then(
+        (answer) => {
+          if (answer.data !== undefined) {
+            saveFile(
+              answer.data,
+              t("admin-activities:placements.sheetFile", {
+                course: fileSlug(
+                  courseName(placement.courseId),
+                  t("admin-activities:placements.sheetFallback"),
+                ),
+              }),
+            );
+          }
+          setSheet(undefined);
+        },
+        (cause: unknown) => {
+          setSheet({
+            error: isApiError(cause)
+              ? t(`errors:${cause.code}`, { defaultValue: t("admin-activities:placements.error") })
+              : t("admin-activities:placements.error"),
+            id: placement.id,
+          });
+        },
+      );
+  };
 
   const add = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -141,6 +178,24 @@ export function ActivityPlacementsCard({
                         ring: ringName(placement.ringId),
                       })}
                 </a>
+                {placement.buildSheetFileKey == null ? null : (
+                  <Button
+                    loading={sheet?.id === placement.id && sheet.error === undefined}
+                    loadingLabel={t("admin-activities:placements.sheetPending")}
+                    onClick={() => {
+                      downloadSheet(placement);
+                    }}
+                    variant="ghost"
+                  >
+                    <Icon aria-hidden="true" name="doc" />
+                    {t("admin-activities:placements.sheet")}
+                  </Button>
+                )}
+                {sheet?.id === placement.id && sheet.error !== undefined ? (
+                  <p className="ah-form-field__error" role="alert">
+                    {sheet.error}
+                  </p>
+                ) : null}
               </li>
             );
           })}

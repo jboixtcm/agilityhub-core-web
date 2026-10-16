@@ -1,15 +1,20 @@
-import { type ApiClient, saveFile, useSubmissionKeys } from "@agilityhub/api-client";
-import { renderBuildSheetPdf } from "@agilityhub/course-ui";
+import {
+  ApiError,
+  type ApiClient,
+  isApiError,
+  saveFile,
+  useSubmissionKeys,
+} from "@agilityhub/api-client";
+import { renderBuildSheetPdf, type PlannerPlacement } from "@agilityhub/course-ui";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Button, FormField, Input, Modal, Select, Textarea } from "@agilityhub/ui";
 import { type SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-  fileSlug,
+  type Course,
   kindOf,
   pdfBlob,
-  type Discipline,
   type Placement,
   type Ring,
   type RingSetup,
@@ -19,6 +24,7 @@ import {
   useCourseLabels,
   useCourseStore,
   useMetres,
+  useSheetFileNames,
   useSheetLabels,
 } from "./shared";
 
@@ -34,27 +40,30 @@ function clubToday(timeZone: string): string {
 
 /**
  * «Registra-ho com a muntat» (S16 §2, R-16-07): what is set up on a ring — this placement, or the
- * course without one — with its kind (the discipline's by default), «Fins quan?» and a note. An
- * active setup on the ring is named first («Substituirà el muntatge actual…»): registering
- * replaces it. One `Idempotency-Key` per payload; errors stay in the dialog.
+ * course without one — with its kind (the discipline's by default), «Fins quan?» and a note; the
+ * course's AgilityHub level and club levels go with it (R-16-09: what the students read). The
+ * ring's active setup is read first and named («Substituirà el muntatge actual…»): REGISTRA
+ * waits for it, since registering replaces it. One `Idempotency-Key` per payload; errors stay in
+ * the dialog. An INSTRUCTOR refused by the api (`403`, `courses.allowInstructorPublish` off) is
+ * told why, and the screen stops offering the action (`onRefused`).
  */
 export function RegisterSetupModal({
   client,
-  courseId,
-  discipline,
+  course,
   onClose,
+  onRefused,
   onRegistered,
   placement,
   rings,
   timeZone,
 }: {
   client: ApiClient;
-  courseId: string;
-  discipline: Discipline;
+  course: Pick<Course, "agilityhubLevel" | "discipline" | "id" | "levelIds">;
   onClose: () => void;
+  onRefused: () => void;
   onRegistered: (message: string) => void;
   /** With a placement the ring is the placement's; without one the user picks it. */
-  placement?: Placement | undefined;
+  placement?: Pick<Placement, "id" | "ringId"> | undefined;
   rings: readonly Ring[];
   timeZone: string;
 }) {
@@ -65,7 +74,7 @@ export function RegisterSetupModal({
   const keys = useSubmissionKeys();
   const activeRings = rings.filter((ring) => ring.active);
   const [ringId, setRingId] = useState(placement?.ringId ?? activeRings[0]?.id ?? "");
-  const [kind, setKind] = useState<SetupKind>(kindOf(discipline));
+  const [kind, setKind] = useState<SetupKind>(kindOf(course.discipline));
   const [expectedUntil, setExpectedUntil] = useState("");
   const [notes, setNotes] = useState("");
   /** The active setup of the ring it was read for (`null` = none): another ring reads again. */
@@ -108,10 +117,11 @@ export function RegisterSetupModal({
     setPending(true);
     setError(undefined);
     const body = {
+      ...(course.agilityhubLevel == null ? {} : { agilityhubLevel: course.agilityhubLevel }),
       kind,
-      levelIds: [],
+      levelIds: [...course.levelIds],
       ringId,
-      ...(placement === undefined ? { courseId } : { placementId: placement.id }),
+      ...(placement === undefined ? { courseId: course.id } : { placementId: placement.id }),
       ...(expectedUntil === "" ? {} : { expectedUntil }),
       ...(notes.trim() === "" ? {} : { notes: notes.trim() }),
     };
@@ -126,7 +136,12 @@ export function RegisterSetupModal({
           : t("admin-courses:setup.registeredReplacing", { ring: ringName }),
       );
     } catch (cause) {
-      setError(errorText(cause));
+      if (isApiError(cause, "FORBIDDEN")) {
+        setError(t("admin-courses:setup.instructorRefused"));
+        onRefused();
+      } else {
+        setError(errorText(cause));
+      }
       setPending(false);
     }
   };
@@ -216,7 +231,8 @@ export function RegisterSetupModal({
             {t("admin-courses:common.cancel")}
           </Button>
           <Button
-            disabled={ringId === ""}
+            // Until the ring's active setup is known, the user cannot see what will be replaced.
+            disabled={ringId === "" || current === undefined}
             loading={pending}
             loadingLabel={t("admin-courses:common.saving")}
             type="submit"
@@ -229,17 +245,36 @@ export function RegisterSetupModal({
   );
 }
 
+/** The browser made and downloaded the sheet, but the api did not store it. */
+class BuildSheetNotStored extends Error {
+  constructor(readonly reason: unknown) {
+    super("BUILD_SHEET_NOT_STORED");
+  }
+}
+
+/** A build-sheet failure in the reader's language. */
+export function useBuildSheetError(): (error: unknown) => string {
+  const { t } = useTranslation("admin-courses");
+  const errorText = useCourseError();
+  return (error) =>
+    error instanceof BuildSheetNotStored
+      ? t("admin-courses:sheet.notStored", { reason: errorText(error.reason) })
+      : errorText(error);
+}
+
 /**
  * R-16-10 «Full de muntatge»: generated in the browser from the stored placement (its
- * `resolvedObstacles`, A8c) and the ring's current geometry, and saved as a PDF. The api's
- * storage of the sheet (`POST /placements/{id}/build-sheet`) answers `501 NOT_IMPLEMENTED`, so
- * nothing is uploaded (question in the E9-W03 report).
+ * `resolvedObstacles`, A8c) and the ring's current geometry, downloaded, then stored for the
+ * placement (`BUILD_SHEET` upload + `POST /placements/{id}/build-sheet`, E9-T05). A stale
+ * placement (R-16-06) mixes old obstacles with the new geometry: the screens disable the action
+ * and point to «Revisa» instead. Answers the placement with its `buildSheetFileKey`.
  */
 export function useBuildSheet(client: ApiClient) {
   const store = useCourseStore(client);
   const sheet = useSheetLabels();
   const metres = useMetres();
-  const { t } = useTranslation("admin-courses");
+  const names = useSheetFileNames();
+  const { t } = useTranslation(["admin-courses", "errors"]);
   return async ({
     courseName,
     notes,
@@ -247,11 +282,16 @@ export function useBuildSheet(client: ApiClient) {
   }: {
     courseName: string;
     notes: string | null | undefined;
-    placement: Pick<Placement, "name" | "resolvedObstacles" | "ringId">;
-  }) => {
+    placement: Pick<Placement, "id" | "name" | "resolvedObstacles" | "ringId">;
+  }): Promise<PlannerPlacement> => {
     const ring = await store.getRing(placement.ringId);
-    if (ring === null) throw new Error("RING_WITHOUT_GEOMETRY");
-    const obstacles = placement.resolvedObstacles;
+    if (ring === null) {
+      throw new ApiError({
+        code: "RING_WITHOUT_GEOMETRY",
+        message: t("errors:RING_WITHOUT_GEOMETRY"),
+        status: 422,
+      });
+    }
     const subheading = [
       t("admin-courses:sheet.ring", {
         length: metres(ring.length_m),
@@ -259,13 +299,35 @@ export function useBuildSheet(client: ApiClient) {
         width: metres(ring.width_m),
       }),
       ...(placement.name == null || placement.name === "" ? [] : [placement.name]),
-    ].join(" · ");
+    ].join(t("admin-courses:sheet.listSeparator"));
     const bytes = renderBuildSheetPdf({
       labels: sheet.build(courseName, subheading),
       notes: notes ?? null,
-      obstacles,
+      obstacles: placement.resolvedObstacles,
       ring,
     });
-    saveFile(pdfBlob(bytes), `${fileSlug(courseName)}-${fileSlug(ring.name)}.pdf`);
+    saveFile(pdfBlob(bytes), names.build(courseName, ring.name));
+    try {
+      return await store.attachBuildSheet(placement.id, bytes);
+    } catch (cause) {
+      throw new BuildSheetNotStored(cause);
+    }
+  };
+}
+
+/** R-16-10: the build sheet the placement stores (`GET /placements/{id}/build-sheet`). */
+export function useStoredBuildSheet(client: ApiClient) {
+  const store = useCourseStore(client);
+  const names = useSheetFileNames();
+  return async ({
+    courseName,
+    placementId,
+    ringName,
+  }: {
+    courseName: string;
+    placementId: string;
+    ringName: string;
+  }) => {
+    saveFile(await store.getBuildSheet(placementId), names.build(courseName, ringName));
   };
 }

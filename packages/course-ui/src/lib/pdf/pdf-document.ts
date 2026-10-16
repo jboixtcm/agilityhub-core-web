@@ -1,9 +1,10 @@
 /**
  * A minimal PDF 1.4 writer for the sheets S16 generates in the browser (R-16-10 build sheet, A8b
  * marker sheet): vector lines, rectangles, polygons and circles in grey levels, and text in the
- * two standard Helvetica faces with WinAnsi encoding (every Catalan, Spanish and English letter).
- * No fonts are embedded and nothing depends on the DOM, so the output is byte-for-byte
- * deterministic (snapshot tests, T-16-04) and works in workers and tests alike.
+ * two standard Helvetica faces with WinAnsi encoding (every Catalan, Spanish and English letter;
+ * the document properties in UTF-16BE). No fonts are embedded and nothing depends on the DOM, so
+ * the output is byte-for-byte deterministic (snapshot tests, T-16-04) and works in workers and
+ * tests alike.
  *
  * Coordinates are millimetres from the page's top-left corner, as on paper; the writer turns them
  * into PDF points from the bottom-left. Colours are grey levels (0 = black, 1 = white): print
@@ -143,16 +144,42 @@ const SYMBOL_WIDTHS: Readonly<Record<string, number>> = {
   ï: 278,
 };
 
-function encodeChar(char: string): number {
+/** The WinAnsi byte of `char`, or `undefined` when WinAnsi has no such character. */
+function winAnsiCode(char: string): number | undefined {
   const extra = WIN_ANSI_EXTRA[char];
   if (extra !== undefined) return extra;
-  const code = char.codePointAt(0) ?? 0x3f;
+  const code = char.codePointAt(0) ?? 0;
   if ((code >= 0x20 && code <= 0x7e) || (code >= 0xa0 && code <= 0xff)) return code;
-  // Typographic spaces read as a space; anything else WinAnsi cannot show reads as «?».
-  return code === 0x202f || code === 0x00a0 || code === 0x2009 ? 0x20 : 0x3f;
+  return undefined;
 }
 
-/** Advance width of one character in 1/1000 em. */
+/**
+ * `text` in characters WinAnsi can show. Composed first (NFC: a decomposed «é» is one letter);
+ * a character still outside WinAnsi becomes its compatibility form when that one fits (U+0140
+ * «ŀ» → «l·», a thin space → a space), else the WinAnsi parts of its decomposition with the
+ * combining marks dropped; only what is left reads as «?».
+ */
+function toWinAnsi(text: string): string {
+  let out = "";
+  for (const char of text.normalize("NFC")) {
+    if (winAnsiCode(char) !== undefined) {
+      out += char;
+      continue;
+    }
+    const compatible = char.normalize("NFKC");
+    if (Array.from(compatible).every((part) => winAnsiCode(part) !== undefined)) {
+      out += compatible;
+      continue;
+    }
+    for (const part of char.normalize("NFKD")) {
+      if (winAnsiCode(part) !== undefined) out += part;
+      else if (!/\p{M}/u.test(part)) out += "?";
+    }
+  }
+  return out;
+}
+
+/** Advance width of one WinAnsi character in 1/1000 em. */
 function charWidth(char: string, font: PdfFont): number {
   const table = font === "bold" ? HELVETICA_BOLD_ASCII : HELVETICA_ASCII;
   const code = char.codePointAt(0) ?? 0;
@@ -161,20 +188,21 @@ function charWidth(char: string, font: PdfFont): number {
   if (symbol !== undefined) return symbol;
   const base = LATIN1_BASE[char];
   if (base !== undefined) return charWidth(base, font);
-  return code === 0x202f || code === 0x00a0 ? 278 : 556;
+  return code === 0x00a0 ? 278 : 556;
 }
 
 /** The width of `text` in millimetres at `sizePt` (for alignment and fitting). */
 export function textWidthMm(text: string, sizePt: number, font: PdfFont = "regular"): number {
   let units = 0;
-  for (const char of text) units += charWidth(char, font);
+  for (const char of toWinAnsi(text)) units += charWidth(char, font);
   return ((units / 1000) * sizePt) / PT_PER_MM;
 }
 
 /** `text` shortened with «…» so it fits `maxWidthMm`. */
 export function fitText(text: string, maxWidthMm: number, sizePt: number, font: PdfFont): string {
   if (textWidthMm(text, sizePt, font) <= maxWidthMm) return text;
-  const chars = Array.from(text);
+  // Composed first, so shortening never leaves a letter without its accent.
+  const chars = Array.from(text.normalize("NFC"));
   while (chars.length > 0 && textWidthMm(`${chars.join("")}…`, sizePt, font) > maxWidthMm) {
     chars.pop();
   }
@@ -187,14 +215,28 @@ function num(value: number): string {
   return Object.is(rounded, -0) || rounded === 0 ? "0" : String(rounded);
 }
 
+/** A page string (`Tj`): WinAnsi bytes, the delimiters escaped. */
 function pdfString(text: string): string {
   let out = "(";
-  for (const char of text) {
-    const code = encodeChar(char);
+  for (const char of toWinAnsi(text)) {
+    const code = winAnsiCode(char) ?? 0x3f;
     if (code === 0x28 || code === 0x29 || code === 0x5c) out += `\\${String.fromCharCode(code)}`;
     else out += String.fromCharCode(code);
   }
   return `${out})`;
+}
+
+/**
+ * A document-properties string (the Info dictionary): readers decode those as PDFDocEncoding,
+ * not WinAnsi (’ would read as ™), so they travel as UTF-16BE with its byte-order mark, in hex.
+ */
+function pdfTextString(text: string): string {
+  const normalized = text.normalize("NFC");
+  let hex = "FEFF";
+  for (let index = 0; index < normalized.length; index += 1) {
+    hex += normalized.charCodeAt(index).toString(16).toUpperCase().padStart(4, "0");
+  }
+  return `<${hex}>`;
 }
 
 export class PdfPage {
@@ -350,7 +392,7 @@ export class PdfDocument {
       "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>",
     );
     objects.push(
-      `<< /Title ${pdfString(this.#info.title)} /Producer ${pdfString(this.#info.producer)} >>`,
+      `<< /Title ${pdfTextString(this.#info.title)} /Producer ${pdfTextString(this.#info.producer)} >>`,
     );
     this.#pages.forEach((page, index) => {
       const contentId = (pageIds[index] ?? 0) + 1;
@@ -372,7 +414,7 @@ export class PdfDocument {
     for (const offset of offsets) out += `${String(offset).padStart(10, "0")} 00000 n \n`;
     out += `trailer\n<< /Size ${String(objects.length + 1)} /Root 1 0 R /Info 5 0 R >>\nstartxref\n${String(xref)}\n%%EOF\n`;
 
-    // Every character above is a single byte (WinAnsi or the binary-comment marker).
+    // Every character above is a single byte (WinAnsi, hex or the binary-comment marker).
     const bytes = new Uint8Array(out.length);
     for (let index = 0; index < out.length; index += 1) bytes[index] = out.charCodeAt(index) & 0xff;
     return bytes;

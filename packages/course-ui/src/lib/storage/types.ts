@@ -113,9 +113,11 @@ export interface SavePlacementInput {
   readonly activityId?: string | null;
   readonly displayName?: string | null;
   readonly grades?: readonly string[];
-  readonly sizes?: readonly ("XS" | "S" | "M" | "I" | "L" | "ALL")[];
+  readonly sizes?: readonly PlacementSize[];
   readonly isTraining?: boolean;
   readonly mode?: "event" | "training" | "free-floating";
+  /** Only when the user chooses it; absent, the api's default applies (`DRAFT`). */
+  readonly status?: PlannerPlacement["status"];
   /**
    * R-16-05: a placement with a `critical` warning is refused (`422 PLACEMENT_BLOCKED{warnings}`)
    * unless an ADMIN confirms it; the confirmed retry sends `force: true` (and a new
@@ -125,14 +127,38 @@ export interface SavePlacementInput {
 }
 
 /**
- * `PUT /placements/{id}`: the placement recalculated (a stale one after a geometry change,
- * R-16-06, or the user's new transform) at the `version` the user edited, so another editor's
- * save in between answers `409 STALE_VERSION`. The api keeps its ring and its course.
+ * `PUT /placements/{id}` replaces the placement (R-16-05/06): the body is the stored placement the
+ * user read (`stored`, at its `version`, so another editor's save in between answers
+ * `409 STALE_VERSION`) with the user's new transform, course-core's recalculated obstacles and
+ * warnings, and only the fields the user edited (`edits`). Everything else (schedule, grades,
+ * sizes, threshold, status, mode, activity) goes back as it is stored, because the api replaces
+ * a missing value with its default (E9-W03 round 2, review #1). The ring and the course are kept.
  */
-export interface UpdatePlacementInput extends Omit<SavePlacementInput, "submissionKey"> {
-  readonly placementId: string;
-  readonly version: number;
+export interface UpdatePlacementInput {
+  readonly stored: PlannerPlacement;
+  readonly course: CourseData;
+  /** The course's version the user placed (the api wants its current version). */
+  readonly courseVersion: number;
+  readonly placement: CoursePlacement;
+  readonly warnings: readonly Warning[];
+  readonly force?: boolean;
+  readonly edits?: PlacementEdits;
 }
+
+/** What the user changed on a stored placement; an absent field keeps the stored value. */
+export interface PlacementEdits {
+  readonly name?: string | null;
+  readonly displayName?: string | null;
+  readonly scheduledAt?: string | null;
+  readonly activityId?: string | null;
+  readonly grades?: readonly string[];
+  readonly sizes?: readonly PlacementSize[];
+  readonly thresholdMeters?: number;
+  readonly status?: PlannerPlacement["status"];
+  readonly mode?: PlannerPlacement["mode"];
+}
+
+export type PlacementSize = "XS" | "S" | "M" | "I" | "L" | "ALL";
 
 export interface PlannerPlacement {
   readonly id: string;
@@ -151,6 +177,11 @@ export interface PlannerPlacement {
   /** R-16-06: the ring's geometry changed after the placement was resolved. */
   readonly stale: boolean;
   readonly updatedAt: string;
+  readonly grades: readonly string[];
+  readonly sizes: readonly PlacementSize[];
+  readonly warningThresholdM: number;
+  /** R-16-10: the stored build sheet (`GET /placements/{id}/build-sheet`), `null` without one. */
+  readonly buildSheetFileKey: string | null;
 }
 
 export interface ListCalendarPlacementsInput {
@@ -299,7 +330,12 @@ export interface PlannerStore {
     markerId: string,
     patch: UpdateMarkerPatch,
   ): Promise<PlannerRingMarker>;
-  deactivateMarker(ringId: string, markerId: string): Promise<PlannerRingMarker>;
+  /** `geometryVersion` is the version the user read (E9-W02 review #2): never a silent overwrite. */
+  deactivateMarker(
+    ringId: string,
+    markerId: string,
+    geometryVersion: number,
+  ): Promise<PlannerRingMarker>;
   listCalibrationLogs(ringId: string): Promise<readonly PlannerCalibrationLog[]>;
   createCalibrationLog(input: CreateCalibrationLogInput): Promise<PlannerCalibrationLog>;
   createBuildSession(input: {

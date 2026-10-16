@@ -1,0 +1,121 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+
+ ❯ tests/sheets.test.tsx (14 tests | 7 failed) 136ms
+   ❯ R-16-17 the PDF writer prints every Catalan, Spanish and English letter (2)
+     × R-16-17 decomposed accents and «ŀ» (U+0140) print as WinAnsi letters, never «?» 5ms
+     × R-16-17 the document properties are UTF-16BE text strings, so ’ and · read back as typed 1ms
+   ❯ R-16-10 the build sheet's punctuation comes from the caller (1)
+     × R-16-10 the marker distances join with `listSeparator` and an unnumbered obstacle shows `unnumbered` 7ms
+   ❯ A8b the ring's marker sheet from the stored markers (4)
+     × A8b a marker larger than the printable width is refused, never printed smaller 1ms
+     × A8b a ring without an active marker has no sheet (no empty PDF) 0ms
+   ❯ T-16-04 dragging the plan in the placement editor (4)
+     × T-16-04 a second finger on the plan neither restarts nor moves the drag of the first 10ms
+     × T-16-04 a cancelled drag ends without swallowing the next real click on an obstacle 10ms
+
+ Test Files  1 failed (1)
+      Tests  7 failed | 7 passed (14)
+   Start at  14:12:26
+   Duration  768ms (environment 38%, transform 27%, tests 20%, import 14%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sheets.test.tsx > R-16-17 the PDF writer prints every Catalan, Spanish and English letter > R-16-17 decomposed accents and «ŀ» (U+0140) print as WinAnsi letters, never «?»
+AssertionError: expected [ 'Co?locació · Cafe?', 'q?', '??' ] to deeply equal [ 'Col·locació · Café', 'q', '??' ]
+
+- Expected
++ Received
+
+  [
+-   "Col·locació · Café",
+-   "q",
++   "Co?locació · Cafe?",
++   "q?",
+    "??",
+  ]
+
+ ❯ tests/sheets.test.tsx:248:43
+    246|     // Nothing WinAnsi can show (Polish «ł», a check mark) still reads…
+    247|     page.text(10, 30, "ł✓");
+    248|     expect(fileTexts(document.toBytes())).toEqual(["Col·locació · Café…
+       |                                           ^
+    249|     expect(textWidthMm("Coŀlocació", 10)).toBeCloseTo(textWidthMm("Col…
+    250|     expect(textWidthMm("Café", 10)).toBeCloseTo(textWidthMm("Café", 1…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/sheets.test.tsx > R-16-17 the PDF writer prints every Catalan, Spanish and English letter > R-16-17 the document properties are UTF-16BE text strings, so ’ and · read back as typed
+AssertionError: expected undefined to be defined
+ ❯ infoString tests/sheets.test.tsx:220:15
+    218| function infoString(bytes: Uint8Array, key: string): string {
+    219|   const hex = new RegExp(`/${key} <([0-9A-Fa-f]*)>`, "u").exec(latin1(…
+    220|   expect(hex).toBeDefined();
+       |               ^
+    221|   const units: number[] = [];
+    222|   for (let index = 0; index < (hex ?? "").length; index += 4) {
+ ❯ tests/sheets.test.tsx:261:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/sheets.test.tsx > R-16-10 the build sheet's punctuation comes from the caller > R-16-10 the marker distances join with `listSeparator` and an unnumbered obstacle shows `unnumbered`
+AssertionError: expected [ 'Jumping Sant Joan', …(183) ] to include 's/n'
+ ❯ tests/sheets.test.tsx:282:17
+    280|     });
+    281|     const all = fileTexts(bytes);
+    282|     expect(all).toContain("s/n");
+       |                 ^
+    283|     expect(all).not.toContain("—");
+    284|     const distances = all.filter((text) => /^[A-D]: /u.test(text));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/sheets.test.tsx > A8b the ring's marker sheet from the stored markers > A8b a marker larger than the printable width is refused, never printed smaller
+TypeError: markerSheetProblem is not a function
+ ❯ tests/sheets.test.tsx:415:12
+    413|     ];
+    414|     // Inactive markers are never printed, so C does not count.
+    415|     expect(markerSheetProblem(markers)).toEqual({
+       |            ^
+    416|       kind: "too-large",
+    417|       labels: ["B"],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/sheets.test.tsx > A8b the ring's marker sheet from the stored markers > A8b a ring without an active marker has no sheet (no empty PDF)
+TypeError: markerSheetProblem is not a function
+ ❯ tests/sheets.test.tsx:439:12
+    437|   it("A8b a ring without an active marker has no sheet (no empty PDF)"…
+    438|     const markers = [marker("A", 0, 0, false), marker("B", 10, 0, fals…
+    439|     expect(markerSheetProblem(markers)).toEqual({ kind: "no-active-mar…
+       |            ^
+    440|     expect(markerSheetProblem([])).toEqual({ kind: "no-active-marker" …
+    441|     const error = thrown(() =>
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/sheets.test.tsx > T-16-04 dragging the plan in the placement editor > T-16-04 a second finger on the plan neither restarts nor moves the drag of the first
+AssertionError: expected 9.6 to be close to 7.199999999999999, received difference is 2.4000000000000004, but expected 5e-7
+ ❯ tests/sheets.test.tsx:639:21
+    637|     });
+    638|     expect(onDrag).toHaveBeenCalledTimes(2);
+    639|     expect(total.x).toBeCloseTo(120 * scale, 6);
+       |                     ^
+    640|     expect(total.y).toBeCloseTo(-60 * scale, 6);
+    641|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  tests/sheets.test.tsx > T-16-04 dragging the plan in the placement editor > T-16-04 a cancelled drag ends without swallowing the next real click on an obstacle
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ tests/sheets.test.tsx:673:22
+    671|     if (obstacle === null) return;
+    672|     fireEvent.click(obstacle);
+    673|     expect(onSelect).toHaveBeenCalledTimes(1);
+       |                      ^
+    674|   });
+    675| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+

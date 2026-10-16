@@ -139,6 +139,7 @@ function courseFrom(id: string, body: Schemas["CourseRequest"]): Schemas["Course
 function placementFrom(id: string, body: Schemas["PlacementRequest"]): Schemas["Placement"] {
   return {
     activityId: body.activityId ?? null,
+    buildSheetFileKey: null,
     classSessionIds: [],
     courseId: body.courseId,
     courseVersion: body.courseVersion,
@@ -337,11 +338,32 @@ export function createFakeCoreApi({ maxSizeMb = 25 }: { maxSizeMb?: number } = {
       if (request.ringId !== current.ringId) return failure(422, "PLACEMENT_RING_MISMATCH");
       const updated: Schemas["Placement"] = {
         ...placementFrom(current.id, request),
+        buildSheetFileKey: current.buildSheetFileKey ?? null,
         createdAt: current.createdAt,
         version: current.version + 1,
       };
       placements[index] = updated;
       return { body: updated, status: 200 };
+    }
+    const sheetPath = /^\/placements\/([^/]+)\/build-sheet$/u.exec(path);
+    if (sheetPath !== null) {
+      // R-16-10 (E9-T05): the upload's key binds to the placement; its version does not change.
+      const index = placements.findIndex((candidate) => candidate.id === sheetPath[1]);
+      const current = placements[index];
+      if (current === undefined) return failure(404, "NOT_FOUND");
+      if (method === "POST") {
+        const { fileKey } = body as Schemas["BuildSheetRequest"];
+        const updated = { ...current, buildSheetFileKey: fileKey };
+        placements[index] = updated;
+        return { body: updated, status: 200 };
+      }
+      if (current.buildSheetFileKey == null) return failure(404, "NOT_FOUND");
+      return {
+        body: new Response(new Blob(["%PDF-1.4"], { type: "application/pdf" }), {
+          headers: { "Content-Type": "application/pdf" },
+        }),
+        status: 200,
+      };
     }
     if (method === "POST" && path === "/build-sessions/session-1/finish") {
       finishedAt ??= NOW;

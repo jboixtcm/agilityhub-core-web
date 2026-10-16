@@ -1,9 +1,9 @@
 /**
  * S16 (E9-W03): the course library, placements, ring geometry and inventory, setups and course
  * uploads, as the api answers them (statuses per CATALEG_ERRORS §1, the `ApiError` envelope with
- * the published `details`, `Idempotency-Key` replay per CONVENCIONS_API §7). The build sheet's
- * storage (`/placements/{id}/build-sheet`) is published but answers `501 NOT_IMPLEMENTED` in the
- * api, and so here.
+ * the published `details`, `Idempotency-Key` replay per CONVENCIONS_API §7). The tenant is the
+ * caller's club (R-16-16): the world is one club's (`callerClubOwnsTheWorld`), and another club's
+ * token finds none of its records (`coursesOtherClub`).
  */
 import { courseDataSchema } from "@agilityhub/course-core";
 import { http, HttpResponse } from "msw";
@@ -18,7 +18,6 @@ import {
   courseModels,
   courseState,
   courseStats,
-  COURSES_CLUB_ID,
   type Course,
   type ObstacleInventory,
   type Placement,
@@ -79,6 +78,11 @@ function isAdmin(): boolean {
   return scenario().me.membership?.roles.includes("ADMIN") ?? false;
 }
 
+/** The tenant of the JWT: the club's records and uploads are this club's only. */
+function callerClubId(): string {
+  return scenario().me.membership?.clubId ?? "";
+}
+
 /** COURSES off → `404 MODULE_DISABLED`; then the staff roles (`refuse`). */
 function guard(roles: readonly string[] = ["INSTRUCTOR", "ADMIN"]): Response | undefined {
   const current = scenario();
@@ -86,6 +90,27 @@ function guard(roles: readonly string[] = ["INSTRUCTOR", "ADMIN"]): Response | u
     return apiError("MODULE_DISABLED", "Module disabled", 404);
   }
   return refuse(current, roles);
+}
+
+/**
+ * The two reads a MEMBER makes too (R-16-16: `GET /courses/{id}`, `GET /ring-setups/{id}`):
+ * COURSES, then INSTRUCTOR/ADMIN read as staff; a MEMBER (an impersonation included) reads only
+ * while `courses.showSetupToMembers`, else `404 NOT_FOUND`; any other role → `403 FORBIDDEN`.
+ */
+function readerGuard(what: string): Response | "MEMBER" | "STAFF" {
+  const current = scenario();
+  if (!current.branding.modules.includes("COURSES")) {
+    return apiError("MODULE_DISABLED", "Module disabled", 404);
+  }
+  const roles = current.me.membership?.roles ?? [];
+  const impersonation = current.me.impersonation !== undefined;
+  if (!impersonation && roles.some((role) => role === "INSTRUCTOR" || role === "ADMIN")) {
+    return "STAFF";
+  }
+  if (!impersonation && !roles.includes("MEMBER")) return apiError("FORBIDDEN", "Forbidden", 403);
+  return findParameter("courses.showSetupToMembers")?.value === false
+    ? apiError("NOT_FOUND", `${what} not found`, 404)
+    : "MEMBER";
 }
 
 function nowIso(): string {
@@ -147,7 +172,7 @@ export function resetCourseKeys(): void {
 function readable(course: Course): boolean {
   if (course.ownerType === "AGILITYHUB") return course.visibility === "PUBLIC";
   if (course.ownerType === "ACCOUNT") return course.ownerAccountId === meId();
-  if (!callerClubOwnsTheWorld()) return false;
+  if (course.clubId !== callerClubId()) return false;
   return course.visibility !== "PRIVATE" || course.createdByAccountId === meId();
 }
 
@@ -160,14 +185,31 @@ function findCourse(id: string): Course | undefined {
   return courseState.courses.find((course) => course.id === id);
 }
 
+/** `404 NOT_FOUND` for another club's or a deleted course. */
+function foundCourse(id: string): Course | Response {
+  const course = findCourse(id);
+  return course === undefined || (course.ownerType === "CLUB" && course.clubId !== callerClubId())
+    ? apiError("NOT_FOUND", "Course not found", 404)
+    : course;
+}
+
 /** `404 NOT_FOUND` for another club's or a deleted course; `COURSE_NOT_VISIBLE` for the rest. */
 function visibleCourse(id: string): Course | Response {
-  const course = findCourse(id);
-  if (course === undefined) return apiError("NOT_FOUND", "Course not found", 404);
-  if (course.ownerType === "CLUB" && !callerClubOwnsTheWorld()) {
-    return apiError("NOT_FOUND", "Course not found", 404);
-  }
+  const course = foundCourse(id);
+  if (course instanceof Response) return course;
   return readable(course) ? course : apiError("COURSE_NOT_VISIBLE", "Course not visible", 404);
+}
+
+/**
+ * R-16-16: what a MEMBER reads — a PUBLIC course, or one an ACTIVE setup of the club shows
+ * (directly or through its placement); any other is `COURSE_NOT_VISIBLE`.
+ */
+function memberVisibleCourse(id: string): Course | Response {
+  const course = foundCourse(id);
+  if (course instanceof Response) return course;
+  return course.visibility === "PUBLIC" || activeOnRings(course.id).length > 0
+    ? course
+    : apiError("COURSE_NOT_VISIBLE", "Course not visible", 404);
 }
 
 function localizedName(course: Course, locale: string): string {
@@ -175,18 +217,22 @@ function localizedName(course: Course, locale: string): string {
   return names[locale] ?? names.ca ?? Object.values(names)[0] ?? course.name;
 }
 
-/** R-16-17: `name` in the reader's language; `nameI18n` only to a caller who can edit it. */
-function forReader(course: Course, request: Request): Course {
+/**
+ * R-16-17: `name` in the reader's language; `nameI18n` only to a caller who can edit it (never a
+ * MEMBER).
+ */
+function forReader(course: Course, request: Request, canEdit = editable(course)): Course {
   const { nameI18n, ...rest } = course;
   return {
     ...rest,
     name: localizedName(course, readerLocale(request)),
-    ...(editable(course) ? { nameI18n: nameI18n ?? null } : {}),
+    ...(canEdit ? { nameI18n: nameI18n ?? null } : {}),
   };
 }
 
-/** The rings whose ACTIVE setup shows the course, directly or through its placement. */
+/** The caller's club's rings whose ACTIVE setup shows the course (directly or by its placement). */
 function activeOnRings(courseId: string): Schemas["ActiveRing"][] {
+  if (!callerClubOwnsTheWorld()) return [];
   return courseState.setups
     .filter((setup) => setup.status === "ACTIVE")
     .filter(
@@ -279,9 +325,17 @@ function courseFileUrl(fileKey: string): string {
 /** An upload of this club with the purpose the field needs (else `404 NOT_FOUND`). */
 function uploaded(fileKey: string | null | undefined, purpose: string): Response | undefined {
   if (fileKey === null || fileKey === undefined) return undefined;
-  return courseState.files.get(fileKey)?.purpose === purpose
+  const file = courseState.files.get(fileKey);
+  return file?.purpose === purpose && file.clubId === callerClubId()
     ? undefined
     : apiError("NOT_FOUND", "File not found", 404);
+}
+
+/** `fileKey = {clubId}/courses/{uuid}` (the snapshot's `courseUploadUrl`); deterministic here. */
+function uploadFileKey(): string {
+  courseState.sequence += 1;
+  const uuid = `00000000-0000-4000-8000-${String(courseState.sequence).padStart(12, "0")}`;
+  return `${callerClubId()}/courses/${uuid}`;
 }
 
 /** R-16-01: the model is validated against course-data.v1 (schemaVersion 1). */
@@ -318,6 +372,13 @@ function levelsProblem(levelIds: readonly string[]): Response | undefined {
 function ringOfClub(ringId: string) {
   return callerClubOwnsTheWorld()
     ? catalogState.rings.find((ring) => ring.id === ringId)
+    : undefined;
+}
+
+/** A placement of the caller's club (another club's is `404 NOT_FOUND`). */
+function clubPlacement(id: string): Placement | undefined {
+  return callerClubOwnsTheWorld()
+    ? courseState.placements.find((item) => item.id === id)
     : undefined;
 }
 
@@ -360,6 +421,11 @@ function placementProblem(body: PlacementBody, admin: boolean): Response | undef
   return undefined;
 }
 
+/**
+ * POST and PUT store the request as sent: a PUT replaces the placement (an absent field takes
+ * its default — DRAFT, TRAINING, `courses.defaultWarningThresholdM`, `null` — never the stored
+ * value); only what the request does not carry (the build sheet, the creation) is kept.
+ */
 function storedPlacement(
   id: string,
   body: PlacementBody,
@@ -471,14 +537,53 @@ function setupExpiry(expectedUntil: string | null | undefined): string {
   return expected < auto ? expected : auto;
 }
 
-function setupForReader(setup: RingSetup): RingSetup {
-  return setup;
+/**
+ * R-16-09: the STAFF view as stored; the MEMBER view without `builtByAccountId`,
+ * `dismantledByAccountId` or `notes`.
+ */
+function setupForReader(
+  setup: RingSetup,
+  view: "MEMBER" | "STAFF" = "STAFF",
+): RingSetup | Schemas["MemberRingSetup"] {
+  if (view === "STAFF") return setup;
+  return {
+    agilityhubLevel: setup.agilityhubLevel ?? null,
+    builtAt: setup.builtAt,
+    courseId: setup.courseId ?? null,
+    createdAt: setup.createdAt,
+    dismantledAt: setup.dismantledAt ?? null,
+    expectedUntil: setup.expectedUntil ?? null,
+    expiresAt: setup.expiresAt,
+    id: setup.id,
+    imageFileKey: setup.imageFileKey ?? null,
+    imageUrl: setup.imageUrl ?? null,
+    kind: setup.kind,
+    levelIds: setup.levelIds,
+    placementId: setup.placementId ?? null,
+    ringId: setup.ringId,
+    status: setup.status,
+    view: "MEMBER",
+  };
+}
+
+/** A setup of the caller's club (another club's is `404 NOT_FOUND`). */
+function clubSetup(id: string): RingSetup | undefined {
+  return callerClubOwnsTheWorld() ? courseState.setups.find((item) => item.id === id) : undefined;
+}
+
+/**
+ * The inventories are stored per club: the world's under the scope itself, another club's
+ * (`coursesOtherClub`) under its club id, so its `club` scope never reads or replaces this one's.
+ */
+function inventoryKey(scope: string): string {
+  return callerClubOwnsTheWorld() ? scope : `${callerClubId()}:${scope}`;
 }
 
 function inventoryOf(scope: string): ObstacleInventory | undefined {
-  if (scope === "club") return courseState.inventories.club;
+  const club = courseState.inventories[inventoryKey("club")];
+  if (scope === "club") return club;
   if (!scope.startsWith("ring:")) return undefined;
-  return courseState.inventories[scope] ?? courseState.inventories.club;
+  return courseState.inventories[inventoryKey(scope)] ?? club;
 }
 
 /**
@@ -576,11 +681,12 @@ export const courseHandlers = [
     if (body.size <= 0 || body.size > maxSizeMb * 1024 * 1024) {
       return apiError("FILE_TOO_LARGE", "File too large", 400, { maxSizeMb });
     }
-    const id = nextId("upload");
-    const fileKey = `${COURSES_CLUB_ID}/courses/${id}`;
+    const fileKey = uploadFileKey();
     courseState.files.set(fileKey, {
       bytes: null,
+      clubId: callerClubId(),
       contentType: body.contentType,
+      placementId: null,
       purpose: body.purpose,
     });
     return HttpResponse.json<Schemas["CourseUploadUrl"]>(
@@ -588,11 +694,15 @@ export const courseHandlers = [
       { status: 201 },
     );
   }),
-  // The storage side of a course upload URL: it keeps the bytes (thumbnails are served back).
+  // The storage side of a course upload URL: it keeps the bytes (thumbnails and build sheets are
+  // served back). The URL is signed for the granted Content-Type: another one is S3's 403.
   http.put(`${COURSE_UPLOADS_ORIGIN}/:fileKey`, async ({ params, request }) => {
     const fileKey = decodeURIComponent(String(params.fileKey));
     const file = courseState.files.get(fileKey);
-    if (file === undefined) return new HttpResponse(null, { status: 403 });
+    const contentType = request.headers.get("Content-Type")?.split(";")[0]?.trim();
+    if (file === undefined || contentType !== file.contentType) {
+      return new HttpResponse(null, { status: 403 });
+    }
     file.bytes = new Uint8Array(await request.arrayBuffer());
     return new HttpResponse(null, { status: 200 });
   }),
@@ -639,7 +749,7 @@ export const courseHandlers = [
         agilityhubLevel: body.agilityhubLevel ?? null,
         canvasHeight: model?.canvasHeight ?? null,
         canvasWidth: model?.canvasWidth ?? null,
-        clubId: COURSES_CLUB_ID,
+        clubId: callerClubId(),
         courseGrade: null,
         courseType: model?.metadata.courseType ?? null,
         createdAt: at,
@@ -684,10 +794,14 @@ export const courseHandlers = [
     });
   }),
   http.get("*/api/v1/courses/:id", ({ params, request }) => {
-    const refused = guard();
-    if (refused !== undefined) return refused;
-    const course = visibleCourse(String(params.id));
-    return course instanceof Response ? course : HttpResponse.json(forReader(course, request));
+    const reader = readerGuard("Course");
+    if (reader instanceof Response) return reader;
+    const id = String(params.id);
+    const course = reader === "MEMBER" ? memberVisibleCourse(id) : visibleCourse(id);
+    if (course instanceof Response) return course;
+    return HttpResponse.json(
+      forReader(course, request, reader === "MEMBER" ? false : editable(course)),
+    );
   }),
   http.patch("*/api/v1/courses/:id", async ({ params, request }) => {
     const refused = guard();
@@ -803,7 +917,7 @@ export const courseHandlers = [
       const copy: Course = {
         ...course,
         agilityhubLevel: course.agilityhubLevel ?? null,
-        clubId: COURSES_CLUB_ID,
+        clubId: callerClubId(),
         createdAt: at,
         createdByAccountId: meId(),
         id: nextId("course"),
@@ -852,9 +966,7 @@ export const courseHandlers = [
   http.get("*/api/v1/placements/:id", ({ params }) => {
     const refused = guard();
     if (refused !== undefined) return refused;
-    const placement = callerClubOwnsTheWorld()
-      ? courseState.placements.find((item) => item.id === String(params.id))
-      : undefined;
+    const placement = clubPlacement(String(params.id));
     return placement === undefined
       ? apiError("NOT_FOUND", "Placement not found", 404)
       : HttpResponse.json(withClasses(placement));
@@ -875,10 +987,8 @@ export const courseHandlers = [
   http.put("*/api/v1/placements/:id", async ({ params, request }) => {
     const refused = guard();
     if (refused !== undefined) return refused;
-    const current = courseState.placements.find((item) => item.id === String(params.id));
-    if (current === undefined || !callerClubOwnsTheWorld()) {
-      return apiError("NOT_FOUND", "Placement not found", 404);
-    }
+    const current = clubPlacement(String(params.id));
+    if (current === undefined) return apiError("NOT_FOUND", "Placement not found", 404);
     const body = (await request.json()) as PlacementBody;
     if (body.version !== current.version) return apiError("STALE_VERSION", "Stale placement", 409);
     if (body.ringId !== current.ringId) {
@@ -893,14 +1003,42 @@ export const courseHandlers = [
     );
     return HttpResponse.json(withClasses(next));
   }),
-  // Published, not implemented in the api (E9 contract; guards then NOT_IMPLEMENTED).
-  http.get("*/api/v1/placements/:id/build-sheet", () => {
+  // R-16-10 / T-16-19: the stored PDF's bytes; a placement without one → NOT_FOUND.
+  http.get("*/api/v1/placements/:id/build-sheet", ({ params }) => {
     const refused = guard();
-    return refused ?? apiError("NOT_IMPLEMENTED", "Not implemented", 501);
+    if (refused !== undefined) return refused;
+    const placement = clubPlacement(String(params.id));
+    if (placement === undefined) return apiError("NOT_FOUND", "Placement not found", 404);
+    const key = placement.buildSheetFileKey;
+    const bytes = key == null ? null : (courseState.files.get(key)?.bytes ?? null);
+    return bytes === null
+      ? apiError("NOT_FOUND", "Build sheet not found", 404)
+      : new HttpResponse(bytes, { headers: { "Content-Type": "application/pdf" } });
   }),
-  http.post("*/api/v1/placements/:id/build-sheet", () => {
+  // R-16-10: binds this club's BUILD_SHEET upload (another club's key, another purpose or a key
+  // bound to another placement → NOT_FOUND) and replaces the previous sheet; the version stays.
+  http.post("*/api/v1/placements/:id/build-sheet", async ({ params, request }) => {
     const refused = guard();
-    return refused ?? apiError("NOT_IMPLEMENTED", "Not implemented", 501);
+    if (refused !== undefined) return refused;
+    const body = (await request.json()) as Partial<Schemas["BuildSheetRequest"]>;
+    if (typeof body.fileKey !== "string" || body.fileKey === "") {
+      return fieldError("fileKey", "REQUIRED");
+    }
+    const placement = clubPlacement(String(params.id));
+    if (placement === undefined) return apiError("NOT_FOUND", "Placement not found", 404);
+    const file = courseState.files.get(body.fileKey);
+    const free = file?.placementId == null || file.placementId === placement.id;
+    if (file === undefined || !free || uploaded(body.fileKey, "BUILD_SHEET") !== undefined) {
+      return apiError("NOT_FOUND", "File not found", 404);
+    }
+    const previous = placement.buildSheetFileKey;
+    if (previous != null && previous !== body.fileKey) courseState.files.delete(previous);
+    file.placementId = placement.id;
+    const next: Placement = { ...placement, buildSheetFileKey: body.fileKey };
+    courseState.placements = courseState.placements.map((item) =>
+      item.id === placement.id ? next : item,
+    );
+    return HttpResponse.json(withClasses(next));
   }),
 
   // ---- Ring geometry and inventory (D16, R-16-04, R-16-12) ------------------------------------
@@ -939,6 +1077,7 @@ export const courseHandlers = [
     const refused = guard(["ADMIN"]);
     if (refused !== undefined) return refused;
     const ringId = String(params.id);
+    if (ringOfClub(ringId) === undefined) return apiError("NOT_FOUND", "Ring not found", 404);
     const current = courseState.geometries[ringId];
     if (current === undefined) return apiError("NOT_FOUND", "Ring without geometry", 404);
     const version = Number(new URL(request.url).searchParams.get("version"));
@@ -973,6 +1112,9 @@ export const courseHandlers = [
     if (refused !== undefined) return refused;
     const scope = String(params.scope);
     if (scope !== "club" && !scope.startsWith("ring:")) return fieldError("scope", "INVALID");
+    if (scope.startsWith("ring:") && ringOfClub(scope.slice(5)) === undefined) {
+      return apiError("NOT_FOUND", "Ring not found", 404);
+    }
     const body = (await request.json()) as Schemas["InventoryRequest"];
     const types = body.items.map((item) => item.type);
     if (body.items.some((item) => item.count < 0) || new Set(types).size !== types.length) {
@@ -984,7 +1126,7 @@ export const courseHandlers = [
       scope: scope === "club" ? "CLUB" : "RING",
       updatedAt: nowIso(),
     };
-    courseState.inventories[scope] = inventory;
+    courseState.inventories[inventoryKey(scope)] = inventory;
     return HttpResponse.json(inventory);
   }),
 
@@ -999,8 +1141,7 @@ export const courseHandlers = [
     const size = Number(url.searchParams.get("size") ?? "20");
     const items = courseState.setups
       .filter((setup) => setup.ringId === ringId)
-      .sort((a, b) => (a.builtAt < b.builtAt ? 1 : a.builtAt > b.builtAt ? -1 : 0))
-      .map(setupForReader);
+      .sort((a, b) => (a.builtAt < b.builtAt ? 1 : a.builtAt > b.builtAt ? -1 : 0));
     return HttpResponse.json<Schemas["RingSetupPage"]>({
       items: items.slice(page * size, (page + 1) * size),
       page,
@@ -1009,13 +1150,14 @@ export const courseHandlers = [
       totalPages: Math.ceil(items.length / size),
     });
   }),
+  // R-16-09: staff read any setup of the club; a MEMBER only an ACTIVE one (view MEMBER).
   http.get("*/api/v1/ring-setups/:id", ({ params }) => {
-    const refused = guard();
-    if (refused !== undefined) return refused;
-    const setup = courseState.setups.find((item) => item.id === String(params.id));
-    return setup === undefined || !callerClubOwnsTheWorld()
+    const reader = readerGuard("Setup");
+    if (reader instanceof Response) return reader;
+    const setup = clubSetup(String(params.id));
+    return setup === undefined || (reader === "MEMBER" && setup.status !== "ACTIVE")
       ? apiError("NOT_FOUND", "Setup not found", 404)
-      : HttpResponse.json(setupForReader(setup));
+      : HttpResponse.json(setupForReader(setup, reader));
   }),
   http.post("*/api/v1/ring-setups", async ({ request }) => {
     const refused = guard();
@@ -1039,7 +1181,7 @@ export const courseHandlers = [
         if (courseState.geometries[body.ringId] === undefined) {
           return apiError("RING_WITHOUT_GEOMETRY", "Ring without geometry", 422);
         }
-        const placement = courseState.placements.find((item) => item.id === body.placementId);
+        const placement = clubPlacement(body.placementId);
         if (placement === undefined) return apiError("NOT_FOUND", "Placement not found", 404);
         if (placement.ringId !== body.ringId) {
           return apiError("PLACEMENT_RING_MISMATCH", "Placement ring mismatch", 422);
@@ -1103,42 +1245,47 @@ export const courseHandlers = [
       );
     });
   }),
-  http.post("*/api/v1/ring-setups/:id/dismantle", ({ params }) => {
+  http.post("*/api/v1/ring-setups/:id/dismantle", async ({ params, request }) => {
     const refused = guard();
     if (refused !== undefined) return refused;
-    const setup = courseState.setups.find((item) => item.id === String(params.id));
-    if (setup === undefined) return apiError("NOT_FOUND", "Setup not found", 404);
-    if (setup.status !== "ACTIVE") {
-      return apiError("INVALID_STATE", "Invalid state", 409, { reason: setup.status });
-    }
-    const next: RingSetup = {
-      ...setup,
-      dismantledAt: nowIso(),
-      dismantledByAccountId: meId(),
-      status: "DISMANTLED",
-    };
-    courseState.setups = courseState.setups.map((item) => (item.id === setup.id ? next : item));
-    return HttpResponse.json(next);
+    const text = await request.text();
+    return keyed(request, text, () => {
+      const setup = clubSetup(String(params.id));
+      if (setup === undefined) return apiError("NOT_FOUND", "Setup not found", 404);
+      if (setup.status !== "ACTIVE") {
+        return apiError("INVALID_STATE", "Invalid state", 409, { reason: setup.status });
+      }
+      const next: RingSetup = {
+        ...setup,
+        dismantledAt: nowIso(),
+        dismantledByAccountId: meId(),
+        status: "DISMANTLED",
+      };
+      courseState.setups = courseState.setups.map((item) => (item.id === setup.id ? next : item));
+      return HttpResponse.json(next);
+    });
   }),
   http.post("*/api/v1/ring-setups/:id/renewal", async ({ params, request }) => {
     const refused = guard();
     if (refused !== undefined) return refused;
-    const setup = courseState.setups.find((item) => item.id === String(params.id));
-    if (setup === undefined) return apiError("NOT_FOUND", "Setup not found", 404);
-    if (setup.status !== "ACTIVE") {
-      return apiError("INVALID_STATE", "Invalid state", 409, { reason: setup.status });
-    }
     const text = await request.text();
-    const body = (text === "" ? {} : JSON.parse(text)) as { expectedUntil?: string | null };
-    if (body.expectedUntil != null && body.expectedUntil < clubLocalDate()) {
-      return fieldError("expectedUntil", "INVALID");
-    }
-    const next: RingSetup = {
-      ...setup,
-      expectedUntil: body.expectedUntil ?? null,
-      expiresAt: setupExpiry(body.expectedUntil),
-    };
-    courseState.setups = courseState.setups.map((item) => (item.id === setup.id ? next : item));
-    return HttpResponse.json(next);
+    return keyed(request, text, () => {
+      const setup = clubSetup(String(params.id));
+      if (setup === undefined) return apiError("NOT_FOUND", "Setup not found", 404);
+      if (setup.status !== "ACTIVE") {
+        return apiError("INVALID_STATE", "Invalid state", 409, { reason: setup.status });
+      }
+      const body = (text === "" ? {} : JSON.parse(text)) as Schemas["RenewalRequest"];
+      if (body.expectedUntil != null && body.expectedUntil < clubLocalDate()) {
+        return fieldError("expectedUntil", "INVALID");
+      }
+      const next: RingSetup = {
+        ...setup,
+        expectedUntil: body.expectedUntil ?? null,
+        expiresAt: setupExpiry(body.expectedUntil),
+      };
+      courseState.setups = courseState.setups.map((item) => (item.id === setup.id ? next : item));
+      return HttpResponse.json(next);
+    });
   }),
 ];

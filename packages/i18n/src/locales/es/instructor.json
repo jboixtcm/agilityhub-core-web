@@ -145,6 +145,16 @@
       "cancelling": "Anulando el bloqueo",
       "loading": "Cargando el bloqueo",
       "loadError": "No se ha podido cargar el bloqueo."
+    },
+    "registrants": {
+      "title": "Inscritos ({booked}/{capacity})",
+      "empty": "Todavía no hay ningún inscrito.",
+      "loading": "Cargando los inscritos…",
+      "loadError": "No se han podido cargar los inscritos.",
+      "retry": "Vuelve a intentarlo",
+      "name": "{member} + {dog}",
+      "position": "{position}. {name}",
+      "waiting": "En espera: {names}"
     }
   },
   "ringBlock": {

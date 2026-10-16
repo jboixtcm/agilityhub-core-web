@@ -17,7 +17,7 @@ import {
   MemoryRefreshTokenStore,
   SessionProvider,
 } from "@agilityhub/auth";
-import { createI18n } from "@agilityhub/i18n";
+import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { getResponse, http, HttpResponse } from "msw";
@@ -78,7 +78,7 @@ async function renderApplication(
   locale: "ca" | "es" | "en" = "ca",
   navigate?: (path: string, replace: boolean) => void,
 ) {
-  const i18n = await createI18n({
+  const i18n = await createClubsI18n({
     branding,
     browserLanguages: [locale],
     initialNamespaces: [
@@ -120,7 +120,7 @@ async function renderNavigation(
   roles: ("ADMIN" | "INSTRUCTOR" | "MEMBER")[],
   activeProfile: "ADMIN" | "INSTRUCTOR" | "MEMBER" = "MEMBER",
 ) {
-  const i18n = await createI18n({
+  const i18n = await createClubsI18n({
     branding: canicBranding,
     browserLanguages: ["ca"],
     initialNamespaces: ["shell"],
@@ -199,7 +199,7 @@ describe("T-02-14 clubs shell", () => {
     );
     cleanup();
 
-    const i18n = await createI18n({
+    const i18n = await createClubsI18n({
       branding: canicBranding,
       browserLanguages: ["ca"],
       initialNamespaces: ["shell"],
@@ -1607,7 +1607,7 @@ describe("T-03-40 mobile own dogs", () => {
       es: ["1 pendiente · 2 hechas", "2 pendientes · 1 hecha"],
     } as const;
     for (const locale of ["ca", "es", "en"] as const) {
-      const i18n = await createI18n({
+      const i18n = await createClubsI18n({
         branding: minimalBranding,
         browserLanguages: [locale],
         initialNamespaces: ["census"],

@@ -1,13 +1,16 @@
-import type { BackendModule, ReadCallback } from "i18next";
+import { createLoaderBackend, type LoaderTable, type Messages } from "./backend";
+import { clubsLoaders } from "./clubs-resources";
+import { namespaces, type Locale, type Namespace } from "./types";
 
-import { namespaces, productLocales, type Locale, type Namespace } from "./types";
+type BackofficeNamespace = Exclude<Namespace, keyof (typeof clubsLoaders)["ca"]>;
 
-type Messages = Record<string, unknown>;
-type ResourceLoader = () => Promise<{ default: Messages }>;
-
-const loaders = {
+/**
+ * The namespaces only the backoffice (`apps/clubs-admin`) and the ID pages read; the full table is
+ * the students' one plus these. `apps/clubs` boots with `@agilityhub/i18n/clubs`, which never
+ * imports this module, so none of these locale chunks reaches its build.
+ */
+const backofficeLoaders = {
   ca: {
-    activities: () => import("./locales/ca/activities.json"),
     "admin-activities": () => import("./locales/ca/admin-activities.json"),
     "admin-audit": () => import("./locales/ca/admin-audit.json"),
     "admin-billing": () => import("./locales/ca/admin-billing.json"),
@@ -19,27 +22,10 @@ const loaders = {
     "admin-scheduling": () => import("./locales/ca/admin-scheduling.json"),
     "admin-settings": () => import("./locales/ca/admin-settings.json"),
     "admin-training": () => import("./locales/ca/admin-training.json"),
-    auth: () => import("./locales/ca/auth.json"),
-    booking: () => import("./locales/ca/booking.json"),
-    billing: () => import("./locales/ca/billing.json"),
-    census: () => import("./locales/ca/census.json"),
     console: () => import("./locales/ca/console.json"),
-    common: () => import("./locales/ca/common.json"),
-    enums: () => import("./locales/ca/enums.json"),
-    errors: () => import("./locales/ca/errors.json"),
-    history: () => import("./locales/ca/history.json"),
-    home: () => import("./locales/ca/home.json"),
-    inactivity: () => import("./locales/ca/inactivity.json"),
     id: () => import("./locales/ca/id.json"),
-    instructor: () => import("./locales/ca/instructor.json"),
-    notifications: () => import("./locales/ca/notifications.json"),
-    leave: () => import("./locales/ca/leave.json"),
-    shell: () => import("./locales/ca/shell.json"),
-    signup: () => import("./locales/ca/signup.json"),
-    training: () => import("./locales/ca/training.json"),
   },
   en: {
-    activities: () => import("./locales/en/activities.json"),
     "admin-activities": () => import("./locales/en/admin-activities.json"),
     "admin-audit": () => import("./locales/en/admin-audit.json"),
     "admin-billing": () => import("./locales/en/admin-billing.json"),
@@ -51,27 +37,10 @@ const loaders = {
     "admin-scheduling": () => import("./locales/en/admin-scheduling.json"),
     "admin-settings": () => import("./locales/en/admin-settings.json"),
     "admin-training": () => import("./locales/en/admin-training.json"),
-    auth: () => import("./locales/en/auth.json"),
-    booking: () => import("./locales/en/booking.json"),
-    billing: () => import("./locales/en/billing.json"),
-    census: () => import("./locales/en/census.json"),
     console: () => import("./locales/en/console.json"),
-    common: () => import("./locales/en/common.json"),
-    enums: () => import("./locales/en/enums.json"),
-    errors: () => import("./locales/en/errors.json"),
-    history: () => import("./locales/en/history.json"),
-    home: () => import("./locales/en/home.json"),
-    inactivity: () => import("./locales/en/inactivity.json"),
     id: () => import("./locales/en/id.json"),
-    instructor: () => import("./locales/en/instructor.json"),
-    notifications: () => import("./locales/en/notifications.json"),
-    leave: () => import("./locales/en/leave.json"),
-    shell: () => import("./locales/en/shell.json"),
-    signup: () => import("./locales/en/signup.json"),
-    training: () => import("./locales/en/training.json"),
   },
   es: {
-    activities: () => import("./locales/es/activities.json"),
     "admin-activities": () => import("./locales/es/admin-activities.json"),
     "admin-audit": () => import("./locales/es/admin-audit.json"),
     "admin-billing": () => import("./locales/es/admin-billing.json"),
@@ -83,56 +52,24 @@ const loaders = {
     "admin-scheduling": () => import("./locales/es/admin-scheduling.json"),
     "admin-settings": () => import("./locales/es/admin-settings.json"),
     "admin-training": () => import("./locales/es/admin-training.json"),
-    auth: () => import("./locales/es/auth.json"),
-    booking: () => import("./locales/es/booking.json"),
-    billing: () => import("./locales/es/billing.json"),
-    census: () => import("./locales/es/census.json"),
     console: () => import("./locales/es/console.json"),
-    common: () => import("./locales/es/common.json"),
-    enums: () => import("./locales/es/enums.json"),
-    errors: () => import("./locales/es/errors.json"),
-    history: () => import("./locales/es/history.json"),
-    home: () => import("./locales/es/home.json"),
-    inactivity: () => import("./locales/es/inactivity.json"),
     id: () => import("./locales/es/id.json"),
-    instructor: () => import("./locales/es/instructor.json"),
-    notifications: () => import("./locales/es/notifications.json"),
-    leave: () => import("./locales/es/leave.json"),
-    shell: () => import("./locales/es/shell.json"),
-    signup: () => import("./locales/es/signup.json"),
-    training: () => import("./locales/es/training.json"),
   },
-} as const satisfies Record<Locale, Record<Namespace, ResourceLoader>>;
+} as const satisfies LoaderTable<BackofficeNamespace>;
 
-function isLocale(value: string): value is Locale {
-  return productLocales.includes(value as Locale);
+function isBackofficeNamespace(namespace: Namespace): namespace is BackofficeNamespace {
+  return namespace in backofficeLoaders.ca;
 }
 
-function isNamespace(value: string): value is Namespace {
-  return namespaces.includes(value as Namespace);
+/** The full table, looked up per call (no module-level merge: see `createLoaderBackend`). */
+function loadModule(locale: Locale, namespace: Namespace): Promise<{ default: Messages }> {
+  return isBackofficeNamespace(namespace)
+    ? backofficeLoaders[locale][namespace]()
+    : clubsLoaders[locale][namespace]();
 }
 
 export async function loadNamespace(locale: Locale, namespace: Namespace): Promise<Messages> {
-  return (await loaders[locale][namespace]()).default;
+  return (await loadModule(locale, namespace)).default;
 }
 
-export const namespaceBackend: BackendModule = {
-  type: "backend",
-  init: () => undefined,
-  read(language: string, namespace: string, callback: ReadCallback): void {
-    const baseLanguage = language.toLowerCase().split("-")[0] ?? language;
-    if (!isLocale(baseLanguage) || !isNamespace(namespace)) {
-      callback(new Error(`Unsupported i18n resource: ${language}/${namespace}`), false);
-      return;
-    }
-
-    void loadNamespace(baseLanguage, namespace).then(
-      (messages) => {
-        callback(null, messages);
-      },
-      (error: unknown) => {
-        callback(error instanceof Error ? error : new Error(String(error)), false);
-      },
-    );
-  },
-};
+export const namespaceBackend = /* @__PURE__ */ createLoaderBackend(namespaces, loadModule);

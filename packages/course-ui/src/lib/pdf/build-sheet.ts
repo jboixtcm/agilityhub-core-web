@@ -6,9 +6,8 @@
  * from the caller in the reader's language (R-16-17), lengths in metres through the caller's
  * `Intl` formatter.
  */
-import type { ObstacleType } from "@agilityhub/course-core";
+import type { ObstacleType, ResolvedObstacle } from "@agilityhub/course-core";
 
-import type { ResolvedObstacle } from "../resolved-obstacles.js";
 import type { PlannerRing, PlannerRingDoor } from "../storage/types.js";
 
 import { SHEET_PAPER, type SheetPaper, wrapText } from "./layout.js";
@@ -38,6 +37,10 @@ export interface BuildSheetLabels {
   readonly degrees: (value: number) => string;
   /** One marker distance, e.g. «A: 4,25 m». */
   readonly markerDistance: (label: string, metres: string) => string;
+  /** What joins the two marker distances of a row, e.g. « · ». */
+  readonly listSeparator: string;
+  /** The number cell of an obstacle the course does not number, e.g. «—». */
+  readonly unnumbered: string;
   readonly inventoryTitle: string;
   readonly inventoryRow: (type: string, count: number) => string;
   readonly doorsTitle: string;
@@ -234,11 +237,11 @@ export function renderBuildSheetPdf(input: BuildSheetInput): Uint8Array {
     }
     const markers = nearestMarkers(input.ring, obstacle.x, obstacle.y)
       .map((marker) => labels.markerDistance(marker.label, labels.metres(marker.distance)))
-      .join(" · ");
+      .join(labels.listSeparator);
     const cells: Record<(typeof columns)[number]["key"], string> = {
       heading: labels.degrees(obstacle.rotationDeg),
       markers: markers === "" ? labels.none : markers,
-      number: obstacle.numbers.length === 0 ? "—" : obstacle.numbers.join("/"),
+      number: obstacle.numbers.length === 0 ? labels.unnumbered : obstacle.numbers.join("/"),
       obstacle: labels.obstacle(obstacle.type),
       x: labels.metres(obstacle.x),
       y: labels.metres(obstacle.y),

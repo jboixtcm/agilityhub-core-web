@@ -2,7 +2,7 @@ import { createApiClient } from "@agilityhub/api-client";
 import { mockScenario, resetActivityState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { createI18n } from "@agilityhub/i18n";
+import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
@@ -52,7 +52,7 @@ function client() {
 
 async function renderWith(node: ReactNode, modules: readonly string[] = branding.modules) {
   const clubBranding: Branding = { ...branding, modules: [...modules] };
-  const i18n = await createI18n({
+  const i18n = await createClubsI18n({
     branding: clubBranding,
     browserLanguages: ["ca"],
     initialNamespaces: ["activities", "common", "enums", "errors", "shell"],

@@ -6,7 +6,7 @@ import {
 } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { createI18n } from "@agilityhub/i18n";
+import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
@@ -46,7 +46,7 @@ afterAll(() => {
 async function renderSheet(classId = "c1") {
   mockScenario("instructor");
   window.history.replaceState(null, "", `/instructor/classes/${classId}`);
-  const i18n = await createI18n({
+  const i18n = await createClubsI18n({
     branding: canic,
     browserLanguages: ["ca"],
     initialNamespaces: ["instructor", "enums", "errors", "home", "common"],

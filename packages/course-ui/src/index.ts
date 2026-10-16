@@ -32,11 +32,13 @@ export {
 } from "./lib/pdf/build-sheet";
 export { SHEET_PAPER, type SheetPaper } from "./lib/pdf/layout";
 export {
+  MarkerSheetError,
+  markerSheetProblem,
   renderMarkerSheetPdf,
   type MarkerSheetInput,
   type MarkerSheetLabels,
+  type MarkerSheetProblem,
 } from "./lib/pdf/marker-sheet";
-export { resolvePlacedObstacles, type ResolvedObstacle } from "./lib/resolved-obstacles";
 export { configurePlannerStore, getPlannerStore } from "./lib/storage/get-store";
 export type {
   CreateCalibrationLogInput,
@@ -54,6 +56,8 @@ export type {
   PlannerVenue,
   SavePlacementInput,
   SaveRingDoorInput,
+  PlacementEdits,
+  PlacementSize,
   UpdateMarkerPatch,
   UpdatePlacementInput,
   UpsertBuildObstacleStatusInput,

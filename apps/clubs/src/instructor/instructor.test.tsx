@@ -8,7 +8,7 @@ import {
 } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
-import { createI18n } from "@agilityhub/i18n";
+import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import {
   act,
@@ -87,7 +87,7 @@ async function renderScreen(
 ) {
   mockScenario(scenario);
   window.history.replaceState(null, "", path);
-  const i18n = await createI18n({
+  const i18n = await createClubsI18n({
     branding,
     browserLanguages: [locale],
     initialNamespaces: ["instructor", "enums", "errors", "home", "common"],

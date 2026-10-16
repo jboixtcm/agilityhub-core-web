@@ -39,7 +39,9 @@
       "source": "Source",
       "activeOnRings": "Set up on",
       "stats": "Obstacles",
-      "obstacleCount": "Number of obstacles"
+      "obstacleCount": "Number of obstacles",
+      "tag": "Tag",
+      "levelId": "Club level"
     },
     "statsCount": "{count, plural, one {# obstacle} other {# obstacles}}",
     "statsWithLength": "{count, plural, one {# obstacle} other {# obstacles}} · {length} m",
@@ -115,7 +117,10 @@
     "delete": "Delete",
     "deleteQuestion": "Delete “{name}”? It will no longer show in the library.",
     "loadErrorTitle": "The course could not be opened",
-    "loadError": "Try again in a while."
+    "loadError": "Try again in a while.",
+    "shareStale": "Someone changed the course meanwhile. We loaded it again: choose again whether to share it.",
+    "storedSheet": "Stored sheet",
+    "sheetStale": "The ring's geometry changed: review the placement before printing its build sheet."
   },
   "viewer": {
     "entry": "entry",
@@ -146,7 +151,10 @@
     "noRingsTitle": "No ring with a geometry",
     "noRings": "To place a course, a ring needs its geometry first (Settings › Rings).",
     "loadErrorTitle": "The editor could not be opened",
-    "loadError": "Try again in a while."
+    "loadError": "Try again in a while.",
+    "blockedBy": "Critical warnings",
+    "courseStale": "The course changed meanwhile. We loaded it again with your position: check the warnings and save again.",
+    "sheetStale": "The ring's geometry changed: save the placement to print its build sheet."
   },
   "controls": {
     "title": "Placement",
@@ -196,7 +204,8 @@
     "replaces": "It will replace the current setup ({kind}, from {day}).",
     "submit": "REGISTER",
     "registered": "Registered as set up on {ring}.",
-    "registeredReplacing": "Registered as set up on {ring}; it replaces the previous setup."
+    "registeredReplacing": "Registered as set up on {ring}; it replaces the previous setup.",
+    "instructorRefused": "In this club only the administration can register what is set up."
   },
   "sheet": {
     "buildTitle": "Build sheet",
@@ -219,7 +228,10 @@
     "door": "{label}: {side}, from {start} to {end} m ({flow})",
     "notes": "Notes",
     "none": "None",
-    "page": "Page {page} of {total}"
+    "page": "Page {page} of {total}",
+    "listSeparator": " · ",
+    "unnumbered": "—",
+    "notStored": "The build sheet was downloaded but could not be stored: {reason}"
   },
   "markerSheet": {
     "title": "Marker sheet · {ring}",
@@ -285,9 +297,16 @@
       "TOO_FEW_POINTS": "needs at least three points",
       "NOT_SIMPLE": "cannot cross itself",
       "TOO_FEW_MARKERS": "at least three active markers are needed",
-      "COLLINEAR_MARKERS": "the active markers cannot be in a straight line"
+      "COLLINEAR_MARKERS": "the active markers cannot be in a straight line",
+      "TOO_MANY_MARKERS": "there are too many active markers",
+      "other": "is not valid"
     },
-    "loadError": "The ring could not be loaded"
+    "loadError": "The ring could not be loaded",
+    "otherField": "Another field",
+    "notANumber": "must be a number",
+    "precheck": "Check these fields before saving:",
+    "markerSheetNoMarker": "No active marker: activate at least one to print the sheet.",
+    "markerSheetTooLarge": "{labels}: larger than {mm} mm, they do not fit on the page at real size."
   },
   "doors": {
     "title": "Doors of {name} ({count}/{maximum})",
@@ -349,5 +368,10 @@
     "pastLine": "From {built} to {ended}",
     "replaced": "Replaced",
     "review": "Review it"
+  },
+  "files": {
+    "fallback": "course",
+    "buildSheet": "{course}-{ring}.pdf",
+    "markerSheet": "markers-{ring}.pdf"
   }
 }

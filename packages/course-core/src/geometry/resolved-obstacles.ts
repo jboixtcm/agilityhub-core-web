@@ -1,15 +1,14 @@
-import {
-  placedObstacleHeadingDegrees,
-  placeObstacleInRing,
-  type CourseData,
-  type CoursePlacement,
-  type ObstacleType,
-} from "@agilityhub/course-core";
-
 /**
- * An obstacle of a placed course in the ring's frame (metres, Y up): what `Placement`
- * persists as `resolvedObstacles` (A8c), what the AR app reads and what the build sheet prints.
+ * The obstacles of a placed course in the ring's frame (metres, Y up): what `Placement` persists
+ * as `resolvedObstacles` (A8c), what the AR app reads and what the build sheet prints. course-core
+ * is the one place that computes placement geometry (R-16-01): the api stores this result, the web
+ * client and the PDFs read it (E9-W03 round 2, review #17).
  */
+import type { CourseData } from '../schema/course-data.js';
+import type { ObstacleType } from '../schema/primitives.js';
+import { placedObstacleHeadingDegrees } from './heading.js';
+import { placeObstacleInRing, type CoursePlacement } from './placement.js';
+
 export interface ResolvedObstacle {
   readonly obstacleId: string;
   readonly type: ObstacleType;
@@ -21,7 +20,7 @@ export interface ResolvedObstacle {
   readonly numbers: readonly number[];
 }
 
-/** course-core's placement of every positioned obstacle of `course` (R-16-05, computed here). */
+/** course-core's placement of every positioned obstacle of `course` (R-16-05). */
 export function resolvePlacedObstacles(
   course: CourseData,
   placement: CoursePlacement,

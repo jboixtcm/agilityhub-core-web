@@ -296,8 +296,11 @@ export function PlannerCanvas({
 
   // The SVG keeps its aspect ratio (`xMidYMid meet`), so one screen pixel is the larger of the
   // two axis ratios in metres. Screen Y grows downwards; the ring's +Y is up.
+  // Only the pointer that pressed first drags: a second finger neither restarts nor moves it
+  // (the same pointer pressing again restarts, in case its release happened off the plan).
   function onPointerDown(event: ReactPointerEvent<SVGSVGElement>) {
     if (onDragPlacement === undefined || event.button !== 0) return;
+    if (drag.current !== null && drag.current.pointerId !== event.pointerId) return;
     drag.current = { x: event.clientX, y: event.clientY, moved: false, pointerId: event.pointerId };
     suppressClick.current = false;
   }
@@ -305,6 +308,7 @@ export function PlannerCanvas({
   function onPointerMove(event: ReactPointerEvent<SVGSVGElement>) {
     const current = drag.current;
     if (onDragPlacement === undefined || current === null) return;
+    if (event.pointerId !== current.pointerId) return;
     const dxPx = event.clientX - current.x;
     const dyPx = event.clientY - current.y;
     if (!current.moved && Math.hypot(dxPx, dyPx) < DRAG_THRESHOLD_PX) return;
@@ -322,8 +326,17 @@ export function PlannerCanvas({
     onDragPlacement(dxPx * metresPerPx, -dyPx * metresPerPx);
   }
 
-  function onPointerEnd() {
-    suppressClick.current = drag.current?.moved === true;
+  // A release after a drag swallows the click it produces; a cancel (the browser took the
+  // gesture over) produces none, so it ends the drag without swallowing the next real click.
+  function onPointerUp(event: ReactPointerEvent<SVGSVGElement>) {
+    if (drag.current?.pointerId !== event.pointerId) return;
+    suppressClick.current = drag.current.moved;
+    drag.current = null;
+  }
+
+  function onPointerCancel(event: ReactPointerEvent<SVGSVGElement>) {
+    if (drag.current?.pointerId !== event.pointerId) return;
+    suppressClick.current = false;
     drag.current = null;
   }
 
@@ -338,8 +351,8 @@ export function PlannerCanvas({
         style={onDragPlacement === undefined ? undefined : { cursor: 'grab', touchAction: 'none' }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
-        onPointerUp={onPointerEnd}
-        onPointerCancel={onPointerEnd}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerCancel}
         onClickCapture={(event) => {
           // A drag that ends over an obstacle is not a click on it.
           if (suppressClick.current) {

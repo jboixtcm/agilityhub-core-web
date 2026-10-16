@@ -39,7 +39,9 @@
       "source": "Fuente",
       "activeOnRings": "Montado en",
       "stats": "Obstáculos",
-      "obstacleCount": "Número de obstáculos"
+      "obstacleCount": "Número de obstáculos",
+      "tag": "Etiqueta",
+      "levelId": "Nivel del club"
     },
     "statsCount": "{count, plural, one {# obstáculo} other {# obstáculos}}",
     "statsWithLength": "{count, plural, one {# obstáculo} other {# obstáculos}} · {length} m",
@@ -115,7 +117,10 @@
     "delete": "Eliminar",
     "deleteQuestion": "¿Quieres eliminar «{name}»? Dejará de salir en la biblioteca.",
     "loadErrorTitle": "No se ha podido abrir el recorrido",
-    "loadError": "Vuelve a intentarlo dentro de un rato."
+    "loadError": "Vuelve a intentarlo dentro de un rato.",
+    "shareStale": "Alguien ha cambiado el recorrido mientras tanto. Lo hemos vuelto a cargar: vuelve a elegir si lo compartes.",
+    "storedSheet": "Hoja guardada",
+    "sheetStale": "La geometría de la pista ha cambiado: revisa la colocación antes de sacar la hoja de montaje."
   },
   "viewer": {
     "entry": "entrada",
@@ -146,7 +151,10 @@
     "noRingsTitle": "Ninguna pista con geometría",
     "noRings": "Para colocar un recorrido, primero hace falta la geometría de una pista (Configuración › Pistas).",
     "loadErrorTitle": "No se ha podido abrir el editor",
-    "loadError": "Vuelve a intentarlo dentro de un rato."
+    "loadError": "Vuelve a intentarlo dentro de un rato.",
+    "blockedBy": "Avisos críticos",
+    "courseStale": "El recorrido ha cambiado mientras tanto. Lo hemos vuelto a cargar con tu posición: revisa los avisos y guarda de nuevo.",
+    "sheetStale": "La geometría de la pista ha cambiado: guarda la colocación para poder sacar la hoja de montaje."
   },
   "controls": {
     "title": "Colocación",
@@ -196,7 +204,8 @@
     "replaces": "Sustituirá el montaje actual ({kind}, del {day}).",
     "submit": "REGISTRAR",
     "registered": "Registrado como montado en {ring}.",
-    "registeredReplacing": "Registrado como montado en {ring}; sustituye el montaje anterior."
+    "registeredReplacing": "Registrado como montado en {ring}; sustituye el montaje anterior.",
+    "instructorRefused": "En este club solo la administración puede registrar qué hay montado."
   },
   "sheet": {
     "buildTitle": "Hoja de montaje",
@@ -219,7 +228,10 @@
     "door": "{label}: {side}, de {start} a {end} m ({flow})",
     "notes": "Notas",
     "none": "Ninguno",
-    "page": "Página {page} de {total}"
+    "page": "Página {page} de {total}",
+    "listSeparator": " · ",
+    "unnumbered": "—",
+    "notStored": "Se ha descargado la hoja de montaje, pero no se ha podido guardar: {reason}"
   },
   "markerSheet": {
     "title": "Hoja de marcadores · {ring}",
@@ -285,9 +297,16 @@
       "TOO_FEW_POINTS": "necesita al menos tres puntos",
       "NOT_SIMPLE": "no puede cruzarse",
       "TOO_FEW_MARKERS": "hacen falta al menos tres marcadores activos",
-      "COLLINEAR_MARKERS": "los marcadores activos no pueden estar en línea recta"
+      "COLLINEAR_MARKERS": "los marcadores activos no pueden estar en línea recta",
+      "TOO_MANY_MARKERS": "hay demasiados marcadores activos",
+      "other": "no es válido"
     },
-    "loadError": "No se ha podido cargar la pista"
+    "loadError": "No se ha podido cargar la pista",
+    "otherField": "Otro campo",
+    "notANumber": "debe ser un número",
+    "precheck": "Revisa estos campos antes de guardar:",
+    "markerSheetNoMarker": "Ningún marcador activo: activa al menos uno para sacar la hoja.",
+    "markerSheetTooLarge": "{labels}: miden más de {mm} mm y no caben en la página a tamaño real."
   },
   "doors": {
     "title": "Puertas de {name} ({count}/{maximum})",
@@ -349,5 +368,10 @@
     "pastLine": "Del {built} al {ended}",
     "replaced": "Sustituido",
     "review": "Revísala"
+  },
+  "files": {
+    "fallback": "recorrido",
+    "buildSheet": "{course}-{ring}.pdf",
+    "markerSheet": "marcadores-{ring}.pdf"
   }
 }

@@ -942,7 +942,7 @@ export interface paths {
         put?: never;
         /**
          * createBuildSession
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11: starts a build session on a placement of the club (NOT_FOUND) whose course the caller can read (COURSE_NOT_VISIBLE): status NOT_STARTED, startedAt now, one obstacle per resolved obstacle of the placement, all NOT_PLACED; selectedStrategy defaults to EQUIPMENT_TYPE. joinCode (six characters, unique among the club's open sessions) is what another phone types and joinToken what its QR carries (POST /build-sessions/join). Publishes BuildSessionStarted.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11: starts a build session on a placement of the club (NOT_FOUND) whose course the caller can read (COURSE_NOT_VISIBLE): status NOT_STARTED, startedAt now, one obstacle per resolved obstacle of the placement, all NOT_PLACED; selectedStrategy defaults to EQUIPMENT_TYPE. joinCode (six characters, unique among the club's open sessions) is what another phone types and joinToken what its QR carries (POST /build-sessions/join); a code drawn by another session at the same moment is drawn again. Publishes BuildSessionStarted.
          */
         post: operations["createBuildSession"];
         delete?: never;
@@ -962,7 +962,7 @@ export interface paths {
         put?: never;
         /**
          * joinBuildSession
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11 (S16 §14.2): code is an open session's joinCode (case-insensitive; joinedVia CODE) or the joinToken of its QR (joinedVia QR); the caller becomes a participant once (a second join returns the session unchanged). No open session of the club with that code, or one open for courses.buildSessionMaxHours or longer → NOT_FOUND.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11 (S16 §14.2): code is an open session's joinCode (case-insensitive; joinedVia CODE) or the joinToken of its QR (joinedVia QR); the caller becomes a participant once (a second join returns the session unchanged); phones joining at once all join. No open session of the club with that code, or one open for courses.buildSessionMaxHours or longer → NOT_FOUND.
          */
         post: operations["joinBuildSession"];
         delete?: never;
@@ -1000,7 +1000,7 @@ export interface paths {
         };
         /**
          * buildSessionEvents
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11 live mode: a text/event-stream of the session's changes. Event obstacle {sessionId, obstacleId, status, byAccountId, at, version} for each changed obstacle; event finished {sessionId, status, finishedAt, version} when the session closes (COMPLETED or ABANDONED), after which the stream ends (a closed session gets it at once); each event id is the session version. A comment line every 20 seconds is the heartbeat. Authentication: the bearer header, or the access_token query parameter, which only this operation accepts (a browser EventSource sends no header). After a reconnection, read GET /build-sessions/{id} for the state.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11 live mode: a text/event-stream of the session's changes. Event obstacle {sessionId, obstacleId, status, byAccountId, at, version} for each changed obstacle; event finished {sessionId, status, finishedAt, version} when the session closes (COMPLETED or ABANDONED), after which the stream ends (a closed session gets it at once); a session open for courses.buildSessionMaxHours or longer gets finished {status: ABANDONED, finishedAt: null} within a second, before S15 P9 records it. Each event id is the session version. A comment line every 20 seconds is the heartbeat. A stream lasts at most 30 minutes and never longer than the access token it opened with (its exp); a client that does not read its events is closed. Authentication: the bearer header, or the access_token query parameter, which only this operation accepts (a browser EventSource sends no header). After a reconnection, read GET /build-sessions/{id} for the state.
          */
         get: operations["buildSessionEvents"];
         put?: never;
@@ -1020,7 +1020,7 @@ export interface paths {
         };
         /**
          * exportBuildSession
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. S16 §14.1 (E77): BuildSessionExportV1, the Unity app's contract, kept byte for byte with the planner's spellings (snake_case keys and values, placement_mode in camelCase, normalized_json and warnings_json as stored). judge_id and event_id are null, venue_id is the club's venue, is_training comes from the placement's mode. The ring needs its geometry (RING_WITHOUT_GEOMETRY) with the six markers A–F the app calibrates with (GEOMETRY_INVALID {violations: [{path: markers, rule: TOO_FEW_MARKERS}]}); a course no longer readable → COURSE_NOT_VISIBLE. The server checks the result against the schema: a failed check is a server error (500 INTERNAL_ERROR).
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. S16 §14.1 (E77): BuildSessionExportV1, the Unity app's contract, kept byte for byte with the planner's spellings (snake_case keys and values, placement_mode in camelCase, normalized_json and warnings_json as stored). judge_id and event_id are null, venue_id is the club's venue, is_training comes from the placement's mode. The ring needs its geometry (RING_WITHOUT_GEOMETRY) with exactly six active markers, the A–F the app calibrates with, and only those are exported (GEOMETRY_INVALID {violations: [{path: markers, rule}]}: TOO_FEW_MARKERS for fewer, TOO_MANY_MARKERS for more); a course no longer readable → COURSE_NOT_VISIBLE. The server checks the result against the schema: a failed check is a server error (500 INTERNAL_ERROR).
          */
         get: operations["exportBuildSession"];
         put?: never;
@@ -1042,7 +1042,7 @@ export interface paths {
         put?: never;
         /**
          * finishBuildSession
-         * @description Roles: INSTRUCTOR (while courses.allowInstructorPublish, else FORBIDDEN), ADMIN. Module: COURSES. R-16-11: the session becomes COMPLETED (finishedAt) and the ring's setup is registered as POST /ring-setups does: kind from the course's discipline (AGILITY, JUMPING, else FUN), the placement as its source, the course's levels. When the ring's active setup already shows this placement it is refreshed instead (builtAt, builtByAccountId and a new expiresAt; no event). A closed or outlived session → BUILD_SESSION_FINISHED; a course no longer readable → COURSE_NOT_VISIBLE. Publishes BuildSessionFinished and ends the session's streams with a finished event.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11: the session becomes COMPLETED (finishedAt), whoever of them finishes it. The ring's setup follows courses.allowInstructorPublish (R-16-07): an ADMIN, or an INSTRUCTOR while it is on, registers it as POST /ring-setups does (kind from the course's discipline: AGILITY, JUMPING, else FUN; the placement as its source; the course's levels), and setupId names it; when the ring's active setup already shows this placement it is refreshed instead, as a renewal (builtAt, builtByAccountId, the same expectedUntil and a new expiresAt; no event). An INSTRUCTOR's finish with the switch off registers no setup: setupId is null and an ADMIN registers it with POST /ring-setups. A closed or outlived session → BUILD_SESSION_FINISHED; a course no longer readable → COURSE_NOT_VISIBLE; a ring without geometry → RING_WITHOUT_GEOMETRY. Taps racing it are retried, STALE_VERSION only when the retries run out. Publishes BuildSessionFinished and ends the session's streams with a finished event.
          */
         post: operations["finishBuildSession"];
         delete?: never;
@@ -1214,7 +1214,7 @@ export interface paths {
         head?: never;
         /**
          * patchClass
-         * @description Roles: ADMIN. Tenant and role guards apply. The date field is forbidden (400 VALIDATION_ERROR). Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement.
+         * @description Roles: ADMIN. Tenant and role guards apply. The date field is forbidden (400 VALIDATION_ERROR). Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement; without COURSES a new ring drops the hidden planned placement.
          */
         patch: operations["patchClass"];
         trace?: never;
@@ -4728,13 +4728,13 @@ export interface paths {
         };
         /**
          * getBuildSheet
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-10: the placement's build sheet, the PDF the client stored (T-16-19); a placement without one → NOT_FOUND.
          */
         get: operations["getBuildSheet"];
         put?: never;
         /**
          * attachBuildSheet
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. E9 contract; guards then NOT_IMPLEMENTED.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-10: the client renders the build sheet PDF (course-ui) and uploads it with POST /courses/upload-urls {purpose: BUILD_SHEET}; fileKey binds that upload to the placement and replaces the previous sheet. Another club's key, another purpose or a key bound to another entity → NOT_FOUND (R-16-16). The placement's version does not change; a race with another write of the placement → STALE_VERSION.
          */
         post: operations["attachBuildSheet"];
         delete?: never;
@@ -6746,7 +6746,7 @@ export interface paths {
         head?: never;
         /**
          * patchTemplateClass
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement; without COURSES a new ring drops the hidden planned placement.
          */
         patch: operations["patchTemplateClass"];
         trace?: never;
@@ -8216,6 +8216,8 @@ export interface components {
             ringId: string;
             /** @enum {string} */
             selectedStrategy: "EQUIPMENT_TYPE" | "CLOSER_OBSTACLE_ORDER" | "FREE_BUILD";
+            /** @description R-16-11: the ring setup finish registered or refreshed; null while the session is open, once it is ABANDONED, or when an INSTRUCTOR finished it with courses.allowInstructorPublish off (no setup registered: an ADMIN registers it with POST /ring-setups) */
+            setupId?: string | null;
             /** Format: date-time */
             startedAt?: string | null;
             startedByAccountId: string;
@@ -9082,6 +9084,8 @@ export interface components {
             /** @description Visibility follows bookings.showInstructorHoursBefore */
             instructorName?: string | null;
             levelIds: string[];
+            /** @description S16 R-16-13 «Recorregut previst» (screen 07): only with COURSES and courses.showSetupToMembers; null when the class plans no placement or its course is gone */
+            plannedPlacement?: components["schemas"]["PlannedPlacement"] | null;
             ring?: components["schemas"]["ClassRing"] | null;
             startTime: string;
             /** @enum {string} */
@@ -10653,7 +10657,7 @@ export interface components {
         GeometryViolation: {
             path: string;
             /** @enum {string} */
-            rule: "OUT_OF_RANGE" | "NEGATIVE" | "NOT_POSITIVE" | "DUPLICATE_ID" | "DUPLICATE_LABEL" | "DUPLICATE_MARKER_UID" | "DUPLICATE_APRIL_TAG" | "OUTSIDE_PERIMETER" | "OUTSIDE_RING" | "TOO_FEW_POINTS" | "NOT_SIMPLE" | "TOO_FEW_MARKERS" | "COLLINEAR_MARKERS";
+            rule: "OUT_OF_RANGE" | "NEGATIVE" | "NOT_POSITIVE" | "DUPLICATE_ID" | "DUPLICATE_LABEL" | "DUPLICATE_MARKER_UID" | "DUPLICATE_APRIL_TAG" | "OUTSIDE_PERIMETER" | "OUTSIDE_RING" | "TOO_FEW_POINTS" | "NOT_SIMPLE" | "TOO_FEW_MARKERS" | "COLLINEAR_MARKERS" | "TOO_MANY_MARKERS";
         };
         GridOccupancy: {
             /** Format: int32 */
@@ -13536,6 +13540,11 @@ export interface components {
             /** Format: date-time */
             since: string;
             source: components["schemas"]["LeaveSource"];
+        };
+        PlannedPlacement: {
+            /** @description The course's name in the reader's language */
+            courseName: string;
+            placementId: string;
         };
         PlatformAccountRequest: {
             /** Format: email */
@@ -23907,7 +23916,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description BUILD_SESSION_FINISHED */
+            /** @description BUILD_SESSION_FINISHED, RING_WITHOUT_GEOMETRY */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -52053,7 +52062,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;

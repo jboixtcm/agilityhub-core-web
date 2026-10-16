@@ -1,0 +1,207 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/course-handlers.test.ts (18 tests | 6 failed) 290ms
+   ❯ E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) (18)
+     × T-16-05 R-16-16: an ADMIN of another club (coursesOtherClub) finds none of this club's courses, placements, geometry, inventory or setups, and changes none of them 7ms
+     × R-16-16 upload keys: fileKey = {the caller's clubId}/courses/{uuid}; another club's upload is NOT_FOUND here; BUILD_SHEET is application/pdf only 3ms
+     × R-16-09 / R-16-16 a MEMBER (impersonation included) reads a PUBLIC course, a course an ACTIVE setup shows and an ACTIVE setup (view MEMBER), only while courses.showSetupToMembers 3ms
+     × CONVENCIONS_API §7 dismantle and renewal are keyed: the same key and body replay the answer, another body → 409 IDEMPOTENCY_KEY_REUSED 5ms
+     × T-16-19 R-16-10 build sheet: POST {fileKey} binds this club's BUILD_SHEET upload and replaces the previous one (version unchanged); GET answers the bytes as application/pdf; none, another purpose, another club's or another placement's key → 404 1ms
+     × R-16-13 without COURSES a new ring drops the hidden planned placement (patchTemplateClass, patchClass); the same ring keeps it 6ms
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 12 passed (18)
+   Start at  14:12:27
+   Duration  1.26s (transform 47%, import 28%, tests 25%)
+
+stderr | src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > T-16-05 R-16-16: an ADMIN of another club (coursesOtherClub) finds none of this club's courses, placements, geometry, inventory or setups, and changes none of them
+TypeError: Cannot read properties of undefined (reading 'branding')
+    at guard (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/course-handlers.ts:85:16)
+    at /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/course-handlers.ts:687:21
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:191:26
+    at HttpHandler.run (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:157:35)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at executeHandlers (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/utils/executeHandlers.mjs:11:14)
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/until-async@3.0.2/node_modules/until-async/lib/index.js:14:17)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:81:41)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+    at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24)
+[MSW] Encountered an unhandled exception during the handler lookup for "GET http://localhost/api/v1/courses/course-jumping-dijous". Please see the original error above.
+
+stderr | src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > R-16-16 upload keys: fileKey = {the caller's clubId}/courses/{uuid}; another club's upload is NOT_FOUND here; BUILD_SHEET is application/pdf only
+TypeError: Cannot read properties of undefined (reading 'branding')
+    at guard (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/course-handlers.ts:85:16)
+    at /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/course-handlers.ts:565:21
+    at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:191:26
+    at HttpHandler.run (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:157:35)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at executeHandlers (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/utils/executeHandlers.mjs:11:14)
+    at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/until-async@3.0.2/node_modules/until-async/lib/index.js:14:17)
+    at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:81:41)
+    at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
+    at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24)
+[MSW] Encountered an unhandled exception during the handler lookup for "POST http://localhost/api/v1/courses/upload-urls". Please see the original error above.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > T-16-05 R-16-16: an ADMIN of another club (coursesOtherClub) finds none of this club's courses, placements, geometry, inventory or setups, and changes none of them
+AssertionError: GET /courses/course-jumping-dijous: expected { …(2) } to match object { body: { code: 'NOT_FOUND' }, …(1) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "code": "NOT_FOUND",
++     "message": "Cannot read properties of undefined (reading 'branding')",
++     "name": "TypeError",
++     "stack": "TypeError: Cannot read properties of undefined (reading 'branding')
++     at guard (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/course-handlers.ts:85:16)
++     at /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/course-handlers.ts:687:21
++     at file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:191:26
++     at HttpHandler.run (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/handlers/RequestHandler.mjs:157:35)
++     at processTicksAndRejections (node:internal/process/task_queues:103:5)
++     at executeHandlers (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/utils/executeHandlers.mjs:11:14)
++     at until (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/until-async@3.0.2/node_modules/until-async/lib/index.js:14:17)
++     at InterceptorHttpNetworkFrame.resolve (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/frames/http-frame.mjs:81:41)
++     at Emitter.<anonymous> (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/msw@2.15.0_@types+node@24.13.3_typescript@5.9.3/node_modules/msw/lib/core/experimental/define-network.mjs:80:11)
++     at Emitter.emitAsPromise (file:///Users/jordib/dev/agilityhub/agilityhub-core-web/node_modules/.pnpm/rettime@0.11.11/node_modules/rettime/build/index.mjs:177:24)",
+    },
+-   "status": 404,
++   "status": 500,
+  }
+
+ ❯ notFound src/mocks/course-handlers.test.ts:230:43
+    228|     const notFound = async (method: string, path: string, body?: unkno…
+    229|       const answer = await call<Schemas["ApiError"]>(other, method, pa…
+    230|       expect(answer, `${method} ${path}`).toMatchObject({
+       |                                           ^
+    231|         body: { code: "NOT_FOUND" },
+    232|         status: 404,
+ ❯ src/mocks/course-handlers.test.ts:236:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > R-16-16 upload keys: fileKey = {the caller's clubId}/courses/{uuid}; another club's upload is NOT_FOUND here; BUILD_SHEET is application/pdf only
+AssertionError: expected 500 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 500
+
+ ❯ upload src/mocks/course-handlers.test.ts:86:24
+     84|     size: bytes.length,
+     85|   });
+     86|   expect(grant.status).toBe(201);
+       |                        ^
+     87|   const put = await fetch(grant.body.uploadUrl, {
+     88|     body: bytes,
+ ❯ src/mocks/course-handlers.test.ts:304:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > R-16-09 / R-16-16 a MEMBER (impersonation included) reads a PUBLIC course, a course an ACTIVE setup shows and an ACTIVE setup (view MEMBER), only while courses.showSetupToMembers
+AssertionError: expected 403 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 403
+
+ ❯ src/mocks/course-handlers.test.ts:350:28
+    348|     for (const reader of ["member", "impersonated"] as const) {
+    349|       const shown = await call<Schemas["Course"]>(reader, "GET", `/cou…
+    350|       expect(shown.status).toBe(200);
+       |                            ^
+    351|       valid("Course", shown.body);
+    352|       // Never editable by a member: no nameI18n.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > CONVENCIONS_API §7 dismantle and renewal are keyed: the same key and body replay the answer, another body → 409 IDEMPOTENCY_KEY_REUSED
+AssertionError: expected { body: { …(4) }, status: 409 } to deeply equal { body: { …(19) }, status: 200 }
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "agilityhubLevel": null,
+-     "builtAt": "2026-10-12T18:00:00Z",
+-     "builtByAccountId": "10000000-0000-4000-8000-000000000003",
+-     "courseId": "course-jumping-dijous",
+-     "createdAt": "2026-10-12T18:00:00Z",
+-     "dismantledAt": "2026-10-16T11:12:28Z",
+-     "dismantledByAccountId": "10000000-0000-4000-8000-000000000001",
+-     "expectedUntil": null,
+-     "expiresAt": "2026-10-18T22:00:00Z",
+-     "id": "setup-muntanya-dijous",
+-     "imageFileKey": null,
+-     "imageUrl": null,
+-     "kind": "JUMPING",
+-     "levelIds": [
+-       "level-c",
+-     ],
+-     "notes": "Muntat per al grup de dijous.",
+-     "placementId": "placement-muntanya-dijous",
+-     "ringId": "ring-muntanya",
+-     "status": "DISMANTLED",
+-     "view": "STAFF",
++     "code": "INVALID_STATE",
++     "details": {
++       "reason": "DISMANTLED",
++     },
++     "message": "Invalid state",
++     "traceId": "mock-trace-id",
+    },
+-   "status": 200,
++   "status": 409,
+  }
+
+ ❯ src/mocks/course-handlers.test.ts:414:20
+    412|     expect(first).toMatchObject({ body: { status: "DISMANTLED" }, stat…
+    413|     const replay = await call<Schemas["RingSetup"]>("admin", "POST", p…
+    414|     expect(replay).toEqual(first);
+       |                    ^
+    415|     const reused = await call<Schemas["ApiError"]>("admin", "POST", pa…
+    416|     expect(reused).toMatchObject({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > T-16-19 R-16-10 build sheet: POST {fileKey} binds this club's BUILD_SHEET upload and replaces the previous one (version unchanged); GET answers the bytes as application/pdf; none, another purpose, another club's or another placement's key → 404
+AssertionError: expected null not to be null
+ ❯ src/mocks/course-handlers.test.ts:460:42
+    458|     const stored = courseState.placements.find((item) => item.id === P…
+    459|     if (stored === undefined) throw new Error("PLACEMENT_NOT_FOUND");
+    460|     expect(stored.buildSheetFileKey).not.toBeNull();
+       |                                          ^
+    461|     const fixture = await buildSheet("instructor", PLACEMENT_IDS.centr…
+    462|     expect(fixture.status).toBe(200);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > R-16-13 without COURSES a new ring drops the hidden planned placement (patchTemplateClass, patchClass); the same ring keeps it
+AssertionError: expected 400 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 400
+
+ ❯ src/mocks/course-handlers.test.ts:1038:25
+    1036|       version: planned.body.version,
+    1037|     });
+    1038|     expect(same.status).toBe(200);
+       |                         ^
+    1039|     expect(same.body.classes.find((candidate) => candidate.id === item…
+    1040|       PLACEMENT_IDS.muntanyaJumping,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+

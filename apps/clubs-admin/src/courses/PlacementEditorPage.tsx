@@ -1,4 +1,10 @@
-import { type ApiClient, isApiError, useSubmissionKeys } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  type components,
+  isApiError,
+  useSubmissionKeys,
+} from "@agilityhub/api-client";
+import { plannerPlacement } from "@agilityhub/api-client/core-api-store";
 import { useSession } from "@agilityhub/auth";
 import type { Warning } from "@agilityhub/course-core";
 import {
@@ -27,7 +33,12 @@ import {
 import { type SyntheticEvent, useEffect, useMemo, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { RegisterSetupModal, useBuildSheet } from "./RegisterSetupModal";
+import {
+  RegisterSetupModal,
+  useBuildSheet,
+  useBuildSheetError,
+  useStoredBuildSheet,
+} from "./RegisterSetupModal";
 import {
   type Course,
   isCourseData,
@@ -35,11 +46,15 @@ import {
   type Ring,
   useCourseError,
   useCourseStore,
+  useSetupPermission,
   useWarningText,
 } from "./shared";
 
+type PlacementBlockedDetails = components["schemas"]["PlacementBlockedDetails"];
+
 type SaveFailure =
   | { kind: "blocked"; critical: readonly Warning[] }
+  | { kind: "courseStale" }
   | { kind: "error"; message: string }
   | { kind: "stale" };
 
@@ -74,6 +89,10 @@ export function PlacementEditorPage({
   const { locale } = useClubFormats();
   const keys = useSubmissionKeys();
   const buildSheet = useBuildSheet(client);
+  const storedSheet = useStoredBuildSheet(client);
+  const sheetErrorText = useBuildSheetError();
+  const setupPermission = useSetupPermission(client);
+  const [sheetPending, setSheetPending] = useState(false);
   const [course, setCourse] = useState<Course>();
   const [rings, setRings] = useState<readonly PlannerRing[]>();
   const [catalogRings, setCatalogRings] = useState<Ring[]>([]);
@@ -121,39 +140,9 @@ export function PlacementEditorPage({
         const saved = placement.data;
         setStoredResolved(saved);
         setName(saved.name ?? "");
-        const plannerSaved = {
-          courseVersion: saved.courseVersion,
-          placement: {
-            flipX: saved.transform.flipX,
-            flipY: saved.transform.flipY,
-            offsetXMeters: saved.transform.offsetXM,
-            offsetYMeters: saved.transform.offsetYM,
-            placementMode:
-              saved.placementMode === "CENTERED"
-                ? ("centered" as const)
-                : saved.placementMode === "FIT_TO_RING"
-                  ? ("fitToRing" as const)
-                  : ("preserveMeters" as const),
-            rotationDegrees: saved.transform.rotationDeg,
-          },
-        };
-        setStored({
-          activityId: saved.activityId ?? null,
-          courseId: saved.courseId,
-          courseVersion: saved.courseVersion,
-          displayName: saved.displayName ?? null,
-          id: saved.id,
-          mode: saved.mode,
-          name: saved.name ?? null,
-          placement: plannerSaved.placement,
-          ringId: saved.ringId,
-          scheduledAt: saved.scheduledAt ?? null,
-          stale: saved.stale,
-          status: saved.status,
-          updatedAt: saved.updatedAt,
-          version: saved.version,
-        });
-        dispatch({ placement: plannerSaved.placement, type: "SET_PLACEMENT" });
+        const reopened = plannerPlacement(saved);
+        setStored(reopened);
+        dispatch({ placement: reopened.placement, type: "SET_PLACEMENT" });
       }
     };
     load().catch((cause: unknown) => {
@@ -196,67 +185,120 @@ export function PlacementEditorPage({
   const editing = stored !== undefined;
   const activity = stored?.activityId ?? activityId ?? null;
 
+  /** A move or a turn: course-core judges the new position, so an old refusal no longer applies. */
+  const move = (action: Parameters<typeof dispatch>[0]) => {
+    dispatch(action);
+    setFailure(undefined);
+  };
+
+  /**
+   * After `409 STALE_VERSION`: the placement or the course changed meanwhile. Both are read
+   * again; the user's transform and name stay, the course's new model and version are adopted
+   * (the warnings follow it), so the next save is made at the versions now stored.
+   */
+  const recoverStale = async () => {
+    const [freshCourse, freshPlacement] = await Promise.all([
+      client
+        .GET("/courses/{id}", { params: { path: { id: course.id } } })
+        .then((answer) => answer.data)
+        .catch(() => undefined),
+      stored === undefined
+        ? Promise.resolve(undefined)
+        : client
+            .GET("/placements/{id}", { params: { path: { id: stored.id } } })
+            .then((answer) => answer.data)
+            .catch(() => undefined),
+    ]);
+    const courseChanged = freshCourse !== undefined && freshCourse.version !== course.version;
+    if (courseChanged && isCourseData(freshCourse.normalizedJson)) {
+      setCourse(freshCourse);
+      dispatch({
+        course: freshCourse.normalizedJson,
+        courseDbId: freshCourse.id,
+        filename: freshCourse.name,
+        type: "SET_COURSE",
+      });
+      dispatch({ placement: state.placement, type: "SET_PLACEMENT" });
+    }
+    if (freshPlacement !== undefined) {
+      setStored(plannerPlacement(freshPlacement));
+      setStoredResolved(freshPlacement);
+    }
+    setFailure({ kind: courseChanged ? "courseStale" : "stale" });
+  };
+
   const save = async (force: boolean) => {
     if (ring === null) return;
     setPending(true);
     setFailure(undefined);
     setSavedMessage(undefined);
     const trimmed = name.trim();
-    const input: Omit<SavePlacementInput, "submissionKey"> = {
-      activityId: activity,
-      course: model,
-      courseId: course.id,
-      courseVersion: course.version,
-      ...(force ? { force: true } : {}),
-      ...(activity === null ? {} : { mode: "event" as const }),
-      ...(trimmed === "" ? {} : { name: trimmed }),
-      placement: state.placement,
-      ringId: ring.id,
-      thresholdMeters: null,
-      venueId: branding.club.slug,
-      warnings,
-    };
-    // One key per payload: what the user placed, where, under which name, forced or not.
-    const signature = JSON.stringify({
-      activity,
-      courseId: course.id,
-      courseVersion: course.version,
-      force,
-      name: trimmed,
-      placement: state.placement,
-      ringId: ring.id,
-    });
     try {
-      const saved = editing
-        ? await store.updatePlacement({ ...input, placementId: stored.id, version: stored.version })
-        : await keys.send(signature, (key) =>
-            store.savePlacement({ ...input, submissionKey: key }),
-          );
-      setStored(saved);
-      const fresh = await client.GET("/placements/{id}", { params: { path: { id: saved.id } } });
-      if (fresh.data !== undefined) setStoredResolved(fresh.data);
-      if (!editing) {
+      let saved: PlannerPlacement;
+      if (editing) {
+        saved = await store.updatePlacement({
+          course: model,
+          courseVersion: course.version,
+          // Only what the user edits here; the rest of the placement goes back as stored.
+          edits: { name: trimmed === "" ? null : trimmed },
+          ...(force ? { force: true } : {}),
+          placement: state.placement,
+          stored,
+          warnings,
+        });
+      } else {
+        const input: Omit<SavePlacementInput, "submissionKey"> = {
+          activityId: activity,
+          course: model,
+          courseId: course.id,
+          courseVersion: course.version,
+          ...(force ? { force: true } : {}),
+          ...(activity === null ? {} : { mode: "event" as const }),
+          ...(trimmed === "" ? {} : { name: trimmed }),
+          placement: state.placement,
+          ringId: ring.id,
+          thresholdMeters: null,
+          venueId: branding.club.slug,
+          warnings,
+        };
+        // One key per payload: what the user placed, where, under which name, forced or not.
+        const signature = JSON.stringify({
+          activity,
+          courseId: course.id,
+          courseVersion: course.version,
+          force,
+          name: trimmed,
+          placement: state.placement,
+          ringId: ring.id,
+        });
+        saved = await keys.send(signature, (key) =>
+          store.savePlacement({ ...input, submissionKey: key }),
+        );
         // Further saves are updates of this placement (its version), also after a reload.
         const search = new URLSearchParams(window.location.search);
         search.set("colocacio", saved.id);
         window.history.replaceState(null, "", `${window.location.pathname}?${search.toString()}`);
       }
+      setStored(saved);
       setSavedMessage(t("admin-courses:editor.saved"));
+      // The stored obstacles for the build sheet and the setup: best effort, the save is done.
+      client.GET("/placements/{id}", { params: { path: { id: saved.id } } }).then(
+        (fresh) => {
+          const read = fresh.data;
+          if (read === undefined) return;
+          // A late answer never replaces what a later save already read.
+          setStoredResolved((current) =>
+            current?.id === read.id && current.version > read.version ? current : read,
+          );
+        },
+        () => undefined,
+      );
     } catch (cause) {
       if (isApiError(cause, "PLACEMENT_BLOCKED")) {
-        const details = cause.details as { warnings?: Warning[] } | undefined;
+        const details = cause.details as Partial<PlacementBlockedDetails> | null | undefined;
         setFailure({ critical: details?.warnings ?? [], kind: "blocked" });
-      } else if (isApiError(cause, "STALE_VERSION") && editing) {
-        // Someone saved it in between: read its version, keep this user's transform and name.
-        const fresh = await client
-          .GET("/placements/{id}", { params: { path: { id: stored.id } } })
-          .then((answer) => answer.data)
-          .catch(() => undefined);
-        if (fresh !== undefined) {
-          setStored({ ...stored, stale: fresh.stale, version: fresh.version });
-          setStoredResolved(fresh);
-        }
-        setFailure({ kind: "stale" });
+      } else if (isApiError(cause, "STALE_VERSION")) {
+        await recoverStale();
       } else {
         setFailure({ kind: "error", message: errorText(cause) });
       }
@@ -308,7 +350,7 @@ export function PlacementEditorPage({
                 exit: t("admin-courses:viewer.exit"),
               }}
               onDragPlacement={(dxMeters, dyMeters) => {
-                dispatch({ dxMeters, dyMeters, type: "NUDGE" });
+                move({ dxMeters, dyMeters, type: "NUDGE" });
               }}
               onSelectObstacle={(id) => {
                 dispatch({ obstacleId: id, type: "SELECT_OBSTACLE" });
@@ -334,7 +376,7 @@ export function PlacementEditorPage({
                 id="editor-ring"
                 onChange={(event) => {
                   const next = rings.find((item) => item.id === event.currentTarget.value);
-                  if (next !== undefined) dispatch({ ring: next, type: "SET_RING" });
+                  if (next !== undefined) move({ ring: next, type: "SET_RING" });
                 }}
                 value={ring?.id ?? ""}
               >
@@ -379,22 +421,22 @@ export function PlacementEditorPage({
             }}
             locale={locale}
             onCenter={() => {
-              dispatch({ type: "CENTER" });
+              move({ type: "CENTER" });
             }}
             onFlipX={() => {
-              dispatch({ type: "FLIP_X" });
+              move({ type: "FLIP_X" });
             }}
             onFlipY={() => {
-              dispatch({ type: "FLIP_Y" });
+              move({ type: "FLIP_Y" });
             }}
             onNudge={(dxMeters, dyMeters) => {
-              dispatch({ dxMeters, dyMeters, type: "NUDGE" });
+              move({ dxMeters, dyMeters, type: "NUDGE" });
             }}
             onReset={() => {
-              dispatch({ type: "RESET_PLACEMENT" });
+              move({ type: "RESET_PLACEMENT" });
             }}
             onRotate={(deltaDegrees) => {
-              dispatch({ deltaDegrees, type: "ROTATE" });
+              move({ deltaDegrees, type: "ROTATE" });
             }}
             units="M"
           />
@@ -429,6 +471,14 @@ export function PlacementEditorPage({
             {failure?.kind === "blocked" ? (
               <div className="courses-blocked" role="alert">
                 <p>{t("errors:PLACEMENT_BLOCKED")}</p>
+                {failure.critical.length === 0 ? null : (
+                  // What the api judged critical (`details.warnings`), in the reader's language.
+                  <ul aria-label={t("admin-courses:editor.blockedBy")}>
+                    {failure.critical.map((warning) => (
+                      <li key={warning.id}>{warningText(warning)}</li>
+                    ))}
+                  </ul>
+                )}
                 {admin ? (
                   <>
                     <p>{t("admin-courses:editor.forceQuestion")}</p>
@@ -451,6 +501,11 @@ export function PlacementEditorPage({
                 {t("admin-courses:editor.stale")}
               </p>
             ) : null}
+            {failure?.kind === "courseStale" ? (
+              <p className="ah-form-field__error" role="alert">
+                {t("admin-courses:editor.courseStale")}
+              </p>
+            ) : null}
             {failure?.kind === "error" ? (
               <p className="ah-form-field__error" role="alert">
                 {failure.message}
@@ -471,35 +526,77 @@ export function PlacementEditorPage({
                 {t("admin-courses:editor.save")}
               </Button>
             </div>
-            {storedResolved === undefined ? null : (
+            {storedResolved === undefined || stored === undefined ? null : (
               <div className="courses-form__actions">
                 <Button
+                  // R-16-06: a stale placement's obstacles no longer match the ring: save it first.
+                  aria-describedby={stored.stale ? "editor-sheet-stale" : undefined}
+                  disabled={stored.stale || sheetPending}
+                  loading={sheetPending}
+                  loadingLabel={t("admin-courses:detail.sheetPending")}
                   onClick={() => {
                     setSheetError(undefined);
+                    setSheetPending(true);
                     buildSheet({
                       courseName: course.name,
                       notes: course.notes,
                       placement: storedResolved,
-                    }).catch((cause: unknown) => {
-                      setSheetError(errorText(cause));
-                    });
+                    })
+                      .then((saved) => {
+                        setStored((current) =>
+                          current === undefined
+                            ? current
+                            : { ...current, buildSheetFileKey: saved.buildSheetFileKey },
+                        );
+                      })
+                      .catch((cause: unknown) => {
+                        setSheetError(sheetErrorText(cause));
+                      })
+                      .finally(() => {
+                        setSheetPending(false);
+                      });
                   }}
                   variant="secondary"
                 >
                   <Icon aria-hidden="true" name="doc" />
                   {t("admin-courses:detail.buildSheet")}
                 </Button>
-                <Button
-                  onClick={() => {
-                    setRegistering(true);
-                  }}
-                  variant="secondary"
-                >
-                  <Icon aria-hidden="true" name="cone" />
-                  {t("admin-courses:detail.register")}
-                </Button>
+                {stored.buildSheetFileKey === null ? null : (
+                  <Button
+                    disabled={sheetPending}
+                    onClick={() => {
+                      setSheetError(undefined);
+                      storedSheet({
+                        courseName: course.name,
+                        placementId: stored.id,
+                        ringName: ring?.name ?? "",
+                      }).catch((cause: unknown) => {
+                        setSheetError(sheetErrorText(cause));
+                      });
+                    }}
+                    variant="ghost"
+                  >
+                    {t("admin-courses:detail.storedSheet")}
+                  </Button>
+                )}
+                {setupPermission.allowed ? (
+                  <Button
+                    onClick={() => {
+                      setRegistering(true);
+                    }}
+                    variant="secondary"
+                  >
+                    <Icon aria-hidden="true" name="cone" />
+                    {t("admin-courses:detail.register")}
+                  </Button>
+                ) : null}
               </div>
             )}
+            {stored?.stale === true && storedResolved !== undefined ? (
+              <p className="courses-muted" id="editor-sheet-stale">
+                {t("admin-courses:editor.sheetStale")}
+              </p>
+            ) : null}
             {sheetError === undefined ? null : (
               <p className="ah-form-field__error" role="alert">
                 {sheetError}
@@ -511,11 +608,11 @@ export function PlacementEditorPage({
       {registering && storedResolved !== undefined ? (
         <RegisterSetupModal
           client={client}
-          courseId={course.id}
-          discipline={course.discipline}
+          course={course}
           onClose={() => {
             setRegistering(false);
           }}
+          onRefused={setupPermission.refused}
           onRegistered={(message) => {
             setRegistering(false);
             setSavedMessage(message);

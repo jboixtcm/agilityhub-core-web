@@ -5,6 +5,7 @@ import {
   aprilTag36h11Bits,
   centerCourseInRing,
   parseSmarterTxt,
+  resolvePlacedObstacles,
   type CourseData,
 } from "@agilityhub/course-core";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
@@ -14,17 +15,20 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import {
   computeWarnings,
   INITIAL_STATE,
+  MarkerSheetError,
+  markerSheetProblem,
   PlannerCanvas,
   plannerReducer,
   renderBuildSheetPdf,
   renderMarkerSheetPdf,
-  resolvePlacedObstacles,
   ringToCore,
+  SHEET_PAPER,
   type BuildSheetLabels,
   type MarkerSheetLabels,
   type PlannerRing,
   type PlannerRingMarker,
 } from "../src/index";
+import { PdfDocument, textWidthMm } from "../src/lib/pdf/pdf-document";
 
 // ---------------------------------------------------------------------------
 // Reading the PDFs back: the xref table must point at every object, and the text the pages
@@ -191,6 +195,7 @@ const buildLabels: BuildSheetLabels = {
   heading: "Jumping Sant Joan",
   inventoryRow: (type, count) => `${type} × ${String(count)}`,
   inventoryTitle: "Material necessari",
+  listSeparator: " · ",
   markerDistance: (label, value) => `${label}: ${value} m`,
   metres: (value) => metres.format(value),
   none: "Cap",
@@ -201,7 +206,88 @@ const buildLabels: BuildSheetLabels = {
   plan: "Plànol",
   producer: "AgilityHub",
   subheading: "Pista central · Col·locació d'entrenament",
+  unnumbered: "—",
 };
+
+/** Every `Tj` string of the file, in order (latin1 bytes, escapes undone). */
+function fileTexts(bytes: Uint8Array): string[] {
+  return pageStreams(bytes).flatMap(texts);
+}
+
+/** The Info dictionary's `key` string: a `<FEFF…>` hex string decoded as UTF-16BE. */
+function infoString(bytes: Uint8Array, key: string): string {
+  const hex = new RegExp(`/${key} <([0-9A-Fa-f]*)>`, "u").exec(latin1(bytes))?.[1];
+  expect(hex).toBeDefined();
+  const units: number[] = [];
+  for (let index = 0; index < (hex ?? "").length; index += 4) {
+    units.push(Number.parseInt((hex ?? "").slice(index, index + 4), 16));
+  }
+  expect(units[0]).toBe(0xfeff);
+  return String.fromCharCode(...units.slice(1));
+}
+
+function thrown(run: () => unknown): unknown {
+  try {
+    run();
+  } catch (error) {
+    return error;
+  }
+  return undefined;
+}
+
+describe("R-16-17 the PDF writer prints every Catalan, Spanish and English letter", () => {
+  it("R-16-17 decomposed accents and «ŀ» (U+0140) print as WinAnsi letters, never «?»", () => {
+    const document = new PdfDocument({ producer: "AgilityHub", title: "Prova" });
+    const page = document.addPage(SHEET_PAPER.a4);
+    // «Coŀlocació» with the Catalan ligature U+0140, «Café» with a combining acute (U+0301).
+    page.text(10, 10, "Coŀlocació · Café");
+    // A combining mark on a letter with no precomposed WinAnsi form keeps the letter.
+    page.text(10, 20, "q́");
+    // Nothing WinAnsi can show (Polish «ł», a check mark) still reads as «?».
+    page.text(10, 30, "ł✓");
+    expect(fileTexts(document.toBytes())).toEqual(["Col·locació · Café", "q", "??"]);
+    expect(textWidthMm("Coŀlocació", 10)).toBeCloseTo(textWidthMm("Col·locació", 10), 6);
+    expect(textWidthMm("Café", 10)).toBeCloseTo(textWidthMm("Café", 10), 6);
+  });
+
+  it("R-16-17 the document properties are UTF-16BE text strings, so ’ and · read back as typed", () => {
+    const document = new PdfDocument({
+      producer: "AgilityHub · Pla d’obstacles",
+      title: "Full de muntatge · Col·locació d’entrenament",
+    });
+    document.addPage(SHEET_PAPER.a4);
+    const bytes = document.toBytes();
+    checkStructure(bytes);
+    expect(infoString(bytes, "Title")).toBe("Full de muntatge · Col·locació d’entrenament");
+    expect(infoString(bytes, "Producer")).toBe("AgilityHub · Pla d’obstacles");
+  });
+});
+
+describe("R-16-10 the build sheet's punctuation comes from the caller", () => {
+  it("R-16-10 the marker distances join with `listSeparator` and an unnumbered obstacle shows `unnumbered`", () => {
+    const course = fixture(JUMPING);
+    const ring = ringFor(course);
+    const [firstObstacle, ...rest] = resolvePlacedObstacles(
+      course,
+      centerCourseInRing(course, ringToCore(ring)),
+    );
+    expect(firstObstacle).toBeDefined();
+    if (firstObstacle === undefined) return;
+    const bytes = renderBuildSheetPdf({
+      labels: { ...buildLabels, listSeparator: " ; ", unnumbered: "s/n" },
+      obstacles: [{ ...firstObstacle, numbers: [] }, ...rest],
+      ring,
+    });
+    const all = fileTexts(bytes);
+    expect(all).toContain("s/n");
+    expect(all).not.toContain("—");
+    const distances = all.filter((text) => /^[A-D]: /u.test(text));
+    expect(distances.length).toBeGreaterThan(0);
+    for (const text of distances) {
+      expect(text).toMatch(/^[A-D]: [\d,]+ m ; [A-D]: [\d,]+ m$/u);
+    }
+  });
+});
 
 describe("T-16-04 / R-16-10 the build sheet of the fixture courses", () => {
   for (const name of [JUMPING, AGILITY]) {
@@ -289,19 +375,102 @@ describe("A8b the ring's marker sheet from the stored markers", () => {
     streams.forEach((stream, index) => {
       const tagId = index * 7;
       const grid = aprilTag36h11Bits(tagId);
-      const whiteData = grid.flat().filter(Boolean).length;
-      // 8 × 8 modules, every border module and every 0 bit black: one filled `re` each.
-      const black = 64 - whiteData;
-      const filled = [...stream.matchAll(/0 g\n[\d. ]+ re\nf/gu)].length;
-      expect(filled).toBe(black);
+      // 8 × 8 modules, every border module and every 0 bit black, each where the AR app reads
+      // it: row 0 at the top of the printed tag, column 0 at its left (a transposed or mirrored
+      // tag fails here).
+      const expected = grid.map((row, y) =>
+        row.map((white, x) => x === 0 || y === 0 || x === 7 || y === 7 || !white),
+      );
+      expect(drawnModules(stream)).toEqual(expected);
       // The dashed cut line is the 190 mm footprint: 190 mm = 538.583 pt.
       expect(stream).toContain("538.583 538.583 re");
+      expect(texts(stream)).toContain("190 mm");
       expect(texts(stream)).toContain(
         `club-central-${String.fromCharCode(97 + index)} · AprilTag 36h11 núm. ${String(tagId)}`,
       );
     });
   });
+
+  it("A8b a marker always prints at its stored size, and the size line says that size", () => {
+    const small = { ...marker("A", 0, 0), physical_height_m: 0.15, physical_width_m: 0.15 };
+    const bytes = renderMarkerSheetPdf({
+      labels: markerLabels,
+      markers: [small],
+      tagIds: new Map([[small.id, 3]]),
+    });
+    const [stream = ""] = pageStreams(bytes);
+    // 150 mm = 425.197 pt; one module is a tenth of it.
+    expect(stream).toContain("425.197 425.197 re");
+    expect(texts(stream)).toContain("150 mm");
+    expect(drawnModules(stream).flat().length).toBe(64);
+  });
+
+  it("A8b a marker larger than the printable width is refused, never printed smaller", () => {
+    const markers = [
+      marker("A", 0, 0),
+      { ...marker("B", 10, 0), physical_height_m: 0.25, physical_width_m: 0.25 },
+      { ...marker("C", 20, 0, false), physical_height_m: 0.3, physical_width_m: 0.3 },
+    ];
+    // Inactive markers are never printed, so C does not count.
+    expect(markerSheetProblem(markers)).toEqual({
+      kind: "too-large",
+      labels: ["B"],
+      maxMillimetres: 190,
+    });
+    expect(markerSheetProblem(markers, "letter")).toEqual({
+      kind: "too-large",
+      labels: ["B"],
+      maxMillimetres: 195.9,
+    });
+    expect(markerSheetProblem(markers.slice(0, 1))).toBeNull();
+    const error = thrown(() =>
+      renderMarkerSheetPdf({
+        labels: markerLabels,
+        markers,
+        tagIds: new Map(markers.map((item, index) => [item.id, index])),
+      }),
+    );
+    expect(error).toBeInstanceOf(MarkerSheetError);
+    expect((error as MarkerSheetError).problem).toEqual(markerSheetProblem(markers));
+  });
+
+  it("A8b a ring without an active marker has no sheet (no empty PDF)", () => {
+    const markers = [marker("A", 0, 0, false), marker("B", 10, 0, false)];
+    expect(markerSheetProblem(markers)).toEqual({ kind: "no-active-marker" });
+    expect(markerSheetProblem([])).toEqual({ kind: "no-active-marker" });
+    const error = thrown(() =>
+      renderMarkerSheetPdf({
+        labels: markerLabels,
+        markers,
+        tagIds: new Map(markers.map((item, index) => [item.id, index])),
+      }),
+    );
+    expect(error).toBeInstanceOf(MarkerSheetError);
+    expect((error as MarkerSheetError).problem).toEqual({ kind: "no-active-marker" });
+  });
 });
+
+/**
+ * The AprilTag modules a marker page draws, as an 8 × 8 grid of «black» flags: each filled
+ * black `re` placed by its offset from the top-left one (row 0 at the top of the page).
+ */
+function drawnModules(stream: string): boolean[][] {
+  const rects = [...stream.matchAll(/0 g\n([\d.]+) ([\d.]+) ([\d.]+) [\d.]+ re\nf/gu)].map(
+    (match) => ({ size: Number(match[3]), x: Number(match[1]), y: Number(match[2]) }),
+  );
+  const module = rects[0]?.size ?? 1;
+  const left = Math.min(...rects.map((rect) => rect.x));
+  const top = Math.max(...rects.map((rect) => rect.y));
+  const grid = Array.from({ length: 8 }, () => Array.from({ length: 8 }, () => false));
+  for (const rect of rects) {
+    const column = Math.round((rect.x - left) / module);
+    const row = Math.round((top - rect.y) / module);
+    const cells = grid[row];
+    expect(cells?.[column]).toBe(false);
+    if (cells !== undefined) cells[column] = true;
+  }
+  return grid;
+}
 
 // ---------------------------------------------------------------------------
 // T-16-04 «PlacementEditor emet transform i avisos en arrossegar»: dragging the plan moves the
@@ -433,5 +602,74 @@ describe("T-16-04 dragging the plan in the placement editor", () => {
       />,
     );
     expect(screen.getByRole("img", { name: "Plànol" }).style.cursor).toBe("");
+  });
+
+  it("T-16-04 a second finger on the plan neither restarts nor moves the drag of the first", () => {
+    const course = fixture(JUMPING);
+    const ring = ringFor(course);
+    const onDrag = vi.fn<(dxMeters: number, dyMeters: number) => void>();
+    render(
+      <PlannerCanvas
+        course={course}
+        labels={{ ariaLabel: "Plànol", entry: "Entrada", exit: "Sortida" }}
+        onDragPlacement={onDrag}
+        onSelectObstacle={() => undefined}
+        placement={centerCourseInRing(course, ringToCore(ring))}
+        ring={ring}
+        selectedObstacleId={null}
+        warnings={[]}
+      />,
+    );
+    const svg = screen.getByRole("img", { name: "Plànol" });
+    vi.spyOn(svg, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 600, 600));
+    const scale = Math.max((ring.length_m + 3) / 600, (ring.width_m + 3) / 600);
+    fireEvent.pointerDown(svg, { button: 0, clientX: 100, clientY: 100, pointerId: 7 });
+    fireEvent.pointerMove(svg, { clientX: 160, clientY: 130, pointerId: 7 });
+    // The second finger lands, moves and lifts far away while the first one stays down.
+    fireEvent.pointerDown(svg, { button: 0, clientX: 400, clientY: 400, pointerId: 8 });
+    fireEvent.pointerMove(svg, { clientX: 500, clientY: 500, pointerId: 8 });
+    fireEvent.pointerUp(svg, { clientX: 500, clientY: 500, pointerId: 8 });
+    fireEvent.pointerMove(svg, { clientX: 220, clientY: 160, pointerId: 7 });
+    fireEvent.pointerUp(svg, { clientX: 220, clientY: 160, pointerId: 7 });
+    const total = onDrag.mock.calls.reduce((sum, [dx, dy]) => ({ x: sum.x + dx, y: sum.y + dy }), {
+      x: 0,
+      y: 0,
+    });
+    expect(onDrag).toHaveBeenCalledTimes(2);
+    expect(total.x).toBeCloseTo(120 * scale, 6);
+    expect(total.y).toBeCloseTo(-60 * scale, 6);
+  });
+
+  it("T-16-04 a cancelled drag ends without swallowing the next real click on an obstacle", () => {
+    const course = fixture(JUMPING);
+    const ring = ringFor(course);
+    const onDrag = vi.fn();
+    const onSelect = vi.fn();
+    render(
+      <PlannerCanvas
+        course={course}
+        labels={{ ariaLabel: "Plànol", entry: "Entrada", exit: "Sortida" }}
+        onDragPlacement={onDrag}
+        onSelectObstacle={onSelect}
+        placement={centerCourseInRing(course, ringToCore(ring))}
+        ring={ring}
+        selectedObstacleId={null}
+        warnings={[]}
+      />,
+    );
+    const svg = screen.getByRole("img", { name: "Plànol" });
+    vi.spyOn(svg, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 600, 600));
+    fireEvent.pointerDown(svg, { button: 0, clientX: 100, clientY: 100, pointerId: 3 });
+    fireEvent.pointerMove(svg, { clientX: 200, clientY: 150, pointerId: 3 });
+    fireEvent.pointerCancel(svg, { pointerId: 3 });
+    expect(onDrag).toHaveBeenCalledTimes(1);
+    // The drag is over: further moves of that pointer do nothing.
+    fireEvent.pointerMove(svg, { clientX: 260, clientY: 180, pointerId: 3 });
+    expect(onDrag).toHaveBeenCalledTimes(1);
+    const obstacle = svg.querySelector('g[style*="cursor: pointer"]');
+    expect(obstacle).not.toBeNull();
+    if (obstacle === null) return;
+    fireEvent.click(obstacle);
+    expect(onSelect).toHaveBeenCalledTimes(1);
   });
 });

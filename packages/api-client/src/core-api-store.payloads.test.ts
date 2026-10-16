@@ -252,7 +252,7 @@ describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () =>
       body: { force: true, warnings: [critical] },
       idempotencyKey: "placement-key-2",
     });
-    expect(saved).toMatchObject({ id: "placement-1", ringId: "ring-1", status: "READY_TO_BUILD" });
+    expect(saved).toMatchObject({ id: "placement-1", ringId: "ring-1", status: "DRAFT" });
   });
 
   it("R-16-05 savePlacement sends the complete published payload under the caller's key", async () => {
@@ -277,7 +277,7 @@ describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () =>
       ringId: "ring-1",
       scheduledAt: "2026-10-22T16:00:00Z",
       sizes: null,
-      status: "READY_TO_BUILD",
+      status: null,
       transform: {
         flipX: false,
         flipY: false,
@@ -377,6 +377,13 @@ describe("E9-W03: the store D16 and D18 use", () => {
     );
     expect(isApiError(created, "STALE_VERSION")).toBe(true);
 
+    // Deactivating a marker on the stale read too (E9-W03 round 2, review #10).
+    const deactivated = await rejection(
+      store.deactivateMarker("ring-1", "marker-a", read.geometry_version),
+    );
+    expect(isApiError(deactivated, "STALE_VERSION")).toBe(true);
+    expect(api.requests.at(-1)?.body).toMatchObject({ version: 3 });
+
     // Their markers are intact.
     expect(api.geometry.version).toBe(4);
     expect(api.geometry.markers.map((item) => [item.id, item.label, item.xM])).toEqual([
@@ -411,7 +418,7 @@ describe("E9-W03: the store D16 and D18 use", () => {
     expect(body.pathLengthM).toBeGreaterThan(0);
   });
 
-  it("R-16-02 without an injected uploadFetch the signed PUT goes through the global fetch, called as a browser requires", async () => {
+  it("E9-W03 (found by the e2e) without an injected uploadFetch the signed PUT goes through the global fetch, called as a browser requires", async () => {
     const api = createFakeCoreApi();
     const puts: string[] = [];
     // A browser's fetch refuses any receiver but the global object («Illegal invocation»).
@@ -448,15 +455,32 @@ describe("E9-W03: the store D16 and D18 use", () => {
     expect(ring).toMatchObject({ geometry_version: 3, id: "ring-1", obstacle_inventory: [] });
   });
 
-  it("R-16-06 updatePlacement PUTs the recalculated placement at the version the user edited; a newer save answers STALE_VERSION", async () => {
+  it("R-16-06 a stale placement is re-saved at the version the user edited and keeps what the user did not change (schedule, grades, sizes, threshold, status, mode)", async () => {
     const api = createFakeCoreApi();
     const store = storeOn(api);
-    const created = await store.savePlacement(placementInput());
-    expect(created).toMatchObject({
-      courseVersion: 1,
-      placement: centred,
-      stale: false,
+    const created = await store.savePlacement(
+      placementInput({
+        grades: ["G2"],
+        mode: "free-floating",
+        scheduledAt: "2026-10-24T08:00:00Z",
+        sizes: ["S", "M"],
+        status: "ARCHIVED",
+        thresholdMeters: 2.5,
+      }),
+    );
+    // The ring's geometry changed: the api marked the placement stale (R-16-06).
+    const storedApi = api.placements[0];
+    if (storedApi === undefined) throw new Error("PLACEMENT_NOT_STORED");
+    api.placements[0] = { ...storedApi, stale: true };
+    const stored = { ...created, stale: true };
+    expect(stored).toMatchObject({
+      grades: ["G2"],
+      mode: "FREE_FLOATING",
+      scheduledAt: "2026-10-24T08:00:00Z",
+      sizes: ["S", "M"],
+      status: "ARCHIVED",
       version: 1,
+      warningThresholdM: 2.5,
     });
 
     const moved: CoursePlacement = {
@@ -465,9 +489,11 @@ describe("E9-W03: the store D16 and D18 use", () => {
       placementMode: "preserveMeters",
     };
     const updated = await store.updatePlacement({
-      ...placementInput({ placement: moved }),
-      placementId: created.id,
-      version: created.version,
+      course,
+      courseVersion: 1,
+      placement: moved,
+      stored,
+      warnings: [],
     });
     const request = api.requests.at(-1);
     expect(request).toMatchObject({
@@ -477,24 +503,98 @@ describe("E9-W03: the store D16 and D18 use", () => {
     });
     expect(request?.body).toMatchObject({
       courseId: "course-1",
+      grades: ["G2"],
+      mode: "FREE_FLOATING",
       placementMode: "PRESERVE_METERS",
       ringId: "ring-1",
+      scheduledAt: "2026-10-24T08:00:00Z",
+      sizes: ["S", "M"],
+      status: "ARCHIVED",
       transform: { offsetXM: 22 },
       version: 1,
+      warningThresholdM: 2.5,
     });
     expect(request?.body).not.toHaveProperty("force");
-    expect(updated).toMatchObject({ placement: moved, version: 2 });
+    // The api replaced the placement: what the user did not change survived, and it is fresh.
+    expect(updated).toMatchObject({
+      grades: ["G2"],
+      mode: "FREE_FLOATING",
+      placement: moved,
+      scheduledAt: "2026-10-24T08:00:00Z",
+      sizes: ["S", "M"],
+      stale: false,
+      status: "ARCHIVED",
+      version: 2,
+      warningThresholdM: 2.5,
+    });
 
-    // The same stale version again: another editor's save in between is never overwritten.
+    // An edit the user made is sent; the rest stays as stored.
+    await store.updatePlacement({
+      course,
+      courseVersion: 1,
+      edits: { name: "Muntatge de dissabte", status: "READY_TO_BUILD" },
+      placement: moved,
+      stored: updated,
+      warnings: [],
+    });
+    expect(api.placements[0]).toMatchObject({
+      grades: ["G2"],
+      mode: "FREE_FLOATING",
+      name: "Muntatge de dissabte",
+      status: "READY_TO_BUILD",
+      version: 3,
+      warningThresholdM: 2.5,
+    });
+
+    // The same old version again: another editor's save in between is never overwritten.
     const stale = await rejection(
       store.updatePlacement({
-        ...placementInput({ placement: centred }),
-        placementId: created.id,
-        version: created.version,
+        course,
+        courseVersion: 1,
+        placement: centred,
+        stored,
+        warnings: [],
       }),
     );
     expect(isApiError(stale, "STALE_VERSION")).toBe(true);
-    expect(api.placements[0]?.transform.offsetXM).toBe(22);
+    expect(api.placements[0].transform.offsetXM).toBe(22);
+  });
+
+  it("R-16-05 a new placement sends no status unless the user chose one (the api's default applies)", async () => {
+    const api = createFakeCoreApi();
+    const saved = await storeOn(api).savePlacement(placementInput());
+    expect(api.requests.at(-1)?.body).toMatchObject({ status: null });
+    expect(saved.status).toBe("DRAFT");
+  });
+
+  it("R-16-10 attachBuildSheet uploads the PDF (BUILD_SHEET) and attaches its key; the stored sheet is read back as a PDF", async () => {
+    const api = createFakeCoreApi();
+    const store = storeOn(api);
+    const created = await store.savePlacement(placementInput());
+    const pdf = new TextEncoder().encode("%PDF-1.4 fake sheet");
+
+    const attached = await store.attachBuildSheet(created.id, pdf);
+    expect(calls(api).slice(-2)).toEqual([
+      "POST /courses/upload-urls",
+      "POST /placements/placement-1/build-sheet",
+    ]);
+    expect(api.requests.at(-2)?.body).toEqual({
+      contentType: "application/pdf",
+      purpose: "BUILD_SHEET",
+      size: pdf.byteLength,
+    });
+    expect(api.requests.at(-1)?.body).toEqual({ fileKey: "club-1/courses/source-1.txt" });
+    expect(api.uploads).toEqual([
+      { bytes: pdf.byteLength, url: "https://files.test/upload/source-1" },
+    ]);
+    // The placement's version does not change (E9-T05).
+    expect(attached).toMatchObject({
+      buildSheetFileKey: "club-1/courses/source-1.txt",
+      version: created.version,
+    });
+
+    const sheet = await store.getBuildSheet(created.id);
+    expect(sheet.type).toBe("application/pdf");
   });
 
   it("R-16-05 a placement without a known threshold sends warningThresholdM: null (the club's default applies)", async () => {

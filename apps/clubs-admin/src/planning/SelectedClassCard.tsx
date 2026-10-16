@@ -244,7 +244,10 @@ export function SelectedClassCard({
       setAwaitingVersion(false);
     });
   };
-  const [error, setError] = useState<{ field: "capacity" | "general"; message: string }>();
+  const [error, setError] = useState<{
+    field: "capacity" | "general" | "placementId";
+    message: string;
+  }>();
   const [ringBookings, setRingBookings] = useState<unknown[]>();
   const editable = !readOnly && (session.state === "ACTIVE" || session.state === "DRAFT");
   const notesOnly = !readOnly && !editable;
@@ -333,7 +336,12 @@ export function SelectedClassCard({
       } else {
         setRingBookings(undefined);
         setError({
-          field: code === "CAPACITY_BELOW_BOOKINGS" ? "capacity" : "general",
+          field:
+            code === "CAPACITY_BELOW_BOOKINGS"
+              ? "capacity"
+              : code === "PLACEMENT_RING_MISMATCH" && coursesModule && chips.ringId !== null
+                ? "placementId"
+                : "general",
           message: errorMessage(cause),
         });
       }
@@ -424,6 +432,9 @@ export function SelectedClassCard({
               </span>
               <PlannedCourseSelect
                 client={client}
+                describedBy={
+                  error?.field === "placementId" ? "calendar-placement-error" : undefined
+                }
                 disabled={chipsDisabled}
                 onChange={(placementId) => {
                   set({ placementId });
@@ -431,6 +442,12 @@ export function SelectedClassCard({
                 ringId={chips.ringId}
                 value={chips.placementId}
               />
+              {error?.field === "placementId" ? (
+                // S16 R-16-13: the planned course is not of the class's ring; said under it.
+                <span className="ah-form-field__error" id="calendar-placement-error" role="alert">
+                  {error.message}
+                </span>
+              ) : null}
             </label>
           ) : null}
           {settings.levelsEnabled ? (
@@ -627,7 +644,7 @@ export function SelectedClassCard({
         />
       )}
 
-      {error === undefined ? null : (
+      {error === undefined || error.field === "placementId" ? null : (
         <p
           className="ah-form-field__error"
           id={error.field === "capacity" ? "calendar-capacity-error" : undefined}

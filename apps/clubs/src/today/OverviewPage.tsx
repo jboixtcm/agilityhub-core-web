@@ -96,12 +96,13 @@ const BOOKING_DISPLAY_STATE_TONES: Readonly<Record<ClassBookingItem["displayStat
 
 /**
  * S08 §6 (E5-W03): who is booked and who waits, read-only for every role here — the waiting-list
- * removal is D4's (ADMIN), and attendance is S10's screen 21. The copy is D4's
- * (`admin-scheduling:registrants.*`), one literal for both screens.
+ * removal is D4's (ADMIN), and attendance is S10's screen 21. The copy is D4's literals
+ * (`admin-scheduling:registrants.*`), mirrored in the students' `instructor:overview.registrants.*`
+ * so this app never loads an `admin-*` namespace (E9-W03 point 12).
  */
 function ClassRegistrants({ client, session }: { client: ApiClient; session: ClassSession }) {
   const branding = useBranding();
-  const { t } = useTranslation(["admin-scheduling", "enums"]);
+  const { t } = useTranslation(["instructor", "enums"]);
   const waitlistEnabled = branding.modules.includes("WAITLIST");
   const registrants = useClassRegistrants(client, session.id, waitlistEnabled);
   const entries =
@@ -111,39 +112,39 @@ function ClassRegistrants({ client, session }: { client: ApiClient; session: Cla
           const dog = entry.dogName ?? entry.dog.name;
           const guide = waitlistEntryGuide(entry);
           const name =
-            guide === "" ? dog : t("admin-scheduling:registrants.name", { dog, member: guide });
+            guide === "" ? dog : t("instructor:overview.registrants.name", { dog, member: guide });
           return {
             id: entry.id,
             label:
               entry.position === null || entry.position === undefined
                 ? name
-                : t("admin-scheduling:registrants.position", { name, position: entry.position }),
+                : t("instructor:overview.registrants.position", { name, position: entry.position }),
           };
         })
       : [];
   return (
     <RegistrantsPanel
-      emptyLabel={t("admin-scheduling:registrants.empty")}
+      emptyLabel={t("instructor:overview.registrants.empty")}
       {...(registrants.status === "error"
         ? {
             error: (
               <>
-                <span>{t("admin-scheduling:registrants.loadError")}</span>{" "}
+                <span>{t("instructor:overview.registrants.loadError")}</span>{" "}
                 <Button onClick={registrants.refetch} variant="ghost">
-                  {t("admin-scheduling:registrants.retry")}
+                  {t("instructor:overview.registrants.retry")}
                 </Button>
               </>
             ),
           }
         : {})}
       loading={registrants.status === "loading"}
-      loadingLabel={t("admin-scheduling:registrants.loading")}
+      loadingLabel={t("instructor:overview.registrants.loading")}
       rows={
         registrants.status === "ready"
           ? registrants.bookings.map((item) => ({
               id: item.id,
               level: item.levelCode ?? undefined,
-              name: t("admin-scheduling:registrants.name", {
+              name: t("instructor:overview.registrants.name", {
                 dog: item.dogName,
                 member: item.memberName,
               }),
@@ -154,7 +155,7 @@ function ClassRegistrants({ client, session }: { client: ApiClient; session: Cla
             }))
           : []
       }
-      title={t("admin-scheduling:registrants.title", {
+      title={t("instructor:overview.registrants.title", {
         booked: session.counters.booked,
         capacity: session.capacity,
       })}
@@ -162,7 +163,7 @@ function ClassRegistrants({ client, session }: { client: ApiClient; session: Cla
         ? {
             waiting: {
               entries,
-              text: t("admin-scheduling:registrants.waiting", {
+              text: t("instructor:overview.registrants.waiting", {
                 names: entries.map((entry) => entry.label).join(" · "),
               }),
             },

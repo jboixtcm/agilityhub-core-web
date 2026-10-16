@@ -28,7 +28,12 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { RegisterSetupModal, useBuildSheet } from "./RegisterSetupModal";
+import {
+  RegisterSetupModal,
+  useBuildSheet,
+  useBuildSheetError,
+  useStoredBuildSheet,
+} from "./RegisterSetupModal";
 import {
   AGILITYHUB_LEVELS,
   type AgilityhubLevel,
@@ -43,6 +48,7 @@ import {
   type Ring,
   useCourseError,
   useCourseLabels,
+  useSetupPermission,
 } from "./shared";
 
 const CourseViewer3D = lazy(() => import("./CourseViewer3D"));
@@ -294,10 +300,10 @@ function ShareSwitch({
   const { t } = useTranslation("admin-courses");
   const errorText = useCourseError();
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<string>();
+  const [message, setMessage] = useState<{ text: string; tone: "error" | "info" }>();
   const change = async (shared: boolean) => {
     setPending(true);
-    setError(undefined);
+    setMessage(undefined);
     try {
       const result = await client.PATCH("/courses/{id}", {
         body: { version: course.version, visibility: shared ? "CLUB" : "PRIVATE" },
@@ -305,7 +311,18 @@ function ShareSwitch({
       });
       if (result.data !== undefined) onSaved(result.data);
     } catch (cause) {
-      setError(errorText(cause));
+      if (apiCode(cause) === "STALE_VERSION") {
+        // Like the metadata card: read the course as it is now, so the switch shows what is stored
+        // and the next change is made at its version (never a fresh version with a stale view).
+        const fresh = await client
+          .GET("/courses/{id}", { params: { path: { id: course.id } } })
+          .then((answer) => answer.data)
+          .catch(() => undefined);
+        if (fresh !== undefined) onSaved(fresh);
+        setMessage({ text: t("admin-courses:detail.shareStale"), tone: "info" });
+      } else {
+        setMessage({ text: errorText(cause), tone: "error" });
+      }
     } finally {
       setPending(false);
     }
@@ -321,9 +338,12 @@ function ShareSwitch({
           onCheckedChange={(checked) => void change(checked)}
         />
       </label>
-      {error === undefined ? null : (
-        <p className="ah-form-field__error" role="alert">
-          {error}
+      {message === undefined ? null : (
+        <p
+          className={message.tone === "error" ? "ah-form-field__error" : "courses-muted"}
+          role={message.tone === "error" ? "alert" : "status"}
+        >
+          {message.text}
         </p>
       )}
     </div>
@@ -385,25 +405,30 @@ function ConfirmModal({
 /** The course's placements: where it is placed, whether its ring changed (R-16-06), actions. */
 function PlacementsCard({
   canPlace,
+  canRegister,
   client,
   course,
   onNavigate,
+  onPlacementChanged,
   onRegister,
   placements,
   rings,
 }: {
   canPlace: boolean;
+  canRegister: boolean;
   client: ApiClient;
   course: Course;
   onNavigate: (path: string) => void;
+  onPlacementChanged: (placement: Placement) => void;
   onRegister: (placement: Placement) => void;
   placements: readonly Placement[] | undefined;
   rings: readonly Ring[];
 }) {
   const { t } = useTranslation("admin-courses");
   const { formatDateTime } = useClubFormats();
-  const errorText = useCourseError();
+  const sheetError = useBuildSheetError();
   const buildSheet = useBuildSheet(client);
+  const storedSheet = useStoredBuildSheet(client);
   const [sheet, setSheet] = useState<{ id: string; error?: string }>();
   const ringName = (id: string) => rings.find((ring) => ring.id === id)?.name ?? id;
   const editorPath = (placement?: Placement) =>
@@ -411,14 +436,23 @@ function PlacementsCard({
       placement === undefined ? "" : `?colocacio=${encodeURIComponent(placement.id)}`
     }`;
 
-  const downloadSheet = (placement: Placement) => {
+  const downloadSheet = (placement: Placement, stored: boolean) => {
     setSheet({ id: placement.id });
-    buildSheet({ courseName: course.name, notes: course.notes, placement }).then(
+    const done = stored
+      ? storedSheet({
+          courseName: course.name,
+          placementId: placement.id,
+          ringName: ringName(placement.ringId),
+        })
+      : buildSheet({ courseName: course.name, notes: course.notes, placement }).then((saved) => {
+          onPlacementChanged({ ...placement, buildSheetFileKey: saved.buildSheetFileKey });
+        });
+    done.then(
       () => {
         setSheet(undefined);
       },
       (cause: unknown) => {
-        setSheet({ error: errorText(cause), id: placement.id });
+        setSheet({ error: sheetError(cause), id: placement.id });
       },
     );
   };
@@ -468,26 +502,49 @@ function PlacementsCard({
                     : t("admin-courses:detail.edit")}
                 </Button>
                 <Button
+                  // R-16-06: a stale placement's obstacles no longer match the ring: «Revisa» first.
+                  aria-describedby={placement.stale ? `sheet-stale-${placement.id}` : undefined}
+                  disabled={
+                    placement.stale || (sheet?.id === placement.id && sheet.error === undefined)
+                  }
                   loading={sheet?.id === placement.id && sheet.error === undefined}
                   loadingLabel={t("admin-courses:detail.sheetPending")}
                   onClick={() => {
-                    downloadSheet(placement);
+                    downloadSheet(placement, false);
                   }}
                   variant="secondary"
                 >
                   <Icon aria-hidden="true" name="doc" />
                   {t("admin-courses:detail.buildSheet")}
                 </Button>
-                <Button
-                  onClick={() => {
-                    onRegister(placement);
-                  }}
-                  variant="secondary"
-                >
-                  <Icon aria-hidden="true" name="cone" />
-                  {t("admin-courses:detail.register")}
-                </Button>
+                {placement.buildSheetFileKey == null ? null : (
+                  <Button
+                    disabled={sheet?.id === placement.id && sheet.error === undefined}
+                    onClick={() => {
+                      downloadSheet(placement, true);
+                    }}
+                    variant="ghost"
+                  >
+                    {t("admin-courses:detail.storedSheet")}
+                  </Button>
+                )}
+                {canRegister ? (
+                  <Button
+                    onClick={() => {
+                      onRegister(placement);
+                    }}
+                    variant="secondary"
+                  >
+                    <Icon aria-hidden="true" name="cone" />
+                    {t("admin-courses:detail.register")}
+                  </Button>
+                ) : null}
               </div>
+              {placement.stale ? (
+                <p className="courses-muted" id={`sheet-stale-${placement.id}`}>
+                  {t("admin-courses:detail.sheetStale")}
+                </p>
+              ) : null}
               {sheet?.id === placement.id && sheet.error !== undefined ? (
                 <p className="ah-form-field__error" role="alert">
                   {sheet.error}
@@ -520,6 +577,7 @@ export function CourseDetailPage({
   const branding = useBranding();
   const labels = useCourseLabels();
   const keys = useSubmissionKeys();
+  const setupPermission = useSetupPermission(client);
   const [course, setCourse] = useState<Course>();
   /** A failed read, kept with the attempt it belongs to: [Torna-ho a provar] is a new attempt. */
   const [failure, setFailure] = useState<{ attempt: number; error: unknown }>();
@@ -664,15 +722,17 @@ export function CourseDetailPage({
             </Button>
           ) : (
             <>
-              <Button
-                onClick={() => {
-                  setDialog({ kind: "register" });
-                }}
-                variant="secondary"
-              >
-                <Icon aria-hidden="true" name="cone" />
-                {t("admin-courses:detail.register")}
-              </Button>
+              {setupPermission.allowed ? (
+                <Button
+                  onClick={() => {
+                    setDialog({ kind: "register" });
+                  }}
+                  variant="secondary"
+                >
+                  <Icon aria-hidden="true" name="cone" />
+                  {t("admin-courses:detail.register")}
+                </Button>
+              ) : null}
               <Button
                 onClick={() => {
                   setDialog({ kind: "duplicate" });
@@ -749,9 +809,15 @@ export function CourseDetailPage({
       {editable ? (
         <PlacementsCard
           canPlace={withModel}
+          canRegister={setupPermission.allowed}
           client={client}
           course={course}
           onNavigate={onNavigate}
+          onPlacementChanged={(changed) => {
+            setPlacements((current) =>
+              current?.map((item) => (item.id === changed.id ? changed : item)),
+            );
+          }}
           onRegister={(item) => {
             setDialog({ kind: "register", placement: item });
           }}
@@ -762,11 +828,11 @@ export function CourseDetailPage({
       {dialog?.kind === "register" ? (
         <RegisterSetupModal
           client={client}
-          courseId={course.id}
-          discipline={course.discipline}
+          course={course}
           onClose={() => {
             setDialog(undefined);
           }}
+          onRefused={setupPermission.refused}
           onRegistered={(message) => {
             setDialog(undefined);
             setNotice(message);

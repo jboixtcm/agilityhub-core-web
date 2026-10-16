@@ -39,7 +39,9 @@
       "source": "Font",
       "activeOnRings": "Muntat a",
       "stats": "Obstacles",
-      "obstacleCount": "Nombre d'obstacles"
+      "obstacleCount": "Nombre d'obstacles",
+      "tag": "Etiqueta",
+      "levelId": "Nivell del club"
     },
     "statsCount": "{count, plural, one {# obstacle} other {# obstacles}}",
     "statsWithLength": "{count, plural, one {# obstacle} other {# obstacles}} · {length} m",
@@ -115,7 +117,10 @@
     "delete": "Elimina",
     "deleteQuestion": "Vols eliminar «{name}»? Deixarà de sortir a la biblioteca.",
     "loadErrorTitle": "No s'ha pogut obrir el recorregut",
-    "loadError": "Torna-ho a provar d'aquí a una estona."
+    "loadError": "Torna-ho a provar d'aquí a una estona.",
+    "shareStale": "Algú ha canviat el recorregut mentrestant. L'hem tornat a carregar: torna a triar si el comparteixes.",
+    "storedSheet": "Full desat",
+    "sheetStale": "La geometria de la pista ha canviat: revisa la col·locació abans de treure'n el full de muntatge."
   },
   "viewer": {
     "entry": "entrada",
@@ -146,7 +151,10 @@
     "noRingsTitle": "Cap pista amb geometria",
     "noRings": "Per col·locar un recorregut, primer cal la geometria d'una pista (Configuració › Pistes).",
     "loadErrorTitle": "No s'ha pogut obrir l'editor",
-    "loadError": "Torna-ho a provar d'aquí a una estona."
+    "loadError": "Torna-ho a provar d'aquí a una estona.",
+    "blockedBy": "Avisos crítics",
+    "courseStale": "El recorregut ha canviat mentrestant. L'hem tornat a carregar amb la teva posició: revisa els avisos i desa de nou.",
+    "sheetStale": "La geometria de la pista ha canviat: desa la col·locació per poder treure'n el full de muntatge."
   },
   "controls": {
     "title": "Col·locació",
@@ -196,7 +204,8 @@
     "replaces": "Substituirà el muntatge actual ({kind}, de {day}).",
     "submit": "REGISTRA",
     "registered": "Registrat com a muntat a {ring}.",
-    "registeredReplacing": "Registrat com a muntat a {ring}; substitueix el muntatge anterior."
+    "registeredReplacing": "Registrat com a muntat a {ring}; substitueix el muntatge anterior.",
+    "instructorRefused": "En aquest club només l'administració pot registrar què hi ha muntat."
   },
   "sheet": {
     "buildTitle": "Full de muntatge",
@@ -219,7 +228,10 @@
     "door": "{label}: {side}, de {start} a {end} m ({flow})",
     "notes": "Notes",
     "none": "Cap",
-    "page": "Pàgina {page} de {total}"
+    "page": "Pàgina {page} de {total}",
+    "listSeparator": " · ",
+    "unnumbered": "—",
+    "notStored": "S'ha descarregat el full de muntatge, però no s'ha pogut desar: {reason}"
   },
   "markerSheet": {
     "title": "Full de marcadors · {ring}",
@@ -285,9 +297,16 @@
       "TOO_FEW_POINTS": "necessita almenys tres punts",
       "NOT_SIMPLE": "no pot creuar-se",
       "TOO_FEW_MARKERS": "calen almenys tres marcadors actius",
-      "COLLINEAR_MARKERS": "els marcadors actius no poden estar en línia recta"
+      "COLLINEAR_MARKERS": "els marcadors actius no poden estar en línia recta",
+      "TOO_MANY_MARKERS": "hi ha massa marcadors actius",
+      "other": "no és vàlid"
     },
-    "loadError": "No s'ha pogut carregar la pista"
+    "loadError": "No s'ha pogut carregar la pista",
+    "otherField": "Un altre camp",
+    "notANumber": "ha de ser un número",
+    "precheck": "Revisa aquests camps abans de desar:",
+    "markerSheetNoMarker": "Cap marcador actiu: activa'n almenys un per treure el full.",
+    "markerSheetTooLarge": "{labels}: fan més de {mm} mm i no caben a la pàgina a mida real."
   },
   "doors": {
     "title": "Portes de {name} ({count}/{maximum})",
@@ -349,5 +368,10 @@
     "pastLine": "Del {built} al {ended}",
     "replaced": "Substituït",
     "review": "Revisa-la"
+  },
+  "files": {
+    "fallback": "recorregut",
+    "buildSheet": "{course}-{ring}.pdf",
+    "markerSheet": "marcadors-{ring}.pdf"
   }
 }

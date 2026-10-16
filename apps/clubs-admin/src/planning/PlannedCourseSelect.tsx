@@ -18,6 +18,7 @@ export function useCoursesModule(): boolean {
  * named by its course and its own name. The select is only mounted with COURSES; no ring, none.
  */
 function usePlannedCourses(client: ApiClient, ringId: string | null) {
+  const { t } = useTranslation("admin-scheduling");
   /** The answer for the ring it was read for: another ring shows «loading» until its own. */
   const [read, setRead] = useState<{
     failed: boolean;
@@ -45,7 +46,10 @@ function usePlannedCourses(client: ApiClient, ringId: string | null) {
               const name = placement.name ?? "";
               return {
                 id: placement.id,
-                label: name === "" || name === course ? course : `${course} · ${name}`,
+                label:
+                  name === "" || name === course
+                    ? course
+                    : t("admin-scheduling:plannedCourse.option", { course, name }),
               };
             }),
           ringId,
@@ -58,7 +62,7 @@ function usePlannedCourses(client: ApiClient, ringId: string | null) {
     return () => {
       active = false;
     };
-  }, [client, ringId]);
+  }, [client, ringId, t]);
   if (ringId === null) return { failed: false, options: [] };
   return read?.ringId === ringId
     ? { failed: read.failed, options: read.options }
@@ -73,6 +77,7 @@ function usePlannedCourses(client: ApiClient, ringId: string | null) {
 export function PlannedCourseSelect({
   className,
   client,
+  describedBy,
   disabled = false,
   id,
   onChange,
@@ -81,6 +86,8 @@ export function PlannedCourseSelect({
 }: {
   className?: string;
   client: ApiClient;
+  /** The id of the error said under the select (`aria-describedby`). */
+  describedBy?: string | undefined;
   disabled?: boolean;
   id?: string;
   onChange: (placementId: string | null) => void;
@@ -94,6 +101,8 @@ export function PlannedCourseSelect({
     <>
       <Select
         aria-busy={options === undefined || undefined}
+        aria-describedby={describedBy}
+        aria-invalid={describedBy === undefined ? undefined : true}
         {...(className === undefined ? {} : { className })}
         disabled={disabled || ringId === null}
         {...(id === undefined ? {} : { id })}
