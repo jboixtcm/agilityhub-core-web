@@ -1,9 +1,9 @@
 {
-  "courseName": "Jumping E9-W04 5987",
+  "courseName": "Jumping E9-W04 2940",
   "obstacles": 21,
-  "placementId": "36870498-480f-4313-8581-b361b99bfcc1",
-  "ringId": "53b74807-2ecf-467a-b575-80e512d8effb",
-  "setupId": "88be51b5-6752-4989-8972-5a582942fbd5",
+  "placementId": "4a441abd-5610-4458-893b-0c7e6a4b3963",
+  "ringId": "ef6a7462-3ebd-47ab-ab54-910904505d93",
+  "setupId": "c6127393-8c80-4305-b63f-50731cc24c2d",
   "warnings": [
     "course-larger-than-ring",
     "outside-ring",

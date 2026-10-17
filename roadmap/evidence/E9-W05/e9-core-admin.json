@@ -1,10 +1,10 @@
 {
   "course": {
-    "id": "3a1adbfb-4017-4da6-af1f-8c0558196f65",
+    "id": "b72e1638-7a45-44e9-b3c7-686adbc21b80",
     "name": "JP S SW"
   },
   "forced": true,
-  "placementId": "f2500771-59d4-4843-baf9-5d0b581c9190",
+  "placementId": "8357e1d9-d426-4b24-ba66-9441af2278bb",
   "ring": "Muntanya",
   "uploads": [
     "grant SMARTER_SOURCE → 201 (127.0.0.1:4174/api/v1/attachments/…)",

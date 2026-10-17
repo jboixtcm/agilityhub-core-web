@@ -301,9 +301,13 @@ describe("T-06-29 screen 10 «Classes del dia»", () => {
     // api's «Sense» column) has nowhere to go, so it is not drawn — never silently: development
     // builds log it (E4-W03 review #2).
     expect(screen.queryByText("Obediència")).not.toBeInTheDocument();
-    expect(warn).toHaveBeenCalledWith(
-      "[DayGrid] cells without a matching column are not drawn: cls-b (ringId null)",
-    );
+    // The log is a passive effect: on a loaded runner React's scheduler can yield between the
+    // commit (the grid findByRole sees) and the effect, so wait for it (E9-W05 round 2 #1).
+    await waitFor(() => {
+      expect(warn).toHaveBeenCalledWith(
+        "[DayGrid] cells without a matching column are not drawn: cls-b (ringId null)",
+      );
+    });
     warn.mockRestore();
   });
 

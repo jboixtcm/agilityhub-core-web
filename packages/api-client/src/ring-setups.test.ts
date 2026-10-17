@@ -28,9 +28,10 @@ const setup: RingSetup = {
 };
 
 describe("E9-W05 #9 · R-16-09 the ADMIN fallback's setup summary", () => {
-  it("never carries the raw AgilityHub level code as a label, and opens the viewer of a placement", () => {
+  it("carries the AgilityHub level as the api's levelLabel does (round 2 #7), and opens the viewer of a placement", () => {
     const summary = ringSetupSummary(setup);
-    expect(summary.levelLabel).toBeNull();
+    expect(summary.levelLabel).toBe("EASY");
+    expect(ringSetupSummary({ ...setup, agilityhubLevel: null }).levelLabel).toBeNull();
     expect(summary.hasViewer).toBe(true);
     expect(summary).toMatchObject({ id: "setup-1", kind: "FUN", thumbnailUrl: null });
   });

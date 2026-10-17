@@ -1,0 +1,36 @@
+{
+  "clubNow": {
+    "date": "2026-10-17",
+    "time": "12:00"
+  },
+  "instructorIds": [
+    "2878e199-57f6-49ab-a6bb-97aecce3c3a3"
+  ],
+  "seen": [
+    "2026-10-17 SATURDAY: 08:30 CLASS/FINISHED+CLASS/FINISHED, 09:30 CLASS/FINISHED+CLASS/FINISHED, 16:30 CLASS/CANCELLED, 18:30 CLASS/CANCELLED",
+    "2026-10-18 SUNDAY: "
+  ],
+  "slots": [
+    {
+      "date": "2026-10-17",
+      "endTime": "15:00",
+      "startTime": "14:00"
+    },
+    {
+      "date": "2026-10-17",
+      "endTime": "16:00",
+      "startTime": "15:00"
+    },
+    {
+      "date": "2026-10-18",
+      "endTime": "11:00",
+      "startTime": "10:00"
+    },
+    {
+      "date": "2026-10-18",
+      "endTime": "12:00",
+      "startTime": "11:00"
+    }
+  ],
+  "timeZone": "Europe/Madrid"
+}

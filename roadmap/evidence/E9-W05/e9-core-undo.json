@@ -1,0 +1,10 @@
+{
+  "problems": [],
+  "steps": [
+    "PUT /members/b1d24ccb-6733-3ce3-be0b-1d2433957e4a/roles MEMBER",
+    "POST /class-sessions/a919f263-353f-43f0-a621-6279177d2a12/cancellation",
+    "POST /bookings/5fde33db-22e5-42f4-96e2-88151f736f39/cancellation",
+    "PATCH /class-sessions/a919f263-353f-43f0-a621-6279177d2a12 {placementId: null}"
+  ],
+  "testStatus": "passed"
+}

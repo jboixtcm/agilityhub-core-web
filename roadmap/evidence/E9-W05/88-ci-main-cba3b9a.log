@@ -1,0 +1,406 @@
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:40:25.8881768Z  Test Files  21 passed (21)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:40:25.8882308Z       Tests  378 passed (378)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:40:46.8139497Z  Test Files  16 passed (16)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:40:46.8140473Z       Tests  163 passed (163)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:41:43.5700009Z  Test Files  7 passed (7)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:41:43.5701016Z       Tests  129 passed (129)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:41:45.7595425Z  Test Files  2 passed (2)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:41:45.7596643Z       Tests  38 passed (38)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:42:00.9959559Z  Test Files  6 passed (6)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:42:00.9960740Z       Tests  48 passed (48)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:43:10.1144573Z  Test Files  2 passed (2)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:43:10.1204282Z       Tests  35 passed (35)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:43:18.9889806Z  Test Files  37 passed (37)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:43:18.9890831Z       Tests  755 passed (755)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:45:36.0290475Z  Test Files  32 passed (32)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:45:36.0291986Z       Tests  600 passed (600)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:45:41.7323906Z  Test Files  1 passed (1)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:45:41.7325135Z       Tests  10 passed (10)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:48:01.3269032Z  Test Files  53 passed (53)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:48:01.3269558Z       Tests  836 passed (836)
+Frontend checks	Lint, typecheck, test, and build	2026-10-17T08:48:01.3273772Z  Tasks:    38 successful, 38 total
+Frontend checks	Run Playwright with MSW	﻿2026-10-17T08:48:25.3022822Z ##[group]Run pnpm turbo run e2e --concurrency=1
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.3023234Z pnpm turbo run e2e --concurrency=1
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.3086973Z shell: /usr/bin/bash -e {0}
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.3087241Z env:
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.3087524Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.3087846Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7849160Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7851972Z    • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7854411Z    • Running e2e in 11 packages
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7855241Z    • Remote caching disabled
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7855780Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7960512Z ##[group]@agilityhub/course-core:build
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7974583Z cache hit, replaying logs 8b12f2a8463a0190
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7975300Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7976387Z > @agilityhub/course-core@0.0.1 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-core
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7977715Z > tsc -p tsconfig.build.json
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7978218Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7978946Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7993908Z ##[group]@agilityhub/shared-types:build
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7995632Z cache hit, replaying logs 1caf5b33f1294437
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7996259Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7997338Z > @agilityhub/shared-types@0.0.1 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/shared-types
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7998546Z > tsc -p tsconfig.build.json
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7999027Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.7999588Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.8012349Z ##[group]@agilityhub/course-ui:build
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.8015804Z cache hit, replaying logs 6a09546c6d2d52b9
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.8016424Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.8017485Z > @agilityhub/course-ui@0.0.1 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-ui
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.8019614Z > tsc -p tsconfig.build.json
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.8020170Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:25.8020752Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5491042Z ##[group]@agilityhub/course-ui:e2e
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5492148Z cache bypass, force executing 5ecc401a2c013028
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5492779Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5494864Z > @agilityhub/course-ui@0.0.1 e2e /home/runner/work/agilityhub-core-web/agilityhub-core-web/packages/course-ui
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5495636Z > playwright test
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5495816Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5495824Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5496265Z Running 4 tests using 1 worker
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5497069Z ····
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5497516Z   4 passed (11.7s)
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5498245Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5500143Z ##[group]clubs:build
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5500528Z cache hit, replaying logs 0330b33386468bc1
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5500778Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5501219Z > clubs@0.0.0 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5502197Z > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5502893Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5504784Z vite v8.2.2 building client environment for production...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5505478Z transforming...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5506192Z ✓ 413 modules transformed.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5506918Z rendering chunks...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5507375Z computing gzip size...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5510127Z [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/ca/common.json is dynamically imported by ../../packages/i18n/src/clubs-resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5512601Z dist/index.html                                             2.79 kB │ gzip:   0.97 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5513598Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5514507Z dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5515580Z dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5517063Z dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5518050Z dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5519029Z dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5520001Z dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5520843Z [plugin builtin:vite-reporter] 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5521608Z (!) Some chunks are larger than 500 kB after minification. Consider:
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5522549Z dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5523642Z - Using dynamic import() to code-split the application
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5524552Z dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5525400Z dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5526369Z - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5527905Z dist/obstacle-models/wall.fbx                              25.43 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5528472Z dist/obstacle-models/seesaw.fbx                            30.17 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5528986Z dist/obstacle-models/dogwalk.fbx                           41.45 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5529742Z dist/obstacle-models/aframe.fbx                            52.09 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5530742Z dist/obstacle-models/jump_double.fbx                      102.10 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5533123Z dist/obstacle-models/long_jump.fbx                        114.12 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5534412Z dist/obstacle-models/jump_single.fbx                      137.14 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5535479Z dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5536432Z dist/obstacle-models/tire.fbx                           1,907.21 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5537706Z dist/assets/CoursesRoute-C0tYTowS.css                       3.88 kB │ gzip:   1.03 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5539034Z dist/assets/index-Bw6E6ZNO.css                            135.60 kB │ gzip:  21.70 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5540252Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5541833Z dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5543188Z dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5544767Z dist/assets/notifications-BP8GtpgC.js                       0.75 kB │ gzip:   0.47 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5546090Z dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5547263Z dist/assets/virtual_pwa-register-BM2m6QYb.js                1.12 kB │ gzip:   0.59 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5548118Z dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5549378Z dist/assets/billing-fouQ79Yi.js                             1.19 kB │ gzip:   0.64 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5550660Z dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5552029Z dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5553573Z dist/assets/history-Bs5JKpAd.js                             1.35 kB │ gzip:   0.69 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5554874Z dist/assets/training-CYuCURIa.js                            1.57 kB │ gzip:   0.80 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5556163Z dist/assets/home-CLVBc5a3.js                                1.59 kB │ gzip:   0.79 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5557434Z dist/assets/training-DhvOYmdN.js                            1.62 kB │ gzip:   0.85 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5558732Z dist/assets/training-B5riWOVN.js                            1.63 kB │ gzip:   0.86 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5559496Z dist/assets/leave-BJCFfMEA.js                               1.64 kB │ gzip:   0.83 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5560630Z dist/assets/home-DIaHUeYG.js                                1.65 kB │ gzip:   0.84 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5562145Z dist/assets/home-vQT0WHAi.js                                1.67 kB │ gzip:   0.84 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5563779Z dist/assets/leave-CNFxa8RY.js                               1.75 kB │ gzip:   0.94 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5565135Z dist/assets/leave-DLQuaFFq.js                               1.76 kB │ gzip:   0.94 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5566420Z dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5567740Z dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5569044Z dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5570367Z dist/assets/inactivity-1DJxpGMC.js                          1.93 kB │ gzip:   0.93 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5571366Z dist/assets/inactivity-CCuSHOmb.js                          2.02 kB │ gzip:   1.02 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5572074Z dist/assets/inactivity-CpsDk17I.js                          2.04 kB │ gzip:   1.01 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5572777Z dist/assets/courses-B74UEBNV.js                             3.77 kB │ gzip:   1.69 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5573793Z dist/assets/courses-CCdTQKAZ.js                             4.05 kB │ gzip:   1.84 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5574500Z dist/assets/courses-BVmES6DS.js                             4.06 kB │ gzip:   1.86 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5575158Z dist/assets/booking-C2JFywZY.js                             4.84 kB │ gzip:   1.84 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5575807Z dist/assets/auth-C10lCXDJ.js                                5.05 kB │ gzip:   2.14 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5576451Z dist/assets/booking-BnHoP-fw.js                             5.18 kB │ gzip:   2.03 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5577100Z dist/assets/booking-oFemWAlT.js                             5.19 kB │ gzip:   2.03 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5577747Z dist/assets/auth-Uy3Y-og8.js                                5.63 kB │ gzip:   2.37 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5578389Z dist/assets/signup-BkgU37Eh.js                              5.63 kB │ gzip:   2.54 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5579076Z dist/assets/workbox-window.prod.es5-Bd17z0YL.js             5.65 kB │ gzip:   2.20 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5579756Z dist/assets/auth-DU3LoyRH.js                                5.70 kB │ gzip:   2.38 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5580609Z dist/assets/signup-Bi4UbtBk.js                              5.88 kB │ gzip:   2.80 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5581255Z dist/assets/signup-DQ9RZKro.js                              5.97 kB │ gzip:   2.82 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5581901Z dist/assets/census-Drl8KD6d.js                              6.79 kB │ gzip:   2.66 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5582540Z dist/assets/census-BwBGWGVI.js                              7.14 kB │ gzip:   2.93 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5583217Z dist/assets/census-D_K8N9oO.js                              7.34 kB │ gzip:   2.97 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5584309Z dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5584988Z dist/assets/instructor-BSMV7cfT.js                          9.21 kB │ gzip:   3.30 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5585675Z dist/assets/instructor-B9ckjWiH.js                          9.62 kB │ gzip:   3.52 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5586354Z dist/assets/instructor-DVcPrFGK.js                          9.73 kB │ gzip:   3.54 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5587024Z dist/assets/enums-Bxq9DLOA.js                              10.29 kB │ gzip:   4.28 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5587666Z dist/assets/enums-1H1J8p9N.js                              10.64 kB │ gzip:   4.48 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5588309Z dist/assets/enums-CKDiW-uu.js                              10.70 kB │ gzip:   4.48 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5588951Z dist/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5589599Z dist/assets/errors-Bvp7svDM.js                             23.31 kB │ gzip:   7.57 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5590251Z dist/assets/errors-QdWmQXin.js                             23.32 kB │ gzip:   7.54 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5590912Z dist/assets/CoursesRoute-6xI9YV2_.js                      130.60 kB │ gzip:  36.17 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5591756Z dist/assets/CourseViewer3D-CZB0H7I6.js                    582.82 kB │ gzip: 151.71 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5592423Z dist/assets/index-Cd1zQZWj.js                             679.37 kB │ gzip: 194.65 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5592724Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5594297Z [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/ca/shell.json is dynamically imported by ../../packages/i18n/src/clubs-resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5595384Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5596833Z [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/en/common.json is dynamically imported by ../../packages/i18n/src/clubs-resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5597894Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5599320Z [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/en/shell.json is dynamically imported by ../../packages/i18n/src/clubs-resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5600369Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5601777Z [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/es/common.json is dynamically imported by ../../packages/i18n/src/clubs-resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5602831Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5604578Z [INEFFECTIVE_DYNAMIC_IMPORT] ../../packages/i18n/src/locales/es/shell.json is dynamically imported by ../../packages/i18n/src/clubs-resources.ts but also statically imported by ../../packages/i18n/src/catalog.ts, dynamic import will not move module into another chunk.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5605692Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5605947Z ✓ built in 928ms
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5606108Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5606233Z PWA v1.3.0
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5606703Z Building src/sw.ts service worker ("es" format)...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5607506Z vite v8.2.2 building client environment for production...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5608198Z [warn] `inlineDynamicImports` option is deprecated, please use `codeSplitting: false` instead.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5608662Z transforming...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5608932Z ✓ 60 modules transformed.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5609181Z rendering chunks...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5609408Z computing gzip size...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5609733Z dist/sw.mjs  17.90 kB │ gzip: 6.01 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5609913Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5610054Z ✓ built in 42ms
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5610205Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5610328Z PWA v1.3.0
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5610642Z mode      injectManifest
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5610945Z format:   es
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5611355Z precache  56 entries (1186.40 KiB)
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5611660Z files generated
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5611901Z   dist/sw.js
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5612391Z check-clubs-bundle: 54 chunks in apps/clubs/dist/assets, no admin-*, console or id namespace
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5613010Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5613629Z ##[group]clubs-admin:build
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5614106Z cache hit, replaying logs 85cc717c93c6604f
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5614311Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5614727Z > clubs-admin@0.0.0 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5615239Z > tsc --noEmit && vite build
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5615399Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5615767Z vite v8.2.2 building client environment for production...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5616163Z transforming...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5616427Z ✓ 460 modules transformed.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5616676Z rendering chunks...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5616914Z computing gzip size...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5617547Z dist/index.html                                             3.36 kB │ gzip:   1.05 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5618187Z dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5618770Z dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5619327Z dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5619862Z dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5620392Z dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5620928Z dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5621458Z dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5621986Z dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5622516Z dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5623030Z dist/obstacle-models/wall.fbx                              25.43 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5623774Z dist/obstacle-models/seesaw.fbx                            30.17 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5624280Z dist/obstacle-models/dogwalk.fbx                           41.45 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5624778Z dist/obstacle-models/aframe.fbx                            52.09 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5625740Z dist/obstacle-models/jump_double.fbx                      102.10 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5626593Z dist/obstacle-models/long_jump.fbx                        114.12 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5627395Z dist/obstacle-models/jump_single.fbx                      137.14 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5628130Z dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5628635Z dist/obstacle-models/tire.fbx                           1,907.21 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5629325Z dist/assets/CoursesRoute-BR2xPRm0.css                       5.67 kB │ gzip:   1.22 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5630037Z dist/assets/ConsolePage-B-2c0WBB.css                       10.87 kB │ gzip:   2.09 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5630748Z dist/assets/list-helpers-BLMgzLlG.css                      37.87 kB │ gzip:   6.29 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5631418Z dist/assets/index-CEGYOKFK.css                            110.50 kB │ gzip:  17.45 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5632309Z dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5633015Z dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5634095Z dist/assets/notifications-BP8GtpgC.js                       0.75 kB │ gzip:   0.47 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5634781Z dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5635449Z dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5636115Z dist/assets/billing-fouQ79Yi.js                             1.19 kB │ gzip:   0.64 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5636862Z dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5637598Z dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5638283Z dist/assets/admin-training-DDv2dFuD.js                      1.35 kB │ gzip:   0.63 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5639337Z dist/assets/history-Bs5JKpAd.js                             1.35 kB │ gzip:   0.69 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5640392Z dist/assets/admin-training-Du9KAoeO.js                      1.42 kB │ gzip:   0.68 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5641089Z dist/assets/admin-training-CtWdBvS6.js                      1.44 kB │ gzip:   0.69 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5641757Z dist/assets/shell-MmhDtYvZ.js                               1.51 kB │ gzip:   0.80 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5642400Z dist/assets/shell-DGq05jFC.js                               1.57 kB │ gzip:   0.89 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5643052Z dist/assets/training-CYuCURIa.js                            1.57 kB │ gzip:   0.80 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5644180Z dist/assets/home-CLVBc5a3.js                                1.59 kB │ gzip:   0.79 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5644831Z dist/assets/shell-B88W6SCd.js                               1.60 kB │ gzip:   0.89 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5645486Z dist/assets/training-DhvOYmdN.js                            1.62 kB │ gzip:   0.85 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5646144Z dist/assets/training-B5riWOVN.js                            1.63 kB │ gzip:   0.86 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5646793Z dist/assets/leave-BJCFfMEA.js                               1.64 kB │ gzip:   0.83 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5647428Z dist/assets/home-DIaHUeYG.js                                1.65 kB │ gzip:   0.84 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5648081Z dist/assets/home-vQT0WHAi.js                                1.67 kB │ gzip:   0.84 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5648719Z dist/assets/leave-CNFxa8RY.js                               1.75 kB │ gzip:   0.94 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5649360Z dist/assets/leave-DLQuaFFq.js                               1.76 kB │ gzip:   0.94 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5650024Z dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5650685Z dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5651354Z dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5652029Z dist/assets/inactivity-1DJxpGMC.js                          1.93 kB │ gzip:   0.93 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5652699Z dist/assets/inactivity-CCuSHOmb.js                          2.02 kB │ gzip:   1.02 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5653605Z dist/assets/inactivity-CpsDk17I.js                          2.04 kB │ gzip:   1.01 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5654317Z dist/assets/admin-dashboard-VZhOZ68T.js                     2.07 kB │ gzip:   1.02 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5655011Z dist/assets/admin-dashboard-MI69Hia9.js                     2.13 kB │ gzip:   1.10 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5655705Z dist/assets/admin-dashboard-DNVY2TkD.js                     2.18 kB │ gzip:   1.11 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5656390Z dist/assets/common-BWPdAVFO.js                              2.38 kB │ gzip:   1.14 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5657035Z dist/assets/common-iXFFh1Lz.js                              2.46 kB │ gzip:   1.24 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5657833Z dist/assets/common-MPf1kZTR.js                              2.52 kB │ gzip:   1.26 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5658475Z dist/assets/id-C-TOkX2J.js                                  3.04 kB │ gzip:   1.34 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5659093Z dist/assets/id-D-e7vQBS.js                                  3.20 kB │ gzip:   1.48 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5659706Z dist/assets/id-Crzz3iYH.js                                  3.26 kB │ gzip:   1.48 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5660347Z dist/assets/courses-B74UEBNV.js                             3.77 kB │ gzip:   1.69 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5661000Z dist/assets/courses-CCdTQKAZ.js                             4.05 kB │ gzip:   1.84 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5661650Z dist/assets/courses-BVmES6DS.js                             4.06 kB │ gzip:   1.86 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5662329Z dist/assets/admin-messaging-Deb_qeG3.js                     4.53 kB │ gzip:   1.87 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5663020Z dist/assets/admin-messaging-BzpSHSUj.js                     4.70 kB │ gzip:   2.01 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5663946Z dist/assets/admin-messaging-dXGlHtst.js                     4.79 kB │ gzip:   2.03 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5664628Z dist/assets/booking-C2JFywZY.js                             4.84 kB │ gzip:   1.84 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5665269Z dist/assets/auth-C10lCXDJ.js                                5.05 kB │ gzip:   2.14 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5665907Z dist/assets/booking-BnHoP-fw.js                             5.18 kB │ gzip:   2.03 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5666559Z dist/assets/booking-oFemWAlT.js                             5.19 kB │ gzip:   2.03 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5667229Z dist/assets/admin-catalogs-p29fM8xq.js                      5.41 kB │ gzip:   2.01 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5667883Z dist/assets/auth-Uy3Y-og8.js                                5.63 kB │ gzip:   2.37 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5668669Z dist/assets/signup-BkgU37Eh.js                              5.63 kB │ gzip:   2.54 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5669340Z dist/assets/admin-catalogs-dZtpqy8S.js                      5.67 kB │ gzip:   2.23 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5670004Z dist/assets/auth-DU3LoyRH.js                                5.70 kB │ gzip:   2.38 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5670666Z dist/assets/admin-catalogs-D4wG5vIy.js                      5.87 kB │ gzip:   2.26 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5671329Z dist/assets/signup-Bi4UbtBk.js                              5.88 kB │ gzip:   2.80 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5671973Z dist/assets/signup-DQ9RZKro.js                              5.97 kB │ gzip:   2.82 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5672636Z dist/assets/admin-audit-C4-9Wus9.js                         6.20 kB │ gzip:   2.58 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5673582Z dist/assets/admin-activities-Cq_gSQfl.js                    6.61 kB │ gzip:   2.63 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5674336Z dist/assets/admin-audit-Ns-DEoau.js                         6.78 kB │ gzip:   2.85 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5675011Z dist/assets/census-Drl8KD6d.js                              6.79 kB │ gzip:   2.66 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5675690Z dist/assets/admin-activities-BniXEHx4.js                    6.86 kB │ gzip:   2.84 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5676386Z dist/assets/admin-audit-CpzEXu7e.js                         6.90 kB │ gzip:   2.87 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5677078Z dist/assets/admin-activities-DMyPCuQC.js                    7.06 kB │ gzip:   2.90 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5677749Z dist/assets/census-BwBGWGVI.js                              7.14 kB │ gzip:   2.93 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5678387Z dist/assets/census-D_K8N9oO.js                              7.34 kB │ gzip:   2.97 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5679057Z dist/assets/admin-scheduling-CuhYcQCI.js                    8.44 kB │ gzip:   3.12 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5679742Z dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5680427Z dist/assets/admin-scheduling-9PDLJvm3.js                    8.87 kB │ gzip:   3.39 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5681135Z dist/assets/admin-scheduling-aQ58wazE.js                    8.87 kB │ gzip:   3.38 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5681815Z dist/assets/instructor-BSMV7cfT.js                          9.21 kB │ gzip:   3.30 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5682778Z dist/assets/instructor-B9ckjWiH.js                          9.62 kB │ gzip:   3.52 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5683731Z dist/assets/instructor-DVcPrFGK.js                          9.73 kB │ gzip:   3.54 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5684425Z dist/assets/admin-billing-CSu7p_6R.js                       9.83 kB │ gzip:   3.47 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5685110Z dist/assets/admin-billing-CC32bEji.js                      10.03 kB │ gzip:   3.78 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5685796Z dist/assets/admin-billing-C6P5ZjUV.js                      10.24 kB │ gzip:   3.81 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5686455Z dist/assets/enums-Bxq9DLOA.js                              10.29 kB │ gzip:   4.28 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5687097Z dist/assets/enums-1H1J8p9N.js                              10.64 kB │ gzip:   4.48 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5687739Z dist/assets/enums-CKDiW-uu.js                              10.70 kB │ gzip:   4.48 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5688397Z dist/assets/admin-courses-Bu9IeSk2.js                      12.81 kB │ gzip:   4.87 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5689089Z dist/assets/admin-courses-CEpa0yDg.js                      13.66 kB │ gzip:   5.20 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5689779Z dist/assets/admin-courses-diOUxYX-.js                      13.98 kB │ gzip:   5.24 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5690441Z dist/assets/console-DH6Gy_tq.js                            16.57 kB │ gzip:   6.57 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5691090Z dist/assets/console-CgWiuTfg.js                            17.50 kB │ gzip:   7.14 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5691754Z dist/assets/admin-census-Cs77qzU3.js                       17.55 kB │ gzip:   6.53 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5692418Z dist/assets/console-cQ3RJnE2.js                            17.99 kB │ gzip:   7.23 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5693086Z dist/assets/admin-census-CKc7ESYs.js                       18.59 kB │ gzip:   7.03 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5694175Z dist/assets/admin-census-DV0dTNnQ.js                       19.02 kB │ gzip:   7.12 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5694951Z dist/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5696241Z dist/assets/admin-settings-C2QA7QS-.js                     22.98 kB │ gzip:   8.00 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5697486Z dist/assets/errors-Bvp7svDM.js                             23.31 kB │ gzip:   7.57 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5698677Z dist/assets/errors-QdWmQXin.js                             23.32 kB │ gzip:   7.54 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5699542Z dist/assets/admin-settings-BWSnmoqN.js                     24.71 kB │ gzip:   8.66 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5700248Z dist/assets/admin-settings-pHvd1AUw.js                     25.15 kB │ gzip:   8.67 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5700941Z dist/assets/ConsolePage-C0jarUjQ.js                        97.24 kB │ gzip:  23.37 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5701636Z dist/assets/list-helpers--P0bRR_v.js                      203.84 kB │ gzip:  63.26 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5702310Z dist/assets/CoursesRoute-B2Z0g-wJ.js                      229.54 kB │ gzip:  63.50 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5702996Z dist/assets/CourseViewer3D-COOqb6bK.js                    582.83 kB │ gzip: 151.71 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5703988Z dist/assets/index-f5nJJiJ0.js                           1,054.28 kB │ gzip: 362.55 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5704292Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5704448Z ✓ built in 1.13s
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5704780Z [plugin builtin:vite-reporter] 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5705221Z (!) Some chunks are larger than 500 kB after minification. Consider:
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5705693Z - Using dynamic import() to code-split the application
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5706487Z - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5707378Z - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5707953Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5708279Z ##[group]id:build
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5708563Z cache hit, replaying logs daf440b428968b04
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5708760Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5709079Z > id@0.0.0 build /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/id
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5709688Z > tsc --noEmit && vite build
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5709851Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5710209Z vite v8.2.2 building client environment for production...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5710592Z transforming...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5710890Z ✓ 256 modules transformed.
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5711140Z rendering chunks...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5711366Z computing gzip size...
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5711824Z dist/index.html                                           0.39 kB │ gzip:   0.26 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5712455Z dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5713022Z dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5713867Z dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5714407Z dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5714938Z dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5715461Z dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5715984Z dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5716501Z dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5717015Z dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5717659Z dist/assets/index-CF21kanp.css                           54.17 kB │ gzip:   9.78 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5718314Z dist/assets/common-BpH9cuss.js                            2.30 kB │ gzip:   1.09 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5718957Z dist/assets/common-D5M4a98u.js                            2.39 kB │ gzip:   1.18 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5719751Z dist/assets/common-DLazKDt-.js                            2.45 kB │ gzip:   1.20 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5720376Z dist/assets/id-C-TOkX2J.js                                3.04 kB │ gzip:   1.34 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5720995Z dist/assets/id-D-e7vQBS.js                                3.20 kB │ gzip:   1.48 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5721610Z dist/assets/id-Crzz3iYH.js                                3.26 kB │ gzip:   1.48 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5722238Z dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5722877Z dist/assets/errors-Bvp7svDM.js                           23.31 kB │ gzip:   7.57 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5723803Z dist/assets/errors-QdWmQXin.js                           23.32 kB │ gzip:   7.54 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5724462Z dist/assets/index-oI67I_5j.js                           328.35 kB │ gzip: 101.26 kB
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5724755Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5724895Z ✓ built in 443ms
+Frontend checks	Run Playwright with MSW	2026-10-17T08:48:38.5725314Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0818896Z ##[group]clubs:e2e
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0819494Z cache bypass, force executing 06279a53ed210137
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0819761Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0820522Z > clubs@0.0.0 e2e /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0821270Z > playwright test
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0821572Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0821787Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0822045Z Running 93 tests using 2 workers
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0823542Z ················································································
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0824347Z ·············
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0824747Z   93 passed (5.2m)
+Frontend checks	Run Playwright with MSW	2026-10-17T08:53:53.0825430Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3577472Z ##[group]clubs-admin:e2e
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3578203Z cache bypass, force executing 181bff942ffb3c40
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3578599Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3579236Z > clubs-admin@0.0.0 e2e /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/clubs-admin
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3579763Z > playwright test
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3579935Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3579941Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3580087Z Running 101 tests using 2 workers
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3581192Z ················································································
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3582000Z ·····················
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3582247Z   101 passed (7.8m)
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:42.3582641Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1531828Z ##[group]id:e2e
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1532550Z cache bypass, force executing a8686813abcb1c11
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1532999Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1533803Z > id@0.0.0 e2e /home/runner/work/agilityhub-core-web/agilityhub-core-web/apps/id
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1534582Z > playwright test
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1534831Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1534840Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1535047Z Running 1 test using 1 worker
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1535728Z ·
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1536064Z   1 passed (8.8s)
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1536733Z ##[endgroup]
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1536959Z 
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1537181Z  Tasks:    10 successful, 10 total
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1537760Z Cached:    6 cached, 10 total
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1538207Z   Time:    13m26.401s 
+Frontend checks	Run Playwright with MSW	2026-10-17T09:01:52.1538450Z 

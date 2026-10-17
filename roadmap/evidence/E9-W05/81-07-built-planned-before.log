@@ -1,0 +1,41 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/courses/courses.test.tsx (29 tests | 1 failed | 28 skipped) 154ms
+   ❯ E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type (7)
+     × T-16-16 · E9-W05 round 2 #7: no [Sessió de muntatge] on 07 when the ring's ACTIVE setup already shows the planned placement (R-16-13) 153ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > T-16-16 · E9-W05 round 2 #7: no [Sessió de muntatge] on 07 when the ring's ACTIVE setup already shows the planned placement (R-16-13)
+Error: [2mexpect([22m[31melement[39m[2m).not.toBeInTheDocument()[22m
+
+[31mexpected document not to contain element, found <button
+  class="ah-button ah-button--secondary"
+  type="button"
+>
+  <span
+    class="ah-button__content"
+  >
+    Sessió de muntatge
+  </span>
+</button> instead[39m
+ ❯ src/courses/courses.test.tsx:470:78
+    468|       expect(record.list).toContain(`GET /ring-setups/${SETUP_IDS.cent…
+    469|     });
+    470|     expect(screen.queryByRole("button", { name: "Sessió de muntatge" }…
+       |                                                                              ^
+    471|   });
+    472|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 skipped (29)
+   Start at  11:55:04
+   Duration  1.56s (transform 54%, environment 16%, import 16%, tests 10%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/courses/courses.test.tsx -t already shows the planned

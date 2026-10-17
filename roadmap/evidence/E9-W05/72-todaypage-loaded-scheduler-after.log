@@ -1,0 +1,31 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > draws the mockup grid with identical ring columns, the date header and the week chips
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > renders «Ocupada» + generic reason in grey without background and never a count
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > opens the risk balloon with the api riskText on tap and closes it on a second tap or elsewhere
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > uses the club's today (Europe/Madrid) whatever the device time zone
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > never shows a count in the member view even when a cell carries occupancy
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > moves by chips and arrows (Sunday only by the arrows) and keeps ?date in the address
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the api «Sense» column as delivered and the activity cell
+ ✓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > never adds a «Sense» column of its own when the api does not send one 10288ms
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-13-01
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-08-32
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=2026-02-30
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > falls back to the club-local today and rewrites the address for ?date=hola
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > rewrites an invalid ?date= after mounting, never during render (E4-W03 review #4)
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Auckland: requested date, header and chips name the club's calendar day
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Kiritimati: requested date, header and chips name the club's calendar day
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Europe/Madrid: requested date, header and chips name the club's calendar day
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in America/Bogota: requested date, header and chips name the club's calendar day
+ ↓ src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the empty state (dayGridEmpty) and the error toast with retry
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 17 skipped (18)
+   Start at  11:45:51
+   Duration  11.74s (tests 67%, transform 30%, environment 3%)
+
+  Transform  transforming modules took 4.67s · 40% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

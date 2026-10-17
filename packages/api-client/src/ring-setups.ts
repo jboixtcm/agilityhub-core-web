@@ -8,8 +8,10 @@ type RingSetup = components["schemas"]["RingSetup"];
 
 /**
  * A ring's setup (`RingSetup`, the staff projection) as `GET /me/ring-setups` summarises it. The
- * history carries no `levelLabel` (only `levelIds`), so the summary has none (never the raw
- * `agilityhubLevel` code, AGENTS rule 1); the setup's own photo is the thumbnail.
+ * api's `levelLabel` is the club levels' codes, else the `agilityhubLevel` code; the history
+ * carries only `levelIds` (their codes need the levels catalog), so the orientative AgilityHub
+ * level stands in — a code, which the screens translate as they do the api's (E9-W05 round 2 #7).
+ * The setup's own photo is the thumbnail.
  */
 export function ringSetupSummary(setup: RingSetup): MeRingSetupSummary {
   return {
@@ -20,7 +22,7 @@ export function ringSetupSummary(setup: RingSetup): MeRingSetupSummary {
       (setup.courseId != null || setup.placementId != null || setup.imageUrl != null),
     id: setup.id,
     kind: setup.kind,
-    levelLabel: null,
+    levelLabel: setup.agilityhubLevel ?? null,
     thumbnailUrl: setup.imageUrl ?? null,
   };
 }

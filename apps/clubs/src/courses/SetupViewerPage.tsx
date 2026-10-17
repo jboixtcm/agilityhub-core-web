@@ -196,11 +196,10 @@ export function SetupViewerPage({
 
   const { setup, summary } = loaded;
   const staff = isStaffSetup(setup);
-  const level =
-    summary?.levelLabel ??
-    (setup.agilityhubLevel === null || setup.agilityhubLevel === undefined
-      ? null
-      : agilityhubLevelLabel(t, setup.agilityhubLevel));
+  // The api's label is the club levels' codes, else the AgilityHub level's code: the latter reads
+  // in the reader's language, never as «MEDIUM» (E9-W05 round 2 #7).
+  const levelCode = summary?.levelLabel ?? setup.agilityhubLevel ?? null;
+  const level = levelCode === null ? null : agilityhubLevelLabel(t, levelCode);
   const heading = [
     kindLabel(t, setup.kind),
     ...(level === null || level === "" ? [] : [t("courses:level", { level })]),

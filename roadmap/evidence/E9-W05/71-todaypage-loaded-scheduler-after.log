@@ -1,0 +1,51 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/today/TodayPage.test.tsx (18 tests | 5 failed) 172521ms
+   ❯ T-06-29 screen 10 «Classes del dia» (18)
+     × R-06-14 in Pacific/Auckland: requested date, header and chips name the club's calendar day 15003ms
+     × R-06-14 in Pacific/Kiritimati: requested date, header and chips name the club's calendar day 15001ms
+     × R-06-14 in Europe/Madrid: requested date, header and chips name the club's calendar day 15002ms
+     × R-06-14 in America/Bogota: requested date, header and chips name the club's calendar day 15002ms
+     × shows the empty state (dayGridEmpty) and the error toast with retry 15002ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Auckland: requested date, header and chips name the club's calendar day
+ FAIL  src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Pacific/Kiritimati: requested date, header and chips name the club's calendar day
+ FAIL  src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in Europe/Madrid: requested date, header and chips name the club's calendar day
+ FAIL  src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > R-06-14 in America/Bogota: requested date, header and chips name the club's calendar day
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/today/TodayPage.test.tsx:361:5
+    359|     ["Europe/Madrid", "2026-08-04", "dt 4 d’agost", "dt 4"],
+    360|     ["America/Bogota", "2026-08-03", "dl 3 d’agost", "dl 3"],
+    361|   ])(
+       |     ^
+    362|     "R-06-14 in %s: requested date, header and chips name the club's c…
+    363|     async (timeZone, today, header, chip) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/today/TodayPage.test.tsx > T-06-29 screen 10 «Classes del dia» > shows the empty state (dayGridEmpty) and the error toast with retry
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/today/TodayPage.test.tsx:388:3
+    386|   );
+    387|
+    388|   it("shows the empty state (dayGridEmpty) and the error toast with re…
+       |   ^
+    389|     mockScenario("dayGridEmpty");
+    390|     await renderToday();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 13 passed (18)
+   Start at  11:42:50
+   Duration  173.77s (tests 97%, transform 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/today/TodayPage.test.tsx

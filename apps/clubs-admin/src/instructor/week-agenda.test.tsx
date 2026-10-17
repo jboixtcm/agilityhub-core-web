@@ -2,6 +2,7 @@ import { createApiClient } from "@agilityhub/api-client";
 import {
   AGENDA_MOCK_NOW,
   AGENDA_SELECTED_CLASS_ID,
+  courseState,
   handlers,
   mockScenario,
   type MockScenario,
@@ -912,13 +913,20 @@ describe("T-16-16 D12: the rings' courses set up (S16 §2 «icona a la capçaler
         ),
       ),
     );
+    // Round 2 #7: Central's photo carries an orientative AgilityHub level; the history fallback
+    // passes it as the api's levelLabel does, and the strip reads it in the reader's language.
+    const central = courseState.setups.find(
+      (item) => item.ringId === "ring-central" && item.status === "ACTIVE",
+    );
+    if (central === undefined) throw new Error("Central has no ACTIVE setup in the mocks");
+    central.agilityhubLevel = "MEDIUM";
     const { onNavigate } = await renderAgenda({ scenario: "admin" });
     const strip = await screen.findByRole("list", { name: "Recorreguts muntats a les pistes" });
     const muntanya = await within(strip).findByRole("button", {
       name: /^Muntanya: Jumping · .*muntat ahir$/u,
     });
     expect(
-      within(strip).getByRole("button", { name: "Central: Fun · muntat fa 2 dies" }),
+      within(strip).getByRole("button", { name: "Central: Fun · nivell Mitjà · muntat fa 2 dies" }),
     ).toBeVisible();
     expect(
       requests.some((request) => request.line.startsWith("GET /rings/ring-muntanya/setups")),

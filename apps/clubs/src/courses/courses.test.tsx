@@ -457,6 +457,19 @@ describe("E9-W05: building a planned course from the phone, ADMIN-only sessions,
     expect(new Set(record.keys.slice(0, 2)).size).toBe(1);
   });
 
+  it("T-16-16 · E9-W05 round 2 #7: no [Sessió de muntatge] on 07 when the ring's ACTIVE setup already shows the planned placement (R-16-13)", async () => {
+    const central = courseState.setups.find((item) => item.id === SETUP_IDS.centralPhoto);
+    if (central === undefined) throw new Error("Central has no photo setup in the mocks");
+    central.placementId = PLACEMENT_IDS.centralLeague;
+    const record = recordRequests();
+    await renderApp("/reserves/booking-duna-mon3", { scenario: "instructor" });
+    expect(await screen.findByText("Recorregut previst: Agility C–D")).toBeVisible();
+    await waitFor(() => {
+      expect(record.list).toContain(`GET /ring-setups/${SETUP_IDS.centralPhoto}`);
+    });
+    expect(screen.queryByRole("button", { name: "Sessió de muntatge" })).not.toBeInTheDocument();
+  });
+
   it("T-16-16 · a ring with no setup offers staff the join-by-code form (R-16-11)", async () => {
     mockScenario("instructor");
     const created = await apiClient().POST("/build-sessions", {
@@ -472,6 +485,16 @@ describe("E9-W05: building a planned course from the phone, ADMIN-only sessions,
     await waitFor(() => {
       expect(window.location.pathname).toBe(`/instructor/muntatge/${created.data?.id ?? ""}`);
     });
+  });
+
+  it("R-16-09 · E9-W05 round 2 #7: the api's levelLabel that is an AgilityHub level code reads translated in the viewer's heading", async () => {
+    // No club levels: `/me/ring-setups` sends the setup's AgilityHub level code as levelLabel.
+    const active = courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaActive);
+    if (active === undefined) throw new Error("Muntanya has no ACTIVE setup in the mocks");
+    Object.assign(active, { agilityhubLevel: "MEDIUM", levelIds: [] });
+    await viewer("/recorreguts/muntat/ring-muntanya", "member");
+    expect(await screen.findByText("Jumping · nivell Mitjà")).toBeVisible();
+    expect(screen.queryByText(/MEDIUM/u)).not.toBeInTheDocument();
   });
 
   it("R-16-09 · an ADMIN session refused by /me/ring-setups (403) opens the ring's setup from its history", async () => {

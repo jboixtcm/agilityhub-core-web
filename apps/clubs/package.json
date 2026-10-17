@@ -36,7 +36,7 @@
     "dev": "vite",
     "lint": "eslint . --max-warnings 0 --config ../../eslint.config.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run && node --test ../../scripts/check-clubs-bundle.test.mjs",
     "build": "tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs",
     "e2e": "playwright test",
     "preview": "vite preview"

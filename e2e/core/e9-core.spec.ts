@@ -53,8 +53,10 @@ function record(page: Page, device: string) {
 }
 
 function note(name: string, value: unknown) {
+  // A label such as «E9-W05 07» becomes `e9-w05-07`: no spaces in evidence file names.
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/gu, "-");
   writeFileSync(
-    join(evidenceDirectory, `e9-core-${name}.json`),
+    join(evidenceDirectory, `e9-core-${slug}.json`),
     `${JSON.stringify(value, null, 2)}\n`,
   );
 }
@@ -342,7 +344,7 @@ async function seedPlacedCourse(
     ringId: ring.id,
     setupId,
   };
-  note(options.withSetup ? "seeded" : `seeded-${options.label.toLowerCase()}`, {
+  note(options.withSetup ? "seeded" : `seeded-${options.label}`, {
     ...seeded,
     warnings: warnings.map((warning) => warning.ruleId),
   });
@@ -664,20 +666,258 @@ interface PlannedClass {
   classSessionId: string;
   placementId: string;
   courseName: string;
+  /** A one-off class the test added to the week (cancelled at its end). */
+  createdForTheTest: boolean;
+}
+
+/**
+ * What a test changed on the stage's core (E9-W05 round 2 #2): each step is undone, in reverse
+ * order, in the test's `finally`, so the next test of the stage (or a retry) finds the seed's
+ * preconditions — the member without INSTRUCTOR, the bare ring without geometry, no booking.
+ */
+type Undo = { label: string; run: () => Promise<ApiAnswer> }[];
+
+/** Runs every undo step, newest first; a step that fails never stops the others. */
+async function runUndo(undo: Undo): Promise<string[]> {
+  const problems: string[] = [];
+  for (const step of [...undo].reverse()) {
+    try {
+      const answer = await step.run();
+      if (answer.status >= 300) {
+        problems.push(`${step.label} → ${String(answer.status)} ${codeOf(answer)}`);
+      }
+    } catch (error) {
+      problems.push(`${step.label}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+  return problems;
+}
+
+/** What the running test changed on the core; `afterEach` undoes it. */
+let pendingUndo: Undo = [];
+
+// After every test, a timed-out one included: the undo runs, newest first. An undo that fails
+// fails a test that passed, and is only attached to one that already failed (never hiding its
+// first error).
+test.afterEach(async () => {
+  if (pendingUndo.length === 0) return;
+  const testInfo = test.info();
+  const undo = pendingUndo;
+  pendingUndo = [];
+  const problems = await runUndo(undo);
+  note("undo", { problems, steps: undo.map((step) => step.label), testStatus: testInfo.status });
+  if (problems.length === 0) return;
+  testInfo.annotations.push({ description: problems.join("; "), type: "undo failed" });
+  if (testInfo.status === testInfo.expectedStatus) {
+    throw new Error(`The test could not undo its changes: ${problems.join("; ")}`);
+  }
+});
+
+/** `DELETE /rings/{id}/geometry` at its stored version (R-16-04). */
+async function deleteGeometry(
+  admin: { bearer: string; page: Page },
+  ringId: string,
+): Promise<ApiAnswer> {
+  const stored = await api(admin.page, admin.bearer, "GET", `/rings/${ringId}/geometry`);
+  if (stored.status !== 200) return stored;
+  const version = (stored.body as { version: number }).version;
+  return api(
+    admin.page,
+    admin.bearer,
+    "DELETE",
+    `/rings/${ringId}/geometry?version=${String(version)}`,
+  );
+}
+
+/** `PUT /placements/{id}` with `status: ARCHIVED`: the stored placement, archived (its geometry can go). */
+async function archivePlacement(
+  admin: { bearer: string; page: Page },
+  placementId: string,
+): Promise<ApiAnswer> {
+  const stored = await api(admin.page, admin.bearer, "GET", `/placements/${placementId}`);
+  if (stored.status !== 200) return stored;
+  const placement = stored.body as Record<string, unknown>;
+  return api(admin.page, admin.bearer, "PUT", `/placements/${placementId}`, {
+    courseId: placement.courseId,
+    courseVersion: placement.courseVersion,
+    force: true,
+    placementMode: placement.placementMode,
+    resolvedObstacles: placement.resolvedObstacles,
+    ringId: placement.ringId,
+    status: "ARCHIVED",
+    transform: placement.transform,
+    version: placement.version,
+    warnings: placement.warnings,
+  });
+}
+
+/** `PATCH /class-sessions/{id} {placementId}` at the class's stored version (R-16-13). */
+async function planClass(
+  admin: { bearer: string; page: Page },
+  classSessionId: string,
+  placementId: string | null,
+): Promise<ApiAnswer & { previous: string | null }> {
+  const session = await api(admin.page, admin.bearer, "GET", `/class-sessions/${classSessionId}`);
+  const stored = session.body as { placementId?: string | null; version: number };
+  const patched = await api(
+    admin.page,
+    admin.bearer,
+    "PATCH",
+    `/class-sessions/${classSessionId}`,
+    {
+      placementId,
+      version: stored.version,
+    },
+  );
+  return { ...patched, previous: stored.placementId ?? null };
+}
+
+/** Today's date and time at the club («YYYY-MM-DD», «HH:mm»). */
+function clubNow(timeZone: string): { date: string; time: string } {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      day: "2-digit",
+      hour: "2-digit",
+      hourCycle: "h23",
+      minute: "2-digit",
+      month: "2-digit",
+      timeZone,
+      year: "numeric",
+    })
+      .formatToParts(new Date())
+      .map((part) => [part.type, part.value]),
+  );
+  return {
+    date: `${parts.year ?? ""}-${parts.month ?? ""}-${parts.day ?? ""}`,
+    time: `${parts.hour ?? ""}:${parts.minute ?? ""}`,
+  };
+}
+
+function addDays(date: string, days: number): string {
+  const day = new Date(`${date}T12:00:00Z`);
+  day.setUTCDate(day.getUTCDate() + days);
+  return day.toISOString().slice(0, 10);
+}
+
+/** A one-off class the test may add to the seeded week: its day, times and an instructor. */
+interface NewClassSlot {
+  date: string;
+  endTime: string;
+  instructorIds: string[];
+  startTime: string;
+}
+
+/**
+ * Free hours on `ringId` left in the seeded (VALIDATED) week, from the admin's day grid (instructor
+ * view): from the club-local today (an hour or more from now) to Sunday, two per day at most, with
+ * the instructors of a class of that week. Each day grid read is noted (the evidence of a run that
+ * finds none).
+ */
+async function newClassSlots(
+  admin: { bearer: string; page: Page },
+  ringId: string,
+): Promise<NewClassSlot[]> {
+  // The club's zone comes with any day grid.
+  const utcToday = new Date().toISOString().slice(0, 10);
+  const probe = await api(admin.page, admin.bearer, "GET", `/day-grid?date=${utcToday}`);
+  const timeZone = (probe.body as { timeZone?: string } | null)?.timeZone ?? "Europe/Madrid";
+  const now = clubNow(timeZone);
+  const hour = Number(now.time.slice(0, 2));
+  const slots: Omit<NewClassSlot, "instructorIds">[] = [];
+  const classIds: string[] = [];
+  const seen: string[] = [];
+  for (let offset = 0; offset < 7; offset += 1) {
+    const date = addDays(now.date, offset);
+    const grid = await api(
+      admin.page,
+      admin.bearer,
+      "GET",
+      `/day-grid?date=${date}&view=instructor`,
+    );
+    if (grid.status !== 200) {
+      seen.push(`${date}: GET /day-grid → ${String(grid.status)} ${codeOf(grid)}`);
+      break;
+    }
+    const day = grid.body as {
+      dayOfWeek: string;
+      rows: {
+        cells: { classId?: string; kind: string; ringId?: string | null; state?: string }[];
+        time: string;
+      }[];
+    };
+    seen.push(
+      `${date} ${day.dayOfWeek}: ${day.rows
+        .map(
+          (row) =>
+            `${row.time} ${row.cells.map((cell) => `${cell.kind}/${cell.state ?? "-"}`).join("+")}`,
+        )
+        .join(", ")}`,
+    );
+    for (const row of day.rows) {
+      for (const cell of row.cells) {
+        if (cell.kind === "CLASS" && cell.classId !== undefined) classIds.push(cell.classId);
+      }
+    }
+    // The hours a cell of the ring touches (a 16:30 class keeps 16:00 and 17:00 busy).
+    const busy = new Set(
+      day.rows
+        .filter((row) => row.cells.some((cell) => cell.ringId === ringId))
+        .flatMap((row) => {
+          const start = Number(row.time.slice(0, 2));
+          return row.time.endsWith(":00") ? [start] : [start, start + 1];
+        }),
+    );
+    const first = offset === 0 ? hour + 2 : 10;
+    const free = [first, first + 1, first + 2, 17, 19]
+      .filter((start) => start <= 21 && !busy.has(start))
+      .slice(0, 2);
+    for (const start of new Set(free)) {
+      slots.push({
+        date,
+        endTime: `${String(start + 1).padStart(2, "0")}:00`,
+        startTime: `${String(start).padStart(2, "0")}:00`,
+      });
+    }
+    if (day.dayOfWeek === "SUNDAY") break;
+  }
+  let instructorIds: string[] = [];
+  for (const classId of classIds) {
+    const session = await api(admin.page, admin.bearer, "GET", `/class-sessions/${classId}`);
+    const ids = (session.body as { instructorIds?: string[] } | null)?.instructorIds ?? [];
+    if (ids.length > 0) {
+      instructorIds = ids.slice(0, 1);
+      break;
+    }
+  }
+  note("new-class-slots", { clubNow: now, instructorIds, seen, slots, timeZone });
+  return instructorIds.length === 0 ? [] : slots.map((slot) => ({ ...slot, instructorIds }));
+}
+
+interface Candidate {
+  /** The account's ACTIVE booking on the class; "" = to book. */
+  bookingId: string;
+  /** The class; "" for a class the test creates (`create`). */
+  id: string;
+  /** A one-off class for the dog's level the admin adds to the week (cancelled at the end). */
+  create?: NewClassSlot;
+  ringId: string | undefined;
 }
 
 /**
  * A staff member's own booking on a class of a ring with a placement, and that placement planned
  * for the class (R-16-13, `PATCH /class-sessions/{id} {placementId}`): screen 07 of a staff member.
- * An ACTIVE booking the account already has comes first; else it books as a member does
- * (`/me/bookable-classes` → `POST /seat-holds` → `POST /bookings`). `string` when neither is
- * possible on the run's day: the reason.
+ * An ACTIVE booking the account already has comes first; then a class it can book as a member does
+ * (`/me/bookable-classes` → `POST /seat-holds` → `POST /bookings`); last, a one-off class for the
+ * dog's level that the admin adds to the seeded week on the planned ring (`POST /class-sessions`;
+ * the seed's puppy has no CAD class after Saturday 09:30, and nothing is seeded on Sunday). `string`
+ * when none is possible on the run's day: the reason. Every change it makes goes onto `undo`.
  */
 async function plannedClassOf(
   phone: Page,
   admin: { bearer: string; page: Page },
   planned: Seeded,
   model: ReturnType<typeof parseSmarterTxt>["courseData"],
+  undo: Undo,
 ): Promise<PlannedClass | string> {
   const bearer = bearerOf(phone);
   /** Why each candidate was passed over (the evidence of a leg that did not run). */
@@ -688,8 +928,13 @@ async function plannedClassOf(
     (item) => item.status === "ACTIVE",
   );
   if (dog === undefined) return "the account has no ACTIVE dog";
+  const rings = (await api(admin.page, admin.bearer, "GET", "/rings")).body as {
+    items: { id: string; name: string }[];
+  };
+  const ringIdOf = (name: string | null | undefined) =>
+    rings.items.find((ring) => ring.name === name)?.id;
   const own = await api(phone, bearer, "GET", "/me/bookings");
-  const booked = (
+  const booked: Candidate[] = (
     own.status === 200
       ? (
           own.body as {
@@ -707,29 +952,61 @@ async function plannedClassOf(
     .map((item) => ({
       bookingId: item.id,
       id: item.classSessionId,
-      ringName: item.classSession.ringName ?? null,
+      ringId: ringIdOf(item.classSession.ringName),
     }));
   const bookable = await api(phone, bearer, "GET", `/me/bookable-classes?dogId=${dog.id}`);
   if (bookable.status !== 200) return `GET /me/bookable-classes → ${String(bookable.status)}`;
-  const classes = (
-    bookable.body as { classes: { id: string; ringName: string | null; state: string }[] }
-  ).classes
-    .filter((item) => item.state === "BOOKABLE" && item.ringName !== null)
-    .map((item) => ({ bookingId: "", id: item.id, ringName: item.ringName }));
-  const rings = (await api(admin.page, admin.bearer, "GET", "/rings")).body as {
-    items: { id: string; name: string }[];
+  const offer = bookable.body as {
+    classes: { id: string; ringName: string | null; state: string }[];
+    dog: { levelId?: string | null };
   };
-  const plannedRing = rings.items.find((ring) => ring.id === planned.ringId)?.name;
-  // Own bookings first, then bookable classes; within each, the planned placement's ring first.
-  const byRing = (items: typeof classes) => [
-    ...items.filter((item) => item.ringName === plannedRing),
-    ...items.filter((item) => item.ringName !== plannedRing),
+  const classes: Candidate[] = offer.classes
+    .filter((item) => item.state === "BOOKABLE" && item.ringName !== null)
+    .map((item) => ({ bookingId: "", id: item.id, ringId: ringIdOf(item.ringName) }));
+  const levelId = offer.dog.levelId ?? null;
+  // Within each source, the planned placement's ring first.
+  const byRing = (items: readonly Candidate[]) => [
+    ...items.filter((item) => item.ringId === planned.ringId),
+    ...items.filter((item) => item.ringId !== planned.ringId),
   ];
-  for (const candidate of [...byRing(booked), ...byRing(classes)]) {
-    const ring = rings.items.find((item) => item.name === candidate.ringName);
+
+  const tryCandidate = async (candidate: Candidate): Promise<PlannedClass | undefined> => {
+    const ring = rings.items.find((item) => item.id === candidate.ringId);
     if (ring === undefined) {
-      reasons.push(`${candidate.ringName ?? "?"}: not in GET /rings`);
-      continue;
+      reasons.push(`${candidate.id}: its ring is not in GET /rings`);
+      return undefined;
+    }
+    let classId = candidate.id;
+    if (candidate.create !== undefined) {
+      if (levelId === null) {
+        reasons.push(`${ring.name}: the dog has no level to create a class for`);
+        return undefined;
+      }
+      const slot = candidate.create;
+      const created = await api(admin.page, admin.bearer, "POST", "/class-sessions", {
+        date: slot.date,
+        endTime: slot.endTime,
+        instructorIds: slot.instructorIds,
+        levelIds: [levelId],
+        ringId: ring.id,
+        startTime: slot.startTime,
+      });
+      const createdClass = created.body as { id?: string; state?: string } | null;
+      if (created.status !== 201 || createdClass?.id === undefined) {
+        reasons.push(
+          `${ring.name} ${slot.date} ${slot.startTime}: POST /class-sessions → ${String(created.status)} ${codeOf(created)}`,
+        );
+        return undefined;
+      }
+      const createdId = createdClass.id;
+      classId = createdId;
+      undo.push({
+        label: `POST /class-sessions/${createdId}/cancellation`,
+        run: () =>
+          api(admin.page, admin.bearer, "POST", `/class-sessions/${createdId}/cancellation`, {
+            reason: "DELETED",
+          }),
+      });
     }
     let placementId = ring.id === planned.ringId ? planned.placementId : "";
     let courseName = planned.courseName;
@@ -751,12 +1028,20 @@ async function plannedClassOf(
         const stored = await api(admin.page, admin.bearer, "GET", `/rings/${ring.id}/geometry`);
         if (stored.status === 200) {
           reasons.push(`${ring.name}: a geometry and no placement`);
-          continue;
+          return undefined;
         }
         const target = await ensureGeometry(admin.page, admin.bearer, ring.id);
+        undo.push({
+          label: `DELETE /rings/${ring.id}/geometry`,
+          run: () => deleteGeometry(admin, ring.id),
+        });
         const made = await seedPlacedCourse(admin.page, admin.bearer, target, model, {
           label: "E9-W05 07",
           withSetup: false,
+        });
+        undo.push({
+          label: `PUT /placements/${made.placementId} ARCHIVED`,
+          run: () => archivePlacement(admin, made.placementId),
         });
         placementId = made.placementId;
         courseName = made.courseName;
@@ -765,43 +1050,65 @@ async function plannedClassOf(
     let bookingId = candidate.bookingId;
     if (bookingId === "") {
       const hold = await api(phone, bearer, "POST", "/seat-holds", {
-        classSessionId: candidate.id,
+        classSessionId: classId,
         dogId: dog.id,
       });
       if (hold.status !== 201 && hold.status !== 200) {
         reasons.push(`${ring.name}: POST /seat-holds → ${String(hold.status)} ${codeOf(hold)}`);
-        continue;
+        return undefined;
       }
       const booking = await api(phone, bearer, "POST", "/bookings", {
         seatHoldId: (hold.body as { id: string }).id,
       });
       if (booking.status !== 201 && booking.status !== 200) {
         reasons.push(`${ring.name}: POST /bookings → ${String(booking.status)} ${codeOf(booking)}`);
-        continue;
+        return undefined;
       }
-      bookingId = (booking.body as { id: string }).id;
+      const madeBooking = (booking.body as { id: string }).id;
+      bookingId = madeBooking;
+      undo.push({
+        label: `POST /bookings/${madeBooking}/cancellation`,
+        run: () => api(phone, bearerOf(phone), "POST", `/bookings/${madeBooking}/cancellation`, {}),
+      });
     }
-    const session = await api(admin.page, admin.bearer, "GET", `/class-sessions/${candidate.id}`);
-    const patched = await api(
-      admin.page,
-      admin.bearer,
-      "PATCH",
-      `/class-sessions/${candidate.id}`,
-      {
-        placementId,
-        version: (session.body as { version: number }).version,
-      },
-    );
+    const patched = await planClass(admin, classId, placementId);
     // A finished class may refuse the edit: the next candidate.
     if (patched.status !== 200) {
       reasons.push(
         `${ring.name}: PATCH /class-sessions → ${String(patched.status)} ${codeOf(patched)}`,
       );
-      continue;
+      return undefined;
     }
-    return { bookingId, classSessionId: candidate.id, courseName, placementId };
+    const classSessionId = classId;
+    undo.push({
+      label: `PATCH /class-sessions/${classSessionId} {placementId: ${patched.previous ?? "null"}}`,
+      run: () => planClass(admin, classSessionId, patched.previous),
+    });
+    return {
+      bookingId,
+      classSessionId,
+      courseName,
+      createdForTheTest: candidate.create !== undefined,
+      placementId,
+    };
+  };
+
+  // Own bookings first, then bookable classes, then (at most three tries) a one-off class.
+  for (const candidate of [...byRing(booked), ...byRing(classes)]) {
+    const found = await tryCandidate(candidate);
+    if (found !== undefined) return found;
   }
-  return `no usable class (${String(booked.length)} own bookings, ${String(classes.length)} bookable): ${reasons.join("; ")}`;
+  const slots = await newClassSlots(admin, planned.ringId);
+  for (const slot of slots.slice(0, 3)) {
+    const found = await tryCandidate({
+      bookingId: "",
+      create: slot,
+      id: "",
+      ringId: planned.ringId,
+    });
+    if (found !== undefined) return found;
+  }
+  return `no usable class (${String(booked.length)} own bookings, ${String(classes.length)} bookable, ${String(slots.length)} free hours for a one-off class this week): ${reasons.join("; ")}`;
 }
 
 function codeOf(answer: ApiAnswer): string {
@@ -814,9 +1121,8 @@ async function setRoles(
   admin: { bearer: string; page: Page },
   memberId: string,
   roles: readonly string[],
-): Promise<number> {
-  return (await api(admin.page, admin.bearer, "PUT", `/members/${memberId}/roles`, { roles }))
-    .status;
+): Promise<ApiAnswer> {
+  return api(admin.page, admin.bearer, "PUT", `/members/${memberId}/roles`, { roles });
 }
 
 test("E9-W05 · T-16-16 against the core: a planned placement built from 07 on the phone, joined from a ring with no setup (R-16-13, R-16-11, WP-16-F′)", async ({
@@ -834,18 +1140,23 @@ test("E9-W05 · T-16-16 against the core: a planned placement built from 07 on t
     withSetup: false,
   });
   // A staff member who also trains a dog: the seeded member gets the INSTRUCTOR role too (the demo
-  // seed's instructor logins are not members, `GET /me/dogs` → 403), and signs in again to carry
-  // it. The roles are put back at the end, whatever happens.
+  // seed's instructor logins are not members, `GET /me/dogs` → 403, and the seed has no account
+  // that is both), and signs in again to carry it. Everything the test changes on the stage's core
+  // (the roles, a booking, the class's levels and plan, a bare ring's geometry and placement) goes
+  // onto `pendingUndo`, which `afterEach` undoes whatever happens (a timeout included).
   const asMember = await clubsPage(browser, "member@example.test", "/inici", "member07");
   const me = await api(asMember, bearerOf(asMember), "GET", "/me");
-  const memberId = (me.body as { membership: { memberId: string } }).membership.memberId;
+  const membership = (me.body as { membership: { memberId: string; roles: string[] } }).membership;
   await asMember.context().close();
-  expect(await setRoles(admin, memberId, ["MEMBER", "INSTRUCTOR"])).toBe(200);
-  try {
-    await plannedFrom07(browser, admin, planned, model);
-  } finally {
-    expect(await setRoles(admin, memberId, ["MEMBER"])).toBe(200);
-  }
+  const promoted = await setRoles(admin, membership.memberId, [
+    ...new Set([...membership.roles, "INSTRUCTOR"]),
+  ]);
+  pendingUndo.push({
+    label: `PUT /members/${membership.memberId}/roles ${membership.roles.join("+")}`,
+    run: () => setRoles(admin, membership.memberId, membership.roles),
+  });
+  expect(promoted.status).toBe(200);
+  await plannedFrom07(browser, admin, planned, model, pendingUndo);
 });
 
 async function plannedFrom07(
@@ -853,6 +1164,7 @@ async function plannedFrom07(
   admin: { bearer: string; page: Page },
   planned: Seeded,
   model: ReturnType<typeof parseSmarterTxt>["courseData"],
+  undo: Undo,
 ): Promise<void> {
   const phoneA = await clubsPage(
     browser,
@@ -863,42 +1175,36 @@ async function plannedFrom07(
   const phoneB = await clubsPage(browser, "instructor.2@example.test", "/instructor/dia", "phoneB");
 
   // 1. Screen 07 of a staff member's own booking: «Recorregut previst» with [Sessió de muntatge].
-  const plannedClass = await plannedClassOf(phoneA, admin, planned, model);
-  let session: { id: string; joinCode: string };
+  const plannedClass = await plannedClassOf(phoneA, admin, planned, model, undo);
   if (typeof plannedClass === "string") {
-    // Recorded, never hidden: the leg needs something bookable on the run's day.
-    test.info().annotations.push({ description: plannedClass, type: "07 leg not run" });
+    // The leg is what the test is for (E9-W05 round 2 #3): when the run's day leaves no class to
+    // book, the test fails with the reason, never passes without it.
     note("planned-07", { notRun: plannedClass });
-    const started = await api(phoneA, bearerOf(phoneA), "POST", "/build-sessions", {
-      live: true,
-      placementId: planned.placementId,
-    });
-    expect(started.status).toBe(201);
-    session = started.body as { id: string; joinCode: string };
-  } else {
-    await navigateSpa(phoneA, `/reserves/${plannedClass.bookingId}`);
-    await expect(phoneA.getByText(`Recorregut previst: ${plannedClass.courseName}`)).toBeVisible();
-    await screenshot(phoneA, "core-07-recorregut-previst-instructor-375.png");
-    const starting = phoneA.waitForResponse(isCall("POST", /^\/api\/v1\/build-sessions$/u));
-    await phoneA.getByRole("button", { name: "Sessió de muntatge" }).click();
-    const startedResponse = await starting;
-    expect(startedResponse.status()).toBe(201);
-    expect(startedResponse.request().headers()["idempotency-key"]).toMatch(/[0-9a-f-]{36}/u);
-    expect(
-      (JSON.parse(startedResponse.request().postData() ?? "{}") as { placementId?: string })
-        .placementId,
-    ).toBe(plannedClass.placementId);
-    session = (await startedResponse.json()) as { id: string; joinCode: string };
-    await phoneA.waitForURL(`**/instructor/muntatge/${session.id}`);
-    await expect(obstacleList(phoneA).getByRole("button").first()).toBeVisible();
-    await screenshot(phoneA, "core-07-sessio-iniciada-375.png");
-    note("planned-07", {
-      bookingId: plannedClass.bookingId,
-      classSessionId: plannedClass.classSessionId,
-      placementId: plannedClass.placementId,
-      sessionId: session.id,
-    });
+    throw new Error(`07's «Recorregut previst» leg could not run: ${plannedClass}`);
   }
+  await navigateSpa(phoneA, `/reserves/${plannedClass.bookingId}`);
+  await expect(phoneA.getByText(`Recorregut previst: ${plannedClass.courseName}`)).toBeVisible();
+  await screenshot(phoneA, "core-07-recorregut-previst-instructor-375.png");
+  const starting = phoneA.waitForResponse(isCall("POST", /^\/api\/v1\/build-sessions$/u));
+  await phoneA.getByRole("button", { name: "Sessió de muntatge" }).click();
+  const startedResponse = await starting;
+  expect(startedResponse.status()).toBe(201);
+  expect(startedResponse.request().headers()["idempotency-key"]).toMatch(/[0-9a-f-]{36}/u);
+  expect(
+    (JSON.parse(startedResponse.request().postData() ?? "{}") as { placementId?: string })
+      .placementId,
+  ).toBe(plannedClass.placementId);
+  const session = (await startedResponse.json()) as { id: string; joinCode: string };
+  await phoneA.waitForURL(`**/instructor/muntatge/${session.id}`);
+  await expect(obstacleList(phoneA).getByRole("button").first()).toBeVisible();
+  await screenshot(phoneA, "core-07-sessio-iniciada-375.png");
+  note("planned-07", {
+    bookingId: plannedClass.bookingId,
+    classSessionId: plannedClass.classSessionId,
+    placementId: plannedClass.placementId,
+    sessionId: session.id,
+    createdForTheTest: plannedClass.createdForTheTest,
+  });
 
   // 2. Phone B opens the viewer of a ring with no setup: staff get the join-by-code form there.
   const setups = await api(phoneB, bearerOf(phoneB), "GET", "/me/ring-setups");

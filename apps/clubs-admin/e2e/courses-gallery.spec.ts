@@ -5,13 +5,13 @@ import { expect, test, type Page } from "@playwright/test";
 
 // E9-W05 step 3: S16 has no mockups, so every backoffice S16 screen is captured for Josep at 375
 // and 1280 px, light and dark, against MSW. The light captures draw the club's branding with the
-// light fixture's palette (`agilityhub.mockTheme`, `mockThemeMode` in the mocks). A later task can
-// send them elsewhere with `--capture-task=<ID>` (`E2E_CAPTURE_TASK`).
+// light fixture's palette (`agilityhub.mockTheme`, `mockThemeMode` in the mocks). A capture script,
+// not a suite (E9-W05 round 2 #2): it runs only when `E2E_CAPTURE_TASK` names the folder, so
+// `pnpm e2e` and CI skip it and never rewrite the captures:
+//   pnpm e2e:docker E9-W05 --capture-task=E9-W05 --grep=E9-W05 --pass-with-no-tests
 const captureTask = process.env.E2E_CAPTURE_TASK ?? "";
-const evidenceDirectory = resolve(
-  import.meta.dirname,
-  `../../../roadmap/evidence/${captureTask === "" ? "E9-W05" : captureTask}`,
-);
+test.skip(captureTask === "", "capture only: set E2E_CAPTURE_TASK (--capture-task=<ID>)");
+const evidenceDirectory = resolve(import.meta.dirname, `../../../roadmap/evidence/${captureTask}`);
 const baseUrl = "http://127.0.0.1:4174";
 
 interface Theme {

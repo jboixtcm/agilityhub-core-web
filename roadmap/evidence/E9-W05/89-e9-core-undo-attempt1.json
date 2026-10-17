@@ -1,0 +1,6 @@
+{
+  "problems": [],
+  "steps": [
+    "PUT /members/56487387-2cef-31c6-815b-b56ba4d69d42/roles MEMBER"
+  ]
+}

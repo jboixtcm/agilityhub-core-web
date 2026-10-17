@@ -40,7 +40,7 @@ function setupText(t: Translate, setup: MeRingSetupSummary, timeZone: string): s
  * level, how long ago it was built, until when, the photo or thumbnail, and the course in D18.
  * Only with COURSES. An ADMIN session without INSTRUCTOR is refused by `/me/ring-setups` (403) and
  * reads each ring's history instead (`GET /rings/{id}/setups`, `readRingSetups`); the history has
- * no level label, so the orientative AgilityHub level stands in.
+ * no level label, so the orientative AgilityHub level stands in (`ringSetupSummary`).
  */
 export function AgendaRingSetups({
   client,

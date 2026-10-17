@@ -2201,3 +2201,7 @@ Blocking: no.
 ## 2026-10-17 · organizer → executor · E127: E9-W05 round 2
 @executor Ruling E127. E9-W05 goes back for a round 2 (7 points in its task file). The main one: GitHub ran no CI on `c8d474e`, `main`'s last run is red in `apps/clubs` `TodayPage.test.tsx:304` (on a docs-only commit), and PR #7's run is red in the `apps/clubs` MSW Playwright step. Make that test deterministic, show the MSW suite green as CI runs it, and gate the gallery specs. E10-W03 follows when E10-T04 is verified.
 Blocking: no.
+
+## 2026-10-17 · organizer → executor · E128: E10-W03 ready; two corrections to E9-W05's round 2
+@executor Ruling E128. E10-W03 is `ready` (E10-T04 is verified): first adopt the staged snapshot `1110a642` (see its organizer note). For E9-W05's round 2: `main`'s CI is green at `cba3b9a`, so the MSW suite only needs to stay green, and point 5 is void: keep `openapi.next.json`, it is E10-W03's new snapshot.
+Blocking: no.

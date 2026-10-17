@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: every forbidden namespace has sentinels in ca, es and en
+ok 1 - every forbidden namespace has sentinels in ca, es and en
+  ---
+  duration_ms: 158.653834
+  type: 'test'
+  ...
+# Subtest: a clean bundle (the app's own namespaces only) passes
+ok 2 - a clean bundle (the app's own namespaces only) passes
+  ---
+  duration_ms: 155.154959
+  type: 'test'
+  ...
+# Subtest: a namespace chunk is refused by its name
+ok 3 - a namespace chunk is refused by its name
+  ---
+  duration_ms: 156.271542
+  type: 'test'
+  ...
+# Subtest: a namespace merged into another chunk is refused by its contents
+ok 4 - a namespace merged into another chunk is refused by its contents
+  ---
+  duration_ms: 155.77075
+  type: 'test'
+  ...
+# Subtest: a forbidden namespace with no usable sentinel fails the check instead of weakening it
+ok 5 - a forbidden namespace with no usable sentinel fails the check instead of weakening it
+  ---
+  duration_ms: 1.24575
+  type: 'test'
+  ...
+# Subtest: an unreadable or empty assets folder is a problem
+ok 6 - an unreadable or empty assets folder is a problem
+  ---
+  duration_ms: 0.390333
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 688.741959

@@ -1,6 +1,7 @@
 {
-  "bookingId": "6477bd15-bec3-4b7c-867c-1372074b28b6",
-  "classSessionId": "d58a9d3d-abfd-47ae-b830-7e90bdbb9b23",
-  "placementId": "697e8daa-1cc8-4a7b-8b15-eca7c1d2b613",
-  "sessionId": "5695dc98-73a0-4062-b183-bc83ca7b5a45"
+  "bookingId": "5fde33db-22e5-42f4-96e2-88151f736f39",
+  "classSessionId": "a919f263-353f-43f0-a621-6279177d2a12",
+  "placementId": "c06788ee-1150-4150-9f51-ea1eca88d599",
+  "sessionId": "2492d7e7-5f72-4811-b034-6d2415285303",
+  "createdForTheTest": true
 }

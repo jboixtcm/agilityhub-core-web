@@ -1,0 +1,37 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/ring-setups.test.ts (2 tests | 1 failed) 3ms
+   ❯ E9-W05 #9 · R-16-09 the ADMIN fallback's setup summary (2)
+     × carries the AgilityHub level as the api's levelLabel does (round 2 #7), and opens the viewer of a placement 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/ring-setups.test.ts > E9-W05 #9 · R-16-09 the ADMIN fallback's setup summary > carries the AgilityHub level as the api's levelLabel does (round 2 #7), and opens the viewer of a placement
+AssertionError: expected null to be 'EASY' // Object.is equality
+
+- Expected:
+"EASY"
+
++ Received:
+null
+
+ ❯ src/ring-setups.test.ts:33:32
+     31|   it("carries the AgilityHub level as the api's levelLabel does (round…
+     32|     const summary = ringSetupSummary(setup);
+     33|     expect(summary.levelLabel).toBe("EASY");
+       |                                ^
+     34|     expect(ringSetupSummary({ ...setup, agilityhubLevel: null }).level…
+     35|     expect(summary.hasViewer).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  11:53:31
+   Duration  95ms (transform 61%, import 20%, tests 13%, worker 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/ring-setups.test.ts

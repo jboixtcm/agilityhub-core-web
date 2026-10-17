@@ -91,8 +91,29 @@ export function TrainingSetupLines({ rings }: { rings: readonly TrainingRing[] }
 }
 
 interface BookingCourses {
+  /** The ring's ACTIVE setup already shows the planned placement: nothing left to build. */
+  plannedBuilt: boolean;
   planned: components["schemas"]["PlannedPlacement"] | null;
   setup: MeRingSetupSummary | null;
+}
+
+/**
+ * Whether the ring's ACTIVE setup shows the planned placement. The summary carries no
+ * `placementId`, so staff read the setup itself (`GET /ring-setups/{id}`, the staff projection);
+ * a failed read keeps the action (the api still accepts a session).
+ */
+async function plannedIsBuilt(
+  client: ApiClient,
+  planned: components["schemas"]["PlannedPlacement"],
+  setup: MeRingSetupSummary,
+): Promise<boolean> {
+  try {
+    const read = (await client.GET("/ring-setups/{id}", { params: { path: { id: setup.id } } }))
+      .data;
+    return read?.placementId != null && read.placementId === planned.placementId;
+  } catch {
+    return false;
+  }
 }
 
 type ClassSessionRead =
@@ -131,8 +152,9 @@ async function plannedOf(
  * setup (→ the viewer), and «Recorregut previst: …» when the class plans a placement (the member
  * view's `plannedPlacement`, only with `courses.showSetupToMembers`). To staff (INSTRUCTOR ·
  * ADMIN) the planned course comes with [Sessió de muntatge] (R-16-11, T-16-16): a course that is
- * not set up yet can be built from the phone. Nothing while loading or if the reads fail: the
- * booking's own detail never waits for them.
+ * not set up yet can be built from the phone — not when the ring's ACTIVE setup already shows that
+ * placement (E9-W05 round 2 #7). Nothing while loading or if the reads fail: the booking's own
+ * detail never waits for them.
  */
 export function BookingCourseLines({
   classSessionId,
@@ -147,7 +169,7 @@ export function BookingCourseLines({
   const build = useStartBuildSession(client);
   const enabled = branding.modules.includes("COURSES");
   const load = useCallback(async (): Promise<BookingCourses> => {
-    if (!enabled) return { planned: null, setup: null };
+    if (!enabled) return { planned: null, plannedBuilt: false, setup: null };
     const session = (
       await client.GET("/class-sessions/{id}", { params: { path: { id: classSessionId } } })
     ).data;
@@ -156,11 +178,15 @@ export function BookingCourseLines({
       plannedOf(client, session, staff),
       ringId === undefined ? null : readMeRingSetup(client, ringId).catch(() => null),
     ]);
-    return { planned, setup };
+    const plannedBuilt =
+      staff && planned !== null && setup !== null
+        ? await plannedIsBuilt(client, planned, setup)
+        : false;
+    return { planned, plannedBuilt, setup };
   }, [classSessionId, client, enabled, staff]);
   const courses = useLoader(load);
   if (!ready || !enabled || courses.status !== "ready") return null;
-  const { planned, setup } = courses.data;
+  const { planned, plannedBuilt, setup } = courses.data;
   if (planned === null && setup === null) return null;
   return (
     <div className="course-blocks course-blocks--detail">
@@ -191,7 +217,7 @@ export function BookingCourseLines({
           </span>
         </p>
       )}
-      {planned === null || !staff ? null : (
+      {planned === null || !staff || plannedBuilt ? null : (
         <div className="course-blocks__action">
           <Button
             loading={build.pending}
