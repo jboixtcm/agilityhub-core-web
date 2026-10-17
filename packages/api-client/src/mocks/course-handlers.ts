@@ -11,6 +11,7 @@ import { http, HttpResponse } from "msw";
 import type { components } from "../generated/schema";
 
 import { refuse, selectItems, type ListSpec, listValues } from "./backoffice-handlers";
+import { activityState } from "./fixtures/activities";
 import { clubInstant } from "./fixtures/calendar";
 import { catalogState } from "./fixtures/catalogs";
 import {
@@ -136,8 +137,22 @@ function fieldError(field: string, code: string): Response {
 // ---------------------------------------------------------------------------------------------
 // CONVENCIONS_API §7: a keyed write replays its stored answer; the same key with another body
 // is `409 IDEMPOTENCY_KEY_REUSED {reason: DIFFERENT_REQUEST}`. A 5xx is never stored.
+// E62 / R-16-16: the fingerprint is the caller's too (club, account, roles, impersonation), so
+// another caller — another club's token included — reusing the key with the same body gets that
+// 409, never the stored answer (which may hold this club's records) nor a second execution.
 
 const keyedAnswers = new Map<string, { body: unknown; fingerprint: string; status: number }>();
+
+/** Who sent a keyed write: the tenant and the authorization the route accepted. */
+function callerFingerprint(): string {
+  const { me } = scenario();
+  return JSON.stringify({
+    accountId: me.account.id,
+    clubId: callerClubId(),
+    impersonation: me.impersonation ?? null,
+    roles: [...(me.membership?.roles ?? [])].sort(),
+  });
+}
 
 async function keyed(
   request: Request,
@@ -147,9 +162,10 @@ async function keyed(
   const key = request.headers.get("Idempotency-Key");
   if (key === null) return run();
   const id = `${request.method} ${new URL(request.url).pathname} ${key}`;
+  const fingerprint = `${callerFingerprint()}\n${bodyText}`;
   const saved = keyedAnswers.get(id);
   if (saved !== undefined) {
-    return saved.fingerprint === bodyText
+    return saved.fingerprint === fingerprint
       ? HttpResponse.json(saved.body as Record<string, unknown>, { status: saved.status })
       : apiError("IDEMPOTENCY_KEY_REUSED", "Idempotency key reused", 409, {
           reason: "DIFFERENT_REQUEST",
@@ -159,7 +175,7 @@ async function keyed(
   if (response.status < 500) {
     keyedAnswers.set(id, {
       body: await response.clone().json(),
-      fingerprint: bodyText,
+      fingerprint,
       status: response.status,
     });
   }
@@ -377,6 +393,13 @@ function ringOfClub(ringId: string) {
     : undefined;
 }
 
+/** An activity of the caller's club (S07's world is this club's; another club finds none). */
+function activityOfClub(activityId: string): boolean {
+  return (
+    callerClubOwnsTheWorld() && activityState.activities.some((item) => item.id === activityId)
+  );
+}
+
 /** A placement of the caller's club (another club's is `404 NOT_FOUND`). */
 function clubPlacement(id: string): Placement | undefined {
   return callerClubOwnsTheWorld()
@@ -412,6 +435,8 @@ function placementProblem(body: PlacementBody, admin: boolean): Response | undef
     if (!scenario().branding.modules.includes("ACTIVITIES")) {
       return fieldError("activityId", "MODULE_DISABLED");
     }
+    // «activityId an activity of the club»: another club's or an unknown one → NOT_FOUND.
+    if (!activityOfClub(body.activityId)) return apiError("NOT_FOUND", "Activity not found", 404);
   }
   const critical = body.warnings.filter((warning) => warning.severity === "critical");
   if (critical.length > 0) {
@@ -1102,9 +1127,16 @@ export const courseHandlers = [
     const ringId = url.searchParams.get("ringId");
     const courseId = url.searchParams.get("courseId");
     const activityId = url.searchParams.get("activityId");
+    // «each must be the club's»: another club's (or an unknown) ring or activity → NOT_FOUND.
+    if (ringId !== null && ringOfClub(ringId) === undefined) {
+      return apiError("NOT_FOUND", "Ring not found", 404);
+    }
     if (courseId !== null) {
       const course = visibleCourse(courseId);
       if (course instanceof Response) return course;
+    }
+    if (activityId !== null && !activityOfClub(activityId)) {
+      return apiError("NOT_FOUND", "Activity not found", 404);
     }
     const items = callerClubOwnsTheWorld()
       ? courseState.placements
@@ -1172,8 +1204,9 @@ export const courseHandlers = [
       ? apiError("NOT_FOUND", "Build sheet not found", 404)
       : new HttpResponse(bytes, { headers: { "Content-Type": "application/pdf" } });
   }),
-  // R-16-10: binds this club's BUILD_SHEET upload (another club's key, another purpose or a key
-  // bound to another placement → NOT_FOUND) and replaces the previous sheet; the version stays.
+  // R-16-10: binds this club's BUILD_SHEET upload (another club's key, another purpose, a key
+  // bound to another placement or a key granted but never uploaded → NOT_FOUND: there is no PDF
+  // to store) and replaces the previous sheet; the version stays.
   http.post("*/api/v1/placements/:id/build-sheet", async ({ params, request }) => {
     const refused = guard();
     if (refused !== undefined) return refused;
@@ -1185,7 +1218,8 @@ export const courseHandlers = [
     if (placement === undefined) return apiError("NOT_FOUND", "Placement not found", 404);
     const file = courseState.files.get(body.fileKey);
     const free = file?.placementId == null || file.placementId === placement.id;
-    if (file === undefined || !free || uploaded(body.fileKey, "BUILD_SHEET") !== undefined) {
+    // No file, or granted but never uploaded (no bytes yet).
+    if (file?.bytes == null || !free || uploaded(body.fileKey, "BUILD_SHEET") !== undefined) {
       return apiError("NOT_FOUND", "File not found", 404);
     }
     const previous = placement.buildSheetFileKey;

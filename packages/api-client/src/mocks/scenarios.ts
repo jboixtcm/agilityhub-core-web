@@ -989,8 +989,45 @@ export function mockScenario(name: MockScenario): void {
   selectedScenario = name;
 }
 
+export type MockThemeMode = "dark" | "light";
+
+let themeModeOverride: MockThemeMode | null = null;
+
+/**
+ * E9-W05 step 3 (screens without mockups, captured light and dark): the scenario's branding read
+ * with the other theme mode, the fixtures' own palette for it (a dark club's theme drawn with the
+ * light fixture's colours, and the other way round). `null` restores the scenario's own theme.
+ */
+export function mockThemeMode(mode: MockThemeMode | null): void {
+  themeModeOverride = mode;
+}
+
+const themedScenarios = new Map<string, MockScenarioDefinition>();
+
 export function currentMockScenario(): MockScenarioDefinition {
-  return scenarios[selectedScenario];
+  const scenario = scenarios[selectedScenario];
+  if (themeModeOverride === null || scenario.branding.theme.mode === themeModeOverride) {
+    return scenario;
+  }
+  // One object per scenario and mode, so handlers that keep state per scenario see the same one.
+  const key = `${selectedScenario}:${themeModeOverride}`;
+  const cached = themedScenarios.get(key);
+  if (cached !== undefined) return cached;
+  const palette = themeModeOverride === "light" ? minimal.theme : canic.theme;
+  const themed: MockScenarioDefinition = {
+    ...scenario,
+    branding: {
+      ...scenario.branding,
+      theme: {
+        ...scenario.branding.theme,
+        colors: palette.colors,
+        mode: themeModeOverride,
+        ringPalette: palette.ringPalette,
+      },
+    },
+  };
+  themedScenarios.set(key, themed);
+  return themed;
 }
 
 export function currentMockScenarioName(): MockScenario {

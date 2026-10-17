@@ -1,0 +1,26 @@
+
+> @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/attendance-handlers.ts
+  173:25  error  Invalid type "string | null" of template literal expression  @typescript-eslint/restrict-template-expressions
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/handlers.ts
+  2348:36  error  Invalid type "string | null" of template literal expression  @typescript-eslint/restrict-template-expressions
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/list-exports.ts
+  55:13  error  Invalid type "string | null" of template literal expression  @typescript-eslint/restrict-template-expressions
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/mocks/scenarios.ts
+  1025:13  error  Unnecessary conditional, the types have no overlap  @typescript-eslint/no-unnecessary-condition
+
+✖ 4 problems (4 errors, 0 warnings)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @agilityhub/api-client@0.0.0 lint: `eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs`
+Exit status 1
+
+> @agilityhub/api-client@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> tsc --noEmit
+

@@ -43,6 +43,11 @@ type Source = "course" | "photo";
 const AGILITYHUB_LEVELS: readonly AgilityhubLevel[] = ["EASY", "MEDIUM", "HARD"];
 const NOTE_MAX_LENGTH = 500;
 
+/** A file the `COURSE_IMAGE` grant can take: one that says it is an image (`image/*`). */
+function isImage(file: File): boolean {
+  return file.type.startsWith("image/");
+}
+
 /** The fields an error belongs to: the api's answer lands next to what it is about. */
 type Field = "course" | "form" | "levels" | "photo" | "until";
 
@@ -140,6 +145,12 @@ export function RegisterSetupPage({
     event.preventDefault();
     if (kind !== "EMPTY" && source === "photo" && file === undefined) {
       setError({ field: "photo", message: t("courses:register.photoRequired") });
+      return;
+    }
+    // Some cameras and galleries report no type (HEIC on some Android builds): the upload grant
+    // needs an image's content type, so the photo field says so before asking for it.
+    if (kind !== "EMPTY" && source === "photo" && file !== undefined && !isImage(file)) {
+      setError({ field: "photo", message: t("errors:FILE_TYPE_NOT_ALLOWED") });
       return;
     }
     if (kind !== "EMPTY" && source === "course" && course === undefined) {

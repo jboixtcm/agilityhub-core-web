@@ -1042,7 +1042,7 @@ export interface paths {
         put?: never;
         /**
          * finishBuildSession
-         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11: the session becomes COMPLETED (finishedAt), whoever of them finishes it. The ring's setup follows courses.allowInstructorPublish (R-16-07): an ADMIN, or an INSTRUCTOR while it is on, registers it as POST /ring-setups does (kind from the course's discipline: AGILITY, JUMPING, else FUN; the placement as its source; the course's levels), and setupId names it; when the ring's active setup already shows this placement it is refreshed instead, as a renewal (builtAt, builtByAccountId, the same expectedUntil and a new expiresAt; no event). An INSTRUCTOR's finish with the switch off registers no setup: setupId is null and an ADMIN registers it with POST /ring-setups. A closed or outlived session → BUILD_SESSION_FINISHED; a course no longer readable → COURSE_NOT_VISIBLE; a ring without geometry → RING_WITHOUT_GEOMETRY. Taps racing it are retried, STALE_VERSION only when the retries run out. Publishes BuildSessionFinished and ends the session's streams with a finished event.
+         * @description Roles: INSTRUCTOR, ADMIN. Module: COURSES. R-16-11: the session becomes COMPLETED (finishedAt), whoever of them finishes it. The ring's setup follows courses.allowInstructorPublish (R-16-07): an ADMIN, or an INSTRUCTOR while it is on, registers it as POST /ring-setups does (kind from the course's discipline: AGILITY, JUMPING, else FUN; the placement as its source; the course's levels), and setupId names it; when the ring's active setup already shows this placement it is refreshed instead, as a renewal (builtAt, builtByAccountId, the same expectedUntil and a new expiresAt; no event). An INSTRUCTOR's finish with the switch off registers no setup: setupId is null and an ADMIN registers it with POST /ring-setups. A closed or outlived session → BUILD_SESSION_FINISHED; a course no longer readable → COURSE_NOT_VISIBLE; a ring without geometry → RING_WITHOUT_GEOMETRY. Taps or another finish racing it are retried (of two finishes at once, one closes the session and the other gets BUILD_SESSION_FINISHED), STALE_VERSION only when the retries run out. Publishes BuildSessionFinished and ends the session's streams with a finished event.
          */
         post: operations["finishBuildSession"];
         delete?: never;
@@ -5022,7 +5022,7 @@ export interface paths {
         put?: never;
         /**
          * clonePlatformCatalog
-         * @description S17. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Empty destination parts only; warnings describe locale fallback.
+         * @description S17. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Empty destination parts only. warnings[] are {code, part, from}, once each: LOCALE_OMITTED (texts in the source locale `from` were left out, the destination does not use it) or DEFAULT_LOCALE_COPIED (a text without the destination's default locale got the source's `from` text).
          */
         post: operations["clonePlatformCatalog"];
         delete?: never;
@@ -5082,7 +5082,7 @@ export interface paths {
         put?: never;
         /**
          * addPlatformDomain
-         * @description S17. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Guards then 501 NOT_IMPLEMENTED.
+         * @description S17 R-17-02/R-17-03. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. The host is normalized (lower case, IDN to ASCII, no final dot or port); it is unique among every club and app (409 HOST_ALREADY_USED) and the product hosts clubs.*, clubsadmin.*, id.* and core.* are reserved (422 HOST_RESERVED). A template club has no domains: 400 VALIDATION_ERROR {field: template}. The new domain is PENDING, not primary, with its DNS instructions in verification; GET /branding with it answers 404 UNKNOWN_HOST until it is verified. Audited CLUB_DOMAIN_CHANGED; publishes ClubUpdated.
          */
         post: operations["addPlatformDomain"];
         delete?: never;
@@ -5103,9 +5103,29 @@ export interface paths {
         post?: never;
         /**
          * deletePlatformDomain
-         * @description S17. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Guards then 501 NOT_IMPLEMENTED.
+         * @description S17 §5. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Only a PENDING domain is removed; a VERIFIED or BROKEN one answers 409 INVALID_STATE {status}. An unknown host of the club is 404 NOT_FOUND. Audited CLUB_DOMAIN_CHANGED.
          */
         delete: operations["deletePlatformDomain"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/platform/clubs/{id}/domains/{host}/primary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * makePlatformDomainPrimary
+         * @description S17 §2 (E10-T04). Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. The domain becomes the primary one of its app (the host links and e-mails use) and the app's previous primary stops being it; repeating it changes nothing. Only a VERIFIED domain can be primary: 409 INVALID_STATE {status}. Answers every domain of the club. Audited CLUB_DOMAIN_CHANGED.
+         */
+        put: operations["makePlatformDomainPrimary"];
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -5122,7 +5142,7 @@ export interface paths {
         put?: never;
         /**
          * verifyPlatformDomain
-         * @description S17. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Guards then 501 NOT_IMPLEMENTED.
+         * @description S17 R-17-03. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Looks up (a) a CNAME from the host to verification.cnameTarget, else (b) the TXT record verification.recordName = verification.recordValue. Found: the domain is VERIFIED (verifiedAt, the challenge removed), the primary one of its app when the app has no verified primary yet, Caddy's ask (GET /internal/domains/allowed) accepts it and GET /branding resolves it; publishes ClubDomainVerified and ClubUpdated, audited CLUB_DOMAIN_CHANGED. Not found: 422 HOST_NOT_VERIFIED {host, cnameTarget, recordName, recordValue} (the records it expects; the TXT pair is null without a challenge), nothing changes and the key is released, so a retry checks again. A VERIFIED domain answers 409 INVALID_STATE {status}. The DNS lookup runs before the write's transaction.
          */
         post: operations["verifyPlatformDomain"];
         delete?: never;
@@ -5151,6 +5171,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/platform/clubs/{id}/parameters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * listPlatformParameters
+         * @description S17 §2 «Paràmetres» (E118 #1). Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. The target club's parameters with the shape of GET /parameters (every catalog key, PLATFORM_ONLY included, grouped by block), each row with its value, isOverride and version. version is the club override's version, 0 for a key the club has not overridden: PUT /platform/clubs/{id}/parameters/{key} expects exactly that value (409 STALE_VERSION otherwise). block filters one block.
+         */
+        get: operations["listPlatformParameters"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/platform/clubs/{id}/parameters/{key}": {
         parameters: {
             query?: never;
@@ -5161,7 +5201,7 @@ export interface paths {
         get?: never;
         /**
          * updatePlatformParameter
-         * @description S17. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required.
+         * @description S17. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. PLATFORM_ONLY keys included. version is the row's version from GET /platform/clubs/{id}/parameters: the override's version, 0 for a key the club has not overridden (409 STALE_VERSION otherwise).
          */
         put: operations["updatePlatformParameter"];
         post?: never;
@@ -5226,7 +5266,7 @@ export interface paths {
         put?: never;
         /**
          * rotatePublicApiKey
-         * @description S17. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Guards then 501 NOT_IMPLEMENTED. One-time key response; previous key overlaps for 24 hours.
+         * @description S17 R-17-11. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Generates the club's website key (agh_pub_ + 43 URL-safe characters) and answers it once; only its SHA-256 digest is stored. The key it replaces keeps opening the X-Api-Key public routes (S05/S07) for 24 hours, then answers 403 INVALID_API_KEY; a second rotation inside those 24 hours ends the older key at once. A replay of the same Idempotency-Key answers the same key (stored sealed). Audited PUBLIC_API_KEY_ROTATED without any key value; publishes ClubUpdated.
          */
         post: operations["rotatePublicApiKey"];
         delete?: never;
@@ -5266,7 +5306,7 @@ export interface paths {
         put?: never;
         /**
          * startSupportAccess
-         * @description S17. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Guards then 501 NOT_IMPLEMENTED. SUPPORT grant, ADMIN role and PLATFORM_SUPPORT origin; no personal exports or full IBAN.
+         * @description S17 R-17-10. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. A SUPPORT grant of platform.supportAccessMinutes (60) and its token: a clubs-admin access token (no refresh token) with the club's clubId, roles [ADMIN], actorAccountId and sub = the calling platform account, support = true and no platformRoles. Every request with it re-checks the grant: once it expires, is ended with POST /oauth2/revoke, or its account is no longer an active AGILITYHUB_ADMIN, the token is 401 UNAUTHENTICATED. It never reaches the personal-data exports and their files, the SEPA files (full IBANs), a member impersonation or the account's own credentials and sessions: 403 SUPPORT_RESTRICTED; IBANs stay masked elsewhere. GET /me answers it with an ADMIN membership and support {actorName, expiresAt}. Audited SUPPORT_ACCESS_STARTED {reason, details.expiresAt} in the club's own audit, and every action taken with it is audited with origin = PLATFORM_SUPPORT; publishes SupportAccessStarted. A replay of the same key answers the same token.
          */
         post: operations["startSupportAccess"];
         delete?: never;
@@ -6904,7 +6944,7 @@ export interface paths {
         };
         /**
          * isDomainAllowed
-         * @description S17 R-17-03. Caddy internal-network endpoint, no bearer or tenant. Public ingress blocks /internal/*. The request address must be loopback or RFC1918 under the existing trusted-proxy configuration; untrusted forwarded headers grant no access. Contract only: never authorizes a certificate yet.
+         * @description S17 R-17-03, WP-17-D. Caddy's on-demand TLS ask (internal network), no bearer or tenant. Public ingress blocks /internal/*. The request address must be loopback or RFC1918 under the existing trusted-proxy configuration; untrusted forwarded headers grant no access (403 FORBIDDEN). 200 (no body) only for a VERIFIED domain of a club, the host compared normalized; a PENDING, BROKEN or unknown host, or a product host, is 404 NOT_FOUND, so Caddy issues no certificate for it.
          */
         get: operations["allowed"];
         put?: never;
@@ -7762,7 +7802,7 @@ export interface components {
             SMS: boolean;
         };
         /** @enum {string} */
-        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
+        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
         /** @description Values are masked by the audit writer. */
         AuditChange: {
             after: unknown;
@@ -7798,7 +7838,7 @@ export interface components {
             /** Format: uuid */
             memberId?: string;
             /** @enum {string} */
-            origin: "APP" | "BACKOFFICE" | "SYSTEM" | "WEBHOOK" | "PUBLIC";
+            origin: "APP" | "BACKOFFICE" | "SYSTEM" | "WEBHOOK" | "PUBLIC" | "PLATFORM_SUPPORT";
             reason?: string;
             /** Format: uuid */
             traceId: string;
@@ -7831,7 +7871,7 @@ export interface components {
             /** Format: uuid */
             memberId?: string;
             /** @enum {string} */
-            origin?: "APP" | "BACKOFFICE" | "SYSTEM" | "WEBHOOK" | "PUBLIC";
+            origin?: "APP" | "BACKOFFICE" | "SYSTEM" | "WEBHOOK" | "PUBLIC" | "PLATFORM_SUPPORT";
             reason?: string;
         };
         AuditSummary: {
@@ -8735,7 +8775,16 @@ export interface components {
             copied: {
                 [key: string]: number;
             };
-            warnings: string[];
+            warnings: components["schemas"]["CatalogCloneWarning"][];
+        };
+        /** @description S17 R-17-08: one localized-text adjustment of a cloned part, once per code, part and locale. */
+        CatalogCloneWarning: {
+            /** @enum {string} */
+            code: "LOCALE_OMITTED" | "DEFAULT_LOCALE_COPIED";
+            /** @description The source locale the warning is about (ca, es or en). */
+            from: string;
+            /** @enum {string} */
+            part: "LEVELS" | "RINGS" | "PLANS" | "FAQ" | "MESSAGE_TEMPLATES";
         };
         CatalogItemsAdministrator: {
             items: components["schemas"]["Administrator"][];
@@ -9517,7 +9566,8 @@ export interface components {
             legalAddress: components["schemas"]["LegalAddress"] | null;
             legalName: string | null;
             name: string;
-            slug: string;
+            /** @description The club's slug; null on a product host (S17 §2 «Entrada»), whose branding is the product's. */
+            slug: string | null;
             /** @description Normalized: upper case, without spaces or separators (S02 §3). ES: a 7-digit DNI is stored padded to 8 digits. */
             taxId: string | null;
         };
@@ -10299,8 +10349,10 @@ export interface components {
             /** @enum {string} */
             status: "PENDING" | "VERIFIED" | "BROKEN";
         };
-        /** @description S17 §2 DNS instructions: CNAME to the product host, or TXT _agilityhub-verify.{host} = agh-verify-{token}. The token is generated when the domain is added and remains stable until verified; DNS lookup is deferred. */
+        /** @description S17 §2 DNS instructions (R-17-03): a CNAME from the host to cnameTarget, or the TXT record recordName = recordValue (_agilityhub-verify.{host} = agh-verify-{token}). The token is generated when the domain is added, stays stable while it is PENDING and is removed once it is VERIFIED. */
         DomainVerificationChallenge: {
+            /** @description The product host of the domain's app the CNAME points to: clubs.agilitydoghub.com for clubs, clubsadmin.agilitydoghub.com for clubs-admin (deployment hosts). */
+            cnameTarget: string;
             recordName: string;
             recordValue: string;
         };
@@ -11988,6 +12040,8 @@ export interface components {
             membership?: components["schemas"]["MembershipSummary"];
             /** @description Current member's payment method; absent without BILLING or a member */
             paymentMethod?: components["schemas"]["MePaymentMethod"];
+            /** @description S17 R-17-10: present only with a support access token of the AgilityHub team; clubs-admin shows its persistent banner from it */
+            support?: components["schemas"]["MeSupport"];
         };
         MeAccount: {
             /** Format: email */
@@ -12208,6 +12262,15 @@ export interface components {
             kind: "AGILITY" | "JUMPING" | "FUN" | "OBSTACLE_DRILL" | "EMPTY";
             levelLabel?: string | null;
             thumbnailUrl?: string | null;
+        };
+        MeSupport: {
+            /** @description The AgilityHub team member who entered the club */
+            actorName: string;
+            /**
+             * Format: date-time
+             * @description When the support access ends
+             */
+            expiresAt: string;
         };
         /** @description ADMIN projection. Payment details are masked. accountMissing means SEPA_DD without an IBAN. An optional property without a value is sent as null. */
         Member: {
@@ -13697,7 +13760,7 @@ export interface components {
             primary: boolean;
             /** @enum {string} */
             status: "PENDING" | "VERIFIED" | "BROKEN";
-            /** @description TXT challenge for a newly added domain; null for legacy domains without a challenge. */
+            /** @description The DNS instructions while the domain is not verified; null once it is VERIFIED and for a legacy domain without a challenge. */
             verification?: components["schemas"]["DomainVerificationChallenge"] | null;
             /** Format: date-time */
             verifiedAt?: string | null;
@@ -23358,7 +23421,9 @@ export interface operations {
     joinBuildSession: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -54945,7 +55010,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description HOST_ALREADY_USED */
+            /** @description HOST_ALREADY_USED, STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -54983,7 +55048,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description NOT_IMPLEMENTED */
+            /** @description Not Implemented */
             501: {
                 headers: {
                     [name: string]: unknown;
@@ -55069,7 +55134,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description STALE_VERSION, INVALID_STATE */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -55107,7 +55172,131 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description NOT_IMPLEMENTED */
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    makePlatformDomainPrimary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                host: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description List<PlatformDomain> */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlatformDomain"][];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description FORBIDDEN, IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description CLUB_NOT_FOUND, NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description STALE_VERSION, INVALID_STATE */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
             501: {
                 headers: {
                     [name: string]: unknown;
@@ -55195,7 +55384,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description STALE_VERSION, INVALID_STATE */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -55233,7 +55422,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description NOT_IMPLEMENTED */
+            /** @description Not Implemented */
             501: {
                 headers: {
                     [name: string]: unknown;
@@ -55332,6 +55521,131 @@ export interface operations {
                 };
             };
             /** @description MODULE_DEPENDENCY */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    listPlatformParameters: {
+        parameters: {
+            query?: {
+                block?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description SettingsContracts.Parameters */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Parameters"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description FORBIDDEN, IMPERSONATION_DENIED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description CLUB_NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -55952,7 +56266,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description STALE_VERSION */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -55990,7 +56304,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description NOT_IMPLEMENTED */
+            /** @description Not Implemented */
             501: {
                 headers: {
                     [name: string]: unknown;
@@ -56248,7 +56562,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description NOT_IMPLEMENTED */
+            /** @description Not Implemented */
             501: {
                 headers: {
                     [name: string]: unknown;
@@ -69070,7 +69384,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description NOT_IMPLEMENTED */
+            /** @description Not Implemented */
             501: {
                 headers: {
                     [name: string]: unknown;

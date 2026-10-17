@@ -1,0 +1,91 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/course-handlers.test.ts (32 tests | 1 failed | 31 skipped) 38ms
+   ❯ E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) (22)
+     × T-16-05 R-16-16 / CONVENCIONS_API §7 (E62): an Idempotency-Key reused by another caller (another club's ADMIN, this club's INSTRUCTOR) with the same body → 409 IDEMPOTENCY_KEY_REUSED {DIFFERENT_REQUEST}, never this club's stored answer; the same caller's retry replays it 35ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > T-16-05 R-16-16 / CONVENCIONS_API §7 (E62): an Idempotency-Key reused by another caller (another club's ADMIN, this club's INSTRUCTOR) with the same body → 409 IDEMPOTENCY_KEY_REUSED {DIFFERENT_REQUEST}, never this club's stored answer; the same caller's retry replays it
+AssertionError: coursesOtherClub: expected { body: { …(37) }, status: 201 } to match object { body: { …(2) }, status: 409 }
+(41 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "code": "IDEMPOTENCY_KEY_REUSED",
+-     "details": {
+-       "reason": "DIFFERENT_REQUEST",
++     "agilityhubLevel": null,
++     "canvasHeight": null,
++     "canvasWidth": null,
++     "clubId": "50000000-0000-4000-8000-000000000001",
++     "courseGrade": null,
++     "courseType": null,
++     "createdAt": "2026-10-16T23:06:15Z",
++     "createdByAccountId": "10000000-0000-4000-8000-000000000001",
++     "designLengthM": null,
++     "designWidthM": null,
++     "designedOn": null,
++     "designerName": null,
++     "discipline": "OTHER",
++     "eventName": null,
++     "id": "course-2",
++     "imageFileKey": "50000000-0000-4000-8000-000000000001/courses/00000000-0000-4000-8000-000000000001",
++     "imageUrl": "https://files.example.test/files/50000000-0000-4000-8000-000000000001%2Fcourses%2F00000000-0000-4000-8000-000000000001",
++     "levelIds": [],
++     "name": "Plànol compartit",
++     "nameI18n": {
++       "ca": "Plànol compartit",
++     },
++     "normalizedJson": null,
++     "notes": null,
++     "origin": null,
++     "ownerAccountId": null,
++     "ownerType": "CLUB",
++     "schemaVersion": null,
++     "sizeCategory": null,
++     "source": "IMAGE",
++     "sourceCourseId": null,
++     "sourceFileKey": null,
++     "stats": {
++       "bbox": {
++         "h": 0,
++         "w": 0,
+        },
++       "obstacleCount": 0,
++       "pathLengthM": 0,
+      },
+-   "status": 409,
++     "tags": [],
++     "thumbnailFileKey": null,
++     "thumbnailUrl": "https://files.example.test/files/50000000-0000-4000-8000-000000000001%2Fcourses%2F00000000-0000-4000-8000-000000000001",
++     "updatedAt": "2026-10-16T23:06:15Z",
++     "version": 1,
++     "visibility": "CLUB",
++   },
++   "status": 201,
+  }
+
+ ❯ src/mocks/course-handlers.test.ts:370:30
+    368|     for (const caller of ["coursesOtherClub", "instructor"] as const) {
+    369|       const theirs = await call<Schemas["ApiError"]>(caller, "POST", "…
+    370|       expect(theirs, caller).toMatchObject(reused);
+       |                              ^
+    371|       expect(JSON.stringify(theirs.body), caller).not.toContain(create…
+    372|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 skipped (32)
+   Start at  02:06:14
+   Duration  1.26s (transform 57%, import 40%, tests 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/course-handlers.test.ts -t Idempotency-Key reused by another caller

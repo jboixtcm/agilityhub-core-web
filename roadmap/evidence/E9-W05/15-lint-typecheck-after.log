@@ -1,0 +1,27 @@
+
+> clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> eslint . --max-warnings 0 --config ../../eslint.config.mjs
+
+clubs-admin lint exit 0
+
+> @agilityhub/course-ui@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+> eslint src tests harness e2e playwright.config.ts vite.harness.config.ts --max-warnings 0 --config ../../eslint.config.mjs
+
+course-ui lint exit 0
+
+> clubs-admin@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+> tsc --noEmit
+
+e2e/courses-gallery.spec.ts(50,5): error TS2375: Type '{ colors: Record<string, string>; mode: Mode; ringPalette: string[] | undefined; }' is not assignable to type 'Theme' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'ringPalette' are incompatible.
+    Type 'string[] | undefined' is not assignable to type 'string[]'.
+      Type 'undefined' is not assignable to type 'string[]'.
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs-admin@0.0.0 typecheck: `tsc --noEmit`
+Exit status 2
+clubs-admin typecheck exit 2
+
+> @agilityhub/course-ui@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+> tsc --noEmit
+
+course-ui typecheck exit 0

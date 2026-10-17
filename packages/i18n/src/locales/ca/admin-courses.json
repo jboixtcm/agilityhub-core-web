@@ -237,7 +237,7 @@
     "title": "Full de marcadors · {ring}",
     "marker": "Marcador {label}",
     "position": "Posició a la pista: x {x} m · y {y} m",
-    "size": "Mida impresa: {mm} mm (amb el marge blanc)",
+    "size": "Mida impresa: {mm, number} mm (amb el marge blanc)",
     "identifiers": "{uid} · AprilTag 36h11 núm. {tag}",
     "instructions": "Imprimeix-lo a mida real, sense ajustar a la pàgina. Fixa'l pla i ben visible al punt de la pista que indica la posició, sense tapar el marge blanc."
   },
@@ -306,7 +306,7 @@
     "notANumber": "ha de ser un número",
     "precheck": "Revisa aquests camps abans de desar:",
     "markerSheetNoMarker": "Cap marcador actiu: activa'n almenys un per treure el full.",
-    "markerSheetTooLarge": "{labels}: fan més de {mm} mm i no caben a la pàgina a mida real."
+    "markerSheetTooLarge": "{labels}: fan més de {mm, number} mm i no caben a la pàgina a mida real."
   },
   "doors": {
     "title": "Portes de {name} ({count}/{maximum})",

@@ -227,6 +227,7 @@
     "rowNamed": "{course} · {ring} · {name}",
     "sheet": "Full de muntatge",
     "sheetPending": "Descarregant el full de muntatge",
+    "sheetStale": "La geometria de la pista ha canviat: revisa la col·locació abans de treure'n el full de muntatge.",
     "sheetFile": "full-de-muntatge-{course}.pdf",
     "sheetFallback": "recorregut"
   }

@@ -1,0 +1,50 @@
+heavy.sh: 04:28 waiting for the host lock, held by: 03:15 agilityhub-core-api: ./mvnw -q clean verify
+heavy.sh: the lock is still held after 49 min by: 03:15 agilityhub-core-api: ./mvnw -q clean verify
+heavy.sh: running WITHOUT the lock - if this run fails on timeouts, say so in the report
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E9-W05 e9-core.spec.ts
+
+E4_WEEK_START=2026-10-12 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-19 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-16T10:43:23.234158434Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:228ace06e557649665f5cbda4b43edeace888011142f466403a6eb29371ac944]
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E9-W05/demo-canic.yaml (406 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E9-W05/demo-fifo.yaml (62 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Volume agilityhub-e9-w05_mongo-data Creating 
+ Network agilityhub-e9-w05_default Creating 
+ Network agilityhub-e9-w05_default Creating 
+ Volume agilityhub-e9-w05_export-files Creating 
+ Volume agilityhub-e9-w05_export-files Creating 
+ Volume agilityhub-e9-w05_mongo-data Creating 
+ Volume agilityhub-e9-w05_mailbox Creating 
+ Volume agilityhub-e9-w05_mailbox Creating 
+ Volume agilityhub-e9-w05_mongo-data Created 
+ Volume agilityhub-e9-w05_mongo-data Created 
+ Volume agilityhub-e9-w05_export-files Created 
+ Volume agilityhub-e9-w05_export-files Created 
+ Volume agilityhub-e9-w05_mailbox Created 
+ Volume agilityhub-e9-w05_mailbox Created 
+ Network agilityhub-e9-w05_default Created 
+ Network agilityhub-e9-w05_default Created 
+ Container agilityhub-e9-w05-mongo-1 Creating 
+ Container agilityhub-e9-w05-mongo-1 Created 
+ Container agilityhub-e9-w05-seed-1 Creating 
+ Container agilityhub-e9-w05-seed-1 Created 
+ Container agilityhub-e9-w05-activate-demo-club-1 Creating 
+ Container agilityhub-e9-w05-activate-demo-club-1 Created 
+ Container agilityhub-e9-w05-core-1 Creating 
+ Container agilityhub-e9-w05-core-1 Created 
+ Container agilityhub-e9-w05-mongo-1 Starting 
+ Container agilityhub-e9-w05-mongo-1 Started 
+ Container agilityhub-e9-w05-mongo-1 Waiting 
+ Container agilityhub-e9-w05-mongo-1 Healthy 
+ Container agilityhub-e9-w05-seed-1 Starting 
+ Container agilityhub-e9-w05-seed-1 Started 
+ Container agilityhub-e9-w05-seed-1 Waiting 
+ Container agilityhub-e9-w05-seed-1 Error service "seed" didn't complete successfully: exit 1
+service "seed" didn't complete successfully: exit 1
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E9-W05/seed-files.log (1 lines)
+ ELIFECYCLE  Command failed with exit code 1.

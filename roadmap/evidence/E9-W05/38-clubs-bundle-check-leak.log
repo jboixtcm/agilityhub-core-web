@@ -1,0 +1,3 @@
+check-clubs-bundle: 1 backoffice/ID namespace chunk(s) in the students' app:
+  admin-billing-Fake0001.js
+exit 1

@@ -2345,7 +2345,7 @@ export const handlers = [
       }
       if (key === "signup.text.imageConsent") {
         const club = scenario.branding.club.name;
-        const contact = `contact@${scenario.branding.club.slug}.example.test`;
+        const contact = `contact@${scenario.branding.club.slug ?? "club"}.example.test`;
         const text =
           locale === "es"
             ? `Autorizo a ${club} a tomar fotografías y vídeos en los que aparezcamos mi perro o yo durante las clases, entrenamientos y actividades del club, y a publicarlos en los canales del club con la única finalidad de dar a conocer su actividad. Puedo retirar esta autorización en cualquier momento desde mi perfil o escribiendo a ${contact}; la retirada no afecta a publicaciones anteriores.`
@@ -2452,7 +2452,8 @@ export const handlers = [
       name: branding.club.name,
       paymentProviders: clubPaymentProviders(),
       pwa: null,
-      slug: branding.club.slug,
+      // `ClubSummary.slug` is null only on a product host, which has no club settings to read.
+      slug: branding.club.slug ?? "",
       status: branding.status,
       taxId: branding.club.taxId ?? null,
       theme: branding.theme,

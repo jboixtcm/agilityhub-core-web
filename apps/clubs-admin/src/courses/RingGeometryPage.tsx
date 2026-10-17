@@ -502,7 +502,7 @@ function GeometryCard({
         values,
         base,
         base?.version ?? 0,
-        branding.club.slug,
+        branding.club.slug ?? "",
         ring.name,
       );
       const result = await client.PUT("/rings/{id}/geometry", {

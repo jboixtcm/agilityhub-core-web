@@ -25,6 +25,7 @@ type PlatformThemeRequest = components["schemas"]["PlatformThemeRequest"];
 type PlatformProviderRequest = components["schemas"]["PlatformProviderRequest"];
 type ProviderSummary = components["schemas"]["PlatformProviderSummary"];
 type CatalogCloneRequest = components["schemas"]["CatalogCloneRequest"];
+type CatalogCloneResult = components["schemas"]["CatalogCloneResult"];
 type PlatformAdminRequest = components["schemas"]["PlatformAdminRequest"];
 type PlatformRoles = components["schemas"]["PlatformRoles"];
 type StatusRequest = components["schemas"]["PlatformClubStatusRequest"];
@@ -959,12 +960,18 @@ export const consoleHandlers = [
     }
     consoleState.catalogParts[club.id] = [...filled, ...body.parts];
     const missingDefault = !source.locales.includes(club.defaultLocale);
-    return HttpResponse.json({
+    // R-17-08 (E10-T04 snapshot): one `CatalogCloneWarning` per code, part and source locale.
+    const result: CatalogCloneResult = {
       copied: Object.fromEntries(body.parts.map((part) => [part, CATALOG_COUNTS[part] ?? 0])),
       warnings: missingDefault
-        ? [`defaultLocale ${club.defaultLocale} copied from ${source.defaultLocale}`]
+        ? body.parts.map((part) => ({
+            code: "DEFAULT_LOCALE_COPIED" as const,
+            from: source.defaultLocale,
+            part,
+          }))
         : [],
-    });
+    };
+    return HttpResponse.json(result);
   }),
   http.get("*/api/v1/platform/clubs/:id/admins", ({ params }) => {
     const denied = refused();

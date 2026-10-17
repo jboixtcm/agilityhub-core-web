@@ -1,0 +1,3521 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/courses/courses.test.tsx (33 tests | 5 failed) 13111ms
+   ❯ R-16-10 / R-16-07 a course's page: build sheet, register as set up, metadata (13)
+     × R-16-06 / T-16-19 E9-W05 #1 a stale placement's stored sheet («Full desat») is disabled too, with the same reason as «Full de muntatge» 29ms
+     × R-16-06 / T-16-19 E9-W05 #1 the editor disables a stale placement's stored sheet until it is saved 55ms
+     × R-16-07 E9-W05 #7b a FORBIDDEN refusal names courses.allowInstructorPublish only to an INSTRUCTOR; an ADMIN reads the generic error and keeps the action 56ms
+     × R-16-07 E9-W05 #7c an INSTRUCTOR refused once is offered «Registra-ho com a muntat» again, without a reload, once courses.allowInstructorPublish reads true 10098ms
+   ❯ D16 «Geometria» (S16 §2, R-16-04/06/08) (11)
+     × A8b E9-W05 #7d the marker sizes print with the reader's decimal separator (ICU number, never the raw value) 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/courses.test.tsx > R-16-10 / R-16-07 a course's page: build sheet, register as set up, metadata > R-16-06 / T-16-19 E9-W05 #1 a stale placement's stored sheet («Full desat») is disabled too, with the same reason as «Full de muntatge»
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<button
+  class="ah-button ah-button--ghost"
+  type="button"
+/>[39m
+ ❯ src/courses/courses.test.tsx:565:20
+    563|     const stored = within(row).getByRole("button", { name: "Full desat…
+    564|     // The stored PDF was made from the obstacles and marker distances…
+    565|     expect(stored).toBeDisabled();
+       |                    ^
+    566|     expect(stored).toHaveAccessibleDescription(
+    567|       "La geometria de la pista ha canviat: revisa la col·locació aban…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/courses/courses.test.tsx > R-16-10 / R-16-07 a course's page: build sheet, register as set up, metadata > R-16-06 / T-16-19 E9-W05 #1 the editor disables a stale placement's stored sheet until it is saved
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<button
+  class="ah-button ah-button--ghost"
+  type="button"
+/>[39m
+ ❯ src/courses/courses.test.tsx:581:20
+    579|     );
+    580|     const stored = await screen.findByRole("button", { name: "Full des…
+    581|     expect(stored).toBeDisabled();
+       |                    ^
+    582|     expect(stored).toHaveAccessibleDescription(
+    583|       "La geometria de la pista ha canviat: desa la col·locació per po…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/courses/courses.test.tsx > R-16-10 / R-16-07 a course's page: build sheet, register as set up, metadata > R-16-07 E9-W05 #7b a FORBIDDEN refusal names courses.allowInstructorPublish only to an INSTRUCTOR; an ADMIN reads the generic error and keeps the action
+AssertionError: expected 'En aquest club només l\'administració…' to be 'No teniu permís per fer aquesta acció.' // Object.is equality
+
+Expected: "No teniu permís per fer aquesta acció."
+Received: "En aquest club només l'administració pot registrar què hi ha muntat."
+
+ ❯ src/courses/courses.test.tsx:710:28
+    708|     // An ADMIN is never refused by the switch: the refusal is another…
+    709|     await renderRoute(`/recorreguts/${COURSE_IDS.jumping}`, "admin");
+    710|     expect(await refuse()).toBe("No teniu permís per fer aquesta acció…
+       |                            ^
+    711|     expect(screen.getAllByRole("button", { name: "Registra-ho com a mu…
+    712|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/courses/courses.test.tsx > R-16-10 / R-16-07 a course's page: build sheet, register as set up, metadata > R-16-07 E9-W05 #7c an INSTRUCTOR refused once is offered «Registra-ho com a muntat» again, without a reload, once courses.allowInstructorPublish reads true
+TestingLibraryElementError: Unable to find role="button" and name "Registra-ho com a muntat"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"courses-page courses-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"courses-page__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"courses-back"[39m
+            [33mhref[39m=[32m"/recorreguts"[39m
+          [36m>[39m
+            [0m‹ Biblioteca de recorreguts[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mJumping del dijous[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"courses-chips-inline"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mJumping[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mSmarter[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+            [36m>[39m
+              [0mDel club[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"courses-muted"[39m
+            [36m>[39m
+              [0m11 obstacles[0m
+            [36m</span>[39m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"courses-actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mDuplica[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mElimina[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"courses-detail__grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"course-viewer-title"[39m
+          [33mclass[39m=[32m"ah-card courses-card"[39m
+          [33mrole[39m=[32m"region"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"course-viewer-title"[39m
+          [36m>[39m
+            [0mRecorregut[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-tabs"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Recorregut"[39m
+              [33mclass[39m=[32m"ah-tabs__list"[39m
+              [33mrole[39m=[32m"tablist"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_k_-panel-2d"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_k_-tab-2d"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mPlànol[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_k_-panel-3d"[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_k_-tab-3d"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m3D[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33maria-labelledby[39m=[32m"_r_k_-tab-2d"[39m
+              [33mclass[39m=[32m"ah-tabs__panel"[39m
+              [33mid[39m=[32m"_r_k_-panel-2d"[39m
+              [33mrole[39m=[32m"tabpanel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"w-full aspect-square max-h-[80vh] bg-surface-2 border border-border rounded-2xl overflow-hidden"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-label[39m=[32m"Plànol de Jumping del dijous"[39m
+                  [33mclass[39m=[32m"w-full h-full"[39m
+                  [33mrole[39m=[32m"img"[39m
+                  [33mviewBox[39m=[32m"-1.5 -1.5 33 23"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<g[39m
+                    [33mtransform[39m=[32m"scale(1 -1) translate(0 -20)"[39m
+                  [36m>[39m
+                    [36m<rect[39m
+                      [33mfill[39m=[32m"var(--ah-color-course-floor)"[39m
+                      [33mheight[39m=[32m"20"[39m
+                      [33mstroke[39m=[32m"var(--ah-color-course-ring)"[39m
+                      [33mstroke-width[39m=[32m"0.06"[39m
+                      [33mwidth[39m=[32m"30"[39m
+                      [33mx[39m=[32m"0"[39m
+                      [33my[39m=[32m"0"[39m
+                    [36m/>[39m
+                    [36m<polyline[39m
+                      [33mfill[39m=[32m"none"[39m
+                      [33mpoints[39m=[32m"12.5,14 14,13 15.5,14"[39m
+                      [33mstroke[39m=[32m"var(--ah-color-course-door)"[39m
+                      [33mstroke-linecap[39m=[32m"round"[39m
+                      [33mstroke-opacity[39m=[32m"0.85"[39m
+                      [33mstroke-width[39m=[32m"0.6"[39m
+                    [36m/>[39m
+                    [36m<g[39m
+                      [33mstyle[39m=[32m"cursor: pointer;"[39m
+                    [36m>[39m
+                      [36m<g[39m
+                        [33mtransform[39m=[32m"translate(4 16) rotate(90)"[39m
+                      [36m>[39m
+                        [36m<g>[39m
+                          [36m<rect[39m
+                            [33mfill[39m=[32m"var(--ah-color-course-obstacle-light)"[39m
+                            [33mheight[39m=[32m"0.12"[39m
+                         ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"courses-page courses-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"courses-page__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"courses-back"[39m
+            [33mhref[39m=[32m"/recorreguts"[39m
+          [36m>[39m
+            [0m‹ Biblioteca de recorreguts[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mJumping del dijous[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"courses-chips-inline"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mJumping[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mSmarter[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+            [36m>[39m
+              [0mDel club[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"courses-muted"[39m
+            [36m>[39m
+              [0m11 obstacles[0m
+            [36m</span>[39m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"courses-actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mDuplica[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mElimina[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"courses-detail__grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"course-viewer-title"[39m
+          [33mclass[39m=[32m"ah-card courses-card"[39m
+          [33mrole[39m=[32m"region"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"course-viewer-title"[39m
+          [36m>[39m
+            [0mRecorregut[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-tabs"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Recorregut"[39m
+              [33mclass[39m=[32m"ah-tabs__list"[39m
+              [33mrole[39m=[32m"tablist"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_k_-panel-2d"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_k_-tab-2d"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mPlànol[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_k_-panel-3d"[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_k_-tab-3d"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m3D[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33maria-labelledby[39m=[32m"_r_k_-tab-2d"[39m
+              [33mclass[39m=[32m"ah-tabs__panel"[39m
+              [33mid[39m=[32m"_r_k_-panel-2d"[39m
+              [33mrole[39m=[32m"tabpanel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"w-full aspect-square max-h-[80vh] bg-surface-2 border border-border rounded-2xl overflow-hidden"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-label[39m=[32m"Plànol de Jumping del dijous"[39m
+                  [33mclass[39m=[32m"w-full h-full"[39m
+                  [33mrole[39m=[32m"img"[39m
+                  [33mviewBox[39m=[32m"-1.5 -1.5 33 23"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<g[39m
+                    [33mtransform[39m=[32m"scale(1 -1) translate(0 -20)"[39m
+                  [36m>[39m
+                    [36m<rect[39m
+                      [33mfill[39m=[32m"var(--ah-color-course-floor)"[39m
+                      [33mheight[39m=[32m"20"[39m
+                      [33mstroke[39m=[32m"var(--ah-color-course-ring)"[39m
+                      [33mstroke-width[39m=[32m"0.06"[39m
+                      [33mwidth[39m=[32m"30"[39m
+                      [33mx[39m=[32m"0"[39m
+                      [33my[39m=[32m"0"[39m
+                    [36m/>[39m
+                    [36m<polyline[39m
+                      [33mfill[39m=[32m"none"[39m
+                      [33mpoints[39m=[32m"12.5,14 14,13 15.5,14"[39m
+                      [33mstroke[39m=[32m"var(--ah-color-course-door)"[39m
+                      [33mstroke-linecap[39m=[32m"round"[39m
+                      [33mstroke-opacity[39m=[32m"0.85"[39m
+                      [33mstroke-width[39m=[32m"0.6"[39m
+                    [36m/>[39m
+                    [36m<g[39m
+                      [33mstyle[39m=[32m"cursor: pointer;"[39m
+                    [36m>[39m
+                      [36m<g[39m
+                        [33mtransform[39m=[32m"translate(4 16) rotate(90)"[39m
+                      [36m>[39m
+                        [36m<g>[39m
+                          [36m<rect[39m
+                            [33mfill[39m=[32m"var(--ah-color-course-obstacle-light)"[39m
+                            [33mheight[39m=[32m"0.12"[39m
+                         ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:746:20
+    744|     await screen.findByText("Dijous tarda");
+    745|     expect(
+    746|       await screen.findAllByRole("button", { name: "Registra-ho com a …
+       |                    ^
+    747|     ).toHaveLength(2);
+    748|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/courses/courses.test.tsx > D16 «Geometria» (S16 §2, R-16-04/06/08) > A8b E9-W05 #7d the marker sizes print with the reader's decimal separator (ICU number, never the raw value)
+AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "Mida impresa: 150,5 mm (amb el marge blanc)",
+-   "B: fan més de 195,9 mm i no caben a la pàgina a mida real.",
++   "Mida impresa: 150.5 mm (amb el marge blanc)",
++   "B: fan més de 195.9 mm i no caben a la pàgina a mida real.",
+  ]
+
+ ❯ src/courses/courses.test.tsx:845:30
+    843|       ];
+    844|     };
+    845|     expect(await read("ca")).toEqual([
+       |                              ^
+    846|       "Mida impresa: 150,5 mm (amb el marge blanc)",
+    847|       "B: fan més de 195,9 mm i no caben a la pàgina a mida real.",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  5 failed | 78 passed (83)
+   Start at  02:08:46
+   Duration  14.77s (tests 88%, transform 7%, environment 3%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/courses src/activities
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+stderr | src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > 08: the ring's line «Muntanya: Jumping · nivell C–D · muntat ahir» opens the viewer, read-only for a MEMBER
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > a photo setup shows its photo; «previst fins» is the club's day
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > R-16-16: a setup registered from the library draws its course in 2D for a MEMBER, with zoom and a quarter turn
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > T-16-09 / R-16-09: with courses.showSetupToMembers off a MEMBER reads «Sense recorregut registrat» and no setup
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > T-16-09 / R-16-09: a setup the api hides from a MEMBER (404) reads that it is no longer shown
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > R-16-15: without COURSES there is no line on 08, no icon on 10 and the viewer is not available
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > R-16-06 / R-16-16: staff see the course placed on the ring and «Geometria canviada: revisa la col·locació»
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > R-16-08: [Marca com a desmuntat] asks first, sends one keyed dismantle and the viewer reads «Desmuntat»
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > T-16-10 R-16-11: [Sessió de muntatge] starts a live session; a tap moves an obstacle, another phone's tap arrives by polling, FINALITZA registers the setup
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > T-16-10 R-16-11: a second phone joins with the session's code (case-insensitive)
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > R-16-11: an unknown code reads that no open session has it, beside the field
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > T-16-16 · a ring with no setup offers staff the join-by-code form (R-16-11)
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-09 · an ADMIN session refused by /me/ring-setups (403) opens the ring's setup from its history
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+stderr | src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+An error occurred in the <SetupViewerPage> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+ ❯ src/courses/courses.test.tsx (27 tests | 22 failed) 201305ms
+   ❯ T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) (8)
+     × 08: the ring's line «Muntanya: Jumping · nivell C–D · muntat ahir» opens the viewer, read-only for a MEMBER 10236ms
+     × 10: the course icon in Muntanya's header opens its setup; a ring without one has no icon 59ms
+     × a photo setup shows its photo; «previst fins» is the club's day 10013ms
+     × R-16-16: a setup registered from the library draws its course in 2D for a MEMBER, with zoom and a quarter turn 10017ms
+     × T-16-09 / R-16-09: with courses.showSetupToMembers off a MEMBER reads «Sense recorregut registrat» and no setup 10022ms
+     × T-16-09 / R-16-09: a setup the api hides from a MEMBER (404) reads that it is no longer shown 10012ms
+     × R-16-15: without COURSES there is no line on 08, no icon on 10 and the viewer is not available 10065ms
+   ❯ the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) (13)
+     × R-16-06 / R-16-16: staff see the course placed on the ring and «Geometria canviada: revisa la col·locació» 10011ms
+     × T-16-16 R-16-07: registered in under five taps (ring preselected → kind → photo → REGISTRA), one key, the viewer after 10088ms
+     × R-16-07: on a ring with a setup, REGISTRA names what it replaces and the viewer says it replaced it 10023ms
+     × R-16-07: a course of the library goes as courseId; without a choice REGISTRA says what is missing 10062ms
+     × R-16-07 / CONVENCIONS_API §7: a lost answer keeps the key, the photo is not uploaded twice, and the api's refusal stays in the form 10049ms
+     × R-16-07: an INSTRUCTOR refused by the api (courses.allowInstructorPublish off) reads why, in the form 10053ms
+     × R-16-08: [Marca com a desmuntat] asks first, sends one keyed dismantle and the viewer reads «Desmuntat» 10021ms
+     × T-16-10 R-16-11: [Sessió de muntatge] starts a live session; a tap moves an obstacle, another phone's tap arrives by polling, FINALITZA registers the setup 10018ms
+     × T-16-10 R-16-11: a second phone joins with the session's code (case-insensitive) 10019ms
+     × R-16-11: an unknown code reads that no open session has it, beside the field 10017ms
+   ❯ E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type (5)
+     × T-16-16 · staff start a build session from 07's «Recorregut previst»: one key per payload, the error in place, then the session (R-16-11, R-16-13) 10010ms
+     × T-16-16 · a ring with no setup offers staff the join-by-code form (R-16-11) 10013ms
+     × R-16-09 · an ADMIN session refused by /me/ring-setups (403) opens the ring's setup from its history 10012ms
+     × R-16-07 · a photo without an image type is refused on the photo field before any upload grant 10043ms
+     × R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup 184ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 22 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > 08: the ring's line «Muntanya: Jumping · nivell C–D · muntat ahir» opens the viewer, read-only for a MEMBER
+TestingLibraryElementError: Unable to find role="heading" and name "Muntanya"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:50:25
+     48|       expect(window.location.pathname).toBe(`/recorreguts/${SETUP_IDS.…
+     49|     });
+     50|     expect(await screen.findByRole("heading", { level: 1, name: "Munta…
+       |                         ^
+     51|     expect(await screen.findByText("Jumping · nivell C–D")).toBeVisibl…
+     52|     expect(screen.getByText("muntat ahir")).toBeVisible();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > 10: the course icon in Muntanya's header opens its setup; a ring without one has no icon
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > a photo setup shows its photo; «previst fins» is the club's day
+TestingLibraryElementError: Unable to find role="img" and name "Foto o plànol del muntatge"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:93:32
+     91|     central.expectedUntil = "2026-08-06";
+     92|     await viewer(`/recorreguts/${SETUP_IDS.centralPhoto}`, "member");
+     93|     const photo = await screen.findByRole("img", { name: "Foto o plàno…
+       |                                ^
+     94|     expect(photo).toHaveAttribute("src", central.imageUrl);
+     95|     expect(screen.getByText("previst fins dijous, 6 d’agost")).toBeVis…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > R-16-16: a setup registered from the library draws its course in 2D for a MEMBER, with zoom and a quarter turn
+TestingLibraryElementError: Unable to find role="img" and name "Plànol de Agility C–D"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:103:25
+    101|     Object.assign(central, { courseId: "course-agility-c-d", imageFile…
+    102|     await viewer(`/recorreguts/${SETUP_IDS.centralPhoto}`, "member");
+    103|     expect(await screen.findByRole("img", { name: "Plànol de Agility C…
+       |                         ^
+    104|     expect(screen.getByText("Recorregut: Agility C–D")).toBeVisible();
+    105|     const zoomOut = screen.getByRole("button", { name: "Redueix" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > T-16-09 / R-16-09: with courses.showSetupToMembers off a MEMBER reads «Sense recorregut registrat» and no setup
+TestingLibraryElementError: Unable to find an element with the text: Sense recorregut registrat. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:118:25
+    116|   it("T-16-09 / R-16-09: with courses.showSetupToMembers off a MEMBER …
+    117|     await viewer("/recorreguts/muntat/ring-muntanya", "memberSetupHidd…
+    118|     expect(await screen.findByText("Sense recorregut registrat")).toBe…
+       |                         ^
+    119|     expect(
+    120|       screen.queryByRole("button", { name: "Registra què hi ha muntat"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > T-16-09 / R-16-09: a setup the api hides from a MEMBER (404) reads that it is no longer shown
+TestingLibraryElementError: Unable to find an element with the text: Aquest muntatge ja no es mostra.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:127:25
+    125|   it("T-16-09 / R-16-09: a setup the api hides from a MEMBER (404) rea…
+    126|     await viewer(`/recorreguts/${SETUP_IDS.muntanyaActive}`, "memberSe…
+    127|     expect(await screen.findByText("Aquest muntatge ja no es mostra.")…
+       |                         ^
+    128|   });
+    129|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > R-16-15: without COURSES there is no line on 08, no icon on 10 and the viewer is not available
+TestingLibraryElementError: Unable to find an element with the text: No disponible. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:136:25
+    134|     window.history.pushState(null, "", `/recorreguts/${SETUP_IDS.munta…
+    135|     window.dispatchEvent(new PopStateEvent("popstate"));
+    136|     expect(await screen.findByText("No disponible")).toBeVisible();
+       |                         ^
+    137|   });
+    138| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > R-16-06 / R-16-16: staff see the course placed on the ring and «Geometria canviada: revisa la col·locació»
+TestingLibraryElementError: Unable to find an element with the text: Geometria canviada: revisa la col·locació. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:143:25
+    141|   it("R-16-06 / R-16-16: staff see the course placed on the ring and «…
+    142|     await viewer(`/recorreguts/${SETUP_IDS.muntanyaActive}`, "instruct…
+    143|     expect(await screen.findByText("Geometria canviada: revisa la col·…
+       |                         ^
+    144|     expect(await screen.findByRole("img", { name: /^Plànol de / })).to…
+    145|     expect(screen.getByRole("button", { name: "Sessió de muntatge" }))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > T-16-16 R-16-07: registered in under five taps (ring preselected → kind → photo → REGISTRA), one key, the viewer after
+Error: [2mexpect([22m[31melement[39m[2m).toBeEnabled()[22m
+
+Received element is not enabled:
+  [31m<button
+  class="ah-button ah-button--primary course-submit"
+  disabled=""
+  type="submit"
+/>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"clubs-shell__top"[39m
+        [36m/>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"clubs-shell__content"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"booking-screen course-screen course-register"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__title"[39m
+              [36m>[39m
+                [36m<h1>[39m
+                  [0mRegistra què hi ha muntat[0m
+                [36m</h1>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Tanca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button booking-screen__close"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</header>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"course-form"[39m
+              [33mnovalidate[39m=[32m""[39m
+            [36m>[39m
+              [36m<fieldset[39m
+                [33mclass[39m=[32m"course-form__fieldset"[39m
+              [36m>[39m
+                [36m<legend[39m
+                  [33mclass[39m=[32m"booking-section__title"[39m
+                [36m>[39m
+                  [0mPista[0m
+                [36m</legend>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"training-chips"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #F2B58C;"[39m
+                    [36m/>[39m
+                    [0mMuntanya[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #8FCE8F;"[39m
+                    [36m/>[39m
+                    [0mCentral[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #C9CDD3;"[39m
+                    [36m/>[39m
+                    [0mCarretera[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #F5D67A;"[39m
+                    [36m/>[39m
+                    [0mCadells[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #85B8E8;"[39m
+                    [36m/>[39m
+                    [0mPetita[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</fieldset>[39m
+              [36m<fieldset[39m
+                [33mclass[39m=[32m"course-form__fieldset"[39m
+              [36m>[39m
+                [36m<legend[39m
+                  [33mclass[39m=[32m"booking-section__title"[39m
+                [36m>[39m
+                  [0mQuè hi ha muntat?[0m
+                [36m</legend>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"training-chips...
+ ❯ src/courses/courses.test.tsx:184:22
+    182|     const submit = screen.getByRole("button", { name: "REGISTRA" });
+    183|     await waitFor(() => {
+    184|       expect(submit).toBeEnabled();
+       |                      ^
+    185|     });
+    186|     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > R-16-07: on a ring with a setup, REGISTRA names what it replaces and the viewer says it replaced it
+TestingLibraryElementError: Unable to find an element with the text: /^Substituirà el muntatge actual \(Jumping, de \d+ d’agost\)\.$/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen course-screen course-register"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mRegistra què hi ha muntat[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Tanca"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button booking-screen__close"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</header>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"course-form"[39m
+            [33mnovalidate[39m=[32m""[39m
+          [36m>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"course-form__fieldset"[39m
+            [36m>[39m
+              [36m<legend[39m
+                [33mclass[39m=[32m"booking-section__title"[39m
+              [36m>[39m
+                [0mPista[0m
+              [36m</legend>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"training-chips"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"training-ring-dot"[39m
+                    [33mstyle[39m=[32m"--ah-ring-color: #F2B58C;"[39m
+                  [36m/>[39m
+                  [0mMuntanya[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"training-ring-dot"[39m
+                    [33mstyle[39m=[32m"--ah-ring-color: #8FCE8F;"[39m
+                  [36m/>[39m
+                  [0mCentral[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"training-ring-dot"[39m
+                    [33mstyle[39m=[32m"--ah-ring-color: #C9CDD3;"[39m
+                  [36m/>[39m
+                  [0mCarretera[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"training-ring-dot"[39m
+                    [33mstyle[39m=[32m"--ah-ring-color: #F5D67A;"[39m
+                  [36m/>[39m
+                  [0mCadells[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"training-ring-dot"[39m
+                    [33mstyle[39m=[32m"--ah-ring-color: #85B8E8;"[39m
+                  [36m/>[39m
+                  [0mPetita[0m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</fieldset>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"course-form__fieldset"[39m
+            [36m>[39m
+              [36m<legend[39m
+                [33mclass[39m=[32m"booking-section__title"[39m
+              [36m>[39m
+                [0mQuè hi ha muntat?[0m
+              [36m</legend>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"training-chips"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mAgility[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mJumping[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mFun[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mTreball d'obstacle[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mBuida[0m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</fieldset>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"course-form__fieldset"[39m
+            [36m>[39m
+              [36m<legend[39m
+                [33mclass[39m=[32m"booking-section__title"[39m
+              [36m>[39m
+                [0mD'on surt?[0m
+              [36m</legend>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"training-chips"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mFoto o plànol[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mUn recorregut de la biblioteca[0m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"course-photo"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-button ah-button--secondary course-photo__pick"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span>[39m
+                    [0mFes una foto o tria'n una[0m
+                  [36m</span>[39m
+                  [36m<input[39m
+                    [33maccept[39m=[32m"image/*"[39m
+                    [33mcapture[39m=[32m"environment"[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                    [33mtype[39m=[32m"file"[39m
+                  [36m/>[39m
+                [36m</label>[39m
+              [36m</div>[39m
+            [36m</fieldset>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"course-form__fieldset"[39m
+            [36m>[39m
+              [36m<legend[39m
+                [33mclass[39m=[32m"booking-section__title"[39m
+              [36m>[39m
+                [0mNivell orientatiu[0m
+              [36m</legend>[39m
+              [36m<div[39m
+                [33maria-label[39m=[32m"Nivells del club"[39m
+                [33mclass[39m=[32m"training-chips"[39m
+                [33mrole[39m=[32m"group"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mP[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mA[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mB[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mC[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mD[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mE[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mF[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mG[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mT[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mPENDENT[0m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"course-form__label"[39m
+                [33mfor[39m=[32m"setup-agilityhub-level"[39m
+              [36m>[39m
+                [0mEscala AgilityHub[0m
+              [36m</label>[39m
+              [36m<select[39m
+                [33mclass[39m=[32m"ah-select"[39m
+                [33mid[39m=[32m"setup-agilityhub-level"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mSense nivell[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"EASY"[39m
+                [36m>[39m
+                  [0mFàcil[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"MEDIUM"[39m
+                [36m>[39m
+                  [0mMitjà[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"HARD"[39m
+                [36m>[39m
+                  [0mDifícil[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</fieldset>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"course-form__fieldset"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"course-form__label"[39m
+                [33mfor[39m=[32m"setup-until"[39m
+              [36m>[39m
+                [0mFins quan?[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33maria-describedby[39m=[32m"setup-until-help"[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"setup-until"[39m
+                [33mmin[39m=[32m"2026-08-03"[39m
+                [33mtype[39m=[32m"date"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"course-muted"[39m
+                [33mid[39m=[32m"setup-until-help"[39m
+              [36m>[39m
+                [0mSi ho deixes en blanc, es retira sol al cap dels dies que té configurats el club.[0m
+              [36m</p>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"course-form__label"[39m
+                [33mfor[39m=[32m"setup-notes"[39m
+              [36m>[39m
+                [0mNota[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"setup-notes"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</fieldset>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"booking-note booking-note--danger"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0mNo s'ha pogut llegir què hi ha muntat ara a la pista.[0m
+              [36m</p>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mTorna-ho a provar[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary course-submit"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mREGISTRA[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</form>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/dia"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEl meu dia[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mVisió global[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/alumnes"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAlumnes[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen course-screen course-register"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m/>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mRegistra què hi ha muntat[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Tanca"[39m
+                [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button booking-screen__close"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+          [36m</header>[39m
+          [36m<form[39m
+            [33mclass[39m=[32m"course-form"[39m
+            [33mnovalidate[39m=[32m""[39m
+          [36m>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"course-form__fieldset"[39m
+            [36m>[39m
+              [36m<legend[39m
+                [33mclass[39m=[32m"booking-section__title"[39m
+              [36m>[39m
+                [0mPista[0m
+              [36m</legend>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"training-chips"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"training-ring-dot"[39m
+                    [33mstyle[39m=[32m"--ah-ring-color: #F2B58C;"[39m
+                  [36m/>[39m
+                  [0mMuntanya[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"training-ring-dot"[39m
+                    [33mstyle[39m=[32m"--ah-ring-color: #8FCE8F;"[39m
+                  [36m/>[39m
+                  [0mCentral[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"training-ring-dot"[39m
+                    [33mstyle[39m=[32m"--ah-ring-color: #C9CDD3;"[39m
+                  [36m/>[39m
+                  [0mCarretera[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"training-ring-dot"[39m
+                    [33mstyle[39m=[32m"--ah-ring-color: #F5D67A;"[39m
+                  [36m/>[39m
+                  [0mCadells[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"training-ring-dot"[39m
+                    [33mstyle[39m=[32m"--ah-ring-color: #85B8E8;"[39m
+                  [36m/>[39m
+                  [0mPetita[0m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</fieldset>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"course-form__fieldset"[39m
+            [36m>[39m
+              [36m<legend[39m
+                [33mclass[39m=[32m"booking-section__title"[39m
+              [36m>[39m
+                [0mQuè hi ha muntat?[0m
+              [36m</legend>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"training-chips"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mAgility[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mJumping[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mFun[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mTreball d'obstacle[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mBuida[0m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</fieldset>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"course-form__fieldset"[39m
+            [36m>[39m
+              [36m<legend[39m
+                [33mclass[39m=[32m"booking-section__title"[39m
+              [36m>[39m
+                [0mD'on surt?[0m
+              [36m</legend>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"training-chips"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mFoto o plànol[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mUn recorregut de la biblioteca[0m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"course-photo"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-button ah-button--secondary course-photo__pick"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-hidden[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-icon"[39m
+                  [36m>[39m
+                    [36m<use[39m
+                      [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cam"[39m
+                    [36m/>[39m
+                  [36m</svg>[39m
+                  [36m<span>[39m
+                    [0mFes una foto o tria'n una[0m
+                  [36m</span>[39m
+                  [36m<input[39m
+                    [33maccept[39m=[32m"image/*"[39m
+                    [33mcapture[39m=[32m"environment"[39m
+                    [33mclass[39m=[32m"ah-sr-only"[39m
+                    [33mtype[39m=[32m"file"[39m
+                  [36m/>[39m
+                [36m</label>[39m
+              [36m</div>[39m
+            [36m</fieldset>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"course-form__fieldset"[39m
+            [36m>[39m
+              [36m<legend[39m
+                [33mclass[39m=[32m"booking-section__title"[39m
+              [36m>[39m
+                [0mNivell orientatiu[0m
+              [36m</legend>[39m
+              [36m<div[39m
+                [33maria-label[39m=[32m"Nivells del club"[39m
+                [33mclass[39m=[32m"training-chips"[39m
+                [33mrole[39m=[32m"group"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mP[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mA[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mB[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mC[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mD[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mE[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mF[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mG[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mT[0m
+                [36m</button>[39m
+                [36m<button[39m
+                  [33maria-pressed[39m=[32m"false"[39m
+                  [33mclass[39m=[32m"ah-chip training-chip"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [0mPENDENT[0m
+                [36m</button>[39m
+              [36m</div>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"course-form__label"[39m
+                [33mfor[39m=[32m"setup-agilityhub-level"[39m
+              [36m>[39m
+                [0mEscala AgilityHub[0m
+              [36m</label>[39m
+              [36m<select[39m
+                [33mclass[39m=[32m"ah-select"[39m
+                [33mid[39m=[32m"setup-agilityhub-level"[39m
+              [36m>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m>[39m
+                  [0mSense nivell[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"EASY"[39m
+                [36m>[39m
+                  [0mFàcil[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"MEDIUM"[39m
+                [36m>[39m
+                  [0mMitjà[0m
+                [36m</option>[39m
+                [36m<option[39m
+                  [33mvalue[39m=[32m"HARD"[39m
+                [36m>[39m
+                  [0mDifícil[0m
+                [36m</option>[39m
+              [36m</select>[39m
+            [36m</fieldset>[39m
+            [36m<fieldset[39m
+              [33mclass[39m=[32m"course-form__fieldset"[39m
+            [36m>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"course-form__label"[39m
+                [33mfor[39m=[32m"setup-until"[39m
+              [36m>[39m
+                [0mFins quan?[0m
+              [36m</label>[39m
+              [36m<input[39m
+                [33maria-describedby[39m=[32m"setup-until-help"[39m
+                [33mclass[39m=[32m"ah-input"[39m
+                [33mid[39m=[32m"setup-until"[39m
+                [33mmin[39m=[32m"2026-08-03"[39m
+                [33mtype[39m=[32m"date"[39m
+                [33mvalue[39m=[32m""[39m
+              [36m/>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"course-muted"[39m
+                [33mid[39m=[32m"setup-until-help"[39m
+              [36m>[39m
+                [0mSi ho deixes en blanc, es retira sol al cap dels dies que té configurats el club.[0m
+              [36m</p>[39m
+              [36m<label[39m
+                [33mclass[39m=[32m"course-form__label"[39m
+                [33mfor[39m=[32m"setup-notes"[39m
+              [36m>[39m
+                [0mNota[0m
+              [36m</label>[39m
+              [36m<textarea[39m
+                [33mclass[39m=[32m"ah-input ah-textarea"[39m
+                [33mid[39m=[32m"setup-notes"[39m
+                [33mmaxlength[39m=[32m"500"[39m
+              [36m/>[39m
+            [36m</fieldset>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"booking-note booking-note--danger"[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [36m<p>[39m
+                [0mNo s'ha pogut llegir què hi ha muntat ara a la pista.[0m
+              [36m</p>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mTorna-ho a provar[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--primary course-submit"[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"submit"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mREGISTRA[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</form>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/dia"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEl meu dia[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mVisió global[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/alumnes"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAlumnes[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:203:20
+    201|     await renderApp("/instructor/pistes/ring-muntanya/muntat", { scena…
+    202|     expect(
+    203|       await screen.findByText(/^Substituirà el muntatge actual \(Jumpi…
+       |                    ^
+    204|     ).toBeVisible();
+    205|     fireEvent.change(screen.getByLabelText("Fes una foto o tria'n una"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > R-16-07: a course of the library goes as courseId; without a choice REGISTRA says what is missing
+Error: [2mexpect([22m[31melement[39m[2m).toBeEnabled()[22m
+
+Received element is not enabled:
+  [31m<button
+  class="ah-button ah-button--primary course-submit"
+  disabled=""
+  type="submit"
+/>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"clubs-shell__top"[39m
+        [36m/>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"clubs-shell__content"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"booking-screen course-screen course-register"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__title"[39m
+              [36m>[39m
+                [36m<h1>[39m
+                  [0mRegistra què hi ha muntat[0m
+                [36m</h1>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Tanca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button booking-screen__close"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</header>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"course-form"[39m
+              [33mnovalidate[39m=[32m""[39m
+            [36m>[39m
+              [36m<fieldset[39m
+                [33mclass[39m=[32m"course-form__fieldset"[39m
+              [36m>[39m
+                [36m<legend[39m
+                  [33mclass[39m=[32m"booking-section__title"[39m
+                [36m>[39m
+                  [0mPista[0m
+                [36m</legend>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"training-chips"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #F2B58C;"[39m
+                    [36m/>[39m
+                    [0mMuntanya[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #8FCE8F;"[39m
+                    [36m/>[39m
+                    [0mCentral[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #C9CDD3;"[39m
+                    [36m/>[39m
+                    [0mCarretera[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #F5D67A;"[39m
+                    [36m/>[39m
+                    [0mCadells[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #85B8E8;"[39m
+                    [36m/>[39m
+                    [0mPetita[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</fieldset>[39m
+              [36m<fieldset[39m
+                [33mclass[39m=[32m"course-form__fieldset"[39m
+              [36m>[39m
+                [36m<legend[39m
+                  [33mclass[39m=[32m"booking-section__title"[39m
+                [36m>[39m
+                  [0mQuè hi ha muntat?[0m
+                [36m</legend>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"training-chips...
+ ❯ src/courses/courses.test.tsx:223:22
+    221|     const submit = screen.getByRole("button", { name: "REGISTRA" });
+    222|     await waitFor(() => {
+    223|       expect(submit).toBeEnabled();
+       |                      ^
+    224|     });
+    225|     fireEvent.click(submit);
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > R-16-07 / CONVENCIONS_API §7: a lost answer keeps the key, the photo is not uploaded twice, and the api's refusal stays in the form
+Error: [2mexpect([22m[31melement[39m[2m).toBeEnabled()[22m
+
+Received element is not enabled:
+  [31m<button
+  class="ah-button ah-button--primary course-submit"
+  disabled=""
+  type="submit"
+/>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"clubs-shell__top"[39m
+        [36m/>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"clubs-shell__content"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"booking-screen course-screen course-register"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__title"[39m
+              [36m>[39m
+                [36m<h1>[39m
+                  [0mRegistra què hi ha muntat[0m
+                [36m</h1>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Tanca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button booking-screen__close"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</header>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"course-form"[39m
+              [33mnovalidate[39m=[32m""[39m
+            [36m>[39m
+              [36m<fieldset[39m
+                [33mclass[39m=[32m"course-form__fieldset"[39m
+              [36m>[39m
+                [36m<legend[39m
+                  [33mclass[39m=[32m"booking-section__title"[39m
+                [36m>[39m
+                  [0mPista[0m
+                [36m</legend>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"training-chips"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #F2B58C;"[39m
+                    [36m/>[39m
+                    [0mMuntanya[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #8FCE8F;"[39m
+                    [36m/>[39m
+                    [0mCentral[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #C9CDD3;"[39m
+                    [36m/>[39m
+                    [0mCarretera[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #F5D67A;"[39m
+                    [36m/>[39m
+                    [0mCadells[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #85B8E8;"[39m
+                    [36m/>[39m
+                    [0mPetita[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</fieldset>[39m
+              [36m<fieldset[39m
+                [33mclass[39m=[32m"course-form__fieldset"[39m
+              [36m>[39m
+                [36m<legend[39m
+                  [33mclass[39m=[32m"booking-section__title"[39m
+                [36m>[39m
+                  [0mQuè hi ha muntat?[0m
+                [36m</legend>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"training-chips...
+ ❯ src/courses/courses.test.tsx:256:22
+    254|     const submit = screen.getByRole("button", { name: "REGISTRA" });
+    255|     await waitFor(() => {
+    256|       expect(submit).toBeEnabled();
+       |                      ^
+    257|     });
+    258|     fireEvent.click(submit);
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > R-16-07: an INSTRUCTOR refused by the api (courses.allowInstructorPublish off) reads why, in the form
+Error: [2mexpect([22m[31melement[39m[2m).toBeEnabled()[22m
+
+Received element is not enabled:
+  [31m<button
+  class="ah-button ah-button--primary course-submit"
+  disabled=""
+  type="submit"
+/>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"clubs-shell__top"[39m
+        [36m/>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"clubs-shell__content"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"booking-screen course-screen course-register"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__title"[39m
+              [36m>[39m
+                [36m<h1>[39m
+                  [0mRegistra què hi ha muntat[0m
+                [36m</h1>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Tanca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button booking-screen__close"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</header>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"course-form"[39m
+              [33mnovalidate[39m=[32m""[39m
+            [36m>[39m
+              [36m<fieldset[39m
+                [33mclass[39m=[32m"course-form__fieldset"[39m
+              [36m>[39m
+                [36m<legend[39m
+                  [33mclass[39m=[32m"booking-section__title"[39m
+                [36m>[39m
+                  [0mPista[0m
+                [36m</legend>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"training-chips"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #F2B58C;"[39m
+                    [36m/>[39m
+                    [0mMuntanya[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #8FCE8F;"[39m
+                    [36m/>[39m
+                    [0mCentral[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #C9CDD3;"[39m
+                    [36m/>[39m
+                    [0mCarretera[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #F5D67A;"[39m
+                    [36m/>[39m
+                    [0mCadells[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #85B8E8;"[39m
+                    [36m/>[39m
+                    [0mPetita[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</fieldset>[39m
+              [36m<fieldset[39m
+                [33mclass[39m=[32m"course-form__fieldset"[39m
+              [36m>[39m
+                [36m<legend[39m
+                  [33mclass[39m=[32m"booking-section__title"[39m
+                [36m>[39m
+                  [0mQuè hi ha muntat?[0m
+                [36m</legend>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"training-chips...
+ ❯ src/courses/courses.test.tsx:281:22
+    279|     const submit = screen.getByRole("button", { name: "REGISTRA" });
+    280|     await waitFor(() => {
+    281|       expect(submit).toBeEnabled();
+       |                      ^
+    282|     });
+    283|     fireEvent.click(submit);
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > R-16-08: [Marca com a desmuntat] asks first, sends one keyed dismantle and the viewer reads «Desmuntat»
+TestingLibraryElementError: Unable to find role="button" and name "Marca com a desmuntat"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:295:34
+    293|     const record = recordRequests();
+    294|     await viewer(`/recorreguts/${SETUP_IDS.centralPhoto}`, "instructor…
+    295|     fireEvent.click(await screen.findByRole("button", { name: "Marca c…
+       |                                  ^
+    296|     expect(
+    297|       screen.getByText(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > T-16-10 R-16-11: [Sessió de muntatge] starts a live session; a tap moves an obstacle, another phone's tap arrives by polling, FINALITZA registers the setup
+TestingLibraryElementError: Unable to find role="button" and name "Sessió de muntatge"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:317:34
+    315|     const record = recordRequests();
+    316|     await viewer(`/recorreguts/${SETUP_IDS.muntanyaActive}`, "instruct…
+    317|     fireEvent.click(await screen.findByRole("button", { name: "Sessió …
+       |                                  ^
+    318|     await waitFor(() => {
+    319|       expect(window.location.pathname).toMatch(/^\/instructor\/muntatg…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > T-16-10 R-16-11: a second phone joins with the session's code (case-insensitive)
+TestingLibraryElementError: Unable to find a label with the text of: Codi d'una sessió de muntatge
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:375:35
+    373|     const code = created.data?.joinCode ?? "";
+    374|     await viewer(`/recorreguts/${SETUP_IDS.muntanyaActive}`, "instruct…
+    375|     fireEvent.change(await screen.findByLabelText("Codi d'una sessió d…
+       |                                   ^
+    376|       target: { value: code.toLowerCase() },
+    377|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > R-16-11: an unknown code reads that no open session has it, beside the field
+TestingLibraryElementError: Unable to find a label with the text of: Codi d'una sessió de muntatge
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:394:35
+    392|   it("R-16-11: an unknown code reads that no open session has it, besi…
+    393|     await viewer(`/recorreguts/${SETUP_IDS.muntanyaActive}`, "instruct…
+    394|     fireEvent.change(await screen.findByLabelText("Codi d'una sessió d…
+       |                                   ^
+    395|       target: { value: "ZZZZZZ" },
+    396|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > T-16-16 · staff start a build session from 07's «Recorregut previst»: one key per payload, the error in place, then the session (R-16-11, R-16-13)
+TestingLibraryElementError: Unable to find an element with the text: Recorregut previst: Agility C–D. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back"[39m
+                [33mhref[39m=[32m"/inici"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mDetall de la reserva[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card detail-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"detail-card__dot"[39m
+                [33mstyle[39m=[32m"--class-row-ring: #8FCE8F;"[39m
+              [36m/>[39m
+              [36m<strong[39m
+                [33mclass[39m=[32m"detail-card__title"[39m
+              [36m>[39m
+                [0mClasse B+C · amb la Duna[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mconfirmada[0m
+              [36m</span>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__when"[39m
+            [36m>[39m
+              [0mDilluns 3 · 18:50–19:50 · Central[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__booked"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mReservada el dijous 30/07 a les 20:14[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"course-blocks course-blocks--detail"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33mclass[39m=[32m"course-blocks__line"[39m
+                [33mhref[39m=[32m"/recorreguts/setup-central-foto"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon course-blocks__icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"course-blocks__text"[39m
+                [36m>[39m
+                  [0mA la pista hi ha muntat: Fun · muntat fa 2 dies[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon course-blocks__chev"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mANUL·LA LA RESERVA[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/dia"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEl meu dia[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mVisió global[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/alumnes"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAlumnes[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back"[39m
+                [33mhref[39m=[32m"/inici"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mDetall de la reserva[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card detail-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__line"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"detail-card__dot"[39m
+                [33mstyle[39m=[32m"--class-row-ring: #8FCE8F;"[39m
+              [36m/>[39m
+              [36m<strong[39m
+                [33mclass[39m=[32m"detail-card__title"[39m
+              [36m>[39m
+                [0mClasse B+C · amb la Duna[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mconfirmada[0m
+              [36m</span>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__when"[39m
+            [36m>[39m
+              [0mDilluns 3 · 18:50–19:50 · Central[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"detail-card__booked"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-clock"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mReservada el dijous 30/07 a les 20:14[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"course-blocks course-blocks--detail"[39m
+            [36m>[39m
+              [36m<a[39m
+                [33mclass[39m=[32m"course-blocks__line"[39m
+                [33mhref[39m=[32m"/recorreguts/setup-central-foto"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon course-blocks__icon"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-flag"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"course-blocks__text"[39m
+                [36m>[39m
+                  [0mA la pista hi ha muntat: Fun · muntat fa 2 dies[0m
+                [36m</span>[39m
+                [36m<svg[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"ah-icon course-blocks__chev"[39m
+                [36m>[39m
+                  [36m<use[39m
+                    [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                  [36m/>[39m
+                [36m</svg>[39m
+              [36m</a>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mANUL·LA LA RESERVA[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/dia"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEl meu dia[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mVisió global[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/instructor/alumnes"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAlumnes[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:437:25
+    435|     );
+    436|     await renderApp("/reserves/booking-duna-mon3", { scenario: "instru…
+    437|     expect(await screen.findByText("Recorregut previst: Agility C–D"))…
+       |                         ^
+    438|     const start = screen.getByRole("button", { name: "Sessió de muntat…
+    439|     fireEvent.click(start);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > T-16-16 · a ring with no setup offers staff the join-by-code form (R-16-11)
+TestingLibraryElementError: Unable to find an element with the text: Sense recorregut registrat. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:467:25
+    465|     });
+    466|     await viewer("/recorreguts/muntat/ring-carretera", "instructor");
+    467|     expect(await screen.findByText("Sense recorregut registrat")).toBe…
+       |                         ^
+    468|     fireEvent.change(screen.getByLabelText("Codi d'una sessió de munta…
+    469|       target: { value: created.data?.joinCode ?? "" },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-09 · an ADMIN session refused by /me/ring-setups (403) opens the ring's setup from its history
+TestingLibraryElementError: Unable to find an element with the text: /^Jumping/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:488:25
+    486|     );
+    487|     await viewer("/recorreguts/muntat/ring-muntanya", "admin");
+    488|     expect(await screen.findByText(/^Jumping/u)).toBeVisible();
+       |                         ^
+    489|     expect(screen.queryByText("No s'ha pogut carregar el muntatge.")).…
+    490|     expect(screen.getByRole("button", { name: "Sessió de muntatge" }))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-07 · a photo without an image type is refused on the photo field before any upload grant
+Error: [2mexpect([22m[31melement[39m[2m).toBeEnabled()[22m
+
+Received element is not enabled:
+  [31m<button
+  class="ah-button ah-button--primary course-submit"
+  disabled=""
+  type="submit"
+/>[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"clubs-shell__top"[39m
+        [36m/>[39m
+        [36m<main[39m
+          [33mclass[39m=[32m"clubs-shell__content"[39m
+        [36m>[39m
+          [36m<section[39m
+            [33mclass[39m=[32m"booking-screen course-screen course-register"[39m
+          [36m>[39m
+            [36m<header[39m
+              [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side"[39m
+              [36m/>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__title"[39m
+              [36m>[39m
+                [36m<h1>[39m
+                  [0mRegistra què hi ha muntat[0m
+                [36m</h1>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+              [36m>[39m
+                [36m<button[39m
+                  [33maria-label[39m=[32m"Tanca"[39m
+                  [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button booking-screen__close"[39m
+                  [33mtype[39m=[32m"button"[39m
+                [36m>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"ah-button__content"[39m
+                  [36m>[39m
+                    [36m<svg[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"ah-icon"[39m
+                    [36m>[39m
+                      [36m<use[39m
+                        [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                      [36m/>[39m
+                    [36m</svg>[39m
+                  [36m</span>[39m
+                [36m</button>[39m
+              [36m</div>[39m
+            [36m</header>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"course-form"[39m
+              [33mnovalidate[39m=[32m""[39m
+            [36m>[39m
+              [36m<fieldset[39m
+                [33mclass[39m=[32m"course-form__fieldset"[39m
+              [36m>[39m
+                [36m<legend[39m
+                  [33mclass[39m=[32m"booking-section__title"[39m
+                [36m>[39m
+                  [0mPista[0m
+                [36m</legend>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"training-chips"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #F2B58C;"[39m
+                    [36m/>[39m
+                    [0mMuntanya[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #8FCE8F;"[39m
+                    [36m/>[39m
+                    [0mCentral[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"true"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #C9CDD3;"[39m
+                    [36m/>[39m
+                    [0mCarretera[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #F5D67A;"[39m
+                    [36m/>[39m
+                    [0mCadells[0m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-pressed[39m=[32m"false"[39m
+                    [33mclass[39m=[32m"ah-chip training-chip"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33maria-hidden[39m=[32m"true"[39m
+                      [33mclass[39m=[32m"training-ring-dot"[39m
+                      [33mstyle[39m=[32m"--ah-ring-color: #85B8E8;"[39m
+                    [36m/>[39m
+                    [0mPetita[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</fieldset>[39m
+              [36m<fieldset[39m
+                [33mclass[39m=[32m"course-form__fieldset"[39m
+              [36m>[39m
+                [36m<legend[39m
+                  [33mclass[39m=[32m"booking-section__title"[39m
+                [36m>[39m
+                  [0mQuè hi ha muntat?[0m
+                [36m</legend>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"training-chips...
+ ❯ src/courses/courses.test.tsx:502:22
+    500|     const submit = screen.getByRole("button", { name: "REGISTRA" });
+    501|     await waitFor(() => {
+    502|       expect(submit).toBeEnabled();
+       |                      ^
+    503|     });
+    504|     for (const type of ["", "application/pdf"]) {
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/22]⎯
+
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+AssertionError: expected '/recorreguts/setup-muntanya-dijous' to be '/instructor/avui' // Object.is equality
+
+Expected: "/instructor/avui"
+Received: "/recorreguts/setup-muntanya-dijous"
+
+ ❯ src/courses/courses.test.tsx:553:38
+    551|       setTimeout(resolve, 50);
+    552|     });
+    553|     expect(window.location.pathname).toBe("/instructor/avui");
+       |                                      ^
+    554|   });
+    555| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/22]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 14 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "08: the ring's line «Muntanya: Jumping · nivell C–D · muntat ahir» opens the viewer, read-only for a MEMBER". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "a photo setup shows its photo; «previst fins» is the club's day". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "R-16-16: a setup registered from the library draws its course in 2D for a MEMBER, with zoom and a quarter turn". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "T-16-09 / R-16-09: with courses.showSetupToMembers off a MEMBER reads «Sense recorregut registrat» and no setup". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "T-16-09 / R-16-09: a setup the api hides from a MEMBER (404) reads that it is no longer shown". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "R-16-15: without COURSES there is no line on 08, no icon on 10 and the viewer is not available". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "R-16-06 / R-16-16: staff see the course placed on the ring and «Geometria canviada: revisa la col·locació»". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "R-16-08: [Marca com a desmuntat] asks first, sends one keyed dismantle and the viewer reads «Desmuntat»". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "T-16-10 R-16-11: [Sessió de muntatge] starts a live session; a tap moves an obstacle, another phone's tap arrives by polling, FINALITZA registers the setup". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "T-16-10 R-16-11: a second phone joins with the session's code (case-insensitive)". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "R-16-11: an unknown code reads that no open session has it, beside the field". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "T-16-16 · a ring with no setup offers staff the join-by-code form (R-16-11)". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "R-16-09 · an ADMIN session refused by /me/ring-setups (403) opens the ring's setup from its history". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+TypeError: useMeRingSetup is not a function
+ ❯ SetupViewerPage src/courses/SetupViewerPage.tsx:107:23
+    105|   const rings = useActiveRings(client);
+    106|   const [refresh, setRefresh] = useState(0);
+    107|   // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-1…
+       |                       ^
+    108|   // without INSTRUCTOR reads it from the ring's history).
+    109|   const ringSummary = useActiveSetup(client, setupId === undefined ? (…
+ ❯ Object.react_stack_bottom_frame ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+ ❯ performWorkOnRoot ../../node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js:16583:35
+
+This error originated in "src/courses/courses.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The last test to run before this error was "R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  22 failed | 5 passed (27)
+     Errors  14 errors
+   Start at  02:09:19
+   Duration  203.03s (tests 99%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/courses

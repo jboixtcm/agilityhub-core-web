@@ -1,8 +1,16 @@
-import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  type components,
+  isApiError,
+  readRingSetups,
+  useSubmissionKeys,
+} from "@agilityhub/api-client";
+import { useSession } from "@agilityhub/auth";
 import { clubDaysSince } from "@agilityhub/i18n";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { type Translate, useLoader } from "../booking/shared";
+import { errorText, navigateInApp, type Translate, useLoader } from "../booking/shared";
 
 export type MeRingSetup = components["schemas"]["MeRingSetup"];
 export type MeRingSetupSummary = components["schemas"]["MeRingSetupSummary"];
@@ -98,52 +106,70 @@ export async function readMeRingSetup(
   return items.find((item) => item.ringId === ringId)?.setup ?? null;
 }
 
-/** `readMeRingSetup` as a page's state (`ringId` empty = nothing to read). */
-export function useMeRingSetup(client: ApiClient, ringId: string, refresh?: unknown) {
+/**
+ * The ring's ACTIVE setup for anyone who may read it: `GET /me/ring-setups` (MEMBER · INSTRUCTOR);
+ * an ADMIN session without the INSTRUCTOR role is refused there (`403`), and reads the ring's
+ * history instead (`GET /rings/{id}/setups`, INSTRUCTOR · ADMIN, newest first) — `readRingSetups`.
+ */
+export async function readActiveSetup(
+  client: ApiClient,
+  ringId: string,
+): Promise<MeRingSetupSummary | null> {
+  const items = await readRingSetups(client, { ringIds: [ringId] });
+  return items.find((item) => item.ringId === ringId)?.setup ?? null;
+}
+
+/**
+ * `readActiveSetup` as a page's state (`ringId` empty = nothing to read): the viewer of
+ * `/recorreguts/muntat/:ringId` and «Substituirà el muntatge actual ({tipus}, de {dia})» of the
+ * register form (R-16-07).
+ */
+export function useActiveSetup(client: ApiClient, ringId: string, refresh?: unknown) {
   const load = useCallback(
-    async () => (ringId === "" ? null : readMeRingSetup(client, ringId)),
+    async () => (ringId === "" ? null : readActiveSetup(client, ringId)),
     [client, ringId],
   );
   return useLoader(load, refresh);
 }
 
-/** What «Substituirà el muntatge actual ({tipus}, de {dia})» names (R-16-07). */
-export interface ActiveSetup {
-  builtAt: string;
-  id: string;
-  kind: string;
-}
-
 /**
- * The ring's ACTIVE setup for whoever registers one: `GET /me/ring-setups` (MEMBER · INSTRUCTOR);
- * an ADMIN session without the INSTRUCTOR role is refused there (`403`), and reads the ring's
- * history instead (`GET /rings/{id}/setups`, INSTRUCTOR · ADMIN, newest first).
+ * [Sessió de muntatge] (R-16-11): `POST /build-sessions {placementId, live: true}` under one
+ * `Idempotency-Key` per payload (kept while the api has not answered it), then the session's page;
+ * a refusal stays where it was asked (`error`). Used by the viewer of an ACTIVE setup and by 07's
+ * «Recorregut previst» for staff. No course store: 07 is part of the app's start.
  */
-export async function readActiveSetup(
-  client: ApiClient,
-  ringId: string,
-): Promise<ActiveSetup | null> {
-  try {
-    return await readMeRingSetup(client, ringId);
-  } catch (error) {
-    if (!isApiError(error, "FORBIDDEN")) throw error;
-    const page = required(
-      (
-        await client.GET("/rings/{id}/setups", {
-          params: { path: { id: ringId }, query: { page: 0, size: 20 } },
-        })
-      ).data,
-    );
-    return page.items.find((item) => item.status === "ACTIVE") ?? null;
-  }
+export function useStartBuildSession(client: ApiClient) {
+  const { t } = useTranslation(["courses", "errors", "common"]);
+  const keys = useSubmissionKeys();
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string>();
+  const start = useCallback(
+    async (placementId: string) => {
+      const body = { live: true, placementId };
+      setPending(true);
+      setError(undefined);
+      try {
+        const created = await keys.send(JSON.stringify(body), (key) =>
+          client.POST("/build-sessions", { body, headers: { "Idempotency-Key": key } }),
+        );
+        navigateInApp(coursePaths.session(required(created.data).id));
+      } catch (cause) {
+        setError(errorText(t, cause));
+        setPending(false);
+      }
+    },
+    [client, keys, t],
+  );
+  return { error, pending, start };
 }
 
-export function useActiveSetup(client: ApiClient, ringId: string) {
-  const load = useCallback(
-    async () => (ringId === "" ? null : readActiveSetup(client, ringId)),
-    [client, ringId],
+/** INSTRUCTOR or ADMIN, never an impersonated session (S16 §2: the instructors' actions). */
+export function useStaffRoles(): boolean {
+  const session = useSession();
+  return (
+    session.me?.impersonation === undefined &&
+    session.roles.some((role) => role === "INSTRUCTOR" || role === "ADMIN")
   );
-  return useLoader(load);
 }
 
 /** A `404` the api answers for something the reader may not see (or that is gone). */

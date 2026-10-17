@@ -1,0 +1,13 @@
+
+> @agilityhub/course-ui@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+
+
+ Test Files  6 passed (6)
+      Tests  48 passed (48)
+   Start at  02:12:44
+   Duration  1.67s (environment 43%, transform 24%, tests 22%, import 10%)
+

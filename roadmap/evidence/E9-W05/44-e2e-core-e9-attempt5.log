@@ -1,0 +1,94 @@
+heavy.sh: 08:41 waiting for the host lock, held by: 08:34 agilityhub-core-api-c: ./mvnw -q clean verify
+heavy.sh: the lock is still held after 62 min by: 08:34 agilityhub-core-api-c: ./mvnw -q clean verify
+heavy.sh: running WITHOUT the lock - if this run fails on timeouts, say so in the report
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E9-W05 e9-core.spec.ts
+
+E4_WEEK_START=2026-10-12 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-19 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-16T10:43:23.234158434Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:228ace06e557649665f5cbda4b43edeace888011142f466403a6eb29371ac944]
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E9-W05/demo-canic.yaml (406 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E9-W05/demo-fifo.yaml (62 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-e9-w05_default Creating 
+ Volume agilityhub-e9-w05_mailbox Creating 
+ Network agilityhub-e9-w05_default Creating 
+ Volume agilityhub-e9-w05_mongo-data Creating 
+ Volume agilityhub-e9-w05_mongo-data Creating 
+ Volume agilityhub-e9-w05_mailbox Creating 
+ Volume agilityhub-e9-w05_export-files Creating 
+ Volume agilityhub-e9-w05_export-files Creating 
+ Volume agilityhub-e9-w05_export-files Created 
+ Volume agilityhub-e9-w05_export-files Created 
+ Volume agilityhub-e9-w05_mailbox Created 
+ Volume agilityhub-e9-w05_mailbox Created 
+ Volume agilityhub-e9-w05_mongo-data Created 
+ Volume agilityhub-e9-w05_mongo-data Created 
+ Network agilityhub-e9-w05_default Created 
+ Network agilityhub-e9-w05_default Created 
+ Container agilityhub-e9-w05-mongo-1 Creating 
+ Container agilityhub-e9-w05-mongo-1 Created 
+ Container agilityhub-e9-w05-seed-1 Creating 
+ Container agilityhub-e9-w05-seed-1 Created 
+ Container agilityhub-e9-w05-activate-demo-club-1 Creating 
+ Container agilityhub-e9-w05-activate-demo-club-1 Created 
+ Container agilityhub-e9-w05-core-1 Creating 
+ Container agilityhub-e9-w05-core-1 Created 
+ Container agilityhub-e9-w05-mongo-1 Starting 
+ Container agilityhub-e9-w05-mongo-1 Started 
+ Container agilityhub-e9-w05-mongo-1 Waiting 
+ Container agilityhub-e9-w05-mongo-1 Healthy 
+ Container agilityhub-e9-w05-seed-1 Starting 
+ Container agilityhub-e9-w05-seed-1 Started 
+ Container agilityhub-e9-w05-seed-1 Waiting 
+ Container agilityhub-e9-w05-seed-1 Exited 
+ Container agilityhub-e9-w05-activate-demo-club-1 Starting 
+ Container agilityhub-e9-w05-activate-demo-club-1 Started 
+ Container agilityhub-e9-w05-mongo-1 Waiting 
+ Container agilityhub-e9-w05-activate-demo-club-1 Waiting 
+ Container agilityhub-e9-w05-activate-demo-club-1 Exited 
+ Container agilityhub-e9-w05-mongo-1 Healthy 
+ Container agilityhub-e9-w05-core-1 Starting 
+ Container agilityhub-e9-w05-core-1 Started 
+ Container agilityhub-e9-w05-activate-demo-club-1 Waiting 
+ Container agilityhub-e9-w05-core-1 Waiting 
+ Container agilityhub-e9-w05-mongo-1 Waiting 
+ Container agilityhub-e9-w05-seed-1 Waiting 
+ Container agilityhub-e9-w05-seed-1 Exited 
+ Container agilityhub-e9-w05-activate-demo-club-1 Exited 
+ Container agilityhub-e9-w05-mongo-1 Healthy 
+ Container agilityhub-e9-w05-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E9-W05/seed-files.log (191 lines)
+ Container agilityhub-e9-w05-playwright-run-092c5e6fc72e Creating 
+ Container agilityhub-e9-w05-playwright-run-092c5e6fc72e Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:12951
+    throw new Error(
+          ^
+
+Error: Error when performing the request to https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz; for troubleshooting help, see https://github.com/nodejs/corepack#troubleshooting
+    at fetch (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:12951:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async fetchUrlStream (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:12981:20)
+    at async download (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:13133:18)
+    at async installVersion (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:13229:55)
+    at async Engine.ensurePackageManager (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:13744:32)
+    at async Engine.executePackageManagerRequest (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:13855:25)
+    at async Object.runMain (/usr/lib/node_modules/corepack/dist/lib/corepack.cjs:14566:7) {
+  [cause]: [TypeError: fetch failed] {
+    [cause]: Error: getaddrinfo ENOTFOUND registry.npmjs.org
+        at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+      errno: -3008,
+      code: 'ENOTFOUND',
+      syscall: 'getaddrinfo',
+      hostname: 'registry.npmjs.org'
+    }
+  }
+}
+
+Node.js v24.20.0
+
+ ELIFECYCLE  Command failed with exit code 1.

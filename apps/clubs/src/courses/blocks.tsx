@@ -5,7 +5,7 @@
  * returned, which already applies `courses.showSetupToMembers` for a MEMBER (R-16-09).
  */
 import type { ApiClient, components } from "@agilityhub/api-client";
-import { type DayGridColumnAction, Icon, useBranding } from "@agilityhub/ui";
+import { Button, type DayGridColumnAction, Icon, useBranding } from "@agilityhub/ui";
 import { type CSSProperties, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -19,6 +19,8 @@ import {
   readMeRingSetup,
   type RingSetupSummary,
   setupLine,
+  useStaffRoles,
+  useStartBuildSession,
 } from "./shared";
 
 type TrainingRing = components["schemas"]["TrainingRing"];
@@ -86,11 +88,45 @@ interface BookingCourses {
   setup: MeRingSetupSummary | null;
 }
 
+type ClassSessionRead =
+  | components["schemas"]["ClassSession"]
+  | components["schemas"]["ClassSessionMemberView"];
+
+/**
+ * The class's planned placement (R-16-13): a MEMBER reads it named (`plannedPlacement`, only with
+ * `courses.showSetupToMembers`); staff read the `placementId` and its course's name (`GET
+ * /placements/{id}` → `GET /courses/{id}`). `null` when there is none or it cannot be read.
+ */
+async function plannedOf(
+  client: ApiClient,
+  session: ClassSessionRead | undefined,
+  staff: boolean,
+): Promise<components["schemas"]["PlannedPlacement"] | null> {
+  if (session === undefined) return null;
+  if ("plannedPlacement" in session) return session.plannedPlacement ?? null;
+  const placementId = "placementId" in session ? (session.placementId ?? null) : null;
+  if (!staff || placementId === null) return null;
+  try {
+    const placement = (
+      await client.GET("/placements/{id}", { params: { path: { id: placementId } } })
+    ).data;
+    if (placement === undefined) return null;
+    const course = (
+      await client.GET("/courses/{id}", { params: { path: { id: placement.courseId } } })
+    ).data;
+    return course === undefined ? null : { courseName: course.name, placementId };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Screen 07 (S16 §2, R-16-13): «A la pista hi ha muntat: …» when the class's ring has an active
  * setup (→ the viewer), and «Recorregut previst: …» when the class plans a placement (the member
- * view's `plannedPlacement`, only with `courses.showSetupToMembers`). Nothing while loading or if
- * the reads fail: the booking's own detail never waits for them.
+ * view's `plannedPlacement`, only with `courses.showSetupToMembers`). To staff (INSTRUCTOR ·
+ * ADMIN) the planned course comes with [Sessió de muntatge] (R-16-11, T-16-16): a course that is
+ * not set up yet can be built from the phone. Nothing while loading or if the reads fail: the
+ * booking's own detail never waits for them.
  */
 export function BookingCourseLines({
   classSessionId,
@@ -99,8 +135,10 @@ export function BookingCourseLines({
   classSessionId: string;
   client: ApiClient;
 }) {
-  const { t } = useTranslation(["courses", "enums"]);
+  const { t } = useTranslation(["courses", "enums", "errors", "common"]);
   const branding = useBranding();
+  const staff = useStaffRoles();
+  const build = useStartBuildSession(client);
   const enabled = branding.modules.includes("COURSES");
   const load = useCallback(async (): Promise<BookingCourses> => {
     if (!enabled) return { planned: null, setup: null };
@@ -108,14 +146,12 @@ export function BookingCourseLines({
       await client.GET("/class-sessions/{id}", { params: { path: { id: classSessionId } } })
     ).data;
     const ringId = session?.ring?.id;
-    const planned =
-      session !== undefined && "plannedPlacement" in session
-        ? (session.plannedPlacement ?? null)
-        : null;
-    const setup =
-      ringId === undefined ? null : await readMeRingSetup(client, ringId).catch(() => null);
+    const [planned, setup] = await Promise.all([
+      plannedOf(client, session, staff),
+      ringId === undefined ? null : readMeRingSetup(client, ringId).catch(() => null),
+    ]);
     return { planned, setup };
-  }, [classSessionId, client, enabled]);
+  }, [classSessionId, client, enabled, staff]);
   const courses = useLoader(load);
   if (!enabled || courses.status !== "ready") return null;
   const { planned, setup } = courses.data;
@@ -148,6 +184,23 @@ export function BookingCourseLines({
             {t("courses:blocks.bookingPlanned", { course: planned.courseName })}
           </span>
         </p>
+      )}
+      {planned === null || !staff ? null : (
+        <div className="course-blocks__action">
+          <Button
+            loading={build.pending}
+            loadingLabel={t("courses:sending")}
+            onClick={() => void build.start(planned.placementId)}
+            variant="secondary"
+          >
+            {t("courses:viewer.buildSession")}
+          </Button>
+          {build.error === undefined ? null : (
+            <p className="booking-note booking-note--danger" role="alert">
+              {build.error}
+            </p>
+          )}
+        </div>
       )}
     </div>
   );

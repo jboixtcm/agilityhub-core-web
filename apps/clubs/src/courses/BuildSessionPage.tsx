@@ -277,6 +277,8 @@ export function BuildSessionPage({ client, sessionId }: { client: ApiClient; ses
       const closed = await keys.send(`finish:${current.id}`, (key) =>
         store.finishBuildSession({ buildSessionId: current.id, submissionKey: key }),
       );
+      // The user left while it ran (like `tap`): no state to update, and no taking them back.
+      if (!mounted.current) return;
       if (closed.setupId != null) {
         navigateInApp(coursePaths.setup(closed.setupId), {
           notice: { messageKey: "courses:session.finished", tone: "success" },
@@ -287,7 +289,7 @@ export function BuildSessionPage({ client, sessionId }: { client: ApiClient; ses
       setSession(closed);
       setFinishedMessage("finishedNoSetup");
     } catch (cause) {
-      setError(errorText(t, cause));
+      if (mounted.current) setError(errorText(t, cause));
     } finally {
       if (mounted.current) setFinishing(false);
     }

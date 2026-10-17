@@ -170,7 +170,7 @@ export const attendanceHandlers = [
     if (query instanceof Response) return query;
     const week = instructorWeekView(query, context(scenario));
     // The api's name (`{club.slug}_agenda_{yyyyMMdd}.pdf`); the page saves its own (E6-W03).
-    const fileName = `${scenario.branding.club.slug}_agenda_${week.week.startDate.replaceAll("-", "")}.pdf`;
+    const fileName = `${scenario.branding.club.slug ?? ""}_agenda_${week.week.startDate.replaceAll("-", "")}.pdf`;
     return new HttpResponse(weekPdf(), {
       headers: {
         "Content-Disposition": `attachment; filename="${fileName}"`,

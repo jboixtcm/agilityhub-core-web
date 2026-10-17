@@ -426,29 +426,32 @@ export function SelectedClassCard({
             </Select>
           </label>
           {coursesModule && chips.ringId !== null ? (
-            <label className={chipClass("calendar-chip calendar-chip--select")}>
-              <span className="calendar-chip__label">
-                {t("admin-scheduling:plannedCourse.label")}
-              </span>
-              <PlannedCourseSelect
-                client={client}
-                describedBy={
-                  error?.field === "placementId" ? "calendar-placement-error" : undefined
-                }
-                disabled={chipsDisabled}
-                onChange={(placementId) => {
-                  set({ placementId });
-                }}
-                ringId={chips.ringId}
-                value={chips.placementId}
-              />
+            <>
+              <label className={chipClass("calendar-chip calendar-chip--select")}>
+                <span className="calendar-chip__label">
+                  {t("admin-scheduling:plannedCourse.label")}
+                </span>
+                <PlannedCourseSelect
+                  client={client}
+                  describedBy={
+                    error?.field === "placementId" ? "calendar-placement-error" : undefined
+                  }
+                  disabled={chipsDisabled}
+                  onChange={(placementId) => {
+                    set({ placementId });
+                  }}
+                  ringId={chips.ringId}
+                  value={chips.placementId}
+                />
+              </label>
               {error?.field === "placementId" ? (
-                // S16 R-16-13: the planned course is not of the class's ring; said under it.
+                // S16 R-16-13: the planned course is not of the class's ring; said under it,
+                // outside the label so it describes the select without joining its name.
                 <span className="ah-form-field__error" id="calendar-placement-error" role="alert">
                   {error.message}
                 </span>
               ) : null}
-            </label>
+            </>
           ) : null}
           {settings.levelsEnabled ? (
             <MultiChip

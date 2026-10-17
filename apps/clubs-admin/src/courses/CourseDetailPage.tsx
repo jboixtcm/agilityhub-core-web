@@ -519,7 +519,11 @@ function PlacementsCard({
                 </Button>
                 {placement.buildSheetFileKey == null ? null : (
                   <Button
-                    disabled={sheet?.id === placement.id && sheet.error === undefined}
+                    // R-16-06: the stored sheet was made on the old geometry too: «Revisa» first.
+                    aria-describedby={placement.stale ? `sheet-stale-${placement.id}` : undefined}
+                    disabled={
+                      placement.stale || (sheet?.id === placement.id && sheet.error === undefined)
+                    }
                     onClick={() => {
                       downloadSheet(placement, true);
                     }}

@@ -1,4 +1,9 @@
-import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
+import {
+  type ApiClient,
+  type components,
+  isApiError,
+  readRingSetups,
+} from "@agilityhub/api-client";
 import { clubDaysSince, useClubFormats } from "@agilityhub/i18n";
 import { Button, Icon, Modal, Skeleton, useBranding } from "@agilityhub/ui";
 import { useEffect, useState } from "react";
@@ -33,7 +38,9 @@ function setupText(t: Translate, setup: MeRingSetupSummary, timeZone: string): s
  * are a strip above the grid — one course icon per ring with an ACTIVE setup (`GET
  * /me/ring-setups`, only the filtered ring when «Pista» is set), opening the setup: its kind,
  * level, how long ago it was built, until when, the photo or thumbnail, and the course in D18.
- * Only with COURSES; nothing for a session the api refuses (an ADMIN without INSTRUCTOR: 403).
+ * Only with COURSES. An ADMIN session without INSTRUCTOR is refused by `/me/ring-setups` (403) and
+ * reads each ring's history instead (`GET /rings/{id}/setups`, `readRingSetups`); the history has
+ * no level label, so the orientative AgilityHub level stands in.
  */
 export function AgendaRingSetups({
   client,
@@ -51,13 +58,16 @@ export function AgendaRingSetups({
   const enabled = branding.modules.includes("COURSES");
   const [items, setItems] = useState<readonly MeRingSetup[]>([]);
   const [open, setOpen] = useState<{ ring: AgendaRing; setup: MeRingSetupSummary }>();
+  // The rings' ids as one key: the week's answer arrives (or changes week) with the same rings.
+  const ringIds = rings.map((ring) => ring.id).join(",");
 
   useEffect(() => {
-    if (!enabled) return undefined;
+    // No ring known yet (the week is loading): nothing to show, nothing to read.
+    if (!enabled || ringIds === "") return undefined;
     let current = true;
-    client.GET("/me/ring-setups", {}).then(
+    readRingSetups(client, { historyRingIds: ringIds.split(",") }).then(
       (result) => {
-        if (current) setItems(result.data ?? []);
+        if (current) setItems(result);
       },
       () => {
         if (current) setItems([]);
@@ -66,7 +76,7 @@ export function AgendaRingSetups({
     return () => {
       current = false;
     };
-  }, [client, enabled]);
+  }, [client, enabled, ringIds]);
 
   if (!enabled) return null;
   const shown = items.flatMap((item) => {

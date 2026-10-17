@@ -237,7 +237,7 @@
     "title": "Marker sheet · {ring}",
     "marker": "Marker {label}",
     "position": "Position on the ring: x {x} m · y {y} m",
-    "size": "Printed size: {mm} mm (white margin included)",
+    "size": "Printed size: {mm, number} mm (white margin included)",
     "identifiers": "{uid} · AprilTag 36h11 no. {tag}",
     "instructions": "Print it at actual size, without fitting it to the page. Mount it flat and clearly visible at the point of the ring its position gives, without covering the white margin."
   },
@@ -306,7 +306,7 @@
     "notANumber": "must be a number",
     "precheck": "Check these fields before saving:",
     "markerSheetNoMarker": "No active marker: activate at least one to print the sheet.",
-    "markerSheetTooLarge": "{labels}: larger than {mm} mm, they do not fit on the page at real size."
+    "markerSheetTooLarge": "{labels}: larger than {mm, number} mm, they do not fit on the page at real size."
   },
   "doors": {
     "title": "Doors of {name} ({count}/{maximum})",

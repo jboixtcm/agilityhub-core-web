@@ -1,0 +1,394 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/instructor/week-agenda.test.tsx (24 tests | 1 failed | 23 skipped) 10078ms
+   ❯ T-16-16 D12: the rings' courses set up (S16 §2 «icona a la capçalera de pista») (4)
+     × R-16-09: an ADMIN session refused by /me/ring-setups (403) still sees the strip, read from each ring's history 10076ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/instructor/week-agenda.test.tsx > T-16-16 D12: the rings' courses set up (S16 §2 «icona a la capçalera de pista») > R-16-09: an ADMIN session refused by /me/ring-setups (403) still sees the strip, read from each ring's history
+TestingLibraryElementError: Unable to find role="list" and name "Recorreguts muntats a les pistes"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"week-agenda"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"week-agenda__header"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mAgenda de la setmana[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"week-agenda__navigator"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana anterior"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow week-agenda__arrow--previous"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<strong[39m
+            [33mclass[39m=[32m"week-agenda__current"[39m
+          [36m>[39m
+            [0mSetmana actual[0m
+          [36m</strong>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana següent"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"week-agenda__range"[39m
+          [36m>[39m
+            [0mdel 10 al 15 d’agost[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Filtres de l'agenda"[39m
+          [33mclass[39m=[32m"week-agenda__filters"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"week-agenda__filter week-agenda__filter--instructor"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mInstructor[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Instructor"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mInstructor: Tots[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"me"[39m
+              [36m>[39m
+                [0mInstructor: Els meus[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-estel"[39m
+              [36m>[39m
+                [0mInstructor: Estel[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-marc"[39m
+              [36m>[39m
+                [0mInstructor: Marc[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-nuria"[39m
+              [36m>[39m
+                [0mInstructor: Núria[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"week-agenda__filter"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mFiltre de pista[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Filtre de pista"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes les pistes[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-muntanya"[39m
+              [36m>[39m
+                [0mMuntanya[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-central"[39m
+              [36m>[39m
+                [0mCentral[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-carretera"[39m
+              [36m>[39m
+                [0mCarretera[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-cadells"[39m
+              [36m>[39m
+                [0mCadells[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-petita"[39m
+              [36m>[39m
+                [0mPetita[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mPDF[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+ ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"week-agenda"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"week-agenda__header"[39m
+      [36m>[39m
+        [36m<h1[39m
+          [33mclass[39m=[32m"ah-sr-only"[39m
+        [36m>[39m
+          [0mAgenda de la setmana[0m
+        [36m</h1>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"week-agenda__navigator"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana anterior"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow week-agenda__arrow--previous"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<strong[39m
+            [33mclass[39m=[32m"week-agenda__current"[39m
+          [36m>[39m
+            [0mSetmana actual[0m
+          [36m</strong>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Setmana següent"[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button week-agenda__arrow"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"week-agenda__range"[39m
+          [36m>[39m
+            [0mdel 10 al 15 d’agost[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Filtres de l'agenda"[39m
+          [33mclass[39m=[32m"week-agenda__filters"[39m
+          [33mrole[39m=[32m"group"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"week-agenda__filter week-agenda__filter--instructor"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mInstructor[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Instructor"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mInstructor: Tots[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"me"[39m
+              [36m>[39m
+                [0mInstructor: Els meus[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-estel"[39m
+              [36m>[39m
+                [0mInstructor: Estel[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-marc"[39m
+              [36m>[39m
+                [0mInstructor: Marc[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"instructor-nuria"[39m
+              [36m>[39m
+                [0mInstructor: Núria[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"week-agenda__filter"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-sr-only"[39m
+            [36m>[39m
+              [0mFiltre de pista[0m
+            [36m</span>[39m
+            [36m<select[39m
+              [33maria-label[39m=[32m"Filtre de pista"[39m
+            [36m>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m""[39m
+              [36m>[39m
+                [0mTotes les pistes[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-muntanya"[39m
+              [36m>[39m
+                [0mMuntanya[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-central"[39m
+              [36m>[39m
+                [0mCentral[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-carretera"[39m
+              [36m>[39m
+                [0mCarretera[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-cadells"[39m
+              [36m>[39m
+                [0mCadells[0m
+              [36m</option>[39m
+              [36m<option[39m
+                [33mvalue[39m=[32m"ring-petita"[39m
+              [36m>[39m
+                [0mPetita[0m
+              [36m</option>[39m
+            [36m</select>[39m
+          [36m</label>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-export"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mPDF[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+ ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/instructor/week-agenda.test.tsx:916:32
+    914|     );
+    915|     const { onNavigate } = await renderAgenda({ scenario: "admin" });
+    916|     const strip = await screen.findByRole("list", { name: "Recorreguts…
+       |                                ^
+    917|     const muntanya = await within(strip).findByRole("button", {
+    918|       name: /^Muntanya: Jumping · .*muntat ahir$/u,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 23 skipped (24)
+   Start at  02:08:36
+   Duration  11.46s (tests 89%, transform 6%, environment 2%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/instructor/week-agenda.test.tsx -t ADMIN session refused

@@ -248,6 +248,8 @@ export function PlannerCanvas({
   const ringH = ring.width_m;
   const drag = useRef<{ x: number; y: number; moved: boolean; pointerId: number } | null>(null);
   const suppressClick = useRef(false);
+  /** The press now reaching the plan started on an obstacle (its handler runs first). */
+  const pressedObstacle = useRef(false);
 
   // Obstacles + their footprints in ring frame. placeObstacleInRing /
   // placeControlPointsInRing internally route through placeCoursePoint,
@@ -298,29 +300,47 @@ export function PlannerCanvas({
   // two axis ratios in metres. Screen Y grows downwards; the ring's +Y is up.
   // Only the pointer that pressed first drags: a second finger neither restarts nor moves it
   // (the same pointer pressing again restarts, in case its release happened off the plan).
+  // The plan holds the pointer's capture while it drags, so the release (or the loss of the
+  // capture) always reaches it, even off the plan, and a dead press never blocks later drags.
+  function capture(element: SVGSVGElement, pointerId: number) {
+    try {
+      element.setPointerCapture(pointerId);
+    } catch {
+      // No pointer capture (a test DOM, an old browser): the drag still follows the moves.
+    }
+  }
+
   function onPointerDown(event: ReactPointerEvent<SVGSVGElement>) {
+    const onObstacle = pressedObstacle.current;
+    pressedObstacle.current = false;
     if (onDragPlacement === undefined || event.button !== 0) return;
     if (drag.current !== null && drag.current.pointerId !== event.pointerId) return;
     drag.current = { x: event.clientX, y: event.clientY, moved: false, pointerId: event.pointerId };
     suppressClick.current = false;
+    // Captured at once, except on an obstacle: a captured release sends its click to the plan
+    // (Pointer Events 3), and the obstacle would never be selected. That press is captured as
+    // soon as it becomes a drag (`onPointerMove`); until then the obstacle's own release
+    // reaches the plan by bubbling.
+    if (!onObstacle) capture(event.currentTarget, event.pointerId);
   }
 
   function onPointerMove(event: ReactPointerEvent<SVGSVGElement>) {
     const current = drag.current;
     if (onDragPlacement === undefined || current === null) return;
     if (event.pointerId !== current.pointerId) return;
+    // No button pressed: the release happened where the plan could not hear it. The drag is
+    // over, and hovering back over the plan never moves the course.
+    if (event.buttons === 0) {
+      drag.current = null;
+      suppressClick.current = false;
+      return;
+    }
     const dxPx = event.clientX - current.x;
     const dyPx = event.clientY - current.y;
     if (!current.moved && Math.hypot(dxPx, dyPx) < DRAG_THRESHOLD_PX) return;
     const rect = event.currentTarget.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return;
-    if (!current.moved) {
-      try {
-        event.currentTarget.setPointerCapture(current.pointerId);
-      } catch {
-        // No pointer capture (a test DOM, an old browser): the drag still follows the moves.
-      }
-    }
+    if (!current.moved) capture(event.currentTarget, current.pointerId);
     const metresPerPx = Math.max(viewW / rect.width, viewH / rect.height);
     drag.current = { ...current, x: event.clientX, y: event.clientY, moved: true };
     onDragPlacement(dxPx * metresPerPx, -dyPx * metresPerPx);
@@ -340,6 +360,15 @@ export function PlannerCanvas({
     drag.current = null;
   }
 
+  // The capture went away without a release reaching the plan (the browser took it, the pointer
+  // vanished): the drag ends. After a normal release `drag.current` is already empty, so the
+  // click that release produces is still swallowed.
+  function onLostPointerCapture(event: ReactPointerEvent<SVGSVGElement>) {
+    if (drag.current?.pointerId !== event.pointerId) return;
+    suppressClick.current = false;
+    drag.current = null;
+  }
+
   return (
     <div className="w-full aspect-square max-h-[80vh] bg-surface-2 border border-border rounded-2xl overflow-hidden">
       <svg
@@ -353,6 +382,7 @@ export function PlannerCanvas({
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerCancel}
+        onLostPointerCapture={onLostPointerCapture}
         onClickCapture={(event) => {
           // A drag that ends over an obstacle is not a click on it.
           if (suppressClick.current) {
@@ -575,6 +605,7 @@ export function PlannerCanvas({
               <g
                 key={o.id}
                 onClick={() => { onSelectObstacle(isSelected ? null : o.sourceId); }}
+                onPointerDown={() => { pressedObstacle.current = true; }}
                 style={{ cursor: 'pointer' }}
               >
                 {hasIcon ? (

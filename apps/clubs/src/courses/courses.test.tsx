@@ -2,6 +2,7 @@ import {
   courseState,
   mockScenario,
   type MockScenario,
+  PLACEMENT_IDS,
   SETUP_IDS,
 } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
@@ -80,6 +81,8 @@ describe("T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09)", () => {
     });
     expect(setup).toHaveAttribute("href", `/recorreguts/${SETUP_IDS.centralPhoto}`);
     expect(screen.getByText("Recorregut previst: Agility C–D")).toBeVisible();
+    // T-16-16: a MEMBER reads the planned course as a line, with no build session to start.
+    expect(screen.queryByRole("button", { name: "Sessió de muntatge" })).not.toBeInTheDocument();
   });
 
   it("a photo setup shows its photo; «previst fins» is the club's day", async () => {
@@ -116,6 +119,7 @@ describe("T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09)", () => {
     expect(
       screen.queryByRole("button", { name: "Registra què hi ha muntat" }),
     ).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Codi d'una sessió de muntatge")).not.toBeInTheDocument();
   });
 
   it("T-16-09 / R-16-09: a setup the api hides from a MEMBER (404) reads that it is no longer shown", async () => {
@@ -168,21 +172,19 @@ describe("the instructor's viewer, «Registra què hi ha muntat» and the build 
         name: "Carretera",
       }),
     ).toHaveAttribute("aria-pressed", "true");
-    let taps = 0;
+    // Three interactions and nothing else: kind, photo, REGISTRA. REGISTRA is enabled right after
+    // the kind and the photo, with no other control touched (review E9-W04 #7).
     fireEvent.click(within(kinds).getByRole("button", { name: "Jumping" }));
-    taps += 1;
     const photo = new File(["photo"], "pista.jpg", { type: "image/jpeg" });
     fireEvent.change(screen.getByLabelText("Fes una foto o tria'n una"), {
       target: { files: [photo] },
     });
-    taps += 1;
     const submit = screen.getByRole("button", { name: "REGISTRA" });
     await waitFor(() => {
       expect(submit).toBeEnabled();
     });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     fireEvent.click(submit);
-    taps += 1;
-    expect(taps).toBeLessThan(5);
     await waitFor(() => {
       expect(window.location.pathname).toMatch(/^\/recorreguts\/setup-/u);
     });
@@ -412,6 +414,146 @@ describe("the instructor's viewer, «Registra què hi ha muntat» and the build 
       ),
     ).toBeVisible();
     expect(screen.queryByRole("button", { name: "FINALITZA" })).not.toBeInTheDocument();
+  });
+});
+
+describe("E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type", () => {
+  it("T-16-16 · staff start a build session from 07's «Recorregut previst»: one key per payload, the error in place, then the session (R-16-11, R-16-13)", async () => {
+    const record = recordRequests();
+    let failures = 1;
+    server.use(
+      http.post("*/api/v1/build-sessions", () => {
+        if (failures > 0) {
+          failures -= 1;
+          return HttpResponse.json(
+            { code: "INTERNAL_ERROR", details: {}, message: "boom", traceId: "t" },
+            { status: 500 },
+          );
+        }
+        return undefined;
+      }),
+    );
+    await renderApp("/reserves/booking-duna-mon3", { scenario: "instructor" });
+    expect(await screen.findByText("Recorregut previst: Agility C–D")).toBeVisible();
+    const start = screen.getByRole("button", { name: "Sessió de muntatge" });
+    fireEvent.click(start);
+    expect(await screen.findByRole("alert")).toHaveTextContent(/./u);
+    expect(window.location.pathname).toBe("/reserves/booking-duna-mon3");
+    await waitFor(() => {
+      expect(start).toBeEnabled();
+    });
+    fireEvent.click(start);
+    await waitFor(() => {
+      expect(window.location.pathname).toMatch(/^\/instructor\/muntatge\//u);
+    });
+    expect(await screen.findByRole("list", { name: "Obstacles" })).toBeVisible();
+    const bodies = bodiesOf(record, "/build-sessions");
+    expect(bodies).toEqual([
+      { live: true, placementId: PLACEMENT_IDS.centralLeague },
+      { live: true, placementId: PLACEMENT_IDS.centralLeague },
+    ]);
+    const posts = record.list.filter((line) => line === "POST /build-sessions");
+    expect(posts).toHaveLength(2);
+    expect(new Set(record.keys.slice(0, 2)).size).toBe(1);
+  });
+
+  it("T-16-16 · a ring with no setup offers staff the join-by-code form (R-16-11)", async () => {
+    mockScenario("instructor");
+    const created = await apiClient().POST("/build-sessions", {
+      body: { live: true, placementId: "placement-muntanya-dijous" },
+      headers: { "Idempotency-Key": "join-empty-ring-key" },
+    });
+    await viewer("/recorreguts/muntat/ring-carretera", "instructor");
+    expect(await screen.findByText("Sense recorregut registrat")).toBeVisible();
+    fireEvent.change(screen.getByLabelText("Codi d'una sessió de muntatge"), {
+      target: { value: created.data?.joinCode ?? "" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Uneix-t'hi" }));
+    await waitFor(() => {
+      expect(window.location.pathname).toBe(`/instructor/muntatge/${created.data?.id ?? ""}`);
+    });
+  });
+
+  it("R-16-09 · an ADMIN session refused by /me/ring-setups (403) opens the ring's setup from its history", async () => {
+    const record = recordRequests();
+    server.use(
+      http.get("*/api/v1/me/ring-setups", () =>
+        HttpResponse.json(
+          { code: "FORBIDDEN", details: {}, message: "Forbidden", traceId: "t" },
+          { status: 403 },
+        ),
+      ),
+    );
+    await viewer("/recorreguts/muntat/ring-muntanya", "admin");
+    expect(await screen.findByText(/^Jumping/u)).toBeVisible();
+    expect(screen.queryByText("No s'ha pogut carregar el muntatge.")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sessió de muntatge" })).toBeVisible();
+    expect(record.list.some((line) => line.startsWith("GET /rings/ring-muntanya/setups"))).toBe(
+      true,
+    );
+  });
+
+  it("R-16-07 · a photo without an image type is refused on the photo field before any upload grant", async () => {
+    const record = recordRequests();
+    await renderApp("/instructor/pistes/ring-carretera/muntat", { scenario: "instructor" });
+    const input = await screen.findByLabelText("Fes una foto o tria'n una");
+    const submit = screen.getByRole("button", { name: "REGISTRA" });
+    await waitFor(() => {
+      expect(submit).toBeEnabled();
+    });
+    for (const type of ["", "application/pdf"]) {
+      fireEvent.change(input, { target: { files: [new File(["photo"], "pista.heic", { type })] } });
+      fireEvent.click(submit);
+      expect(await screen.findByRole("alert")).toHaveTextContent(
+        "Aquest tipus de fitxer no està permès.",
+      );
+      expect(input).toHaveAttribute("aria-describedby", "setup-photo-error");
+    }
+    expect(record.list.some((line) => line.startsWith("POST /courses/upload-urls"))).toBe(false);
+    expect(record.list.some((line) => line.startsWith("POST /ring-setups"))).toBe(false);
+  });
+
+  it("R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup", async () => {
+    mockScenario("instructor");
+    const created = await apiClient().POST("/build-sessions", {
+      body: { live: true, placementId: "placement-muntanya-dijous" },
+      headers: { "Idempotency-Key": "finish-unmount-key" },
+    });
+    let release: () => void = () => undefined;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let finishing = false;
+    server.use(
+      http.post("*/api/v1/build-sessions/:id/finish", async () => {
+        finishing = true;
+        await gate;
+        return undefined;
+      }),
+    );
+    await renderApp(`/instructor/muntatge/${created.data?.id ?? ""}`, { scenario: "instructor" });
+    fireEvent.click(await screen.findByRole("button", { name: "FINALITZA" }));
+    await waitFor(() => {
+      expect(finishing).toBe(true);
+    });
+    window.history.pushState(null, "", "/instructor/avui");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    // The session page itself is gone (its button only changes to the pending label while the
+    // finish runs, so the button alone does not prove the page left).
+    await waitFor(() => {
+      expect(screen.queryByRole("list", { name: "Obstacles" })).not.toBeInTheDocument();
+    });
+    release();
+    await waitFor(() => {
+      expect(courseState.buildSessions.find((item) => item.id === created.data?.id)?.status).toBe(
+        "COMPLETED",
+      );
+    });
+    // Time for the late answer to reach the client and be dropped.
+    await new Promise((resolve) => {
+      setTimeout(resolve, 200);
+    });
+    expect(window.location.pathname).toBe("/instructor/avui");
   });
 });
 

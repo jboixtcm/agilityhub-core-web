@@ -1,0 +1,185 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/course-handlers.test.ts (32 tests | 1 failed | 31 skipped) 24ms
+   ❯ E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) (22)
+     × R-16-05 / R-16-16 POST and PUT /placements: an activityId that is not an activity of the club → 404 NOT_FOUND (nothing stored); an activity of the club is linked 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > R-16-05 / R-16-16 POST and PUT /placements: an activityId that is not an activity of the club → 404 NOT_FOUND (nothing stored); an activity of the club is linked
+AssertionError: expected { body: { …(24) }, status: 201 } to match object { body: { code: 'NOT_FOUND' }, …(1) }
+(29 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "code": "NOT_FOUND",
++     "activityId": "activity-x",
++     "buildSheetFileKey": null,
++     "classSessionIds": [],
++     "courseId": "course-jumping-dijous",
++     "courseVersion": 3,
++     "createdAt": "2026-10-16T23:06:24Z",
++     "createdByAccountId": "10000000-0000-4000-8000-000000000001",
++     "displayName": null,
++     "grades": [],
++     "id": "placement-1",
++     "mode": "TRAINING",
++     "name": null,
++     "placementMode": "CENTERED",
++     "resolvedObstacles": [
++       {
++         "numbers": [
++           1,
++         ],
++         "obstacleId": "1",
++         "rotationDeg": -90,
++         "type": "Jump",
++         "x": 9,
++         "y": 18.5,
++       },
++       {
++         "numbers": [
++           2,
++         ],
++         "obstacleId": "2",
++         "rotationDeg": -90,
++         "type": "Jump",
++         "x": 14,
++         "y": 18.5,
++       },
++       {
++         "numbers": [
++           3,
++         ],
++         "obstacleId": "3",
++         "rotationDeg": 0,
++         "type": "Tunnel4m",
++         "x": 19,
++         "y": 15.5,
++       },
++       {
++         "numbers": [
++           4,
++           10,
++         ],
++         "obstacleId": "4",
++         "rotationDeg": 0,
++         "type": "Jump",
++         "x": 23,
++         "y": 12.5,
++       },
++       {
++         "numbers": [
++           5,
++         ],
++         "obstacleId": "5",
++         "rotationDeg": -90,
++         "type": "Weave",
++         "x": 28,
++         "y": 14.5,
++       },
++       {
++         "numbers": [
++           6,
++         ],
++         "obstacleId": "6",
++         "rotationDeg": 0,
++         "type": "Jump",
++         "x": 31,
++         "y": 8.5,
+        },
+-   "status": 404,
++       {
++         "numbers": [
++           7,
++         ],
++         "obstacleId": "7",
++         "rotationDeg": -90,
++         "type": "Jump",
++         "x": 26,
++         "y": 6.5,
++       },
++       {
++         "numbers": [
++           8,
++         ],
++         "obstacleId": "8",
++         "rotationDeg": -90,
++         "type": "DoubleJump",
++         "x": 20,
++         "y": 6.5,
++       },
++       {
++         "numbers": [
++           9,
++         ],
++         "obstacleId": "9",
++         "rotationDeg": -90,
++         "type": "Tire",
++         "x": 15,
++         "y": 7.5,
++       },
++       {
++         "numbers": [
++           11,
++         ],
++         "obstacleId": "10",
++         "rotationDeg": -45,
++         "type": "LongJump",
++         "x": 11,
++         "y": 11.5,
++       },
++       {
++         "numbers": [
++           12,
++         ],
++         "obstacleId": "11",
++         "rotationDeg": -90,
++         "type": "Jump",
++         "x": 8,
++         "y": 6.5,
++       },
++     ],
++     "ringId": "ring-muntanya",
++     "scheduledAt": null,
++     "sizes": [],
++     "stale": false,
++     "status": "DRAFT",
++     "transform": {
++       "flipX": false,
++       "flipY": false,
++       "offsetXM": 20,
++       "offsetYM": 12.5,
++       "rotationDeg": 0,
++     },
++     "updatedAt": "2026-10-16T23:06:24Z",
++     "version": 1,
++     "warningThresholdM": 1.5,
++     "warnings": [],
++   },
++   "status": 201,
+  }
+
+ ❯ src/mocks/course-handlers.test.ts:458:21
+    456|       activityId: "activity-x",
+    457|     });
+    458|     expect(created).toMatchObject({ body: { code: "NOT_FOUND" }, statu…
+       |                     ^
+    459|     expect(courseState.placements).toHaveLength(count);
+    460|     const replaced = await call<Schemas["ApiError"]>("admin", "PUT", `…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 skipped (32)
+   Start at  02:06:23
+   Duration  1.13s (transform 63%, import 34%, tests 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/course-handlers.test.ts -t an activityId that is not an activity of the club

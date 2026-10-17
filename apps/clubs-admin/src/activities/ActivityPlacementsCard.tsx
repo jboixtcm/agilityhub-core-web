@@ -180,6 +180,11 @@ export function ActivityPlacementsCard({
                 </a>
                 {placement.buildSheetFileKey == null ? null : (
                   <Button
+                    // R-16-06: a stale placement's sheet was made on the ring's old geometry.
+                    aria-describedby={
+                      placement.stale ? `activity-sheet-stale-${placement.id}` : undefined
+                    }
+                    disabled={placement.stale}
                     loading={sheet?.id === placement.id && sheet.error === undefined}
                     loadingLabel={t("admin-activities:placements.sheetPending")}
                     onClick={() => {
@@ -191,6 +196,11 @@ export function ActivityPlacementsCard({
                     {t("admin-activities:placements.sheet")}
                   </Button>
                 )}
+                {placement.buildSheetFileKey != null && placement.stale ? (
+                  <p className="activity-placements__hint" id={`activity-sheet-stale-${placement.id}`}>
+                    {t("admin-activities:placements.sheetStale")}
+                  </p>
+                ) : null}
                 {sheet?.id === placement.id && sheet.error !== undefined ? (
                   <p className="ah-form-field__error" role="alert">
                     {sheet.error}

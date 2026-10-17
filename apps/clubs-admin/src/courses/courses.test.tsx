@@ -187,6 +187,16 @@ function captureDownloads(): Blob[] {
   return saved;
 }
 
+/** The stale placement (R-16-06) with a build sheet stored before its ring's geometry changed. */
+function storeSheetOnStalePlacement(): void {
+  const placement = courseState.placements.find(
+    (item) => item.id === PLACEMENT_IDS.muntanyaJumping,
+  );
+  if (placement === undefined) throw new Error("PLACEMENT_NOT_FOUND");
+  expect(placement.stale).toBe(true);
+  placement.buildSheetFileKey = "club-1/courses/old-build-sheet";
+}
+
 async function pdfText(blob: Blob): Promise<string> {
   const bytes = new Uint8Array(await blob.arrayBuffer());
   return Array.from(bytes, (byte) => String.fromCharCode(byte)).join("");
@@ -324,7 +334,7 @@ describe("T-16-04 / R-16-05 the placement editor", () => {
     const plan = screen.getByRole("img", { name: "Recorregut col·locat a Muntanya" });
     vi.spyOn(plan, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 600, 600));
     fireEvent.pointerDown(plan, { button: 0, clientX: 100, clientY: 300, pointerId: 1 });
-    fireEvent.pointerMove(plan, { clientX: 600, clientY: 300, pointerId: 1 });
+    fireEvent.pointerMove(plan, { buttons: 1, clientX: 600, clientY: 300, pointerId: 1 });
     fireEvent.pointerUp(plan, { clientX: 600, clientY: 300, pointerId: 1 });
     expect(await screen.findAllByText(/queda fora de la pista\.$/u)).not.toHaveLength(0);
     expect(screen.getByText(/Hi ha \d+ avisos? crítics?\./u)).toBeVisible();
@@ -353,7 +363,7 @@ describe("T-16-04 / R-16-05 the placement editor", () => {
     const plan = await screen.findByRole("img", { name: "Recorregut col·locat a Muntanya" });
     vi.spyOn(plan, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 600, 600));
     fireEvent.pointerDown(plan, { button: 0, clientX: 100, clientY: 300, pointerId: 1 });
-    fireEvent.pointerMove(plan, { clientX: 600, clientY: 300, pointerId: 1 });
+    fireEvent.pointerMove(plan, { buttons: 1, clientX: 600, clientY: 300, pointerId: 1 });
     fireEvent.pointerUp(plan, { clientX: 600, clientY: 300, pointerId: 1 });
     fireEvent.click(screen.getByRole("button", { name: "DESA LA COL·LOCACIÓ" }));
     expect(
@@ -450,7 +460,7 @@ describe("T-16-04 / R-16-05 the placement editor", () => {
     const plan = await screen.findByRole("img", { name: "Recorregut col·locat a Muntanya" });
     vi.spyOn(plan, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 600, 600));
     fireEvent.pointerDown(plan, { button: 0, clientX: 100, clientY: 300, pointerId: 1 });
-    fireEvent.pointerMove(plan, { clientX: 600, clientY: 300, pointerId: 1 });
+    fireEvent.pointerMove(plan, { buttons: 1, clientX: 600, clientY: 300, pointerId: 1 });
     fireEvent.pointerUp(plan, { clientX: 600, clientY: 300, pointerId: 1 });
     fireEvent.click(screen.getByRole("button", { name: "DESA LA COL·LOCACIÓ" }));
     const refused = await screen.findByRole("list", { name: "Avisos crítics" });
@@ -543,6 +553,36 @@ describe("R-16-10 / R-16-07 a course's page: build sheet, register as set up, me
       "La geometria de la pista ha canviat: revisa la col·locació abans de treure'n el full de muntatge.",
     );
     expect(within(row).getByRole("button", { name: "Revisa" })).toBeEnabled();
+  });
+
+  it("R-16-06 / T-16-19 E9-W05 #1 a stale placement's stored sheet («Full desat») is disabled too, with the same reason as «Full de muntatge»", async () => {
+    storeSheetOnStalePlacement();
+    await renderRoute(`/recorreguts/${COURSE_IDS.jumping}`);
+    const row = (await screen.findByText("Dijous tarda")).closest("li");
+    if (row === null) throw new Error("ROW_NOT_FOUND");
+    const stored = within(row).getByRole("button", { name: "Full desat" });
+    // The stored PDF was made from the obstacles and marker distances of the old geometry.
+    expect(stored).toBeDisabled();
+    expect(stored).toHaveAccessibleDescription(
+      "La geometria de la pista ha canviat: revisa la col·locació abans de treure'n el full de muntatge.",
+    );
+    fireEvent.click(stored);
+    expect(requests("GET", `/placements/${PLACEMENT_IDS.muntanyaJumping}/build-sheet`)).toHaveLength(
+      0,
+    );
+  });
+
+  it("R-16-06 / T-16-19 E9-W05 #1 the editor disables a stale placement's stored sheet until it is saved", async () => {
+    storeSheetOnStalePlacement();
+    await renderRoute(
+      `/recorreguts/${COURSE_IDS.jumping}/col-locacio?colocacio=${PLACEMENT_IDS.muntanyaJumping}`,
+    );
+    const stored = await screen.findByRole("button", { name: "Full desat" });
+    expect(stored).toBeDisabled();
+    expect(stored).toHaveAccessibleDescription(
+      "La geometria de la pista ha canviat: desa la col·locació per poder treure'n el full de muntatge.",
+    );
+    expect(screen.getByRole("button", { name: "Full de muntatge" })).toBeDisabled();
   });
 
   it("R-16-10 a ring without geometry reads errors:RING_WITHOUT_GEOMETRY, never a generic error", async () => {
@@ -644,6 +684,69 @@ describe("R-16-10 / R-16-07 a course's page: build sheet, register as set up, me
     expect(screen.getAllByRole("button", { name: "Registra-ho com a muntat" })).toHaveLength(2);
   });
 
+  it("R-16-07 E9-W05 #7b a FORBIDDEN refusal names courses.allowInstructorPublish only to an INSTRUCTOR; an ADMIN reads the generic error and keeps the action", async () => {
+    server.use(
+      http.post("*/api/v1/ring-setups", () =>
+        HttpResponse.json(
+          { code: "FORBIDDEN", details: null, message: "Forbidden", traceId: "trace" },
+          { status: 403 },
+        ),
+      ),
+    );
+    const refuse = async () => {
+      const row = (await screen.findByText("Dijous tarda")).closest("li");
+      if (row === null) throw new Error("ROW_NOT_FOUND");
+      fireEvent.click(within(row).getByRole("button", { name: "Registra-ho com a muntat" }));
+      const dialog = await screen.findByRole("dialog", { name: "Registra-ho com a muntat" });
+      await within(dialog).findByText(/^Substituirà el muntatge actual/u);
+      fireEvent.click(within(dialog).getByRole("button", { name: "REGISTRA" }));
+      const alert = await within(dialog).findByRole("alert");
+      fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+      return alert.textContent;
+    };
+
+    // An ADMIN is never refused by the switch: the refusal is another one (e.g. impersonation).
+    await renderRoute(`/recorreguts/${COURSE_IDS.jumping}`, "admin");
+    expect(await refuse()).toBe("No teniu permís per fer aquesta acció.");
+    expect(screen.getAllByRole("button", { name: "Registra-ho com a muntat" })).toHaveLength(2);
+
+    cleanup();
+    await renderRoute(`/recorreguts/${COURSE_IDS.jumping}`, "instructor");
+    expect(await refuse()).toBe(
+      "En aquest club només l'administració pot registrar què hi ha muntat.",
+    );
+  });
+
+  it("R-16-07 E9-W05 #7c an INSTRUCTOR refused once is offered «Registra-ho com a muntat» again, without a reload, once courses.allowInstructorPublish reads true", async () => {
+    await setParameterAsAdmin("courses.allowInstructorPublish", false);
+    await renderRoute(`/recorreguts/${COURSE_IDS.jumping}`, "instructor");
+    const row = (await screen.findByText("Dijous tarda")).closest("li");
+    if (row === null) throw new Error("ROW_NOT_FOUND");
+    fireEvent.click(within(row).getByRole("button", { name: "Registra-ho com a muntat" }));
+    const dialog = await screen.findByRole("dialog", { name: "Registra-ho com a muntat" });
+    await within(dialog).findByText(/^Substituirà el muntatge actual/u);
+    fireEvent.click(within(dialog).getByRole("button", { name: "REGISTRA" }));
+    await within(dialog).findByRole("alert");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel·la" }));
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: "Registra-ho com a muntat" })).toBeNull();
+    });
+
+    // The admin turns the switch back on, and the instructor can now read it (same tab).
+    cleanup();
+    const parameter = await setParameterAsAdmin("courses.allowInstructorPublish", true);
+    server.use(
+      http.get("*/api/v1/parameters/courses.allowInstructorPublish", () =>
+        HttpResponse.json(parameter),
+      ),
+    );
+    await renderRoute(`/recorreguts/${COURSE_IDS.jumping}`, "instructor");
+    await screen.findByText("Dijous tarda");
+    expect(
+      await screen.findAllByRole("button", { name: "Registra-ho com a muntat" }),
+    ).toHaveLength(2);
+  });
+
   it("optimistic locking: after 409 STALE_VERSION the course is read again and only the user's own edits are put back", async () => {
     await renderRoute(`/recorreguts/${COURSE_IDS.jumping}`);
     const notes = await screen.findByRole("textbox", { name: "Notes" });
@@ -726,6 +829,34 @@ describe("R-16-10 / R-16-07 a course's page: build sheet, register as set up, me
 });
 
 describe("D16 «Geometria» (S16 §2, R-16-04/06/08)", () => {
+  it("A8b E9-W05 #7d the marker sizes print with the reader's decimal separator (ICU number, never the raw value)", async () => {
+    const read = async (language: "ca" | "en" | "es") => {
+      const i18n = await createI18n({
+        // A club that offers the three product locales, so the reader's language is the one used.
+        branding: { ...branding, locales: ["ca", "es", "en"] },
+        browserLanguages: [language],
+        initialNamespaces: ["admin-courses"],
+        storage: undefined,
+      });
+      return [
+        i18n.t("admin-courses:markerSheet.size", { mm: 150.5 }),
+        i18n.t("admin-courses:geometry.markerSheetTooLarge", { labels: "B", mm: 195.9 }),
+      ];
+    };
+    expect(await read("ca")).toEqual([
+      "Mida impresa: 150,5 mm (amb el marge blanc)",
+      "B: fan més de 195,9 mm i no caben a la pàgina a mida real.",
+    ]);
+    expect(await read("es")).toEqual([
+      "Tamaño impreso: 150,5 mm (con el margen blanco)",
+      "B: miden más de 195,9 mm y no caben en la página a tamaño real.",
+    ]);
+    expect(await read("en")).toEqual([
+      "Printed size: 150.5 mm (white margin included)",
+      "B: larger than 195.9 mm, they do not fit on the page at real size.",
+    ]);
+  });
+
   it("R-16-04 GEOMETRY_INVALID reads each violation by field and rule; a valid save goes at the stored version", async () => {
     await renderRoute("/pistes/ring-muntanya/geometria");
     await screen.findByRole("textbox", { name: "Llargada (m)" });
@@ -839,7 +970,7 @@ describe("D16 «Geometria» (S16 §2, R-16-04/06/08)", () => {
     expect(body.markers.map((marker) => marker.label)).toEqual(["A", "B", "C", "D", "E", "F"]);
     expect(new Set(body.markers.map((marker) => marker.aprilTagId)).size).toBe(6);
     // The planner's uid: the club's slug (the venue), the ring and the label.
-    expect(body.markers[0]?.markerUid).toBe(`${branding.club.slug}-carretera-a`);
+    expect(body.markers[0]?.markerUid).toBe(`${branding.club.slug ?? ""}-carretera-a`);
   });
 
   it("R-16-04 the default markers of a new geometry follow the typed size while untouched; a new marker takes the next free letter", async () => {

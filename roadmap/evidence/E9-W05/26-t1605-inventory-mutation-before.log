@@ -1,0 +1,53 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/course-handlers.test.ts (32 tests | 1 failed | 31 skipped) 73ms
+   ❯ E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) (22)
+     × T-16-05 R-16-16: an ADMIN of another club (coursesOtherClub) finds none of this club's courses, placements, geometry, inventory or setups, and changes none of them 71ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > T-16-05 R-16-16: an ADMIN of another club (coursesOtherClub) finds none of this club's courses, placements, geometry, inventory or setups, and changes none of them
+AssertionError: GET /obstacle-inventories/ring:ring-muntanya: expected { body: { …(4) }, status: 200 } to match object { body: { code: 'NOT_FOUND' }, …(1) }
+(4 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "code": "NOT_FOUND",
++     "items": [
++       {
++         "count": 3,
++         "type": "Jump",
+        },
+-   "status": 404,
++     ],
++     "ringId": null,
++     "scope": "CLUB",
++     "updatedAt": "2026-10-16T23:06:59Z",
++   },
++   "status": 200,
+  }
+
+ ❯ notFound src/mocks/course-handlers.test.ts:255:43
+    253|     const notFound = async (method: string, path: string, body?: unkno…
+    254|       const answer = await call<Schemas["ApiError"]>(other, method, pa…
+    255|       expect(answer, `${method} ${path}`).toMatchObject({
+       |                                           ^
+    256|         body: { code: "NOT_FOUND" },
+    257|         status: 404,
+ ❯ src/mocks/course-handlers.test.ts:326:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 skipped (32)
+   Start at  02:06:58
+   Duration  1.13s (transform 61%, import 32%, tests 7%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/course-handlers.test.ts -t finds none of this club's courses

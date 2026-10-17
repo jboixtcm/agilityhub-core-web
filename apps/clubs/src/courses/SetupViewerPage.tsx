@@ -5,7 +5,6 @@ import {
   useSubmissionKeys,
 } from "@agilityhub/api-client";
 import { plannerPlacement } from "@agilityhub/api-client/core-api-store";
-import { useSession } from "@agilityhub/auth";
 import { useClubFormats } from "@agilityhub/i18n";
 import {
   AppBar,
@@ -34,7 +33,9 @@ import {
   kindLabel,
   type MeRingSetupSummary,
   readMeRingSetup,
-  useMeRingSetup,
+  useActiveSetup,
+  useStaffRoles,
+  useStartBuildSession,
   type ViewedRingSetup,
 } from "./shared";
 import { useCourseStore } from "./store";
@@ -103,8 +104,9 @@ export function SetupViewerPage({
   const formats = useClubFormats();
   const rings = useActiveRings(client);
   const [refresh, setRefresh] = useState(0);
-  // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-16-09).
-  const ringSummary = useMeRingSetup(client, setupId === undefined ? (ringId ?? "") : "", refresh);
+  // `/recorreguts/muntat/:ringId`: the ring's ACTIVE setup first (R-16-09; an ADMIN session
+  // without INSTRUCTOR reads it from the ring's history).
+  const ringSummary = useActiveSetup(client, setupId === undefined ? (ringId ?? "") : "", refresh);
   const resolvedSetupId =
     setupId ??
     (ringSummary.status === "ready" && ringSummary.data !== null ? ringSummary.data.id : "");
@@ -165,6 +167,7 @@ export function SetupViewerPage({
           title={t("courses:viewer.none")}
         />
         {ringId === undefined ? null : <StaffRegisterLink ringId={ringId} />}
+        <StaffJoin client={client} />
       </section>
     );
   }
@@ -369,12 +372,101 @@ function StaffRegisterLink({ ringId, replacing = false }: { ringId: string; repl
   );
 }
 
-/** INSTRUCTOR or ADMIN, never an impersonated session (S16 §2: the instructors' actions). */
-function useStaffRoles(): boolean {
-  const session = useSession();
+/**
+ * A ring with no setup (R-16-11): staff can still join a session another phone started on it —
+ * a course being built is not registered as set up until its session finishes.
+ */
+function StaffJoin({ client }: { client: ApiClient }) {
+  const branding = useBranding();
+  const roles = useStaffRoles();
+  if (!roles || !branding.modules.includes("COURSES")) return null;
   return (
-    session.me?.impersonation === undefined &&
-    session.roles.some((role) => role === "INSTRUCTOR" || role === "ADMIN")
+    <div className="course-actions">
+      <JoinSessionForm client={client} />
+    </div>
+  );
+}
+
+/**
+ * Joining a build session another phone started (R-16-11): its six-character code (or the QR's
+ * token), `POST /build-sessions/join` (no key), then the session's page. `disabled` = another
+ * action of the screen is being sent; `onPendingChange` tells the screen while this one is.
+ */
+function JoinSessionForm({
+  client,
+  disabled = false,
+  onPendingChange,
+}: {
+  client: ApiClient;
+  disabled?: boolean;
+  onPendingChange?: (pending: boolean) => void;
+}) {
+  const { t } = useTranslation(["courses", "errors", "common"]);
+  const store = useCourseStore(client);
+  const [code, setCode] = useState("");
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string>();
+
+  const busy = (value: boolean) => {
+    setPending(value);
+    onPendingChange?.(value);
+  };
+
+  const join = async (event: SyntheticEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const value = code.trim();
+    if (value === "") {
+      setError(t("courses:viewer.join.required"));
+      return;
+    }
+    busy(true);
+    setError(undefined);
+    try {
+      const session = await store.joinBuildSession({ code: value });
+      navigateInApp(coursePaths.session(session.id));
+    } catch (cause) {
+      setError(
+        isApiError(cause, "NOT_FOUND") ? t("courses:viewer.join.notFound") : errorText(t, cause),
+      );
+      busy(false);
+    }
+  };
+
+  return (
+    <form className="course-join" noValidate onSubmit={(event) => void join(event)}>
+      <label className="course-join__label" htmlFor="course-join-code">
+        {t("courses:viewer.join.label")}
+      </label>
+      <div className="course-join__row">
+        <Input
+          aria-describedby={error === undefined ? undefined : "course-join-error"}
+          autoCapitalize="characters"
+          autoComplete="off"
+          disabled={disabled || pending}
+          id="course-join-code"
+          maxLength={64}
+          onChange={(event) => {
+            setCode(event.currentTarget.value);
+            setError(undefined);
+          }}
+          value={code}
+        />
+        <Button
+          disabled={disabled}
+          loading={pending}
+          loadingLabel={t("courses:sending")}
+          type="submit"
+          variant="secondary"
+        >
+          {t("courses:viewer.join.submit")}
+        </Button>
+      </div>
+      {error === undefined ? null : (
+        <p className="booking-note booking-note--danger" id="course-join-error" role="alert">
+          {error}
+        </p>
+      )}
+    </form>
   );
 }
 
@@ -397,51 +489,12 @@ function StaffActions({
   setup: ViewedRingSetup;
 }) {
   const { t } = useTranslation(["courses", "errors", "common"]);
-  const store = useCourseStore(client);
   const keys = useSubmissionKeys();
-  const [pending, setPending] = useState<"dismantle" | "join" | "session">();
-  const [error, setError] = useState<{ at: "dismantle" | "join" | "session"; message: string }>();
+  const session = useStartBuildSession(client);
+  const [pending, setPending] = useState<"dismantle" | "join">();
+  const [error, setError] = useState<{ at: "dismantle"; message: string }>();
   const [confirm, setConfirm] = useState(false);
-  const [code, setCode] = useState("");
-
-  const startSession = async () => {
-    if (setup.placementId == null) return;
-    setPending("session");
-    setError(undefined);
-    const placementId = setup.placementId;
-    try {
-      const session = await keys.send(JSON.stringify({ live: true, placementId }), (key) =>
-        store.createBuildSession({ live: true, placementId, submissionKey: key }),
-      );
-      navigateInApp(coursePaths.session(session.id));
-    } catch (cause) {
-      setError({ at: "session", message: errorText(t, cause) });
-      setPending(undefined);
-    }
-  };
-
-  const join = async (event: SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const value = code.trim();
-    if (value === "") {
-      setError({ at: "join", message: t("courses:viewer.join.required") });
-      return;
-    }
-    setPending("join");
-    setError(undefined);
-    try {
-      const session = await store.joinBuildSession({ code: value });
-      navigateInApp(coursePaths.session(session.id));
-    } catch (cause) {
-      setError({
-        at: "join",
-        message: isApiError(cause, "NOT_FOUND")
-          ? t("courses:viewer.join.notFound")
-          : errorText(t, cause),
-      });
-      setPending(undefined);
-    }
-  };
+  const busy = pending !== undefined || session.pending;
 
   const dismantle = async () => {
     setPending("dismantle");
@@ -467,54 +520,29 @@ function StaffActions({
       {setup.placementId == null ? null : (
         <>
           <Button
-            disabled={pending !== undefined && pending !== "session"}
-            loading={pending === "session"}
+            disabled={pending !== undefined}
+            loading={session.pending}
             loadingLabel={t("courses:sending")}
-            onClick={() => void startSession()}
+            onClick={() => {
+              if (setup.placementId != null) void session.start(setup.placementId);
+            }}
           >
             {t("courses:viewer.buildSession")}
           </Button>
-          {error?.at === "session" ? (
+          {session.error === undefined ? null : (
             <p className="booking-note booking-note--danger" role="alert">
-              {error.message}
+              {session.error}
             </p>
-          ) : null}
+          )}
         </>
       )}
-      <form className="course-join" noValidate onSubmit={(event) => void join(event)}>
-        <label className="course-join__label" htmlFor="course-join-code">
-          {t("courses:viewer.join.label")}
-        </label>
-        <div className="course-join__row">
-          <Input
-            aria-describedby={error?.at === "join" ? "course-join-error" : undefined}
-            autoCapitalize="characters"
-            autoComplete="off"
-            disabled={pending !== undefined}
-            id="course-join-code"
-            maxLength={64}
-            onChange={(event) => {
-              setCode(event.currentTarget.value);
-              if (error?.at === "join") setError(undefined);
-            }}
-            value={code}
-          />
-          <Button
-            disabled={pending !== undefined && pending !== "join"}
-            loading={pending === "join"}
-            loadingLabel={t("courses:sending")}
-            type="submit"
-            variant="secondary"
-          >
-            {t("courses:viewer.join.submit")}
-          </Button>
-        </div>
-        {error?.at === "join" ? (
-          <p className="booking-note booking-note--danger" id="course-join-error" role="alert">
-            {error.message}
-          </p>
-        ) : null}
-      </form>
+      <JoinSessionForm
+        client={client}
+        disabled={pending === "dismantle" || session.pending}
+        onPendingChange={(joining) => {
+          setPending(joining ? "join" : undefined);
+        }}
+      />
       {confirm ? (
         <Card className="course-confirm">
           <p>{t("courses:viewer.dismantleConfirm", { ring: ringName })}</p>
@@ -546,7 +574,7 @@ function StaffActions({
         </Card>
       ) : (
         <Button
-          disabled={pending !== undefined}
+          disabled={busy}
           onClick={() => {
             setConfirm(true);
           }}

@@ -12,7 +12,9 @@ import { buildEventsSubscriber } from "./live-events";
  */
 export function useCourseStore(client: ApiClient): CoreApiStore {
   const branding = useBranding();
-  const { city, name, slug } = branding.club;
+  const { city, name } = branding.club;
+  // A club host always has a slug; only a product host's branding carries `null`.
+  const slug = branding.club.slug ?? "";
   return useMemo(() => {
     const subscribeBuildEvents = buildEventsSubscriber();
     return new CoreApiStore({

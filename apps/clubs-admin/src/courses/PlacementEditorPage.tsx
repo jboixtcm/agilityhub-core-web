@@ -114,7 +114,7 @@ export function PlacementEditorPage({
     const load = async () => {
       const [courseAnswer, venueRings, catalog, placement] = await Promise.all([
         client.GET("/courses/{id}", { params: { path: { id: courseId } } }),
-        store.listRings(branding.club.slug),
+        store.listRings(branding.club.slug ?? ""),
         client.GET("/rings", { params: { query: { includeInactive: false } } }),
         placementId === undefined
           ? Promise.resolve(undefined)
@@ -258,7 +258,7 @@ export function PlacementEditorPage({
           placement: state.placement,
           ringId: ring.id,
           thresholdMeters: null,
-          venueId: branding.club.slug,
+          venueId: branding.club.slug ?? "",
           warnings,
         };
         // One key per payload: what the user placed, where, under which name, forced or not.
@@ -563,7 +563,9 @@ export function PlacementEditorPage({
                 </Button>
                 {stored.buildSheetFileKey === null ? null : (
                   <Button
-                    disabled={sheetPending}
+                    // R-16-06: the stored sheet was made on the old geometry too: save it first.
+                    aria-describedby={stored.stale ? "editor-sheet-stale" : undefined}
+                    disabled={stored.stale || sheetPending}
                     onClick={() => {
                       setSheetError(undefined);
                       storedSheet({

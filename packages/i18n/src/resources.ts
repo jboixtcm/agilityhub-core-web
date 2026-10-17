@@ -6,8 +6,10 @@ type BackofficeNamespace = Exclude<Namespace, keyof (typeof clubsLoaders)["ca"]>
 
 /**
  * The namespaces only the backoffice (`apps/clubs-admin`) and the ID pages read; the full table is
- * the students' one plus these. `apps/clubs` boots with `@agilityhub/i18n/clubs`, which never
- * imports this module, so none of these locale chunks reaches its build.
+ * the students' one plus these. `apps/clubs` boots with `@agilityhub/i18n/clubs`, but it also
+ * imports the package root (formats, helpers), which re-exports this module: keeping these locale
+ * chunks out of its build relies on tree-shaking. `scripts/check-clubs-bundle.mjs` (run by the
+ * clubs `build`) fails if any `admin-*`, `console` or `id` chunk reaches `apps/clubs/dist/assets`.
  */
 const backofficeLoaders = {
   ca: {

@@ -100,26 +100,53 @@ async function adminBearer(browser: Browser): Promise<{ bearer: string; page: Pa
   return { bearer, page };
 }
 
+/** The last bearer each members' app page sent to the api (its own calls, for `api`). */
+const bearers = new WeakMap<Page, string>();
+
+function bearerOf(page: Page): string {
+  const bearer = bearers.get(page);
+  if (bearer === undefined) throw new Error("The page sent no bearer yet");
+  return bearer;
+}
+
 /** A member or an instructor on the members' app, 375 px (an instructor lands on 20). */
 async function clubsPage(
   browser: Browser,
   email: string,
-  landing: "/inici" | "/instructor/dia",
+  landing: "/inici" | "/instructor/dia" | readonly ("/inici" | "/instructor/dia")[],
   device: string,
 ): Promise<Page> {
+  const landings: readonly string[] = typeof landing === "string" ? [landing] : landing;
   const context = await browser.newContext({ viewport: { height: 812, width: 375 } });
   await context.addInitScript(() => {
     localStorage.setItem("agilityhub.locale", "ca");
   });
   const page = await context.newPage();
   record(page, device);
+  page.on("request", (request) => {
+    const authorization = request.headers().authorization;
+    if (authorization !== undefined && new URL(request.url()).pathname.startsWith("/api/v1/")) {
+      bearers.set(page, authorization);
+    }
+  });
   await page.goto(`${clubsUrl}/entrar`);
   await page.getByLabel("Correu electrònic").fill(email);
   const reveal = page.getByRole("button", { name: "Tinc contrasenya" });
   if (await reveal.isVisible()) await reveal.click();
   await page.getByLabel("Contrasenya", { exact: true }).fill(corePassword);
   await submitPasswordLogin(page);
-  await page.waitForURL((url) => url.pathname === landing);
+  await page.waitForURL(
+    (url) => landings.includes(url.pathname) || url.pathname === "/perfil-acces",
+  );
+  if (new URL(page.url()).pathname === "/perfil-acces") {
+    // 03b: an account with more than one profile and none remembered chooses one first; a staff
+    // member opens their own bookings as a member (07).
+    await page
+      .locator("button.profile-choice__card")
+      .filter({ hasText: /^Com a alumn[ae]/u })
+      .click();
+    await page.waitForURL((url) => url.pathname === "/inici");
+  }
   await expect(page.locator(".clubs-shell")).toBeVisible();
   return page;
 }
@@ -178,13 +205,34 @@ interface Seeded {
  * R-16-01/05) and the setup that shows it (R-16-07).
  */
 async function seedCourses(page: Page, bearer: string): Promise<Seeded> {
+  const ring = await ensureGeometry(page, bearer);
+
+  const model = parseSmarterTxt(readFileSync(SMARTER, "utf8"), {
+    sourceFileName: "jp-s-sw.txt",
+  }).courseData;
+  return seedPlacedCourse(page, bearer, ring, model);
+}
+
+/**
+ * Muntanya's geometry (40 × 20 m, the six canonical markers A–F), stored once per stage: each test
+ * of the stage can run first.
+ */
+async function ensureGeometry(
+  page: Page,
+  bearer: string,
+  ringId?: string,
+): Promise<{ id: string; name: string }> {
   const rings = (await api(page, bearer, "GET", "/rings")).body as {
     items: { id: string; name: string; shortName: string }[];
   };
-  const ring = rings.items.find((item) => item.name === "Muntanya") ?? rings.items[0];
+  const ring =
+    ringId === undefined
+      ? (rings.items.find((item) => item.name === "Muntanya") ?? rings.items[0])
+      : rings.items.find((item) => item.id === ringId);
   if (ring === undefined) throw new Error("No ring in the seed");
   const stored = await api(page, bearer, "GET", `/rings/${ring.id}/geometry`);
-  const version = stored.status === 200 ? (stored.body as { version: number }).version : 0;
+  if (stored.status === 200) return ring;
+  const version = 0;
   const geometry = await api(page, bearer, "PUT", `/rings/${ring.id}/geometry`, {
     borderClearanceM: 1,
     doors: [],
@@ -213,11 +261,21 @@ async function seedCourses(page: Page, bearer: string): Promise<Seeded> {
     widthM: 20,
   });
   expect(geometry.status).toBe(200);
+  return ring;
+}
 
-  const model = parseSmarterTxt(readFileSync(SMARTER, "utf8"), {
-    sourceFileName: "jp-s-sw.txt",
-  }).courseData;
-  const courseName = `Jumping E9-W04 ${String(Date.now() % 10_000)}`;
+/**
+ * A course from the model, its placement on the ring and, unless `withSetup` is false (a planned
+ * placement nobody has built yet), the setup that shows it (R-16-07).
+ */
+async function seedPlacedCourse(
+  page: Page,
+  bearer: string,
+  ring: { id: string; name: string },
+  model: ReturnType<typeof parseSmarterTxt>["courseData"],
+  options: { label: string; withSetup: boolean } = { label: "E9-W04", withSetup: true },
+): Promise<Seeded> {
+  const courseName = `Jumping ${options.label} ${String(Date.now() % 10_000)}`;
   const course = await api(page, bearer, "POST", "/courses", {
     discipline: "JUMPING",
     levelIds: [],
@@ -266,21 +324,28 @@ async function seedCourses(page: Page, bearer: string): Promise<Seeded> {
   expect(placed.status).toBe(201);
   const placementBody = placed.body as { id: string; resolvedObstacles: unknown[] };
 
-  const setup = await api(page, bearer, "POST", "/ring-setups", {
-    kind: "JUMPING",
-    levelIds: [],
-    placementId: placementBody.id,
-    ringId: ring.id,
-  });
-  expect(setup.status).toBe(201);
+  let setupId = "";
+  if (options.withSetup) {
+    const setup = await api(page, bearer, "POST", "/ring-setups", {
+      kind: "JUMPING",
+      levelIds: [],
+      placementId: placementBody.id,
+      ringId: ring.id,
+    });
+    expect(setup.status).toBe(201);
+    setupId = (setup.body as { setup: { id: string } }).setup.id;
+  }
   const seeded = {
     courseName,
     obstacles: placementBody.resolvedObstacles.length,
     placementId: placementBody.id,
     ringId: ring.id,
-    setupId: (setup.body as { setup: { id: string } }).setup.id,
+    setupId,
   };
-  note("seeded", { ...seeded, warnings: warnings.map((warning) => warning.ruleId) });
+  note(options.withSetup ? "seeded" : `seeded-${options.label.toLowerCase()}`, {
+    ...seeded,
+    warnings: warnings.map((warning) => warning.ruleId),
+  });
   return seeded;
 }
 
@@ -423,3 +488,431 @@ test("E9-W04 · T-16-16 against the core: the member's viewer, registering, and 
   await expect(member.getByRole("img", { name: `Plànol de ${seeded.courseName}` })).toBeVisible();
   await screenshot(member, "core-visor-alumne-biblioteca-375.png");
 });
+
+/**
+ * The signed uploads of `POST /courses/upload-urls`: each grant's purpose, and the PUT of the file
+ * to its url (host, the first path segments and the status: never the signature or the key).
+ */
+function recordUploads(page: Page): () => Promise<string[]> {
+  const grants: Promise<{ line: string; target: string }>[] = [];
+  const puts: { status: number; url: URL }[] = [];
+  const short = (url: URL) => `${url.host}${url.pathname.split("/").slice(0, 4).join("/")}/…`;
+  page.on("response", (response) => {
+    const url = new URL(response.url());
+    const method = response.request().method();
+    if (method === "POST" && url.pathname === "/api/v1/courses/upload-urls") {
+      const purpose =
+        (JSON.parse(response.request().postData() ?? "{}") as { purpose?: string }).purpose ?? "?";
+      grants.push(
+        response.json().then((grant: { uploadUrl: string }) => {
+          const target = new URL(grant.uploadUrl, response.url());
+          return {
+            line: `grant ${purpose} → ${String(response.status())} (${short(target)})`,
+            target: `${target.host}${target.pathname}`,
+          };
+        }),
+      );
+    }
+    if (method === "PUT") puts.push({ status: response.status(), url });
+  });
+  return async () => {
+    const answered = await Promise.all(grants);
+    return answered.flatMap((grant) => [
+      grant.line,
+      ...puts
+        .filter((put) => `${put.url.host}${put.url.pathname}` === grant.target)
+        .map((put) => `PUT ${short(put.url)} → ${String(put.status)}`),
+    ]);
+  };
+}
+
+function isCall(method: string, path: RegExp) {
+  return (response: Response) =>
+    response.request().method() === method && path.test(new URL(response.url()).pathname);
+}
+
+test("E9-W05 · T-16-15 against the core: D18's library and import wizard, the course page, the placement editor, the stored build sheet and «Registra-ho com a muntat» (R-16-02, R-16-05, R-16-10, R-16-07)", async ({
+  browser,
+}) => {
+  test.setTimeout(420_000);
+  const admin = await adminBearer(browser);
+  const ring = await ensureGeometry(admin.page, admin.bearer);
+  const page = admin.page;
+  const readUploads = recordUploads(page);
+
+  // 1. D18 from the sidebar: the club's library on the real core.
+  await page.getByRole("link", { exact: true, name: "Recorreguts" }).click();
+  await page.waitForURL("**/recorreguts**");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Biblioteca de recorreguts" }),
+  ).toBeVisible();
+  await expect(page.getByRole("table", { name: "Llistat de recorreguts" })).toBeVisible();
+  await screenshot(page, "core-D18-biblioteca-1280.png");
+
+  // 2. The import wizard: a Smarter file read in the browser (R-16-02), its source and thumbnail
+  // uploaded through `POST /courses/upload-urls`, then `POST /courses`.
+  await page.getByRole("button", { name: "Nou recorregut" }).click();
+  await page.getByRole("menuitem", { name: "Importa un fitxer Smarter (.txt)" }).click();
+  const dialog = page.getByRole("dialog", { name: "Importa un fitxer Smarter" });
+  await dialog.getByLabel("Tria el fitxer .txt que exporta Smarter").setInputFiles(SMARTER);
+  await expect(dialog.getByText(/obstacles$/u).first()).toBeVisible();
+  await screenshot(page, "core-D18-importa-1280.png");
+  const creating = page.waitForResponse(isCall("POST", /^\/api\/v1\/courses$/u));
+  await dialog.getByRole("button", { name: "Desa el recorregut" }).click();
+  const createdResponse = await creating;
+  expect(createdResponse.status()).toBe(201);
+  expect(createdResponse.request().headers()["idempotency-key"]).toMatch(/[0-9a-f-]{36}/u);
+  const course = (await createdResponse.json()) as { id: string; name: string };
+  await page.waitForURL(`**/recorreguts/${course.id}`);
+  await expect(page.getByRole("tab", { name: "Plànol" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("img", { name: /^Plànol de / }).first()).toBeVisible();
+  await screenshot(page, "core-D18-recorregut-1280.png");
+
+  // 3. The placement editor on the ring with geometry, saved (with `force` when the api refuses
+  // critical warnings, R-16-05: the ADMIN confirms).
+  await page.getByRole("button", { name: "Col·loca en una pista" }).click();
+  await page.waitForURL(/\/col-locacio(\?.*)?$/u);
+  await expect(
+    page.getByRole("img", { name: `Recorregut col·locat a ${ring.name}` }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Centra" }).click();
+  await page.getByLabel("Nom de la col·locació").fill("Dissabte matí E9-W05");
+  const placing = page.waitForResponse(isCall("POST", /^\/api\/v1\/placements$/u));
+  await page.getByRole("button", { name: "DESA LA COL·LOCACIÓ" }).click();
+  let placedResponse = await placing;
+  const forced = placedResponse.status() === 422;
+  if (forced) {
+    expect(((await placedResponse.json()) as { code: string }).code).toBe("PLACEMENT_BLOCKED");
+    await expect(
+      page.getByText(
+        "Vols desar-la igualment? Quedarà registrat que l'has desada amb avisos crítics.",
+      ),
+    ).toBeVisible();
+    await screenshot(page, "core-D18-col-locacio-force-1280.png");
+    const forcing = page.waitForResponse(isCall("POST", /^\/api\/v1\/placements$/u));
+    await page.getByRole("button", { name: "Desa igualment" }).click();
+    placedResponse = await forcing;
+  }
+  expect(placedResponse.status()).toBe(201);
+  const placement = (await placedResponse.json()) as { id: string; ringId: string };
+  expect(placement.ringId).toBe(ring.id);
+  await expect(page.getByText("Col·locació desada.")).toBeVisible();
+  await screenshot(page, "core-D18-col-locacio-1280.png");
+
+  // 4. The build sheet: rendered in the browser, uploaded (BUILD_SHEET) and bound to the placement
+  // (R-16-10), then offered back from the core («Full desat», T-16-19).
+  const binding = page.waitForResponse(
+    isCall("POST", new RegExp(`^/api/v1/placements/${placement.id}/build-sheet$`, "u")),
+  );
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Full de muntatge" }).click();
+  const sheet = await download;
+  expect(sheet.suggestedFilename()).toMatch(/\.pdf$/u);
+  await sheet.saveAs(join(evidenceDirectory, "core-full-de-muntatge.pdf"));
+  expect((await binding).status()).toBe(200);
+  const reading = page.waitForResponse(
+    isCall("GET", new RegExp(`^/api/v1/placements/${placement.id}/build-sheet$`, "u")),
+  );
+  const storedDownload = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Full desat" }).click();
+  expect((await reading).status()).toBe(200);
+  const stored = await storedDownload;
+  expect(stored.suggestedFilename()).toMatch(/\.pdf$/u);
+  await stored.saveAs(join(evidenceDirectory, "core-full-de-muntatge-desat.pdf"));
+
+  // 5. «Registra-ho com a muntat» from the editor: the ring's setup now shows this placement.
+  await page.getByRole("button", { name: "Registra-ho com a muntat" }).click();
+  const setupDialog = page.getByRole("dialog", { name: "Registra-ho com a muntat" });
+  await expect(setupDialog).toBeVisible();
+  await screenshot(page, "core-D18-registra-1280.png");
+  const registering = page.waitForResponse(isCall("POST", /^\/api\/v1\/ring-setups$/u));
+  await setupDialog.getByRole("button", { name: "REGISTRA" }).click();
+  const registered = await registering;
+  expect(registered.status()).toBe(201);
+  const setup = (await registered.json()) as { setup: { placementId: string | null } };
+  expect(setup.setup.placementId).toBe(placement.id);
+  await expect(
+    page.getByText(new RegExp(`^Registrat com a muntat a ${ring.name}`, "u")),
+  ).toBeVisible();
+
+  // 6. Back in the library (in-app links): the import is set up on that ring.
+  await page.getByRole("link", { name: `‹ ${course.name}` }).click();
+  await page.getByRole("link", { name: "‹ Biblioteca de recorreguts" }).click();
+  const row = page.getByRole("row").filter({ hasText: course.name }).first();
+  await expect(row).toContainText(ring.name);
+  await screenshot(page, "core-D18-biblioteca-importat-1280.png");
+
+  const uploads = await readUploads();
+  note("admin", {
+    course: { id: course.id, name: course.name },
+    forced,
+    placementId: placement.id,
+    ring: ring.name,
+    uploads,
+  });
+  // Every grant the flow asked for (the import's and the build sheet's) was followed by its PUT to
+  // the storage, and every one succeeded.
+  const grants = uploads.filter((line) => line.startsWith("grant "));
+  const puts = uploads.filter((line) => line.startsWith("PUT "));
+  expect(grants.some((line) => line.startsWith("grant BUILD_SHEET → 201"))).toBe(true);
+  expect(puts).toHaveLength(grants.length);
+  expect(puts.every((line) => / → 2\d\d$/u.test(line))).toBe(true);
+});
+
+interface PlannedClass {
+  bookingId: string;
+  classSessionId: string;
+  placementId: string;
+  courseName: string;
+}
+
+/**
+ * A staff member's own booking on a class of a ring with a placement, and that placement planned
+ * for the class (R-16-13, `PATCH /class-sessions/{id} {placementId}`): screen 07 of a staff member.
+ * An ACTIVE booking the account already has comes first; else it books as a member does
+ * (`/me/bookable-classes` → `POST /seat-holds` → `POST /bookings`). `string` when neither is
+ * possible on the run's day: the reason.
+ */
+async function plannedClassOf(
+  phone: Page,
+  admin: { bearer: string; page: Page },
+  planned: Seeded,
+  model: ReturnType<typeof parseSmarterTxt>["courseData"],
+): Promise<PlannedClass | string> {
+  const bearer = bearerOf(phone);
+  /** Why each candidate was passed over (the evidence of a leg that did not run). */
+  const reasons: string[] = [];
+  const dogs = await api(phone, bearer, "GET", "/me/dogs");
+  if (dogs.status !== 200) return `GET /me/dogs → ${String(dogs.status)}`;
+  const dog = (dogs.body as { dogs: { id: string; status: string }[] }).dogs.find(
+    (item) => item.status === "ACTIVE",
+  );
+  if (dog === undefined) return "the account has no ACTIVE dog";
+  const own = await api(phone, bearer, "GET", "/me/bookings");
+  const booked = (
+    own.status === 200
+      ? (
+          own.body as {
+            items: {
+              classSession: { ringName?: string | null };
+              classSessionId: string;
+              id: string;
+              state: string;
+            }[];
+          }
+        ).items
+      : []
+  )
+    .filter((item) => item.state === "ACTIVE" && (item.classSession.ringName ?? null) !== null)
+    .map((item) => ({
+      bookingId: item.id,
+      id: item.classSessionId,
+      ringName: item.classSession.ringName ?? null,
+    }));
+  const bookable = await api(phone, bearer, "GET", `/me/bookable-classes?dogId=${dog.id}`);
+  if (bookable.status !== 200) return `GET /me/bookable-classes → ${String(bookable.status)}`;
+  const classes = (
+    bookable.body as { classes: { id: string; ringName: string | null; state: string }[] }
+  ).classes
+    .filter((item) => item.state === "BOOKABLE" && item.ringName !== null)
+    .map((item) => ({ bookingId: "", id: item.id, ringName: item.ringName }));
+  const rings = (await api(admin.page, admin.bearer, "GET", "/rings")).body as {
+    items: { id: string; name: string }[];
+  };
+  const plannedRing = rings.items.find((ring) => ring.id === planned.ringId)?.name;
+  // Own bookings first, then bookable classes; within each, the planned placement's ring first.
+  const byRing = (items: typeof classes) => [
+    ...items.filter((item) => item.ringName === plannedRing),
+    ...items.filter((item) => item.ringName !== plannedRing),
+  ];
+  for (const candidate of [...byRing(booked), ...byRing(classes)]) {
+    const ring = rings.items.find((item) => item.name === candidate.ringName);
+    if (ring === undefined) {
+      reasons.push(`${candidate.ringName ?? "?"}: not in GET /rings`);
+      continue;
+    }
+    let placementId = ring.id === planned.ringId ? planned.placementId : "";
+    let courseName = planned.courseName;
+    if (placementId === "") {
+      const placements = await api(
+        admin.page,
+        admin.bearer,
+        "GET",
+        `/placements?ringId=${ring.id}`,
+      );
+      const first = (placements.body as { courseId: string; id: string }[] | null)?.[0];
+      if (placements.status === 200 && first !== undefined) {
+        const course = await api(admin.page, admin.bearer, "GET", `/courses/${first.courseId}`);
+        placementId = first.id;
+        courseName = (course.body as { name: string }).name;
+      } else {
+        // A ring nobody has placed a course on: the canonical geometry when it has none (a
+        // ring that already has one keeps it, and is skipped), then a planned placement there.
+        const stored = await api(admin.page, admin.bearer, "GET", `/rings/${ring.id}/geometry`);
+        if (stored.status === 200) {
+          reasons.push(`${ring.name}: a geometry and no placement`);
+          continue;
+        }
+        const target = await ensureGeometry(admin.page, admin.bearer, ring.id);
+        const made = await seedPlacedCourse(admin.page, admin.bearer, target, model, {
+          label: "E9-W05 07",
+          withSetup: false,
+        });
+        placementId = made.placementId;
+        courseName = made.courseName;
+      }
+    }
+    let bookingId = candidate.bookingId;
+    if (bookingId === "") {
+      const hold = await api(phone, bearer, "POST", "/seat-holds", {
+        classSessionId: candidate.id,
+        dogId: dog.id,
+      });
+      if (hold.status !== 201 && hold.status !== 200) {
+        reasons.push(`${ring.name}: POST /seat-holds → ${String(hold.status)} ${codeOf(hold)}`);
+        continue;
+      }
+      const booking = await api(phone, bearer, "POST", "/bookings", {
+        seatHoldId: (hold.body as { id: string }).id,
+      });
+      if (booking.status !== 201 && booking.status !== 200) {
+        reasons.push(`${ring.name}: POST /bookings → ${String(booking.status)} ${codeOf(booking)}`);
+        continue;
+      }
+      bookingId = (booking.body as { id: string }).id;
+    }
+    const session = await api(admin.page, admin.bearer, "GET", `/class-sessions/${candidate.id}`);
+    const patched = await api(
+      admin.page,
+      admin.bearer,
+      "PATCH",
+      `/class-sessions/${candidate.id}`,
+      {
+        placementId,
+        version: (session.body as { version: number }).version,
+      },
+    );
+    // A finished class may refuse the edit: the next candidate.
+    if (patched.status !== 200) {
+      reasons.push(
+        `${ring.name}: PATCH /class-sessions → ${String(patched.status)} ${codeOf(patched)}`,
+      );
+      continue;
+    }
+    return { bookingId, classSessionId: candidate.id, courseName, placementId };
+  }
+  return `no usable class (${String(booked.length)} own bookings, ${String(classes.length)} bookable): ${reasons.join("; ")}`;
+}
+
+function codeOf(answer: ApiAnswer): string {
+  const body = answer.body as { code?: string } | null;
+  return body?.code ?? "";
+}
+
+/** `PUT /members/{id}/roles` as the club admin (S03 R-03-10): the account's membership roles. */
+async function setRoles(
+  admin: { bearer: string; page: Page },
+  memberId: string,
+  roles: readonly string[],
+): Promise<number> {
+  return (await api(admin.page, admin.bearer, "PUT", `/members/${memberId}/roles`, { roles }))
+    .status;
+}
+
+test("E9-W05 · T-16-16 against the core: a planned placement built from 07 on the phone, joined from a ring with no setup (R-16-13, R-16-11, WP-16-F′)", async ({
+  browser,
+}) => {
+  test.setTimeout(420_000);
+  const admin = await adminBearer(browser);
+  const ring = await ensureGeometry(admin.page, admin.bearer);
+  const model = parseSmarterTxt(readFileSync(SMARTER, "utf8"), {
+    sourceFileName: "jp-s-sw.txt",
+  }).courseData;
+  // A placement nobody has built: no setup shows it (R-16-13's «Recorregut previst»).
+  const planned = await seedPlacedCourse(admin.page, admin.bearer, ring, model, {
+    label: "E9-W05",
+    withSetup: false,
+  });
+  // A staff member who also trains a dog: the seeded member gets the INSTRUCTOR role too (the demo
+  // seed's instructor logins are not members, `GET /me/dogs` → 403), and signs in again to carry
+  // it. The roles are put back at the end, whatever happens.
+  const asMember = await clubsPage(browser, "member@example.test", "/inici", "member07");
+  const me = await api(asMember, bearerOf(asMember), "GET", "/me");
+  const memberId = (me.body as { membership: { memberId: string } }).membership.memberId;
+  await asMember.context().close();
+  expect(await setRoles(admin, memberId, ["MEMBER", "INSTRUCTOR"])).toBe(200);
+  try {
+    await plannedFrom07(browser, admin, planned, model);
+  } finally {
+    expect(await setRoles(admin, memberId, ["MEMBER"])).toBe(200);
+  }
+});
+
+async function plannedFrom07(
+  browser: Browser,
+  admin: { bearer: string; page: Page },
+  planned: Seeded,
+  model: ReturnType<typeof parseSmarterTxt>["courseData"],
+): Promise<void> {
+  const phoneA = await clubsPage(
+    browser,
+    "member@example.test",
+    ["/inici", "/instructor/dia"],
+    "phoneA",
+  );
+  const phoneB = await clubsPage(browser, "instructor.2@example.test", "/instructor/dia", "phoneB");
+
+  // 1. Screen 07 of a staff member's own booking: «Recorregut previst» with [Sessió de muntatge].
+  const plannedClass = await plannedClassOf(phoneA, admin, planned, model);
+  let session: { id: string; joinCode: string };
+  if (typeof plannedClass === "string") {
+    // Recorded, never hidden: the leg needs something bookable on the run's day.
+    test.info().annotations.push({ description: plannedClass, type: "07 leg not run" });
+    note("planned-07", { notRun: plannedClass });
+    const started = await api(phoneA, bearerOf(phoneA), "POST", "/build-sessions", {
+      live: true,
+      placementId: planned.placementId,
+    });
+    expect(started.status).toBe(201);
+    session = started.body as { id: string; joinCode: string };
+  } else {
+    await navigateSpa(phoneA, `/reserves/${plannedClass.bookingId}`);
+    await expect(phoneA.getByText(`Recorregut previst: ${plannedClass.courseName}`)).toBeVisible();
+    await screenshot(phoneA, "core-07-recorregut-previst-instructor-375.png");
+    const starting = phoneA.waitForResponse(isCall("POST", /^\/api\/v1\/build-sessions$/u));
+    await phoneA.getByRole("button", { name: "Sessió de muntatge" }).click();
+    const startedResponse = await starting;
+    expect(startedResponse.status()).toBe(201);
+    expect(startedResponse.request().headers()["idempotency-key"]).toMatch(/[0-9a-f-]{36}/u);
+    expect(
+      (JSON.parse(startedResponse.request().postData() ?? "{}") as { placementId?: string })
+        .placementId,
+    ).toBe(plannedClass.placementId);
+    session = (await startedResponse.json()) as { id: string; joinCode: string };
+    await phoneA.waitForURL(`**/instructor/muntatge/${session.id}`);
+    await expect(obstacleList(phoneA).getByRole("button").first()).toBeVisible();
+    await screenshot(phoneA, "core-07-sessio-iniciada-375.png");
+    note("planned-07", {
+      bookingId: plannedClass.bookingId,
+      classSessionId: plannedClass.classSessionId,
+      placementId: plannedClass.placementId,
+      sessionId: session.id,
+    });
+  }
+
+  // 2. Phone B opens the viewer of a ring with no setup: staff get the join-by-code form there.
+  const setups = await api(phoneB, bearerOf(phoneB), "GET", "/me/ring-setups");
+  expect(setups.status).toBe(200);
+  const bare = (setups.body as { ringId: string; setup?: unknown }[]).find(
+    (item) => item.setup === null || item.setup === undefined,
+  );
+  if (bare === undefined) throw new Error("Every ring has a setup: no ring to open bare");
+  await navigateSpa(phoneB, `/recorreguts/muntat/${bare.ringId}`);
+  await expect(phoneB.getByText("Sense recorregut registrat")).toBeVisible();
+  await phoneB.getByLabel("Codi d'una sessió de muntatge").fill(session.joinCode.toLowerCase());
+  await screenshot(phoneB, "core-visor-sense-muntatge-unir-375.png");
+  await phoneB.getByRole("button", { name: "Uneix-t'hi" }).click();
+  await phoneB.waitForURL(`**/instructor/muntatge/${session.id}`);
+  await expect(obstacleList(phoneB).getByRole("button").first()).toBeVisible();
+  note("join-bare-ring", { ringId: bare.ringId, sessionId: session.id });
+}

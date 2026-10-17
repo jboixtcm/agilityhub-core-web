@@ -227,6 +227,7 @@
     "rowNamed": "{course} · {ring} · {name}",
     "sheet": "Build sheet",
     "sheetPending": "Downloading the build sheet",
+    "sheetStale": "The ring's geometry changed: review the placement before printing its build sheet.",
     "sheetFile": "build-sheet-{course}.pdf",
     "sheetFallback": "course"
   }

@@ -1,0 +1,55 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/planning/PlannedCourseSelect.test.tsx (13 tests | 2 failed | 11 skipped) 206ms
+   ❯ R-16-13 «Recorregut previst» of a class (D3 and D4, S16 §2) (9)
+     × R-16-13 E9-W05 #7a D4: the mismatch describes «Recorregut previst» and is never part of its accessible name 185ms
+   ❯ R-16-13 D7 «Col·locacions» of an activity (S16 §2) (4)
+     × R-16-06 / T-16-19 E9-W05 #1 D7 disables a stale placement's stored build sheet and says why 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/planning/PlannedCourseSelect.test.tsx > R-16-13 «Recorregut previst» of a class (D3 and D4, S16 §2) > R-16-13 E9-W05 #7a D4: the mismatch describes «Recorregut previst» and is never part of its accessible name
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAccessibleName()[22m
+
+Expected element to have accessible name:
+[32m  Recorregut previst[39m
+Received:
+[31m  Recorregut previstLa col·locació no pertany a aquesta pista.[39m
+ ❯ src/planning/PlannedCourseSelect.test.tsx:304:20
+    302|     expect(alert).toHaveTextContent("La col·locació no pertany a aques…
+    303|     expect(select).toHaveAccessibleDescription("La col·locació no pert…
+    304|     expect(select).toHaveAccessibleName("Recorregut previst");
+       |                    ^
+    305|     // The alert sits after the label that names the select, not insid…
+    306|     expect(select.closest("label")).not.toContainElement(alert);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/planning/PlannedCourseSelect.test.tsx > R-16-13 D7 «Col·locacions» of an activity (S16 §2) > R-16-06 / T-16-19 E9-W05 #1 D7 disables a stale placement's stored build sheet and says why
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<button
+  class="ah-button ah-button--ghost"
+  type="button"
+/>[39m
+ ❯ src/planning/PlannedCourseSelect.test.tsx:480:19
+    478|     );
+    479|     const sheet = await screen.findByRole("button", { name: "Full de m…
+    480|     expect(sheet).toBeDisabled();
+       |                   ^
+    481|     expect(sheet).toHaveAccessibleDescription(
+    482|       "La geometria de la pista ha canviat: revisa la col·locació aban…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 11 skipped (13)
+   Start at  02:10:42
+   Duration  1.51s (transform 46%, environment 19%, import 16%, tests 14%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/planning/PlannedCourseSelect.test.tsx -t E9-W05

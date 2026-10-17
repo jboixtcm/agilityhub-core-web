@@ -49,7 +49,8 @@ export interface Branding {
     /** The club's legal name and tax id (`ClubSummary`), for the public footer. */
     legalName?: string | null;
     name: string;
-    slug: string;
+    /** `null` on a product host (`ClubSummary.slug`, S17 §2 «Entrada»), whose branding is the product's. */
+    slug: string | null;
     taxId?: string | null;
   };
   countryProfile: unknown;

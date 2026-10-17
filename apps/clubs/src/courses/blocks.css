@@ -54,6 +54,12 @@ a.course-blocks__line:focus-visible {
   min-width: 0;
 }
 
+/* 07, staff only (E9-W05): [Sessió de muntatge] of the planned course, its error under it. */
+.course-blocks__action {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
 .course-blocks__chev {
   flex: 0 0 auto;
   color: var(--ah-color-text-muted);

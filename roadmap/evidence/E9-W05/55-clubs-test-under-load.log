@@ -1,0 +1,45 @@
+
+> clubs@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+ ❯ src/courses/courses.test.tsx (27 tests | 1 failed) 10346ms
+   ❯ E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type (5)
+     × R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup 345ms
+Not implemented: navigation to another Document
+Not implemented: navigation to another Document
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+AssertionError: expected '/recorreguts/setup-muntanya-dijous' to be '/instructor/avui' // Object.is equality
+
+Expected: "/instructor/avui"
+Received: "/recorreguts/setup-muntanya-dijous"
+
+ ❯ src/courses/courses.test.tsx:553:38
+    551|       setTimeout(resolve, 50);
+    552|     });
+    553|     expect(window.location.pathname).toBe("/instructor/avui");
+       |                                      ^
+    554|   });
+    555| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 31 passed (32)
+      Tests  1 failed | 599 passed (600)
+   Start at  08:36:59
+   Duration  20.94s (tests 58%, environment 17%, transform 13%, import 8%, setup 4%)
+
+    Isolate  32 workers spawned · ~1.72s startup each (spawn + environment, per file)
+             at least ~1.52s faster with isolate: false — reuses workers across files instead of one per file
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test: `vitest run`
+Exit status 1

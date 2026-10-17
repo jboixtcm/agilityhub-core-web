@@ -902,6 +902,33 @@ describe("T-16-16 D12: the rings' courses set up (S16 §2 «icona a la capçaler
     ).not.toBeInTheDocument();
   });
 
+  it("R-16-09: an ADMIN session refused by /me/ring-setups (403) still sees the strip, read from each ring's history", async () => {
+    const requests = recordRequests();
+    server.use(
+      http.get("*/api/v1/me/ring-setups", () =>
+        HttpResponse.json(
+          { code: "FORBIDDEN", details: {}, message: "Forbidden", traceId: "t" },
+          { status: 403 },
+        ),
+      ),
+    );
+    const { onNavigate } = await renderAgenda({ scenario: "admin" });
+    const strip = await screen.findByRole("list", { name: "Recorreguts muntats a les pistes" });
+    const muntanya = await within(strip).findByRole("button", {
+      name: /^Muntanya: Jumping · .*muntat ahir$/u,
+    });
+    expect(
+      within(strip).getByRole("button", { name: "Central: Fun · muntat fa 2 dies" }),
+    ).toBeVisible();
+    expect(
+      requests.some((request) => request.line.startsWith("GET /rings/ring-muntanya/setups")),
+    ).toBe(true);
+    fireEvent.click(muntanya);
+    const dialog = await screen.findByRole("dialog", { name: "Muntanya" });
+    fireEvent.click(await within(dialog).findByRole("button", { name: "Obre el recorregut" }));
+    expect(onNavigate).toHaveBeenCalledWith("/recorreguts/course-jumping-dijous");
+  });
+
   it("R-16-15: without COURSES there is no icon and no read of /me/ring-setups", async () => {
     const requests = recordRequests();
     await renderAgenda({ modules: canic.modules.filter((module) => module !== "COURSES") });

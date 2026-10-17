@@ -22,6 +22,7 @@
     "CLASS_UPDATED_WITH_BOOKINGS": "Classe amb reserves modificada",
     "CLUB_ADMIN_INVITED": "Administrador del club convidat",
     "CLUB_CREATED": "Club creat",
+    "CLUB_DOMAIN_CHANGED": "Domini del club modificat",
     "CLUB_MODULES_CHANGED": "Mòduls del club modificats",
     "CLUB_PAYMENT_PROVIDER_CHANGED": "Proveïdor de pagament del club modificat",
     "CLUB_STATUS_CHANGED": "Estat del club modificat",
@@ -63,6 +64,7 @@
     "PAYMENT_REFUND_INTERVENTION": "Intervenció en el reemborsament del pagament",
     "PAYMENT_REFUNDED": "Pagament reemborsat",
     "PLATFORM_ROLES_CHANGED": "Rols de plataforma modificats",
+    "PUBLIC_API_KEY_ROTATED": "Clau d'API pública renovada",
     "REMITTANCE_GENERATED": "Remesa generada",
     "REMITTANCE_ROLLED_BACK": "Remesa retrocedida",
     "REMITTANCE_SUBMITTED": "Remesa marcada com a enviada al banc",
@@ -73,6 +75,7 @@
     "SIGNUP_EDITED": "Preinscripció modificada",
     "SIGNUP_REJECTED": "Preinscripció rebutjada",
     "SIGNUP_SUBMITTED": "Sol·licitud d'alta enviada",
+    "SUPPORT_ACCESS_STARTED": "Accés de suport iniciat",
     "TEMPLATE_BAND_DELETED": "Franja de plantilla esborrada",
     "TEMPLATE_CLASS_DELETED": "Classe de plantilla eliminada",
     "TRAINING_BOOKED_BY_CLUB": "Entrenament reservat pel club",
@@ -157,6 +160,7 @@
   "origins": {
     "APP": "App",
     "BACKOFFICE": "Backoffice",
+    "PLATFORM_SUPPORT": "Suport d'AgilityHub",
     "PUBLIC": "Formulari públic",
     "SYSTEM": "Sistema",
     "WEBHOOK": "Webhook"

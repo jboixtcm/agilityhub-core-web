@@ -22,6 +22,7 @@
     "CLASS_UPDATED_WITH_BOOKINGS": "Clase con reservas modificada",
     "CLUB_ADMIN_INVITED": "Administrador del club invitado",
     "CLUB_CREATED": "Club creado",
+    "CLUB_DOMAIN_CHANGED": "Dominio del club modificado",
     "CLUB_MODULES_CHANGED": "Módulos del club modificados",
     "CLUB_PAYMENT_PROVIDER_CHANGED": "Proveedor de pago del club modificado",
     "CLUB_STATUS_CHANGED": "Estado del club modificado",
@@ -63,6 +64,7 @@
     "PAYMENT_REFUND_INTERVENTION": "Intervención en el reembolso del pago",
     "PAYMENT_REFUNDED": "Pago reembolsado",
     "PLATFORM_ROLES_CHANGED": "Roles de plataforma modificados",
+    "PUBLIC_API_KEY_ROTATED": "Clave de API pública renovada",
     "REMITTANCE_GENERATED": "Remesa generada",
     "REMITTANCE_ROLLED_BACK": "Remesa retrocedida",
     "REMITTANCE_SUBMITTED": "Remesa marcada como enviada al banco",
@@ -73,6 +75,7 @@
     "SIGNUP_EDITED": "Preinscripción modificada",
     "SIGNUP_REJECTED": "Preinscripción rechazada",
     "SIGNUP_SUBMITTED": "Solicitud de alta enviada",
+    "SUPPORT_ACCESS_STARTED": "Acceso de soporte iniciado",
     "TEMPLATE_BAND_DELETED": "Franja de plantilla borrada",
     "TEMPLATE_CLASS_DELETED": "Clase de plantilla eliminada",
     "TRAINING_BOOKED_BY_CLUB": "Entrenamiento reservado por el club",
@@ -157,6 +160,7 @@
   "origins": {
     "APP": "App",
     "BACKOFFICE": "Backoffice",
+    "PLATFORM_SUPPORT": "Soporte de AgilityHub",
     "PUBLIC": "Formulario público",
     "SYSTEM": "Sistema",
     "WEBHOOK": "Webhook"

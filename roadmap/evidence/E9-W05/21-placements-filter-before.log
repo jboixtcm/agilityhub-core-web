@@ -1,0 +1,43 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/course-handlers.test.ts (32 tests | 1 failed | 31 skipped) 22ms
+   ❯ E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) (22)
+     × T-16-05 R-16-16 GET /placements: a ringId or activityId that is not the club's (another club's, or unknown) → 404 NOT_FOUND, not an empty list; the club's own filter its placements 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > T-16-05 R-16-16 GET /placements: a ringId or activityId that is not the club's (another club's, or unknown) → 404 NOT_FOUND, not an empty list; the club's own filter its placements
+AssertionError: coursesOtherClub ringId=ring-central: expected { body: [], status: 200 } to match object { body: { code: 'NOT_FOUND' }, …(1) }
+
+- Expected
++ Received
+
+  {
+-   "body": {
+-     "code": "NOT_FOUND",
+-   },
+-   "status": 404,
++   "body": [],
++   "status": 200,
+  }
+
+ ❯ src/mocks/course-handlers.test.ts:427:45
+    425|     ] as const) {
+    426|       const refused = await call<Schemas["ApiError"]>(caller, "GET", `…
+    427|       expect(refused, `${caller} ${query}`).toMatchObject({
+       |                                             ^
+    428|         body: { code: "NOT_FOUND" },
+    429|         status: 404,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 skipped (32)
+   Start at  02:06:21
+   Duration  1.17s (transform 61%, import 37%, tests 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/course-handlers.test.ts -t GET /placements: a ringId or activityId that is not the club

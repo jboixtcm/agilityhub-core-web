@@ -227,6 +227,7 @@
     "rowNamed": "{course} · {ring} · {name}",
     "sheet": "Hoja de montaje",
     "sheetPending": "Descargando la hoja de montaje",
+    "sheetStale": "La geometría de la pista ha cambiado: revisa la colocación antes de sacar la hoja de montaje.",
     "sheetFile": "hoja-de-montaje-{course}.pdf",
     "sheetFallback": "recorrido"
   }

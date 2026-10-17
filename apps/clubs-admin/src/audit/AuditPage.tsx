@@ -162,6 +162,8 @@ function originLabel(t: Translation, origin: AuditOrigin): string {
       return t("admin-audit:origins.APP");
     case "BACKOFFICE":
       return t("admin-audit:origins.BACKOFFICE");
+    case "PLATFORM_SUPPORT":
+      return t("admin-audit:origins.PLATFORM_SUPPORT");
     case "PUBLIC":
       return t("admin-audit:origins.PUBLIC");
     case "SYSTEM":
@@ -190,7 +192,10 @@ function roleLabel(t: Translation, role: AuditRole): string {
 
 function filterLabel(t: Translation, field: string, value: string): string {
   if (field === "action") return actionLabel(t, value);
-  if (field === "origin" && ["APP", "BACKOFFICE", "PUBLIC", "SYSTEM", "WEBHOOK"].includes(value)) {
+  if (
+    field === "origin" &&
+    ["APP", "BACKOFFICE", "PLATFORM_SUPPORT", "PUBLIC", "SYSTEM", "WEBHOOK"].includes(value)
+  ) {
     return originLabel(t, value as AuditOrigin);
   }
   if (field === "actorRole" && isAuditRole(value)) {

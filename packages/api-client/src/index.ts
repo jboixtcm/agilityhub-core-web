@@ -119,6 +119,7 @@ export {
   useRingBlockGrid,
   useRingBlockSubmit,
 } from "./ring-blocks";
+export { readRingActiveSetup, readRingSetups, ringSetupSummary } from "./ring-setups";
 export {
   STUDENT_SEARCH_PAGE_SIZE,
   type StudentSearchDog,

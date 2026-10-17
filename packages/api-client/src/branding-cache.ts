@@ -54,7 +54,7 @@ function isNormalizedBranding(value: unknown): value is NormalizedBranding {
   const theme = candidate.theme;
   const colors = theme?.colors;
   return (
-    typeof candidate.club?.slug === "string" &&
+    (typeof candidate.club?.slug === "string" || candidate.club?.slug === null) &&
     typeof candidate.club.name === "string" &&
     candidate.countryProfile !== undefined &&
     typeof candidate.currency === "string" &&

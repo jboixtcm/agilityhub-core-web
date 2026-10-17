@@ -533,6 +533,8 @@ if [[ "$staged" == true ]]; then
   # E9-W04: S16 in the members' app (the viewer, «Registra què hi ha muntat», a build session on
   # two phones through the SSE stream) on its own fresh seed; the demo seed has no course, so the
   # spec stores Muntanya's geometry, a course, its placement and a setup through the api first.
+  # E9-W05: the same stage drives the backoffice too (D18's library and import wizard, the
+  # placement editor, the stored build sheet) and a build session started from 07's planned course.
   export CORE_TEST_FILES="e9-core.spec.ts"
   export SEED_WEEK_START="$E4_WEEK_START"
   run_stage e9

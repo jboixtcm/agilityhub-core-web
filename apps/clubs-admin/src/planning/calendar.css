@@ -173,6 +173,11 @@
   gap: var(--ah-space-2);
 }
 
+/* A chip's error (e.g. «Recorregut previst») sits after its label, on a line of its own. */
+.calendar-chips > .ah-form-field__error {
+  flex-basis: 100%;
+}
+
 .calendar-chip {
   position: relative;
   display: inline-flex;

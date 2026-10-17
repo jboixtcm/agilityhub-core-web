@@ -5,6 +5,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import openapiDocument from "../../openapi/openapi.json";
 import type { components } from "../generated/schema";
 
+import { ACTIVITY_IDS } from "./fixtures/activities";
 import { clubInstant } from "./fixtures/calendar";
 import { addDays, clubLocalDate } from "./fixtures/planning";
 import { findParameter, replaceParameter } from "./fixtures/settings";
@@ -274,8 +275,10 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
     ]);
     const placements = await call<Schemas["Placement"][]>(other, "GET", "/placements");
     expect(placements.body).toEqual([]);
-    // The writes.
-    await notFound("DELETE", "/rings/ring-carretera/geometry?version=1");
+    // The writes. Both rings have a geometry at that version: only the tenant refuses them.
+    expect(courseState.geometries["ring-muntanya"]?.version).toBe(4);
+    expect(courseState.geometries["ring-central"]?.version).toBe(1);
+    await notFound("DELETE", "/rings/ring-muntanya/geometry?version=4");
     await notFound("DELETE", "/rings/ring-central/geometry?version=1");
     await notFound("PUT", "/obstacle-inventories/ring:ring-central", {
       items: [{ count: 1, type: "Jump" }],
@@ -283,9 +286,24 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
     await notFound("POST", `/ring-setups/${SETUP_IDS.muntanyaActive}/dismantle`);
     await notFound("POST", `/ring-setups/${SETUP_IDS.centralPhoto}/renewal`, {});
     await notFound("PUT", `/placements/${PLACEMENT_IDS.centralLeague}`, {});
+    // A real BUILD_SHEET upload of that club (granted and uploaded): only the placement's tenant
+    // refuses it, and this club's stored sheet stays.
+    const storedSheet = courseState.placements.find(
+      (item) => item.id === PLACEMENT_IDS.centralLeague,
+    )?.buildSheetFileKey;
+    const theirSheet = await upload(
+      other,
+      "BUILD_SHEET",
+      "application/pdf",
+      new TextEncoder().encode("%PDF-1.4 theirs"),
+    );
     await notFound("POST", `/placements/${PLACEMENT_IDS.centralLeague}/build-sheet`, {
-      fileKey: "x",
+      fileKey: theirSheet,
     });
+    expect(
+      courseState.placements.find((item) => item.id === PLACEMENT_IDS.centralLeague)
+        ?.buildSheetFileKey,
+    ).toBe(storedSheet);
     const sheet = await buildSheet(other, PLACEMENT_IDS.centralLeague);
     expect(sheet.status).toBe(404);
     // Its own club inventory is its own: this club's stays as it was.
@@ -304,6 +322,8 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
       "/obstacle-inventories/club",
     );
     expect(read.body.items).toEqual([{ count: 3, type: "Jump" }]);
+    // With a club inventory of its own, this club's ring is still not found (not its inventory).
+    await notFound("GET", "/obstacle-inventories/ring:ring-muntanya");
     const mine = await call<Schemas["ObstacleInventory"]>(
       "admin",
       "GET",
@@ -323,6 +343,171 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
     expect(courseState.setups.find((item) => item.id === SETUP_IDS.centralPhoto)?.expiresAt).toBe(
       clubInstant(addDays(clubLocalDate(), 5), "00:00"),
     );
+  });
+
+  it("T-16-05 R-16-16 / CONVENCIONS_API §7 (E62): an Idempotency-Key reused by another caller (another club's ADMIN, this club's INSTRUCTOR) with the same body → 409 IDEMPOTENCY_KEY_REUSED {DIFFERENT_REQUEST}, never this club's stored answer; the same caller's retry replays it", async () => {
+    const reused = {
+      body: { code: "IDEMPOTENCY_KEY_REUSED", details: { reason: "DIFFERENT_REQUEST" } },
+      status: 409,
+    };
+    // POST /courses: this club's course is never handed to the other club.
+    const imageFileKey = await upload("admin", "COURSE_IMAGE", "image/png", new Uint8Array([1]));
+    const course = {
+      discipline: "OTHER",
+      imageFileKey,
+      levelIds: [],
+      name: { ca: "Plànol compartit" },
+      source: "IMAGE",
+      tags: [],
+      visibility: "CLUB",
+    };
+    const courseKey = { "Idempotency-Key": "shared-course-1" };
+    const created = await call<Schemas["Course"]>("admin", "POST", "/courses", course, courseKey);
+    expect(created.status).toBe(201);
+    const count = courseState.courses.length;
+    for (const caller of ["coursesOtherClub", "instructor"] as const) {
+      const theirs = await call<Schemas["ApiError"]>(caller, "POST", "/courses", course, courseKey);
+      expect(theirs, caller).toMatchObject(reused);
+      expect(JSON.stringify(theirs.body), caller).not.toContain(created.body.id);
+    }
+    expect(courseState.courses).toHaveLength(count);
+    const retried = await call<Schemas["Course"]>("admin", "POST", "/courses", course, courseKey);
+    expect(retried).toEqual(created);
+
+    // dismantle and renewal: the setup of this club is never read back by the other club.
+    const dismantle = `/ring-setups/${SETUP_IDS.muntanyaActive}/dismantle`;
+    const dismantleKey = { "Idempotency-Key": "shared-dismantle-1" };
+    const dismantled = await call<Schemas["RingSetup"]>(
+      "admin",
+      "POST",
+      dismantle,
+      undefined,
+      dismantleKey,
+    );
+    expect(dismantled).toMatchObject({ body: { status: "DISMANTLED" }, status: 200 });
+    for (const caller of ["coursesOtherClub", "instructor"] as const) {
+      const theirs = await call<Schemas["ApiError"]>(
+        caller,
+        "POST",
+        dismantle,
+        undefined,
+        dismantleKey,
+      );
+      expect(theirs, caller).toMatchObject(reused);
+    }
+    expect(
+      await call<Schemas["RingSetup"]>("admin", "POST", dismantle, undefined, dismantleKey),
+    ).toEqual(dismantled);
+
+    const renewal = `/ring-setups/${SETUP_IDS.centralPhoto}/renewal`;
+    const renewalKey = { "Idempotency-Key": "shared-renewal-1" };
+    const renewed = await call<Schemas["RingSetup"]>("admin", "POST", renewal, {}, renewalKey);
+    expect(renewed).toMatchObject({ body: { id: SETUP_IDS.centralPhoto }, status: 200 });
+    const otherRenewal = await call<Schemas["ApiError"]>(
+      "coursesOtherClub",
+      "POST",
+      renewal,
+      {},
+      renewalKey,
+    );
+    expect(otherRenewal).toMatchObject(reused);
+    expect(await call<Schemas["RingSetup"]>("admin", "POST", renewal, {}, renewalKey)).toEqual(
+      renewed,
+    );
+  });
+
+  it("T-16-05 R-16-16 GET /placements: a ringId or activityId that is not the club's (another club's, or unknown) → 404 NOT_FOUND, not an empty list; the club's own filter its placements", async () => {
+    for (const [caller, query] of [
+      ["coursesOtherClub", "ringId=ring-central"],
+      ["coursesOtherClub", `activityId=${ACTIVITY_IDS.league}`],
+      ["admin", "ringId=ring-x"],
+      ["admin", "activityId=activity-x"],
+    ] as const) {
+      const refused = await call<Schemas["ApiError"]>(caller, "GET", `/placements?${query}`);
+      expect(refused, `${caller} ${query}`).toMatchObject({
+        body: { code: "NOT_FOUND" },
+        status: 404,
+      });
+    }
+    for (const query of ["ringId=ring-central", `activityId=${ACTIVITY_IDS.league}`]) {
+      const own = await call<Schemas["Placement"][]>("admin", "GET", `/placements?${query}`);
+      expect(
+        own.body.map((item) => item.id),
+        query,
+      ).toEqual([PLACEMENT_IDS.centralLeague]);
+    }
+  });
+
+  it("R-16-05 / R-16-16 POST and PUT /placements: an activityId that is not an activity of the club → 404 NOT_FOUND (nothing stored); an activity of the club is linked", async () => {
+    const stored = courseState.placements.find((item) => item.id === PLACEMENT_IDS.muntanyaJumping);
+    if (stored === undefined) throw new Error("PLACEMENT_NOT_FOUND");
+    const body: Schemas["PlacementRequest"] = {
+      courseId: COURSE_IDS.jumping,
+      courseVersion: 3,
+      placementMode: "CENTERED",
+      resolvedObstacles: stored.resolvedObstacles,
+      ringId: "ring-muntanya",
+      transform: stored.transform,
+      warnings: [],
+    };
+    const count = courseState.placements.length;
+    const created = await call<Schemas["ApiError"]>("admin", "POST", "/placements", {
+      ...body,
+      activityId: "activity-x",
+    });
+    expect(created).toMatchObject({ body: { code: "NOT_FOUND" }, status: 404 });
+    expect(courseState.placements).toHaveLength(count);
+    const replaced = await call<Schemas["ApiError"]>("admin", "PUT", `/placements/${stored.id}`, {
+      ...body,
+      activityId: "activity-x",
+      version: stored.version,
+    });
+    expect(replaced).toMatchObject({ body: { code: "NOT_FOUND" }, status: 404 });
+    expect(courseState.placements.find((item) => item.id === stored.id)?.version).toBe(
+      stored.version,
+    );
+    const linked = await call<Schemas["Placement"]>("admin", "POST", "/placements", {
+      ...body,
+      activityId: ACTIVITY_IDS.league,
+    });
+    expect(linked).toMatchObject({ body: { activityId: ACTIVITY_IDS.league }, status: 201 });
+  });
+
+  it("T-16-19 R-16-10 build sheet: a BUILD_SHEET key granted but never uploaded → 404 NOT_FOUND and the placement keeps its sheet; once uploaded, the same key is bound", async () => {
+    const path = `/placements/${PLACEMENT_IDS.centralLeague}/build-sheet`;
+    const before = await buildSheet("admin", PLACEMENT_IDS.centralLeague);
+    expect(before.status).toBe(200);
+    const storedKey = courseState.placements.find(
+      (item) => item.id === PLACEMENT_IDS.centralLeague,
+    )?.buildSheetFileKey;
+    const pdf = new TextEncoder().encode("%PDF-1.4 late");
+    const grant = await call<Schemas["CourseUploadUrl"]>("admin", "POST", "/courses/upload-urls", {
+      contentType: "application/pdf",
+      purpose: "BUILD_SHEET",
+      size: pdf.length,
+    });
+    expect(grant.status).toBe(201);
+    const early = await call<Schemas["ApiError"]>("admin", "POST", path, {
+      fileKey: grant.body.fileKey,
+    });
+    expect(early).toMatchObject({ body: { code: "NOT_FOUND" }, status: 404 });
+    expect(
+      courseState.placements.find((item) => item.id === PLACEMENT_IDS.centralLeague)
+        ?.buildSheetFileKey,
+    ).toBe(storedKey);
+    expect(await buildSheet("admin", PLACEMENT_IDS.centralLeague)).toEqual(before);
+
+    const put = await fetch(grant.body.uploadUrl, {
+      body: pdf,
+      headers: { "Content-Type": "application/pdf" },
+      method: "PUT",
+    });
+    expect(put.status).toBe(200);
+    const bound = await call<Schemas["Placement"]>("admin", "POST", path, {
+      fileKey: grant.body.fileKey,
+    });
+    expect(bound).toMatchObject({ body: { buildSheetFileKey: grant.body.fileKey }, status: 200 });
+    expect((await buildSheet("admin", PLACEMENT_IDS.centralLeague)).bytes).toEqual(pdf);
   });
 
   it("R-16-16 upload keys: fileKey = {the caller's clubId}/courses/{uuid}; another club's upload is NOT_FOUND here; BUILD_SHEET is application/pdf only", async () => {

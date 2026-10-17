@@ -1,6 +1,7 @@
 import { ApiError, createApiClient } from "@agilityhub/api-client";
 import {
   catalogState,
+  courseState,
   mockScenario,
   PLACEMENT_IDS,
   planningState,
@@ -278,6 +279,33 @@ describe("R-16-13 «Recorregut previst» of a class (D3 and D4, S16 §2)", () =>
     expect(screen.getAllByRole("alert")).toHaveLength(1);
   });
 
+  it("R-16-13 E9-W05 #7a D4: the mismatch describes «Recorregut previst» and is never part of its accessible name", async () => {
+    server.use(
+      http.patch("*/api/v1/class-sessions/:id", () =>
+        HttpResponse.json(
+          {
+            code: "PLACEMENT_RING_MISMATCH",
+            details: null,
+            message: "Placement ring mismatch",
+            traceId: "trace",
+          },
+          { status: 422 },
+        ),
+      ),
+    );
+    await renderWith(selectedCard(muntanyaSession()));
+    await screen.findByRole("option", { name: "Jumping del dijous · Dijous tarda" });
+    const select = screen.getByRole("combobox", { name: "Recorregut previst" });
+    fireEvent.change(select, { target: { value: PLACEMENT_IDS.muntanyaJumping } });
+    fireEvent.click(screen.getByRole("button", { name: "ACCEPTA" }));
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent("La col·locació no pertany a aquesta pista.");
+    expect(select).toHaveAccessibleDescription("La col·locació no pertany a aquesta pista.");
+    expect(select).toHaveAccessibleName("Recorregut previst");
+    // The alert sits after the label that names the select, not inside it.
+    expect(select.closest("label")).not.toContainElement(alert);
+  });
+
   it("R-16-13 D4: a new ring drops the class's planned course in the same PATCH", async () => {
     const session = muntanyaSession();
     session.placementId = PLACEMENT_IDS.muntanyaJumping;
@@ -422,6 +450,39 @@ describe("R-16-13 D7 «Col·locacions» of an activity (S16 §2)", () => {
     const bytes = new Uint8Array(await (saved[0] ?? new Blob()).arrayBuffer());
     expect(String.fromCharCode(...bytes.slice(0, 5))).toBe("%PDF-");
     vi.restoreAllMocks();
+  });
+
+  it("R-16-06 / T-16-19 E9-W05 #1 D7 disables a stale placement's stored build sheet and says why", async () => {
+    const league = courseState.placements.find((item) => item.id === PLACEMENT_IDS.centralLeague);
+    if (league === undefined) throw new Error("PLACEMENT_NOT_FOUND");
+    expect(league.buildSheetFileKey).not.toBeNull();
+    // Central's geometry changed after the sheet was stored (R-16-06).
+    league.stale = true;
+    const requested: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      requested.push(`${request.method} ${new URL(request.url).pathname}`);
+    };
+    server.events.on("request:start", listener);
+    onTestFinished(() => {
+      server.events.removeListener("request:start", listener);
+    });
+    await renderWith(
+      <ActivityPlacementsCard
+        activityId="activity-lliga-social-3"
+        client={client()}
+        onNavigate={() => undefined}
+        placementIds={[PLACEMENT_IDS.centralLeague]}
+        readOnly
+        rings={catalogState.rings}
+      />,
+    );
+    const sheet = await screen.findByRole("button", { name: "Full de muntatge" });
+    expect(sheet).toBeDisabled();
+    expect(sheet).toHaveAccessibleDescription(
+      "La geometria de la pista ha canviat: revisa la col·locació abans de treure'n el full de muntatge.",
+    );
+    fireEvent.click(sheet);
+    expect(requested.filter((item) => item.endsWith("/build-sheet"))).toEqual([]);
   });
 
   it("an INSTRUCTOR reads the placements without [Afegeix] (D7 is read-only for them)", async () => {

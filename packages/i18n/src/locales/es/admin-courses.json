@@ -237,7 +237,7 @@
     "title": "Hoja de marcadores · {ring}",
     "marker": "Marcador {label}",
     "position": "Posición en la pista: x {x} m · y {y} m",
-    "size": "Tamaño impreso: {mm} mm (con el margen blanco)",
+    "size": "Tamaño impreso: {mm, number} mm (con el margen blanco)",
     "identifiers": "{uid} · AprilTag 36h11 n.º {tag}",
     "instructions": "Imprímelo a tamaño real, sin ajustar a la página. Fíjalo plano y bien visible en el punto de la pista que indica la posición, sin tapar el margen blanco."
   },
@@ -306,7 +306,7 @@
     "notANumber": "debe ser un número",
     "precheck": "Revisa estos campos antes de guardar:",
     "markerSheetNoMarker": "Ningún marcador activo: activa al menos uno para sacar la hoja.",
-    "markerSheetTooLarge": "{labels}: miden más de {mm} mm y no caben en la página a tamaño real."
+    "markerSheetTooLarge": "{labels}: miden más de {mm, number} mm y no caben en la página a tamaño real."
   },
   "doors": {
     "title": "Puertas de {name} ({count}/{maximum})",

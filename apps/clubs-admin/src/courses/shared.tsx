@@ -61,7 +61,9 @@ export function kindOf(discipline: Discipline): SetupKind {
  */
 export function useCourseStore(client: ApiClient): CoreApiStore {
   const branding = useBranding();
-  const { city, name, slug } = branding.club;
+  const { city, name } = branding.club;
+  // A club host always has a slug; only a product host's branding carries `null`.
+  const slug = branding.club.slug ?? "";
   const store = useMemo(
     () =>
       new CoreApiStore({
@@ -298,7 +300,8 @@ export function useSheetFileNames() {
 /**
  * Who is refused `POST /ring-setups` in this session (club and account): an INSTRUCTOR cannot read
  * `courses.allowInstructorPublish` (MATRIU_PERMISOS: `/parameters` is ADMIN-only), so the api's
- * `403 FORBIDDEN` is how the screen learns the switch is off; from then on the action is hidden.
+ * `403 FORBIDDEN` is how the screen learns the switch is off; from then on the action is hidden,
+ * until the parameter is read as `true` again (then the refusal is forgotten).
  */
 const setupRefusals = new Set<string>();
 
@@ -320,7 +323,7 @@ export function useSetupPermission(client: ApiClient): {
   const session = useSession();
   const branding = useBranding();
   const admin = session.roles.includes("ADMIN");
-  const who = `${branding.club.slug}:${session.me?.account.id ?? ""}`;
+  const who = `${branding.club.slug ?? ""}:${session.me?.account.id ?? ""}`;
   const [switchOff, setSwitchOff] = useState(false);
   const [, setRefusedAt] = useState(0);
   useEffect(() => {
@@ -330,14 +333,19 @@ export function useSetupPermission(client: ApiClient): {
       .GET("/parameters/{key}", { params: { path: { key: "courses.allowInstructorPublish" } } })
       .then(
         (result) => {
-          if (active) setSwitchOff(result.data?.value === false);
+          if (!active) return;
+          setSwitchOff(result.data?.value === false);
+          // The switch reads on again: an earlier refusal no longer holds (no reload needed).
+          if (result.data?.value === true && setupRefusals.delete(who)) {
+            setRefusedAt((value) => value + 1);
+          }
         },
         () => undefined,
       );
     return () => {
       active = false;
     };
-  }, [admin, client]);
+  }, [admin, client, who]);
   return {
     allowed: admin || (!switchOff && !setupRefusals.has(who)),
     refused: () => {

@@ -1,0 +1,194 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/course-handlers.test.ts (32 tests | 1 failed | 31 skipped) 32ms
+   ❯ E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) (22)
+     × T-16-19 R-16-10 build sheet: a BUILD_SHEET key granted but never uploaded → 404 NOT_FOUND and the placement keeps its sheet; once uploaded, the same key is bound 30ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > T-16-19 R-16-10 build sheet: a BUILD_SHEET key granted but never uploaded → 404 NOT_FOUND and the placement keeps its sheet; once uploaded, the same key is bound
+AssertionError: expected { body: { …(24) }, status: 200 } to match object { body: { code: 'NOT_FOUND' }, …(1) }
+(29 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "body": {
+-     "code": "NOT_FOUND",
++     "activityId": "activity-lliga-social-3",
++     "buildSheetFileKey": "50000000-0000-4000-8000-000000000001/courses/00000000-0000-4000-8000-000000000001",
++     "classSessionIds": [],
++     "courseId": "course-agility-c-d",
++     "courseVersion": 1,
++     "createdAt": "2026-10-10T08:00:00Z",
++     "createdByAccountId": "10000000-0000-4000-8000-000000000001",
++     "displayName": null,
++     "grades": [],
++     "id": "placement-central-lliga",
++     "mode": "EVENT",
++     "name": "Lliga social · recorregut 1",
++     "placementMode": "CENTERED",
++     "resolvedObstacles": [
++       {
++         "numbers": [
++           1,
++         ],
++         "obstacleId": "1",
++         "rotationDeg": -90,
++         "type": "Jump",
++         "x": 6,
++         "y": 20,
++       },
++       {
++         "numbers": [
++           2,
++         ],
++         "obstacleId": "2",
++         "rotationDeg": -90,
++         "type": "AFrame",
++         "x": 12,
++         "y": 19,
++       },
++       {
++         "numbers": [
++           3,
++         ],
++         "obstacleId": "3",
++         "rotationDeg": -90,
++         "type": "Jump",
++         "x": 18,
++         "y": 20,
++       },
++       {
++         "numbers": [
++           4,
++         ],
++         "obstacleId": "4",
++         "rotationDeg": 0,
++         "type": "Tunnel5m",
++         "x": 23,
++         "y": 17,
+        },
+-   "status": 404,
++       {
++         "numbers": [
++           5,
++         ],
++         "obstacleId": "5",
++         "rotationDeg": 0,
++         "type": "Jump",
++         "x": 28,
++         "y": 14,
++       },
++       {
++         "numbers": [
++           6,
++         ],
++         "obstacleId": "6",
++         "rotationDeg": -90,
++         "type": "DogWalk",
++         "x": 24,
++         "y": 9,
++       },
++       {
++         "numbers": [
++           7,
++         ],
++         "obstacleId": "7",
++         "rotationDeg": -90,
++         "type": "Jump",
++         "x": 17,
++         "y": 7,
++       },
++       {
++         "numbers": [
++           8,
++         ],
++         "obstacleId": "8",
++         "rotationDeg": -90,
++         "type": "Seesaw",
++         "x": 11,
++         "y": 8,
++       },
++       {
++         "numbers": [
++           9,
++         ],
++         "obstacleId": "9",
++         "rotationDeg": 0,
++         "type": "Tire",
++         "x": 7,
++         "y": 11,
++       },
++       {
++         "numbers": [
++           10,
++         ],
++         "obstacleId": "10",
++         "rotationDeg": -90,
++         "type": "Weave",
++         "x": 14,
++         "y": 13,
++       },
++       {
++         "numbers": [
++           11,
++         ],
++         "obstacleId": "11",
++         "rotationDeg": 0,
++         "type": "Jump",
++         "x": 20,
++         "y": 13,
++       },
++       {
++         "numbers": [
++           12,
++         ],
++         "obstacleId": "12",
++         "rotationDeg": -90,
++         "type": "Wall",
++         "x": 30,
++         "y": 6,
++       },
++     ],
++     "ringId": "ring-central",
++     "scheduledAt": null,
++     "sizes": [],
++     "stale": false,
++     "status": "READY_TO_BUILD",
++     "transform": {
++       "flipX": false,
++       "flipY": false,
++       "offsetXM": 18,
++       "offsetYM": 13,
++       "rotationDeg": 0,
++     },
++     "updatedAt": "2026-09-26T08:00:00Z",
++     "version": 1,
++     "warningThresholdM": 1.5,
++     "warnings": [],
++   },
++   "status": 200,
+  }
+
+ ❯ src/mocks/course-handlers.test.ts:493:19
+    491|       fileKey: grant.body.fileKey,
+    492|     });
+    493|     expect(early).toMatchObject({ body: { code: "NOT_FOUND" }, status:…
+       |                   ^
+    494|     expect(
+    495|       courseState.placements.find((item) => item.id === PLACEMENT_IDS.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 skipped (32)
+   Start at  02:06:25
+   Duration  1.05s (transform 62%, import 34%, tests 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/course-handlers.test.ts -t a BUILD_SHEET key granted but never uploaded

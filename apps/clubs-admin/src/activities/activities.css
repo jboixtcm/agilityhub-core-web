@@ -355,6 +355,12 @@
   font-size: 0.8rem;
 }
 
+.activity-placements__hint {
+  margin: 0;
+  color: var(--ah-color-text-muted);
+  font-size: 0.8rem;
+}
+
 .activity-row--dates > .ah-form-field {
   flex: 1 1 6.5rem;
 }

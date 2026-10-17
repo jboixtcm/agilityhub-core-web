@@ -1,0 +1,448 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/courses/courses.test.tsx (33 tests | 5 failed | 28 skipped) 10405ms
+   ❯ R-16-10 / R-16-07 a course's page: build sheet, register as set up, metadata (13)
+     × R-16-06 / T-16-19 E9-W05 #1 a stale placement's stored sheet («Full desat») is disabled too, with the same reason as «Full de muntatge» 140ms
+     × R-16-06 / T-16-19 E9-W05 #1 the editor disables a stale placement's stored sheet until it is saved 78ms
+     × R-16-07 E9-W05 #7b a FORBIDDEN refusal names courses.allowInstructorPublish only to an INSTRUCTOR; an ADMIN reads the generic error and keeps the action 77ms
+     × R-16-07 E9-W05 #7c an INSTRUCTOR refused once is offered «Registra-ho com a muntat» again, without a reload, once courses.allowInstructorPublish reads true 10103ms
+   ❯ D16 «Geometria» (S16 §2, R-16-04/06/08) (11)
+     × A8b E9-W05 #7d the marker sizes print with the reader's decimal separator (ICU number, never the raw value) 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/courses.test.tsx > R-16-10 / R-16-07 a course's page: build sheet, register as set up, metadata > R-16-06 / T-16-19 E9-W05 #1 a stale placement's stored sheet («Full desat») is disabled too, with the same reason as «Full de muntatge»
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<button
+  class="ah-button ah-button--ghost"
+  type="button"
+/>[39m
+ ❯ src/courses/courses.test.tsx:565:20
+    563|     const stored = within(row).getByRole("button", { name: "Full desat…
+    564|     // The stored PDF was made from the obstacles and marker distances…
+    565|     expect(stored).toBeDisabled();
+       |                    ^
+    566|     expect(stored).toHaveAccessibleDescription(
+    567|       "La geometria de la pista ha canviat: revisa la col·locació aban…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/courses/courses.test.tsx > R-16-10 / R-16-07 a course's page: build sheet, register as set up, metadata > R-16-06 / T-16-19 E9-W05 #1 the editor disables a stale placement's stored sheet until it is saved
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<button
+  class="ah-button ah-button--ghost"
+  type="button"
+/>[39m
+ ❯ src/courses/courses.test.tsx:581:20
+    579|     );
+    580|     const stored = await screen.findByRole("button", { name: "Full des…
+    581|     expect(stored).toBeDisabled();
+       |                    ^
+    582|     expect(stored).toHaveAccessibleDescription(
+    583|       "La geometria de la pista ha canviat: desa la col·locació per po…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/courses/courses.test.tsx > R-16-10 / R-16-07 a course's page: build sheet, register as set up, metadata > R-16-07 E9-W05 #7b a FORBIDDEN refusal names courses.allowInstructorPublish only to an INSTRUCTOR; an ADMIN reads the generic error and keeps the action
+AssertionError: expected 'En aquest club només l\'administració…' to be 'No teniu permís per fer aquesta acció.' // Object.is equality
+
+Expected: "No teniu permís per fer aquesta acció."
+Received: "En aquest club només l'administració pot registrar què hi ha muntat."
+
+ ❯ src/courses/courses.test.tsx:710:28
+    708|     // An ADMIN is never refused by the switch: the refusal is another…
+    709|     await renderRoute(`/recorreguts/${COURSE_IDS.jumping}`, "admin");
+    710|     expect(await refuse()).toBe("No teniu permís per fer aquesta acció…
+       |                            ^
+    711|     expect(screen.getAllByRole("button", { name: "Registra-ho com a mu…
+    712|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/courses/courses.test.tsx > R-16-10 / R-16-07 a course's page: build sheet, register as set up, metadata > R-16-07 E9-W05 #7c an INSTRUCTOR refused once is offered «Registra-ho com a muntat» again, without a reload, once courses.allowInstructorPublish reads true
+TestingLibraryElementError: Unable to find role="button" and name "Registra-ho com a muntat"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"courses-page courses-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"courses-page__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"courses-back"[39m
+            [33mhref[39m=[32m"/recorreguts"[39m
+          [36m>[39m
+            [0m‹ Biblioteca de recorreguts[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mJumping del dijous[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"courses-chips-inline"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mJumping[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mSmarter[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+            [36m>[39m
+              [0mDel club[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"courses-muted"[39m
+            [36m>[39m
+              [0m11 obstacles[0m
+            [36m</span>[39m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"courses-actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mDuplica[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mElimina[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"courses-detail__grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"course-viewer-title"[39m
+          [33mclass[39m=[32m"ah-card courses-card"[39m
+          [33mrole[39m=[32m"region"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"course-viewer-title"[39m
+          [36m>[39m
+            [0mRecorregut[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-tabs"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Recorregut"[39m
+              [33mclass[39m=[32m"ah-tabs__list"[39m
+              [33mrole[39m=[32m"tablist"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_5_-panel-2d"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_5_-tab-2d"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mPlànol[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_5_-panel-3d"[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_5_-tab-3d"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m3D[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33maria-labelledby[39m=[32m"_r_5_-tab-2d"[39m
+              [33mclass[39m=[32m"ah-tabs__panel"[39m
+              [33mid[39m=[32m"_r_5_-panel-2d"[39m
+              [33mrole[39m=[32m"tabpanel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"w-full aspect-square max-h-[80vh] bg-surface-2 border border-border rounded-2xl overflow-hidden"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-label[39m=[32m"Plànol de Jumping del dijous"[39m
+                  [33mclass[39m=[32m"w-full h-full"[39m
+                  [33mrole[39m=[32m"img"[39m
+                  [33mviewBox[39m=[32m"-1.5 -1.5 33 23"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<g[39m
+                    [33mtransform[39m=[32m"scale(1 -1) translate(0 -20)"[39m
+                  [36m>[39m
+                    [36m<rect[39m
+                      [33mfill[39m=[32m"var(--ah-color-course-floor)"[39m
+                      [33mheight[39m=[32m"20"[39m
+                      [33mstroke[39m=[32m"var(--ah-color-course-ring)"[39m
+                      [33mstroke-width[39m=[32m"0.06"[39m
+                      [33mwidth[39m=[32m"30"[39m
+                      [33mx[39m=[32m"0"[39m
+                      [33my[39m=[32m"0"[39m
+                    [36m/>[39m
+                    [36m<polyline[39m
+                      [33mfill[39m=[32m"none"[39m
+                      [33mpoints[39m=[32m"12.5,14 14,13 15.5,14"[39m
+                      [33mstroke[39m=[32m"var(--ah-color-course-door)"[39m
+                      [33mstroke-linecap[39m=[32m"round"[39m
+                      [33mstroke-opacity[39m=[32m"0.85"[39m
+                      [33mstroke-width[39m=[32m"0.6"[39m
+                    [36m/>[39m
+                    [36m<g[39m
+                      [33mstyle[39m=[32m"cursor: pointer;"[39m
+                    [36m>[39m
+                      [36m<g[39m
+                        [33mtransform[39m=[32m"translate(4 16) rotate(90)"[39m
+                      [36m>[39m
+                        [36m<g>[39m
+                          [36m<rect[39m
+                            [33mfill[39m=[32m"var(--ah-color-course-obstacle-light)"[39m
+                            [33mheight[39m=[32m"0.12"[39m
+                         ...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"courses-page courses-detail"[39m
+    [36m>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"courses-page__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"courses-back"[39m
+            [33mhref[39m=[32m"/recorreguts"[39m
+          [36m>[39m
+            [0m‹ Biblioteca de recorreguts[0m
+          [36m</a>[39m
+          [36m<h1>[39m
+            [0mJumping del dijous[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"courses-chips-inline"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mJumping[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+            [36m>[39m
+              [0mSmarter[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+            [36m>[39m
+              [0mDel club[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"courses-muted"[39m
+            [36m>[39m
+              [0m11 obstacles[0m
+            [36m</span>[39m
+          [36m</p>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"courses-actions"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-dup"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mDuplica[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--danger"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mElimina[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"courses-detail__grid"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"course-viewer-title"[39m
+          [33mclass[39m=[32m"ah-card courses-card"[39m
+          [33mrole[39m=[32m"region"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"course-viewer-title"[39m
+          [36m>[39m
+            [0mRecorregut[0m
+          [36m</h2>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-tabs"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Recorregut"[39m
+              [33mclass[39m=[32m"ah-tabs__list"[39m
+              [33mrole[39m=[32m"tablist"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_5_-panel-2d"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_5_-tab-2d"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mPlànol[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_5_-panel-3d"[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_5_-tab-3d"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m3D[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33maria-labelledby[39m=[32m"_r_5_-tab-2d"[39m
+              [33mclass[39m=[32m"ah-tabs__panel"[39m
+              [33mid[39m=[32m"_r_5_-panel-2d"[39m
+              [33mrole[39m=[32m"tabpanel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"w-full aspect-square max-h-[80vh] bg-surface-2 border border-border rounded-2xl overflow-hidden"[39m
+              [36m>[39m
+                [36m<svg[39m
+                  [33maria-label[39m=[32m"Plànol de Jumping del dijous"[39m
+                  [33mclass[39m=[32m"w-full h-full"[39m
+                  [33mrole[39m=[32m"img"[39m
+                  [33mviewBox[39m=[32m"-1.5 -1.5 33 23"[39m
+                  [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                [36m>[39m
+                  [36m<g[39m
+                    [33mtransform[39m=[32m"scale(1 -1) translate(0 -20)"[39m
+                  [36m>[39m
+                    [36m<rect[39m
+                      [33mfill[39m=[32m"var(--ah-color-course-floor)"[39m
+                      [33mheight[39m=[32m"20"[39m
+                      [33mstroke[39m=[32m"var(--ah-color-course-ring)"[39m
+                      [33mstroke-width[39m=[32m"0.06"[39m
+                      [33mwidth[39m=[32m"30"[39m
+                      [33mx[39m=[32m"0"[39m
+                      [33my[39m=[32m"0"[39m
+                    [36m/>[39m
+                    [36m<polyline[39m
+                      [33mfill[39m=[32m"none"[39m
+                      [33mpoints[39m=[32m"12.5,14 14,13 15.5,14"[39m
+                      [33mstroke[39m=[32m"var(--ah-color-course-door)"[39m
+                      [33mstroke-linecap[39m=[32m"round"[39m
+                      [33mstroke-opacity[39m=[32m"0.85"[39m
+                      [33mstroke-width[39m=[32m"0.6"[39m
+                    [36m/>[39m
+                    [36m<g[39m
+                      [33mstyle[39m=[32m"cursor: pointer;"[39m
+                    [36m>[39m
+                      [36m<g[39m
+                        [33mtransform[39m=[32m"translate(4 16) rotate(90)"[39m
+                      [36m>[39m
+                        [36m<g>[39m
+                          [36m<rect[39m
+                            [33mfill[39m=[32m"var(--ah-color-course-obstacle-light)"[39m
+                            [33mheight[39m=[32m"0.12"[39m
+                         ...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:746:20
+    744|     await screen.findByText("Dijous tarda");
+    745|     expect(
+    746|       await screen.findAllByRole("button", { name: "Registra-ho com a …
+       |                    ^
+    747|     ).toHaveLength(2);
+    748|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/courses/courses.test.tsx > D16 «Geometria» (S16 §2, R-16-04/06/08) > A8b E9-W05 #7d the marker sizes print with the reader's decimal separator (ICU number, never the raw value)
+AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "Mida impresa: 150,5 mm (amb el marge blanc)",
+-   "B: fan més de 195,9 mm i no caben a la pàgina a mida real.",
++   "Mida impresa: 150.5 mm (amb el marge blanc)",
++   "B: fan més de 195.9 mm i no caben a la pàgina a mida real.",
+  ]
+
+ ❯ src/courses/courses.test.tsx:845:30
+    843|       ];
+    844|     };
+    845|     expect(await read("ca")).toEqual([
+       |                              ^
+    846|       "Mida impresa: 150,5 mm (amb el marge blanc)",
+    847|       "B: fan més de 195,9 mm i no caben a la pàgina a mida real.",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 28 skipped (33)
+   Start at  02:10:30
+   Duration  11.85s (tests 88%, transform 6%, environment 2%, import 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/courses/courses.test.tsx -t E9-W05

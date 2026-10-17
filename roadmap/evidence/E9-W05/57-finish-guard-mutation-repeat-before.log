@@ -1,0 +1,68 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/courses/courses.test.tsx (27 tests | 1 failed | 26 skipped) 7382ms
+   ❯ E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type (5)
+     × R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup 7379ms (repeat x19)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+AssertionError: expected '/recorreguts/setup-muntanya-dijous' to be '/instructor/avui' // Object.is equality
+
+Expected: "/instructor/avui"
+Received: "/recorreguts/setup-muntanya-dijous"
+
+ ❯ src/courses/courses.test.tsx:556:38
+    554|       setTimeout(resolve, 200);
+    555|     });
+    556|     expect(window.location.pathname).toBe("/instructor/avui");
+       |                                      ^
+    557|   });
+    558| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/20]⎯
+
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+AssertionError: expected '/recorreguts/setup-muntanya-dijous' to be '/instructor/avui' // Object.is equality
+
+Expected: "/instructor/avui"
+Received: "/recorreguts/setup-muntanya-dijous"
+
+ ❯ src/courses/courses.test.tsx:556:38
+    554|       setTimeout(resolve, 200);
+    555|     });
+    556|     expect(window.location.pathname).toBe("/instructor/avui");
+       |                                      ^
+    557|   });
+    558| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/20]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 26 skipped (27)
+   Start at  08:38:06
+   Duration  9.68s (tests 77%, transform 14%, import 4%, environment 4%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/courses/courses.test.tsx -t leaving the session while FINALITZA --repeats=19

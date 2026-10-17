@@ -250,16 +250,19 @@ describe("R-16-17 the PDF writer prints every Catalan, Spanish and English lette
     expect(textWidthMm("Café", 10)).toBeCloseTo(textWidthMm("Café", 10), 6);
   });
 
-  it("R-16-17 the document properties are UTF-16BE text strings, so ’ and · read back as typed", () => {
+  it("R-16-17 the document properties are UTF-16BE text strings, so ’, · and a character outside the BMP read back as typed", () => {
+    // «𝄞» (U+1D11E) is outside the BMP: UTF-16BE writes it as the surrogate pair D834 DD1E.
     const document = new PdfDocument({
       producer: "AgilityHub · Pla d’obstacles",
-      title: "Full de muntatge · Col·locació d’entrenament",
+      title: "Full de muntatge · Col·locació d’entrenament 𝄞",
     });
     document.addPage(SHEET_PAPER.a4);
     const bytes = document.toBytes();
     checkStructure(bytes);
-    expect(infoString(bytes, "Title")).toBe("Full de muntatge · Col·locació d’entrenament");
+    expect(infoString(bytes, "Title")).toBe("Full de muntatge · Col·locació d’entrenament 𝄞");
     expect(infoString(bytes, "Producer")).toBe("AgilityHub · Pla d’obstacles");
+    // E9-W05 #7e: the pair itself, high surrogate first, at the end of the title's hex string.
+    expect(latin1(bytes)).toMatch(/\/Title <FEFF[0-9A-F]*0020D834DD1E>/u);
   });
 });
 
@@ -553,8 +556,8 @@ describe("T-16-04 dragging the plan in the placement editor", () => {
     });
     const scale = Math.max(viewW / 600, viewH / 600);
     fireEvent.pointerDown(svg, { button: 0, clientX: 100, clientY: 100, pointerId: 7 });
-    fireEvent.pointerMove(svg, { clientX: 160, clientY: 130, pointerId: 7 });
-    fireEvent.pointerMove(svg, { clientX: 220, clientY: 160, pointerId: 7 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 160, clientY: 130, pointerId: 7 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 220, clientY: 160, pointerId: 7 });
     fireEvent.pointerUp(svg, { clientX: 220, clientY: 160, pointerId: 7 });
     const offset = (text: string) => {
       const [x = Number.NaN, y = Number.NaN] = text.split(",").map(Number);
@@ -587,7 +590,7 @@ describe("T-16-04 dragging the plan in the placement editor", () => {
     const svg = screen.getByRole("img", { name: "Plànol" });
     vi.spyOn(svg, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 600, 600));
     fireEvent.pointerDown(svg, { button: 0, clientX: 10, clientY: 10, pointerId: 1 });
-    fireEvent.pointerMove(svg, { clientX: 11, clientY: 11, pointerId: 1 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 11, clientY: 11, pointerId: 1 });
     fireEvent.pointerUp(svg, { clientX: 11, clientY: 11, pointerId: 1 });
     expect(onDrag).not.toHaveBeenCalled();
     rerender(
@@ -624,12 +627,12 @@ describe("T-16-04 dragging the plan in the placement editor", () => {
     vi.spyOn(svg, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 600, 600));
     const scale = Math.max((ring.length_m + 3) / 600, (ring.width_m + 3) / 600);
     fireEvent.pointerDown(svg, { button: 0, clientX: 100, clientY: 100, pointerId: 7 });
-    fireEvent.pointerMove(svg, { clientX: 160, clientY: 130, pointerId: 7 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 160, clientY: 130, pointerId: 7 });
     // The second finger lands, moves and lifts far away while the first one stays down.
     fireEvent.pointerDown(svg, { button: 0, clientX: 400, clientY: 400, pointerId: 8 });
-    fireEvent.pointerMove(svg, { clientX: 500, clientY: 500, pointerId: 8 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 500, clientY: 500, pointerId: 8 });
     fireEvent.pointerUp(svg, { clientX: 500, clientY: 500, pointerId: 8 });
-    fireEvent.pointerMove(svg, { clientX: 220, clientY: 160, pointerId: 7 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 220, clientY: 160, pointerId: 7 });
     fireEvent.pointerUp(svg, { clientX: 220, clientY: 160, pointerId: 7 });
     const total = onDrag.mock.calls.reduce((sum, [dx, dy]) => ({ x: sum.x + dx, y: sum.y + dy }), {
       x: 0,
@@ -659,17 +662,103 @@ describe("T-16-04 dragging the plan in the placement editor", () => {
     );
     const svg = screen.getByRole("img", { name: "Plànol" });
     vi.spyOn(svg, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 600, 600));
-    fireEvent.pointerDown(svg, { button: 0, clientX: 100, clientY: 100, pointerId: 3 });
-    fireEvent.pointerMove(svg, { clientX: 200, clientY: 150, pointerId: 3 });
+    fireEvent.pointerDown(svg, { button: 0, buttons: 1, clientX: 100, clientY: 100, pointerId: 3 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 200, clientY: 150, pointerId: 3 });
     fireEvent.pointerCancel(svg, { pointerId: 3 });
     expect(onDrag).toHaveBeenCalledTimes(1);
     // The drag is over: further moves of that pointer do nothing.
-    fireEvent.pointerMove(svg, { clientX: 260, clientY: 180, pointerId: 3 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 260, clientY: 180, pointerId: 3 });
     expect(onDrag).toHaveBeenCalledTimes(1);
     const obstacle = svg.querySelector('g[style*="cursor: pointer"]');
     expect(obstacle).not.toBeNull();
     if (obstacle === null) return;
+    // The next real tap on an obstacle, as a browser sends it: press, release, then click
+    // (E9-W05 #7e: the click is not a bare synthetic one).
+    fireEvent.pointerDown(obstacle, { button: 0, buttons: 1, clientX: 300, clientY: 300, pointerId: 4 });
+    fireEvent.pointerUp(obstacle, { button: 0, clientX: 300, clientY: 300, pointerId: 4 });
     fireEvent.click(obstacle);
+    expect(onDrag).toHaveBeenCalledTimes(1);
     expect(onSelect).toHaveBeenCalledTimes(1);
+  });
+});
+
+/** The plan with a recorded pointer capture (jsdom has none). */
+function capturingPlan(onDrag: (dxMeters: number, dyMeters: number) => void) {
+  const course = fixture(JUMPING);
+  const ring = ringFor(course);
+  const onSelect = vi.fn();
+  render(
+    <PlannerCanvas
+      course={course}
+      labels={{ ariaLabel: "Plànol", entry: "Entrada", exit: "Sortida" }}
+      onDragPlacement={onDrag}
+      onSelectObstacle={onSelect}
+      placement={centerCourseInRing(course, ringToCore(ring))}
+      ring={ring}
+      selectedObstacleId={null}
+      warnings={[]}
+    />,
+  );
+  const svg = screen.getByRole("img", { name: "Plànol" });
+  vi.spyOn(svg, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 600, 600));
+  const setPointerCapture = vi.fn<(pointerId: number) => void>();
+  Object.assign(svg, { setPointerCapture });
+  const obstacle = svg.querySelector('g[style*="cursor: pointer"]');
+  if (obstacle === null) throw new Error("OBSTACLE_NOT_FOUND");
+  return { obstacle, onSelect, setPointerCapture, svg };
+}
+
+describe("T-16-04 E9-W05 #6 the plan's drag holds the pointer capture", () => {
+  it("T-16-04 E9-W05 #6 a press on the plan captures its pointer at once; a press on an obstacle only once it drags, so a tap still selects it", () => {
+    const onDrag = vi.fn();
+    const { obstacle, onSelect, setPointerCapture, svg } = capturingPlan(onDrag);
+    fireEvent.pointerDown(svg, { button: 0, buttons: 1, clientX: 20, clientY: 20, pointerId: 5 });
+    expect(setPointerCapture).toHaveBeenCalledWith(5);
+    fireEvent.pointerUp(svg, { button: 0, clientX: 20, clientY: 20, pointerId: 5 });
+    setPointerCapture.mockClear();
+
+    // A tap on an obstacle: no capture (a captured release would click the plan instead).
+    fireEvent.pointerDown(obstacle, { button: 0, buttons: 1, clientX: 300, clientY: 300, pointerId: 6 });
+    fireEvent.pointerUp(obstacle, { button: 0, clientX: 300, clientY: 300, pointerId: 6 });
+    fireEvent.click(obstacle);
+    expect(setPointerCapture).not.toHaveBeenCalled();
+    expect(onSelect).toHaveBeenCalledTimes(1);
+
+    // A drag that starts on an obstacle is captured as soon as it is a drag.
+    fireEvent.pointerDown(obstacle, { button: 0, buttons: 1, clientX: 300, clientY: 300, pointerId: 7 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 360, clientY: 300, pointerId: 7 });
+    expect(setPointerCapture).toHaveBeenCalledWith(7);
+    expect(onDrag).toHaveBeenCalledTimes(1);
+  });
+
+  it("T-16-04 E9-W05 #6 a lost capture ends the drag: its pointer moves nothing more and another pointer drags at once", () => {
+    const onDrag = vi.fn();
+    const { svg } = capturingPlan(onDrag);
+    fireEvent.pointerDown(svg, { button: 0, buttons: 1, clientX: 100, clientY: 100, pointerId: 11 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 160, clientY: 100, pointerId: 11 });
+    expect(onDrag).toHaveBeenCalledTimes(1);
+    // The release never reaches the plan; the browser takes the capture away.
+    fireEvent.lostPointerCapture(svg, { pointerId: 11 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 220, clientY: 100, pointerId: 11 });
+    expect(onDrag).toHaveBeenCalledTimes(1);
+    // The dead pointer does not block the next one (a new touch has a new id).
+    fireEvent.pointerDown(svg, { button: 0, buttons: 1, clientX: 100, clientY: 100, pointerId: 12 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 160, clientY: 100, pointerId: 12 });
+    expect(onDrag).toHaveBeenCalledTimes(2);
+  });
+
+  it("T-16-04 E9-W05 #6 a move with no button pressed moves nothing and ends a drag whose release was missed", () => {
+    const onDrag = vi.fn();
+    const { svg } = capturingPlan(onDrag);
+    fireEvent.pointerDown(svg, { button: 0, buttons: 1, clientX: 100, clientY: 100, pointerId: 1 });
+    // The mouse was let go off the plan; it hovers back with no button pressed.
+    fireEvent.pointerMove(svg, { buttons: 0, clientX: 200, clientY: 150, pointerId: 1 });
+    expect(onDrag).not.toHaveBeenCalled();
+    // The stale drag is gone: even a later move with a button reported does not resume it.
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 260, clientY: 180, pointerId: 1 });
+    expect(onDrag).not.toHaveBeenCalled();
+    fireEvent.pointerDown(svg, { button: 0, buttons: 1, clientX: 100, clientY: 100, pointerId: 2 });
+    fireEvent.pointerMove(svg, { buttons: 1, clientX: 160, clientY: 100, pointerId: 2 });
+    expect(onDrag).toHaveBeenCalledTimes(1);
   });
 });

@@ -5,6 +5,7 @@ import {
   saveFile,
   useSubmissionKeys,
 } from "@agilityhub/api-client";
+import { useSession } from "@agilityhub/auth";
 import { renderBuildSheetPdf, type PlannerPlacement } from "@agilityhub/course-ui";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Button, FormField, Input, Modal, Select, Textarea } from "@agilityhub/ui";
@@ -45,7 +46,8 @@ function clubToday(timeZone: string): string {
  * ring's active setup is read first and named («Substituirà el muntatge actual…»): REGISTRA
  * waits for it, since registering replaces it. One `Idempotency-Key` per payload; errors stay in
  * the dialog. An INSTRUCTOR refused by the api (`403`, `courses.allowInstructorPublish` off) is
- * told why, and the screen stops offering the action (`onRefused`).
+ * told why, and the screen stops offering the action (`onRefused`); an ADMIN's `403` is another
+ * refusal and reads the generic error.
  */
 export function RegisterSetupModal({
   client,
@@ -68,6 +70,7 @@ export function RegisterSetupModal({
   timeZone: string;
 }) {
   const { t } = useTranslation(["admin-courses", "enums", "errors"]);
+  const admin = useSession().roles.includes("ADMIN");
   const labels = useCourseLabels();
   const errorText = useCourseError();
   const { formatDate } = useClubFormats();
@@ -136,7 +139,9 @@ export function RegisterSetupModal({
           : t("admin-courses:setup.registeredReplacing", { ring: ringName }),
       );
     } catch (cause) {
-      if (isApiError(cause, "FORBIDDEN")) {
+      // Only an INSTRUCTOR is refused by `courses.allowInstructorPublish`; an ADMIN refused with
+      // FORBIDDEN (e.g. while impersonating) reads the generic error.
+      if (!admin && isApiError(cause, "FORBIDDEN")) {
         setError(t("admin-courses:setup.instructorRefused"));
         onRefused();
       } else {

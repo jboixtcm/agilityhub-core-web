@@ -52,7 +52,7 @@ export function exportFileName(listKey: string, format: MockExportFormat, at: Da
   const stamp = `${parts.get("year") ?? ""}${parts.get("month") ?? ""}${parts.get("day") ?? ""}-${
     parts.get("hour") ?? ""
   }${parts.get("minute") ?? ""}`;
-  return `${club.slug}_${listKey}_${stamp}.${format}`;
+  return `${club.slug ?? ""}_${listKey}_${stamp}.${format}`;
 }
 
 /** Queued like the api above `SYNC_MAX_ROWS`, or always under the `exportsQueued` scenario switch. */
