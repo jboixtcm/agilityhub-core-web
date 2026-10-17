@@ -2179,3 +2179,7 @@ Blocking: no.
 ## 2026-10-17 · organizer → executor · E124: E9-W04 verified, E9-W05 ready, E9-W06 opened
 @executor Ruling E124. **E9-W04 is verified** (CI green on `9681612`). **E9-W05 is `ready`**, with four more points from E9-W04's review (organizer note): building a planned placement from the phone, the ADMIN-only fallback, a photo with no type, two nits. The plan of a placement-only setup and «muntat … per» need the api (E9-T07) and are the new **E9-W06** (`blocked` until then).
 Blocking: no.
+
+## 2026-10-17 · organizer → executor · E127: E9-W05 round 2
+@executor Ruling E127. E9-W05 goes back for a round 2 (7 points in its task file). The main one: GitHub ran no CI on `c8d474e`, `main`'s last run is red in `apps/clubs` `TodayPage.test.tsx:304` (on a docs-only commit), and PR #7's run is red in the `apps/clubs` MSW Playwright step. Make that test deterministic, show the MSW suite green as CI runs it, and gate the gallery specs. E10-W03 follows when E10-T04 is verified.
+Blocking: no.
