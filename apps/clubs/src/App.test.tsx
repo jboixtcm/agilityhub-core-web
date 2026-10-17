@@ -275,6 +275,94 @@ describe("T-02-14 clubs shell", () => {
   });
 });
 
+describe("A38 (E11-W02 step 1): the members' app navigates without reloading", () => {
+  function recordRequests() {
+    const paths: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      paths.push(new URL(request.url).pathname);
+    };
+    server.events.on("request:start", listener);
+    return {
+      paths,
+      stop: () => {
+        server.events.removeListener("request:start", listener);
+      },
+    };
+  }
+
+  it("a tab opens its screen in place: no token renewal, no new /branding or /me, and back returns", async () => {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    const refresh = vi.spyOn(client, "refresh");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    await screen.findByRole("heading", { name: "El meu perfil" });
+    const requests = recordRequests();
+
+    const tabs = screen.getByRole("navigation", { name: "Navegació principal" });
+    fireEvent.click(within(tabs).getByRole("link", { name: "Reservar" }));
+
+    expect(window.location.pathname).toBe("/reservar");
+    expect(await screen.findByRole("heading", { level: 1, name: "Reservar" })).toBeVisible();
+    window.history.back();
+    expect(await screen.findByRole("heading", { name: "El meu perfil" })).toBeVisible();
+    requests.stop();
+    expect(refresh).not.toHaveBeenCalled();
+    expect(requests.paths.filter((path) => /\/(branding|me|oauth2\/token)$/u.test(path))).toEqual(
+      [],
+    );
+  });
+
+  it("a link inside a screen (12 → 13) opens in place", async () => {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(client);
+    fireEvent.click(await screen.findByRole("link", { name: /Els meus gossos/u }));
+    expect(window.location.pathname).toBe("/gossos");
+    expect(await screen.findByRole("heading", { level: 1, name: "Els meus gossos" })).toBeVisible();
+  });
+
+  it("E8-W04 question 4: withdrawing on 14 returns to 12 in place, with its success toast", async () => {
+    const client = authClient();
+    await client.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/inactivitat");
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(true);
+    await renderApplication(client);
+    const withdraw = await screen.findByRole("button", { name: "RETIRA LA SOL·LICITUD" });
+    await waitFor(() => {
+      expect(withdraw).toBeEnabled();
+    });
+    fireEvent.click(withdraw);
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/perfil");
+    });
+    expect(await screen.findByRole("heading", { name: "El meu perfil" })).toBeVisible();
+    expect(screen.getByText("La sol·licitud s'ha retirat.")).toBeVisible();
+    confirm.mockRestore();
+  });
+
+  it("a password login opens the landing screen in place, with the session it just made", async () => {
+    mockScenario("member");
+    window.history.pushState(null, "", "/entrar");
+    const client = authClient();
+    await renderApplication(client);
+    fireEvent.change(screen.getByPlaceholderText("correu@exemple.cat"), {
+      target: { value: "biel.roca@example.test" },
+    });
+    fireEvent.change(screen.getByPlaceholderText("contrasenya"), {
+      target: { value: "secret-password" },
+    });
+    const refresh = vi.spyOn(client, "refresh");
+    fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/inici");
+    });
+    expect(await screen.findByRole("navigation", { name: "Navegació principal" })).toBeVisible();
+    expect(refresh).not.toHaveBeenCalled();
+  });
+});
+
 describe("T-01-18 access screen", () => {
   it("uses the exact access actions, focuses an empty email and gates signup", async () => {
     window.history.pushState(null, "", "/entrar");
@@ -299,6 +387,13 @@ describe("T-01-18 access screen", () => {
       screen.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" })).toBeVisible();
+    // INC-11 (mockup 01): the question in grey, the action as a link in the club's colour.
+    const forgot = screen.getByRole("button", { name: "Has oblidat la contrasenya? Recupera-la" });
+    expect(within(forgot).getByText("Recupera-la")).toHaveClass("auth-link");
+    expect(within(forgot).getByText("Has oblidat la contrasenya?")).not.toHaveClass("auth-link");
+    const join = screen.getByRole("link", { name: "Encara no hi ets? Apunta-t'hi →" });
+    expect(within(join).getByText("Apunta-t'hi →")).toHaveClass("auth-link");
+    expect(within(join).getByText("Encara no hi ets?")).not.toHaveClass("auth-link");
     // E3-W12 step 5 (S02 R-02-02, Jordi 25-09): the public footer and the registered office below it.
     // The Cànic fixture carries the club's real legal identity, as the seed does (S02 R-02-10).
     expect(screen.getByText("Club Agility Cànic · G63189617 · Cabrera de Mar")).toBeVisible();
@@ -1423,7 +1518,8 @@ describe("T-03-40 mobile own dogs", () => {
     await renderApplication(client);
 
     expect(await screen.findByRole("heading", { name: "Els meus gossos" })).toBeVisible();
-    expect(screen.getByText(/Border collie · femella · 4 anys/u)).toBeVisible();
+    // INC-11 (mockup 13): «Border collie · Femella · 4 anys», the sex capitalised.
+    expect(screen.getByText(/Border collie · Femella · 4 anys/u)).toBeVisible();
     expect(screen.getByText("Nivell C")).toBeVisible();
     expect(screen.getByText("Pot entrenar sol")).toBeVisible();
     expect(screen.getByText(/FCAG · llicència 3241 · Iniciació/u)).toBeVisible();
@@ -1526,7 +1622,7 @@ describe("T-03-40 mobile own dogs", () => {
     );
     if (card === null) throw new TypeError("Missing the pending dog card");
     expect(within(card).getByText("pendent de validació")).toBeVisible();
-    expect(within(card).getByText(/Mestís · mascle · 1 any/u)).toBeVisible();
+    expect(within(card).getByText(/Mestís · Mascle · 1 any/u)).toBeVisible();
     expect(within(card).queryByRole("button")).toBeNull();
     expect(within(card).queryByRole("textbox")).toBeNull();
     expect(card.querySelector("input")).toBeNull();
@@ -2133,7 +2229,9 @@ describe("T-03-41 mobile own data", () => {
     await renderApplication(client);
 
     expect(await screen.findByRole("heading", { name: "Les meves dades" })).toBeVisible();
-    expect(screen.getByLabelText("DNI")).toHaveAttribute("readonly");
+    // The heading shows with the page's own loading state; the form comes with `GET /me` (A38: the
+    // page is no longer hidden again meanwhile, so the form is awaited, not assumed).
+    expect(await screen.findByLabelText("DNI")).toHaveAttribute("readonly");
     expect(screen.getByLabelText("Nom")).toHaveAttribute("readonly");
     expect(screen.getByLabelText("Cognom 1")).toHaveAttribute("readonly");
     expect(screen.getByLabelText("Cognom 2")).toHaveAttribute("readonly");

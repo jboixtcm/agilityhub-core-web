@@ -1,0 +1,36 @@
+$ (cd apps/clubs-admin && pnpm exec vitest run src/polish-styles.test.ts -t "WhatsApp chip reads at AA")
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/polish-styles.test.ts (7 tests | 1 failed | 6 skipped) 9ms
+   ❯ E11-W02 step 5 (axe color-contrast): D2's WhatsApp chip reads at AA on its fill (1)
+     × the chip's text leans a fifth towards the text colour, as every badge's (axe: 4.2:1 in primary) 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 step 5 (axe color-contrast): D2's WhatsApp chip reads at AA on its fill > the chip's text leans a fifth towards the text colour, as every badge's (axe: 4.2:1 in primary)
+AssertionError: expected undefined to be 'color-mix(in srgb, var(--ah-color-pri…' // Object.is equality
+
+- Expected:
+"color-mix(in srgb, var(--ah-color-primary) 80%, var(--ah-color-text))"
+
++ Received:
+undefined
+
+ ❯ src/polish-styles.test.ts:62:87
+     60| describe("E11-W02 step 5 (axe color-contrast): D2's WhatsApp chip read…
+     61|   it("the chip's text leans a fifth towards the text colour, as every …
+     62|     expect(declarations(".signup-review-data a.signup-review-whatsapp"…
+       |                                                                                       ^
+     63|       "color-mix(in srgb, var(--ah-color-primary) 80%, var(--ah-color-…
+     64|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  23:31:15
+   Duration  1.14s (environment 73%, setup 18%, transform 6%, tests 1%, import 1%)
+
+exit=1

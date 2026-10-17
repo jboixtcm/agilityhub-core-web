@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useContext, useLayoutEffect } from "react";
+import { createContext, type ReactNode, useContext, useLayoutEffect, useState } from "react";
 
 export type ThemeMode = "auto" | "dark" | "light";
 
@@ -74,6 +74,28 @@ export interface Branding {
   timeZone: string;
 }
 
+const DARK_SCHEME = "(prefers-color-scheme: dark)";
+
+/** The reader's `matchMedia` for the dark scheme; none without a window (or in jsdom). */
+function darkSchemeQuery(): MediaQueryList | undefined {
+  if (typeof window === "undefined") return undefined;
+  const match = (window as Partial<Window>).matchMedia;
+  return typeof match === "function" ? match.call(window, DARK_SCHEME) : undefined;
+}
+
+/** The reader asks for a dark scheme (`prefers-color-scheme`). */
+export function prefersDarkScheme(): boolean {
+  return darkSchemeQuery()?.matches ?? false;
+}
+
+/** The scheme a theme paints in: `auto` follows the reader's `prefers-color-scheme` (R-02-08). */
+export function resolvedThemeMode(
+  theme: Pick<BrandingTheme, "mode">,
+  dark: boolean = prefersDarkScheme(),
+): "dark" | "light" {
+  return theme.mode === "auto" ? (dark ? "dark" : "light") : theme.mode;
+}
+
 function nonEmptyAssetUrl(value: string | null | undefined): string | undefined {
   const normalized = value?.trim();
   return normalized === "" ? undefined : normalized;
@@ -93,7 +115,9 @@ export function resolveBrandingLogo(
 
   const logoUrl = nonEmptyAssetUrl(theme.logoUrl);
   const themedLogoUrl =
-    theme.mode === "dark" ? (nonEmptyAssetUrl(theme.logoDarkUrl) ?? logoUrl) : logoUrl;
+    resolvedThemeMode(theme) === "dark"
+      ? (nonEmptyAssetUrl(theme.logoDarkUrl) ?? logoUrl)
+      : logoUrl;
   if (themedLogoUrl !== undefined) {
     return { kind: "full", showName: false, src: themedLogoUrl };
   }
@@ -176,8 +200,64 @@ export function contrastRatio(foreground: string, background: string): number | 
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-function themeProperties(theme: BrandingTheme): [string, string][] {
-  const properties = Object.entries(theme.colors).flatMap(([key, value]) => {
+/**
+ * What a dark reader of an `auto` club sees (R-02-08, E11-W02 INC-41): the club has one palette, its
+ * light one, so the surfaces and the text are the product's dark ones (`tokens.css`), and the
+ * club's accent stays unless it does not read on that background (then the product's dark pair).
+ */
+const AUTO_DARK_NEUTRALS: Partial<Record<keyof BrandingThemeColors, string>> = {
+  background: "var(--ah-product-dark-background)",
+  border: "var(--ah-product-dark-border)",
+  surface: "var(--ah-product-dark-surface)",
+  surfaceAlt: "var(--ah-product-dark-surface-alt)",
+  text: "var(--ah-product-dark-text)",
+  textMuted: "var(--ah-product-dark-text-muted)",
+};
+
+/** A component (text, a fill) reads on its background from 3:1 (WCAG 1.4.11, large text). */
+const AUTO_DARK_ACCENT_CONTRAST = 3;
+
+export interface ApplyThemeOptions {
+  /** The reader's scheme, for `auto` (default: `prefersDarkScheme()`). */
+  dark?: boolean;
+  /**
+   * The value of a product dark token (`--ah-product-dark-<name>`), to tell whether the club's
+   * accent reads on it; `""` when unknown (default: the root's computed style).
+   */
+  productDark?: (name: string) => string;
+}
+
+function computedProductDark(root: HTMLElement): (name: string) => string {
+  return (name) =>
+    typeof getComputedStyle === "function"
+      ? getComputedStyle(root).getPropertyValue(`--ah-product-dark-${name}`).trim()
+      : "";
+}
+
+function autoDarkColors(
+  colors: BrandingThemeColors,
+  productDark: (name: string) => string,
+): Record<keyof BrandingThemeColors, string> {
+  const background = productDark("background");
+  const ratio = background === "" ? undefined : contrastRatio(colors.primary, background);
+  const accent =
+    ratio !== undefined && ratio < AUTO_DARK_ACCENT_CONTRAST
+      ? {
+          onPrimary: "var(--ah-product-dark-on-primary)",
+          primary: "var(--ah-product-dark-primary)",
+        }
+      : {};
+  return { ...colors, ...AUTO_DARK_NEUTRALS, ...accent };
+}
+
+function themeProperties(
+  theme: BrandingTheme,
+  dark = false,
+  productDark: (name: string) => string = () => "",
+): [string, string][] {
+  const colors =
+    theme.mode === "auto" && dark ? autoDarkColors(theme.colors, productDark) : theme.colors;
+  const properties = Object.entries(colors).flatMap(([key, value]) => {
     const token = tokenByColor[key as keyof BrandingThemeColors];
     return [[token, value] as [string, string]];
   });
@@ -211,25 +291,66 @@ export function brandingThemeStyle(theme: BrandingTheme): Record<string, string>
 export function applyBrandingTheme(
   theme: BrandingTheme,
   root: HTMLElement = document.documentElement,
+  { dark = prefersDarkScheme(), productDark = computedProductDark(root) }: ApplyThemeOptions = {},
 ): void {
+  const scheme = resolvedThemeMode(theme, dark);
   root.dataset.theme = theme.mode;
-  root.style.colorScheme = theme.mode === "auto" ? "light dark" : theme.mode;
-  themeProperties(theme).forEach(([property, value]) => {
+  // The scheme the page paints (`auto` resolved): what scheme-dependent tokens key on.
+  root.dataset.scheme = scheme;
+  // `auto` paints one scheme at a time (R-02-08): the native controls follow the same one.
+  root.style.colorScheme = scheme;
+  themeProperties(theme, dark, productDark).forEach(([property, value]) => {
     root.style.setProperty(property, value);
   });
+  // The browser's own chrome (address bar, PWA splash) takes the background the page paints
+  // (E11-W02 step 6, Lighthouse «themed-omnibox»): a dark `auto` reader's is the product's dark one.
+  const background =
+    theme.mode === "auto" && dark
+      ? productDark("background") || theme.colors.background
+      : theme.colors.background;
+  setThemeColor(background);
+}
+
+function setThemeColor(color: string): void {
+  if (typeof document === "undefined") return;
+  let meta = document.head.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  if (meta === null) {
+    meta = document.createElement("meta");
+    meta.name = "theme-color";
+    document.head.append(meta);
+  }
+  meta.content = color;
+}
+
+/** The reader's `prefers-color-scheme`, kept up to date (R-02-08: what `auto` follows). */
+function usePrefersDarkScheme(): boolean {
+  const [dark, setDark] = useState(prefersDarkScheme);
+  useLayoutEffect(() => {
+    const query = darkSchemeQuery();
+    if (query === undefined) return undefined;
+    const changed = (event: MediaQueryListEvent) => {
+      setDark(event.matches);
+    };
+    query.addEventListener("change", changed);
+    return () => {
+      query.removeEventListener("change", changed);
+    };
+  }, []);
+  return dark;
 }
 
 export function BrandingProvider({ branding, children }: BrandingProviderProps) {
+  const dark = usePrefersDarkScheme();
   useLayoutEffect(() => {
     const root = document.documentElement;
-    const properties = themeProperties(branding.theme);
+    const properties = themeProperties(branding.theme, dark);
     const previousTheme = root.getAttribute("data-theme");
     const previousColorScheme = root.style.colorScheme;
     const previousValues = new Map(
       properties.map(([property]) => [property, root.style.getPropertyValue(property)]),
     );
 
-    applyBrandingTheme(branding.theme, root);
+    applyBrandingTheme(branding.theme, root, { dark });
 
     const ratio = contrastRatio(branding.theme.colors.primary, branding.theme.colors.onPrimary);
     if (ratio !== undefined && ratio < 4.5) {
@@ -253,7 +374,7 @@ export function BrandingProvider({ branding, children }: BrandingProviderProps) 
         }
       });
     };
-  }, [branding]);
+  }, [branding, dark]);
 
   return <BrandingContext.Provider value={branding}>{children}</BrandingContext.Provider>;
 }

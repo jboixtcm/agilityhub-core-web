@@ -1,0 +1,72 @@
+$ (cd apps/clubs && pnpm exec vitest run src/polish-styles.test.ts)
+# red run: the test files of this task on main's code (867d3c4, a detached worktree), 2026-10-16T23:13:38Z
+
+ RUN  v5.0.0 /tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/apps/clubs
+
+ ❯ src/polish-styles.test.ts (3 tests | 3 failed) 16ms
+   ❯ E11-W02 (INC-11): screens 01 and 16 as their mockups draw them (2)
+     × 01: «Encara no hi ets?» stays grey and only its action reads as a link, underlined on hover and focus 10ms
+     × 16: the DNI/NIE and passport inputs share a line whatever their labels' length (one subgrid) 2ms
+   ❯ E11-W02 step 5: the dog's level reads at AA on its tinted fill (1)
+     × 13: the level's text leans towards the text colour (axe: 4.46:1 with the bare primary) 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 (INC-11): screens 01 and 16 as their mockups draw them > 01: «Encara no hi ets?» stays grey and only its action reads as a link, underlined on hover and focus
+AssertionError: expected 'var(--ah-color-primary)' to be 'var(--ah-color-text-muted)' // Object.is equality
+
+Expected: "var(--ah-color-text-muted)"
+Received: "var(--ah-color-primary)"
+
+ ❯ src/polish-styles.test.ts:29:57
+     27| describe("E11-W02 (INC-11): screens 01 and 16 as their mockups draw th…
+     28|   it("01: «Encara no hi ets?» stays grey and only its action reads as …
+     29|     expect(declarations(".auth-signup a").get("color")).toBe("var(--ah…
+       |                                                         ^
+     30|     expect(declarations(".auth-signup a").get("font-weight")).toBeUnde…
+     31|     expect(declarations(".auth-link").get("color")).toBe("var(--ah-col…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 (INC-11): screens 01 and 16 as their mockups draw them > 16: the DNI/NIE and passport inputs share a line whatever their labels' length (one subgrid)
+AssertionError: expected undefined to be 'auto auto auto' // Object.is equality
+
+- Expected:
+"auto auto auto"
+
++ Received:
+undefined
+
+ ❯ src/polish-styles.test.ts:44:60
+     42|   it("16: the DNI/NIE and passport inputs share a line whatever their …
+     43|     for (const grid of [".signup-grid--identity", ".signup-grid--phone…
+     44|       expect(declarations(grid).get("grid-template-rows")).toBe("auto …
+       |                                                            ^
+     45|       const field = declarations(`${grid} > .ah-form-field`);
+     46|       expect(field.get("grid-row")).toBe("span 3");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 step 5: the dog's level reads at AA on its tinted fill > 13: the level's text leans towards the text colour (axe: 4.46:1 with the bare primary)
+AssertionError: expected 'var(--ah-color-primary)' to be 'color-mix(in srgb, var(--ah-color-pri…' // Object.is equality
+
+Expected: "color-mix(in srgb, var(--ah-color-primary) 80%, var(--ah-color-text))"
+Received: "var(--ah-color-primary)"
+
+ ❯ src/polish-styles.test.ts:54:59
+     52| describe("E11-W02 step 5: the dog's level reads at AA on its tinted fi…
+     53|   it("13: the level's text leans towards the text colour (axe: 4.46:1 …
+     54|     expect(declarations(".dog-card__level").get("color")).toBe(
+       |                                                           ^
+     55|       "color-mix(in srgb, var(--ah-color-primary) 80%, var(--ah-color-…
+     56|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  23:13:39
+   Duration  1.15s (environment 76%, setup 15%, transform 6%, tests 2%, import 1%)
+
+exit=1

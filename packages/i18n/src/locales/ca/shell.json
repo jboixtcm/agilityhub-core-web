@@ -16,6 +16,7 @@
     "tabs": "Informació del club",
     "updated": "Actualitzat el {date}"
   },
+  "loading": "Carregant",
   "language": {
     "ca": "Català",
     "en": "Anglès",

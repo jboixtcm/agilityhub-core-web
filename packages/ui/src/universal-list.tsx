@@ -1037,7 +1037,8 @@ export function UniversalList<Row>({
                   </th>
                 );
               })}
-              <th className="ah-universal-list__chevron" scope="col" />
+              {/* The row links' column: no header of its own (each link names its row). */}
+              <td aria-hidden="true" className="ah-universal-list__chevron" />
             </tr>
           </thead>
           <tbody>

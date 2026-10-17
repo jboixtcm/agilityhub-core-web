@@ -1,0 +1,2073 @@
+$ (cd apps/clubs && pnpm exec vitest run src/states.test.tsx)
+# red run: the test files of this task on main's code (867d3c4, a detached worktree), 2026-10-16T23:13:54Z
+
+ RUN  v5.0.0 /tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/apps/clubs
+
+ ❯ src/states.test.tsx (34 tests | 6 failed) 62001ms
+   ❯ E11-W02 step 4: the members' app says when its data is loading or failed (34)
+     × 13 (/gossos) shows an alert when its reads fail 10019ms
+     × rebuts (/rebuts) shows an alert when its reads fail 10018ms
+     × rebut (/rebuts/invoice-laura-sep) shows an alert when its reads fail 10024ms
+     × 28 (/dades) shows an alert when its reads fail 10024ms
+     × 14 (/inactivitat) shows an alert when its reads fail 10019ms
+     × 15 (/baixa) shows an alert when its reads fail 10020ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading or failed > 13 (/gossos) shows an alert when its reads fail
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page my-dogs-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Els meus gossos
+            </h1>
+          </header>
+          <div
+            class="self-page__body"
+          >
+            <section
+              class="ah-empty-state"
+            >
+              <svg
+                aria-hidden="true"
+                class="ah-icon"
+              >
+                <use
+                  href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+                />
+              </svg>
+              <h2>
+                No s'ha pogut obrir aquesta pantalla
+              </h2>
+              <p>
+                No s'han pogut carregar els teus gossos.
+              </p>
+              <button
+                class="ah-button ah-button--primary"
+                type="button"
+              >
+                <span
+                  class="ah-button__content"
+                >
+                  Torna-ho a provar
+                </span>
+              </button>
+            </section>
+          </div>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page my-dogs-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Els meus gossos
+            </h1>
+          </header>
+          <div
+            class="self-page__body"
+          >
+            <section
+              class="ah-empty-state"
+            >
+              <svg
+                aria-hidden="true"
+                class="ah-icon"
+              >
+                <use
+                  href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+                />
+              </svg>
+              <h2>
+                No s'ha pogut obrir aquesta pantalla
+              </h2>
+              <p>
+                No s'han pogut carregar els teus gossos.
+              </p>
+              <button
+                class="ah-button ah-button--primary"
+                type="button"
+              >
+                <span
+                  class="ah-button__content"
+                >
+                  Torna-ho a provar
+                </span>
+              </button>
+            </section>
+          </div>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:124:28
+    122|       mockScenario(scenario);
+    123|       await renderAt(path, email, "fail");
+    124|       expect((await screen.findAllByRole("alert")).length).toBeGreater…
+       |                            ^
+    125|     },
+    126|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading or failed > rebuts (/rebuts) shows an alert when its reads fail
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="billing-page"
+        >
+          <header
+            class="billing-page__bar"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              ‹
+            </a>
+            <h1>
+              Rebuts
+            </h1>
+          </header>
+          <section
+            class="ah-empty-state"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+              />
+            </svg>
+            <h2>
+              No s'han pogut carregar els rebuts.
+            </h2>
+            <p>
+              No s'han pogut carregar els rebuts.
+            </p>
+            <button
+              class="ah-button ah-button--primary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                Torna-ho a provar
+              </span>
+            </button>
+          </section>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="billing-page"
+        >
+          <header
+            class="billing-page__bar"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              ‹
+            </a>
+            <h1>
+              Rebuts
+            </h1>
+          </header>
+          <section
+            class="ah-empty-state"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+              />
+            </svg>
+            <h2>
+              No s'han pogut carregar els rebuts.
+            </h2>
+            <p>
+              No s'han pogut carregar els rebuts.
+            </p>
+            <button
+              class="ah-button ah-button--primary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                Torna-ho a provar
+              </span>
+            </button>
+          </section>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:124:28
+    122|       mockScenario(scenario);
+    123|       await renderAt(path, email, "fail");
+    124|       expect((await screen.findAllByRole("alert")).length).toBeGreater…
+       |                            ^
+    125|     },
+    126|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading or failed > rebut (/rebuts/invoice-laura-sep) shows an alert when its reads fail
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="billing-page"
+        >
+          <header
+            class="billing-page__bar"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/rebuts"
+            >
+              ‹
+            </a>
+            <h1>
+              Detall del rebut
+            </h1>
+          </header>
+          <section
+            class="ah-empty-state"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+              />
+            </svg>
+            <h2>
+              No s'han pogut carregar els rebuts.
+            </h2>
+            <p>
+              No s'han pogut carregar els rebuts.
+            </p>
+          </section>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="billing-page"
+        >
+          <header
+            class="billing-page__bar"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/rebuts"
+            >
+              ‹
+            </a>
+            <h1>
+              Detall del rebut
+            </h1>
+          </header>
+          <section
+            class="ah-empty-state"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+              />
+            </svg>
+            <h2>
+              No s'han pogut carregar els rebuts.
+            </h2>
+            <p>
+              No s'han pogut carregar els rebuts.
+            </p>
+          </section>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:124:28
+    122|       mockScenario(scenario);
+    123|       await renderAt(path, email, "fail");
+    124|       expect((await screen.findAllByRole("alert")).length).toBeGreater…
+       |                            ^
+    125|     },
+    126|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading or failed > 28 (/dades) shows an alert when its reads fail
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Les meves dades
+            </h1>
+          </header>
+          <section
+            class="ah-empty-state"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+              />
+            </svg>
+            <h2>
+              No s'ha pogut obrir aquesta pantalla
+            </h2>
+            <p>
+              No s'han pogut carregar les teves dades.
+            </p>
+          </section>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Les meves dades
+            </h1>
+          </header>
+          <section
+            class="ah-empty-state"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+              />
+            </svg>
+            <h2>
+              No s'ha pogut obrir aquesta pantalla
+            </h2>
+            <p>
+              No s'han pogut carregar les teves dades.
+            </p>
+          </section>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:124:28
+    122|       mockScenario(scenario);
+    123|       await renderAt(path, email, "fail");
+    124|       expect((await screen.findAllByRole("alert")).length).toBeGreater…
+       |                            ^
+    125|     },
+    126|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading or failed > 14 (/inactivitat) shows an alert when its reads fail
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="lifecycle-page"
+        >
+          <header
+            class="lifecycle-page__bar"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              ‹
+            </a>
+            <h1>
+              Període d'inactivitat
+            </h1>
+          </header>
+          <section
+            class="ah-empty-state"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+              />
+            </svg>
+            <h2>
+              No s'ha pogut carregar el període d'inactivitat.
+            </h2>
+            <p>
+              No s'ha pogut carregar el període d'inactivitat.
+            </p>
+            <button
+              class="ah-button ah-button--primary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                No s'ha pogut carregar el període d'inactivitat.
+              </span>
+            </button>
+          </section>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="lifecycle-page"
+        >
+          <header
+            class="lifecycle-page__bar"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              ‹
+            </a>
+            <h1>
+              Període d'inactivitat
+            </h1>
+          </header>
+          <section
+            class="ah-empty-state"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+              />
+            </svg>
+            <h2>
+              No s'ha pogut carregar el període d'inactivitat.
+            </h2>
+            <p>
+              No s'ha pogut carregar el període d'inactivitat.
+            </p>
+            <button
+              class="ah-button ah-button--primary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                No s'ha pogut carregar el període d'inactivitat.
+              </span>
+            </button>
+          </section>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:124:28
+    122|       mockScenario(scenario);
+    123|       await renderAt(path, email, "fail");
+    124|       expect((await screen.findAllByRole("alert")).length).toBeGreater…
+       |                            ^
+    125|     },
+    126|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading or failed > 15 (/baixa) shows an alert when its reads fail
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="lifecycle-page"
+        >
+          <section
+            class="ah-empty-state"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+              />
+            </svg>
+            <h2>
+              No s'ha pogut carregar la sol·licitud de baixa.
+            </h2>
+            <p>
+              No s'ha pogut carregar la sol·licitud de baixa.
+            </p>
+            <button
+              class="ah-button ah-button--primary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                No s'ha pogut carregar la sol·licitud de baixa.
+              </span>
+            </button>
+          </section>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="lifecycle-page"
+        >
+          <section
+            class="ah-empty-state"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+              />
+            </svg>
+            <h2>
+              No s'ha pogut carregar la sol·licitud de baixa.
+            </h2>
+            <p>
+              No s'ha pogut carregar la sol·licitud de baixa.
+            </p>
+            <button
+              class="ah-button ah-button--primary"
+              type="button"
+            >
+              <span
+                class="ah-button__content"
+              >
+                No s'ha pogut carregar la sol·licitud de baixa.
+              </span>
+            </button>
+          </section>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../../../../../../../home/user/agilityhub-core-web/node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:124:28
+    122|       mockScenario(scenario);
+    123|       await renderAt(path, email, "fail");
+    124|       expect((await screen.findAllByRole("alert")).length).toBeGreater…
+       |                            ^
+    125|     },
+    126|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 28 passed (34)
+   Start at  23:13:55
+   Duration  67.21s (tests 92%, transform 5%, environment 1%, import 1%)
+
+exit=1

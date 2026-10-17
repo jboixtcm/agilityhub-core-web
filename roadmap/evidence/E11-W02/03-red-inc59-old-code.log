@@ -1,0 +1,27 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs-admin
+
+-------------------------------------x----------------
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/billing/BillingPage.test.tsx > E8-W01 review follow-ups: where errors land, what the admin sees, what the api decides > T-12-25 / R-12-13 / E8-W07 #1: a completed detail refreshes a stale CHARGING period once while its answer is slow
+Error: Test timed out in 15000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/billing/BillingPage.test.tsx:1466:3
+    1464|   }, 20_000);
+    1465|
+    1466|   it("T-12-25 / R-12-13 / E8-W07 #1: a completed detail refreshes a st…
+       |   ^
+    1467|     mockScenario("billingStripe");
+    1468|     const api = client();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 53 skipped (54)
+   Start at  21:26:55
+   Duration  20.12s (tests 76%, transform 16%, import 4%, environment 4%, setup 1%)
+
+exit=1

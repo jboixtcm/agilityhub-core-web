@@ -89,7 +89,7 @@ function GalleryContent({ canic, onThemeChange }: { canic: boolean; onThemeChang
             <h1>{t("common:gallery.title")}</h1>
           </div>
           <Button onClick={onThemeChange} variant="secondary">
-            {canic ? t("common:gallery.theme.agilityhub") : t("common:gallery.theme.canic")}
+            {canic ? t("common:gallery.theme.agilityhub") : t("common:gallery.theme.club")}
           </Button>
         </header>
 

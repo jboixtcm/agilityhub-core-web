@@ -129,7 +129,7 @@ async function ringOf(store: CoreApiStore): Promise<PlannerRing> {
 }
 
 describe("E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter)", () => {
-  it("#1 R-16-03 UploadCourse retries a lost answer with the same key and body: one upload, one course", async () => {
+  it("T-16-15 R-16-03 UploadCourse retries a lost answer with the same key and body: one upload, one course (E9-W02 round 2 #1)", async () => {
     const api = createFakeCoreApi();
     storeOn(api);
     api.loseNextAnswer("POST", "/courses");
@@ -160,7 +160,7 @@ describe("E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter)
     expect(screen.queryByRole("alert")).toBeNull();
   });
 
-  it("#8 R-16-02 a source over files.maxSizeMb reads FILE_TOO_LARGE's own catalog text in the upload card", async () => {
+  it("T-16-14 R-16-02 a source over files.maxSizeMb reads FILE_TOO_LARGE's own catalog text in the upload card (E9-W02 round 2 #8)", async () => {
     const api = createFakeCoreApi({ maxSizeMb: 1 });
     storeOn(api);
     render(<UploadCourse labels={uploadLabels()} onUploaded={vi.fn()} />);
@@ -181,7 +181,7 @@ describe("E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter)
     expect(api.courses).toHaveLength(0);
   });
 
-  it("#9 R-16-04 add → save → edit → save keeps the saved door's id and leaves the editor clean", async () => {
+  it("T-16-06 R-16-04 add → save → edit → save keeps the saved door's id and leaves the editor clean (E9-W02 round 2 #9)", async () => {
     const api = createFakeCoreApi();
     const store = storeOn(api);
     const onSaved = vi.fn();
@@ -215,7 +215,7 @@ describe("E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter)
     expect(api.geometry.version).toBe(5);
   });
 
-  it("#3/#8 R-16-04 another editor's save in between: STALE_VERSION reads its catalog text in the editor, and [Desfés] brings their door in", async () => {
+  it("T-16-06 R-16-04 another editor's save in between: STALE_VERSION reads its catalog text in the editor, [Desa] waits for [Desfés] (INC-60), and [Desfés] brings their door in (E9-W02 round 2 #3/#8)", async () => {
     const api = createFakeCoreApi();
     const store = storeOn(api);
     render(<RingDoorEditor ring={await ringOf(store)} labels={doorLabels()} onSaved={vi.fn()} />);
@@ -238,6 +238,9 @@ describe("E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter)
       ["door-entrance", true],
       ["door-south", true],
     ]);
+    // INC-60: saving again would repeat the same 409; only [Desfés] (read their doors) goes on.
+    expect(screen.getByRole("button", { name: "Desa" })).toHaveProperty("disabled", true);
+    expect(screen.getByRole("button", { name: "Desfés" })).toHaveProperty("disabled", false);
 
     fireEvent.click(screen.getByRole("button", { name: "Desfés" }));
     await waitFor(() => {

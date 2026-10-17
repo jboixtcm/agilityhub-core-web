@@ -10,6 +10,7 @@ import {
   Button,
   Card,
   EmptyState,
+  ErrorState,
   FormField as UiFormField,
   Icon,
   Input,
@@ -28,7 +29,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-type License = components["schemas"]["LicenseWithPendingFields"];
+type License = components["schemas"]["License"];
 // The api sends documents and licences for ACTIVE dogs only; the page reads them as empty lists otherwise.
 type MeDog = Omit<components["schemas"]["MeDog"], "documents" | "licenses"> & {
   documents: NonNullable<components["schemas"]["MeDog"]["documents"]>;
@@ -529,7 +530,7 @@ function PendingDogCard({ dog }: { dog: MeDog }) {
           <h2>{dog.name}</h2>
           <p>
             {dog.breed} ·{" "}
-            {dog.sex === "FEMALE" ? t("census:values.female") : t("census:values.male")} ·{" "}
+            {dog.sex === "FEMALE" ? t("census:myDogs.sex.FEMALE") : t("census:myDogs.sex.MALE")} ·{" "}
             {t("census:values.years", { count: dog.ageYears })}
           </p>
         </div>
@@ -592,7 +593,7 @@ function DogCard({
           <h2>{dog.name}</h2>
           <p>
             {dog.breed} ·{" "}
-            {dog.sex === "FEMALE" ? t("census:values.female") : t("census:values.male")} ·{" "}
+            {dog.sex === "FEMALE" ? t("census:myDogs.sex.FEMALE") : t("census:myDogs.sex.MALE")} ·{" "}
             {t("census:values.years", { count: dog.ageYears })}
           </p>
         </div>
@@ -804,8 +805,7 @@ function DocumentModal({
 export function MyDogsPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
   const { t } = useTranslation("census");
-  const packsEnabled =
-    branding.modules.includes("PACKS") && branding.modules.includes("BILLING");
+  const packsEnabled = branding.modules.includes("PACKS") && branding.modules.includes("BILLING");
   const [data, setData] = useState<MeDogs>();
   const [packs, setPacks] = useState<PackBalance[]>([]);
   const [packFailure, setPackFailure] = useState(false);
@@ -892,7 +892,7 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
           </div>
         )}
         {error ? (
-          <EmptyState
+          <ErrorState
             action={
               <Button
                 onClick={() => {
@@ -948,9 +948,7 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
                   dog={dog}
                   key={dog.id}
                   modules={branding.modules}
-                  packs={
-                    packsEnabled ? packs : []
-                  }
+                  packs={packsEnabled ? packs : []}
                   onClearMessage={() => {
                     setMessage(undefined);
                   }}
@@ -1103,7 +1101,7 @@ export function MyDataPage({ client }: { client: ApiClient }) {
     return (
       <div className="self-page">
         <PageHeader title={t("census:myData.title")} />
-        <EmptyState
+        <ErrorState
           description={t("census:myData.loadError")}
           title={t("census:selfService.errorTitle")}
         />

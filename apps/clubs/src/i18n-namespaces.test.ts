@@ -59,7 +59,9 @@ describe("point 12 (E9-W03): the students' app ships no admin namespace", () => 
 
   it("boots with the students' backend (`@agilityhub/i18n/clubs`), never the full table", () => {
     const main = readFileSync(resolve(srcRoot, "main.tsx"), "utf8");
-    expect(main).toMatch(/import \{ createClubsI18n \} from "@agilityhub\/i18n\/clubs";/u);
+    expect(main).toMatch(
+      /import \{[^}]*\bcreateClubsI18n\b[^}]*\} from "@agilityhub\/i18n\/clubs";/u,
+    );
     expect(main).not.toMatch(/\bcreateI18n\b/u);
   });
 });

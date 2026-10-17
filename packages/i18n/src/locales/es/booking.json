@@ -15,7 +15,7 @@
     "empty": "Ahora mismo no hay ninguna clase para reservar con este perro.",
     "loading": "Cargando las clases",
     "error": "No se han podido cargar las clases.",
-    "retry": "Vuelve a intentarlo"
+    "retry": "Volver a intentarlo"
   },
   "list": {
     "freeSeats": "{count, plural, one {# plaza} other {# plazas}}",
@@ -36,8 +36,8 @@
     "joined": "Estás en la lista de espera",
     "position": "Eres el número {position} de la lista",
     "confirmBy": "Tienes tiempo hasta las {time} para coger la plaza.",
-    "claim": "COGE LA PLAZA",
-    "leave": "SAL DE LA LISTA DE ESPERA",
+    "claim": "COGER LA PLAZA",
+    "leave": "SALIR DE LA LISTA DE ESPERA",
     "leaveDialog": "¿Quieres salir de la lista de espera de {className}?",
     "left": "Has salido de la lista de espera"
   },
@@ -57,14 +57,14 @@
     "swappable": "{ring, select, none {Clase {description} · anulable dentro de plazo} other {Clase {description} · {ring} · anulable dentro de plazo}}",
     "notSelectableDONE": "Clase {description} · ya hecha — no se puede seleccionar",
     "notSelectableLATE_WINDOW": "Clase {description} · fuera de plazo — no se puede seleccionar",
-    "swapButton": "ANULA {oldDay} Y CONFIRMA {newDay}",
+    "swapButton": "ANULAR {oldDay} Y CONFIRMAR {newDay}",
     "cancelNew": "CANCELAR LA NUEVA RESERVA",
     "limitDone": "{unit, select, DOG {{week, select, NEXT {La semana que viene ya tienes {count, plural, one {una clase} =2 {dos clases} other {# clases}} con {dogArticle}{dogName}.} other {Esta semana ya has hecho {count, plural, one {una clase} =2 {dos clases} other {# clases}} con {dogArticle}{dogName}.}}} other {{week, select, NEXT {La semana que viene ya tienes {count, plural, one {una clase} =2 {dos clases} other {# clases}}.} other {Esta semana ya has hecho {count, plural, one {una clase} =2 {dos clases} other {# clases}}.}}}}",
     "limitNoneNextWeek": "Todavía no puedes reservar clases de la semana que viene.",
     "nextBookableAt": "{week, select, NEXT {Podrás reservar esta clase a partir del {nextBookableAt}.} other {Podrás reservar para la semana que viene a partir del {nextBookableAt}.}}",
     "notYetOpen": "Disponible a partir del {opensAt}.",
     "seatTakenRetry": "Otra persona está terminando de reservar la última plaza. Vuelve a intentarlo en unos segundos.",
-    "retry": "Vuelve a intentarlo",
+    "retry": "Volver a intentarlo",
     "payAndBook": "PAGAR Y CONFIRMAR ({price})",
     "chargeOnAttendance": "Esta clase se cargará en el próximo recibo ({price}).",
     "payAfterSwap": "Al confirmar, pagarás esta clase ({price}).",
@@ -83,9 +83,9 @@
     "bookedByMember": "Reservada por {name} el {date} a las {time}",
     "bookedByClub": "Reservada por el club el {date} a las {time}",
     "weekdayDate": "{weekday} {date}",
-    "cancel": "ANULA LA RESERVA",
+    "cancel": "ANULAR LA RESERVA",
     "cancelDialog": "¿Quieres anular la reserva de la clase {description}?",
-    "cancelConfirm": "ANULA",
+    "cancelConfirm": "ANULAR",
     "lateWarning": "Faltan menos de {threshold}: la sesión contará como hecha.",
     "cancelledInTime": "Anulación hecha dentro del plazo establecido: puedes reservar otra clase.",
     "cancelledLate": "Anulación hecha con menos de {threshold} de antelación. Te agradecemos que nos avises: habilitamos una plaza por si alguien se puede añadir a última hora. Esta sesión, sin embargo, cuenta dentro de tu cómputo de clases.",
@@ -93,7 +93,7 @@
     "thresholdMinutes": "{count, plural, one {# minuto} other {# minutos}}",
     "loading": "Cargando la reserva",
     "error": "No se ha podido cargar la reserva.",
-    "retry": "Vuelve a intentarlo",
+    "retry": "Volver a intentarlo",
     "notFound": "Esta reserva no existe o ya no es accesible."
   }
 }

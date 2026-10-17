@@ -1,0 +1,94 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs
+
+------------x··-----------------------------------------------------x----x------··---x-------------------
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/SignupPage.test.tsx > T-04-31 signup family lookup > continues empty, resolves the fixture family and supports a pending lookup
+AssertionError: expected null not to be null
+ ❯ src/SignupPage.test.tsx:636:62
+    634|     expect(found).toBeVisible();
+    635|     // INC-11 (mockup 18): the note carries its ✓.
+    636|     expect(found.closest("aside")?.querySelector("svg")).not.toBeNull(…
+       |                                                              ^
+    637|     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
+    638|     expect(foundNavigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > 05-08-2026 (before the split day): a full month today, half a month from the 16th
+AssertionError: expected  to have a length of 2 but got +0
+
+- Expected
++ Received
+
+- 2
++ 0
+
+ ❯ src/SignupPage.test.tsx:1816:19
+    1814|     // INC-11 (mockup 19): the options are the brand's check circles, …
+    1815|     const marks = upfrontCard().querySelectorAll(".signup-upfront__opt…
+    1816|     expect(marks).toHaveLength(2);
+       |                   ^
+    1817|     expect(marks[0]?.querySelector("svg")).not.toBeNull();
+    1818|     expect(marks[1]?.querySelector("svg")).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 1: the «Pagament inicial» card is the selected plan's quote (R-04-14/15, T-04-32) > add-dog: on day 26 only TODAY (after billing.upfrontCutoffDay); on day 17 the 1st of next month pays the entry fee only
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "Alta avui, 26 d’agost (quota addicional d'aquest mes)30,00 €",
++ ]
+
+ ❯ src/SignupPage.test.tsx:1890:28
+    1888|     // INC-11 (mockup 19): one option is no choice — no «tria quan vol…
+    1889|     // option reads as a line of the card.
+    1890|     expect(startOptions()).toEqual([]);
+       |                            ^
+    1891|     expect(within(upfrontCard()).queryByText(/tria quan vols començar/…
+    1892|     expect(upfrontLines()).toContain(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/SignupPage.test.tsx > E3-W08 step 5: screens 16 and 17 and the public shell > INC-11 (mockup 17): the chosen sex is a bordered box with its «✓», the other a plain box
+TestingLibraryElementError: Unable to find an element with the text: ✓. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<button[39m
+  [33maria-pressed[39m=[32m"true"[39m
+  [33mtype[39m=[32m"button"[39m
+[36m>[39m
+  [0mFemella[0m
+[36m</button>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/SignupPage.test.tsx:2219:27
+    2217|     fireEvent.click(female);
+    2218|     expect(female).toHaveAttribute("aria-pressed", "true");
+    2219|     expect(within(female).getByText("✓")).toHaveAttribute("aria-hidden…
+       |                           ^
+    2220|     expect(within(male).queryByText("✓")).toBeNull();
+    2221|     fireEvent.click(male);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 4 passed | 97 skipped (105)
+   Start at  21:48:46
+   Duration  6.53s (transform 52%, tests 22%, environment 12%, import 11%, setup 3%)
+
+  Transform  transforming modules took 3.31s · 52% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit=1

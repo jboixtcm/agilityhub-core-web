@@ -92,15 +92,17 @@ export function DashboardPage({
       {signupResult === "rejected-refund" ? <Toast tone="warning">{t("admin-dashboard:signups.refundRequired")}</Toast> : null}
       {error === undefined ? null : <Toast tone="danger">{isApiError(error) ? t(`errors:${error.code}`, { defaultValue: t("admin-dashboard:common.error") }) : t("admin-dashboard:common.error")}</Toast>}
       <h1>{t("admin-dashboard:greeting", { date: today, period })}</h1>
+      {/* INC-11 (mockup D1): the period goes with the label («Ocupació classes · aquesta setmana»),
+          the figures under it («142/163 places»). */}
       <div className="dashboard-kpis">
         {dashboard.kpis.activeMembers === null ? null : (
           <KpiCard detail={t("admin-dashboard:kpi.thisMonth", { count: Math.abs(delta), sign: delta > 0 ? "plus" : delta < 0 ? "minus" : "zero" })} label={t("admin-dashboard:kpi.activeMembers")} value={dashboard.kpis.activeMembers.value} />
         )}
         {occupancy === null ? null : (
-          <KpiCard detail={`${t("admin-dashboard:kpi.thisWeek")} · ${t("admin-dashboard:kpi.places", { booked: occupancy.booked, capacity: occupancy.capacity })}`} label={t("admin-dashboard:kpi.occupancy")} value={occupancy.percent === null ? t("admin-dashboard:common.empty") : `${String(occupancy.percent)}%`} />
+          <KpiCard detail={t("admin-dashboard:kpi.places", { booked: occupancy.booked, capacity: occupancy.capacity })} label={`${t("admin-dashboard:kpi.occupancy")} · ${t("admin-dashboard:kpi.thisWeek")}`} value={occupancy.percent === null ? t("admin-dashboard:common.empty") : `${String(occupancy.percent)}%`} />
         )}
         {dashboard.kpis.trainingBookings === null ? null : (
-          <KpiCard detail={`${t("admin-dashboard:kpi.week")} · ${t("admin-dashboard:kpi.distinctMembers", { count: dashboard.kpis.trainingBookings.distinctMembers })}`} label={t("admin-dashboard:kpi.training")} value={dashboard.kpis.trainingBookings.value} />
+          <KpiCard detail={t("admin-dashboard:kpi.distinctMembers", { count: dashboard.kpis.trainingBookings.distinctMembers })} label={`${t("admin-dashboard:kpi.training")} · ${t("admin-dashboard:kpi.week")}`} value={dashboard.kpis.trainingBookings.value} />
         )}
         {dashboard.kpis.pendingSignups === null ? null : (
           <KpiCard detail={t("admin-dashboard:kpi.older", { count: dashboard.kpis.pendingSignups.olderThanWarn, days: dashboard.kpis.pendingSignups.warnDays })} label={t("admin-dashboard:kpi.pending")} value={dashboard.kpis.pendingSignups.value} />
@@ -118,18 +120,23 @@ export function DashboardPage({
             {dashboard.pendingSignups.items.length === 0 ? <p>{t("admin-dashboard:signups.empty")}</p> : dashboard.pendingSignups.items.map((signup) => {
               const dogs = signup.dogs.map((dog) => t("admin-dashboard:signups.dog", { breed: dog.breed, isAddDog: String(dog.isAddDog), name: dog.name })).join(", ");
               const title = `${signup.shortName} + ${dogs}`;
+              const plan = `${signup.planName}${signup.paymentMethodType === undefined ? "" : ` · ${t(`admin-dashboard:signups.payment.${signup.paymentMethodType}`)}`}`;
               const overdue = warnDays !== undefined && signup.pendingDays > warnDays;
               return (
                 <article className="dashboard-signups__row" key={signup.memberId}>
                   <div>
-                    <strong>{title}</strong>
-                    <small>{signup.planName}{signup.paymentMethodType === undefined ? "" : ` · ${t(`admin-dashboard:signups.payment.${signup.paymentMethodType}`)}`}</small>
+                    {/* INC-11 (mockup D1): «**Marta R.** + Kiwi (whippet)» and the plan on one line,
+                        «Compte no informat» after the plan. */}
+                    <p className="dashboard-signups__line">
+                      <span><strong>{signup.shortName}</strong> + {dogs}</span>
+                      <small>{plan}</small>
+                      {(signup.warnings ?? []).includes("ACCOUNT_NOT_PROVIDED") ? <Badge tone="danger">{t("admin-dashboard:signups.accountNotProvided")}</Badge> : null}
+                    </p>
                     {/* R-14-05: the submission date turns red past dashboard.pendingSignupAgeWarnDays. */}
                     <small className={overdue ? "dashboard-signups__date dashboard-signups__date--overdue" : "dashboard-signups__date"}>
                       {t("admin-dashboard:signups.submitted", { date: formatDate(signup.submittedAt, "short") })}
                     </small>
                   </div>
-                  {(signup.warnings ?? []).includes("ACCOUNT_NOT_PROVIDED") ? <Badge tone="danger">{t("admin-dashboard:signups.accountNotProvided")}</Badge> : null}
                   <Button aria-label={t("admin-dashboard:signups.validateLabel", { name: title })} onClick={() => { onNavigate(`/preinscripcions/${signup.memberId}`); }}>{t("admin-dashboard:signups.validate")}</Button>
                 </article>
               );
@@ -140,7 +147,12 @@ export function DashboardPage({
 
       {dashboard.dogsByLevel === null ? null : (
         <Card className="dashboard-chart">
-          <header><h2>{t("admin-dashboard:chart.title", { count: dashboard.dogsByLevel.totalActiveDogs })}</h2><small>{t("admin-dashboard:chart.legend", { previous: Math.max(0, dashboard.dogsByLevel.activeDogWeeks - 1) })}</small></header>
+          <header><h2>{t("admin-dashboard:chart.title", { count: dashboard.dogsByLevel.totalActiveDogs })}</h2><small className="dashboard-chart__legend">
+            {/* INC-11 (mockup D1): each part of the legend with the swatch of its bars. */}
+            <span><i aria-hidden="true" className="dashboard-chart__swatch ah-bar-chart__bar--highlighted" data-swatch="" />{t("admin-dashboard:chart.legendRecent", { previous: Math.max(0, dashboard.dogsByLevel.activeDogWeeks - 1) })}</span>
+            {" · "}
+            <span><i aria-hidden="true" className="dashboard-chart__swatch ah-bar-chart__bar--total" data-swatch="" />{t("admin-dashboard:chart.legendTotal")}</span>
+          </small></header>
           {/* R-14-07 (E35): one column per progression level; `others` is counted, never painted. */}
           <BarChart data={dashboard.dogsByLevel.levels.map((level) => ({ highlighted: level.withRecentBooking, label: level.code, title: level.name, total: level.total }))} highlightedLabel={t("admin-dashboard:chart.recent")} label={t("admin-dashboard:chart.title", { count: dashboard.dogsByLevel.totalActiveDogs })} totalLabel={t("admin-dashboard:chart.total")} valueLabel={(item) => t("admin-dashboard:chart.value", { recent: item.highlighted, total: item.total })} />
         </Card>

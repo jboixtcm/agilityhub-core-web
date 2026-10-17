@@ -177,8 +177,12 @@
     "save": "GUARDAR"
   },
   "myDogs": {
+    "sex": {
+      "FEMALE": "Hembra",
+      "MALE": "Macho"
+    },
     "addDocument": "＋ DOC.",
-    "addDog": "＋ AÑADE UN PERRO",
+    "addDog": "＋ AÑADIR UN PERRO",
     "available": "{count} disponibles",
     "changePhoto": "Cambiar la foto de {dog}",
     "consumed": "{count} consumidas",

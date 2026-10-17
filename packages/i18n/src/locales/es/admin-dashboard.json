@@ -45,7 +45,7 @@
   "signups": {
     "title": "Preinscripciones pendientes",
     "empty": "Ninguna preinscripción pendiente",
-    "validate": "VALIDA",
+    "validate": "VALIDAR",
     "validated": "El alta se ha validado.",
     "accountNotProvided": "Cuenta no informada",
     "payment": {
@@ -54,13 +54,14 @@
       "MANUAL": "efectivo"
     },
     "dog": "{name} {isAddDog, select, true {(perro nuevo)} other {({breed})}}",
-    "validateLabel": "VALIDA: {name}",
+    "validateLabel": "VALIDAR: {name}",
     "submitted": "enviada el {date}",
     "refundRequired": "Hay un pago cobrado: habrá que devolverlo desde Facturación"
   },
   "chart": {
     "title": "Perros por nivel — {count} activos",
-    "legend": "{previous, plural, =0 {con reserva (sem. actual)} one {con reserva (sem. actual o anterior)} other {con reserva (sem. actual o las # anteriores)}} · total activos",
+    "legendRecent": "{previous, plural, =0 {con reserva (sem. actual)} one {con reserva (sem. actual o anterior)} other {con reserva (sem. actual o las # anteriores)}}",
+    "legendTotal": "total activos",
     "recent": "Con reserva",
     "total": "Total activos",
     "value": "{total} · {recent} res."

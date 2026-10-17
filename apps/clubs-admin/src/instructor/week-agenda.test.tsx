@@ -765,7 +765,7 @@ describe("T-10-32 (D12) the three locales, with no missing key", () => {
       "es",
       "Semana actual",
       "del 10 al 15 de agosto",
-      "Guarda la lista",
+      "Guardar la lista",
       "ha avisado — plaza liberada",
       "aviso mañana a las 8:00",
     ],

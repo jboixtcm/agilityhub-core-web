@@ -16,6 +16,7 @@
     "tabs": "Información del club",
     "updated": "Actualizado el {date}"
   },
+  "loading": "Cargando",
   "language": {
     "ca": "Catalán",
     "en": "Inglés",

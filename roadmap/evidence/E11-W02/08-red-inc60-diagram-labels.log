@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/packages/course-ui
+
+-xx-----
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/panels.test.tsx > T-16-06 R-16-04 RingMarkerDiagram draws the markers at their Core coordinates (E9-W02 round 2 #6) > E11-W02 (INC-60): the origin and the ring sides are painted in a text colour that reads on the floor (light)
+AssertionError: 0,0: expected 1.4523710931424376 to be greater than or equal to 4.5
+ ❯ tests/panels.test.tsx:117:11
+    115|           contrast(token, "--ah-color-course-floor", theme),
+    116|           label.textContent ?? "",
+    117|         ).toBeGreaterThanOrEqual(4.5);
+       |           ^
+    118|       }
+    119|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/panels.test.tsx > T-16-06 R-16-04 RingMarkerDiagram draws the markers at their Core coordinates (E9-W02 round 2 #6) > E11-W02 (INC-60): the origin and the ring sides are painted in a text colour that reads on the floor (dark)
+AssertionError: 0,0: expected 1.3901114924633766 to be greater than or equal to 4.5
+ ❯ tests/panels.test.tsx:117:11
+    115|           contrast(token, "--ah-color-course-floor", theme),
+    116|           label.textContent ?? "",
+    117|         ).toBeGreaterThanOrEqual(4.5);
+       |           ^
+    118|       }
+    119|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 skipped (8)
+   Start at  21:35:01
+   Duration  3.25s (transform 57%, environment 25%, import 12%, tests 5%)
+
+exit=1

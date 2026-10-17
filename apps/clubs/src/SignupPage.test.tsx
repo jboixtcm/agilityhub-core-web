@@ -242,7 +242,10 @@ function requestsTo(recorded: RecordedRequest[], method: string, path: string): 
   return recorded.filter((entry) => entry.method === method && entry.path === path);
 }
 
-async function lastBody(recorded: RecordedRequest[], path: string): Promise<Record<string, unknown>> {
+async function lastBody(
+  recorded: RecordedRequest[],
+  path: string,
+): Promise<Record<string, unknown>> {
   let body: unknown;
   await waitFor(() => {
     body = requestsTo(recorded, "POST", path).at(-1)?.body;
@@ -266,7 +269,12 @@ async function addDogConfigJson(scenario: MockScenario = "signup"): Promise<Sign
   return (await response.json()) as SignupConfigJson;
 }
 
-function apiErrorResponse(code: string, status: number, details: unknown = {}, headers?: HeadersInit) {
+function apiErrorResponse(
+  code: string,
+  status: number,
+  details: unknown = {},
+  headers?: HeadersInit,
+) {
   return HttpResponse.json(
     { code, details, message: code, traceId: "test-trace" },
     { status, ...(headers === undefined ? {} : { headers }) },
@@ -431,9 +439,9 @@ describe("T-04-29 signup person and draft", () => {
     await renderSignup({ branding: genericBranding(), path: "/apuntat-hi" });
     expect(screen.getByLabelText("Tipus de document")).toHaveValue("PASSPORT");
     expect(
-      within(screen.getByLabelText("Tipus de document")).getAllByRole("option").map((option) =>
-        option.getAttribute("value"),
-      ),
+      within(screen.getByLabelText("Tipus de document"))
+        .getAllByRole("option")
+        .map((option) => option.getAttribute("value")),
     ).toEqual(["PASSPORT", "OTHER"]);
     const prefix = screen.getAllByLabelText("Prefix")[0];
     if (prefix === undefined) throw new TypeError("Missing phone prefix");
@@ -620,11 +628,12 @@ describe("T-04-31 signup family lookup", () => {
       target: { value: "Kiwi" },
     });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
-    expect(
-      await screen.findByText(
-        "Grup trobat: Marta R. El gos nou quedarà vinculat al seu grup familiar.",
-      ),
-    ).toBeVisible();
+    const found = await screen.findByText(
+      "Grup trobat: Marta R. El gos nou quedarà vinculat al seu grup familiar.",
+    );
+    expect(found).toBeVisible();
+    // INC-11 (mockup 18): the note carries its ✓.
+    expect(found.closest("aside")?.querySelector("svg")).not.toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
     expect(foundNavigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
 
@@ -680,7 +689,16 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
   it("renders API totals and payment conditions and submits only after privacy consent", async () => {
     const navigate = vi.fn();
     let submittedBody: unknown;
-    seedDraft({ dog: { birthMonth: "03/2022", breed: "Mestís", chip: "941000012345678", documents: [{ files: [], type: "VACCINATION_CARD" }], name: "Kiwi", sex: "FEMALE" } });
+    seedDraft({
+      dog: {
+        birthMonth: "03/2022",
+        breed: "Mestís",
+        chip: "941000012345678",
+        documents: [{ files: [], type: "VACCINATION_CARD" }],
+        name: "Kiwi",
+        sex: "FEMALE",
+      },
+    });
     server.use(
       http.post("*/api/v1/signup", async ({ request }) => {
         submittedBody = await request.json();
@@ -938,22 +956,40 @@ describe("T-04-32 signup payment, checkout and add-dog mode", () => {
 
 describe("B1 identity document at submission (R-04-01)", () => {
   it.each([
-    ["DNI", { idDocument: { type: "DNI", value: "12345678z" } }, "", { type: "DNI", value: "12345678Z" }],
-    ["NIE", { idDocument: { type: "DNI", value: "x1234567-l" } }, "", { type: "NIE", value: "X1234567L" }],
-    ["passport only", { idDocument: { type: "DNI", value: "" } }, "ab1234567", { type: "PASSPORT", value: "AB1234567" }],
-  ])("submits a %s applicant with the identity-check document", async (_label, person, passport, expected) => {
-    const navigate = vi.fn();
-    const recorded = recordRequests();
-    seedDraft({ passport }, person);
-    await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
-    acceptPrivacy();
-    submitSignup();
-    await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith("/apuntat-hi/enviada");
-    });
-    const body = await lastBody(recorded, "/signup");
-    expect((body.person as Record<string, unknown>).idDocument).toEqual(expected);
-  });
+    [
+      "DNI",
+      { idDocument: { type: "DNI", value: "12345678z" } },
+      "",
+      { type: "DNI", value: "12345678Z" },
+    ],
+    [
+      "NIE",
+      { idDocument: { type: "DNI", value: "x1234567-l" } },
+      "",
+      { type: "NIE", value: "X1234567L" },
+    ],
+    [
+      "passport only",
+      { idDocument: { type: "DNI", value: "" } },
+      "ab1234567",
+      { type: "PASSPORT", value: "AB1234567" },
+    ],
+  ])(
+    "submits a %s applicant with the identity-check document",
+    async (_label, person, passport, expected) => {
+      const navigate = vi.fn();
+      const recorded = recordRequests();
+      seedDraft({ passport }, person);
+      await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
+      acceptPrivacy();
+      submitSignup();
+      await waitFor(() => {
+        expect(navigate).toHaveBeenCalledWith("/apuntat-hi/enviada");
+      });
+      const body = await lastBody(recorded, "/signup");
+      expect((body.person as Record<string, unknown>).idDocument).toEqual(expected);
+    },
+  );
 });
 
 describe("M1 stable retries (CONVENCIONS_API §7, R-04-26/27)", () => {
@@ -989,16 +1025,16 @@ describe("M1 stable retries (CONVENCIONS_API §7, R-04-26/27)", () => {
   });
 
   it("changing a payload field after a failure uses a new key", async () => {
-    server.use(
-      http.post("*/api/v1/signup", () => apiErrorResponse("INVALID_IBAN", 400)),
-    );
+    server.use(http.post("*/api/v1/signup", () => apiErrorResponse("INVALID_IBAN", 400)));
     const recorded = recordRequests();
     seedDraft({ payment: { firstMonthOption: "TODAY", type: "SEPA_DD", iban: VALID_IBAN } });
     await renderSignup({ path: "/apuntat-hi/pagament" });
     acceptPrivacy();
     submitSignup();
     await screen.findByText("El número de compte bancari no és vàlid.");
-    fireEvent.change(screen.getByLabelText("Titular del compte"), { target: { value: "Nora Soler" } });
+    fireEvent.change(screen.getByLabelText("Titular del compte"), {
+      target: { value: "Nora Soler" },
+    });
     submitSignup();
     await waitFor(() => {
       expect(requestsTo(recorded, "POST", "/signup")).toHaveLength(2);
@@ -1074,7 +1110,14 @@ describe("M1 stable retries (CONVENCIONS_API §7, R-04-26/27)", () => {
   it("a cancelled checkout returns to 19 with the data and retries only the checkout", async () => {
     const navigate = vi.fn();
     const recorded = recordRequests();
-    seedDraft({ payment: { firstMonthOption: "TODAY", holderName: "Nora Soler Pons", iban: VALID_IBAN, type: "SEPA_DD" } });
+    seedDraft({
+      payment: {
+        firstMonthOption: "TODAY",
+        holderName: "Nora Soler Pons",
+        iban: VALID_IBAN,
+        type: "SEPA_DD",
+      },
+    });
     await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
     acceptPrivacy();
     submitSignup();
@@ -1126,29 +1169,125 @@ describe("M2 api errors land on their field and step (§2, CATALEG_ERRORS)", () 
     status: number;
     text: string;
   }[] = [
-    { code: "INVALID_ID_DOCUMENT", focus: "DNI / NIE", path: "/apuntat-hi", status: 400, text: "El document d'identitat no és vàlid." },
-    { code: "ID_DOCUMENT_AMBIGUOUS", focus: "DNI / NIE", path: "/apuntat-hi", status: 422, text: "El document d'identitat coincideix amb més d'un registre." },
-    { code: "INVALID_PHONE", focus: "Telèfon", path: "/apuntat-hi", status: 400, text: "El telèfon no és vàlid." },
-    { code: "INVALID_IBAN", focus: "IBAN", status: 400, text: "El número de compte bancari no és vàlid." },
-    { code: "PLAN_NOT_AVAILABLE", focus: "Selecciona Abonat", path: "/apuntat-hi/gos", status: 422, text: "Aquest pla no està disponible." },
-    { code: "DOG_DOCUMENT_REQUIRED", focus: "Cartilla de vacunes", path: "/apuntat-hi/gos", status: 422, text: "Cal un document per a aquest gos." },
-    { code: "FILE_NOT_FOUND", focus: "Cartilla de vacunes", path: "/apuntat-hi/gos", status: 400, text: "No s'ha trobat el fitxer." },
-    { code: "DOG_CHIP_ALREADY_REGISTERED", focus: "Núm. de xip", path: "/apuntat-hi/gos", status: 422, text: "El xip d'aquest gos ja està registrat." },
-    { code: "FAMILY_HOLDER_NOT_FOUND", focus: "Nom del responsable", path: "/apuntat-hi/familia", status: 422, text: "No s'ha trobat el titular del grup familiar." },
-    { code: "CONSENT_VERSION_OUTDATED", focus: "Accepto la política de privacitat", status: 422, text: "La política ha canviat. Revisa-la i torna a acceptar-la." },
-    { code: "MEMBER_ALREADY_EXISTS", path: "/apuntat-hi", status: 409, text: "Aquest abonat ja existeix." },
-    { code: "SIGNUP_ALREADY_PENDING", path: "/apuntat-hi", status: 422, text: "Ja tenim una sol·licitud pendent amb aquestes dades; el club la revisarà aviat." },
-    { code: "SIGNUP_CLOSED", status: 422, text: "En aquest moment no es poden enviar sol·licituds d'alta." },
-    { code: "RATE_LIMITED", headers: { "Retry-After": "120" }, status: 429, text: "Massa intents. Torna-ho a provar d'aquí a 120 s." },
-    { code: "PAYMENT_METHOD_NOT_AVAILABLE", status: 422, text: "Aquest mètode de pagament no està disponible." },
+    {
+      code: "INVALID_ID_DOCUMENT",
+      focus: "DNI / NIE",
+      path: "/apuntat-hi",
+      status: 400,
+      text: "El document d'identitat no és vàlid.",
+    },
+    {
+      code: "ID_DOCUMENT_AMBIGUOUS",
+      focus: "DNI / NIE",
+      path: "/apuntat-hi",
+      status: 422,
+      text: "El document d'identitat coincideix amb més d'un registre.",
+    },
+    {
+      code: "INVALID_PHONE",
+      focus: "Telèfon",
+      path: "/apuntat-hi",
+      status: 400,
+      text: "El telèfon no és vàlid.",
+    },
+    {
+      code: "INVALID_IBAN",
+      focus: "IBAN",
+      status: 400,
+      text: "El número de compte bancari no és vàlid.",
+    },
+    {
+      code: "PLAN_NOT_AVAILABLE",
+      focus: "Selecciona Abonat",
+      path: "/apuntat-hi/gos",
+      status: 422,
+      text: "Aquest pla no està disponible.",
+    },
+    {
+      code: "DOG_DOCUMENT_REQUIRED",
+      focus: "Cartilla de vacunes",
+      path: "/apuntat-hi/gos",
+      status: 422,
+      text: "Cal un document per a aquest gos.",
+    },
+    {
+      code: "FILE_NOT_FOUND",
+      focus: "Cartilla de vacunes",
+      path: "/apuntat-hi/gos",
+      status: 400,
+      text: "No s'ha trobat el fitxer.",
+    },
+    {
+      code: "DOG_CHIP_ALREADY_REGISTERED",
+      focus: "Núm. de xip",
+      path: "/apuntat-hi/gos",
+      status: 422,
+      text: "El xip d'aquest gos ja està registrat.",
+    },
+    {
+      code: "FAMILY_HOLDER_NOT_FOUND",
+      focus: "Nom del responsable",
+      path: "/apuntat-hi/familia",
+      status: 422,
+      text: "No s'ha trobat el titular del grup familiar.",
+    },
+    {
+      code: "CONSENT_VERSION_OUTDATED",
+      focus: "Accepto la política de privacitat",
+      status: 422,
+      text: "La política ha canviat. Revisa-la i torna a acceptar-la.",
+    },
+    {
+      code: "MEMBER_ALREADY_EXISTS",
+      path: "/apuntat-hi",
+      status: 409,
+      text: "Aquest abonat ja existeix.",
+    },
+    {
+      code: "SIGNUP_ALREADY_PENDING",
+      path: "/apuntat-hi",
+      status: 422,
+      text: "Ja tenim una sol·licitud pendent amb aquestes dades; el club la revisarà aviat.",
+    },
+    {
+      code: "SIGNUP_CLOSED",
+      status: 422,
+      text: "En aquest moment no es poden enviar sol·licituds d'alta.",
+    },
+    {
+      code: "RATE_LIMITED",
+      headers: { "Retry-After": "120" },
+      status: 429,
+      text: "Massa intents. Torna-ho a provar d'aquí a 120 s.",
+    },
+    {
+      code: "PAYMENT_METHOD_NOT_AVAILABLE",
+      status: 422,
+      text: "Aquest mètode de pagament no està disponible.",
+    },
     // E7-W05 step 4 (CONVENCIONS_API §7, E80): a submission still in progress reads the shared
     // text; another request with the same key keeps the error's own.
-    { code: "IDEMPOTENCY_KEY_REUSED", details: { reason: "IN_PROGRESS" }, status: 409, text: "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment." },
-    { code: "IDEMPOTENCY_KEY_REUSED", details: { reason: "DIFFERENT_REQUEST" }, status: 409, text: "La clau d'idempotència ja s'ha utilitzat per a una altra petició." },
+    {
+      code: "IDEMPOTENCY_KEY_REUSED",
+      details: { reason: "IN_PROGRESS" },
+      status: 409,
+      text: "L'operació encara està en curs. Torna-ho a provar d'aquí a un moment.",
+    },
+    {
+      code: "IDEMPOTENCY_KEY_REUSED",
+      details: { reason: "DIFFERENT_REQUEST" },
+      status: 409,
+      text: "La clau d'idempotència ja s'ha utilitzat per a una altra petició.",
+    },
     { code: "SOMETHING_NEW", status: 422, text: "No s'ha pogut completar l'acció." },
     {
       code: "VALIDATION_ERROR",
-      details: { fieldErrors: [{ code: "INVALID_EMAIL", field: "person.emails[0]" }, { code: "REQUIRED", field: "dog.chip" }] },
+      details: {
+        fieldErrors: [
+          { code: "INVALID_EMAIL", field: "person.emails[0]" },
+          { code: "REQUIRED", field: "dog.chip" },
+        ],
+      },
       focus: "Email",
       path: "/apuntat-hi",
       status: 400,
@@ -1170,59 +1309,66 @@ describe("M2 api errors land on their field and step (§2, CATALEG_ERRORS)", () 
   const titled = cases.map((item) => ({
     ...item,
     answer:
-      typeof item.details === "object" && item.details !== null && "reason" in item.details && typeof item.details.reason === "string"
+      typeof item.details === "object" &&
+      item.details !== null &&
+      "reason" in item.details &&
+      typeof item.details.reason === "string"
         ? `${String(item.status)}, ${item.details.reason}`
         : String(item.status),
     where: item.path ?? "the payment step",
   }));
 
-  it.each(titled)("$code ($answer) → $where", async ({ code, details, focus, headers, path, status, text }) => {
-    server.use(
-      http.post("*/api/v1/signup", () => apiErrorResponse(code, status, details ?? {}, headers)),
-    );
-    const navigate = vi.fn();
-    const recorded = recordRequests();
-    seedDraft();
-    await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
-    acceptPrivacy();
-    submitSignup();
+  it.each(titled)(
+    "$code ($answer) → $where",
+    async ({ code, details, focus, headers, path, status, text }) => {
+      server.use(
+        http.post("*/api/v1/signup", () => apiErrorResponse(code, status, details ?? {}, headers)),
+      );
+      const navigate = vi.fn();
+      const recorded = recordRequests();
+      seedDraft();
+      await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
+      acceptPrivacy();
+      submitSignup();
 
-    const message = await screen.findByText(text);
-    expect(message).toBeVisible();
-    if (path === undefined) {
-      expect(navigate).not.toHaveBeenCalled();
-    } else {
-      expect(navigate).toHaveBeenLastCalledWith(path);
-    }
-    if (focus !== undefined) {
-      const field =
-        focus.startsWith("Selecciona")
+      const message = await screen.findByText(text);
+      expect(message).toBeVisible();
+      if (path === undefined) {
+        expect(navigate).not.toHaveBeenCalled();
+      } else {
+        expect(navigate).toHaveBeenLastCalledWith(path);
+      }
+      if (focus !== undefined) {
+        const field = focus.startsWith("Selecciona")
           ? screen.getByRole("button", { name: focus })
           : screen.getByLabelText(focus, { exact: true });
-      await waitFor(() => {
-        expect(field).toHaveFocus();
-      });
-      if (!focus.startsWith("Selecciona")) {
-        const describedBy = field.getAttribute("aria-describedby") ?? "";
-        expect(window.document.getElementById(describedBy)).toHaveTextContent(text);
+        await waitFor(() => {
+          expect(field).toHaveFocus();
+        });
+        if (!focus.startsWith("Selecciona")) {
+          const describedBy = field.getAttribute("aria-describedby") ?? "";
+          expect(window.document.getElementById(describedBy)).toHaveTextContent(text);
+        }
+      } else if (code !== "SIGNUP_CLOSED") {
+        await waitFor(() => {
+          expect(message).toHaveFocus();
+        });
       }
-    } else if (code !== "SIGNUP_CLOSED") {
-      await waitFor(() => {
-        expect(message).toHaveFocus();
-      });
-    }
-    if (code === "CONSENT_VERSION_OUTDATED") {
-      expect(screen.getByLabelText("Accepto la política de privacitat")).not.toBeChecked();
-    }
-    if (code === "SIGNUP_CLOSED") {
-      expect(screen.queryByRole("button", { name: "ENVIA LA SOL·LICITUD" })).not.toBeInTheDocument();
-    }
-    if (["CONSENT_VERSION_OUTDATED", "PLAN_NOT_AVAILABLE", "SIGNUP_CLOSED"].includes(code)) {
-      await waitFor(() => {
-        expect(requestsTo(recorded, "GET", "/signup").length).toBeGreaterThan(1);
-      });
-    }
-  });
+      if (code === "CONSENT_VERSION_OUTDATED") {
+        expect(screen.getByLabelText("Accepto la política de privacitat")).not.toBeChecked();
+      }
+      if (code === "SIGNUP_CLOSED") {
+        expect(
+          screen.queryByRole("button", { name: "ENVIA LA SOL·LICITUD" }),
+        ).not.toBeInTheDocument();
+      }
+      if (["CONSENT_VERSION_OUTDATED", "PLAN_NOT_AVAILABLE", "SIGNUP_CLOSED"].includes(code)) {
+        await waitFor(() => {
+          expect(requestsTo(recorded, "GET", "/signup").length).toBeGreaterThan(1);
+        });
+      }
+    },
+  );
 });
 
 describe("M19 the consent version sent is the accepted one (R-04-17)", () => {
@@ -1437,7 +1583,12 @@ describe("E3-W06 round 2", () => {
   it("#2 after a cancelled checkout 19 is read-only and the retry charges the committed signup", async () => {
     const recorded = recordRequests();
     seedDraft({
-      payment: { firstMonthOption: "TODAY", holderName: "Nora Soler Pons", iban: VALID_IBAN, type: "SEPA_DD" },
+      payment: {
+        firstMonthOption: "TODAY",
+        holderName: "Nora Soler Pons",
+        iban: VALID_IBAN,
+        type: "SEPA_DD",
+      },
     });
     const navigate = vi.fn();
     await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
@@ -1450,7 +1601,11 @@ describe("E3-W06 round 2", () => {
 
     cleanup();
     navigate.mockClear();
-    await renderSignup({ navigate, path: "/apuntat-hi/pagament?cs=cancel", scenario: "signupStripe" });
+    await renderSignup({
+      navigate,
+      path: "/apuntat-hi/pagament?cs=cancel",
+      scenario: "signupStripe",
+    });
     expect(screen.getByLabelText("IBAN")).toHaveAttribute("readonly");
     expect(screen.getByLabelText("Titular del compte")).toHaveAttribute("readonly");
     expect(screen.getByLabelText("NIF del titular (opcional)")).toHaveAttribute("readonly");
@@ -1522,7 +1677,12 @@ describe("E3-W06 round 2", () => {
       ),
     );
     seedDraft({
-      payment: { firstMonthOption: "TODAY", holderTaxId: "12345678Z", iban: VALID_IBAN, type: "SEPA_DD" },
+      payment: {
+        firstMonthOption: "TODAY",
+        holderTaxId: "12345678Z",
+        iban: VALID_IBAN,
+        type: "SEPA_DD",
+      },
     });
     await renderSignup({ path: "/apuntat-hi/pagament" });
     await waitFor(() => {
@@ -1537,8 +1697,12 @@ describe("E3-W06 round 2", () => {
     const navigate = vi.fn();
     seedDraft();
     await renderSignup({ navigate, path: "/apuntat-hi/familia" });
-    fireEvent.change(screen.getByLabelText("Nom del responsable"), { target: { value: "Marta Roca" } });
-    fireEvent.change(screen.getByLabelText("Nom d'un dels seus gossos"), { target: { value: "Kiwi" } });
+    fireEvent.change(screen.getByLabelText("Nom del responsable"), {
+      target: { value: "Marta Roca" },
+    });
+    fireEvent.change(screen.getByLabelText("Nom d'un dels seus gossos"), {
+      target: { value: "Kiwi" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
     await screen.findByText(/Grup trobat/u);
     await waitFor(() => {
@@ -1578,7 +1742,9 @@ describe("E3-W06 round 2", () => {
     expect(await screen.findByText("La data no és vàlida.")).toBeVisible();
     expect(requestsTo(recorded, "POST", "/signup/identity-checks")).toHaveLength(0);
 
-    fireEvent.change(screen.getByLabelText("Data de naixement"), { target: { value: "16/08/2026" } });
+    fireEvent.change(screen.getByLabelText("Data de naixement"), {
+      target: { value: "16/08/2026" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
     await waitFor(() => {
       expect(requestsTo(recorded, "POST", "/signup/identity-checks")).toHaveLength(1);
@@ -1645,6 +1811,11 @@ describe("E3-W08 step 1: the «Pagament inicial» card is the selected plan's qu
     ]);
     expect(within(upfrontCard()).getAllByRole("radio")[0]).toBeChecked();
     expect(upfrontTotal()).toBe("160,00 €");
+    // INC-11 (mockup 19): the options are the brand's check circles, the chosen one with its ✓.
+    const marks = upfrontCard().querySelectorAll(".signup-upfront__options .signup-check");
+    expect(marks).toHaveLength(2);
+    expect(marks[0]?.querySelector("svg")).not.toBeNull();
+    expect(marks[1]?.querySelector("svg")).toBeNull();
   });
 
   it("17-08-2026: half a month today, the 1st of September in full, a 130 € total; the total is never sent", async () => {
@@ -1714,14 +1885,22 @@ describe("E3-W08 step 1: the «Pagament inicial» card is the selected plan's qu
     const recorded = recordRequests();
     setSignupMockToday("2026-08-26");
     await renderSignup({ addDog: true, navigate, path: "/gossos/nou/pagament" });
-    expect(startOptions()).toEqual(["Alta avui, 26 d’agost (quota addicional d'aquest mes)30,00 €"]);
+    // INC-11 (mockup 19): one option is no choice — no «tria quan vols començar:», no radio; the
+    // option reads as a line of the card.
+    expect(startOptions()).toEqual([]);
+    expect(within(upfrontCard()).queryByText(/tria quan vols començar/u)).toBeNull();
+    expect(upfrontLines()).toContain(
+      "Alta avui, 26 d’agost (quota addicional d'aquest mes) 30,00 €",
+    );
     expect(upfrontTotal()).toBe("130,00 €");
     acceptPrivacy();
     submitSignup();
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledWith("/gossos/nou/enviada");
     });
-    expect(await lastBody(recorded, "/me/dogs/signup")).toMatchObject({ additionalDogOption: "TODAY" });
+    expect(await lastBody(recorded, "/me/dogs/signup")).toMatchObject({
+      additionalDogOption: "TODAY",
+    });
 
     cleanup();
     sessionStorage.clear();
@@ -1749,7 +1928,14 @@ describe("E3-W08 round 2: the card after the signup exists, and the line concept
   it("#3 submitted on 15-08 with a full month, retried on 16-08: the card keeps the frozen full month and its total", async () => {
     const navigate = vi.fn();
     setSignupMockToday("2026-08-15");
-    seedDraft({ payment: { firstMonthOption: "TODAY", holderName: "Nora Soler Pons", iban: VALID_IBAN, type: "SEPA_DD" } });
+    seedDraft({
+      payment: {
+        firstMonthOption: "TODAY",
+        holderName: "Nora Soler Pons",
+        iban: VALID_IBAN,
+        type: "SEPA_DD",
+      },
+    });
     await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
     expect(startOptions()).toEqual([
       "Alta avui, 15 d’agost (mes complet)60,00 €",
@@ -1764,8 +1950,15 @@ describe("E3-W08 round 2: the card after the signup exists, and the line concept
     // Stripe's cancel URL, on the next day: the live quote now offers half a month today.
     cleanup();
     setSignupMockToday("2026-08-16");
-    await renderSignup({ navigate, path: "/apuntat-hi/pagament?cs=cancel", scenario: "signupStripe" });
-    expect(upfrontLines()).toEqual(["Entrada (1 gos) 100,00 €", "Alta avui, 15 d’agost (mes complet) 60,00 €"]);
+    await renderSignup({
+      navigate,
+      path: "/apuntat-hi/pagament?cs=cancel",
+      scenario: "signupStripe",
+    });
+    expect(upfrontLines()).toEqual([
+      "Entrada (1 gos) 100,00 €",
+      "Alta avui, 15 d’agost (mes complet) 60,00 €",
+    ]);
     expect(startOptions()).toEqual([]);
     expect(upfrontTotal()).toBe("160,00 €");
     expect(upfrontCard()).not.toHaveTextContent(/mig mes/u);
@@ -1784,8 +1977,20 @@ describe("E3-W08 round 2: the card after the signup exists, and the line concept
             upfront: {
               additionalDog: null,
               lines: [
-                { amount: eur(10000), concept: "ENTRY_FEE", id: "0c2461d2-e783-459a-b9cd-1d081c914501", paidAmount: eur(0), status: "DUE" },
-                { amount: eur(3000), concept: "FIRST_MONTH", id: "0c2461d2-e783-459a-b9cd-1d081c914502", paidAmount: eur(0), status: "DUE" },
+                {
+                  amount: eur(10000),
+                  concept: "ENTRY_FEE",
+                  id: "0c2461d2-e783-459a-b9cd-1d081c914501",
+                  paidAmount: eur(0),
+                  status: "DUE",
+                },
+                {
+                  amount: eur(3000),
+                  concept: "FIRST_MONTH",
+                  id: "0c2461d2-e783-459a-b9cd-1d081c914502",
+                  paidAmount: eur(0),
+                  status: "DUE",
+                },
               ],
               totalDue: eur(13000),
             },
@@ -1794,7 +1999,14 @@ describe("E3-W08 round 2: the card after the signup exists, and the line concept
         ),
       ),
     );
-    seedDraft({ payment: { firstMonthOption: "TODAY", holderName: "Nora Soler Pons", iban: VALID_IBAN, type: "SEPA_DD" } });
+    seedDraft({
+      payment: {
+        firstMonthOption: "TODAY",
+        holderName: "Nora Soler Pons",
+        iban: VALID_IBAN,
+        type: "SEPA_DD",
+      },
+    });
     await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
     acceptPrivacy();
     submitSignup();
@@ -1802,15 +2014,27 @@ describe("E3-W08 round 2: the card after the signup exists, and the line concept
       expect(navigate).toHaveBeenCalledWith("https://checkout.test/cs_mock_signup");
     });
     cleanup();
-    await renderSignup({ navigate, path: "/apuntat-hi/pagament?cs=cancel", scenario: "signupStripe" });
-    expect(upfrontLines()).toEqual(["Entrada (1 gos) 100,00 €", "Alta avui, 17 d’agost (mig mes) 30,00 €"]);
+    await renderSignup({
+      navigate,
+      path: "/apuntat-hi/pagament?cs=cancel",
+      scenario: "signupStripe",
+    });
+    expect(upfrontLines()).toEqual([
+      "Entrada (1 gos) 100,00 €",
+      "Alta avui, 17 d’agost (mig mes) 30,00 €",
+    ]);
     expect(upfrontTotal()).toBe("130,00 €");
   });
 
   it("#3 a committed add-dog shows the api's frozen additional-dog choice", async () => {
     const navigate = vi.fn();
     setSignupMockToday("2026-08-17");
-    await renderSignup({ addDog: true, navigate, path: "/gossos/nou/pagament", scenario: "signupStripe" });
+    await renderSignup({
+      addDog: true,
+      navigate,
+      path: "/gossos/nou/pagament",
+      scenario: "signupStripe",
+    });
     acceptPrivacy();
     submitSignup();
     await waitFor(() => {
@@ -1818,7 +2042,12 @@ describe("E3-W08 round 2: the card after the signup exists, and the line concept
     });
     cleanup();
     setSignupMockToday("2026-08-26");
-    await renderSignup({ addDog: true, navigate, path: "/gossos/nou/pagament?cs=cancel", scenario: "signupStripe" });
+    await renderSignup({
+      addDog: true,
+      navigate,
+      path: "/gossos/nou/pagament?cs=cancel",
+      scenario: "signupStripe",
+    });
     expect(upfrontLines()).toEqual([
       "Entrada (1 gos) 100,00 €",
       "Alta avui, 17 d’agost (quota addicional d'aquest mes) 30,00 €",
@@ -1846,36 +2075,45 @@ describe("E3-W08 step 2: signed uploads forward the upload-URL headers (R-04-08,
   it.each([
     ["public signup", false, "/apuntat-hi/gos"],
     ["add-dog", true, "/gossos/nou"],
-  ] as const)("%s: the PUT carries every header the storage signed", async (_mode, addDog, path) => {
-    const putHeaders: Record<string, string>[] = [];
-    server.use(
-      http.put("https://uploads.example.test/*", ({ request }) => {
-        putHeaders.push(Object.fromEntries(request.headers.entries()));
-        return new HttpResponse(null, { status: 200 });
-      }),
-    );
-    await renderSignup({ addDog, path });
-    fireEvent.change(screen.getByLabelText("Nom del gos"), { target: { value: "Kiwi" } });
-    fireEvent.change(screen.getByLabelText("Cartilla de vacunes"), {
-      target: { files: [new File(["page-1"], "scan.jpg", { type: "image/jpeg" })] },
-    });
-    expect(await screen.findByText("cartilla_Kiwi_1.jpg pujada")).toBeVisible();
-    expect(putHeaders).toEqual([
-      expect.objectContaining({ "content-type": "image/jpeg", "if-none-match": "*" }),
-    ]);
-  });
+  ] as const)(
+    "%s: the PUT carries every header the storage signed",
+    async (_mode, addDog, path) => {
+      const putHeaders: Record<string, string>[] = [];
+      server.use(
+        http.put("https://uploads.example.test/*", ({ request }) => {
+          putHeaders.push(Object.fromEntries(request.headers.entries()));
+          return new HttpResponse(null, { status: 200 });
+        }),
+      );
+      await renderSignup({ addDog, path });
+      fireEvent.change(screen.getByLabelText("Nom del gos"), { target: { value: "Kiwi" } });
+      fireEvent.change(screen.getByLabelText("Cartilla de vacunes"), {
+        target: { files: [new File(["page-1"], "scan.jpg", { type: "image/jpeg" })] },
+      });
+      expect(await screen.findByText("cartilla_Kiwi_1.jpg pujada")).toBeVisible();
+      expect(putHeaders).toEqual([
+        expect.objectContaining({ "content-type": "image/jpeg", "if-none-match": "*" }),
+      ]);
+    },
+  );
 });
 
 describe("E3-W08 step 4: the signup flags (R-04-08, R-04-12)", () => {
   it("T-04-31 allowFamilyGroupPending=false: a NOT_FOUND claim offers no «Deixa-ho pendent»", async () => {
     const config = await signupConfigJson();
     server.use(
-      http.get("*/api/v1/signup", () => HttpResponse.json({ ...config, allowFamilyGroupPending: false })),
+      http.get("*/api/v1/signup", () =>
+        HttpResponse.json({ ...config, allowFamilyGroupPending: false }),
+      ),
     );
     const navigate = vi.fn();
     await renderSignup({ navigate, path: "/apuntat-hi/familia" });
-    fireEvent.change(screen.getByLabelText("Nom del responsable"), { target: { value: "Persona desconeguda" } });
-    fireEvent.change(screen.getByLabelText("Nom d'un dels seus gossos"), { target: { value: "Bruc" } });
+    fireEvent.change(screen.getByLabelText("Nom del responsable"), {
+      target: { value: "Persona desconeguda" },
+    });
+    fireEvent.change(screen.getByLabelText("Nom d'un dels seus gossos"), {
+      target: { value: "Bruc" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
     expect(await screen.findByText(/No podem trobar la persona que indiques/u)).toBeVisible();
     expect(screen.queryByRole("button", { name: "Deixa-ho pendent i continua ›" })).toBeNull();
@@ -1887,8 +2125,12 @@ describe("E3-W08 step 4: the signup flags (R-04-08, R-04-12)", () => {
     expect(config.allowFamilyGroupPending).toBe(true);
     const navigate = vi.fn();
     await renderSignup({ navigate, path: "/apuntat-hi/familia" });
-    fireEvent.change(screen.getByLabelText("Nom del responsable"), { target: { value: "Persona desconeguda" } });
-    fireEvent.change(screen.getByLabelText("Nom d'un dels seus gossos"), { target: { value: "Bruc" } });
+    fireEvent.change(screen.getByLabelText("Nom del responsable"), {
+      target: { value: "Persona desconeguda" },
+    });
+    fireEvent.change(screen.getByLabelText("Nom d'un dels seus gossos"), {
+      target: { value: "Bruc" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "CONTINUA" }));
     fireEvent.click(await screen.findByRole("button", { name: "Deixa-ho pendent i continua ›" }));
     expect(navigate).toHaveBeenCalledWith("/apuntat-hi/pagament");
@@ -1897,7 +2139,9 @@ describe("E3-W08 step 4: the signup flags (R-04-08, R-04-12)", () => {
   it("T-04-30 requireDogDocumentAtSignup=true: 17 requires the vaccination card with an actionable error", async () => {
     const config = await signupConfigJson();
     server.use(
-      http.get("*/api/v1/signup", () => HttpResponse.json({ ...config, requireDogDocumentAtSignup: true })),
+      http.get("*/api/v1/signup", () =>
+        HttpResponse.json({ ...config, requireDogDocumentAtSignup: true }),
+      ),
     );
     const navigate = vi.fn();
     seedDraft();
@@ -1966,6 +2210,19 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     expect(therapy).toHaveTextContent(/Entrada a compte: 50,00\s€/u);
   });
 
+  it("INC-11 (mockup 17): the chosen sex is a bordered box with its «✓», the other a plain box", async () => {
+    await renderSignup({ path: "/apuntat-hi/gos" });
+    const female = screen.getByRole("button", { name: "Femella" });
+    const male = screen.getByRole("button", { name: "Mascle" });
+    fireEvent.click(female);
+    expect(female).toHaveAttribute("aria-pressed", "true");
+    expect(within(female).getByText("✓")).toHaveAttribute("aria-hidden", "true");
+    expect(within(male).queryByText("✓")).toBeNull();
+    fireEvent.click(male);
+    expect(within(male).getByText("✓")).toBeInTheDocument();
+    expect(within(female).queryByText("✓")).toBeNull();
+  });
+
   it("E4-W12 step 3 (R-04-09, S05 R-05-19): the Cànic's Teràpia shows its priceLabel in the price slot and its conditions in the body", async () => {
     await renderSignup({ path: "/apuntat-hi/gos" });
     const therapy = screen.getByRole("button", { name: "Selecciona Teràpia" });
@@ -1980,7 +2237,9 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     );
     expect(conditions).toHaveClass("signup-plan__conditions");
     expect(therapyHead).not.toContainElement(conditions);
-    expect(therapy).toHaveTextContent(/Entrada a compte: 50,00\s€ · quota mínima durant el tractament: 10,00\s€\/mes/u);
+    expect(therapy).toHaveTextContent(
+      /Entrada a compte: 50,00\s€ · quota mínima durant el tractament: 10,00\s€\/mes/u,
+    );
     // Without a priceLabel the slot shows the price.
     const member = screen.getByRole("button", { name: "Selecciona Abonat" });
     expect(member.querySelector(".signup-plan__head")).toHaveTextContent(/^Abonat60,00\s€\/mes$/u);
@@ -1996,7 +2255,9 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     await renderSignup({ path: "/apuntat-hi/gos" });
     const therapy = screen.getByRole("button", { name: "Selecciona Teràpia" });
     expect(therapy.querySelector(".signup-plan__head")).toHaveTextContent(/^Teràpia$/u);
-    expect(therapy.querySelector(".signup-plan__conditions")).toHaveTextContent(/^pagament inicial a compte/u);
+    expect(therapy.querySelector(".signup-plan__conditions")).toHaveTextContent(
+      /^pagament inicial a compte/u,
+    );
 
     cleanup();
     server.resetHandlers();
@@ -2005,8 +2266,10 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     await act(async () => {
       await i18n.changeLanguage("es");
     });
-    const terapia = await screen.findByRole("button", { name: "Selecciona Terapia" });
-    expect(within(terapia).getByText("condiciones y coste según cada caso")).toHaveClass("signup-plan__price-label");
+    const terapia = await screen.findByRole("button", { name: "Seleccionar Terapia" });
+    expect(within(terapia).getByText("condiciones y coste según cada caso")).toHaveClass(
+      "signup-plan__price-label",
+    );
   });
 
   it("E4-W12 step 4 (T-04-32): the add-dog keeps the member's plan: one read-only line with its name and price, no cards and no selection", async () => {
@@ -2032,7 +2295,9 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledWith("/gossos/nou/enviada");
     });
-    expect(await lastBody(recorded, "/me/dogs/signup")).toMatchObject({ planIdRequested: MEMBER_PLAN });
+    expect(await lastBody(recorded, "/me/dogs/signup")).toMatchObject({
+      planIdRequested: MEMBER_PLAN,
+    });
   });
 
   it("E4-W12 step 4, E4-W15 step 1 (R-04-09, api E5-T22): the plan the public offer hides comes listed and marked current: 17 names it read-only and requests it", async () => {
@@ -2089,7 +2354,9 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
   it("round 2 #6: a maintenance plan without an entry fee shows its minimum fee and no «Entrada a compte: 0,00 €»", async () => {
     const config = await signupConfigJson();
     const plans = config.plans.map((plan) =>
-      plan.maintenanceFee === undefined ? plan : { ...plan, entryFee: { amountMinor: 0, currency: "EUR" } },
+      plan.maintenanceFee === undefined
+        ? plan
+        : { ...plan, entryFee: { amountMinor: 0, currency: "EUR" } },
     );
     server.use(http.get("*/api/v1/signup", () => HttpResponse.json({ ...config, plans })));
     await renderSignup({ path: "/apuntat-hi/gos" });
@@ -2119,11 +2386,11 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     fireEvent.change(postalCode, { target: { value: "08001" } });
     fireEvent.blur(postalCode);
     const select = await screen.findByRole("combobox", { name: "Població (proposada pel CP)" });
-    expect(within(select).getAllByRole("option").map((option) => option.textContent)).toEqual([
-      "Poble Antic",
-      "Poble Centre",
-      "Poble Nou",
-    ]);
+    expect(
+      within(select)
+        .getAllByRole("option")
+        .map((option) => option.textContent),
+    ).toEqual(["Poble Antic", "Poble Centre", "Poble Nou"]);
     expect(select).toHaveValue("Poble Antic");
   });
 
@@ -2146,7 +2413,11 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     await renderSignup({
       branding: {
         ...signupBranding,
-        club: { ...signupBranding.club, legalName: "Associació Esportiva Fictícia", taxId: "G00000001" },
+        club: {
+          ...signupBranding.club,
+          legalName: "Associació Esportiva Fictícia",
+          taxId: "G00000001",
+        },
       },
       path: "/apuntat-hi",
     });
@@ -2170,7 +2441,9 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     const office = brandingCanicFixture.club.legalAddress;
     await renderSignup({ path: "/apuntat-hi" });
     const footer = screen.getByRole("contentinfo");
-    expect(within(footer).getByText(`${office.street} · ${office.postalCode} ${office.city}`)).toBeVisible();
+    expect(
+      within(footer).getByText(`${office.street} · ${office.postalCode} ${office.city}`),
+    ).toBeVisible();
     // Two lines: the office is its own element after «{legalName} · {taxId} · {city}».
     expect([...footer.children].map((line) => line.textContent)).toEqual([
       `${brandingCanicFixture.club.legalName} · ${brandingCanicFixture.club.taxId} · ${brandingCanicFixture.club.city}`,
@@ -2181,10 +2454,15 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     cleanup();
     const signupBranding = brandingFor("signup");
     await renderSignup({
-      branding: { ...signupBranding, club: { ...signupBranding.club, legalAddress: { ...office, city: null } } },
+      branding: {
+        ...signupBranding,
+        club: { ...signupBranding.club, legalAddress: { ...office, city: null } },
+      },
       path: "/apuntat-hi",
     });
-    expect(within(screen.getByRole("contentinfo")).getByText(`${office.street} · ${office.postalCode}`)).toBeVisible();
+    expect(
+      within(screen.getByRole("contentinfo")).getByText(`${office.street} · ${office.postalCode}`),
+    ).toBeVisible();
 
     // `legalAddress: null` (no street or postal code): one line only.
     cleanup();
@@ -2203,7 +2481,9 @@ describe("E3-W08 step 5: screens 16 and 17 and the public shell", () => {
     expect(onPrimary).toBe(background);
     expect(contrastRatio(onPrimary, primary)).toBeGreaterThanOrEqual(4.5);
     await renderSignup({ path: "/apuntat-hi" });
-    expect(document.documentElement.style.getPropertyValue("--ah-color-primary-fg")).toBe(onPrimary);
+    expect(document.documentElement.style.getPropertyValue("--ah-color-primary-fg")).toBe(
+      onPrimary,
+    );
     expect(warn.mock.calls.flat().join(" ")).not.toContain("[BrandingProvider]");
     warn.mockRestore();
   });
@@ -2223,7 +2503,10 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
     // The navigation is on its way: the old document shows no step 16 and keeps the error.
     await new Promise((resolve) => setTimeout(resolve, 150));
     expect(screen.queryByLabelText("DNI / NIE")).toBeNull();
-    expect(savedDraft().pendingError).toMatchObject({ code: "INVALID_ID_DOCUMENT", step: "person" });
+    expect(savedDraft().pendingError).toMatchObject({
+      code: "INVALID_ID_DOCUMENT",
+      step: "person",
+    });
 
     const document = await screen.findByLabelText("DNI / NIE", {}, { timeout: 2000 });
     await waitFor(() => {
@@ -2240,7 +2523,14 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
   it("#2 a cancelled checkout is consumed once: cancel → retry → lost answer → reload → retry with the same key", async () => {
     const recorded = recordRequests();
     const navigate = vi.fn();
-    seedDraft({ payment: { firstMonthOption: "TODAY", holderName: "Nora Soler Pons", iban: VALID_IBAN, type: "SEPA_DD" } });
+    seedDraft({
+      payment: {
+        firstMonthOption: "TODAY",
+        holderName: "Nora Soler Pons",
+        iban: VALID_IBAN,
+        type: "SEPA_DD",
+      },
+    });
     await renderSignup({ navigate, path: "/apuntat-hi/pagament", scenario: "signupStripe" });
     acceptPrivacy();
     submitSignup();
@@ -2250,7 +2540,11 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
 
     // Stripe's cancel URL: the attempt it cancelled is dropped.
     cleanup();
-    await renderSignup({ navigate, path: "/apuntat-hi/pagament?cs=cancel", scenario: "signupStripe" });
+    await renderSignup({
+      navigate,
+      path: "/apuntat-hi/pagament?cs=cancel",
+      scenario: "signupStripe",
+    });
     expect(screen.getByText(/El pagament no s'ha completat/u)).toBeVisible();
     server.use(http.post("*/api/v1/checkout-sessions", () => HttpResponse.error()));
     fireEvent.click(screen.getByRole("button", { name: "PAGA ARA" }));
@@ -2287,7 +2581,10 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
     // 18 changed the draft, then the browser's Back restored this document from the bfcache.
     sessionStorage.setItem(
       DRAFT_KEY,
-      JSON.stringify({ ...savedDraft(), familyClaim: { dogName: "Duna", holderName: "Laura Serra", leavePending: false } }),
+      JSON.stringify({
+        ...savedDraft(),
+        familyClaim: { dogName: "Duna", holderName: "Laura Serra", leavePending: false },
+      }),
     );
     const restored = new Event("pageshow");
     Object.defineProperty(restored, "persisted", { value: true });
@@ -2301,7 +2598,11 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
     await waitFor(() => {
       expect(loads).toEqual(["/apuntat-hi/familia", "/apuntat-hi/familia"]);
     });
-    expect(savedDraft().familyClaim).toEqual({ dogName: "Duna", holderName: "Laura Serra", leavePending: false });
+    expect(savedDraft().familyClaim).toEqual({
+      dogName: "Duna",
+      holderName: "Laura Serra",
+      leavePending: false,
+    });
   });
 
   it("round 2 #2: a pageshow that is not a bfcache restore changes nothing", async () => {
@@ -2331,9 +2632,9 @@ describe("E3-W08 step 7: the three narrow cases of the E3-W06 round-2 review", (
     });
     expect(navigate).toHaveBeenLastCalledWith("/apuntat-hi");
     expect(passport).toHaveAttribute("aria-invalid", "true");
-    expect(document.getElementById(passport.getAttribute("aria-describedby") ?? "")).toHaveTextContent(
-      "El document d'identitat no és vàlid.",
-    );
+    expect(
+      document.getElementById(passport.getAttribute("aria-describedby") ?? ""),
+    ).toHaveTextContent("El document d'identitat no és vàlid.");
     expect(screen.getByLabelText("DNI / NIE")).not.toHaveAttribute("aria-invalid");
   });
 });

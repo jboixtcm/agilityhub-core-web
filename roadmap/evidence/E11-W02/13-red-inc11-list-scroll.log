@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/packages/ui
+
+x
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/universal-list-layout.test.ts > E11-W02 (INC-11): the universal list's table scrolls inside its own box > the table wrapper is a scroll box and the containing block of what it holds
+AssertionError: expected undefined to be 'relative' // Object.is equality
+
+- Expected:
+"relative"
+
++ Received:
+undefined
+
+ ❯ src/universal-list-layout.test.ts:34:34
+     32|     const wrap = declarations(".ah-universal-list__table-wrap");
+     33|     expect(wrap.get("overflow")).toBe("auto");
+     34|     expect(wrap.get("position")).toBe("relative");
+       |                                  ^
+     35|   });
+     36| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  21:59:31
+   Duration  1.15s (environment 75%, setup 19%, transform 4%, tests 1%, import 1%, worker 1%)
+
+exit=1

@@ -199,10 +199,43 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
     ]);
   });
 
+  it("INC-11 (mockup D1): a row reads «**Marta R.** + Kiwi (whippet)», the plan on the same line", async () => {
+    await renderDashboard();
+    const row = signupRow(/^Marta R\./u);
+    const name = within(row).getByText("Marta R.");
+    expect(name.tagName).toBe("STRONG");
+    expect(name.parentElement).toHaveTextContent("Marta R. + Kiwi (whippet)");
+    expect(name.parentElement?.parentElement).toHaveClass("dashboard-signups__line");
+    expect(name.parentElement?.parentElement).toHaveTextContent(/Abonat · domiciliació$/u);
+  });
+
+  it("INC-11 (mockup D1): a KPI's label line carries its period, the detail line its figures", async () => {
+    await renderDashboard();
+    const kpi = (value: string) => screen.getByText(value).closest(".dashboard-kpi");
+    expect(
+      within(kpi("87%") as HTMLElement).getByText("Ocupació classes · aquesta setmana").tagName,
+    ).toBe("SPAN");
+    expect(within(kpi("87%") as HTMLElement).getByText("142/163 places").tagName).toBe("SMALL");
+    expect(
+      within(kpi("56") as HTMLElement).getByText("Entrenaments reservats · setmana").tagName,
+    ).toBe("SPAN");
+    expect(within(kpi("56") as HTMLElement).getByText("38 persones diferents").tagName).toBe(
+      "SMALL",
+    );
+  });
+
+  it("INC-11 (mockup D1): «Compte no informat» follows the plan, not the [VALIDA] button", async () => {
+    await renderDashboard();
+    const badge = within(signupRow(/^Núria T\./u)).getByText("Compte no informat");
+    expect(badge.closest(".dashboard-signups__line")).toHaveTextContent(
+      /Teràpia · domiciliació\s*Compte no informat$/u,
+    );
+  });
+
   it("marks an add-dog row «(nou gos)»", async () => {
     mockScenario("adminSignupReviewAddDog");
     await renderDashboard();
-    expect(screen.getByText("Marta R. + Nit (nou gos)")).toBeVisible();
+    expect(signupRow(/^Marta R\./u)).toHaveTextContent("Marta R. + Nit (nou gos)");
     expect(screen.queryByText(/Nit \(border\)/u)).toBeNull();
   });
 
@@ -314,7 +347,17 @@ describe("E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25)", () => {
         body.dogsByLevel.activeDogWeeks = weeks;
       }),
     );
-    expect(screen.getByText(text)).toBeVisible();
+    const legend = document.querySelector(".dashboard-chart__legend");
+    expect(legend).toHaveTextContent(text);
+    // INC-11 (mockup D1): each part of the legend has its swatch, in the colour of its bars.
+    expect(
+      [...(legend?.querySelectorAll("[data-swatch]") ?? [])].map((swatch) =>
+        swatch.getAttribute("class"),
+      ),
+    ).toEqual([
+      "dashboard-chart__swatch ah-bar-chart__bar--highlighted",
+      "dashboard-chart__swatch ah-bar-chart__bar--total",
+    ]);
   });
 
   it("R-04-23 keeps the refund notice after a rejection with a collected payment", async () => {

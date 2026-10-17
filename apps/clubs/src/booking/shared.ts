@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { useTranslation } from "react-i18next";
 
 import type { LoadState } from "../activities/shared";
+import { navigate } from "../router";
 
 export type Translate = ReturnType<typeof useTranslation>["t"];
 
@@ -18,14 +19,12 @@ export type WaitlistEntry = components["schemas"]["WaitlistEntry"];
 export type BookingLimitReachedDetails = components["schemas"]["BookingLimitReachedDetails"];
 
 /**
- * In-app navigation of the S08 flow: the history entry changes without a reload (the App listens
- * to `popstate`), so the seat hold travels in `history.state` and the back gesture leaves the
- * confirmation like any other page.
+ * In-app navigation of the S08 flow: the history entry changes without a reload (A38's router), so
+ * the seat hold travels in `history.state` and the back gesture leaves the confirmation like any
+ * other page.
  */
 export function navigateInApp(path: string, state: unknown = null, replace = false): void {
-  if (replace) window.history.replaceState(state, "", path);
-  else window.history.pushState(state, "", path);
-  window.dispatchEvent(new PopStateEvent("popstate", { state }));
+  navigate(path, { replace, state });
 }
 
 /**

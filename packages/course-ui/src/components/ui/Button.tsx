@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
-export type ButtonVariant = 'primary' | 'outline' | 'neutral' | 'danger';
+export type ButtonVariant = 'primary' | 'outline' | 'neutral';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -14,8 +14,8 @@ const variantClass: Record<ButtonVariant, string> = {
   outline:
     'bg-transparent border border-warning text-text hover:bg-warning hover:text-[var(--ah-color-on-warning)]',
   neutral: 'bg-surface text-muted hover:text-text hover:bg-surface/80',
-  // Same pairing as the shared `.ah-button--danger` (packages/ui/src/components.css).
-  danger: 'bg-danger text-primary-fg hover:opacity-90',
+  // No `danger` fill (E11-W02, INC-60): nothing here used it, and white on the product red is
+  // below AA; a destructive action is IconButton's red-tinted `danger`.
 };
 
 const sizeClass: Record<ButtonSize, string> = {

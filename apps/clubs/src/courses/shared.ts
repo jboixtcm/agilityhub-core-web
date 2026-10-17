@@ -139,7 +139,9 @@ export function useActiveSetup(client: ApiClient, ringId: string, refresh?: unkn
  * «Recorregut previst» for staff. No course store: 07 is part of the app's start.
  */
 export function useStartBuildSession(client: ApiClient) {
-  const { t } = useTranslation(["courses", "errors", "common"]);
+  // Never suspends: 07's course lines call it inside the booking's detail (E11-W02, A38). Its `t`
+  // only words a refusal, after the button the loaded block shows.
+  const { t } = useTranslation(["courses", "errors", "common"], { useSuspense: false });
   const keys = useSubmissionKeys();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string>();

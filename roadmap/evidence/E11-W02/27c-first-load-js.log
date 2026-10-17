@@ -1,0 +1,24 @@
+$ python3 initial-js.py apps/clubs/dist   # gzip -9 of every JavaScript file apps/clubs/dist/index.html loads (its module script and modulepreloads); script below
+this commit, rebased onto main 3ed54b4 (the build of log 26):
+  assets/index-l4o8xrna.js  73.50 kB gz
+  assets/jsx-runtime-B-hcVAMW.js  3.27 kB gz
+  assets/shared-DEazxljT.js  68.58 kB gz
+  total first-load JavaScript (index.html's script and modulepreloads): 145.36 kB gz
+main b430234 (the build of log 27b):
+  assets/index-Cc5XXs6Z.js  191.79 kB gz
+  assets/jsx-runtime-B-hcVAMW.js  3.27 kB gz
+  total first-load JavaScript (index.html's script and modulepreloads): 195.07 kB gz
+exit=0
+
+----- initial-js.py -----
+import gzip, re, sys, os
+dist = sys.argv[1]
+html = open(os.path.join(dist, "index.html"), encoding="utf-8").read()
+files = re.findall(r'(?:src|href)="/(assets/[^"]+\.js)"', html)
+total = 0
+for f in files:
+    data = open(os.path.join(dist, f), "rb").read()
+    size = len(gzip.compress(data, 9))
+    total += size
+    print(f"  {f}  {size / 1000:.2f} kB gz")
+print(f"  total first-load JavaScript (index.html's script and modulepreloads): {total / 1000:.2f} kB gz")

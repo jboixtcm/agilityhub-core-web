@@ -5,8 +5,8 @@
     "loading": "Cargando el formulario",
     "loadError": "No se ha podido cargar el formulario.",
     "retry": "Volver a intentarlo",
-    "continue": "CONTINÚA",
-    "back": "Vuelve al paso anterior",
+    "continue": "CONTINUAR",
+    "back": "Volver al paso anterior",
     "required": "Este campo es obligatorio.",
     "invalidEmail": "El correo electrónico no es válido.",
     "duplicateEmail": "Los dos correos deben ser diferentes.",
@@ -85,7 +85,7 @@
     "entryFee": "Entrada {price}",
     "packPrice": "{price} · {months} meses",
     "maintenance": "{withEntry, select, yes {Entrada a cuenta: {entry} · cuota mínima durante el tratamiento: {fee}/mes} other {Cuota mínima durante el tratamiento: {fee}/mes}}",
-    "selectPlan": "Selecciona {plan}",
+    "selectPlan": "Seleccionar {plan}",
     "activate": "ACTIVAR"
   },
   "family": {
@@ -118,9 +118,9 @@
     "privacyLink": "Puedes consultarla aquí",
     "imageUse": "Autorizo el uso de mi imagen",
     "imageMeaning": "¿qué significa?",
-    "submit": "ENVÍA LA SOLICITUD",
+    "submit": "ENVIAR LA SOLICITUD",
     "submitting": "Enviando la solicitud",
-    "payNow": "PAGA AHORA",
+    "payNow": "PAGAR AHORA",
     "reviewFooter": "El club revisará la solicitud y el pago, y te enviará la bienvenida con el acceso y la Guía del usuario.",
     "addDogReviewFooter": "El club revisará la solicitud y el pago del perro nuevo, y te avisaremos en la app cuando la haya validado.",
     "consentOutdated": "La política ha cambiado. Revísala y vuelve a aceptarla.",
@@ -143,7 +143,7 @@
     "title": "Solicitud enviada",
     "checkout": "Recibirás la confirmación del pago por correo",
     "addDogTitle": "Añade un perro",
-    "backToDogs": "VUELVE A MIS PERROS"
+    "backToDogs": "VOLVER A MIS PERROS"
   },
   "honeypot": "Sitio web"
 }

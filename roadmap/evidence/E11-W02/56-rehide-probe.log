@@ -1,0 +1,107 @@
+$ node rehide-probe.mjs   # Playwright 1.63 + Chromium on the clubs mock dev server (:4173); script below
+# For each screen, after a full load: does the shell's loading state come back once the screen's content has shown? (A38 follow-up after PR #7's e2e; Jordi allowed local diagnosis, 17-10-2026)
+
+## Before (ce81b4e + the course blocks fixed; 07 with ?checkout= had been rehidden too before useStartBuildSession stopped suspending — checkout-probe.mjs):
+run 1 (07 with ?checkout=, the course blocks and the hook still suspending):
+  83 absent | loading=false
+  1053 absent | loading=true
+  1936 visible | loading=false
+  2056 hidden by div.ah-card checkout-return checkout-return--pending[style=display: none !important;] | loading=true
+  2413 visible | loading=false
+  2435 absent | loading=false   (PAID)
+
+member /inici: ok  [1018 loading=true /inici | 2092 loading=false /inici]
+member /reservar: REHIDDEN  [1002 loading=true /reservar | 1872 loading=false /reservar | 1952 loading=true AFTER CONTENT /reservar | 2321 loading=false /reservar]
+member /entrenaments: ok  [915 loading=true /entrenaments | 1836 loading=false /entrenaments]
+member /avui: ok  [969 loading=true /avui | 1968 loading=false /avui]
+member /perfil: ok  [881 loading=true /perfil | 983 loading=false /perfil]
+member /info: ok  [956 loading=true /info | 1658 loading=false /info]
+member /notificacions: ok  [901 loading=true /notificacions | 1738 loading=false /notificacions]
+member /historic: REHIDDEN  [915 loading=true /historic | 1726 loading=false /historic | 1799 loading=true AFTER CONTENT /historic | 2111 loading=false /historic]
+member /gossos: ok  [1004 loading=true /gossos | 1923 loading=false /gossos]
+member /dades: ok  [932 loading=true /dades | 1682 loading=false /dades]
+member /rebuts: REHIDDEN  [872 loading=true /rebuts | 1775 loading=false /rebuts | 1834 loading=true AFTER CONTENT /rebuts | 2162 loading=false /rebuts]
+member /inactivitat: ok  [911 loading=true /inactivitat | 1622 loading=false /inactivitat]
+member /baixa: ok  [969 loading=true /baixa | 1874 loading=false /baixa]
+member /reserves/booking-duna-mon3: ok  [1037 loading=true /reserves/booking-duna-mon3 | 1865 loading=false /reserves/booking-duna-mon3]
+member /reserves/booking-duna-mon3?checkout=cs_e8_w02: ok  [944 loading=true /reserves/booking-duna-mon3 | 1708 loading=false /reserves/booking-duna-mon3]
+instructor /instructor/avui: ok  [838 loading=true /instructor/avui | 1717 loading=false /instructor/avui]
+instructor /instructor/dia: ok  [913 loading=true /instructor/dia | 1879 loading=false /instructor/dia]
+instructor /instructor/alumnes: ok  [799 loading=true /instructor/alumnes | 1766 loading=false /instructor/alumnes]
+instructor /recorreguts/muntat/ring-central: ok  [912 loading=true /recorreguts/muntat/ring-central | 1647 loading=false /recorreguts/muntat/ring-central]
+
+## After (the screens loader also loads the app's namespaces; blocks and hook never suspend):
+member /inici: ok  [1107 loading=true /inici | 1897 loading=false /inici]
+member /reservar: ok  [928 loading=true /reservar | 1915 loading=false /reservar]
+member /entrenaments: ok  [880 loading=true /entrenaments | 1709 loading=false /entrenaments]
+member /avui: ok  [767 loading=true /avui | 1689 loading=false /avui]
+member /perfil: ok  [891 loading=true /perfil | 1010 loading=false /perfil]
+member /info: ok  [780 loading=true /info | 1560 loading=false /info]
+member /notificacions: ok  [993 loading=true /notificacions | 1951 loading=false /notificacions]
+member /historic: ok  [820 loading=true /historic | 1582 loading=false /historic]
+member /gossos: ok  [815 loading=true /gossos | 1609 loading=false /gossos]
+member /dades: ok  [1123 loading=true /dades | 2088 loading=false /dades]
+member /rebuts: ok  [1008 loading=true /rebuts | 1924 loading=false /rebuts]
+member /inactivitat: ok  [974 loading=true /inactivitat | 1879 loading=false /inactivitat]
+member /baixa: ok  [928 loading=true /baixa | 2090 loading=false /baixa]
+member /reserves/booking-duna-mon3: ok  [841 loading=true /reserves/booking-duna-mon3 | 1718 loading=false /reserves/booking-duna-mon3]
+member /reserves/booking-duna-mon3?checkout=cs_e8_w02: ok  [994 loading=true /reserves/booking-duna-mon3 | 2030 loading=false /reserves/booking-duna-mon3]
+instructor /instructor/avui: ok  [1030 loading=true /instructor/avui | 1991 loading=false /instructor/avui]
+instructor /instructor/dia: ok  [780 loading=true /instructor/dia | 1659 loading=false /instructor/dia]
+instructor /instructor/alumnes: ok  [747 loading=true /instructor/alumnes | 1670 loading=false /instructor/alumnes]
+instructor /recorreguts/muntat/ring-central: ok  [943 loading=true /recorreguts/muntat/ring-central | 1810 loading=false /recorreguts/muntat/ring-central]
+exit=0
+
+----- rehide-probe.mjs -----
+// For each screen, after a full load: does the shell's loading state come back once the screen's
+// content has been shown (a nested suspension hiding a shown screen)? Also via the tab bar.
+import { readFileSync } from "node:fs";
+import { chromium } from "/home/user/agilityhub-core-web/apps/clubs/node_modules/@playwright/test/index.mjs";
+
+const branding = JSON.parse(readFileSync("/home/user/agilityhub-core-web/packages/api-client/src/mocks/fixtures/branding-canic.json", "utf8"));
+const base = "http://127.0.0.1:4173";
+const plans = [
+  { scenario: "member", email: "laura@example.test", paths: ["/inici", "/reservar", "/entrenaments", "/avui", "/perfil", "/info", "/notificacions", "/historic", "/gossos", "/dades", "/rebuts", "/inactivitat", "/baixa", "/reserves/booking-duna-mon3", "/reserves/booking-duna-mon3?checkout=cs_e8_w02"] },
+  { scenario: "instructor", email: "laura@example.test", paths: ["/instructor/avui", "/instructor/dia", "/instructor/alumnes", "/recorreguts/muntat/ring-central"] },
+];
+const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
+for (const plan of plans) {
+  for (const path of plan.paths) {
+    const context = await browser.newContext({ viewport: { height: 812, width: 375 } });
+    const page = await context.newPage();
+    await page.addInitScript(({ cachedBranding, scenario }) => {
+      localStorage.setItem("agilityhub.locale", "ca");
+      localStorage.setItem("agilityhub.mockScenario", scenario);
+      localStorage.setItem(`agilityhub.branding:${location.host}`, JSON.stringify(cachedBranding));
+      const events = [];
+      window.__events = events;
+      let shown = false;
+      let loading = false;
+      const tick = () => {
+        const main = document.querySelector(".clubs-shell__content");
+        const isLoading = document.querySelector('.clubs-shell__content [role="status"][aria-label="Carregant"]') !== null;
+        const hasContent = main !== null && [...main.children].some((el) => el.getAttribute("role") !== "status" && el.checkVisibility());
+        if (hasContent && !isLoading) shown = true;
+        if (isLoading !== loading) {
+          events.push(`${Math.round(performance.now())} loading=${isLoading}${shown && isLoading ? " AFTER CONTENT" : ""} ${location.pathname}`);
+          loading = isLoading;
+        }
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, { cachedBranding: branding, scenario: plan.scenario });
+    await page.goto(`${base}/entrar`);
+    await page.getByLabel("Correu electrònic").fill(plan.email);
+    await page.getByLabel("Contrasenya").fill("secret-password");
+    await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+    await page.waitForURL(/\/(inici|instructor\/dia|instructor\/avui|perfil-acces)/u, { timeout: 30000 }).catch(() => undefined);
+    await page.goto(`${base}${path}`);
+    await page.waitForLoadState("networkidle").catch(() => undefined);
+    await page.waitForTimeout(2500);
+    const events = await page.evaluate(() => window.__events);
+    const bad = events.filter((e) => e.includes("AFTER CONTENT"));
+    console.log(`${plan.scenario} ${path}: ${bad.length === 0 ? "ok" : "REHIDDEN"}  [${events.join(" | ")}]`);
+    await context.close();
+  }
+}
+await browser.close();

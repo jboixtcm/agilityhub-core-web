@@ -336,16 +336,21 @@ function useSavedViews(client: ApiClient, onDefaultView: (view: UniversalListSav
   const [views, setViews] = useState<SavedView[]>([]);
   useEffect(() => {
     let current = true;
-    void client.GET("/saved-views", { params: { query: { listKey } } }).then((result) => {
-      if (current && result.data !== undefined) {
-        setViews(result.data);
-        const defaultId = localStorage.getItem(`agilityhub.list.defaultView.${listKey}`);
-        const defaultView = result.data.find((view) => view.id === defaultId);
-        if (defaultView !== undefined && new URLSearchParams(window.location.search).size === 0) {
-          onDefaultView(toUniversalSavedView(defaultView));
+    void client.GET("/saved-views", { params: { query: { listKey } } }).then(
+      (result) => {
+        if (current && result.data !== undefined) {
+          setViews(result.data);
+          const defaultId = localStorage.getItem(`agilityhub.list.defaultView.${listKey}`);
+          const defaultView = result.data.find((view) => view.id === defaultId);
+          if (defaultView !== undefined && new URLSearchParams(window.location.search).size === 0) {
+            onDefaultView(toUniversalSavedView(defaultView));
+          }
         }
-      }
-    });
+      },
+      () => {
+        // E11-W02 step 4: without its saved views the list still works; its own read says what failed.
+      },
+    );
     return () => {
       current = false;
     };

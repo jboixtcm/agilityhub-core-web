@@ -86,6 +86,45 @@ function withoutRefusedValues(base: PreferencesPatch, refused: PreferencesPatch)
   };
 }
 
+/**
+ * INC-55 #1: the part of a refused body the refusal names — `INVALID_REMINDER_OPTION` the reminder,
+ * `CHANNEL_NOT_ALLOWED` the push choice, otherwise the preference in `details.field`
+ * (`reminderMinutesBefore`, `pushClubNews`, `emailByCategory.<CATEGORY>`). The whole body only when
+ * the refusal names none of the preferences it carried.
+ */
+function refusedPart(cause: unknown, body: PreferencesPatch): PreferencesPatch {
+  if (!isApiError(cause)) return body;
+  const named =
+    typeof cause.details === "object" && cause.details !== null
+      ? (cause.details as { field?: unknown }).field
+      : undefined;
+  const field =
+    cause.code === "INVALID_REMINDER_OPTION"
+      ? "reminderMinutesBefore"
+      : cause.code === "CHANNEL_NOT_ALLOWED"
+        ? "pushClubNews"
+        : typeof named === "string"
+          ? named
+          : "";
+  if (field === "reminderMinutesBefore" && body.reminderMinutesBefore !== undefined) {
+    return { reminderMinutesBefore: body.reminderMinutesBefore };
+  }
+  if (field === "pushClubNews" && body.pushClubNews != null) {
+    return { pushClubNews: body.pushClubNews };
+  }
+  const category = /^emailByCategory[.[]([A-Z_]+)\]?$/u.exec(field)?.[1] as Category | undefined;
+  const value = category === undefined ? undefined : body.emailByCategory?.[category];
+  if (category !== undefined && value != null) {
+    return { emailByCategory: { [category]: value } };
+  }
+  return body;
+}
+
+/** Every preference of `part` is in `body` with the same value. */
+function carries(body: PreferencesPatch, part: PreferencesPatch): boolean {
+  return changedPreferences(withoutRefusedValues(part, body)) === 0;
+}
+
 /** How many preferences a patch changes. */
 function changedPreferences(patch: PreferencesPatch): number {
   return (
@@ -403,6 +442,22 @@ export function createPreferencesSaver(
               unsure = false;
             }
           }
+          // INC-55 #2: what is kept, sent alone with nothing sent since and answered 2xx, is saved:
+          // it leaves the outbox now, also with newer changes waiting, so their failure never
+          // brings it back as pending (nor sends it again over a change made elsewhere).
+          if (held !== undefined && alone && pending.length === 0 && carries(body, held)) {
+            const saved = held;
+            held = undefined;
+            io.kept?.(undefined);
+            // Its copy waiting to go again (adopted after a restore) is saved too: not sent again.
+            const waiting = withoutRefusedValues(state.queued, saved);
+            if (changedPreferences(waiting) !== changedPreferences(state.queued)) {
+              set({
+                queued: waiting,
+                ...(isEmptyPatch(waiting) && timer === undefined ? { waiting: false } : {}),
+              });
+            }
+          }
           if (seq > answered) {
             // The newest answer so far: the api's state after this and every older request.
             answered = seq;
@@ -427,16 +482,21 @@ export function createPreferencesSaver(
             heard.failed?.(cause);
             // The api refused this body: what is kept, and a copy of it waiting to go again (an
             // adopted resend), lose the values it refused — they would be refused again, with
-            // every change sent on top of them — and the api's values show.
+            // every change sent on top of them — and the api's values show for those. The rest
+            // of the body was not refused (INC-55 #1): the api saved nothing, so it goes back on
+            // top, under the changes made since, and is sent again without the refused value —
+            // unless a newer request was sent meanwhile, which carries the newer choices.
             if (isRefusal(cause)) {
+              const refused = refusedPart(cause, body);
+              const unrefused = seq === sequence ? withoutRefusedValues(body, refused) : {};
               if (held !== undefined) {
-                const rest = withoutRefusedValues(held, body);
+                const rest = withoutRefusedValues(held, refused);
                 if (changedPreferences(rest) !== changedPreferences(held)) {
                   held = isEmptyPatch(rest) ? undefined : rest;
                   io.kept?.(held);
                 }
               }
-              const waiting = withoutRefusedValues(state.queued, body);
+              const waiting = mergePatches(unrefused, withoutRefusedValues(state.queued, refused));
               if (changedPreferences(waiting) !== changedPreferences(state.queued)) {
                 set({
                   queued: waiting,

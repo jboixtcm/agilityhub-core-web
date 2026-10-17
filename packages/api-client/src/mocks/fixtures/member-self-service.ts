@@ -2,7 +2,7 @@ import type { components } from "../../generated/schema";
 
 import { censusLevels } from "./census";
 
-type License = components["schemas"]["LicenseWithPendingFields"];
+type License = components["schemas"]["License"];
 // The fixture dogs are ACTIVE, so they carry the documents and licences the api sends only for ACTIVE dogs.
 export type MeDog = Omit<components["schemas"]["MeDog"], "documents" | "licenses" | "status"> & {
   documents: NonNullable<components["schemas"]["MeDog"]["documents"]>;

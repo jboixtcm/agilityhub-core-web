@@ -71,11 +71,12 @@ describe("E7-W01 step 7 «Avisos enviats» (S11 §2, R-11-10)", () => {
     await waitFor(() => {
       expect(rows()).toHaveLength(12);
     });
+    // E11-W02 step 5 (axe empty-table-header): the row chevron's cell is not a column header.
     expect(
       within(screen.getByRole("table", { name: "Avisos enviats pel club" }))
         .getAllByRole("columnheader")
         .map((cell) => cell.textContent),
-    ).toEqual(["Data↓", "Codi", "Categoria", "Destinatari", "Canals", "Llegida", ""]);
+    ).toEqual(["Data↓", "Codi", "Categoria", "Destinatari", "Canals", "Llegida"]);
     const first = rows()[0];
     expect(first).toHaveTextContent("N-08a");
     expect(first).toHaveTextContent("Canvis en reserves");

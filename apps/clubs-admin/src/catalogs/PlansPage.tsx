@@ -29,10 +29,9 @@ import {
 
 type EntryFee = components["schemas"]["EntryFee"];
 type LocalizedText = Record<string, string>;
-type PlanBillingMode = components["schemas"]["PlanBillingMode"];
-type Plan = components["schemas"]["Plan"] & { billingMode?: PlanBillingMode };
-type PlanCreate = components["schemas"]["PlanCreate"] & { billingMode?: PlanBillingMode };
-type PlanPatch = components["schemas"]["PlanPatch"] & { billingMode?: PlanBillingMode };
+type Plan = components["schemas"]["Plan"];
+type PlanCreate = components["schemas"]["PlanCreate"];
+type PlanPatch = components["schemas"]["PlanPatch"];
 type Price = components["schemas"]["Price"];
 type PriceCreate = components["schemas"]["PriceCreate"];
 
@@ -789,18 +788,23 @@ export function PlansPage({ client }: { client: ApiClient }) {
       .GET("/parameters/{key}", {
         params: { path: { key: "billing.entryFeePerDog" } },
       })
-      .then((result) => {
-        const value = result.data?.value;
-        if (
-          current &&
-          typeof value === "object" &&
-          value !== null &&
-          "amountMinor" in value &&
-          typeof value.amountMinor === "number"
-        ) {
-          setEntryFeeMinor(value.amountMinor);
-        }
-      });
+      .then(
+        (result) => {
+          const value = result.data?.value;
+          if (
+            current &&
+            typeof value === "object" &&
+            value !== null &&
+            "amountMinor" in value &&
+            typeof value.amountMinor === "number"
+          ) {
+            setEntryFeeMinor(value.amountMinor);
+          }
+        },
+        () => {
+          // E11-W02 step 4: the preview goes without the entry fee; the page's own read says what failed.
+        },
+      );
     return () => {
       current = false;
     };

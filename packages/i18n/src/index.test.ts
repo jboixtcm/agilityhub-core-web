@@ -9,11 +9,16 @@ describe("@agilityhub/i18n", () => {
     expect(t("common:gallery.save", "en")).toBe("Save");
   });
 
-  it("E4-W18 step 4: the es retry of the access pages reads like the rest of auth («Vuelve a intentarlo»)", async () => {
+  it("E4-W18 step 4 / E11-W02 step 7: the es retry of the access pages reads like the rest of auth and every other es retry («Volver a intentarlo»)", async () => {
     const es = (await import("./locales/es/auth.json")).default;
-    expect(es.activation.retry).toBe("Vuelve a intentarlo");
+    const common = (await import("./locales/es/common.json")).default;
+    // E11-W02 step 7: an es button names its action in the infinitive.
+    expect(es.activation.retry).toBe("Volver a intentarlo");
     expect(es.activation.retry).toBe(es.onboarding.retry);
-    // The message shown right above that button on 01 (E4-W16's retry after a handoff).
+    expect(es.activation.retry).toBe(es.profile.retry);
+    expect(es.activation.retry).toBe(common.boot.retry);
+    // The message shown right above that button on 01 (E4-W16's retry after a handoff) is a
+    // sentence to the reader: it keeps the imperative.
     expect(es.access.genericError).toMatch(/Vuelve a intentarlo\.$/u);
   });
 

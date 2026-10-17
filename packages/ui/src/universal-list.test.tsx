@@ -433,6 +433,18 @@ describe("E8-W01 · a selection the screen holds and rows the selection cannot t
     expect(onSelectedChange).toHaveBeenLastCalledWith(new Set(["pending", "failed"]));
   });
 
+  it("E11-W02 step 5 (axe empty-table-header): every header cell names its column; the chevron's is not a header", () => {
+    renderSelectable(new Set());
+    const empty = [...document.querySelectorAll("th")].filter(
+      (th) => th.textContent.trim() === "" && th.querySelector("input, button") === null,
+    );
+    expect(empty).toEqual([]);
+    expect(document.querySelector("thead .ah-universal-list__chevron")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+  });
+
   it("E8-W01: a held selection is what the checkboxes show, and a click reports the next one", () => {
     const onSelectedChange = renderSelectable(new Set(["failed"]));
     expect(screen.getByRole("checkbox", { name: "failed" })).toBeChecked();

@@ -5,12 +5,12 @@
     "loadingMore": "Cargando más avisos",
     "empty": "Todavía no tienes ningún aviso",
     "error": "No se han podido cargar las notificaciones.",
-    "retry": "Vuelve a intentarlo",
+    "retry": "Volver a intentarlo",
     "unread": "Nueva",
     "viaSms": "{time} · y por SMS",
     "action": {
-      "CHANGE_CLASS": "CAMBIA DE CLASE",
-      "CLAIM_SEAT": "COGE LA PLAZA",
+      "CHANGE_CLASS": "CAMBIAR DE CLASE",
+      "CLAIM_SEAT": "COGER LA PLAZA",
       "expired": "Esta plaza ya no está disponible"
     }
   },
@@ -20,7 +20,7 @@
     "done": "Ya no recibirás los comunicados del club por correo.",
     "invalid": "Este enlace ya no es válido.",
     "error": "No se ha podido completar la baja.",
-    "retry": "Vuelve a intentarlo",
+    "retry": "Volver a intentarlo",
     "toPreferences": "Cambia tus avisos en el perfil"
   }
 }

@@ -1,4 +1,10 @@
 import { createLoaderBackend, type LoaderTable } from "./backend";
+import caCommon from "./locales/ca/common.json";
+import caShell from "./locales/ca/shell.json";
+import enCommon from "./locales/en/common.json";
+import enShell from "./locales/en/shell.json";
+import esCommon from "./locales/es/common.json";
+import esShell from "./locales/es/shell.json";
 import type { Namespace } from "./types";
 
 /**
@@ -29,6 +35,11 @@ export const clubsNamespaces = [
 
 export type ClubsNamespace = (typeof clubsNamespaces)[number];
 
+/**
+ * `common` and `shell` are in the first load already, every locale of them (`catalog.ts`, read by
+ * `format.ts`): their loaders hand over those modules. A dynamic import of the same files made the
+ * bundler emit six chunks that `index.html` preloads (E11-W02 step 6, TTI).
+ */
 export const clubsLoaders = {
   ca: {
     activities: () => import("./locales/ca/activities.json"),
@@ -36,7 +47,7 @@ export const clubsLoaders = {
     billing: () => import("./locales/ca/billing.json"),
     booking: () => import("./locales/ca/booking.json"),
     census: () => import("./locales/ca/census.json"),
-    common: () => import("./locales/ca/common.json"),
+    common: () => Promise.resolve({ default: caCommon }),
     courses: () => import("./locales/ca/courses.json"),
     enums: () => import("./locales/ca/enums.json"),
     errors: () => import("./locales/ca/errors.json"),
@@ -46,7 +57,7 @@ export const clubsLoaders = {
     instructor: () => import("./locales/ca/instructor.json"),
     leave: () => import("./locales/ca/leave.json"),
     notifications: () => import("./locales/ca/notifications.json"),
-    shell: () => import("./locales/ca/shell.json"),
+    shell: () => Promise.resolve({ default: caShell }),
     signup: () => import("./locales/ca/signup.json"),
     training: () => import("./locales/ca/training.json"),
   },
@@ -56,7 +67,7 @@ export const clubsLoaders = {
     billing: () => import("./locales/en/billing.json"),
     booking: () => import("./locales/en/booking.json"),
     census: () => import("./locales/en/census.json"),
-    common: () => import("./locales/en/common.json"),
+    common: () => Promise.resolve({ default: enCommon }),
     courses: () => import("./locales/en/courses.json"),
     enums: () => import("./locales/en/enums.json"),
     errors: () => import("./locales/en/errors.json"),
@@ -66,7 +77,7 @@ export const clubsLoaders = {
     instructor: () => import("./locales/en/instructor.json"),
     leave: () => import("./locales/en/leave.json"),
     notifications: () => import("./locales/en/notifications.json"),
-    shell: () => import("./locales/en/shell.json"),
+    shell: () => Promise.resolve({ default: enShell }),
     signup: () => import("./locales/en/signup.json"),
     training: () => import("./locales/en/training.json"),
   },
@@ -76,7 +87,7 @@ export const clubsLoaders = {
     billing: () => import("./locales/es/billing.json"),
     booking: () => import("./locales/es/booking.json"),
     census: () => import("./locales/es/census.json"),
-    common: () => import("./locales/es/common.json"),
+    common: () => Promise.resolve({ default: esCommon }),
     courses: () => import("./locales/es/courses.json"),
     enums: () => import("./locales/es/enums.json"),
     errors: () => import("./locales/es/errors.json"),
@@ -86,7 +97,7 @@ export const clubsLoaders = {
     instructor: () => import("./locales/es/instructor.json"),
     leave: () => import("./locales/es/leave.json"),
     notifications: () => import("./locales/es/notifications.json"),
-    shell: () => import("./locales/es/shell.json"),
+    shell: () => Promise.resolve({ default: esShell }),
     signup: () => import("./locales/es/signup.json"),
     training: () => import("./locales/es/training.json"),
   },

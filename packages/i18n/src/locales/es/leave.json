@@ -3,6 +3,7 @@
   "back": "Volver al perfil",
   "loading": "Cargando la solicitud de baja",
   "loadError": "No se ha podido cargar la solicitud de baja.",
+  "retry": "Volver a intentarlo",
   "offer": {
     "text": "Si tienes previsto volver más adelante, recuerda que puedes pedir un período de inactividad (predefinido o abierto) y mantener vigente tu matrícula y el importe actual de tu cuota para cuando vuelvas.",
     "fee": "La cuota es de {first} el primer mes y {following} los siguientes.",
@@ -16,8 +17,8 @@
     "reasonPlaceholder": "Elige un motivo",
     "nps": "De 0 a 10, ¿con qué probabilidad nos recomendarías?",
     "comment": "¿Qué podríamos mejorar para que el club se adaptara mejor a tus necesidades?",
-    "submit": "ENVÍA LA SOLICITUD",
-    "withdraw": "RETIRA LA SOLICITUD",
+    "submit": "ENVIAR LA SOLICITUD",
+    "withdraw": "RETIRAR LA SOLICITUD",
     "confirmWithdraw": "¿Quieres retirar esta solicitud?",
     "footer": "El club la revisará y te confirmará la fecha de efecto.",
     "saved": "La solicitud se ha enviado.",

@@ -11,6 +11,8 @@ import {
   type PlannerRingMarker,
 } from "../src/index";
 
+import { contrast } from "./helpers/tokens";
+
 const texts: Partial<Record<"ca" | "en", CourseTexts>> = {};
 
 beforeAll(async () => {
@@ -77,7 +79,7 @@ const ring: PlannerRing = {
   width_m: 22.5,
 };
 
-describe("#6 R-16-04 RingMarkerDiagram draws the markers at their Core coordinates", () => {
+describe("T-16-06 R-16-04 RingMarkerDiagram draws the markers at their Core coordinates (E9-W02 round 2 #6)", () => {
   it("every marker sits where the api stores it (no A–F reading-order relocation)", () => {
     const { container } = render(
       <RingMarkerDiagram ariaLabel="Marcadors de la pista" locale="ca" ring={ring} />,
@@ -97,6 +99,26 @@ describe("#6 R-16-04 RingMarkerDiagram draws the markers at their Core coordinat
       F: [20, 20],
     });
   });
+
+  it.each(["light", "dark"] as const)(
+    "E11-W02 (INC-60): the origin and the ring sides are painted in a text colour that reads on the floor (%s)",
+    (theme) => {
+      const { container } = render(
+        <RingMarkerDiagram ariaLabel="Marcadors de la pista" locale="ca" ring={ring} />,
+      );
+      const labels = [...container.querySelectorAll("text")].filter((text) =>
+        ["0,0", "40 m", "22,50 m"].includes(text.textContent),
+      );
+      expect(labels).toHaveLength(3);
+      for (const label of labels) {
+        const token = /^var\((--[\w-]+)\)$/u.exec(label.getAttribute("fill") ?? "")?.[1] ?? "";
+        expect(
+          contrast(token, "--ah-color-course-floor", theme),
+          label.textContent,
+        ).toBeGreaterThanOrEqual(4.5);
+      }
+    },
+  );
 
   it("R-16-17 the ring sides read in the club's locale", () => {
     const { container, rerender } = render(
@@ -150,7 +172,7 @@ function panel(locale: "ca" | "en", units: "M" | "FT" = "M") {
   );
 }
 
-describe("#12/#13 WarningsPanel: translated rules, lengths only where they are lengths", () => {
+describe("T-16-22 R-16-17 WarningsPanel: translated rules, lengths only where they are lengths (E9-W02 round 2 #12/#13)", () => {
   it("R-16-12 an inventory shortage never reads its missing count as metres or feet", () => {
     panel("ca");
     const shortage = screen.getByText("Falten 2 túnels").closest("button");
@@ -178,7 +200,7 @@ describe("#12/#13 WarningsPanel: translated rules, lengths only where they are l
   });
 });
 
-describe("#13 PlacementControls formats the nudge steps in the club's locale", () => {
+describe("T-16-22 R-16-17 PlacementControls formats the nudge steps in the club's locale (E9-W02 round 2 #13)", () => {
   it.each([
     ["ca", ["0,10 m", "0,50 m", "1,00 m"]],
     ["en", ["0.10 m", "0.50 m", "1.00 m"]],

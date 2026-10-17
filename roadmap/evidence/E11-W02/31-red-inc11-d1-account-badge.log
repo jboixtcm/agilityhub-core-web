@@ -1,0 +1,37 @@
+$ pnpm --filter clubs-admin exec vitest run src/dashboard/DashboardPage.test.tsx -t "Compte no informat"
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/dashboard/DashboardPage.test.tsx (22 tests | 1 failed | 21 skipped) 717ms
+   ❯ E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) (18)
+     × INC-11 (mockup D1): «Compte no informat» follows the plan, not the [VALIDA] button 711ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > INC-11 (mockup D1): «Compte no informat» follows the plan, not the [VALIDA] button
+Error: expect(received).toHaveTextContent()
+
+received value must be a Node.
+Received has type:  Null
+Received has value: null
+ ❯ src/dashboard/DashboardPage.test.tsx:215:55
+    213|     await renderDashboard();
+    214|     const badge = within(signupRow(/^Núria T\./u)).getByText("Compte n…
+    215|     expect(badge.closest(".dashboard-signups__line")).toHaveTextConten…
+       |                                                       ^
+    216|       /Teràpia · domiciliació\s*Compte no informat$/u,
+    217|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 21 skipped (22)
+   Start at  23:05:33
+   Duration  6.80s (transform 55%, environment 17%, import 14%, tests 11%, setup 3%)
+
+  Transform  transforming modules took 3.63s · 55% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit=1

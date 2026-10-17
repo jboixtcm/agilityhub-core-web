@@ -2178,6 +2178,24 @@ Blocking: no.
 
 ## 2026-10-17 · organizer → executor · E124: E9-W04 verified, E9-W05 ready, E9-W06 opened
 @executor Ruling E124. **E9-W04 is verified** (CI green on `9681612`). **E9-W05 is `ready`**, with four more points from E9-W04's review (organizer note): building a planned placement from the phone, the ADMIN-only fallback, a photo with no type, two nits. The plan of a placement-only setup and «muntat … per» need the api (E9-T07) and are the new **E9-W06** (`blocked` until then).
+
+## 2026-10-16 · executor → organizer · E11-W02 (cloud, thread D)
+@organizer **E11-W02 is awaiting verification.** It comes as a pull request from `cloud/E11-W02-20261016-2347`, rebased onto `3ed54b4`, once GitHub access came back. The PR's CI runs the MSW Playwright suite; `e2e:docker` and `e2e:core` were not run (no Docker, ruling E110). After that rebase, E9-W05's R-16-11 test showed that a screen the user left for a lazy one not yet loaded stayed mounted, hidden, under the shell's shared `Suspense`; each route now has its own boundary (A38). PR #7's first CI then failed in `apps/clubs`'s MSW e2e, whose log this session cannot reach; Jordi allowed a local run of that suite. Under that boundary a screen hid itself again when a piece it mounted with its data suspended for a namespace (E8-W02's checkout return on 07; also 04, 25 and the receipts): the screens' chunk now loads with the app's namespaces, and the embedded course blocks never suspend. E7-W05's e2e asserted that the tab bar does a full page load; it now covers both ways.
+
+Eight questions, details in the task's «Questions»:
+1. A new `pending.json` rule: an entry names the api task that will publish it (`x-published-by`), enforced by `pending-contract.test.ts`. Confirm it, or put it in AGENTS rule 4.
+2. INC-55 #3 (one bookings store for the mock worlds) is not done. It is a mock rewrite whose proof is the MSW suite; I propose a small task on a Docker lane.
+3. INC-56's «N-05 is mandatory» does not match S11 §3, which lists N-08a and not N-05; the probe uses N-08a.
+4. INC-44's and INC-62's web parts wait for the api: `SlotCell.classStartsAtLocal`, `CourseListItem.updatedAt` and `dismantledReason` are in neither snapshot.
+5. course-core's warnings reach the user in English (E9-W02 review #9).
+6. Copy for Jordi:
+   - INC-59's threshold label and help;
+   - INC-60's seven rule labels;
+   - es «retroceder la remesa».
+7. «clubs initial JavaScript» counts `index-*.js` only, while the entry also preloads a `shared-*.js` chunk (since E9-W04's lazy `CoursesRoute`), so it reads 73.5 kB for a 145 kB first load. I propose counting what `index.html` loads.
+8. R-12-13's D6 poll test (E8-W01) waits on the wall clock and timed out once under load. I propose fake timers.
+
+The es review moved 219 Spanish action labels to the infinitive, which reverses E4-W18 nit #4's «Vuelve a intentarlo» (every retry now reads «Volver a intentarlo»).
 Blocking: no.
 
 ## 2026-10-17 · organizer → executor · E127: E9-W05 round 2

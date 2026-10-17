@@ -548,6 +548,96 @@ describe("E7-W06 step 4 (E7-W05 review #1) and E7-W07 step 2 (E7-W06 review #3, 
   });
 });
 
+describe("E11-W02 INC-55: a refusal removes only the preference it names, and a confirmed choice leaves the outbox", () => {
+  const refusal = (code: string, details: Record<string, unknown> = {}) =>
+    new ApiError({ code, details, message: "Refused", status: 422, traceId: "t-inc55" });
+
+  it("#1 a mixed body refused with INVALID_REMINDER_OPTION drops the reminder only: the kept push choice stays kept and goes again on its own", async () => {
+    const h = harness();
+    h.saver.adopt({ pushClubNews: false, reminderMinutesBefore: 240 });
+    await tick();
+    expect(h.at(0).body).toEqual({ pushClubNews: false, reminderMinutesBefore: 240 });
+    h.at(0).refuse(refusal("INVALID_REMINDER_OPTION"));
+    await tick();
+    await tick();
+    expect(h.failed).toHaveLength(1);
+    expect(h.kept).toEqual([{ pushClubNews: false }]);
+    expect(shownPreferences(h.saver.state())).toMatchObject({
+      pushClubNews: false,
+      reminderMinutesBefore: null,
+    });
+    expect(h.puts[1]?.body).toEqual({ pushClubNews: false });
+    h.at(1).ok();
+    await tick();
+    expect(h.kept.at(-1)).toBeUndefined();
+  });
+
+  it("#1 CHANNEL_NOT_ALLOWED drops the push choice only, and details.field names any other preference", async () => {
+    const mixed: PreferencesPatch = { emailByCategory: { PERSONAL: false }, pushClubNews: false };
+    const cases: [ApiError, PreferencesPatch, PreferencesPatch][] = [
+      [refusal("CHANNEL_NOT_ALLOWED"), mixed, { emailByCategory: { PERSONAL: false } }],
+      [
+        refusal("VALIDATION_ERROR", { field: "emailByCategory.PERSONAL" }),
+        mixed,
+        { pushClubNews: false },
+      ],
+      [
+        refusal("VALIDATION_ERROR", { field: "reminderMinutesBefore" }),
+        { pushClubNews: false, reminderMinutesBefore: 60 },
+        { pushClubNews: false },
+      ],
+    ];
+    for (const [error, body, rest] of cases) {
+      const h = harness();
+      h.saver.edit(body);
+      await tick();
+      h.at(0).refuse(error);
+      await tick();
+      await tick();
+      expect(h.puts[1]?.body, error.code).toEqual(rest);
+    }
+  });
+
+  it("#1 a refusal that names no preference of the body still drops the whole body (the api's values show)", async () => {
+    const h = harness();
+    h.saver.edit({ emailByCategory: { PERSONAL: false }, pushClubNews: false });
+    await tick();
+    h.at(0).refuse(refusal("VALIDATION_ERROR", { field: "locale" }));
+    await tick();
+    await tick();
+    expect(h.puts).toHaveLength(1);
+    expect(h.saver.state().queued).toEqual({});
+    expect(shownPreferences(h.saver.state())).toMatchObject({
+      emailByCategory: { PERSONAL: true },
+      pushClubNews: true,
+    });
+  });
+
+  it("#2 a kept choice answered 2xx — sent alone, nothing sent since — leaves the outbox even with a newer change waiting, so that change's failure never brings it back", async () => {
+    const h = harness();
+    h.saver.adopt({ emailByCategory: { PERSONAL: false } });
+    await tick();
+    h.saver.edit({ emailByCategory: { OPERATIONAL: true } });
+    await tick();
+    expect(h.puts).toHaveLength(1);
+    h.land(h.at(0).body);
+    h.at(0).ok();
+    await tick();
+    expect(h.kept).toEqual([undefined]);
+    expect(h.puts[1]?.body).toEqual({ emailByCategory: { OPERATIONAL: true } });
+    h.at(1).fail();
+    await tick();
+    await tick();
+    expect(h.saver.state().queued).toEqual({});
+    expect(h.kept).toEqual([undefined]);
+    expect(h.puts).toHaveLength(2);
+    expect(shownPreferences(h.saver.state())?.emailByCategory).toMatchObject({
+      OPERATIONAL: false,
+      PERSONAL: false,
+    });
+  });
+});
+
 describe("E7-W07 round 2 #2 (review #2; S14 §5, T-14-19): 409 MEMBER_ERASED is final for the saver too", () => {
   it("after overlapping PUTs, the resend answered 409 MEMBER_ERASED stops everything: no read, no other PUT, nothing on departure, the kept entry dropped, later changes ignored", async () => {
     const h = harness();

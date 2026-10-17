@@ -1,0 +1,6 @@
+$ for i in 1 2 3; do CHROME_PATH=/opt/pw-browsers/chromium lighthouse http://127.0.0.1:4181/entrar --chrome-flags="--headless=new --no-sandbox --disable-gpu" --form-factor=mobile --only-categories=performance,pwa,accessibility,best-practices --output=json --output=html --output-path=./main$i --quiet; done
+# main's own build (b430234, the base of this commit; apps/clubs/dist of the detached worktree, log 27b), served by the same static server on :4181; same profile as log 42; runs of 2026-10-17, 00:06–00:07 UTC
+run 1: {'performance': 85, 'accessibility': 100, 'best-practices': 96, 'pwa': 88} TTI 3078 ms · FCP 2939 ms · LCP 3631 ms · themed-omnibox 0 · 2026-10-17T00:06:44.499Z
+run 2: {'performance': 85, 'accessibility': 100, 'best-practices': 96, 'pwa': 88} TTI 3091 ms · FCP 2937 ms · LCP 3629 ms · themed-omnibox 0 · 2026-10-17T00:06:55.545Z
+run 3: {'performance': 84, 'accessibility': 100, 'best-practices': 96, 'pwa': 88} TTI 3014 ms · FCP 2940 ms · LCP 3649 ms · themed-omnibox 0 · 2026-10-17T00:07:06.648Z
+exit=0

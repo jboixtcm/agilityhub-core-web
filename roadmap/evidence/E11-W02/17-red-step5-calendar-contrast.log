@@ -1,0 +1,277 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/packages/ui
+
+xxx
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/schedule-contrast.test.ts > E11-W02 step 5: calendar cells read at AA in both schemes > the cell's text uses the scheme's share of the ring colour
+AssertionError: expected '.ah-schedule-grid {\n  display: grid;…' to match /var\(--ah-tint-text-share, 72%\)/u
+
+- Expected:
+/var\(--ah-tint-text-share, 72%\)/u
+
++ Received:
+".ah-schedule-grid {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.ah-schedule-grid__scroll {
+  overflow-x: auto;
+}
+
+.ah-schedule-grid__table {
+  width: 100%;
+  min-width: calc(3.75rem + var(--schedule-columns, 5) * 8rem);
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.75rem;
+}
+
+.ah-schedule-grid__corner,
+.ah-schedule-grid__row-label {
+  width: 3.75rem;
+}
+
+.ah-schedule-grid__column {
+  padding: 0 var(--ah-space-1) var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.ah-schedule-grid__column--colored {
+  color: color-mix(in srgb, var(--schedule-color) 70%, var(--ah-color-text));
+}
+
+.ah-schedule-grid__column-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ah-space-1);
+  width: 100%;
+  min-height: 1.75rem;
+  padding: var(--ah-space-1);
+  color: var(--ah-color-primary);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--ah-color-primary) 50%, transparent);
+  border-radius: var(--ah-radius-sm);
+}
+
+.ah-schedule-grid__column-button .ah-icon {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+.ah-schedule-grid__row {
+  border-top: 1px solid var(--ah-color-border);
+}
+
+.ah-schedule-grid__row-label {
+  padding-right: var(--ah-space-2);
+  color: var(--ah-color-text-muted);
+  font-weight: 500;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.ah-schedule-grid__row-button {
+  padding: var(--ah-space-1);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--ah-radius-sm);
+}
+
+.ah-schedule-grid__row-button:hover {
+  color: var(--ah-color-primary);
+  border-color: color-mix(in srgb, var(--ah-color-primary) 50%, transparent);
+}
+
+.ah-schedule-grid__slot {
+  padding: var(--ah-space-1);
+  vertical-align: top;
+}
+
+.ah-schedule-grid__stack {
+  display: grid;
+  gap: var(--ah-space-1);
+}
+
+.ah-schedule-grid__column-button:focus-visible,
+.ah-schedule-grid__row-button:focus-visible,
+.ah-schedule-cell:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ah-color-info) 70%, transparent);
+  outline-offset: 2px;
+}
+
+.ah-schedule-cell {
+  display: grid;
+  gap: 0.1rem;
+  width: 100%;
+  min-height: 2.6rem;
+  padding: 0.35rem 0.45rem;
+  color: color-mix(
+    in srgb,
+    var(--schedule-color, var(--ah-color-text-muted)) 72%,
+    var(--ah-color-text)
+  );
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  background: color-mix(
+    in srgb,
+    var(--schedule-color, var(--ah-color-text-muted)) 15%,
+    transparent
+  );
+  border: 1px solid transparent;
+  border-radius: 0.3rem;
+}
+
+button.ah-schedule-cell {
+  cursor: pointer;
+}
+
+a.ah-schedule-cell {
+  text-decoration: none;
+}
+
+.ah-schedule-cell--neutral {
+  color: var(--ah-color-text-muted);
+  background: var(--ah-color-surface-2);
+  border-color: var(--ah-color-border);
+}
+
+.ah-schedule-cell--empty {
+  display: block;
+  min-height: 2.6rem;
+  background: transparent;
+  border: 1px dashed var(--ah-color-border);
+}
+
+button.ah-schedule-cell--empty:hover {
+  border-color: var(--ah-color-primary);
+}
+
+
+.ah-schedule-cell--muted {
+  opacity: 0.78;
+}
+
+.ah-schedule-cell--plain {
+  color: var(--ah-color-text-muted);
+  background: transparent;
+  border-color: transparent;
+}
+
+.ah-schedule-cell--dashed {
+  background: transparent;
+  border: 1px dashed
+    color-mix(in srgb, var(--schedule-color, var(--ah-color-text-muted)) 70%, transparent);
+}
+
+.ah-schedule-cell--struck .ah-schedule-cell__title,
+.ah-schedule-cell--struck .ah-schedule-cell__subtitle {
+  text-decoration: line-through;
+}
+
+.ah-schedule-cell--warning {
+  border-color: var(--ah-color-warning);
+}
+
+.ah-schedule-cell--selected {
+  border-color: var(--ah-color-primary);
+  box-shadow: 0 0 0 1px var(--ah-color-primary);
+}
+
+.ah-schedule-cell__title {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ah-schedule-cell__title .ah-icon {
+  flex: none;
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.ah-schedule-cell__meta {
+  font-weight: 800;
+}
+
+
+.ah-schedule-cell__marker {
+  flex: none;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--ah-color-warning);
+  border-radius: var(--ah-radius-full);
+}
+
+.ah-schedule-cell__subtitle {
+  overflow: hidden;
+  font-size: 0.65rem;
+  font-weight: 500;
+  opacity: 0.85;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+"
+
+ ❯ src/schedule-contrast.test.ts:37:18
+     35| describe("E11-W02 step 5: calendar cells read at AA in both schemes", …
+     36|   it("the cell's text uses the scheme's share of the ring colour", () …
+     37|     expect(grid).toMatch(/var\(--ah-tint-text-share, 72%\)/u);
+       |                  ^
+     38|   });
+     39|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/schedule-contrast.test.ts > E11-W02 step 5: calendar cells read at AA in both schemes > dark club: every ring colour of its palette reads at 4.5:1 or more
+Error: --ah-tint-text-share missing for dark
+ ❯ textShare src/schedule-contrast.test.ts:29:34
+     27|   const block = selector.exec(tokens)?.[1] ?? "";
+     28|   const value = /--ah-tint-text-share:\s*(\d+)%/u.exec(block)?.[1];
+     29|   if (value === undefined) throw new Error(`--ah-tint-text-share missi…
+       |                                  ^
+     30|   return Number(value) / 100;
+     31| }
+ ❯ src/schedule-contrast.test.ts:44:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/schedule-contrast.test.ts > E11-W02 step 5: calendar cells read at AA in both schemes > light club: every ring colour of its palette reads at 4.5:1 or more
+Error: --ah-tint-text-share missing for light
+ ❯ textShare src/schedule-contrast.test.ts:29:34
+     27|   const block = selector.exec(tokens)?.[1] ?? "";
+     28|   const value = /--ah-tint-text-share:\s*(\d+)%/u.exec(block)?.[1];
+     29|   if (value === undefined) throw new Error(`--ah-tint-text-share missi…
+       |                                  ^
+     30|   return Number(value) / 100;
+     31| }
+ ❯ src/schedule-contrast.test.ts:44:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  22:18:48
+   Duration  1.61s (environment 64%, transform 21%, setup 11%, import 2%, tests 1%)
+
+exit=1

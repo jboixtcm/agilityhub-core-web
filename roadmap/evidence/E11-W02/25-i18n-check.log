@@ -1,0 +1,14 @@
+$ pnpm i18n:check
+# 2026-10-17T09:37:25Z · cloud session (no Docker, ruling E110) · main 3ed54b4 + this task (rebased)
+
+> agilityhub-core-web@0.0.0 i18n:check /home/user/agilityhub-core-web
+> node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs && node scripts/check-parameter-keys.mjs
+
+i18n check passed
+ca: 4915 keys
+es: 4915 keys
+en: 4915 keys
+3818 statically used keys, 0 unused
+251 codes, 0 missing
+149 catalog parameters (117 in D11, 32 system-only), 10 blocks, 0 missing
+exit=0

@@ -23,6 +23,7 @@ import {
   Button,
   Card,
   EmptyState,
+  ErrorState,
   FormField,
   Icon,
   Input,
@@ -159,7 +160,7 @@ export function PlacementEditorPage({
 
   if (loadError !== undefined) {
     return (
-      <EmptyState
+      <ErrorState
         description={
           isApiError(loadError)
             ? t(`errors:${loadError.code}`, { defaultValue: t("admin-courses:editor.loadError") })

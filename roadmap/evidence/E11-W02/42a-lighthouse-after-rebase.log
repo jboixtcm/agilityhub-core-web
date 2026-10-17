@@ -1,0 +1,10 @@
+$ for i in 1 2 3; do CHROME_PATH=/opt/pw-browsers/chromium lighthouse http://127.0.0.1:4180/entrar --chrome-flags="--headless=new --no-sandbox --disable-gpu" --form-factor=mobile --only-categories=performance,pwa,accessibility,best-practices --output=json --output=html --output-path=./final$i --quiet; done
+# superseded: the first runs after the rebase onto b430234, before log 46's fix (six locale chunks preloaded by index.html); see log 42 for the final runs
+# Lighthouse 11.7.1 (11.x keeps the PWA category), mobile profile with simulated throttling; apps/clubs/dist from log 26 (pnpm build, rebased on b430234), served gzip by a static server on :4180 with the Cànic fixture as /api/v1/branding, its manifest and icons, and 401 for every other api route (01 for a visitor); 2026-10-17T00:04:27Z
+run 1 exit=0
+run 2 exit=0
+run 3 exit=0
+run 1: {'performance': 77, 'accessibility': 100, 'best-practices': 96, 'pwa': 100} TTI 3422 ms · FCP 3290 ms · LCP 4484 ms · TBT 0 ms · throttling simulate mobile
+run 2: {'performance': 80, 'accessibility': 100, 'best-practices': 96, 'pwa': 100} TTI 3468 ms · FCP 3339 ms · LCP 4022 ms · TBT 0 ms · throttling simulate mobile
+run 3: {'performance': 80, 'accessibility': 100, 'best-practices': 96, 'pwa': 100} TTI 3421 ms · FCP 3286 ms · LCP 4024 ms · TBT 0 ms · throttling simulate mobile
+exit=0

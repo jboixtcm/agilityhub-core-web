@@ -50,6 +50,10 @@
     "office": "{street} · {postalCode}",
     "officeWithCity": "{street} · {postalCode} {city}"
   },
+  "boot": {
+    "offline": "No hi ha connexió amb el servidor.",
+    "retry": "Torna-ho a provar"
+  },
   "unavailable": {
     "title": "No disponible"
   },
@@ -105,7 +109,7 @@
     "tableEmpty": "Sense resultats",
     "theme": {
       "agilityhub": "Tema AgilityHub",
-      "canic": "Tema Cànic"
+      "club": "Tema del club"
     },
     "title": "Galeria de components",
     "toast": "Mostra una notificació",

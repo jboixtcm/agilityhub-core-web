@@ -44,6 +44,14 @@ describe("E9-W02 round 2 #7/#8/#11: course-ui reads the club's theme pairs (AGEN
     expect(offending).toEqual([]);
   });
 
+  it("E11-W02 (INC-60): no solid danger fill carries text — white on the product red is 3.6:1, below AA", () => {
+    const filled = classLists()
+      .filter(({ classes }) => classes.some((name) => /^(?:[a-z-]+:)*bg-danger$/u.test(name)))
+      .map(({ file, classes }) => `${file}: ${classes.join(" ")}`);
+    expect(filled).toEqual([]);
+    expect(contrast("--ah-color-primary-fg", "--ah-color-danger", "light")).toBeLessThan(4.5);
+  });
+
   it("no Tailwind palette colour (the fixed red/white utilities of review #11) is left in the package", () => {
     const palette =
       /^(?:[a-z-]+:)*(?:bg|text|border|ring|fill|stroke)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|white|black)(?:-\d{2,3})?(?:\/\d+)?$/u;

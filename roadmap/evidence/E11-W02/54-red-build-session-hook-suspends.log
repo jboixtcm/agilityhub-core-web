@@ -1,0 +1,52 @@
+$ (cd apps/clubs && pnpm exec vitest run src/courses/blocks-suspense.test.tsx)
+# red run: the blocks no longer suspend, but 07's BookingCourseLines calls useStartBuildSession, whose useTranslation still does (the probe: «Estem confirmant…» hidden by Suspense 100 ms after 07 shows, for 300 ms). 2026-10-17T09:08:45Z
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs
+
+ ❯ src/courses/blocks-suspense.test.tsx (3 tests | 1 failed) 506ms
+   ❯ E11-W02 (A38): a course block never suspends the screen it is in (3)
+     × 07's course lines (with [Sessió de muntatge]'s hook) never suspend the booking's detail (E8-W02's checkout return) 41ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/blocks-suspense.test.tsx > E11-W02 (A38): a course block never suspends the screen it is in > 07's course lines (with [Sessió de muntatge]'s hook) never suspend the booking's detail (E8-W02's checkout return)
+TestingLibraryElementError: Unable to find an accessible element with the role "heading" and name "La pantalla"
+
+Here are the accessible roles:
+
+  paragraph:
+
+  Name "":
+  <p />
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <p>
+      Carregant la pantalla
+    </p>
+  </div>
+</body>
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/courses/blocks-suspense.test.tsx:89:19
+     87|     const client = { GET: () => new Promise(() => undefined) } as unkn…
+     88|     await renderInScreen(<BookingCourseLines classSessionId="class-1" …
+     89|     expect(screen.getByRole("heading", { name: "La pantalla" })).toBeV…
+       |                   ^
+     90|     expect(screen.queryByText("Carregant la pantalla")).not.toBeInTheD…
+     91|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  09:08:47
+   Duration  3.78s (transform 47%, environment 26%, tests 14%, import 6%, setup 6%)
+
+exit=1

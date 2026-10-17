@@ -8,7 +8,7 @@ import { useClubFormats } from "@agilityhub/i18n";
 import {
   Button,
   Card,
-  EmptyState,
+  ErrorState,
   FormField,
   Input,
   Select,
@@ -20,12 +20,14 @@ import {
 import { useEffect, useState, type SyntheticEvent } from "react";
 import { useTranslation } from "react-i18next";
 
+import { navigate as navigateTo } from "../router";
+
 type Context = components["schemas"]["MeLeaveContext"];
 
 export function LeavePage({
   client,
   navigate = (path) => {
-    window.location.assign(path);
+    navigateTo(path);
   },
 }: {
   client: ApiClient;
@@ -132,7 +134,7 @@ export function LeavePage({
   if (loadError)
     return (
       <div className="lifecycle-page">
-        <EmptyState
+        <ErrorState
           action={
             <Button
               onClick={() => {
@@ -140,7 +142,7 @@ export function LeavePage({
                 setReload((value) => value + 1);
               }}
             >
-              {t("leave:loadError")}
+              {t("leave:retry")}
             </Button>
           }
           description={t("leave:loadError")}

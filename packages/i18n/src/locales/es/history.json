@@ -1,7 +1,7 @@
 {
   "title": "Historial",
   "back": "Volver",
-  "close": "Cierra",
+  "close": "Cerrar",
   "dogs": {
     "label": "Perros",
     "all": "Todos",
@@ -33,5 +33,5 @@
   "empty": "Todavía no hay nada en el historial",
   "loading": "Cargando el historial",
   "loadError": "No se ha podido cargar el historial.",
-  "retry": "Vuelve a intentarlo"
+  "retry": "Volver a intentarlo"
 }

@@ -114,7 +114,7 @@ test("T-14-27 renders the audit and PDF export state in ca/es/en without missing
   await prepareAdmin(page);
   const cases = [
     { close: "Tanca les exportacions", locale: "ca", title: "Auditoria" },
-    { close: "Cierra las exportaciones", locale: "es", title: "Auditoría" },
+    { close: "Cerrar las exportaciones", locale: "es", title: "Auditoría" },
     { close: "Close exports", locale: "en", title: "Audit" },
   ] as const;
 

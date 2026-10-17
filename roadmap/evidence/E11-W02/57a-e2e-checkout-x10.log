@@ -1,0 +1,38 @@
+$ (cd apps/clubs && CI=1 pnpm exec playwright test -c playwright.local.config.ts --reporter=list --repeat-each=10 e2e/billing-inactivity.spec.ts -g "checkout return waits")
+# E8-W02's checkout return ten times, 4 workers. Before (course blocks fixed, useStartBuildSession and the other screens' namespaces not yet):
+  ✘   2 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (14.0s)
+  ✘   1 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (14.8s)
+  ✓   3 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (6.9s)
+  ✓   4 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (6.3s)
+  ✓   5 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (6.3s)
+  ✓   7 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (5.4s)
+  ✘   6 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (14.2s)
+  ✘   8 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (13.2s)
+  ✘   9 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (13.8s)
+  ✓  10 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (5.4s)
+    Error: expect(locator).toBeVisible() failed
+    Error: expect(locator).toBeVisible() failed
+    Error: expect(locator).toBeVisible() failed
+    Error: expect(locator).toBeVisible() failed
+    Error: expect(locator).toBeVisible() failed
+  5 failed
+  5 passed (1.1m)
+exit=1
+
+# After (the final tree of log 57), 2026-10-17T09:27:47Z:
+
+Running 10 tests using 2 workers
+
+  ✓   1 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (8.2s)
+  ✓   2 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (8.5s)
+  ✓   3 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (8.1s)
+  ✓   4 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (7.7s)
+  ✓   5 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (7.4s)
+  ✓   6 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (7.6s)
+  ✓   7 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (7.6s)
+  ✓   8 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (7.5s)
+  ✓   9 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (7.7s)
+  ✓  10 e2e/billing-inactivity.spec.ts:124:3 › E8-W02 member billing, packs and lifecycle › checkout return waits for the server-confirmed PAID status (7.4s)
+
+  10 passed (49.9s)
+exit=0

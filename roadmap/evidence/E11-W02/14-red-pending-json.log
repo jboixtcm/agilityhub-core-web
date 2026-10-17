@@ -1,0 +1,63 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/packages/api-client
+
+xx
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/pending-contract.test.ts > E11-W02 step 3: pending.json keeps only unpublished contracts, each with its api task > no pending schema is already in the snapshot, under its name or another one
+AssertionError: expected [ 'DogPendingFields', …(3) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "DogPendingFields",
++   "LicensePendingFields",
++   "DogPatchPendingFields",
++   "PlanBillingMode",
++ ]
+
+ ❯ src/pending-contract.test.ts:65:7
+     63|         })
+     64|         .map(({ name }) => name),
+     65|     ).toEqual([]);
+       |       ^
+     66|   });
+     67|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/pending-contract.test.ts > E11-W02 step 3: pending.json keeps only unpublished contracts, each with its api task > every pending entry names the api task that will publish it (x-published-by)
+AssertionError: expected [ 'DogPendingFields', …(4) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "DogPendingFields",
++   "LicensePendingFields",
++   "LicenseWithPendingFields",
++   "DogPatchPendingFields",
++   "PlanBillingMode",
++ ]
+
+ ❯ src/pending-contract.test.ts:79:7
+     77|         .filter(({ schema }) => !/^E\d+-T\d+$/u.test(schema["x-publish…
+     78|         .map(({ name }) => name),
+     79|     ).toEqual([]);
+       |       ^
+     80|   });
+     81| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  22:01:37
+   Duration  316ms (import 46%, transform 40%, tests 11%, worker 3%)
+
+exit=1

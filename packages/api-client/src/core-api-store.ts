@@ -28,7 +28,7 @@ import type {
   UploadCourseInput,
 } from "@agilityhub/course-ui";
 
-import { isApiError } from "./api-error";
+import { isApiError, isInProgress } from "./api-error";
 import type { BuildFinishedEvent, SubscribeBuildEvents } from "./build-events";
 import { apiClient, type ApiClient } from "./client";
 import type { components } from "./generated/schema";
@@ -565,11 +565,30 @@ export class CoreApiStore implements PlannerStore {
   async uploadSmarterFile(input: UploadCourseInput): Promise<{ readonly course: PlannerCourse }> {
     const body =
       this.#courseUploads.get(input.submissionKey) ?? (await this.#storeCourseSource(input));
-    const result = await this.#client.POST("/courses", {
-      body,
-      headers: { "Idempotency-Key": input.submissionKey },
-    });
-    return { course: plannerCourse(required(result.data, "createCourse")) };
+    try {
+      const result = await this.#client.POST("/courses", {
+        body,
+        headers: { "Idempotency-Key": input.submissionKey },
+      });
+      const course = plannerCourse(required(result.data, "createCourse"));
+      this.#courseUploads.delete(input.submissionKey);
+      return { course };
+    } catch (error) {
+      // INC-60: an answer retires the key (a refusal is final for this body); a lost answer, a
+      // busy api, a token to renew or a keyed write still running keep it, so the retry sends the
+      // same body under the same key.
+      if (
+        isApiError(error) &&
+        error.status >= 400 &&
+        error.status < 500 &&
+        error.status !== 401 &&
+        error.status !== 429 &&
+        !isInProgress(error)
+      ) {
+        this.#courseUploads.delete(input.submissionKey);
+      }
+      throw error;
+    }
   }
 
   /** Stores the `.txt` (signed upload) and remembers the creation body under the upload's key. */

@@ -1,0 +1,81 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/packages/api-client
+
+---------------xx·x-----
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/preferences-saver.test.ts > E11-W02 INC-55: a refusal removes only the preference it names, and a confirmed choice leaves the outbox > #1 a mixed body refused with INVALID_REMINDER_OPTION drops the reminder only: the kept push choice stays kept and goes again on its own
+AssertionError: expected [ undefined ] to deeply equal [ { pushClubNews: false } ]
+
+- Expected
++ Received
+
+  [
+-   {
+-     "pushClubNews": false,
+-   },
++   undefined,
+  ]
+
+ ❯ src/preferences-saver.test.ts:564:20
+    562|     await tick();
+    563|     expect(h.failed).toHaveLength(1);
+    564|     expect(h.kept).toEqual([{ pushClubNews: false }]);
+       |                    ^
+    565|     expect(shownPreferences(h.saver.state())).toMatchObject({
+    566|       pushClubNews: false,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/preferences-saver.test.ts > E11-W02 INC-55: a refusal removes only the preference it names, and a confirmed choice leaves the outbox > #1 CHANNEL_NOT_ALLOWED drops the push choice only, and details.field names any other preference
+AssertionError: CHANNEL_NOT_ALLOWED: expected undefined to deeply equal { Object (emailByCategory) }
+
+- Expected:
+{
+  "emailByCategory": {
+    "PERSONAL": false,
+  },
+}
+
++ Received:
+undefined
+
+ ❯ src/preferences-saver.test.ts:597:43
+    595|       await tick();
+    596|       await tick();
+    597|       expect(h.puts[1]?.body, error.code).toEqual(rest);
+       |                                           ^
+    598|     }
+    599|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/preferences-saver.test.ts > E11-W02 INC-55: a refusal removes only the preference it names, and a confirmed choice leaves the outbox > #2 a kept choice answered 2xx — sent alone, nothing sent since — leaves the outbox even with a newer change waiting, so that change's failure never brings it back
+AssertionError: expected [] to deeply equal [ undefined ]
+
+- Expected
++ Received
+
+- [
+-   undefined,
+- ]
++ []
+
+ ❯ src/preferences-saver.test.ts:626:20
+    624|     h.at(0).ok();
+    625|     await tick();
+    626|     expect(h.kept).toEqual([undefined]);
+       |                    ^
+    627|     expect(h.puts[1]?.body).toEqual({ emailByCategory: { OPERATIONAL: …
+    628|     h.at(1).fail();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 1 passed | 20 skipped (24)
+   Start at  21:19:27
+   Duration  683ms (transform 82%, import 9%, tests 8%, worker 1%)
+
+exit=1

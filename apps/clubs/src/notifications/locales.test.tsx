@@ -61,8 +61,8 @@ function browserThatRefused() {
 
 const CASES = [
   {
-    changeClass: "CAMBIA DE CLASE",
-    claim: "COGE LA PLAZA",
+    changeClass: "CAMBIAR DE CLASE",
+    claim: "COGER LA PLAZA",
     feedTitle: "Notificaciones",
     locale: "es",
     firstMeta: "hace 2 min · y por SMS",

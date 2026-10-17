@@ -29,8 +29,8 @@
     "weekOpensAt": "{weekday} {time}"
   },
   "confirm": {
-    "button": "Confirma {day} · {from}–{to} · {ring}",
-    "idle": "Confirma",
+    "button": "Confirmar {day} · {from}–{to} · {ring}",
+    "idle": "Confirmar",
     "sending": "Enviando",
     "done": "Entrenamiento reservado"
   },
@@ -44,7 +44,7 @@
   },
   "loading": "Cargando los entrenamientos",
   "error": "No se han podido cargar los entrenamientos.",
-  "retry": "Vuelve a intentarlo",
+  "retry": "Volver a intentarlo",
   "detail": {
     "withDog": "Entrenamiento · con {dogArticle}{dogName}",
     "cancelDialog": "¿Quieres anular la reserva de este entrenamiento?",

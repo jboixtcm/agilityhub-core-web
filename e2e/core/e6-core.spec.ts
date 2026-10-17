@@ -124,7 +124,7 @@ const sheetText = {
     pending: "pendiente",
     pendingSheet: "pasar lista pendiente",
     present: "presente",
-    save: "Guarda",
+    save: "Guardar",
     saved: "Lista guardada",
     seatReleased: "plaza liberada",
     stale: "Alguien ha guardado la lista hace un momento: revísala",

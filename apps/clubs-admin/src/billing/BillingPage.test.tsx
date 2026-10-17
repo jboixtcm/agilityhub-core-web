@@ -1486,14 +1486,22 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
       releaseRefreshedPeriod = resolve;
     });
     const nativeSetTimeout = window.setTimeout.bind(window);
+    const nativeClearTimeout = window.clearTimeout.bind(window);
     let firePoll: (() => void) | undefined;
+    // INC-59 #2: each held poll gets its own id, outside the range of real timers (negative), and
+    // `clearTimeout` drops it instead of cancelling a real timer that happens to share it.
+    const heldPolls = new Set<number>();
+    let nextHeldPoll = 0;
     vi.spyOn(window, "setTimeout").mockImplementation(
       (handler, timeout, ...arguments_): ReturnType<typeof setTimeout> => {
         if (timeout === 5_000 && typeof handler === "function") {
+          nextHeldPoll -= 1;
+          const id = nextHeldPoll;
+          heldPolls.add(id);
           firePoll = () => {
-            handler(...arguments_);
+            if (heldPolls.delete(id)) handler(...arguments_);
           };
-          return 5_000 as unknown as ReturnType<typeof setTimeout>;
+          return id as unknown as ReturnType<typeof setTimeout>;
         }
         return nativeSetTimeout(
           handler,
@@ -1502,6 +1510,10 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
         ) as unknown as ReturnType<typeof setTimeout>;
       },
     );
+    vi.spyOn(window, "clearTimeout").mockImplementation((id) => {
+      if (typeof id === "number" && heldPolls.delete(id)) return;
+      nativeClearTimeout(id);
+    });
     server.use(
       http.get("*/api/v1/billing/periods/2026-09", async () => {
         const read = ++periodReads;
@@ -1516,6 +1528,9 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
         if (read === 2) await lateDetail;
         return HttpResponse.json({
           ...run,
+          // INC-59 #1: the replacement detail (read 3) paints its own collection date, so the test
+          // knows when the page has applied it.
+          ...(read === 3 ? { collectionDate: "2026-10-09" } : {}),
           status: read === 1 ? "CHARGING" : "COMPLETED",
         });
       }),
@@ -1547,11 +1562,12 @@ describe("E8-W01 review follow-ups: where errors land, what the admin sees, what
       expect(periodReads).toBe(2);
       expect(detailReads).toBe(3);
     });
+    // INC-59 #1: the replacement detail is applied (its date is on screen) before the assertion;
+    // the old implementation refreshed again at this point, while the held period read was still
+    // a stale CHARGING, and a request it starts has time to reach the handler.
+    expect(await screen.findByText(/data de cobrament: 09.10/u)).toBeVisible();
     await act(async () => {
-      // Flush the replacement detail's state/effect chain. The old implementation refreshed here
-      // again while the held period read was still stale CHARGING.
-      await Promise.resolve();
-      await Promise.resolve();
+      await new Promise((resolve) => nativeSetTimeout(resolve, 50));
     });
     expect(periodReads).toBe(2);
     releaseRefreshedPeriod();

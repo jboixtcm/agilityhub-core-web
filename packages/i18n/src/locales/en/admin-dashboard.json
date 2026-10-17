@@ -60,7 +60,8 @@
   },
   "chart": {
     "title": "Dogs by level — {count} active",
-    "legend": "{previous, plural, =0 {with booking (current week)} one {with booking (current or previous week)} other {with booking (current or # previous weeks)}} · total active",
+    "legendRecent": "{previous, plural, =0 {with booking (current week)} one {with booking (current or previous week)} other {with booking (current or # previous weeks)}}",
+    "legendTotal": "total active",
     "recent": "With booking",
     "total": "Total active",
     "value": "{total} · {recent} booked"

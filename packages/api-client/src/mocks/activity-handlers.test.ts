@@ -34,7 +34,7 @@ ajv.addSchema(
       ...openapiDocument.components,
       schemas: withOverlays({
         ...(openapiDocument.components.schemas as SchemaMap),
-        ...(pendingDocument.components.schemas as SchemaMap),
+        ...pendingDocument.components.schemas,
       }),
     },
   },
@@ -926,8 +926,9 @@ describe("E4-W11 T-07-04 R-07-05 the ring-block window must fit club.openingHour
   });
 
   it("E4-W17 step 6 (T-07-03): «Lliga social» has both hours, as the core's seed (9:00–14:00), so any edit of it saves", async () => {
-    const league = (await client.GET("/activities/{id}", { params: { path: { id: ACTIVITY_IDS.league } } }))
-      .data;
+    const league = (
+      await client.GET("/activities/{id}", { params: { path: { id: ACTIVITY_IDS.league } } })
+    ).data;
     if (league === undefined) throw new TypeError("Missing the Lliga social");
     expect(league).toMatchObject({ endTime: "14:00", startTime: "09:00", state: "PUBLISHED" });
     const saved = await client.PATCH("/activities/{id}", {

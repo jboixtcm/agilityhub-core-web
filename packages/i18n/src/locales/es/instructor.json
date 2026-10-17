@@ -25,7 +25,7 @@
     "empty": "Ninguna clase este día",
     "loading": "Cargando el día",
     "loadError": "No se ha podido cargar el día.",
-    "retry": "Vuelve a intentarlo"
+    "retry": "Volver a intentarlo"
   },
   "attendance": {
     "title": "{date} · {time} · {description} · {ring}",
@@ -33,8 +33,8 @@
     "back": "Volver",
     "occupancy": "{booked}/{capacity}",
     "waiting": "{count} en espera",
-    "photoOpen": "Muestra la foto de {dog} a pantalla completa",
-    "photoClose": "Cierra la foto de {dog}",
+    "photoOpen": "Mostrar la foto de {dog} a pantalla completa",
+    "photoClose": "Cerrar la foto de {dog}",
     "circles": "Asistencia de {name}",
     "pendingTasks": "{count, plural, one {# tarea pendiente} other {# tareas pendientes}}",
     "notice": "ha avisado ({time})",
@@ -43,7 +43,7 @@
     "noShowNotice": "no presentado → aviso mañana a las {time}",
     "noticeAlreadySent": "aviso ya enviado",
     "hint": "Un toque en el círculo para cambiar el estado",
-    "save": "Guarda",
+    "save": "Guardar",
     "saving": "Guardando la lista",
     "saved": "Lista guardada",
     "legend": "Leyenda",
@@ -52,15 +52,15 @@
     "joinedAt": "{kind, select, minutes {desde hace {count} min} hours {desde hace {count} h} today {desde hoy {time}} yesterday {desde ayer {time}} other {desde el {date} {time}}}",
     "waitlistRule": "{mode, select, FIFO {Si se libera una plaza, se avisa por orden de llegada: cada uno tiene {minutes} min para confirmar.} other {Si se libera una plaza, se avisa a la vez a todos los que esperan.}}",
     "cancelledBanner": "Clase anulada por el club",
-    "dismiss": "Cierra",
+    "dismiss": "Cerrar",
     "loading": "Cargando la lista",
     "loadError": "No se ha podido cargar la lista.",
-    "retry": "Vuelve a intentarlo"
+    "retry": "Volver a intentarlo"
   },
   "card": {
     "title": "Ficha de alumno",
     "back": "Volver",
-    "search": "Busca un alumno",
+    "search": "Buscar un alumno",
     "photo": "Foto de {dog}",
     "age": "{count, plural, one {# año} other {# años}}",
     "breedAge": "{breed} · {age}",
@@ -86,7 +86,7 @@
     "manageButton": "Gestionar tareas y notas",
     "loading": "Cargando la ficha",
     "loadError": "No se ha podido cargar la ficha.",
-    "retry": "Vuelve a intentarlo",
+    "retry": "Volver a intentarlo",
     "headerLevel": "Nivel {code} · {since}",
     "memberStatus": "{gender, select, female {Abonada} other {Abonado}}",
     "attendanceTitle": "Asistencia · últimos 30 días",
@@ -113,12 +113,12 @@
   },
   "students": {
     "title": "Alumnos",
-    "search": "Busca un alumno",
+    "search": "Buscar un alumno",
     "empty": "Ningún alumno con esta búsqueda",
     "loading": "Cargando los alumnos",
     "loadError": "No se han podido cargar los alumnos.",
-    "retry": "Vuelve a intentarlo",
-    "more": "Muestra más"
+    "retry": "Volver a intentarlo",
+    "more": "Mostrar más"
   },
   "overview": {
     "title": "Visión global",
@@ -141,7 +141,7 @@
       "reason": "Motivo",
       "note": "Nota",
       "createdBy": "Creado por",
-      "cancel": "Anula el bloqueo",
+      "cancel": "Anular el bloqueo",
       "cancelling": "Anulando el bloqueo",
       "loading": "Cargando el bloqueo",
       "loadError": "No se ha podido cargar el bloqueo."
@@ -151,7 +151,7 @@
       "empty": "Todavía no hay ningún inscrito.",
       "loading": "Cargando los inscritos…",
       "loadError": "No se han podido cargar los inscritos.",
-      "retry": "Vuelve a intentarlo",
+      "retry": "Volver a intentarlo",
       "name": "{member} + {dog}",
       "position": "{position}. {name}",
       "waiting": "En espera: {names}"
@@ -189,8 +189,8 @@
     },
     "summary": "Ocupa la pista {ring} de {from} a {to}, aparece en el cuadro global y en el registro de uso de pistas. No se vincula a ningún alumno.",
     "submit": {
-      "RESERVATION": "Reserva la pista",
-      "BLOCK": "Bloquea la pista"
+      "RESERVATION": "Reservar la pista",
+      "BLOCK": "Bloquear la pista"
     },
     "sending": "Enviando",
     "saved": {
@@ -202,7 +202,7 @@
     "conflictRow": "{label} {from}–{to}",
     "loading": "Cargando las horas de la pista",
     "error": "No se han podido cargar las horas de la pista.",
-    "retry": "Vuelve a intentarlo",
+    "retry": "Volver a intentarlo",
     "card": {
       "title": "Reservar o bloquear pista (sin alumno)",
       "reason": "motivo: {reason}",
@@ -210,8 +210,8 @@
       "from": "De",
       "to": "A",
       "submit": {
-        "RESERVATION": "Reserva",
-        "BLOCK": "Bloquea"
+        "RESERVATION": "Reservar",
+        "BLOCK": "Bloquear"
       }
     }
   },
@@ -225,19 +225,19 @@
     "add": "Añadir",
     "newTask": "Nueva tarea",
     "newTaskField": "Texto de la tarea nueva",
-    "create": "Añade",
-    "cancel": "Cancela",
-    "edit": "Edita la tarea",
+    "create": "Añadir",
+    "cancel": "Cancelar",
+    "edit": "Editar la tarea",
     "editField": "Texto de la tarea",
-    "save": "Guarda",
+    "save": "Guardar",
     "saving": "Guardando",
-    "remove": "Elimina la tarea",
+    "remove": "Eliminar la tarea",
     "deleteConfirm": "¿Quieres eliminar esta tarea?",
-    "deleteAction": "Elimina",
+    "deleteAction": "Eliminar",
     "complete": "Márcala como hecha",
-    "reopen": "Vuelve a dejarla pendiente",
+    "reopen": "Volver a dejarla pendiente",
     "attach": "Adjunta un archivo",
-    "removeFile": "Quita {name}",
+    "removeFile": "Quitar {name}",
     "fileRefused": "{name}: {reason}",
     "meta": "{date} · {author}",
     "doneBy": "hecha por {article}{name} el {date}",
@@ -245,11 +245,11 @@
     "loading": "Cargando las tareas",
     "loadError": "No se han podido cargar las tareas.",
     "openError": "No se ha podido abrir el archivo.",
-    "retry": "Vuelve a intentarlo",
-    "close": "Cierra",
+    "retry": "Volver a intentarlo",
+    "close": "Cerrar",
     "historyLink": "Ver el historial completo ›",
     "historyTitle": "Historial de tareas",
-    "more": "Muestra más",
+    "more": "Mostrar más",
     "memberNotes": "Notas a los instructores",
     "memberNotesHint": "· del alumno · solo lectura",
     "noValue": "—",
@@ -285,7 +285,7 @@
     "emptyDescription": "Prueba otra semana o quita los filtros.",
     "loading": "Cargando la agenda",
     "loadError": "No se ha podido cargar la agenda.",
-    "retry": "Vuelve a intentarlo",
+    "retry": "Volver a intentarlo",
     "sheetTitle": "{day} · {time} · {description}{ring, select, none {} other { · {ring}}}{instructor, select, none {} other { · {instructor}}} — {booked}/{capacity}{waiting, plural, =0 {} other { · # en espera}}",
     "sheetLoading": "Cargando la lista",
     "sheetLoadError": "No se ha podido cargar la lista.",
@@ -294,6 +294,6 @@
     "noticeShort": "ha avisado{released, select, yes { — plaza liberada} other {}}{waitlist, select, yes { · espera avisada} other {}}",
     "noShowNotice": "aviso mañana a las {time}",
     "waitingList": "En espera: {names}",
-    "saveSheet": "Guarda la lista"
+    "saveSheet": "Guardar la lista"
   }
 }
