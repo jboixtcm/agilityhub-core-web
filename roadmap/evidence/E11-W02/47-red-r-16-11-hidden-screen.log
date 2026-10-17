@@ -1,0 +1,38 @@
+$ (cd apps/clubs && pnpm exec vitest run src/courses/courses.test.tsx -t "R-16-11 · leaving the session")
+# red run after rebasing onto main 3ed54b4 (E9-W05's test meets this task's lazy screens chunk), 2026-10-17T07:52:34Z
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs
+
+ ❯ src/courses/courses.test.tsx (27 tests | 1 failed | 26 skipped) 1282ms
+   ❯ E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type (5)
+     × R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup 1275ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/courses.test.tsx > E9-W05: building a planned course from the phone, ADMIN-only sessions, the photo's type > R-16-11 · leaving the session while FINALITZA runs: its late answer does not take the user back to the setup
+AssertionError: expected '/recorreguts/setup-muntanya-dijous' to be '/instructor/avui' // Object.is equality
+
+Expected: "/instructor/avui"
+Received: "/recorreguts/setup-muntanya-dijous"
+
+ ❯ src/courses/courses.test.tsx:556:38
+    554|       setTimeout(resolve, 200);
+    555|     });
+    556|     expect(window.location.pathname).toBe("/instructor/avui");
+       |                                      ^
+    557|   });
+    558| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 26 skipped (27)
+   Start at  07:52:36
+   Duration  7.33s (transform 55%, tests 18%, import 13%, environment 11%, setup 3%)
+
+  Transform  transforming modules took 3.96s · 55% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit=1

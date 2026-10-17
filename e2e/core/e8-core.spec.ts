@@ -1099,7 +1099,7 @@ test("E8-W04 T-13-32 (e·2) in es: her inactivity fee simulated (R-13-08) → 15
   const leaveRequestResponse = member.page.waitForResponse(
     responseIs("POST", /\/api\/v1\/me\/leave-requests$/u),
   );
-  await member.page.getByRole("button", { name: "ENVÍA LA SOLICITUD" }).click();
+  await member.page.getByRole("button", { name: "ENVIAR LA SOLICITUD" }).click();
   const leaveRequestHttp = await leaveRequestResponse;
   expect(leaveRequestHttp.status()).toBe(201);
   const requestedLeave = (await leaveRequestHttp.json()) as LeaveRequest;

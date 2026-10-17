@@ -1,0 +1,52 @@
+$ pnpm --filter clubs-admin exec vitest run src/dashboard/DashboardPage.test.tsx -t "label line carries its period"
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/dashboard/DashboardPage.test.tsx (23 tests | 1 failed | 22 skipped) 468ms
+   ❯ E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) (19)
+     × INC-11 (mockup D1): a KPI's label line carries its period, the detail line its figures 459ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > INC-11 (mockup D1): a KPI's label line carries its period, the detail line its figures
+TestingLibraryElementError: Unable to find an element with the text: Ocupació classes · aquesta setmana. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<div
+  class="ah-card dashboard-kpi"
+>
+  <strong>
+    87%
+  </strong>
+  <span>
+    Ocupació classes
+  </span>
+  <small>
+    aquesta setmana · 142/163 places
+  </small>
+</div>
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/dashboard/DashboardPage.test.tsx:215:46
+    213|     await renderDashboard();
+    214|     const kpi = (value: string) => screen.getByText(value).closest(".d…
+    215|     expect(within(kpi("87%") as HTMLElement).getByText("Ocupació class…
+       |                                              ^
+    216|     expect(within(kpi("87%") as HTMLElement).getByText("142/163 places…
+    217|     expect(within(kpi("56") as HTMLElement).getByText("Entrenaments re…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 22 skipped (23)
+   Start at  23:08:14
+   Duration  6.24s (transform 58%, environment 18%, import 14%, tests 8%, setup 3%)
+
+  Transform  transforming modules took 3.48s · 58% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit=1

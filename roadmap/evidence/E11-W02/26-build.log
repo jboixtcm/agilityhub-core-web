@@ -1,0 +1,319 @@
+$ pnpm build
+# 2026-10-17T09:37:27Z · cloud session (no Docker, ruling E110) · main 3ed54b4 + this task (rebased)
+
+> agilityhub-core-web@0.0.0 build /home/user/agilityhub-core-web
+> turbo run build
+
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running build in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:build: cache hit, replaying logs 8b12f2a8463a0190
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /home/user/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/shared-types:build: cache hit, replaying logs 1caf5b33f1294437
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /home/user/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/course-ui:build: cache hit, replaying logs 375ad2d17308e4e3
+@agilityhub/course-ui:build: 
+@agilityhub/course-ui:build: > @agilityhub/course-ui@0.0.1 build /home/user/agilityhub-core-web/packages/course-ui
+@agilityhub/course-ui:build: > tsc -p tsconfig.build.json
+@agilityhub/course-ui:build: 
+clubs:build: cache miss, executing ecba2ed653843c07
+id:build: cache hit, replaying logs 81d30c8ff785c1c0
+clubs-admin:build: cache hit, replaying logs 8279d7cfc1e47d85
+clubs-admin:build: 
+clubs-admin:build: > clubs-admin@0.0.0 build /home/user/agilityhub-core-web/apps/clubs-admin
+clubs-admin:build: > tsc --noEmit && vite build
+clubs-admin:build: 
+clubs-admin:build: vite v8.2.2 building client environment for production...
+clubs-admin:build: transforming...
+clubs-admin:build: ✓ 461 modules transformed.
+clubs-admin:build: rendering chunks...
+clubs-admin:build: computing gzip size...
+clubs-admin:build: dist/index.html                                             2.90 kB │ gzip:   0.97 kB
+clubs-admin:build: dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs-admin:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs-admin:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs-admin:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs-admin:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs-admin:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs-admin:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs-admin:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs-admin:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs-admin:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs-admin:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs-admin:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs-admin:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs-admin:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs-admin:build: dist/assets/CoursesRoute-BR2xPRm0.css                       5.67 kB │ gzip:   1.22 kB
+clubs-admin:build: dist/assets/ConsolePage-B-2c0WBB.css                       10.87 kB │ gzip:   2.09 kB
+clubs-admin:build: dist/assets/list-helpers-Cs0DdFxJ.css                      38.50 kB │ gzip:   6.41 kB
+clubs-admin:build: dist/assets/index-3ANmi8xd.css                            112.27 kB │ gzip:  17.75 kB
+clubs-admin:build: dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+clubs-admin:build: dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+clubs-admin:build: dist/assets/notifications-ipHhB86R.js                       0.76 kB │ gzip:   0.48 kB
+clubs-admin:build: dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+clubs-admin:build: dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+clubs-admin:build: dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+clubs-admin:build: dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+clubs-admin:build: dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+id:build: 
+id:build: > id@0.0.0 build /home/user/agilityhub-core-web/apps/id
+id:build: > tsc --noEmit && vite build
+id:build: 
+id:build: vite v8.2.2 building client environment for production...
+id:build: transforming...
+id:build: ✓ 256 modules transformed.
+id:build: rendering chunks...
+id:build: computing gzip size...
+id:build: dist/index.html                                           0.39 kB │ gzip:   0.27 kB
+id:build: dist/assets/sprite-BOr1Ydze.svg                           5.78 kB │ gzip:   1.52 kB
+id:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2   18.68 kB
+id:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2   18.74 kB
+id:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2   18.78 kB
+id:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2   18.82 kB
+id:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff    20.54 kB
+id:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff    20.60 kB
+id:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff    20.64 kB
+id:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff    20.67 kB
+id:build: dist/assets/index-D_qMauPa.css                           54.87 kB │ gzip:   9.91 kB
+id:build: dist/assets/common-BmBJ5B82.js                            2.39 kB │ gzip:   1.12 kB
+id:build: dist/assets/common-CDigVNb9.js                            2.48 kB │ gzip:   1.22 kB
+id:build: dist/assets/common-j9bnHlpA.js                            2.54 kB │ gzip:   1.24 kB
+id:build: dist/assets/id-C-TOkX2J.js                                3.04 kB │ gzip:   1.34 kB
+id:build: dist/assets/id-D-e7vQBS.js                                3.20 kB │ gzip:   1.48 kB
+id:build: dist/assets/id-D_gaI0Vq.js                                3.26 kB │ gzip:   1.48 kB
+id:build: dist/assets/errors-DLyAknxo.js                           21.99 kB │ gzip:   7.18 kB
+id:build: dist/assets/errors-Bvp7svDM.js                           23.31 kB │ gzip:   7.57 kB
+id:build: dist/assets/errors-QdWmQXin.js                           23.32 kB │ gzip:   7.54 kB
+id:build: dist/assets/index-CCEY7zmd.js                           328.35 kB │ gzip: 101.26 kB
+id:build: 
+id:build: ✓ built in 2.59s
+clubs-admin:build: dist/assets/admin-training-DDv2dFuD.js                      1.35 kB │ gzip:   0.63 kB
+clubs-admin:build: dist/assets/history-BzByswPj.js                             1.35 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-Du9KAoeO.js                      1.42 kB │ gzip:   0.68 kB
+clubs-admin:build: dist/assets/admin-training-BeJlwKIP.js                      1.44 kB │ gzip:   0.69 kB
+clubs-admin:build: dist/assets/training-CYuCURIa.js                            1.57 kB │ gzip:   0.80 kB
+clubs-admin:build: dist/assets/home-CLVBc5a3.js                                1.59 kB │ gzip:   0.79 kB
+clubs-admin:build: dist/assets/training-CLd1ihpP.js                            1.62 kB │ gzip:   0.85 kB
+clubs-admin:build: dist/assets/training-B5riWOVN.js                            1.63 kB │ gzip:   0.86 kB
+clubs-admin:build: dist/assets/home-CNw600-7.js                                1.65 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/home-vQT0WHAi.js                                1.67 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+clubs-admin:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs-admin:build: dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+clubs-admin:build: dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+clubs-admin:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs-admin:build: dist/assets/inactivity-DTHNRC_R.js                          1.96 kB │ gzip:   0.95 kB
+clubs-admin:build: dist/assets/inactivity-Cd3ruGr3.js                          2.07 kB │ gzip:   1.03 kB
+clubs-admin:build: dist/assets/inactivity-2pMMdTz_.js                          2.08 kB │ gzip:   1.03 kB
+clubs-admin:build: dist/assets/admin-dashboard-CaRQFr39.js                     2.09 kB │ gzip:   1.02 kB
+clubs-admin:build: dist/assets/admin-dashboard-BQL-FPZU.js                     2.15 kB │ gzip:   1.11 kB
+clubs-admin:build: dist/assets/admin-dashboard-Dp6ttMdC.js                     2.20 kB │ gzip:   1.11 kB
+clubs-admin:build: dist/assets/id-C-TOkX2J.js                                  3.04 kB │ gzip:   1.34 kB
+clubs-admin:build: dist/assets/id-D-e7vQBS.js                                  3.20 kB │ gzip:   1.48 kB
+clubs-admin:build: dist/assets/id-D_gaI0Vq.js                                  3.26 kB │ gzip:   1.48 kB
+clubs-admin:build: dist/assets/courses-B74UEBNV.js                             3.77 kB │ gzip:   1.69 kB
+clubs-admin:build: dist/assets/courses-CCdTQKAZ.js                             4.05 kB │ gzip:   1.84 kB
+clubs-admin:build: dist/assets/courses-BVmES6DS.js                             4.06 kB │ gzip:   1.86 kB
+clubs-admin:build: dist/assets/admin-messaging-Deb_qeG3.js                     4.53 kB │ gzip:   1.87 kB
+clubs-admin:build: dist/assets/admin-messaging-BzpSHSUj.js                     4.70 kB │ gzip:   2.01 kB
+clubs-admin:build: dist/assets/admin-messaging-jCnhc3Pj.js                     4.80 kB │ gzip:   2.04 kB
+clubs-admin:build: dist/assets/booking-C2JFywZY.js                             4.84 kB │ gzip:   1.84 kB
+clubs-admin:build: dist/assets/auth-BhdhY7B_.js                                5.09 kB │ gzip:   2.16 kB
+clubs-admin:build: dist/assets/booking-DTKV9qOl.js                             5.18 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/booking-oFemWAlT.js                             5.19 kB │ gzip:   2.03 kB
+clubs-admin:build: dist/assets/admin-catalogs-p29fM8xq.js                      5.41 kB │ gzip:   2.01 kB
+clubs-admin:build: dist/assets/signup-BkgU37Eh.js                              5.63 kB │ gzip:   2.54 kB
+clubs-admin:build: dist/assets/auth-CHXdXoMY.js                                5.67 kB │ gzip:   2.38 kB
+clubs-admin:build: dist/assets/admin-catalogs-dZtpqy8S.js                      5.67 kB │ gzip:   2.23 kB
+clubs-admin:build: dist/assets/auth-C582Hlm3.js                                5.74 kB │ gzip:   2.39 kB
+clubs-admin:build: dist/assets/admin-catalogs-D4wG5vIy.js                      5.87 kB │ gzip:   2.26 kB
+clubs-admin:build: dist/assets/signup-Bi4UbtBk.js                              5.88 kB │ gzip:   2.80 kB
+clubs-admin:build: dist/assets/signup-Dk93t5hf.js                              5.98 kB │ gzip:   2.82 kB
+clubs-admin:build: dist/assets/admin-audit-C4-9Wus9.js                         6.20 kB │ gzip:   2.58 kB
+clubs-admin:build: dist/assets/admin-activities-Cq_gSQfl.js                    6.61 kB │ gzip:   2.63 kB
+clubs-admin:build: dist/assets/admin-audit-Ns-DEoau.js                         6.78 kB │ gzip:   2.85 kB
+clubs-admin:build: dist/assets/census-gqS8N5o_.js                              6.82 kB │ gzip:   2.68 kB
+clubs-admin:build: dist/assets/admin-activities-BniXEHx4.js                    6.86 kB │ gzip:   2.84 kB
+clubs-admin:build: dist/assets/admin-audit-8KIyOK39.js                         6.90 kB │ gzip:   2.86 kB
+clubs-admin:build: dist/assets/admin-activities-CgUWXhLO.js                    7.06 kB │ gzip:   2.90 kB
+clubs-admin:build: dist/assets/census-CD5VNgNj.js                              7.18 kB │ gzip:   2.95 kB
+clubs-admin:build: dist/assets/census-C_uGG2Og.js                              7.38 kB │ gzip:   3.00 kB
+clubs-admin:build: dist/assets/admin-scheduling-CuhYcQCI.js                    8.44 kB │ gzip:   3.12 kB
+clubs-admin:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs-admin:build: dist/assets/admin-scheduling-aQ58wazE.js                    8.87 kB │ gzip:   3.38 kB
+clubs-admin:build: dist/assets/admin-scheduling-HaS_SkUx.js                    8.89 kB │ gzip:   3.39 kB
+clubs-admin:build: dist/assets/instructor-DxGH6HDp.js                          9.21 kB │ gzip:   3.30 kB
+clubs-admin:build: dist/assets/instructor-B9ckjWiH.js                          9.62 kB │ gzip:   3.52 kB
+clubs-admin:build: dist/assets/instructor-CsKxTl8f.js                          9.74 kB │ gzip:   3.54 kB
+clubs-admin:build: dist/assets/admin-billing-CSu7p_6R.js                       9.83 kB │ gzip:   3.47 kB
+clubs-admin:build: dist/assets/admin-billing-CC32bEji.js                      10.03 kB │ gzip:   3.78 kB
+clubs-admin:build: dist/assets/admin-billing-C0CifaQl.js                      10.24 kB │ gzip:   3.82 kB
+clubs-admin:build: dist/assets/enums-Bxq9DLOA.js                              10.29 kB │ gzip:   4.28 kB
+clubs-admin:build: dist/assets/enums-1H1J8p9N.js                              10.64 kB │ gzip:   4.48 kB
+clubs-admin:build: dist/assets/enums-CKDiW-uu.js                              10.70 kB │ gzip:   4.48 kB
+clubs-admin:build: dist/assets/admin-courses-Bu9IeSk2.js                      12.81 kB │ gzip:   4.87 kB
+clubs-admin:build: dist/assets/admin-courses-CEpa0yDg.js                      13.66 kB │ gzip:   5.20 kB
+clubs-admin:build: dist/assets/admin-courses-BO0_z5q0.js                      13.98 kB │ gzip:   5.24 kB
+clubs-admin:build: dist/assets/console-DH6Gy_tq.js                            16.57 kB │ gzip:   6.57 kB
+clubs-admin:build: dist/assets/console-CgWiuTfg.js                            17.50 kB │ gzip:   7.14 kB
+clubs-admin:build: dist/assets/admin-census-Cs77qzU3.js                       17.55 kB │ gzip:   6.53 kB
+clubs-admin:build: dist/assets/console-CyxN9q0p.js                            18.01 kB │ gzip:   7.25 kB
+clubs-admin:build: dist/assets/admin-census-CKc7ESYs.js                       18.59 kB │ gzip:   7.03 kB
+clubs-admin:build: dist/assets/admin-census-5QcwqBLl.js                       19.05 kB │ gzip:   7.11 kB
+clubs-admin:build: dist/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+clubs-admin:build: dist/assets/admin-settings-C2QA7QS-.js                     22.98 kB │ gzip:   8.00 kB
+clubs-admin:build: dist/assets/errors-Bvp7svDM.js                             23.31 kB │ gzip:   7.57 kB
+clubs-admin:build: dist/assets/errors-QdWmQXin.js                             23.32 kB │ gzip:   7.54 kB
+clubs-admin:build: dist/assets/admin-settings-BWSnmoqN.js                     24.71 kB │ gzip:   8.66 kB
+clubs-admin:build: dist/assets/admin-settings-Dm7xlgRf.js                     25.16 kB │ gzip:   8.67 kB
+clubs-admin:build: dist/assets/ConsolePage-BB6j4mfx.js                        97.61 kB │ gzip:  23.61 kB
+clubs-admin:build: dist/assets/list-helpers-CJrYY27F.js                      217.06 kB │ gzip:  67.21 kB
+clubs-admin:build: dist/assets/CoursesRoute-CoyyMPJP.js                      229.70 kB │ gzip:  63.53 kB
+clubs-admin:build: dist/assets/CourseViewer3D-CPUqPkuj.js                    582.83 kB │ gzip: 151.71 kB
+clubs-admin:build: dist/assets/index-CVFvdyhg.js                           1,055.26 kB │ gzip: 362.82 kB
+clubs-admin:build: 
+clubs-admin:build: [plugin builtin:vite-reporter] 
+clubs-admin:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs-admin:build: - Using dynamic import() to code-split the application
+clubs-admin:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs-admin:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs-admin:build: ✓ built in 1.95s
+clubs:build: 
+clubs:build: > clubs@0.0.0 build /home/user/agilityhub-core-web/apps/clubs
+clubs:build: > tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs
+clubs:build: 
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: transforming...
+clubs:build: ✓ 416 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/index.html                                             2.94 kB │ gzip:   0.99 kB
+clubs:build: dist/assets/sprite-BOr1Ydze.svg                             5.78 kB │ gzip:   1.52 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-UVxSCcoG.woff2     18.68 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-DRFEGfly.woff2     18.74 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-BLhwKU8k.woff2     18.78 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BdjcYUrC.woff2     18.82 kB
+clubs:build: dist/assets/montserrat-latin-600-normal-CdhFl4lI.woff      20.54 kB
+clubs:build: dist/assets/montserrat-latin-500-normal-Dok2oTci.woff      20.60 kB
+clubs:build: dist/assets/montserrat-latin-400-normal-xItZbAXg.woff      20.64 kB
+clubs:build: dist/assets/montserrat-latin-700-normal-BWkrl476.woff      20.67 kB
+clubs:build: dist/obstacle-models/wall.fbx                              25.43 kB
+clubs:build: dist/obstacle-models/seesaw.fbx                            30.17 kB
+clubs:build: dist/obstacle-models/dogwalk.fbx                           41.45 kB
+clubs:build: dist/obstacle-models/aframe.fbx                            52.09 kB
+clubs:build: dist/obstacle-models/jump_double.fbx                      102.10 kB
+clubs:build: dist/obstacle-models/long_jump.fbx                        114.12 kB
+clubs:build: dist/obstacle-models/jump_single.fbx                      137.14 kB
+clubs:build: dist/obstacle-models/weave_12_poles.fbx                   418.62 kB
+clubs:build: dist/obstacle-models/tire.fbx                           1,907.21 kB
+clubs:build: dist/assets/CoursesRoute-C0tYTowS.css                       3.88 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/training-Dej6N_wb.css                          12.90 kB │ gzip:   2.58 kB
+clubs:build: dist/assets/screens-kiUiPVO3.css                           21.54 kB │ gzip:   3.54 kB
+clubs:build: dist/assets/shared-DcmVIp1B.css                            40.01 kB │ gzip:   6.69 kB
+clubs:build: dist/assets/index-BKIES3iI.css                             63.90 kB │ gzip:  11.54 kB
+clubs:build: dist/assets/notifications-ChKXsAvB.js                       0.75 kB │ gzip:   0.47 kB
+clubs:build: dist/assets/notifications-dxKZmlHL.js                       0.75 kB │ gzip:   0.43 kB
+clubs:build: dist/assets/notifications-ipHhB86R.js                       0.76 kB │ gzip:   0.48 kB
+clubs:build: dist/assets/billing-Dcn1Gx1O.js                             1.08 kB │ gzip:   0.56 kB
+clubs:build: dist/assets/virtual_pwa-register-H5ZPB4PW.js                1.12 kB │ gzip:   0.59 kB
+clubs:build: dist/assets/billing-B7XHt--p.js                             1.17 kB │ gzip:   0.63 kB
+clubs:build: dist/assets/billing-C5Ltp9Rd.js                             1.19 kB │ gzip:   0.64 kB
+clubs:build: dist/assets/history-B1Xz7N4l.js                             1.27 kB │ gzip:   0.65 kB
+clubs:build: dist/assets/history-D5FndTjo.js                             1.32 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/history-BzByswPj.js                             1.35 kB │ gzip:   0.68 kB
+clubs:build: dist/assets/training-CYuCURIa.js                            1.57 kB │ gzip:   0.80 kB
+clubs:build: dist/assets/home-CLVBc5a3.js                                1.59 kB │ gzip:   0.79 kB
+clubs:build: dist/assets/training-CLd1ihpP.js                            1.62 kB │ gzip:   0.85 kB
+clubs:build: dist/assets/training-B5riWOVN.js                            1.63 kB │ gzip:   0.86 kB
+clubs:build: dist/assets/home-CNw600-7.js                                1.65 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/home-vQT0WHAi.js                                1.67 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/leave-CZ4H8Fl9.js                               1.68 kB │ gzip:   0.84 kB
+clubs:build: dist/assets/activities-_j5UPNJ2.js                          1.79 kB │ gzip:   0.83 kB
+clubs:build: dist/assets/leave-CI-xpqrc.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/leave-DWXAvJ4D.js                               1.80 kB │ gzip:   0.96 kB
+clubs:build: dist/assets/activities-D_fvQi10.js                          1.86 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/activities-BKuUowmB.js                          1.88 kB │ gzip:   0.91 kB
+clubs:build: dist/assets/inactivity-DTHNRC_R.js                          1.96 kB │ gzip:   0.95 kB
+clubs:build: dist/assets/inactivity-Cd3ruGr3.js                          2.07 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/inactivity-2pMMdTz_.js                          2.08 kB │ gzip:   1.03 kB
+clubs:build: dist/assets/training-BkPpXpRB.js                            2.90 kB │ gzip:   1.41 kB
+clubs:build: dist/assets/courses-B74UEBNV.js                             3.77 kB │ gzip:   1.69 kB
+clubs:build: dist/assets/courses-CCdTQKAZ.js                             4.05 kB │ gzip:   1.84 kB
+clubs:build: dist/assets/courses-BVmES6DS.js                             4.06 kB │ gzip:   1.86 kB
+clubs:build: dist/assets/booking-C2JFywZY.js                             4.84 kB │ gzip:   1.84 kB
+clubs:build: dist/assets/auth-BhdhY7B_.js                                5.09 kB │ gzip:   2.16 kB
+clubs:build: dist/assets/booking-DTKV9qOl.js                             5.18 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/booking-oFemWAlT.js                             5.19 kB │ gzip:   2.03 kB
+clubs:build: dist/assets/signup-BkgU37Eh.js                              5.63 kB │ gzip:   2.54 kB
+clubs:build: dist/assets/workbox-window.prod.es5-Bd17z0YL.js             5.65 kB │ gzip:   2.20 kB
+clubs:build: dist/assets/auth-CHXdXoMY.js                                5.67 kB │ gzip:   2.38 kB
+clubs:build: dist/assets/auth-C582Hlm3.js                                5.74 kB │ gzip:   2.39 kB
+clubs:build: dist/assets/signup-Bi4UbtBk.js                              5.88 kB │ gzip:   2.80 kB
+clubs:build: dist/assets/signup-Dk93t5hf.js                              5.98 kB │ gzip:   2.82 kB
+clubs:build: dist/assets/census-gqS8N5o_.js                              6.82 kB │ gzip:   2.68 kB
+clubs:build: dist/assets/census-CD5VNgNj.js                              7.18 kB │ gzip:   2.95 kB
+clubs:build: dist/assets/census-C_uGG2Og.js                              7.38 kB │ gzip:   3.00 kB
+clubs:build: dist/assets/jsx-runtime-B-hcVAMW.js                         8.55 kB │ gzip:   3.26 kB
+clubs:build: dist/assets/instructor-DxGH6HDp.js                          9.21 kB │ gzip:   3.30 kB
+clubs:build: dist/assets/instructor-B9ckjWiH.js                          9.62 kB │ gzip:   3.52 kB
+clubs:build: dist/assets/instructor-CsKxTl8f.js                          9.74 kB │ gzip:   3.54 kB
+clubs:build: dist/assets/enums-Bxq9DLOA.js                              10.29 kB │ gzip:   4.28 kB
+clubs:build: dist/assets/enums-1H1J8p9N.js                              10.64 kB │ gzip:   4.48 kB
+clubs:build: dist/assets/enums-CKDiW-uu.js                              10.70 kB │ gzip:   4.48 kB
+clubs:build: dist/assets/errors-DLyAknxo.js                             21.99 kB │ gzip:   7.18 kB
+clubs:build: dist/assets/errors-Bvp7svDM.js                             23.31 kB │ gzip:   7.57 kB
+clubs:build: dist/assets/errors-QdWmQXin.js                             23.32 kB │ gzip:   7.54 kB
+clubs:build: dist/assets/CoursesRoute-DYeVQTT2.js                      130.87 kB │ gzip:  36.25 kB
+clubs:build: dist/assets/screens-BZ7EjimW.js                           218.97 kB │ gzip:  56.00 kB
+clubs:build: dist/assets/shared-DEazxljT.js                            224.78 kB │ gzip:  69.34 kB
+clubs:build: dist/assets/index-l4o8xrna.js                             245.10 kB │ gzip:  74.49 kB
+clubs:build: dist/assets/CourseViewer3D-CaqKyWo5.js                    582.82 kB │ gzip: 151.71 kB
+clubs:build: 
+clubs:build: ✓ built in 1.49s
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: Building src/sw.ts service worker ("es" format)...
+clubs:build: [plugin builtin:vite-reporter] 
+clubs:build: (!) Some chunks are larger than 500 kB after minification. Consider:
+clubs:build: - Using dynamic import() to code-split the application
+clubs:build: - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+clubs:build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+clubs:build: vite v8.2.2 building client environment for production...
+clubs:build: 
+clubs:build:  WARN  inlineDynamicImports option is deprecated, please use codeSplitting: false instead.
+clubs:build: 
+clubs:build: transforming...
+clubs:build: ✓ 60 modules transformed.
+clubs:build: rendering chunks...
+clubs:build: computing gzip size...
+clubs:build: dist/sw.mjs  17.90 kB │ gzip: 6.01 kB
+clubs:build: 
+clubs:build: ✓ built in 118ms
+clubs:build: 
+clubs:build: PWA v1.3.0
+clubs:build: mode      injectManifest
+clubs:build: format:   es
+clubs:build: precache  62 entries (1202.09 KiB)
+clubs:build: files generated
+clubs:build:   dist/sw.js
+clubs:build: check-clubs-bundle: 57 chunks in apps/clubs/dist/assets, no admin-*, console or id namespace
+
+ Tasks:    6 successful, 6 total
+Cached:    5 cached, 6 total
+  Time:    22.946s 
+
+exit=0

@@ -1,0 +1,1835 @@
+$ (cd apps/clubs && pnpm exec vitest run src/App.test.tsx)
+# a dropped first fix: every screen of the shell waited for all 18 namespaces before showing; 12 (static) no longer renders at once, and the first screen after login would wait for them. Replaced by course blocks that do not suspend. 2026-10-17T08:54:39Z
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs
+
+ ❯ src/App.test.tsx (63 tests | 9 failed) 18337ms
+   ❯ T-01-21 profile access rows and impersonation (5)
+     × renders the mockup rows in order without account sessions or backoffice handoff 175ms
+   ❯ E4-W16 step 12 member-app fixes (2)
+     × (b) «Canviar de perfil · {perfil}» follows the membership's gender (ICU select, as 03b) 134ms
+   ❯ T-01-26 imported-account onboarding and policy re-consent (4)
+     × redirects blocking onboarding and permits a policy postponement 235ms
+   ❯ T-03-40 mobile own dogs (7)
+     × renders own dogs, saves the note, shows task totals and gates TASKS 357ms
+     × E4-W16 step 6 (INC-22): «＋ DOC.» works again after a first upload, on another dog, with empty fields 377ms
+   ❯ T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) (3)
+     × step 1: «＋ DOC.» offers the club's three types of GET /me/dogs in order, «Assegurança» sends INSURANCE, and /parameters is never read 376ms
+     × step 1: the labels are the reader's (es), as GET /me/dogs resolves them 368ms
+     × step 2: «Nivell {codi}» only when the dog carries its level (none without levels.enabled), without reading /parameters 383ms
+   ❯ T-03-41 mobile own data (2)
+     × keeps identity read-only, resolves towns, maps READ_ONLY and gates billing 351ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > T-01-21 profile access rows and impersonation > renders the mockup rows in order without account sessions or backoffice handoff
+TestingLibraryElementError: Unable to find an accessible element with the role "link" and name `/Estel Rius/u`
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  <header
+    class="ah-app-bar clubs-shell__header"
+  />
+
+  --------------------------------------------------
+  presentation:
+
+  Name "":
+  <img
+    alt=""
+    class="clubs-shell__logo"
+    src="data:image/png;base64,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...
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Idioma":
+  <select
+    aria-label="Idioma"
+  />
+
+  --------------------------------------------------
+  option:
+
+  Name "Català":
+  <option
+    value="ca"
+  />
+
+  Name "Castellà":
+  <option
+    value="es"
+  />
+
+  --------------------------------------------------
+  link:
+
+  Name "Menú d’usuari":
+  <a
+    aria-label="Menú d’usuari"
+    class="clubs-shell__user"
+    href="/perfil"
+  />
+
+  Name "Inici":
+  <a
+    class="ah-tab-bar__item"
+    href="/inici"
+  />
+
+  Name "Reservar":
+  <a
+    class="ah-tab-bar__item"
+    href="/reservar"
+  />
+
+  Name "Avui":
+  <a
+    class="ah-tab-bar__item"
+    href="/avui"
+  />
+
+  Name "Perfil":
+  <a
+    aria-current="page"
+    class="ah-tab-bar__item"
+    href="/perfil"
+  />
+
+  Name "Info":
+  <a
+    class="ah-tab-bar__item"
+    href="/info"
+  />
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  <main
+    class="clubs-shell__content"
+  />
+
+  --------------------------------------------------
+  status:
+
+  Name "Carregant":
+  <div
+    aria-label="Carregant"
+    class="ah-skeleton"
+    role="status"
+    style="height: 12rem;"
+  />
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Navegació principal":
+  <nav
+    aria-label="Navegació principal"
+    class="ah-tab-bar"
+  />
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      >
+        <header
+          class="ah-app-bar clubs-shell__header"
+        >
+          <div
+            class="ah-app-bar__side"
+          >
+            <img
+              alt=""
+              class="clubs-shell__logo"
+              src="data:image/png;base64,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...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.tsx:581:28
+    579|     await renderApplication(client);
+    580|
+    581|     const account = screen.getByRole("link", { name: /Estel Rius/u });
+       |                            ^
+    582|     expect(account).toHaveAttribute("href", "/dades");
+    583|     expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  src/App.test.tsx > E4-W16 step 12 member-app fixes > (b) «Canviar de perfil · {perfil}» follows the membership's gender (ICU select, as 03b)
+TestingLibraryElementError: Unable to find an accessible element with the role "link" and name `/Canviar de perfil/u`
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  <header
+    class="ah-app-bar clubs-shell__header"
+  />
+
+  --------------------------------------------------
+  presentation:
+
+  Name "":
+  <img
+    alt=""
+    class="clubs-shell__logo"
+    src="data:image/png;base64,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...
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Idioma":
+  <select
+    aria-label="Idioma"
+  />
+
+  --------------------------------------------------
+  option:
+
+  Name "Català":
+  <option
+    value="ca"
+  />
+
+  Name "Castellà":
+  <option
+    value="es"
+  />
+
+  --------------------------------------------------
+  link:
+
+  Name "Menú d’usuari":
+  <a
+    aria-label="Menú d’usuari"
+    class="clubs-shell__user"
+    href="/perfil"
+  />
+
+  Name "Inici":
+  <a
+    class="ah-tab-bar__item"
+    href="/inici"
+  />
+
+  Name "Reservar":
+  <a
+    class="ah-tab-bar__item"
+    href="/reservar"
+  />
+
+  Name "Avui":
+  <a
+    class="ah-tab-bar__item"
+    href="/avui"
+  />
+
+  Name "Perfil":
+  <a
+    aria-current="page"
+    class="ah-tab-bar__item"
+    href="/perfil"
+  />
+
+  Name "Info":
+  <a
+    class="ah-tab-bar__item"
+    href="/info"
+  />
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  <main
+    class="clubs-shell__content"
+  />
+
+  --------------------------------------------------
+  status:
+
+  Name "Carregant":
+  <div
+    aria-label="Carregant"
+    class="ah-skeleton"
+    role="status"
+    style="height: 12rem;"
+  />
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Navegació principal":
+  <nav
+    aria-label="Navegació principal"
+    class="ah-tab-bar"
+  />
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      >
+        <header
+          class="ah-app-bar clubs-shell__header"
+        >
+          <div
+            class="ah-app-bar__side"
+          >
+            <img
+              alt=""
+              class="clubs-shell__logo"
+              src="data:image/png;base64,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...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.tsx:1172:19
+    1170|     window.history.pushState(null, "", "/perfil");
+    1171|     await renderApplication(client);
+    1172|     expect(screen.getByRole("link", { name: /Canviar de perfil/u })).t…
+       |                   ^
+    1173|
+    1174|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  src/App.test.tsx > T-01-26 imported-account onboarding and policy re-consent > redirects blocking onboarding and permits a policy postponement
+TestingLibraryElementError: Unable to find an accessible element with the role "heading" and name "El meu perfil"
+
+Here are the accessible roles:
+
+  banner:
+
+  Name "":
+  <header
+    class="ah-app-bar clubs-shell__header"
+  />
+
+  --------------------------------------------------
+  presentation:
+
+  Name "":
+  <img
+    alt=""
+    class="clubs-shell__logo"
+    src="data:image/png;base64,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...
+
+  --------------------------------------------------
+  combobox:
+
+  Name "Idioma":
+  <select
+    aria-label="Idioma"
+  />
+
+  --------------------------------------------------
+  option:
+
+  Name "Català":
+  <option
+    value="ca"
+  />
+
+  Name "Castellà":
+  <option
+    value="es"
+  />
+
+  --------------------------------------------------
+  link:
+
+  Name "Menú d’usuari":
+  <a
+    aria-label="Menú d’usuari"
+    class="clubs-shell__user"
+    href="/perfil"
+  />
+
+  Name "Inici":
+  <a
+    class="ah-tab-bar__item"
+    href="/inici"
+  />
+
+  Name "Reservar":
+  <a
+    class="ah-tab-bar__item"
+    href="/reservar"
+  />
+
+  Name "Entrenaments":
+  <a
+    class="ah-tab-bar__item"
+    href="/entrenaments"
+  />
+
+  Name "Avui":
+  <a
+    class="ah-tab-bar__item"
+    href="/avui"
+  />
+
+  Name "Perfil":
+  <a
+    aria-current="page"
+    class="ah-tab-bar__item"
+    href="/perfil"
+  />
+
+  Name "Info":
+  <a
+    class="ah-tab-bar__item"
+    href="/info"
+  />
+
+  --------------------------------------------------
+  main:
+
+  Name "":
+  <main
+    class="clubs-shell__content"
+  />
+
+  --------------------------------------------------
+  status:
+
+  Name "Carregant":
+  <div
+    aria-label="Carregant"
+    class="ah-skeleton"
+    role="status"
+    style="height: 12rem;"
+  />
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Navegació principal":
+  <nav
+    aria-label="Navegació principal"
+    class="ah-tab-bar"
+  />
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      >
+        <header
+          class="ah-app-bar clubs-shell__header"
+        >
+          <div
+            class="ah-app-bar__side"
+          >
+            <img
+              alt=""
+              class="clubs-shell__logo"
+              src="data:image/png;base64,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...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.tsx:1392:19
+    1390|       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    1391|     });
+    1392|     expect(screen.getByRole("heading", { name: "El meu perfil" })).toB…
+       |                   ^
+    1393|   });
+    1394|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  src/App.test.tsx > T-03-40 mobile own dogs > renders own dogs, saves the note, shows task totals and gates TASKS
+TestingLibraryElementError: Unable to find an element with the text: /Border collie · Femella · 4 anys/u. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page my-dogs-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Els meus gossos
+            </h1>
+          </header>
+          <div
+            class="self-page__body"
+          >
+            <p
+              role="status"
+            >
+              Carregant els teus gossos
+            </p>
+          </div>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.tsx:1522:19
+    1520|     expect(await screen.findByRole("heading", { name: "Els meus gossos…
+    1521|     // INC-11 (mockup 13): «Border collie · Femella · 4 anys», the sex…
+    1522|     expect(screen.getByText(/Border collie · Femella · 4 anys/u)).toBe…
+       |                   ^
+    1523|     expect(screen.getByText("Nivell C")).toBeVisible();
+    1524|     expect(screen.getByText("Pot entrenar sol")).toBeVisible();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  src/App.test.tsx > T-03-40 mobile own dogs > E4-W16 step 6 (INC-22): «＋ DOC.» works again after a first upload, on another dog, with empty fields
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "＋ DOC."
+
+Here are the accessible roles:
+
+  main:
+
+  Name "":
+  <main
+    class="clubs-shell__content"
+  />
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  <header
+    class="self-page__header"
+  />
+
+  --------------------------------------------------
+  link:
+
+  Name "Torna al perfil":
+  <a
+    aria-label="Torna al perfil"
+    href="/perfil"
+  />
+
+  Name "Inici":
+  <a
+    class="ah-tab-bar__item"
+    href="/inici"
+  />
+
+  Name "Reservar":
+  <a
+    class="ah-tab-bar__item"
+    href="/reservar"
+  />
+
+  Name "Entrenaments":
+  <a
+    class="ah-tab-bar__item"
+    href="/entrenaments"
+  />
+
+  Name "Avui":
+  <a
+    class="ah-tab-bar__item"
+    href="/avui"
+  />
+
+  Name "Perfil":
+  <a
+    aria-current="page"
+    class="ah-tab-bar__item"
+    href="/perfil"
+  />
+
+  Name "Info":
+  <a
+    class="ah-tab-bar__item"
+    href="/info"
+  />
+
+  --------------------------------------------------
+  heading:
+
+  Name "Els meus gossos":
+  <h1 />
+
+  --------------------------------------------------
+  status:
+
+  Name "":
+  <p
+    role="status"
+  />
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Navegació principal":
+  <nav
+    aria-label="Navegació principal"
+    class="ah-tab-bar"
+  />
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page my-dogs-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Els meus gossos
+            </h1>
+          </header>
+          <div
+            class="self-page__body"
+          >
+            <p
+              role="status"
+            >
+              Carregant els teus gossos
+            </p>
+          </div>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ upload src/App.test.tsx:1737:16
+    1735|     async function upload(dog: "Duna" | "Rock", index: number, name: s…
+    1736|       fireEvent.click(
+    1737|         screen.getAllByRole("button", { name: "＋ DOC." })[index] as HT…
+       |                ^
+    1738|       );
+    1739|       const dialog = screen.getByRole("dialog", { name: `Afegeix un do…
+ ❯ src/App.test.tsx:1757:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 1: «＋ DOC.» offers the club's three types of GET /me/dogs in order, «Assegurança» sends INSURANCE, and /parameters is never read
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "＋ DOC."
+
+Here are the accessible roles:
+
+  main:
+
+  Name "":
+  <main
+    class="clubs-shell__content"
+  />
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  <header
+    class="self-page__header"
+  />
+
+  --------------------------------------------------
+  link:
+
+  Name "Torna al perfil":
+  <a
+    aria-label="Torna al perfil"
+    href="/perfil"
+  />
+
+  Name "Inici":
+  <a
+    class="ah-tab-bar__item"
+    href="/inici"
+  />
+
+  Name "Reservar":
+  <a
+    class="ah-tab-bar__item"
+    href="/reservar"
+  />
+
+  Name "Entrenaments":
+  <a
+    class="ah-tab-bar__item"
+    href="/entrenaments"
+  />
+
+  Name "Avui":
+  <a
+    class="ah-tab-bar__item"
+    href="/avui"
+  />
+
+  Name "Perfil":
+  <a
+    aria-current="page"
+    class="ah-tab-bar__item"
+    href="/perfil"
+  />
+
+  Name "Info":
+  <a
+    class="ah-tab-bar__item"
+    href="/info"
+  />
+
+  --------------------------------------------------
+  heading:
+
+  Name "Els meus gossos":
+  <h1 />
+
+  --------------------------------------------------
+  status:
+
+  Name "":
+  <p
+    role="status"
+  />
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Navegació principal":
+  <nav
+    aria-label="Navegació principal"
+    class="ah-tab-bar"
+  />
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page my-dogs-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Els meus gossos
+            </h1>
+          </header>
+          <div
+            class="self-page__body"
+          >
+            <p
+              role="status"
+            >
+              Carregant els teus gossos
+            </p>
+          </div>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ src/App.test.tsx:2170:28
+    2168|     const api = recordApi();
+    2169|     await openMyDogs();
+    2170|     fireEvent.click(screen.getAllByRole("button", { name: "＋ DOC." })[…
+       |                            ^
+    2171|     const dialog = screen.getByRole("dialog", { name: "Afegeix un docu…
+    2172|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 1: the labels are the reader's (es), as GET /me/dogs resolves them
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "＋ DOC."
+
+Here are the accessible roles:
+
+  main:
+
+  Name "":
+  <main
+    class="clubs-shell__content"
+  />
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  <header
+    class="self-page__header"
+  />
+
+  --------------------------------------------------
+  link:
+
+  Name "Volver al perfil":
+  <a
+    aria-label="Volver al perfil"
+    href="/perfil"
+  />
+
+  Name "Inicio":
+  <a
+    class="ah-tab-bar__item"
+    href="/inici"
+  />
+
+  Name "Reservar":
+  <a
+    class="ah-tab-bar__item"
+    href="/reservar"
+  />
+
+  Name "Entrenamientos":
+  <a
+    class="ah-tab-bar__item"
+    href="/entrenaments"
+  />
+
+  Name "Hoy":
+  <a
+    class="ah-tab-bar__item"
+    href="/avui"
+  />
+
+  Name "Perfil":
+  <a
+    aria-current="page"
+    class="ah-tab-bar__item"
+    href="/perfil"
+  />
+
+  Name "Info":
+  <a
+    class="ah-tab-bar__item"
+    href="/info"
+  />
+
+  --------------------------------------------------
+  heading:
+
+  Name "Mis perros":
+  <h1 />
+
+  --------------------------------------------------
+  status:
+
+  Name "":
+  <p
+    role="status"
+  />
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Navegación principal":
+  <nav
+    aria-label="Navegación principal"
+    class="ah-tab-bar"
+  />
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page my-dogs-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Volver al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Mis perros
+            </h1>
+          </header>
+          <div
+            class="self-page__body"
+          >
+            <p
+              role="status"
+            >
+              Cargando tus perros
+            </p>
+          </div>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegación principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inicio
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenamientos
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Hoy
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ src/App.test.tsx:2199:28
+    2197|   it("step 1: the labels are the reader's (es), as GET /me/dogs resolv…
+    2198|     await openMyDogs("es");
+    2199|     fireEvent.click(screen.getAllByRole("button", { name: "＋ DOC." })[…
+       |                            ^
+    2200|     await waitFor(() => {
+    2201|       expect(documentTypeOptions()).toEqual(["Cartilla de vacunas", "S…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  src/App.test.tsx > T-03-40 E3-W12 screen 13 without /parameters (S03 §6 GET /me/dogs, R-03-15, R-03-30, R-03-32) > step 2: «Nivell {codi}» only when the dog carries its level (none without levels.enabled), without reading /parameters
+TestingLibraryElementError: Unable to find an accessible element with the role "heading"
+
+Here are the accessible roles:
+
+  main:
+
+  Name "":
+  <main
+    class="clubs-shell__content"
+  />
+
+  --------------------------------------------------
+  banner:
+
+  Name "":
+  <header
+    class="self-page__header"
+  />
+
+  --------------------------------------------------
+  link:
+
+  Name "Torna al perfil":
+  <a
+    aria-label="Torna al perfil"
+    href="/perfil"
+  />
+
+  Name "Inici":
+  <a
+    class="ah-tab-bar__item"
+    href="/inici"
+  />
+
+  Name "Reservar":
+  <a
+    class="ah-tab-bar__item"
+    href="/reservar"
+  />
+
+  Name "Entrenaments":
+  <a
+    class="ah-tab-bar__item"
+    href="/entrenaments"
+  />
+
+  Name "Avui":
+  <a
+    class="ah-tab-bar__item"
+    href="/avui"
+  />
+
+  Name "Perfil":
+  <a
+    aria-current="page"
+    class="ah-tab-bar__item"
+    href="/perfil"
+  />
+
+  Name "Info":
+  <a
+    class="ah-tab-bar__item"
+    href="/info"
+  />
+
+  --------------------------------------------------
+  heading:
+
+  Name "Els meus gossos":
+  <h1 />
+
+  --------------------------------------------------
+  status:
+
+  Name "":
+  <p
+    role="status"
+  />
+
+  --------------------------------------------------
+  navigation:
+
+  Name "Navegació principal":
+  <nav
+    aria-label="Navegació principal"
+    class="ah-tab-bar"
+  />
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page my-dogs-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Els meus gossos
+            </h1>
+          </header>
+          <div
+            class="self-page__body"
+          >
+            <p
+              role="status"
+            >
+              Carregant els teus gossos
+            </p>
+          </div>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ src/App.test.tsx:2210:14
+    2208|     await openMyDogs();
+    2209|     expect(
+    2210|       screen.getAllByRole("heading", { level: 2 }).map((heading) => he…
+       |              ^
+    2211|     ).toEqual(["Duna", "Rock"]);
+    2212|     expect(screen.queryByText(/^Nivell /u)).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
+ FAIL  src/App.test.tsx > T-03-41 mobile own data > keeps identity read-only, resolves towns, maps READ_ONLY and gates billing
+TestingLibraryElementError: Unable to find a label with the text of: DNI
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Les meves dades
+            </h1>
+          </header>
+          <p
+            class="self-page__loading"
+            role="status"
+          >
+            Carregant les teves dades
+          </p>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/App.test.tsx:2232:19
+    2230|
+    2231|     expect(await screen.findByRole("heading", { name: "Les meves dades…
+    2232|     expect(screen.getByLabelText("DNI")).toHaveAttribute("readonly");
+       |                   ^
+    2233|     expect(screen.getByLabelText("Nom")).toHaveAttribute("readonly");
+    2234|     expect(screen.getByLabelText("Cognom 1")).toHaveAttribute("readonl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  9 failed | 54 passed (63)
+   Start at  08:54:40
+   Duration  24.38s (tests 76%, transform 16%, environment 4%, import 4%, setup 1%)
+
+exit=1

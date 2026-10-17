@@ -104,12 +104,12 @@ const ui = {
   es: {
     appColumn: "App",
     asMember: /^Como alumn[ao]/u,
-    changeClass: "CAMBIA DE CLASE",
+    changeClass: "CAMBIAR DE CLASE",
     email: "Correo electrónico",
     emailColumn: "Correo",
     emailFor: (label: string) => `Correo: ${label}`,
     language: "Idioma",
-    logout: "Cierra la sesión",
+    logout: "Cerrar la sesión",
     notices: "Avisos",
     password: "Contraseña",
     push: "Quiero recibir notificaciones en el móvil cuando haya comunicados del club",
@@ -864,7 +864,11 @@ async function noticeDetail(admin: Session, id: string): Promise<NotificationDet
   return answer.body;
 }
 
-/** The detail once none of `channels` is still `QUEUED` (the dispatcher ran). */
+/**
+ * The detail once each of `channels` has its delivery row and none is still `QUEUED` (the
+ * dispatcher ran). A missing row is not «settled» (INC-56 #1): the poll fails instead of reading a
+ * default.
+ */
 async function settledDetail(
   admin: Session,
   id: string,
@@ -876,13 +880,15 @@ async function settledDetail(
     .poll(
       async () => {
         detail = await noticeDetail(admin, id);
-        return detail.deliveries.some(
-          (delivery) => channels.includes(delivery.channel) && delivery.status === "QUEUED",
-        );
+        const rows = detail.deliveries.filter((delivery) => channels.includes(delivery.channel));
+        return channels.every((channel) => rows.some((delivery) => delivery.channel === channel)) &&
+          rows.every((delivery) => delivery.status !== "QUEUED")
+          ? "settled"
+          : "missing or QUEUED";
       },
-      { message: `deliveries of ${id} still QUEUED`, timeout },
+      { message: `deliveries ${channels.join(", ")} of ${id} missing or still QUEUED`, timeout },
     )
-    .toBe(false);
+    .toBe("settled");
   if (detail === undefined) throw new Error("No notification detail");
   return detail;
 }
@@ -1484,7 +1490,6 @@ test("T-11-39 (a)(b)(g) R-11-01 R-11-02 R-11-10 R-11-11 · D4c cancels the seede
   expectRenderedFrom(aCa.body, n08aTexts.bodyI18n.ca, "the ca body of (a)");
   expect(aCa.action).toMatchObject({ enabled: true, type: "CHANGE_CLASS" });
   expect(aCa.action?.params.dogId).toBe(ca.dogId);
-  await shot(caSession.page, "11-notificacions-core-375.png");
 
   // [CANVIA DE CLASSE] → 04 with her dog chosen (the chip, not only the query).
   const bookableRead = caSession.page.waitForResponse(
@@ -1536,7 +1541,6 @@ test("T-11-39 (a)(b)(g) R-11-01 R-11-02 R-11-10 R-11-11 · D4c cancels the seede
   if (olderShown === undefined) throw new Error("The es member has no older notification");
   const olderDetail = await noticeDetail(admin, olderShown.id);
   expect(olderDetail.locale).toBe("ca");
-  await shot(esSession.page, "11-notificacions-es-core-375.png");
 
   // The mailbox: one message to each registrant, whose subject is the card's title.
   await expect
@@ -1651,109 +1655,124 @@ test("T-11-37 (c) R-11-12 · D9 edits N-08a's ca and es bodies with the run's ma
   const saved = await saving;
   expect(saved.status(), "PUT /message-templates/{id}").toBe(200);
   remember("templateEdited", n08aTemplateId);
-  const edited = (await saved.json()) as TemplateDetail;
-  expect(edited.customized).toBe(true);
-  expect(edited.bodyI18n.ca?.endsWith(templateMarker)).toBe(true);
-  expect(edited.bodyI18n.es?.endsWith(templateMarker)).toBe(true);
-  await expect(editor.getByRole("button", { name: "Restaura el text per defecte" })).toBeVisible();
-  await language.selectOption("ca");
-  await shot(page, "D9-comunicats-core-1280.png");
+  // INC-56 #3: whatever fails from here, the seed club's N-08a goes back to its default text.
+  try {
+    const edited = (await saved.json()) as TemplateDetail;
+    expect(edited.customized).toBe(true);
+    expect(edited.bodyI18n.ca?.endsWith(templateMarker)).toBe(true);
+    expect(edited.bodyI18n.es?.endsWith(templateMarker)).toBe(true);
+    await expect(
+      editor.getByRole("button", { name: "Restaura el text per defecte" }),
+    ).toBeVisible();
+    await language.selectOption("ca");
+    await shot(page, "D9-comunicats-core-1280.png");
 
-  // The same two members book a class both can take (the api as each member: the seed has
-  // none they share after A), and D4c cancels it.
-  const caSession = await clubsSession(browser, MEMBER_CA, "ca");
-  const esSession = await clubsSession(browser, MEMBER_ES, "es");
-  const esIds = new Set(
-    (await bookableAfterMonday(esSession, es.dogId, [theScene().classA.id])).map((item) => item.id),
-  );
-  const shared = (await bookableAfterMonday(caSession, ca.dogId, [theScene().classA.id])).find(
-    (item) => esIds.has(item.id),
-  );
-  if (shared === undefined) throw new Error("The two members share no BOOKABLE class for (c)");
-  classes.c = shared;
-  const caBooking = await bookAs(caSession, shared.id, ca.dogId);
-  const esBooking = await bookAs(esSession, shared.id, es.dogId);
-  remember("bookingCca", caBooking.id);
-  remember("bookingCes", esBooking.id);
-  await cancelAtD4c(admin, shared.id, adminTexts.c);
-  const isNotice = (item: MeNotification) =>
-    item.code === "N-08a" && item.body.includes(adminTexts.c);
-  cards.cCa = await waitForCard(caSession, "N-08a (c) for the ca member", isNotice);
-  cards.cEs = await waitForCard(esSession, "N-08a (c) for the es member", isNotice);
-  const cCa = theCard("cCa");
-  const cEs = theCard("cEs");
-  expect(cCa.body.endsWith(templateMarker)).toBe(true);
-  expect(cEs.body.endsWith(templateMarker)).toBe(true);
-  expect(cCa.title).toBe(theCard("aCa").title);
-  expect(cEs.title).toBe(theCard("aEs").title);
-  // Each in her language: the edited `ca` and `es` bodies (the marker included) rendered in full.
-  expectRenderedFrom(cCa.body, edited.bodyI18n.ca, "the ca body of (c)");
-  expectRenderedFrom(cEs.body, edited.bodyI18n.es, "the es body of (c)");
-  expect(cEs.title).toBe(theScene().n08aTexts.titleI18n.es);
-  const cCaDetail = await noticeDetail(admin, cCa.id);
-  const cEsDetail = await noticeDetail(admin, cEs.id);
-  expect(cCaDetail.locale).toBe("ca");
-  expect(cEsDetail.locale).toBe("es");
-  const aCaDetail = await noticeDetail(admin, theCard("aCa").id);
-  expect(cCaDetail.templateVersion ?? 0).toBeGreaterThan(aCaDetail.templateVersion ?? 0);
+    // The same two members book a class both can take (the api as each member: the seed has
+    // none they share after A), and D4c cancels it.
+    const caSession = await clubsSession(browser, MEMBER_CA, "ca");
+    const esSession = await clubsSession(browser, MEMBER_ES, "es");
+    const esIds = new Set(
+      (await bookableAfterMonday(esSession, es.dogId, [theScene().classA.id])).map(
+        (item) => item.id,
+      ),
+    );
+    const shared = (await bookableAfterMonday(caSession, ca.dogId, [theScene().classA.id])).find(
+      (item) => esIds.has(item.id),
+    );
+    if (shared === undefined) throw new Error("The two members share no BOOKABLE class for (c)");
+    classes.c = shared;
+    const caBooking = await bookAs(caSession, shared.id, ca.dogId);
+    const esBooking = await bookAs(esSession, shared.id, es.dogId);
+    remember("bookingCca", caBooking.id);
+    remember("bookingCes", esBooking.id);
+    await cancelAtD4c(admin, shared.id, adminTexts.c);
+    const isNotice = (item: MeNotification) =>
+      item.code === "N-08a" && item.body.includes(adminTexts.c);
+    cards.cCa = await waitForCard(caSession, "N-08a (c) for the ca member", isNotice);
+    cards.cEs = await waitForCard(esSession, "N-08a (c) for the es member", isNotice);
+    const cCa = theCard("cCa");
+    const cEs = theCard("cEs");
+    expect(cCa.body.endsWith(templateMarker)).toBe(true);
+    expect(cEs.body.endsWith(templateMarker)).toBe(true);
+    expect(cCa.title).toBe(theCard("aCa").title);
+    expect(cEs.title).toBe(theCard("aEs").title);
+    // Each in her language: the edited `ca` and `es` bodies (the marker included) rendered in full.
+    expectRenderedFrom(cCa.body, edited.bodyI18n.ca, "the ca body of (c)");
+    expectRenderedFrom(cEs.body, edited.bodyI18n.es, "the es body of (c)");
+    expect(cEs.title).toBe(theScene().n08aTexts.titleI18n.es);
+    const cCaDetail = await noticeDetail(admin, cCa.id);
+    const cEsDetail = await noticeDetail(admin, cEs.id);
+    expect(cCaDetail.locale).toBe("ca");
+    expect(cEsDetail.locale).toBe("es");
+    const aCaDetail = await noticeDetail(admin, theCard("aCa").id);
+    expect(cCaDetail.templateVersion ?? 0).toBeGreaterThan(aCaDetail.templateVersion ?? 0);
 
-  // The history is frozen (R-11-12): the cards of (a)/(b) on screen, as they were rendered.
-  await open11(caSession.page);
-  await expect(feedCard(caSession.page, cCa.id).locator(".notification-card__body")).toContainText(
-    templateMarker.trim(),
-  );
-  await expect(
-    feedCard(caSession.page, theCard("aCa").id).locator(".notification-card__body"),
-  ).toHaveText(theCard("aCa").body);
-  await open11(esSession.page);
-  await expect(feedCard(esSession.page, cEs.id).locator(".notification-card__body")).toContainText(
-    templateMarker.trim(),
-  );
-  await expect(
-    feedCard(esSession.page, theCard("aEs").id).locator(".notification-card__body"),
-  ).toHaveText(theCard("aEs").body);
-  const cEsShown = await cardView(feedCard(esSession.page, cEs.id));
-  expect(cEsShown.title).toBe(theScene().n08aTexts.titleI18n.es);
-  expectRenderedFrom(cEsShown.body, edited.bodyI18n.es, "the es card of (c) on 11");
+    // The history is frozen (R-11-12): the cards of (a)/(b) on screen, as they were rendered.
+    await open11(caSession.page);
+    await expect(
+      feedCard(caSession.page, cCa.id).locator(".notification-card__body"),
+    ).toContainText(templateMarker.trim());
+    await expect(
+      feedCard(caSession.page, theCard("aCa").id).locator(".notification-card__body"),
+    ).toHaveText(theCard("aCa").body);
+    // INC-56 #4: screen 11 once the template carries the edit (the edited card and the frozen one).
+    await shot(caSession.page, "11-notificacions-core-375.png");
+    await open11(esSession.page);
+    await expect(
+      feedCard(esSession.page, cEs.id).locator(".notification-card__body"),
+    ).toContainText(templateMarker.trim());
+    await expect(
+      feedCard(esSession.page, theCard("aEs").id).locator(".notification-card__body"),
+    ).toHaveText(theCard("aEs").body);
+    const cEsShown = await cardView(feedCard(esSession.page, cEs.id));
+    expect(cEsShown.title).toBe(theScene().n08aTexts.titleI18n.es);
+    expectRenderedFrom(cEsShown.body, edited.bodyI18n.es, "the es card of (c) on 11");
+    await shot(esSession.page, "11-notificacions-es-core-375.png");
 
-  // «Restaura el text per defecte» → the seed again, no longer customized.
-  await openRoute(page, `/comunicats?template=${n08aTemplateId}`, "/tauler");
-  const reopened = page.getByRole("region", { name: "Editor de la plantilla" });
-  await reopened.getByRole("button", { name: "Restaura el text per defecte" }).click();
-  const confirm = page.getByRole("dialog", {
-    name: "Vols restaurar el text per defecte d'aquesta plantilla?",
-  });
-  const resetting = page.waitForResponse(
-    isCall("POST", new RegExp(`/api/v1/message-templates/${n08aTemplateId}/reset$`, "u")),
-  );
-  await confirm.getByRole("button", { exact: true, name: "Restaura" }).click();
-  const reset = await resetting;
-  expect(reset.status(), "POST /message-templates/{id}/reset").toBe(200);
-  remember("templateReset", n08aTemplateId);
-  const restored = (await reset.json()) as TemplateDetail;
-  expect(restored.customized).toBe(false);
-  expect(restored.bodyI18n.ca?.includes(templateMarker)).toBe(false);
-  expect(restored.bodyI18n.es?.includes(templateMarker)).toBe(false);
-  expect(restored.bodyI18n).toEqual(theScene().n08aTexts.bodyI18n);
-  await expect(reopened.getByRole("button", { name: "Restaura el text per defecte" })).toHaveCount(
-    0,
-  );
-  const reread = await call<TemplateDetail>(admin, `/message-templates/${n08aTemplateId}`);
-  expect(reread.body.customized).toBe(false);
-  note("c-template", {
-    class: { description: shared.description, startsAtLocal: shared.startsAtLocal },
-    marker: templateMarker,
-    put: saved.status(),
-    reset: reset.status(),
-    templateVersions: {
-      aNotice: aCaDetail.templateVersion ?? null,
-      afterReset: restored.version,
-      cNotice: cCaDetail.templateVersion ?? null,
-      edited: edited.version,
-      read: before.version,
-    },
-    titles: { ca: cCa.title, es: cEs.title },
-  });
+    // «Restaura el text per defecte» → the seed again, no longer customized.
+    await openRoute(page, `/comunicats?template=${n08aTemplateId}`, "/tauler");
+    const reopened = page.getByRole("region", { name: "Editor de la plantilla" });
+    await reopened.getByRole("button", { name: "Restaura el text per defecte" }).click();
+    const confirm = page.getByRole("dialog", {
+      name: "Vols restaurar el text per defecte d'aquesta plantilla?",
+    });
+    const resetting = page.waitForResponse(
+      isCall("POST", new RegExp(`/api/v1/message-templates/${n08aTemplateId}/reset$`, "u")),
+    );
+    await confirm.getByRole("button", { exact: true, name: "Restaura" }).click();
+    const reset = await resetting;
+    expect(reset.status(), "POST /message-templates/{id}/reset").toBe(200);
+    remember("templateReset", n08aTemplateId);
+    const restored = (await reset.json()) as TemplateDetail;
+    expect(restored.customized).toBe(false);
+    expect(restored.bodyI18n.ca?.includes(templateMarker)).toBe(false);
+    expect(restored.bodyI18n.es?.includes(templateMarker)).toBe(false);
+    expect(restored.bodyI18n).toEqual(theScene().n08aTexts.bodyI18n);
+    await expect(
+      reopened.getByRole("button", { name: "Restaura el text per defecte" }),
+    ).toHaveCount(0);
+    const reread = await call<TemplateDetail>(admin, `/message-templates/${n08aTemplateId}`);
+    expect(reread.body.customized).toBe(false);
+    note("c-template", {
+      class: { description: shared.description, startsAtLocal: shared.startsAtLocal },
+      marker: templateMarker,
+      put: saved.status(),
+      reset: reset.status(),
+      templateVersions: {
+        aNotice: aCaDetail.templateVersion ?? null,
+        afterReset: restored.version,
+        cNotice: cCaDetail.templateVersion ?? null,
+        edited: edited.version,
+        read: before.version,
+      },
+      titles: { ca: cCa.title, es: cEs.title },
+    });
+  } finally {
+    const current = await call<TemplateDetail>(admin, `/message-templates/${n08aTemplateId}`);
+    if (current.body.customized) {
+      await call(admin, `/message-templates/${n08aTemplateId}/reset`, "POST");
+    }
+  }
 });
 
 test("T-11-35 T-11-38 (d) R-11-03 R-11-04 · screen 12 turns «Canvis en reserves…» off under «Correu»: the next N-08a reaches the feed with « · i per SMS» and no e-mail, the log shows EMAIL «omès per preferència» and APP «lliurat»; D10 turns it back on and 12 shows it", async ({
@@ -2340,6 +2359,9 @@ test("T-11-12 T-11-16 T-11-18 T-11-20 T-11-21 E7-W03 step 5 · the core's codes 
   const read = await call<TemplateDetail>(admin, `/message-templates/${n08aTemplateId}`);
   expect(read.status).toBe(200);
   const detail = read.body;
+  // INC-56 #2: N-08a is mandatory by catalog (S11 §3: N-02, N-08a, N-15, N-17, N-32c, N-36), so the
+  // TEMPLATE_MANDATORY probe always runs.
+  expect(detail.mandatory, "N-08a is mandatory by catalog").toBe(true);
   const update = (
     change: Partial<Schemas["MessageTemplateUpdateRequest"]>,
   ): Schemas["MessageTemplateUpdateRequest"] => ({
@@ -2385,15 +2407,12 @@ test("T-11-12 T-11-16 T-11-18 T-11-20 T-11-21 E7-W03 step 5 · the core's codes 
       "PUT",
       update({ version: detail.version === 0 ? 1 : detail.version - 1 }),
     ),
-    // Only on a mandatory template (the catalog's N-08a is one): never disable another.
-    templateMandatory: detail.mandatory
-      ? await probe(
-          admin,
-          `/message-templates/${n08aTemplateId}`,
-          "PUT",
-          update({ enabled: false }),
-        )
-      : null,
+    templateMandatory: await probe(
+      admin,
+      `/message-templates/${n08aTemplateId}`,
+      "PUT",
+      update({ enabled: false }),
+    ),
     templateNotCatalog: await probe(admin, `/message-templates/${customTemplateId}/reset`, "POST"),
     templateNotSendable: await probe(admin, `/message-templates/${n08aTemplateId}/send`, "POST", {
       dryRun: true,
@@ -2420,14 +2439,11 @@ test("T-11-12 T-11-16 T-11-18 T-11-20 T-11-21 E7-W03 step 5 · the core's codes 
         const expected = documented[key as keyof typeof observed];
         return [
           key,
-          answer === null
-            ? { skipped: "N-08a is not mandatory on this core" }
-            : {
-                ...expected,
-                matchesContract:
-                  answer.code === expected.code && answer.status === expected.contract,
-                observed: { code: answer.code, status: answer.status },
-              },
+          {
+            ...expected,
+            matchesContract: answer.code === expected.code && answer.status === expected.contract,
+            observed: { code: answer.code, status: answer.status },
+          },
         ];
       }),
     ),
@@ -2435,7 +2451,6 @@ test("T-11-12 T-11-16 T-11-18 T-11-20 T-11-21 E7-W03 step 5 · the core's codes 
   // Round 2 #4: each probe answers the code its test id cites. The status stays recorded above,
   // not asserted: it is what step 5's proposals compared with S11 §6.
   for (const [key, answer] of Object.entries(observed)) {
-    if (answer === null) continue;
     expect(answer.code, key).toBe(documented[key as keyof typeof observed].code);
   }
   // Anything the core accepted by mistake is undone (never left for the next steps).
@@ -2602,16 +2617,15 @@ test("T-11-35 (h) R-11-16 R-15-14 · «Recordatori de classe: 2 h abans» on 12,
     (item) => item.id === reminderNotice.id,
   );
   if (reminderCard === undefined) throw new Error("Her N-13 is not in her feed");
-  const detail = await settledDetail(admin, reminderCard.id, ["EMAIL", "PUSH"], 30_000).catch(() =>
-    noticeDetail(admin, reminderCard.id),
-  );
-  // OPERATIONAL is off by default (R-11-04): no e-mail.
+  // INC-56 #1: her e-mail row, settled — never a default read when it is missing.
+  const detail = await settledDetail(admin, reminderCard.id, ["EMAIL"], 30_000);
+  // OPERATIONAL is off by default (R-11-04): the e-mail is skipped by her preference, exactly.
   expect(messagesTo(ca.email, mailboxBefore)).toEqual([]);
   expect(
     detail.deliveries
       .filter((delivery) => delivery.channel === "EMAIL")
       .map((delivery) => delivery.status),
-  ).not.toContain("SENT");
+  ).toEqual(["SKIPPED_BY_PREFERENCE"]);
   const { feed } = await open11(caSession.page);
   expect(feed.items[0]?.id).toBe(reminderCard.id);
   const view = await cardView(caSession.page.locator(".notification-card").first());

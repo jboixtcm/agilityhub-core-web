@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/packages/i18n
+
+xx
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/clubs-preload.test.ts > E11-W02 step 6: preloadClubsI18n starts the boot's locale chunks early > loads each namespace of the locale the boot will resolve (the stored one first)
+TypeError: preloadClubsI18n is not a function
+ ❯ src/clubs-preload.test.ts:19:5
+     17|     const auth = vi.spyOn(clubsLoaders.es, "auth");
+     18|     const catalan = vi.spyOn(clubsLoaders.ca, "common");
+     19|     preloadClubsI18n(["common", "auth"], {
+       |     ^
+     20|       branding: { defaultLocale: "ca", locales: ["ca", "es", "en"] },
+     21|       browserLanguages: ["en-GB"],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/clubs-preload.test.ts > E11-W02 step 6: preloadClubsI18n starts the boot's locale chunks early > without a club yet (first visit), the reader's language among the product's, else Catalan
+TypeError: preloadClubsI18n is not a function
+ ❯ src/clubs-preload.test.ts:31:5
+     29|   it("without a club yet (first visit), the reader's language among th…
+     30|     const english = vi.spyOn(clubsLoaders.en, "shell");
+     31|     preloadClubsI18n(["shell"], { browserLanguages: ["en-US"], storage…
+       |     ^
+     32|     expect(english).toHaveBeenCalledOnce();
+     33|     const catalan = vi.spyOn(clubsLoaders.ca, "shell");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  22:33:16
+   Duration  415ms (transform 74%, import 21%, tests 3%, worker 2%)
+
+exit=1

@@ -82,9 +82,17 @@
   line-height: 1.25;
 }
 
+/* INC-11 (screen 10 at 375 px): a title wraps between its words, two lines at most («Obed.
+   utilitat», not «Obed. u…»); only a word longer than the cell ends with an ellipsis. */
 .ah-day-grid .ah-schedule-cell__title {
-  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   letter-spacing: -0.015em;
+  overflow-wrap: normal;
+  white-space: normal;
+  word-break: normal;
 }
 
 /* The lines wrap between words only («Ocupada · manteniment», «Bloq.» at 375 px): a word longer

@@ -30,7 +30,11 @@
 }
 
 .ah-schedule-grid__column--colored {
-  color: color-mix(in srgb, var(--schedule-color) 70%, var(--ah-color-text));
+  color: color-mix(
+    in srgb,
+    var(--schedule-color) var(--ah-tint-text-share, 72%),
+    var(--ah-color-text)
+  );
 }
 
 .ah-schedule-grid__column-button {
@@ -108,7 +112,7 @@
   padding: 0.35rem 0.45rem;
   color: color-mix(
     in srgb,
-    var(--schedule-color, var(--ah-color-text-muted)) 72%,
+    var(--schedule-color, var(--ah-color-text-muted)) var(--ah-tint-text-share, 72%),
     var(--ah-color-text)
   );
   font: inherit;
@@ -148,8 +152,17 @@ button.ah-schedule-cell--empty:hover {
   border-color: var(--ah-color-primary);
 }
 
+/* E11-W02 step 5: a cancelled class is dimmed, still readable at AA (axe: 4.18:1 at 0.55, its
+   subtitle 4.46:1 at 0.7). */
 .ah-schedule-cell--muted {
-  opacity: 0.55;
+  opacity: 0.78;
+}
+
+/* A light scheme cannot fade it and keep AA: it loses its hue instead (the luminance, and so the
+   contrast, stays); the strike-through still says it is cancelled. */
+:root[data-scheme="light"] .ah-schedule-cell--muted {
+  opacity: 1;
+  filter: grayscale(1);
 }
 
 .ah-schedule-cell--plain {
@@ -167,6 +180,12 @@ button.ah-schedule-cell--empty:hover {
 .ah-schedule-cell--struck .ah-schedule-cell__title,
 .ah-schedule-cell--struck .ah-schedule-cell__subtitle {
   text-decoration: line-through;
+}
+
+/* E11-W02 step 5: on a light scheme the subtitle keeps its full colour, for AA at its 10 px size
+   (axe: 3.98:1 dimmed). */
+:root[data-scheme="light"] .ah-schedule-cell__subtitle {
+  opacity: 1;
 }
 
 .ah-schedule-cell--warning {

@@ -3,6 +3,7 @@
   "back": "Back to profile",
   "loading": "Loading leave request",
   "loadError": "The leave request could not be loaded.",
+  "retry": "Try again",
   "offer": {
     "text": "If you plan to return later, remember that you can request a fixed or open-ended inactivity period and keep your joining fee valid and your current membership fee for when you return.",
     "fee": "The fee is {first} for the first month and {following} thereafter.",

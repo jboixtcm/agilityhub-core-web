@@ -10,6 +10,7 @@ import {
 } from "@agilityhub/auth";
 import type { Role } from "@agilityhub/auth";
 import { LOCALE_STORAGE_KEY, productLocales } from "@agilityhub/i18n";
+import { clubsNamespaces } from "@agilityhub/i18n/clubs";
 import {
   AppBar,
   Avatar,
@@ -40,43 +41,78 @@ import {
   useRef,
   useState,
 } from "react";
-import { useTranslation } from "react-i18next";
+import { getI18n, useTranslation } from "react-i18next";
 
-import { ActivityDetailPage } from "./activities/ActivityDetailPage";
-import { HistoryRowsPreview } from "./activities/HistoryRowsPreview";
 import { safeDecode } from "./activities/shared";
-import { InvoicesPage } from "./billing/InvoicesPage";
-import { BookingDetailPage } from "./booking/BookingDetailPage";
-import { BookPage } from "./booking/BookPage";
-import { ConfirmPage } from "./booking/ConfirmPage";
-import { HomePage } from "./booking/HomePage";
 import { navigateInApp } from "./booking/shared";
-import { WaitlistDetailPage } from "./booking/WaitlistDetailPage";
 import type { CourseScreen as CourseScreenModel } from "./courses/CoursesRoute";
-import { HistoryPage } from "./history/HistoryPage";
-import { InactivityPage } from "./inactivity/InactivityPage";
-import { InfoPage } from "./InfoPage";
-import { AttendancePage } from "./instructor/AttendancePage";
-import { DayPage } from "./instructor/DayPage";
-import { RingBlockPage } from "./instructor/RingBlockPage";
-import { StudentCardPage } from "./instructor/StudentCardPage";
-import { StudentSearchPage } from "./instructor/StudentSearchPage";
-import { TasksPage } from "./instructor/TasksPage";
-import { LeavePage } from "./leave/LeavePage";
 import { logoutWithPush } from "./notifications/push";
-import { NotificationsPage } from "./NotificationsPage";
-import { CheckoutReturn } from "./payments/CheckoutReturn";
 import { NoticesCard } from "./profile/NoticesCard";
 import { ProfileLifecycleSection } from "./profile/ProfileLifecycleSection";
 import { PublicFooter } from "./PublicFooter";
-import { MyDataPage, MyDogsPage } from "./SelfServicePages";
-import { SignupPage } from "./SignupPage";
-import { OverviewPage } from "./today/OverviewPage";
-import { TodayPage } from "./today/TodayPage";
+import { navigate as navigateTo, useInAppLinks } from "./router";
 import { useTrainingCacheIdentity, useTrainingTab } from "./training/shared";
-import { TrainingDetailPage } from "./training/TrainingDetailPage";
-import { TrainingPage } from "./training/TrainingPage";
-import { UnsubscribePage } from "./UnsubscribePage";
+
+/** The screens' chunk (`./screens`): loaded once, the first time a screen behind the access opens. */
+/**
+ * The screens' chunk, and with it the app's namespaces not loaded yet (A38): a screen of the chunk
+ * shows with every namespace, so what it mounts with its data (04's, 25's, the receipts' rows, 07's
+ * course lines) never suspends and hides it again under the shell's loading state. They load
+ * alongside the chunk; one that fails only leaves its keys, as before.
+ */
+const screens = () =>
+  Promise.all([
+    import("./screens"),
+    getI18n()
+      .loadNamespaces([...clubsNamespaces])
+      .catch(() => undefined),
+  ]).then(([module]) => module);
+const ActivityDetailPage = lazy(() =>
+  screens().then((module) => ({ default: module.ActivityDetailPage })),
+);
+const HistoryRowsPreview = lazy(() =>
+  screens().then((module) => ({ default: module.HistoryRowsPreview })),
+);
+const InvoicesPage = lazy(() => screens().then((module) => ({ default: module.InvoicesPage })));
+const BookingDetailPage = lazy(() =>
+  screens().then((module) => ({ default: module.BookingDetailPage })),
+);
+const BookPage = lazy(() => screens().then((module) => ({ default: module.BookPage })));
+const ConfirmPage = lazy(() => screens().then((module) => ({ default: module.ConfirmPage })));
+const HomePage = lazy(() => screens().then((module) => ({ default: module.HomePage })));
+const WaitlistDetailPage = lazy(() =>
+  screens().then((module) => ({ default: module.WaitlistDetailPage })),
+);
+const HistoryPage = lazy(() => screens().then((module) => ({ default: module.HistoryPage })));
+const InactivityPage = lazy(() => screens().then((module) => ({ default: module.InactivityPage })));
+const InfoPage = lazy(() => screens().then((module) => ({ default: module.InfoPage })));
+const AttendancePage = lazy(() => screens().then((module) => ({ default: module.AttendancePage })));
+const DayPage = lazy(() => screens().then((module) => ({ default: module.DayPage })));
+const RingBlockPage = lazy(() => screens().then((module) => ({ default: module.RingBlockPage })));
+const StudentCardPage = lazy(() =>
+  screens().then((module) => ({ default: module.StudentCardPage })),
+);
+const StudentSearchPage = lazy(() =>
+  screens().then((module) => ({ default: module.StudentSearchPage })),
+);
+const TasksPage = lazy(() => screens().then((module) => ({ default: module.TasksPage })));
+const LeavePage = lazy(() => screens().then((module) => ({ default: module.LeavePage })));
+const NotificationsPage = lazy(() =>
+  screens().then((module) => ({ default: module.NotificationsPage })),
+);
+const CheckoutReturn = lazy(() => screens().then((module) => ({ default: module.CheckoutReturn })));
+const MyDataPage = lazy(() => screens().then((module) => ({ default: module.MyDataPage })));
+const MyDogsPage = lazy(() => screens().then((module) => ({ default: module.MyDogsPage })));
+const SignupPage = lazy(() => screens().then((module) => ({ default: module.SignupPage })));
+const OverviewPage = lazy(() => screens().then((module) => ({ default: module.OverviewPage })));
+const TodayPage = lazy(() => screens().then((module) => ({ default: module.TodayPage })));
+const TrainingDetailPage = lazy(() =>
+  screens().then((module) => ({ default: module.TrainingDetailPage })),
+);
+const TrainingPage = lazy(() => screens().then((module) => ({ default: module.TrainingPage })));
+const UnsubscribePage = lazy(() =>
+  screens().then((module) => ({ default: module.UnsubscribePage })),
+);
 
 interface RouteDefinition {
   path: string;
@@ -171,7 +207,7 @@ function BookingCheckoutRoute({ bookingId, client }: { bookingId: string; client
           setBookingRefresh((current) => current + 1);
         }}
         onRetry={() => {
-          window.location.assign("/reservar");
+          navigateTo("/reservar");
         }}
       />
       <BookingDetailPage bookingId={bookingId} client={client} refresh={bookingRefresh} />
@@ -448,20 +484,36 @@ function ImpersonationBanner({ authClient }: { authClient: AuthClient }) {
   );
 }
 
+/** The screens' chunk on its way (E11-W02 step 6): the UI kit's loading state. */
+function ScreenLoading() {
+  const { t } = useTranslation("shell");
+  return <Skeleton height="12rem" label={t("shell:loading")} />;
+}
+
 function MobileShell({
   authClient,
   children,
   client,
   detail = false,
+  pathname,
+  screen,
 }: {
   authClient: AuthClient;
   children: ReactNode;
   client: ApiClient;
   detail?: boolean;
+  pathname: string;
+  /** The route pattern of the screen shown (`MOBILE_ROUTES`' `path`). */
+  screen: string;
 }) {
   const branding = useBranding();
   const session = useSession();
   const { t } = useTranslation("shell");
+  const content = useRef<HTMLElement>(null);
+  // A38: the shell stays mounted from one screen to the next, so each new screen starts at its top.
+  useEffect(() => {
+    if (content.current !== null) content.current.scrollTop = 0;
+  }, [pathname]);
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
   // `GET /me/training-summary` is the member's (also impersonated): no call for staff-only roles.
   const trainingTab = useTrainingTab(
@@ -503,12 +555,19 @@ function MobileShell({
           />
         )}
       </div>
-      <main className="clubs-shell__content">{children}</main>
+      <main className="clubs-shell__content" ref={content}>
+        {/* A38: one boundary per route. A screen the user left unmounts at once, as when the
+            screens were static: under a shared boundary it would stay mounted, hidden, while the
+            next screen's chunk loads, and a late answer could still take the user back (R-16-11). */}
+        <Suspense fallback={<ScreenLoading />} key={screen}>
+          {children}
+        </Suspense>
+      </main>
       <MobileNavigation
         activeProfile={session.activeProfile}
         impersonated={session.me?.impersonation !== undefined}
         modules={branding.modules}
-        pathname={window.location.pathname}
+        pathname={pathname}
         roles={session.roles}
         trainingTab={trainingTab}
       />
@@ -568,7 +627,7 @@ function accessError(
 export function AccessPage({
   authClient,
   navigate = (path) => {
-    window.location.assign(path);
+    navigateTo(path);
   },
 }: {
   authClient: AuthClient;
@@ -796,7 +855,9 @@ export function AccessPage({
             onClick={() => void requestLink("RESET")}
             type="button"
           >
-            {t("auth:access.forgot")}
+            {/* INC-11 (mockup 01): the question in grey, «Recupera-la» as a link. */}
+            {t("auth:access.forgot.question")}{" "}
+            <span className="auth-link">{t("auth:access.forgot.action")}</span>
           </button>
           {countdown.seconds > 0 ? (
             <p className="auth-message auth-message--error" role="alert">
@@ -816,7 +877,10 @@ export function AccessPage({
         </form>
         {branding.signup.enabled ? (
           <div className="auth-signup">
-            <a href="/apuntat-hi">{t("auth:access.signup")}</a>
+            <a href="/apuntat-hi">
+              {t("auth:access.signup.question")}{" "}
+              <span className="auth-link">{t("auth:access.signup.action")}</span>
+            </a>
           </div>
         ) : null}
       </section>
@@ -888,7 +952,7 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
           <p>{t("auth:activation.invalidDescription")}</p>
           <Button
             onClick={() => {
-              window.location.assign("/entrar");
+              navigateTo("/entrar");
             }}
             type="button"
           >
@@ -950,7 +1014,7 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
           className="auth-form__primary"
           onClick={() => {
             void routeAfterLogin(me, authClient).then((path) => {
-              window.location.assign(path);
+              navigateTo(path);
             });
           }}
           type="button"
@@ -1459,9 +1523,17 @@ function CourseScreen({ client, screen }: { client: ApiClient; screen: CourseScr
   );
 }
 
+/**
+ * The steps of the signup flows (16–19 and the add-dog flow) keep their own full page loads (A38):
+ * they were built for them (E3-W06, E3-W08: the draft in session storage, the back-forward cache).
+ */
+function loadSignupStep(path: string): void {
+  window.location.assign(path);
+}
+
 function LegacyAccessRedirect() {
   useEffect(() => {
-    window.location.replace("/entrar");
+    navigateTo("/entrar", { replace: true });
   }, []);
   return null;
 }
@@ -1486,14 +1558,11 @@ function AppContent({
   apiClient = defaultApiClient,
   authClient,
   navigate = (path, replace) => {
-    if (replace) {
-      window.location.replace(path);
-    } else {
-      window.location.assign(path);
-    }
+    navigateTo(path, { replace });
   },
   publicApiClient = defaultApiClient,
 }: AppProps) {
+  useInAppLinks();
   const [location, setLocation] = useState(
     () => `${window.location.pathname}${window.location.search}`,
   );
@@ -1535,7 +1604,11 @@ function AppContent({
   }
   if (pathname === "/comunicats/baixa") {
     // S11 R-11-08: the «Deixar de rebre aquests comunicats» link of a CLUB_NEWS e-mail.
-    return <UnsubscribePage client={publicApiClient} logo={<LogoMark compact />} />;
+    return (
+      <Suspense fallback={<ScreenLoading />}>
+        <UnsubscribePage client={publicApiClient} logo={<LogoMark compact />} />
+      </Suspense>
+    );
   }
   if (pathname === "/benvinguda") {
     return (
@@ -1575,13 +1648,13 @@ function AppContent({
   }
   if (pathname === "/apuntat-hi" || pathname.startsWith("/apuntat-hi/")) {
     return (
-      <SignupPage
-        authenticated={session.status === "signedIn"}
-        client={publicApiClient}
-        onNavigate={(path) => {
-          navigate(path, false);
-        }}
-      />
+      <Suspense fallback={<ScreenLoading />}>
+        <SignupPage
+          authenticated={session.status === "signedIn"}
+          client={publicApiClient}
+          onNavigate={loadSignupStep}
+        />
+      </Suspense>
     );
   }
   if (pathname === "/gossos/nou" || pathname.startsWith("/gossos/nou/")) {
@@ -1594,13 +1667,9 @@ function AppContent({
         presentation="modal"
       >
         <RequireAuth>
-          <SignupPage
-            addDog
-            client={apiClient}
-            onNavigate={(path) => {
-              navigate(path, false);
-            }}
-          />
+          <Suspense fallback={<ScreenLoading />}>
+            <SignupPage addDog client={apiClient} onNavigate={loadSignupStep} />
+          </Suspense>
         </RequireAuth>
       </OnboardingExperience>
     );
@@ -1826,6 +1895,8 @@ function AppContent({
       <MobileShell
         authClient={authClient}
         client={apiClient}
+        pathname={pathname}
+        screen={route.path}
         detail={
           [
             "/gossos",

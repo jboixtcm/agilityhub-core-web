@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/packages/api-client
+
+-x--------------------
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/core-api-store.payloads.test.ts > E9-W02 round 2: CoreApiStore payloads against the S16 contract > T-16-15 R-16-03 E11-W02 (INC-60): the body kept for a key goes once the api answered — a 2xx or a refusal — and stays for a lost answer
+AssertionError: expected [ { bytes: 7157, …(1) } ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/core-api-store.payloads.test.ts:147:25
+    145|     expect(api.uploads).toHaveLength(1);
+    146|     await store.uploadSmarterFile(input);
+    147|     expect(api.uploads).toHaveLength(2);
+       |                         ^
+    148|     // A 2xx retires it too: nothing is kept for `key-1` any more (a s…
+    149|     await rejection(store.uploadSmarterFile(input));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 21 skipped (22)
+   Start at  21:31:41
+   Duration  1.04s (transform 80%, import 16%, tests 3%)
+
+exit=1

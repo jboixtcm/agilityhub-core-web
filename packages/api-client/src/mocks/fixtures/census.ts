@@ -9,14 +9,12 @@ export type MemberListItem = ListItemWith<
   components["schemas"]["MemberListItem"],
   "bookingBlocked" | "displayStatus" | "dogs" | "fullName" | "version"
 >;
-type License = components["schemas"]["LicenseWithPendingFields"];
-type DogPendingFields = components["schemas"]["DogPendingFields"];
+type License = components["schemas"]["License"];
 type ApiDog = components["schemas"]["Dog"];
-type Dog = Omit<ApiDog, "licenses"> & DogPendingFields & { licenses: License[] };
+type Dog = Omit<ApiDog, "licenses"> & { licenses: License[] };
 /** A dog as the mock stores it: the whole item of `GET /dogs` without `fields`. */
 export type DogListItem = ListItemWith<
-  Omit<components["schemas"]["DogListItem"], "licenses"> &
-    DogPendingFields & { licenses: License[] },
+  Omit<components["schemas"]["DogListItem"], "licenses"> & { licenses: License[] },
   | "age"
   | "breed"
   | "displayStatus"

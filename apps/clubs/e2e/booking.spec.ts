@@ -52,7 +52,9 @@ async function login(page: Page, scenario = "member", { clock = bookingNow, loca
     .getByLabel(locale === "es" ? "Correo electrónico" : "Correu electrònic")
     .fill("laura@example.test");
   await page.getByLabel(locale === "es" ? "Contraseña" : "Contrasenya").fill("secret-password");
-  await page.getByRole("button", { exact: true, name: "ENTRA" }).click();
+  await page
+    .getByRole("button", { exact: true, name: locale === "es" ? "ENTRAR" : "ENTRA" })
+    .click();
   await page.waitForURL("**/inici");
 }
 

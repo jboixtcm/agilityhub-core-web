@@ -60,7 +60,8 @@
   },
   "chart": {
     "title": "Gossos per nivell — {count} actius",
-    "legend": "{previous, plural, =0 {amb reserva (setm. en curs)} one {amb reserva (setm. en curs o anterior)} other {amb reserva (setm. en curs o les # anteriors)}} · total actius",
+    "legendRecent": "{previous, plural, =0 {amb reserva (setm. en curs)} one {amb reserva (setm. en curs o anterior)} other {amb reserva (setm. en curs o les # anteriors)}}",
+    "legendTotal": "total actius",
     "recent": "Amb reserva",
     "total": "Total actius",
     "value": "{total} · {recent} res."

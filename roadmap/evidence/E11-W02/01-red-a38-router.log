@@ -1,0 +1,700 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs
+
+-------Not implemented: navigation to another Document
+xNot implemented: navigation to another Document
+xx----------------------------------------------------
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/router.test.ts [ src/router.test.ts ]
+Error: Failed to resolve import "./router" from "src/router.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /home/user/agilityhub-core-web/apps/clubs/src/router.test.ts:3:43
+  1  |  import { afterEach, describe, expect, it, vi } from "vitest";
+  2  |  import { inAppDestination, navigate } from "./router";
+     |                                              ^
+  3  |  function anchor(href, attributes = {}) {
+  4  |  	const element = document.createElement("a");
+ ❯ TransformPluginContext._formatLog ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:31147:39
+ ❯ TransformPluginContext.error ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:31144:14
+ ❯ normalizeUrl ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28083:18
+ ❯ ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28153:30
+ ❯ TransformPluginContext.transform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28119:4
+ ❯ EnvironmentPluginContainer.transform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:30932:14
+ ❯ loadAndTransform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:20671:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.test.tsx > A38 (E11-W02 step 1): the members' app navigates without reloading > a tab opens its screen in place: no token renewal, no new /branding or /me, and back returns
+AssertionError: expected '/perfil' to be '/reservar' // Object.is equality
+
+Expected: "/reservar"
+Received: "/perfil"
+
+ ❯ src/App.test.tsx:305:38
+    303|     fireEvent.click(within(tabs).getByRole("link", { name: "Reservar" …
+    304|
+    305|     expect(window.location.pathname).toBe("/reservar");
+       |                                      ^
+    306|     expect(await screen.findByRole("heading", { level: 1, name: "Reser…
+    307|     window.history.back();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/App.test.tsx > A38 (E11-W02 step 1): the members' app navigates without reloading > a link inside a screen (03 → 25) and the header's profile button open in place
+TestingLibraryElementError: Unable to find role="link" and name "Menú d’usuari"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"info-page"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mInfo[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-tabs"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Informació del club"[39m
+              [33mclass[39m=[32m"ah-tabs__list"[39m
+              [33mrole[39m=[32m"tablist"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_1_-panel-faq"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_1_-tab-faq"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mFAQ[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_1_-panel-RULES"[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_1_-tab-RULES"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mNormes[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_1_-panel-IMAGE_CONSENT"[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_1_-tab-IMAGE_CONSENT"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mConsentiment d'imatge[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33maria-labelledby[39m=[32m"_r_1_-tab-faq"[39m
+              [33mclass[39m=[32m"ah-tabs__panel"[39m
+              [33mid[39m=[32m"_r_1_-panel-faq"[39m
+              [33mrole[39m=[32m"tabpanel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"info-faq"[39m
+              [36m>[39m
+                [36m<section>[39m
+                  [36m<h2>[39m
+                    [0mConvivència al club[0m
+                  [36m</h2>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"info-faq__items"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-card info-faq__item"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-controls[39m=[32m"faq-answer-faq-visitors"[39m
+                        [33maria-expanded[39m=[32m"false"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [36m<strong>[39m
+                          [0mPuc venir amb més gent al club?[0m
+                        [36m</strong>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</button>[39m
+                    [36m</div>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-card info-faq__item"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-controls[39m=[32m"faq-answer-faq-off-lead"[39m
+                        [33maria-expanded[39m=[32m"false"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [36m<strong>[39m
+                          [0mEl gos pot anar deslligat pel club?[0m
+                        [36m</strong>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</button>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</section>[39m
+                [36m<section>[39m
+                  [36m<h2>[39m
+                    [0mReserves de classe[0m
+                  [36m</h2>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"info-faq__items"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-card info-faq__item"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-controls[39m=[32m"faq-answer-faq-cancel"[39m
+                        [33maria-expanded[39m=[32m"false"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [36m<strong>[39m
+                          [0mQuè he de fer si no puc venir a una classe?[0m
+                        [36m</strong>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</button>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</section>[39m
+                [36m<section>[39m
+                  [36m<h2>[39m
+                    [0mCompeticions[0m
+                  [36m</h2>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"info-faq__items"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-card info-faq__item"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-controls[39m=[32m"faq-answer-faq-competitions"[39m
+                        [33maria-expanded[39m=[32m"false"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [36m<strong>[39m
+                          [0mQuè cal per poder participar a competicions d'agility?[0m
+                        [36m</strong>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</button>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</section>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"info-page"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mInfo[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-tabs"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Informació del club"[39m
+              [33mclass[39m=[32m"ah-tabs__list"[39m
+              [33mrole[39m=[32m"tablist"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_1_-panel-faq"[39m
+                [33maria-selected[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_1_-tab-faq"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mFAQ[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_1_-panel-RULES"[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_1_-tab-RULES"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mNormes[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-controls[39m=[32m"_r_1_-panel-IMAGE_CONSENT"[39m
+                [33maria-selected[39m=[32m"false"[39m
+                [33mclass[39m=[32m"ah-tabs__tab"[39m
+                [33mid[39m=[32m"_r_1_-tab-IMAGE_CONSENT"[39m
+                [33mrole[39m=[32m"tab"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mConsentiment d'imatge[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33maria-labelledby[39m=[32m"_r_1_-tab-faq"[39m
+              [33mclass[39m=[32m"ah-tabs__panel"[39m
+              [33mid[39m=[32m"_r_1_-panel-faq"[39m
+              [33mrole[39m=[32m"tabpanel"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"info-faq"[39m
+              [36m>[39m
+                [36m<section>[39m
+                  [36m<h2>[39m
+                    [0mConvivència al club[0m
+                  [36m</h2>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"info-faq__items"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-card info-faq__item"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-controls[39m=[32m"faq-answer-faq-visitors"[39m
+                        [33maria-expanded[39m=[32m"false"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [36m<strong>[39m
+                          [0mPuc venir amb més gent al club?[0m
+                        [36m</strong>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</button>[39m
+                    [36m</div>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-card info-faq__item"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-controls[39m=[32m"faq-answer-faq-off-lead"[39m
+                        [33maria-expanded[39m=[32m"false"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [36m<strong>[39m
+                          [0mEl gos pot anar deslligat pel club?[0m
+                        [36m</strong>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</button>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</section>[39m
+                [36m<section>[39m
+                  [36m<h2>[39m
+                    [0mReserves de classe[0m
+                  [36m</h2>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"info-faq__items"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-card info-faq__item"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-controls[39m=[32m"faq-answer-faq-cancel"[39m
+                        [33maria-expanded[39m=[32m"false"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [36m<strong>[39m
+                          [0mQuè he de fer si no puc venir a una classe?[0m
+                        [36m</strong>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</button>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</section>[39m
+                [36m<section>[39m
+                  [36m<h2>[39m
+                    [0mCompeticions[0m
+                  [36m</h2>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"info-faq__items"[39m
+                  [36m>[39m
+                    [36m<div[39m
+                      [33mclass[39m=[32m"ah-card info-faq__item"[39m
+                    [36m>[39m
+                      [36m<button[39m
+                        [33maria-controls[39m=[32m"faq-answer-faq-competitions"[39m
+                        [33maria-expanded[39m=[32m"false"[39m
+                        [33mtype[39m=[32m"button"[39m
+                      [36m>[39m
+                        [36m<strong>[39m
+                          [0mQuè cal per poder participar a competicions d'agility?[0m
+                        [36m</strong>[39m
+                        [36m<svg[39m
+                          [33maria-hidden[39m=[32m"true"[39m
+                          [33mclass[39m=[32m"ah-icon"[39m
+                        [36m>[39m
+                          [36m<use[39m
+                            [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"[39m
+                          [36m/>[39m
+                        [36m</svg>[39m
+                      [36m</button>[39m
+                    [36m</div>[39m
+                  [36m</div>[39m
+                [36m</section>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/App.test.tsx:321:34
+    319|     window.history.pushState(null, "", "/info");
+    320|     await renderApplication(client);
+    321|     const profile = await screen.findByRole("link", { name: "Menú d’us…
+       |                                  ^
+    322|     fireEvent.click(profile);
+    323|     expect(window.location.pathname).toBe("/perfil");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/App.test.tsx > A38 (E11-W02 step 1): the members' app navigates without reloading > a password login opens the landing screen in place, with the session it just made
+AssertionError: expected '/entrar' to be '/inici' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head />[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"auth-page"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"access-title"[39m
+          [33mclass[39m=[32m"auth-panel"[39m
+        [36m>[39m
+          [36m<h1[39m
+            [33mclass[39m=[32m"ah-sr-only"[39m
+            [33mid[39m=[32m"access-title"[39m
+          [36m>[39m
+            [0mAccés[0m
+          [36m</h1>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"auth-logo"[39m
+          [36m>[39m
+            [36m<img[39m
+              [33malt[39m=[32m"Club Agility Cànic"[39m
+              [33mclass[39m=[32m"auth-logo__full"[39m
+              [33msrc[39m=[32m"data:image/png;base64,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...
+
+Expected: "/inici"
+Received: "/entrar"
+
+ ❯ src/App.test.tsx:341:40
+    339|     fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+    340|     await waitFor(() => {
+    341|       expect(window.location.pathname).toBe("/inici");
+       |                                        ^
+    342|     });
+    343|     expect(await screen.findByRole("navigation", { name: "Navegació pr…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 59 skipped (62)
+   Start at  21:16:10
+   Duration  28.36s (tests 70%, transform 16%, environment 8%, import 4%, setup 2%)
+
+exit=1

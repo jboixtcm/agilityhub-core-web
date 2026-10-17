@@ -1,0 +1,38 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/packages/ui
+
+---------x----
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/universal-list.test.tsx > E8-W01 · a selection the screen holds and rows the selection cannot take (D6, ruling E87) > E11-W02 step 5 (axe empty-table-header): every header cell names its column; the chevron's is not a header
+AssertionError: expected [ <th …(2)></th> ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   <th
++     class="ah-universal-list__chevron"
++     scope="col"
++   />,
++ ]
+
+ ❯ src/universal-list.test.tsx:441:19
+    439|       (th) => th.textContent.trim() === "" && th.querySelector("input,…
+    440|     );
+    441|     expect(empty).toEqual([]);
+       |                   ^
+    442|     expect(document.querySelector("thead .ah-universal-list__chevron")…
+    443|       "aria-hidden",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 skipped (14)
+   Start at  22:13:11
+   Duration  1.61s (environment 56%, transform 24%, setup 10%, tests 7%, import 2%)
+
+exit=1

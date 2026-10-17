@@ -2,7 +2,7 @@
   "common": {
     "error": "No se ha podido completar la acción.",
     "loading": "Cargando…",
-    "retry": "Vuelve a intentarlo",
+    "retry": "Volver a intentarlo",
     "close": "Cerrar",
     "cancel": "Cancelar",
     "save": "Guardar",
@@ -15,7 +15,7 @@
     "weekdayTabEmpty": "lu–vi",
     "saturdayTab": "Sábados",
     "new": "Nueva",
-    "duplicate": "Duplica",
+    "duplicate": "Duplicar",
     "band": "Franja",
     "createClass": "Crear clase",
     "gridLabel": "Cuadro semanal de la plantilla «{name}»",
@@ -34,7 +34,7 @@
     },
     "form": {
       "newTitle": "Nueva plantilla",
-      "duplicateTitle": "Duplica la plantilla",
+      "duplicateTitle": "Duplicar la plantilla",
       "name": "Nombre",
       "kind": "Tipo",
       "copyName": "{name} (copia)"
@@ -43,8 +43,8 @@
       "newTitle": "Nueva franja",
       "editTitle": "Franja {range}",
       "start": "Inicio",
-      "end": "Final",
-      "remove": "Borra la franja",
+      "end": "Fin",
+      "remove": "Borrar la franja",
       "closedDays": "Días de cierre: {days}. Esta plantilla no admite franjas."
     },
     "generation": {
@@ -82,8 +82,8 @@
     "levels": "Niveles",
     "description": "Descripción",
     "capacity": "Límite",
-    "submit": "CREA LA CLASE",
-    "remove": "Quita de la plantilla",
+    "submit": "CREAR LA CLASE",
+    "remove": "Quitar de la plantilla",
     "close": "Cerrar"
   },
   "weeks": {
@@ -158,17 +158,17 @@
       "noLevels": "ninguno",
       "exempt": "Exenta de la revisión de las 7:30",
       "notes": "Notas",
-      "accept": "ACEPTA",
-      "cancel": "ANULA LA CLASE",
-      "delete": "ELIMINA",
-      "deleteDraft": "Elimina",
-      "close": "Cierra"
+      "accept": "ACEPTAR",
+      "cancel": "ANULAR LA CLASE",
+      "delete": "ELIMINAR",
+      "deleteDraft": "Eliminar",
+      "close": "Cerrar"
     },
     "ringBookings": {
       "title": "Esta pista tiene reservas de entrenamiento",
       "text": "Si continúas, estas reservas quedarán anuladas por el club y se avisará:",
-      "confirm": "Anula las reservas y guarda",
-      "back": "Vuelve atrás"
+      "confirm": "Anular las reservas y guardar",
+      "back": "Volver atrás"
     },
     "warnings": {
       "title": "Avisos de incoherencia de la semana",
@@ -191,10 +191,10 @@
       "datePlaceholder": "dd/mm/aaaa",
       "invalidDate": "Escribe una fecha válida (dd/mm/aaaa).",
       "start": "Inicio",
-      "end": "Final",
+      "end": "Fin",
       "holiday": "Este día es festivo",
       "visibleNow": "Los alumnos la verán enseguida",
-      "submit": "CREA LA CLASE",
+      "submit": "CREAR LA CLASE",
       "done": "Clase creada"
     },
     "blockForm": {
@@ -207,12 +207,12 @@
       "kind": "Tipo",
       "reason": "Motivo",
       "note": "Nota",
-      "submit": "GUARDA EL BLOQUEO",
-      "cancel": "Anula el bloqueo",
+      "submit": "GUARDAR EL BLOQUEO",
+      "cancel": "Anular el bloqueo",
       "conflicts": "Coincide con:",
       "conflictRow": "{label} · {from}–{to}",
       "managedByActivity": "Este bloqueo se gestiona desde la actividad.",
-      "openActivity": "Abre la actividad",
+      "openActivity": "Abrir la actividad",
       "saved": "Bloqueo guardado",
       "cancelledDone": "Bloqueo anulado"
     },
@@ -240,9 +240,9 @@
     "text": "Texto del aviso",
     "footer": "Se envía con la plantilla «Clase anulada por el club»",
     "footerWaitlist": " · también a la lista de espera ({count})",
-    "back": "Vuelve atrás",
+    "back": "Volver atrás",
     "confirm": "{count, plural, one {ANULA Y AVISA AL ALUMNO} other {ANULA Y AVISA A LOS # ALUMNOS}}",
-    "confirmWaitlist": "ANULA Y AVISA A LA LISTA DE ESPERA",
+    "confirmWaitlist": "ANULAR Y AVISAR A LA LISTA DE ESPERA",
     "simpleCancel": "¿Quieres anular la clase?",
     "simpleDelete": "¿Quieres eliminar la clase?"
   },
@@ -251,17 +251,17 @@
     "empty": "Todavía no hay ningún inscrito.",
     "loading": "Cargando los inscritos…",
     "loadError": "No se han podido cargar los inscritos.",
-    "retry": "Vuelve a intentarlo",
+    "retry": "Volver a intentarlo",
     "name": "{member} + {dog}",
     "position": "{position}. {name}",
     "waiting": "En espera: {names}",
-    "remove": "Quita de la lista",
-    "removeLabel": "Quita {name} de la lista de espera",
+    "remove": "Quitar de la lista",
+    "removeLabel": "Quitar {name} de la lista de espera",
     "removeConfirm": {
       "title": "Quitar de la lista de espera",
       "text": "{name} dejará de estar en espera de esta clase.",
-      "confirm": "Quita de la lista",
-      "cancel": "Cancela"
+      "confirm": "Quitar de la lista",
+      "cancel": "Cancelar"
     }
   },
   "plannedCourse": {

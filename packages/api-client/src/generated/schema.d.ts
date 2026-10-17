@@ -16367,20 +16367,6 @@ export interface components {
         WeekValidationResult: {
             validatedClassIds: string[];
         };
-        DogPendingFields: {
-            handlerName?: string;
-        };
-        LicensePendingFields: {
-            category?: string;
-            division?: string;
-        };
-        LicenseWithPendingFields: components["schemas"]["License"] & components["schemas"]["LicensePendingFields"];
-        DogPatchPendingFields: {
-            handlerName?: string;
-            licenses?: components["schemas"]["LicenseWithPendingFields"][];
-        };
-        /** @enum {string} */
-        PlanBillingMode: "MONTHLY_FEE" | "MAINTENANCE";
     };
     responses: never;
     parameters: never;

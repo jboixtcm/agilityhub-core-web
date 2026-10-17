@@ -122,7 +122,7 @@
   },
   "overview": {
     "title": "Overview",
-    "footer": "n/n +e = booked/places + waiting list · the planned instructor is always shown",
+    "footer": "n/n +w = booked/places + waiting list · the planned instructor is always shown",
     "training": "Training",
     "block": "Blocked",
     "close": "Close",

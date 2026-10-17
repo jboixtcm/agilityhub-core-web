@@ -34,14 +34,21 @@ function open(path: string) {
 }
 
 /**
+ * The blocks below sit inside other screens (07, 08, 24) and often mount after the screen's data:
+ * they wait for `courses` on their own instead of suspending, which would hide the shown screen
+ * under the shell's loading state (E11-W02, A38).
+ */
+const BLOCK_TRANSLATION = { useSuspense: false } as const;
+
+/**
  * Screen 08 (S09 R-09-15, S16 §2): under the ring chips, one line per ring with a course set up —
  * «Muntanya: Jumping · nivell C–D · muntat ahir» — that opens the viewer. The chip itself keeps
  * selecting the ring to book.
  */
 export function TrainingSetupLines({ rings }: { rings: readonly TrainingRing[] }) {
-  const { t } = useTranslation(["courses", "enums"]);
+  const { ready, t } = useTranslation(["courses", "enums"], BLOCK_TRANSLATION);
   const branding = useBranding();
-  if (!branding.modules.includes("COURSES")) return null;
+  if (!ready || !branding.modules.includes("COURSES")) return null;
   const withSetup = rings.flatMap((ring) =>
     ring.setup === null || ring.setup === undefined ? [] : [{ ring, setup: ring.setup }],
   );
@@ -89,8 +96,7 @@ interface BookingCourses {
 }
 
 type ClassSessionRead =
-  | components["schemas"]["ClassSession"]
-  | components["schemas"]["ClassSessionMemberView"];
+  components["schemas"]["ClassSession"] | components["schemas"]["ClassSessionMemberView"];
 
 /**
  * The class's planned placement (R-16-13): a MEMBER reads it named (`plannedPlacement`, only with
@@ -135,7 +141,7 @@ export function BookingCourseLines({
   classSessionId: string;
   client: ApiClient;
 }) {
-  const { t } = useTranslation(["courses", "enums", "errors", "common"]);
+  const { ready, t } = useTranslation(["courses", "enums", "errors", "common"], BLOCK_TRANSLATION);
   const branding = useBranding();
   const staff = useStaffRoles();
   const build = useStartBuildSession(client);
@@ -153,7 +159,7 @@ export function BookingCourseLines({
     return { planned, setup };
   }, [classSessionId, client, enabled, staff]);
   const courses = useLoader(load);
-  if (!enabled || courses.status !== "ready") return null;
+  if (!ready || !enabled || courses.status !== "ready") return null;
   const { planned, setup } = courses.data;
   if (planned === null && setup === null) return null;
   return (
@@ -211,9 +217,9 @@ export function BookingCourseLines({
  * the instructor is on, only with COURSES.
  */
 export function RegisterSetupLink({ ringId, ringName }: { ringId: string; ringName: string }) {
-  const { t } = useTranslation("courses");
+  const { ready, t } = useTranslation("courses", BLOCK_TRANSLATION);
   const branding = useBranding();
-  if (!branding.modules.includes("COURSES")) return null;
+  if (!ready || !branding.modules.includes("COURSES")) return null;
   return (
     <a
       className="course-blocks__line course-blocks__line--register"

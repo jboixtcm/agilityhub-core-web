@@ -177,6 +177,10 @@
     "save": "DESA"
   },
   "myDogs": {
+    "sex": {
+      "FEMALE": "Femella",
+      "MALE": "Mascle"
+    },
     "addDocument": "＋ DOC.",
     "addDog": "＋ AFEGEIX UN GOS",
     "available": "{count} disponibles",

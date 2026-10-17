@@ -1,0 +1,38 @@
+$ (cd apps/clubs && pnpm exec vitest run src/screen-boundary.test.tsx)
+# red run: the shell's Suspense without its per-route key (main 3ed54b4 + this task, before the fix), 2026-10-17T07:53:56Z
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs
+
+ ❯ src/screen-boundary.test.tsx (1 test | 1 failed) 746ms
+   ❯ A38 (E11-W02 step 1): the screen the user left is gone, even while the next one loads (1)
+     × 12 → 03 before the screens' chunk arrived: 12 leaves the page at once, not hidden under the loading state (R-16-11) 741ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/screen-boundary.test.tsx > A38 (E11-W02 step 1): the screen the user left is gone, even while the next one loads > 12 → 03 before the screens' chunk arrived: 12 leaves the page at once, not hidden under the loading state (R-16-11)
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <h1>
+  El meu perfil
+</h1> instead
+ ❯ src/screen-boundary.test.tsx:79:53
+     77|     expect(await screen.findByRole("status", { name: "Carregant" })).t…
+     78|     // Not merely hidden: a hidden screen keeps its effects, so its la…
+     79|     expect(screen.queryByText("El meu perfil")).not.toBeInTheDocument(…
+       |                                                     ^
+     80|
+     81|     chunk.open();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  07:53:57
+   Duration  6.49s (transform 57%, environment 15%, import 13%, tests 12%, setup 3%)
+
+  Transform  transforming modules took 3.61s · 57% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit=1

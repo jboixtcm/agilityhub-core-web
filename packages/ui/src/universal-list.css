@@ -238,7 +238,11 @@
   background: var(--ah-color-surface-2);
 }
 
+/* `position: relative` (E11-W02, INC-11): the rows' visually hidden texts (`.ah-sr-only`, absolute)
+   belong to this scroll box; without it they escaped it and stretched the page with empty scroll
+   (and the back office's sidebar background ended before the page did). */
 .ah-universal-list__table-wrap {
+  position: relative;
   min-width: 0;
   overflow: auto;
   background: var(--ah-color-surface);

@@ -21,7 +21,7 @@ import {
   Badge,
   Button,
   Card,
-  EmptyState,
+  ErrorState,
   FormField,
   Icon,
   Input,
@@ -969,7 +969,7 @@ export function RingGeometryPage({
 
   if (loadError !== undefined) {
     return (
-      <EmptyState
+      <ErrorState
         action={<Button onClick={refresh}>{t("admin-courses:common.retry")}</Button>}
         description={errorText(loadError)}
         title={t("admin-courses:geometry.loadError")}

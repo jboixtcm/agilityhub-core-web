@@ -5,7 +5,16 @@ import {
   useSubmissionKeys,
 } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
-import { Badge, Button, Card, Chip, EmptyState, Skeleton, useToast } from "@agilityhub/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  Chip,
+  EmptyState,
+  ErrorState,
+  Skeleton,
+  useToast,
+} from "@agilityhub/ui";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -22,8 +31,7 @@ const tones = {
 
 function isFullyRefunded(invoice: Invoice): boolean {
   return (
-    invoice.status === "PAID" &&
-    invoice.refundedTotal.amountMinor === invoice.total.amountMinor
+    invoice.status === "PAID" && invoice.refundedTotal.amountMinor === invoice.total.amountMinor
   );
 }
 
@@ -104,6 +112,7 @@ function Detail({ client, id }: { client: ApiClient; id: string }) {
   const formats = useClubFormats();
   const [invoice, setInvoice] = useState<Invoice>();
   const [state, setState] = useState<"loading" | "ready" | "error" | "moduleOff">("loading");
+  const [reload, setReload] = useState(0);
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState(false);
   useEffect(() => {
@@ -122,7 +131,7 @@ function Detail({ client, id }: { client: ApiClient; id: string }) {
     return () => {
       active = false;
     };
-  }, [client, id]);
+  }, [client, id, reload]);
   const download = async () => {
     const tab = window.open("", "_blank");
     setDownloading(true);
@@ -155,12 +164,22 @@ function Detail({ client, id }: { client: ApiClient; id: string }) {
         <h1>{t("billing:detail.title")}</h1>
       </header>
       {state === "moduleOff" ? (
-        <EmptyState
-          description={t("errors:MODULE_DISABLED")}
-          title={t("errors:MODULE_DISABLED")}
-        />
+        <EmptyState description={t("errors:MODULE_DISABLED")} title={t("errors:MODULE_DISABLED")} />
       ) : state === "error" ? (
-        <EmptyState description={t("billing:loadError")} title={t("billing:loadError")} />
+        <ErrorState
+          action={
+            <Button
+              onClick={() => {
+                setState("loading");
+                setReload((value) => value + 1);
+              }}
+            >
+              {t("billing:retry")}
+            </Button>
+          }
+          description={t("billing:loadError")}
+          title={t("billing:loadError")}
+        />
       ) : state === "loading" || invoice === undefined ? (
         <Skeleton height="12rem" label={t("billing:loading")} />
       ) : (
@@ -285,8 +304,7 @@ export function InvoicesPage({
       ? latestInvoice
       : undefined;
   const invalidCard =
-    failedCard !== undefined ||
-    (paymentMethod?.type === "CARD" && paymentMethod.invalid === true);
+    failedCard !== undefined || (paymentMethod?.type === "CARD" && paymentMethod.invalid === true);
   return (
     <div className="billing-page">
       <header className="billing-page__bar">
@@ -295,13 +313,11 @@ export function InvoicesPage({
         </a>
         <h1>{t("billing:title")}</h1>
       </header>
-      {!invalidCard ? null : (
-        <CardFailureBanner client={client} invoice={failedCard} />
-      )}
+      {!invalidCard ? null : <CardFailureBanner client={client} invoice={failedCard} />}
       {state === "loading" ? (
         <Skeleton height="12rem" label={t("billing:loading")} />
       ) : state === "error" ? (
-        <EmptyState
+        <ErrorState
           action={
             <Button
               onClick={() => {
@@ -316,10 +332,7 @@ export function InvoicesPage({
           title={t("billing:loadError")}
         />
       ) : state === "moduleOff" ? (
-        <EmptyState
-          description={t("errors:MODULE_DISABLED")}
-          title={t("errors:MODULE_DISABLED")}
-        />
+        <EmptyState description={t("errors:MODULE_DISABLED")} title={t("errors:MODULE_DISABLED")} />
       ) : items.length === 0 ? (
         <EmptyState description={t("billing:empty")} title={t("billing:empty")} />
       ) : (

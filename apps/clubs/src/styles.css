@@ -280,15 +280,39 @@ select {
 
 .auth-text-action {
   padding: 0;
+  font-size: 0.8125rem;
   color: var(--ah-color-text-muted);
   background: transparent;
   border: 0;
   cursor: pointer;
 }
 
-.auth-text-action:hover,
-.auth-signup a {
+.auth-text-action:hover {
   color: var(--ah-color-primary);
+}
+
+/* INC-11 (mockup 01): the question stays grey; only its action reads as a link, in the club's
+   colour («Recupera-la», «Apunta-t'hi →»). */
+.auth-link {
+  color: var(--ah-color-primary);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+/* Colour is not the only cue: the action underlines under the pointer and the keyboard focus. */
+.auth-text-action:hover .auth-link,
+.auth-text-action:focus-visible .auth-link,
+.auth-signup a:hover .auth-link,
+.auth-signup a:focus-visible .auth-link {
+  text-decoration: underline;
+}
+
+.auth-signup a {
+  color: var(--ah-color-text-muted);
+}
+
+.auth-signup .auth-link {
+  font-weight: 700;
 }
 
 .auth-message,
@@ -320,7 +344,6 @@ select {
 
 .auth-signup a {
   font-size: 0.9rem;
-  font-weight: 700;
   text-decoration: none;
 }
 
@@ -1118,8 +1141,24 @@ div.lifecycle-error p {
   min-width: 0;
 }
 
+/* INC-11 (mockup 16): the DNI/NIE and the passport inputs (and a phone's three fields) share one
+   line however long their labels are — label, input and message are rows of the same grid. */
 .signup-grid--identity {
   grid-template-columns: 1.2fr 1fr;
+}
+
+.signup-grid--identity,
+.signup-grid--phone {
+  grid-template-rows: auto auto auto;
+  row-gap: 0;
+}
+
+.signup-grid--identity > .ah-form-field,
+.signup-grid--phone > .ah-form-field {
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  row-gap: var(--ah-space-1);
+  align-items: end;
 }
 
 .signup-grid--phone {
@@ -1243,9 +1282,21 @@ div.lifecycle-error p {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+/* INC-11 (mockup 17): two input-like boxes; the chosen one has the brand's border, colour and ✓. */
 .signup-chips--dog button {
+  display: inline-flex;
   min-height: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ah-space-1);
   border-radius: var(--ah-radius-sm);
+  font-weight: 600;
+}
+
+.signup-chips--dog button[aria-pressed="true"] {
+  color: var(--ah-color-primary);
+  background: var(--ah-color-surface-2);
+  border-color: var(--ah-color-primary);
 }
 
 .signup-note,
@@ -1266,13 +1317,15 @@ div.lifecycle-error p {
   border-color: var(--ah-color-border);
 }
 
-.signup-note--info {
+.signup-note--info,
+.signup-note--success {
   display: flex;
   gap: var(--ah-space-2);
   align-items: flex-start;
 }
 
-.signup-note--info .ah-icon {
+.signup-note--info .ah-icon,
+.signup-note--success .ah-icon {
   flex: none;
   width: 1rem;
   height: 1rem;
@@ -1568,6 +1621,53 @@ div.lifecycle-error p {
   flex: 1;
 }
 
+/* INC-11 (mockup 19): the native radio stays for the keyboard and assistive technology, visually
+   replaced by the brand's check circle. */
+.signup-radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.signup-upfront__options label {
+  position: relative;
+  cursor: pointer;
+}
+
+.signup-upfront__options .signup-check {
+  display: inline-flex;
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  color: var(--ah-color-on-success);
+  border: 1.5px solid var(--ah-color-border);
+  border-radius: 50%;
+}
+
+.signup-radio:checked + .signup-check {
+  background: var(--ah-color-success);
+  border-color: var(--ah-color-success);
+}
+
+.signup-radio:focus-visible + .signup-check {
+  outline: 3px solid color-mix(in srgb, var(--ah-color-info) 70%, transparent);
+  outline-offset: 2px;
+}
+
+.signup-radio:disabled + .signup-check {
+  opacity: 0.6;
+}
+
+.signup-check .ah-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
 .signup-upfront .signup-upfront__total {
   padding-top: var(--ah-space-2);
   color: var(--ah-color-text);
@@ -1686,7 +1786,8 @@ div.lifecycle-error p {
 }
 
 .dog-card__level {
-  color: var(--ah-color-primary);
+  /* E11-W02 step 5: AA on its tinted fill (axe: 4.46:1 with the bare primary). */
+  color: color-mix(in srgb, var(--ah-color-primary) 80%, var(--ah-color-text));
   background: color-mix(in srgb, var(--ah-color-primary) 16%, transparent);
 }
 

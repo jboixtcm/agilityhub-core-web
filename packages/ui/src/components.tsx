@@ -597,6 +597,50 @@ export function EmptyState({ action, description, icon = "info", title }: EmptyS
   );
 }
 
+/**
+ * The empty state of a read that failed (E11-W02 step 4): the same layout, with the warning icon,
+ * announced as an alert so a screen reader hears that the content is missing and why.
+ */
+export function ErrorState({ action, description, title }: Omit<EmptyStateProps, "icon">) {
+  return (
+    <section className="ah-empty-state ah-empty-state--error" role="alert">
+      <Icon aria-hidden="true" name="warn" />
+      <h2>{title}</h2>
+      <p>{description}</p>
+      {action}
+    </section>
+  );
+}
+
+export interface BootFailureProps {
+  message: string;
+  onRetry: () => void;
+  retryLabel: string;
+  title: string;
+}
+
+/**
+ * The page an app shows when it cannot start (E11-W02, INC-41): `/branding` failed and nothing is
+ * cached, so there is no club theme nor shell — the product theme, the reason and a retry, never a
+ * blank page.
+ */
+export function BootFailure({ message, onRetry, retryLabel, title }: BootFailureProps) {
+  return (
+    <main className="ah-boot-failure">
+      <EmptyState
+        action={
+          <Button onClick={onRetry} type="button">
+            {retryLabel}
+          </Button>
+        }
+        description={message}
+        icon="warn"
+        title={title}
+      />
+    </main>
+  );
+}
+
 export interface SkeletonProps extends Omit<HTMLAttributes<HTMLDivElement>, "children"> {
   label: string;
   height?: string;

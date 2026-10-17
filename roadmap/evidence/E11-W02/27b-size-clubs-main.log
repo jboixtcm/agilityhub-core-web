@@ -1,0 +1,20 @@
+$ pnpm --filter clubs build && pnpm size   # on main's code (b430234, the base of this commit, a detached worktree), for comparison with log 27
+build exit=0
+  clubs initial JavaScript
+  Size limit: 300 kB
+  Size:       191.95 kB gzipped
+  
+  clubs all JavaScript
+  Size limit: 420 kB
+  Size:       297.19 kB gzipped
+  
+  clubs courses JavaScript (viewer, «Registra què hi ha muntat», build session; lazy, COURSES only)
+  Size limit: 40 kB
+  Size:       35.74 kB gzipped
+  
+  clubs course 3D viewer JavaScript (the viewer's 3D tab, lazy, three.js)
+  Size limit: 167 kB
+  Size:       150 kB gzipped
+  
+  clubs-admin initial JavaScript
+exit=0

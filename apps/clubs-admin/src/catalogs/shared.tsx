@@ -82,14 +82,18 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
           <caption className="ah-sr-only">{caption}</caption>
           <thead>
             <tr>
-              {onReorder === undefined ? null : <th className="catalog-table__drag" scope="col" />}
+              {/* The handle's and the actions' columns: no header of their own (axe
+                  empty-table-header); each control names itself. */}
+              {onReorder === undefined ? null : (
+                <td aria-hidden="true" className="catalog-table__drag" />
+              )}
               {columns.map((column) => (
                 <th key={column.key} scope="col">
                   {column.header}
                 </th>
               ))}
               {actions === undefined && onEdit === undefined && onRemove === undefined ? null : (
-                <th className="catalog-table__actions" scope="col" />
+                <td aria-hidden="true" className="catalog-table__actions" />
               )}
             </tr>
           </thead>

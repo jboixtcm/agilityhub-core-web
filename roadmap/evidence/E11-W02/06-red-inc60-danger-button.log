@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/packages/course-ui
+
+·x···
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/tokens.test.ts > E9-W02 round 2 #7/#8/#11: course-ui reads the club's theme pairs (AGENTS rules 2 and 6) > E11-W02 (INC-60): no solid danger fill carries text — white on the product red is 3.6:1, below AA
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "components/ui/Button.tsx: bg-danger text-primary-fg hover:opacity-90",
++ ]
+
+ ❯ tests/tokens.test.ts:51:20
+     49|       .filter(({ classes }) => classes.some((name) => /^(?:[a-z-]+:)*b…
+     50|       .map(({ file, classes }) => `${file}: ${classes.join(" ")}`);
+     51|     expect(filled).toEqual([]);
+       |                    ^
+     52|     expect(contrast("--ah-color-primary-fg", "--ah-color-danger", "lig…
+     53|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  21:32:33
+   Duration  1.87s (environment 48%, transform 42%, import 9%, tests 1%)
+
+exit=1

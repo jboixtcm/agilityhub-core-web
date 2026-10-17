@@ -21,7 +21,7 @@
   "cardBanner": {
     "invalid": "Tarjeta no válida",
     "title": "No hemos podido cobrar el recibo de {month}",
-    "action": "Actualiza la tarjeta",
+    "action": "Actualizar la tarjeta",
     "working": "Abriendo la actualización de tarjeta",
     "error": "Ahora mismo no se puede actualizar la tarjeta."
   },

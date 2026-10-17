@@ -1,0 +1,91 @@
+$ node keys.mjs   # Playwright 1.63 + Chromium, the mock dev servers (clubs :4173, clubs-admin :4174); script copied below the output
+# this commit's tree, rebased onto 3ed54b4; 2026-10-17T08:08:54Z (the same 34 drawn stops as on b430234)
+## clubs /entrar at 375 px
+ 1 input «» focus-visible=true drawn=true
+ 2 input «» focus-visible=true drawn=true
+ 3 button «ENTRA» focus-visible=true drawn=true
+ 4 button «Envia'm un enllaç per entrar sense contrasenya» focus-visible=true drawn=true
+ 5 button «Has oblidat la contrasenya? Recupera-la» focus-visible=true drawn=true
+ 6 a «Encara no hi ets? Apunta-t'hi →» focus-visible=true drawn=true
+ 7 body «» focus-visible=undefined drawn=undefined
+ 8 input «» focus-visible=true drawn=true
+## clubs /inici at 375 px
+ 1 a «Avisos: 2 sense llegir» focus-visible=true drawn=true
+ 2 button «Duna · C» focus-visible=true drawn=true
+ 3 button «Rock · D» focus-visible=true drawn=true
+ 4 button «Toby · B (Joan Antoni)» focus-visible=true drawn=true
+ 5 button «Tots» focus-visible=true drawn=true
+ 6 a «Classe C i sup. · amb Dunaen llista d'esperaDijous 6 d’agost» focus-visible=true drawn=true
+ 7 a «Veure l'històric (2 mesos) ›» focus-visible=true drawn=true
+ 8 a «Inici» focus-visible=true drawn=true
+ 9 a «Reservar» focus-visible=true drawn=true
+10 a «Entrenaments» focus-visible=true drawn=true
+11 a «Avui» focus-visible=true drawn=true
+12 a «Perfil» focus-visible=true drawn=true
+13 a «Info» focus-visible=true drawn=true
+14 body «» focus-visible=undefined drawn=undefined
+## admin /tauler at 1280 px
+ 1 select «Idioma» focus-visible=true drawn=true
+ 2 button «Exportacions» focus-visible=true drawn=true
+ 3 button «Menú d’usuari» focus-visible=true drawn=true
+ 4 a «Tauler» focus-visible=true drawn=true
+ 5 a «Agenda de la setmana» focus-visible=true drawn=true
+ 6 a «Alumnes» focus-visible=true drawn=true
+ 7 a «Preinscripcions3» focus-visible=true drawn=true
+ 8 a «Abonats» focus-visible=true drawn=true
+ 9 a «Gossos» focus-visible=true drawn=true
+10 a «Inactivitats i baixes2» focus-visible=true drawn=true
+11 a «Seguiment alumnes5» focus-visible=true drawn=true
+12 a «Plantilla setmanal» focus-visible=true drawn=true
+13 a «Calendari de classes» focus-visible=true drawn=true
+14 a «Entrenaments» focus-visible=true drawn=true
+exit=0
+
+----- keys.mjs -----
+// Keyboard probe: Tab through a screen and log each focused element, its accessible name and
+// whether the focus is drawn (outline or box-shadow under :focus-visible).
+import { chromium } from "/home/user/agilityhub-core-web/apps/clubs/node_modules/@playwright/test/index.mjs";
+const urls = { admin: "http://127.0.0.1:4174", clubs: "http://127.0.0.1:4173" };
+const runs = [
+  { app: "clubs", path: "/entrar", login: false, width: 375, tabs: 8 },
+  { app: "clubs", path: "/inici", width: 375, tabs: 14 },
+  { app: "admin", path: "/tauler", width: 1280, tabs: 14, clock: "2026-08-10T08:12:00+02:00" },
+];
+const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });
+for (const run of runs) {
+  const context = await browser.newContext({ viewport: { height: run.width < 600 ? 812 : 900, width: run.width } });
+  const page = await context.newPage();
+  if (run.clock) await page.clock.setFixedTime(new Date(run.clock));
+  await page.addInitScript(({ scenario }) => {
+    localStorage.setItem("agilityhub.locale", "ca");
+    localStorage.setItem("agilityhub.mockScenario", scenario);
+  }, { scenario: run.app === "admin" ? "admin" : "member" });
+  const base = urls[run.app];
+  if (run.login !== false) {
+    await page.goto(`${base}/entrar`);
+    await page.getByLabel("Correu electrònic").fill(run.app === "admin" ? "admin@example.test" : "laura@example.test");
+    if (run.app === "admin") await page.getByRole("button", { name: "Tinc contrasenya" }).click();
+    await page.getByLabel("Contrasenya").fill("secret-password");
+    // The keyboard signs in too: Enter in the password field submits the form.
+    await page.getByLabel("Contrasenya").press("Enter");
+    await page.waitForURL(run.app === "admin" ? "**/tauler" : "**/inici", { timeout: 30000 });
+  }
+  if (page.url() !== `${base}${run.path}`) await page.goto(`${base}${run.path}`);
+  await page.waitForLoadState("networkidle").catch(() => undefined);
+  await page.waitForTimeout(800);
+  console.log(`## ${run.app} ${run.path} at ${run.width} px`);
+  for (let index = 1; index <= run.tabs; index += 1) {
+    await page.keyboard.press("Tab");
+    const info = await page.evaluate(() => {
+      const el = document.activeElement;
+      if (el === null || el === document.body) return { tag: "body" };
+      const style = getComputedStyle(el);
+      const drawn = (style.outlineStyle !== "none" && style.outlineWidth !== "0px") || style.boxShadow !== "none";
+      const name = (el.getAttribute("aria-label") ?? el.textContent ?? "").replace(/\s+/gu, " ").trim().slice(0, 60);
+      return { drawn, name, role: el.getAttribute("role") ?? "", tag: el.tagName.toLowerCase(), visible: el.matches(":focus-visible") };
+    });
+    console.log(`${String(index).padStart(2)} ${info.tag}${info.role ? `[role=${info.role}]` : ""} «${info.name ?? ""}» focus-visible=${String(info.visible)} drawn=${String(info.drawn)}`);
+  }
+  await context.close();
+}
+await browser.close();

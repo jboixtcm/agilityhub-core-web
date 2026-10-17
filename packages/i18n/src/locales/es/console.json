@@ -38,7 +38,7 @@
   "checklist": {
     "count": "{done}/{total}",
     "done": "hecho",
-    "goToStatus": "Activa el club",
+    "goToStatus": "Activar el club",
     "items": {
       "branding": "Marca: logo y colores propios",
       "dns": "Dominios verificados",
@@ -54,13 +54,13 @@
     "title": "Checklist de onboarding"
   },
   "common": {
-    "cancel": "Cancela",
-    "close": "Cierra",
-    "discard": "Descarta los cambios",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "discard": "Descartar los cambios",
     "loading": "Cargando",
     "no": "No",
-    "retry": "Vuelve a intentarlo",
-    "save": "GUARDA",
+    "retry": "Volver a intentarlo",
+    "save": "GUARDAR",
     "saved": "Cambios guardados.",
     "saving": "Guardando",
     "yes": "Sí"
@@ -112,9 +112,9 @@
     "newVersion": "Versión nueva",
     "noVersion": "Todavía no se ha publicado ninguna versión de los textos legales.",
     "privacyPolicyUrl": "URL de la política de privacidad",
-    "publish": "Publica una versión nueva",
-    "publishConfirm": "PUBLICA",
-    "publishTitle": "Publica una versión nueva de los textos legales",
+    "publish": "Publicar una versión nueva",
+    "publishConfirm": "PUBLICAR",
+    "publishTitle": "Publicar una versión nueva de los textos legales",
     "reconsentPolicy": "Los abonados verán un aviso en la app para revisar los textos nuevos. No se les bloquea el acceso.",
     "title": "Legal",
     "versionHelp": "Cada versión queda registrada con los consentimientos que se dan.",
@@ -149,8 +149,8 @@
     "moreModulesLabel": "{count, plural, one {# módulo más} other {# módulos más}}: {modules}",
     "noModules": "ninguno",
     "none": "—",
-    "openRecord": "Abre la ficha de {name}",
-    "search": "Busca por nombre o slug",
+    "openRecord": "Abrir la ficha de {name}",
+    "search": "Buscar por nombre o slug",
     "templateClub": "plantilla",
     "title": "Consola de clubes"
   },
@@ -160,7 +160,7 @@
     "es": "Castellano"
   },
   "localization": {
-    "confirm": "GUARDA LOS CAMBIOS",
+    "confirm": "GUARDAR LOS CAMBIOS",
     "confirmIntro": "Antes de guardar, revisa qué cambia para el club:",
     "confirmTitle": "Cambios de localización",
     "consequences": {
@@ -271,9 +271,9 @@
       "title": "Pago manual"
     },
     "notConfigured": "sin configurar",
-    "remove": "Retira el proveedor",
+    "remove": "Retirar el proveedor",
     "removeConfirm": "Se borrará su configuración. Si hay abonados que lo usan, no se podrá retirar.",
-    "removeTitle": "Retira {name}",
+    "removeTitle": "Retirar {name}",
     "sepa": {
       "creditorId": "Identificador de acreedor",
       "creditorName": "Nombre del acreedor",
@@ -297,7 +297,7 @@
       "publishableHelp": "La clave pública (pk_…). Hay que volver a escribirla cada vez que se guarda.",
       "publishableKey": "Clave pública",
       "secretKey": "Clave secreta",
-      "test": "Prueba la conexión",
+      "test": "Probar la conexión",
       "testing": "Probando",
       "testOk": "Conexión correcta con la cuenta {account} ({mode}).",
       "title": "Stripe",
@@ -342,8 +342,8 @@
   "statusTab": {
     "actions": {
       "ACTIVE": "Suspende el club",
-      "ONBOARDING": "Activa el club",
-      "SUSPENDED": "Reactiva el club"
+      "ONBOARDING": "Activar el club",
+      "SUSPENDED": "Reactivar el club"
     },
     "changed": "Se ha cambiado el estado del club.",
     "checklistComplete": "La checklist de onboarding está completa: el club se puede activar.",
@@ -386,7 +386,7 @@
     "description": "Los administradores del club. Un club tiene que tener siempre al menos un administrador.",
     "email": "Correo electrónico",
     "empty": "El club todavía no tiene ningún administrador.",
-    "invite": "INVITA",
+    "invite": "INVITAR",
     "invited": "Se ha enviado la invitación a {email}.",
     "inviteHelp": "Se crea la cuenta si hace falta, se le da el rol de administrador y recibe un enlace de acceso por correo.",
     "inviteTitle": "Invita a un administrador",
@@ -397,15 +397,15 @@
     },
     "name": "Nombre",
     "platformAdminFor": "{name} es admin de plataforma",
-    "remove": "Retira",
+    "remove": "Retirar",
     "removeConfirm": "Dejará de ser administrador del club. Sus datos y su cuenta se conservan.",
-    "removeTitle": "Retira a {name}",
+    "removeTitle": "Retirar a {name}",
     "title": "Equipo"
   },
   "theme": {
-    "addRingColor": "Añade un color",
-    "chooseLogo": "Elige una imagen",
-    "chooseLogoLabel": "Elige una imagen: {logo}",
+    "addRingColor": "Añadir un color",
+    "chooseLogo": "Elegir una imagen",
+    "chooseLogoLabel": "Elegir una imagen: {logo}",
     "colors": {
       "background": "Fondo",
       "border": "Bordes",
@@ -450,7 +450,7 @@
     },
     "noLogo": "sin imagen",
     "preview": {
-      "book": "RESERVA",
+      "book": "RESERVAR",
       "booked": "reservada",
       "calendar": "Calendario",
       "classes": "Clases",
@@ -471,8 +471,8 @@
     "previewTitle": "Previsualización",
     "radius": "Radio de los bordes",
     "radiusHelp": "En píxeles, por ejemplo 8px.",
-    "removeLogo": "Quita la imagen",
-    "removeRingColor": "Quita el color {index}",
+    "removeLogo": "Quitar la imagen",
+    "removeRingColor": "Quitar el color {index}",
     "ringColor": "Color de pista {index}",
     "ringPalette": "Colores de las pistas",
     "typographyTitle": "Tipografía y forma",
@@ -490,14 +490,14 @@
   "wizard": {
     "adminHelp": "Recibirá una invitación por correo con un enlace de acceso como administrador del club.",
     "catalogsHelp": "Los catálogos del club nuevo se pueden copiar de un club plantilla, o empezar vacíos.",
-    "create": "CREA EL CLUB",
+    "create": "CREAR EL CLUB",
     "creating": "Creando el club",
     "definitionTitle": "Archivo club-as-code",
     "description": "Ocho pasos para crear un club. Se crea en puesta en marcha y después se completa la checklist de onboarding.",
-    "discardDraft": "Descarta el borrador",
+    "discardDraft": "Descartar el borrador",
     "draftRestored": "Se ha recuperado el borrador guardado en este dispositivo. Los datos personales no se guardan.",
     "draftSaved": "Borrador guardado en este dispositivo, sin los datos personales.",
-    "enableProvider": "Activa {name}",
+    "enableProvider": "Activar {name}",
     "ibanLater": "El IBAN se guarda en la pestaña Pagos de la ficha, una vez creado el club.",
     "invoiceSeriesHelp": "Opcional, por ejemplo '{YYYY}'.",
     "logoLater": "Los logos se suben en la pestaña Tema de la ficha, una vez creado el club.",
@@ -530,7 +530,7 @@
         "contrast": "No tiene suficiente contraste (hace falta 4,5:1)."
       }
     },
-    "saveDraft": "Guarda como borrador",
+    "saveDraft": "Guardar como borrador",
     "secretsLater": "Las claves secretas se guardan en la pestaña Pagos de la ficha.",
     "slugHelp": "Se propone a partir del nombre. No se puede cambiar una vez creado el club.",
     "stepTitle": "Paso {position} de {total} · {name}",

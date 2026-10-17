@@ -1488,6 +1488,8 @@ function DogStep({
             type="button"
           >
             {sex === "MALE" ? t("signup:dog.male") : t("signup:dog.female")}
+            {/* INC-11 (mockup 17): the chosen one is marked with its border and a «✓». */}
+            {draft.dog.sex === sex ? <span aria-hidden="true">✓</span> : null}
           </button>
         ))}
       </div>
@@ -1861,6 +1863,8 @@ function FamilyStep({
       </section>
       {lookup?.result === "FOUND" ? (
         <aside className="signup-note signup-note--success" role="status">
+          {/* INC-11 (mockup 18): the note carries its ✓. */}
+          <Icon aria-hidden="true" name="check" />
           {t("signup:family.found", { holder: holderDisplayName })}
         </aside>
       ) : lookup?.result === "NOT_FOUND" ? (
@@ -2440,32 +2444,47 @@ function PaymentStep({
               <strong>{formatMoney(row.amount.amountMinor / 100)}</strong>
             </p>
           ))}
-          {startOptions.length === 0 ? null : (
+          {startOptions.length === 1 && startOptions[0] !== undefined ? (
+            // INC-11 (mockup 19): a single option (add-dog after the cut-off day) is no choice:
+            // it reads as one more line of the card, without «tria quan vols començar:».
+            <p className="signup-upfront__line">
+              <span>{optionLabel(startOptions[0])}</span>
+              <strong>{formatMoney(startOptions[0].amountDue.amountMinor / 100)}</strong>
+            </p>
+          ) : startOptions.length === 0 ? null : (
             <fieldset className="signup-upfront__options">
               <legend>{t("signup:payment.chooseStart")}</legend>
-              {startOptions.map((option) => (
-                <label key={option.option}>
-                  <input
-                    checked={selectedOption?.option === option.option}
-                    disabled={locked}
-                    name="signup-start"
-                    onChange={() => {
-                      if (locked) return;
-                      onChange((current) =>
-                        addDog
-                          ? { ...current, additionalDogOption: option.option }
-                          : {
-                              ...current,
-                              payment: { ...current.payment, firstMonthOption: option.option },
-                            },
-                      );
-                    }}
-                    type="radio"
-                  />
-                  <span>{optionLabel(option)}</span>
-                  <strong>{formatMoney(option.amountDue.amountMinor / 100)}</strong>
-                </label>
-              ))}
+              {startOptions.map((option) => {
+                const checked = selectedOption?.option === option.option;
+                return (
+                  <label key={option.option}>
+                    <input
+                      checked={checked}
+                      className="signup-radio"
+                      disabled={locked}
+                      name="signup-start"
+                      onChange={() => {
+                        if (locked) return;
+                        onChange((current) =>
+                          addDog
+                            ? { ...current, additionalDogOption: option.option }
+                            : {
+                                ...current,
+                                payment: { ...current.payment, firstMonthOption: option.option },
+                              },
+                        );
+                      }}
+                      type="radio"
+                    />
+                    {/* INC-11 (mockup 19): the brand's check circle, the native radio underneath. */}
+                    <span aria-hidden="true" className="signup-check">
+                      {checked ? <Icon name="check" /> : null}
+                    </span>
+                    <span>{optionLabel(option)}</span>
+                    <strong>{formatMoney(option.amountDue.amountMinor / 100)}</strong>
+                  </label>
+                );
+              })}
             </fieldset>
           )}
           {/* T-04-32: display-only; the club computes and charges the total, it is never sent. */}

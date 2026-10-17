@@ -157,7 +157,7 @@ const mergedDocument = {
     ...openapiDocument.components,
     schemas: withOverlays({
       ...(openapiDocument.components.schemas as SchemaMap),
-      ...(pendingDocument.components.schemas as SchemaMap),
+      ...pendingDocument.components.schemas,
     }),
   },
 } as AnySchema;
@@ -229,7 +229,9 @@ describe("E8-W02 member billing and lifecycle fixtures follow the published cont
   it("publishes documented ISO 20022 pain.008 schema versions", () => {
     const parameter = findParameter("billing.sepa.schema");
     expect(parameter?.value).toBe("pain.008.001.02");
-    expect(parameter?.constraints).toMatchObject({ values: ["pain.008.001.02", "pain.008.001.08"] });
+    expect(parameter?.constraints).toMatchObject({
+      values: ["pain.008.001.02", "pain.008.001.08"],
+    });
   });
 });
 

@@ -36,10 +36,7 @@ import {
 import { resolveDogOwners } from "./dog-owners";
 
 type MemberListItem = components["schemas"]["MemberListItem"];
-type DogListItem = Omit<components["schemas"]["DogListItem"], "licenses"> &
-  components["schemas"]["DogPendingFields"] & {
-    licenses: components["schemas"]["LicenseWithPendingFields"][];
-  };
+type DogListItem = components["schemas"]["DogListItem"];
 /** A row of D5: the keys of its visible columns, and always the name (the row's label). */
 type MemberRow = ListItemWith<MemberListItem, "fullName">;
 /** A row of D15: the keys of its visible columns, and always the dog's name (the row's label). */
@@ -250,16 +247,21 @@ function useSavedViews(
 
   useEffect(() => {
     let current = true;
-    void client.GET("/saved-views", { params: { query: { listKey } } }).then((result) => {
-      if (current && result.data !== undefined) {
-        setViews(result.data);
-        const defaultViewId = localStorage.getItem(`agilityhub.list.defaultView.${listKey}`);
-        const defaultView = result.data.find((view) => view.id === defaultViewId);
-        if (defaultView !== undefined && new URLSearchParams(window.location.search).size === 0) {
-          onDefaultView(toUniversalSavedView(defaultView));
+    void client.GET("/saved-views", { params: { query: { listKey } } }).then(
+      (result) => {
+        if (current && result.data !== undefined) {
+          setViews(result.data);
+          const defaultViewId = localStorage.getItem(`agilityhub.list.defaultView.${listKey}`);
+          const defaultView = result.data.find((view) => view.id === defaultViewId);
+          if (defaultView !== undefined && new URLSearchParams(window.location.search).size === 0) {
+            onDefaultView(toUniversalSavedView(defaultView));
+          }
         }
-      }
-    });
+      },
+      () => {
+        // E11-W02 step 4: without its saved views the list still works; its own read says what failed.
+      },
+    );
     return () => {
       current = false;
     };
@@ -405,11 +407,16 @@ function useActiveCount(client: ApiClient, kind: CensusKind) {
       kind === "members"
         ? client.GET("/members", { params: { query } })
         : client.GET("/dogs", { params: { query } });
-    void request.then((result) => {
-      if (current && result.data !== undefined) {
-        setCount(result.data.totalItems);
-      }
-    });
+    void request.then(
+      (result) => {
+        if (current && result.data !== undefined) {
+          setCount(result.data.totalItems);
+        }
+      },
+      () => {
+        // E11-W02 step 4: the count stays at 0; the list's own read says what failed.
+      },
+    );
     return () => {
       current = false;
     };
@@ -556,11 +563,14 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           label: t("census:members.columns.dogs"),
           render: (item) => (
             <span className="census-dogs-cell">
-              {(item.dogs ?? []).map((dog) => (
-                <span key={dog.id}>
-                  {dog.name} {dog.level === undefined ? null : levelChip(dog.level.code)}
-                </span>
-              ))}
+              {/* A member without dogs reads «—»: the row link in this cell always has a name. */}
+              {(item.dogs ?? []).length === 0
+                ? t("census:values.empty")
+                : (item.dogs ?? []).map((dog) => (
+                    <span key={dog.id}>
+                      {dog.name} {dog.level === undefined ? null : levelChip(dog.level.code)}
+                    </span>
+                  ))}
             </span>
           ),
         },
@@ -784,10 +794,11 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
         {
           key: "licenses",
           label: t("census:dogs.columns.licenses"),
+          // The contract makes `licenses` optional (a list read with `fields` may leave it out).
           render: (item) =>
-            item.licenses.length === 0
+            (item.licenses ?? []).length === 0
               ? t("census:values.empty")
-              : item.licenses
+              : (item.licenses ?? [])
                   .map(
                     (license) =>
                       `${license.organisation} ${license.number}${license.grade === undefined ? "" : ` (${license.grade})`}`,

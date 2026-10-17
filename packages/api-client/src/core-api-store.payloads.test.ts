@@ -72,7 +72,7 @@ function placementInput(overrides: Partial<SavePlacementInput> = {}): SavePlacem
 }
 
 describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () => {
-  it("#1 R-16-03 a lost POST /courses answer is retried with the same key and the same body (one upload)", async () => {
+  it("T-16-15 R-16-03 a lost POST /courses answer is retried with the same key and the same body (one upload) (E9-W02 round 2 #1)", async () => {
     const api = createFakeCoreApi();
     const store = storeOn(api);
     api.loseNextAnswer("POST", "/courses");
@@ -114,6 +114,42 @@ describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () =>
     ]);
   });
 
+  it("T-16-15 R-16-03 E11-W02 (INC-60): the body kept for a key goes once the api answered — a 2xx or a refusal (a lost answer keeps it: round 2 #1 above)", async () => {
+    const api = createFakeCoreApi();
+    let refuseNext = true;
+    const refusing: FakeCoreApi = {
+      ...api,
+      fetch: async (input, init) => {
+        const request = input instanceof Request ? input : new Request(input, init);
+        if (refuseNext && request.method === "POST" && request.url.endsWith("/courses")) {
+          refuseNext = false;
+          return new Response(
+            JSON.stringify({
+              code: "FILE_TYPE_NOT_ALLOWED",
+              details: {},
+              message: "Refused",
+              traceId: "t-1",
+            }),
+            { headers: { "Content-Type": "application/json" }, status: 422 },
+          );
+        }
+        return api.fetch(request);
+      },
+    };
+    const store = storeOn(refusing);
+    const input = { bytes, courseData: course, filename: "jp-s-sw.txt", submissionKey: "key-1" };
+
+    // A refusal retires the key: the next attempt with it stores the source again.
+    const refused = await rejection(store.uploadSmarterFile(input));
+    expect(isApiError(refused, "FILE_TYPE_NOT_ALLOWED")).toBe(true);
+    expect(api.uploads).toHaveLength(1);
+    await store.uploadSmarterFile(input);
+    expect(api.uploads).toHaveLength(2);
+    // A 2xx retires it too: nothing is kept for `key-1` any more (a stray resend stores again).
+    await rejection(store.uploadSmarterFile(input));
+    expect(api.uploads).toHaveLength(3);
+  });
+
   it.each([
     // [Smarter angle, flipX, flipY, placement rotation, ring heading] — the table of course-core's
     // heading test and course-ui's Planner3D/PlannerCanvas test: persisted = rendered.
@@ -126,7 +162,7 @@ describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () =>
     [30, false, true, 90, 120],
     [30, true, true, 90, -120],
   ])(
-    "#2 R-16-01/05 persists the heading the planners render: angle %d°, flipX=%s, flipY=%s, rotation %d° → %d°",
+    "T-16-02 R-16-01/05 persists the heading the planners render: angle %d°, flipX=%s, flipY=%s, rotation %d° → %d° (E9-W02 round 2 #2)",
     async (angle, flipX, flipY, rotationDegrees, expected) => {
       const api = createFakeCoreApi();
       const first = course.obstacles.find((obstacle) => obstacle.controlPointsMeters === null);
@@ -152,7 +188,7 @@ describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () =>
     },
   );
 
-  it("#3 R-16-04 a door save after another editor's save answers 409 STALE_VERSION and their doors survive", async () => {
+  it("T-16-06 R-16-04 a door save after another editor's save answers 409 STALE_VERSION and their doors survive (E9-W02 round 2 #3)", async () => {
     const api = createFakeCoreApi();
     const store = storeOn(api);
     const edited = await store.getRing("ring-1");
@@ -220,7 +256,7 @@ describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () =>
     ]);
   });
 
-  it("#4 R-16-05 a critical warning answers 422 PLACEMENT_BLOCKED {warnings}; the ADMIN's confirmed retry sends force: true", async () => {
+  it("T-16-07 R-16-05 a critical warning answers 422 PLACEMENT_BLOCKED {warnings}; the ADMIN's confirmed retry sends force: true (E9-W02 round 2 #4)", async () => {
     const api = createFakeCoreApi();
     const store = storeOn(api);
     // A warning exactly as course-core's engine builds it (all ten fields, nulls included).
@@ -299,7 +335,7 @@ describe("E9-W02 round 2: CoreApiStore payloads against the S16 contract", () =>
     });
   });
 
-  it("#5 R-16-11 finishes a build session with the caller's key, and a retry reads the same answer", async () => {
+  it("T-16-10 R-16-11 finishes a build session with the caller's key, and a retry reads the same answer (E9-W02 round 2 #5)", async () => {
     const api = createFakeCoreApi();
     const store = storeOn(api);
 

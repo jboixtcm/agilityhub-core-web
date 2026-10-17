@@ -477,7 +477,7 @@ export function RingDoorEditor({ ring: ringProp, labels, onSaved }: Props) {
   }
 
   async function handleSave() {
-    if (validation.errors.length > 0 || saving) return;
+    if (validation.errors.length > 0 || saving || isStaleVersion(error)) return;
     setSaving(true);
     setError(null);
     try {
@@ -682,7 +682,9 @@ export function RingDoorEditor({ ring: ringProp, labels, onSaved }: Props) {
           variant="primary"
           size="sm"
           onClick={handleSave}
-          disabled={!dirty || saving || validation.errors.length > 0}
+          // INC-60: after a conflict a new save repeats the same 409; [Revert] reads the latest
+          // ring first.
+          disabled={!dirty || saving || validation.errors.length > 0 || isStaleVersion(error)}
         >
           {saving ? labels.saving : labels.save}
         </Button>

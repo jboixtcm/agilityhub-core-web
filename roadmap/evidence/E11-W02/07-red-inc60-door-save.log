@@ -1,0 +1,33 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/packages/api-client
+
+---x
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/core-api-store.ui.test.tsx > E9-W02 round 2: course-ui on the real CoreApiStore (no mocked adapter) > T-16-06 R-16-04 another editor's save in between: STALE_VERSION reads its catalog text in the editor, [Desa] waits for [Desfés] (INC-60), and [Desfés] brings their door in (E9-W02 round 2 #3/#8)
+AssertionError: expected <button type="button" …(1)></button> to have property "disabled" with value true
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/core-api-store.ui.test.tsx:242:58
+    240|     ]);
+    241|     // INC-60: saving again would repeat the same 409; only [Desfés] (…
+    242|     expect(screen.getByRole("button", { name: "Desa" })).toHavePropert…
+       |                                                          ^
+    243|     expect(screen.getByRole("button", { name: "Desfés" })).toHavePrope…
+    244|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 skipped (4)
+   Start at  21:33:37
+   Duration  3.17s (transform 53%, environment 24%, tests 12%, import 11%)
+
+exit=1

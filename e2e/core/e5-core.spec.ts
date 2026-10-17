@@ -83,7 +83,7 @@ const text = {
     calendar: /^Google$/u,
     cancel: "ANULA LA RESERVA",
     cancelConfirm: "ANULA",
-    claim: "COGE LA PLAZA",
+    claim: "COGER LA PLAZA",
     classes: "Clases",
     confirmTitle: "Confirmar reserva",
     done: "Reserva confirmada. Añádela al calendario:",

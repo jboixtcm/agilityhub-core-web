@@ -1,0 +1,29 @@
+$ (cd apps/clubs && pnpm exec vitest run src/screens-chunk.test.ts)
+# red run: the test files of this task on main's code (867d3c4, a detached worktree), 2026-10-16T23:15:17Z
+
+ RUN  v5.0.0 /tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/apps/clubs
+
+ ❯ src/screens-chunk.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/screens-chunk.test.ts [ src/screens-chunk.test.ts ]
+Error: ENOENT: no such file or directory, open '/tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/apps/clubs/src/screens.ts'
+ ❯ read src/screens-chunk.test.ts:6:32
+      4| import { describe, expect, it } from "vitest";
+      5|
+      6| const read = (name: string) => readFileSync(resolve(import.meta.dirnam…
+       |                                ^
+      7|
+      8| // E11-W02 step 6 (TTI < 3 s): the screens behind the access screen ar…
+ ❯ src/screens-chunk.test.ts:11:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  23:15:18
+   Duration  1.32s (environment 79%, setup 17%, transform 3%)
+
+exit=1

@@ -130,7 +130,13 @@
   align-items: center;
   justify-content: center;
   gap: var(--ah-space-1);
-  color: var(--ah-tone-color, var(--ah-color-text-muted));
+  /* E11-W02 step 5: the tone leans a fifth towards the text colour (lighter on a dark theme,
+     darker on a light one), so its label reads at AA on its own tinted fill (axe: 4.26:1 before). */
+  color: color-mix(
+    in srgb,
+    var(--ah-tone-color, var(--ah-color-text-muted)) 80%,
+    var(--ah-color-text)
+  );
   background: color-mix(in srgb, var(--ah-tone-color, var(--ah-color-text-muted)) 14%, transparent);
   border: 1px solid
     color-mix(in srgb, var(--ah-tone-color, var(--ah-color-border)) 42%, transparent);
@@ -493,6 +499,21 @@
 .ah-sidebar__count.ah-badge {
   color: var(--ah-color-primary-fg);
   background: var(--ah-color-primary);
+}
+
+/* E11-W02 step 4: a failed read's state names the failure in the danger colour. */
+.ah-empty-state--error > .ah-icon {
+  color: var(--ah-color-danger);
+}
+
+/* E11-W02 (INC-41): the page of an app that could not start, centred in the viewport. */
+.ah-boot-failure {
+  display: grid;
+  min-height: 100dvh;
+  padding: var(--ah-space-6) var(--ah-space-4);
+  place-items: center;
+  color: var(--ah-color-text);
+  background: var(--ah-color-background);
 }
 
 .ah-empty-state {

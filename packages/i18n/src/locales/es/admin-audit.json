@@ -102,7 +102,7 @@
     "after": "Después",
     "before": "Antes",
     "changes": "Cambios",
-    "close": "Cierra el detalle del cambio",
+    "close": "Cerrar el detalle del cambio",
     "details": "Detalles",
     "entity": "Entidad",
     "genericError": "No se ha podido cargar el detalle del cambio.",
@@ -114,10 +114,10 @@
   "emptyDescription": "Prueba a cambiar la búsqueda o los filtros.",
   "emptyTitle": "No hay entradas de auditoría",
   "exports": {
-    "close": "Cierra las exportaciones",
+    "close": "Cerrar las exportaciones",
     "created": "Creada el {date}",
     "description": "Los archivos preparados se pueden descargar durante siete días.",
-    "download": "Descarga {fileName}",
+    "download": "Descargar {fileName}",
     "empty": "Todavía no hay exportaciones.",
     "error": "No se han podido cargar las exportaciones.",
     "failed": "No se ha podido preparar el archivo.",
@@ -173,7 +173,7 @@
     "SYSTEM": "Sistema",
     "WEBHOOK": "Webhook"
   },
-  "rowLabel": "Abre el cambio «{action}»",
-  "search": "Busca por acción, actor o entidad",
+  "rowLabel": "Abrir el cambio «{action}»",
+  "search": "Buscar por acción, actor o entidad",
   "title": "Auditoría"
 }

@@ -4,18 +4,24 @@ import { resolve } from "node:path";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:4177";
-// The captures go to this spec's own task (E9-W02) unless the run names another one
-// (`E2E_CAPTURE_TASK`, `pnpm e2e:docker <ID> --capture-task=<ID>`), as the apps' specs do.
+// The captures go to a task's evidence only when the run names it (`E2E_CAPTURE_TASK`,
+// `pnpm e2e:docker <ID> --capture-task=<ID>`); any other run writes them to Playwright's output
+// folder, so a later `pnpm e2e` never overwrites the evidence E9-W02 committed (E11-W02, INC-60).
 const captureTask = process.env.E2E_CAPTURE_TASK ?? "";
-const evidenceDirectory = resolve(
-  import.meta.dirname,
-  "../../../roadmap/evidence",
-  captureTask === "" ? "E9-W02" : captureTask,
-);
+const evidenceDirectory =
+  captureTask === ""
+    ? undefined
+    : resolve(import.meta.dirname, "../../../roadmap/evidence", captureTask);
 
 test.beforeAll(() => {
-  mkdirSync(evidenceDirectory, { recursive: true });
+  if (evidenceDirectory !== undefined) mkdirSync(evidenceDirectory, { recursive: true });
 });
+
+function capturePath(name: string): string {
+  return evidenceDirectory === undefined
+    ? test.info().outputPath(name)
+    : resolve(evidenceDirectory, name);
+}
 
 type Rgb = [number, number, number];
 
@@ -55,7 +61,7 @@ async function open(page: Page, theme: "light" | "dark") {
 
 test.describe("E9-W02 round 2: course-ui in a real browser (harness at 1280 px)", () => {
   for (const theme of ["light", "dark"] as const) {
-    test(`#7 T-16-04 primary controls read on the club's primary pair (${theme})`, async ({
+    test(`T-16-04 primary controls read on the club's primary pair (${theme}) (E9-W02 round 2 #7)`, async ({
       page,
     }) => {
       const errors: string[] = [];
@@ -69,13 +75,15 @@ test.describe("E9-W02 round 2: course-ui in a real browser (harness at 1280 px)"
 
       await page.screenshot({
         fullPage: true,
-        path: resolve(evidenceDirectory, `r2-course-ui-harness-1280-${theme}.png`),
+        path: capturePath(`r2-course-ui-harness-1280-${theme}.png`),
       });
       expect(errors).toEqual([]);
     });
   }
 
-  test("#6 the marker diagram draws A at the Core (0, 0) corner", async ({ page }) => {
+  test("T-16-06 the marker diagram draws A at the Core (0, 0) corner (E9-W02 round 2 #6)", async ({
+    page,
+  }) => {
     await open(page, "light");
     const diagram = page.getByRole("img", { name: "Marcadors de la pista" });
     const markerA = diagram.locator("g", { has: page.locator("text", { hasText: /^A$/u }) });
@@ -83,7 +91,8 @@ test.describe("E9-W02 round 2: course-ui in a real browser (harness at 1280 px)"
     await expect(markerA.locator("circle").first()).toHaveAttribute("cy", "0");
   });
 
-  test("T-16-04 nudging the course moves the 2D and 3D views and changes the warnings", async ({
+  // INC-60: what it checks is the 2D view; the 3D view's placement is viewers.test.tsx's.
+  test("T-16-04 nudging the course moves the 2D view and changes the warnings", async ({
     page,
   }) => {
     await open(page, "light");
@@ -103,7 +112,7 @@ test.describe("E9-W02 round 2: course-ui in a real browser (harness at 1280 px)"
     await expect(page.getByText("Marge al perímetre").first()).toBeVisible();
     await page.screenshot({
       fullPage: true,
-      path: resolve(evidenceDirectory, "r2-course-ui-harness-1280-after-nudge.png"),
+      path: capturePath("r2-course-ui-harness-1280-after-nudge.png"),
     });
   });
 });

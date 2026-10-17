@@ -13,6 +13,7 @@ import { I18nextProvider } from "react-i18next";
 
 import { App } from "./App";
 import { ADMIN_AUTH_OPTIONS } from "./auth-options";
+import { BOOT_FAILURE_BRANDING, BootFailurePage } from "./BootFailurePage";
 import "./styles.css";
 
 const rootElement = document.getElementById("root");
@@ -81,4 +82,25 @@ async function bootstrap(root: HTMLElement) {
   );
 }
 
-void bootstrap(rootElement);
+/**
+ * E11-W02 (INC-41): an app that cannot start (`/branding` failed and nothing is cached) says so,
+ * in the product's theme, with a retry — never a blank page.
+ */
+async function showBootFailure(root: HTMLElement, cause: unknown) {
+  console.error(cause);
+  const i18n = await createI18n({
+    branding: BOOT_FAILURE_BRANDING,
+    initialNamespaces: ["common"],
+  });
+  createRoot(root).render(
+    <StrictMode>
+      <I18nextProvider i18n={i18n}>
+        <BootFailurePage />
+      </I18nextProvider>
+    </StrictMode>,
+  );
+}
+
+bootstrap(rootElement).catch(async (cause: unknown) => {
+  await showBootFailure(rootElement, cause);
+});

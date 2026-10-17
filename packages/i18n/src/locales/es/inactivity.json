@@ -3,6 +3,7 @@
   "back": "Volver al perfil",
   "loading": "Cargando el período de inactividad",
   "loadError": "No se ha podido cargar el período de inactividad.",
+  "retry": "Volver a intentarlo",
   "intro": "Tienes derecho a pedir una pausa (en meses). Durante este tiempo no participarás en las actividades del club y pagarás una cuota mínima de mantenimiento que conserva tu plaza y tu cuota actual para cuando vuelvas. Puede pedirse hasta el día {deadlineDay} del mes anterior al inicio del período de inactividad.",
   "endNote": "La fecha final se puede modificar durante el período de inactividad (también hasta el día {deadlineDay}).",
   "form": {
@@ -14,9 +15,9 @@
     "followingMonths": "Meses siguientes",
     "perMonth": "{amount}/mes",
     "bookingsInside": "{count, plural, one {Ahora tienes # reserva dentro del período: se anulará si el club aprueba la solicitud.} other {Ahora tienes # reservas dentro del período: se anularán si el club aprueba la solicitud.}}",
-    "submit": "ENVÍA LA SOLICITUD",
-    "modify": "MODIFICA",
-    "withdraw": "RETIRA LA SOLICITUD",
+    "submit": "ENVIAR LA SOLICITUD",
+    "modify": "MODIFICAR",
+    "withdraw": "RETIRAR LA SOLICITUD",
     "confirmWithdraw": "¿Quieres retirar esta solicitud?",
     "saved": "La solicitud se ha guardado.",
     "withdrawn": "La solicitud se ha retirado."

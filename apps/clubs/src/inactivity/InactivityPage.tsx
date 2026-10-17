@@ -9,7 +9,7 @@ import {
   Button,
   Card,
   Checkbox,
-  EmptyState,
+  ErrorState,
   FormField,
   Input,
   isModuleEnabled,
@@ -21,6 +21,8 @@ import {
 } from "@agilityhub/ui";
 import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { useTranslation } from "react-i18next";
+
+import { navigate as navigateTo } from "../router";
 
 type Context = components["schemas"]["MeInactivityContext"];
 type Preview = components["schemas"]["InactivityPreview"];
@@ -34,7 +36,9 @@ function monthRange(start: string, count = 13): string[] {
 }
 
 function includeMonths(months: string[], ...required: (null | string | undefined)[]): string[] {
-  return [...new Set([...months, ...required.filter((month): month is string => month != null)])].sort();
+  return [
+    ...new Set([...months, ...required.filter((month): month is string => month != null)]),
+  ].sort();
 }
 
 function livePeriod(context: Context | undefined, selectedId: null | string) {
@@ -47,7 +51,7 @@ function livePeriod(context: Context | undefined, selectedId: null | string) {
 export function InactivityPage({
   client,
   navigate = (path) => {
-    window.location.assign(path);
+    navigateTo(path);
   },
 }: {
   client: ApiClient;
@@ -151,11 +155,7 @@ export function InactivityPage({
 
   const live = livePeriod(context, selectedPeriodId);
   const starts = useMemo(
-    () =>
-      includeMonths(
-        monthRange(context?.earliestFromMonth ?? "2026-01"),
-        live?.fromMonth,
-      ),
+    () => includeMonths(monthRange(context?.earliestFromMonth ?? "2026-01"), live?.fromMonth),
     [context?.earliestFromMonth, live?.fromMonth],
   );
   const previewKey = fromMonth === "" ? undefined : `${fromMonth}:${toMonth}`;
@@ -281,7 +281,7 @@ export function InactivityPage({
         <h1>{t("inactivity:title")}</h1>
       </header>
       {loadError ? (
-        <EmptyState
+        <ErrorState
           action={
             <Button
               onClick={() => {
@@ -289,7 +289,7 @@ export function InactivityPage({
                 setReload((value) => value + 1);
               }}
             >
-              {t("inactivity:loadError")}
+              {t("inactivity:retry")}
             </Button>
           }
           description={t("inactivity:loadError")}

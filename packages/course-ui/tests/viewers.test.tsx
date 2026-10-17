@@ -280,7 +280,7 @@ describe("T-16-04 the course viewers render the fixture courses", () => {
     expect(summary).toMatchSnapshot();
   });
 
-  it("#8 the 3D number badge paints the number on the contrasting badge pair", async () => {
+  it("T-16-04 the 3D number badge paints the number on the contrasting badge pair (E9-W02 round 2 #8)", async () => {
     const course = fixture(JUMPING);
     const ring = ringFor(course);
     render3D(course, ring, centred(ring));
@@ -296,7 +296,7 @@ describe("T-16-04 the course viewers render the fixture courses", () => {
   });
 });
 
-describe("#2 R-16-01/05 one heading convention: what the planners render is what is persisted", () => {
+describe("T-16-02 R-16-01/05 one heading convention: what the planners render is what is persisted (E9-W02 round 2 #2)", () => {
   const course = fixture(JUMPING);
   const plain = course.obstacles.find(
     (obstacle) => obstacle.controlPointsMeters === null && obstacle.obstacleType === "Jump",

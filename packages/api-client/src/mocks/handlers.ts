@@ -177,8 +177,7 @@ type BookingBlockRequest = components["schemas"]["BookingBlockRequest"];
 type RolesRequest = components["schemas"]["RolesRequest"];
 type NotificationPreferences = components["schemas"]["NotificationPreferences"];
 type NotificationPreferencesPatch = components["schemas"]["NotificationPreferencesRequest"];
-type DogPatchRequest = components["schemas"]["DogPatch"] &
-  components["schemas"]["DogPatchPendingFields"];
+type DogPatchRequest = components["schemas"]["DogPatch"];
 type DogLevelRequest = components["schemas"]["DogLevelRequest"];
 type FreeTrainingRequest = components["schemas"]["FreeTrainingRequest"];
 type DogTransferRequest = components["schemas"]["DogTransferRequest"];
@@ -206,12 +205,8 @@ type InstructorPatch = components["schemas"]["InstructorPatch"];
 type LevelCreate = components["schemas"]["LevelCreate"];
 type LevelOrder = components["schemas"]["LevelOrder"];
 type LevelPatch = components["schemas"]["LevelPatch"];
-type PlanCreate = components["schemas"]["PlanCreate"] & {
-  billingMode?: components["schemas"]["PlanBillingMode"];
-};
-type PlanPatch = components["schemas"]["PlanPatch"] & {
-  billingMode?: components["schemas"]["PlanBillingMode"];
-};
+type PlanCreate = components["schemas"]["PlanCreate"];
+type PlanPatch = components["schemas"]["PlanPatch"];
 type PriceCreate = components["schemas"]["PriceCreate"];
 type RingCreate = components["schemas"]["RingCreate"];
 type RingOrder = components["schemas"]["RingOrder"];

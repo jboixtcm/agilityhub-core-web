@@ -359,7 +359,7 @@ describe("T-13-31 admin inactivity lifecycle", () => {
   it("T-13-32 renders the complete requested-period actions in ca, es and en", async () => {
     const variants = [
       ["ca", "Inactivitat", "Aprova", "Denega"],
-      ["es", "Inactividad", "Aprueba", "Deniega"],
+      ["es", "Inactividad", "Aprobar", "Denegar"],
       ["en", "Inactivity", "Approve", "Deny"],
     ] as const;
     for (const [language, title, approve, deny] of variants) {

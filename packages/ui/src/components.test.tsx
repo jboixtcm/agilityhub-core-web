@@ -6,6 +6,7 @@ import {
   AppBar,
   Avatar,
   Badge,
+  BootFailure,
   Button,
   Card,
   Checkbox,
@@ -13,6 +14,7 @@ import {
   DataTable,
   Drawer,
   EmptyState,
+  ErrorState,
   FormField,
   IconButton,
   Input,
@@ -361,6 +363,40 @@ describe("base components", () => {
     );
     expect(screen.getByRole("heading", { name: "Sense dades" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Afegeix" })).toBeInTheDocument();
+  });
+
+  it("E11-W02 step 4: ErrorState is the empty state of a failed read, announced as an alert, with its retry", () => {
+    const retry = vi.fn();
+    render(
+      <ErrorState
+        action={<Button onClick={retry}>Torna-ho a provar</Button>}
+        description="No s'han pogut carregar els rebuts."
+        title="No s'han pogut carregar"
+      />,
+    );
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveClass("ah-empty-state", "ah-empty-state--error");
+    expect(alert).toHaveTextContent("No s'han pogut carregar els rebuts.");
+    expect(alert.querySelector("svg")).not.toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
+    expect(retry).toHaveBeenCalledOnce();
+  });
+
+  it("E11-W02 (INC-41): BootFailure says the app could not start, in a page of its own, with a retry", () => {
+    const retry = vi.fn();
+    render(
+      <BootFailure
+        message="No hi ha connexió amb el servidor."
+        onRetry={retry}
+        retryLabel="Torna-ho a provar"
+        title="No disponible"
+      />,
+    );
+    expect(screen.getByRole("main")).toHaveClass("ah-boot-failure");
+    expect(screen.getByRole("heading", { name: "No disponible" })).toBeInTheDocument();
+    expect(screen.getByText("No hi ha connexió amb el servidor.")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
+    expect(retry).toHaveBeenCalledOnce();
   });
 
   it("Skeleton announces loading without motion-dependent content", () => {

@@ -1,0 +1,132 @@
+$ (cd apps/clubs-admin && pnpm exec vitest run src/polish-styles.test.ts)
+# red run: the test files of this task on main's code (867d3c4, a detached worktree), 2026-10-16T23:13:40Z
+
+ RUN  v5.0.0 /tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/apps/clubs-admin
+
+ ❯ src/polish-styles.test.ts (6 tests | 6 failed) 25ms
+   ❯ E11-W02 (INC-11): D1 and D2 as their mockups draw them (5)
+     × D1: a KPI's label is one regular line under its figure, not a bold title 12ms
+     × D2: «Modalitat i tarifa» is the brand's pill, the width of its plan 3ms
+     × D2: the WhatsApp chip stays on the contact's line, and the contact wraps instead 2ms
+     × D2: the image warning's ⚠ sits beside its text's first line 2ms
+     × D2: the amount collected is the width of an amount, its badge on the same line 2ms
+   ❯ E11-W02 step 5 (axe link-in-text-block): a link inside a sentence is underlined (1)
+     × D11's last change («amb històric») is told apart by its underline, not by colour alone 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 (INC-11): D1 and D2 as their mockups draw them > D1: a KPI's label is one regular line under its figure, not a bold title
+AssertionError: expected '800' to be '400' // Object.is equality
+
+Expected: "400"
+Received: "800"
+
+ ❯ src/polish-styles.test.ts:30:38
+     28|   it("D1: a KPI's label is one regular line under its figure, not a bo…
+     29|     const label = declarations(".dashboard-kpi > span");
+     30|     expect(label.get("font-weight")).toBe("400");
+       |                                      ^
+     31|     expect(label.get("font-size")).toBe("0.875rem");
+     32|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 (INC-11): D1 and D2 as their mockups draw them > D2: «Modalitat i tarifa» is the brand's pill, the width of its plan
+AssertionError: expected '100%' to be 'fit-content' // Object.is equality
+
+Expected: "fit-content"
+Received: "100%"
+
+ ❯ src/polish-styles.test.ts:36:33
+     34|   it("D2: «Modalitat i tarifa» is the brand's pill, the width of its p…
+     35|     const select = declarations(".signup-review-plan .ah-select");
+     36|     expect(select.get("width")).toBe("fit-content");
+       |                                 ^
+     37|     expect(select.get("border-radius")).toBe("var(--ah-radius-full)");
+     38|     expect(select.get("background-color")).toBe("var(--ah-color-primar…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 (INC-11): D1 and D2 as their mockups draw them > D2: the WhatsApp chip stays on the contact's line, and the contact wraps instead
+AssertionError: expected undefined to be 'nowrap' // Object.is equality
+
+- Expected:
+"nowrap"
+
++ Received:
+undefined
+
+ ❯ src/polish-styles.test.ts:45:7
+     43|     expect(
+     44|       declarations(".signup-review-data dd:has(> .signup-review-whatsa…
+     45|     ).toBe("nowrap");
+       |       ^
+     46|     expect(declarations(".signup-review-whatsapp").get("flex")).toBe("…
+     47|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 (INC-11): D1 and D2 as their mockups draw them > D2: the image warning's ⚠ sits beside its text's first line
+AssertionError: expected undefined to be 'flex' // Object.is equality
+
+- Expected:
+"flex"
+
++ Received:
+undefined
+
+ ❯ src/polish-styles.test.ts:50:74
+     48|
+     49|   it("D2: the image warning's ⚠ sits beside its text's first line", ()…
+     50|     expect(declarations(".signup-review-warning--image").get("display"…
+       |                                                                          ^
+     51|     expect(declarations(".signup-review-warning--image .ah-icon").get(…
+     52|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 (INC-11): D1 and D2 as their mockups draw them > D2: the amount collected is the width of an amount, its badge on the same line
+AssertionError: expected undefined to be '8rem' // Object.is equality
+
+- Expected:
+"8rem"
+
++ Received:
+undefined
+
+ ❯ src/polish-styles.test.ts:55:83
+     53|
+     54|   it("D2: the amount collected is the width of an amount, its badge on…
+     55|     expect(declarations(".signup-review-upfront > label .ah-input").ge…
+       |                                                                                   ^
+     56|     expect(declarations(".signup-review-upfront > label .ah-badge").ge…
+     57|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 step 5 (axe link-in-text-block): a link inside a sentence is underlined > D11's last change («amb històric») is told apart by its underline, not by colour alone
+AssertionError: expected undefined to be 'underline' // Object.is equality
+
+- Expected:
+"underline"
+
++ Received:
+undefined
+
+ ❯ src/polish-styles.test.ts:62:73
+     60| describe("E11-W02 step 5 (axe link-in-text-block): a link inside a sen…
+     61|   it("D11's last change («amb històric») is told apart by its underlin…
+     62|     expect(declarations(".audit-last-change a").get("text-decoration")…
+       |                                                                         ^
+     63|   });
+     64| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  23:13:42
+   Duration  1.18s (environment 75%, setup 14%, transform 6%, tests 3%, import 2%)
+
+exit=1

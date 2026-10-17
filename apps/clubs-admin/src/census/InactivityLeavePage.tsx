@@ -58,6 +58,8 @@ function useSavedViews(client: ApiClient, listKey: string) {
     let current = true;
     void client.GET("/saved-views", { params: { query: { listKey } } }).then((result) => {
       if (current && result.data !== undefined) setViews(result.data);
+    }, () => {
+      // E11-W02 step 4: without its saved views the list still works; its own read says what failed.
     });
     return () => { current = false; };
   }, [client, listKey]);
@@ -226,6 +228,8 @@ export function InactivityLeavePage({ client, onNavigate }: { client: ApiClient;
         return typeof label === "string" ? [[item.key, label]] : [];
       });
       setLeaveReasons(new Map(entries));
+    }, () => {
+      // E11-W02 step 4: without the catalog the reasons read «—»; the list's own read says what failed.
     });
     return () => {
       current = false;

@@ -1,0 +1,83 @@
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs-admin
+
+·····x···········xxx·
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > INC-11 (mockup D1): a row reads «**Marta R.** + Kiwi (whippet)», the plan on the same line
+TestingLibraryElementError: Unable to find an element with the text: Marta R.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<article[39m
+  [33mclass[39m=[32m"dashboard-signups__row"[39m
+[36m>[39m
+  [36m<div>[39m
+    [36m<strong>[39m
+      [0mMarta R. + Kiwi (whippet)[0m
+    [36m</strong>[39m
+    [36m<small>[39m
+      [0mAbonat[0m
+      [0m · domiciliació[0m
+    [36m</small>[39m
+    [36m<small[39m
+      [33mclass[39m=[32m"dashboard-signups__date"[39m
+    [36m>[39m
+      [0menviada el 08/08/2026[0m
+    [36m</small>[39m
+  [36m</div>[39m
+  [36m<button[39m
+    [33maria-label[39m=[32m"VALIDA: Marta R. + Kiwi (whippet)"[39m
+    [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m>[39m
+    [36m<span[39m
+      [33mclass[39m=[32m"ah-button__content"[39m
+    [36m>[39m
+      [0mVALIDA[0m
+    [36m</span>[39m
+  [36m</button>[39m
+[36m</article>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/dashboard/DashboardPage.test.tsx:205:30
+    203|     await renderDashboard();
+    204|     const row = signupRow(/^Marta R\./u);
+    205|     const name = within(row).getByText("Marta R.");
+       |                              ^
+    206|     expect(name.tagName).toBe("STRONG");
+    207|     expect(name.parentElement).toHaveTextContent("Marta R. + Kiwi (whi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 1 in the chart legend
+ FAIL  src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 2 in the chart legend
+ FAIL  src/dashboard/DashboardPage.test.tsx > E3-W07 step 9 · the D1 minors (S14 R-14-05…07, T-14-25) > follows coverage.activeDogWeeks = 3 in the chart legend
+Error: [2mexpect([22m[31mreceived[39m[2m).toHaveTextContent()[22m
+
+[31mreceived[39m value must be a Node.
+Received has type:  Null
+Received has value: [31mnull[39m
+ ❯ src/dashboard/DashboardPage.test.tsx:328:20
+    326|     );
+    327|     const legend = document.querySelector(".dashboard-chart__legend");
+    328|     expect(legend).toHaveTextContent(text);
+       |                    ^
+    329|     // INC-11 (mockup D1): each part of the legend has its swatch, in …
+    330|     expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 17 passed (21)
+   Start at  21:52:37
+   Duration  6.73s (transform 39%, tests 38%, environment 12%, import 10%, setup 2%)
+
+  Transform  transforming modules took 2.55s · 39% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit=1

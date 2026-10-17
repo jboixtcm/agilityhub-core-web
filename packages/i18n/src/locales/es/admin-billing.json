@@ -24,7 +24,7 @@
     "refresh": "Actualizar",
     "cancel": "Cancelar",
     "close": "Cerrar",
-    "retry": "Vuelve a intentarlo"
+    "retry": "Volver a intentarlo"
   },
   "confirm": {
     "generateTitle": "Generar los recibos · {month}",

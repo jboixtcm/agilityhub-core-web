@@ -42,7 +42,9 @@ const COLORS = {
   door: 'var(--ah-color-course-door)',
   doorStroke: 'var(--ah-color-course-door-accent)',
   doorLabel: 'var(--ah-color-course-text)',
-  axis: 'var(--ah-color-course-ring)',
+  // The origin and the ring sides are text: the course text colour, never the ring's border
+  // colour (1.4:1 on the floor; E11-W02, INC-60).
+  axis: 'var(--ah-color-course-text)',
 };
 
 export interface RingMarkerDiagramProps {

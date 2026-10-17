@@ -8,58 +8,6 @@
   "paths": {},
   "x-schema-overlays": {},
   "components": {
-    "schemas": {
-      "DogPendingFields": {
-        "type": "object",
-        "properties": {
-          "handlerName": {
-            "type": "string",
-            "maxLength": 80
-          }
-        }
-      },
-      "LicensePendingFields": {
-        "type": "object",
-        "properties": {
-          "category": {
-            "type": "string",
-            "maxLength": 10
-          },
-          "division": {
-            "type": "string",
-            "maxLength": 20
-          }
-        }
-      },
-      "LicenseWithPendingFields": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/License"
-          },
-          {
-            "$ref": "#/components/schemas/LicensePendingFields"
-          }
-        ]
-      },
-      "DogPatchPendingFields": {
-        "type": "object",
-        "properties": {
-          "handlerName": {
-            "type": "string",
-            "maxLength": 80
-          },
-          "licenses": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LicenseWithPendingFields"
-            }
-          }
-        }
-      },
-      "PlanBillingMode": {
-        "type": "string",
-        "enum": ["MONTHLY_FEE", "MAINTENANCE"]
-      }
-    }
+    "schemas": {}
   }
 }

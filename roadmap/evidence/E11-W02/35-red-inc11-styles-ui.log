@@ -1,0 +1,58 @@
+$ (cd packages/ui && pnpm exec vitest run src/polish-styles.test.ts)
+# red run: the test files of this task on main's code (867d3c4, a detached worktree), 2026-10-16T23:13:43Z
+
+ RUN  v5.0.0 /tmp/claude-0/-home-user/3d42cdcf-70a5-5d85-8acf-67e45e00fea0/scratchpad/headtree/packages/ui
+
+ ❯ src/polish-styles.test.ts (2 tests | 2 failed) 15ms
+   ❯ E11-W02 (INC-11, screen 10 at 375 px): a day-grid title wraps between its words (1)
+     × two lines at most, never cut inside a word («Obed. utilitat», not «Obed. u…») 11ms
+   ❯ E11-W02 step 5: a tone's chip and badge read at AA on their own tinted fill (1)
+     × the label leans a fifth towards the text colour (axe: 4.26:1 with the bare tone) 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 (INC-11, screen 10 at 375 px): a day-grid title wraps between its words > two lines at most, never cut inside a word («Obed. utilitat», not «Obed. u…»)
+AssertionError: expected undefined to be 'normal' // Object.is equality
+
+- Expected:
+"normal"
+
++ Received:
+undefined
+
+ ❯ src/polish-styles.test.ts:28:38
+     26|   it("two lines at most, never cut inside a word («Obed. utilitat», no…
+     27|     const title = declarations(read("day-grid.css"), ".ah-day-grid .ah…
+     28|     expect(title.get("white-space")).toBe("normal");
+       |                                      ^
+     29|     expect(title.get("-webkit-line-clamp")).toBe("2");
+     30|     expect(title.get("line-clamp")).toBe("2");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/polish-styles.test.ts > E11-W02 step 5: a tone's chip and badge read at AA on their own tinted fill > the label leans a fifth towards the text colour (axe: 4.26:1 with the bare tone)
+AssertionError: expected 'var(--ah-tone-color, var(--ah-color-t…' to match /^color-mix\(\s*in srgb,\s*var\(--ah-…/u
+
+- Expected:
+/^color-mix\(\s*in srgb,\s*var\(--ah-tone-color, var\(--ah-color-text-muted\)\) 80%,\s*var\(--ah-color-text\)\s*\)$/u
+
++ Received:
+"var(--ah-tone-color, var(--ah-color-text-muted))"
+
+ ❯ src/polish-styles.test.ts:39:75
+     37|   it("the label leans a fifth towards the text colour (axe: 4.26:1 wit…
+     38|     for (const selector of [".ah-chip", ".ah-badge"]) {
+     39|       expect(declarations(read("components.css"), selector).get("color…
+       |                                                                           ^
+     40|         /^color-mix\(\s*in srgb,\s*var\(--ah-tone-color, var\(--ah-col…
+     41|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  23:13:44
+   Duration  1.25s (environment 73%, setup 19%, transform 5%, tests 1%, worker 1%, import 1%)
+
+exit=1

@@ -1,0 +1,53 @@
+$ (cd apps/clubs && pnpm exec vitest run src/screens-namespaces.test.tsx)
+# red run, App.tsx as pushed in ce81b4e: a screen of the lazy chunk (04) shows before the app's other namespaces load; the probe found 04, 25 and the receipts hidden again under the loading state 70 ms after showing. 2026-10-17T09:15:53Z
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs
+
+ ❯ src/screens-namespaces.test.tsx (1 test | 1 failed) 1413ms
+   ❯ A38 (E11-W02 step 1): a screen of the lazy chunk never hides itself again (1)
+     × a screen of the chunk is shown with every namespace of the app loaded: what it mounts with its data never hides it again (04, 25, the receipts) 1403ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/screens-namespaces.test.tsx > A38 (E11-W02 step 1): a screen of the lazy chunk never hides itself again > a screen of the chunk is shown with every namespace of the app loaded: what it mounts with its data never hides it again (04, 25, the receipts)
+AssertionError: expected [ 'activities', 'billing', …(9) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "activities",
++   "billing",
++   "census",
++   "courses",
++   "history",
++   "inactivity",
++   "instructor",
++   "leave",
++   "notifications",
++   "signup",
++   "training",
++ ]
+
+ ❯ src/screens-namespaces.test.tsx:61:88
+     59|     );
+     60|     await screen.findByRole("heading", { level: 1, name: "Reservar" },…
+     61|     expect(clubsNamespaces.filter((namespace) => !i18n.hasLoadedNamesp…
+       |                                                                                        ^
+     62|   });
+     63| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  09:15:55
+   Duration  7.29s (transform 53%, tests 20%, import 13%, environment 12%, setup 2%)
+
+  Transform  transforming modules took 3.77s · 53% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+exit=1

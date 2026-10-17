@@ -743,7 +743,7 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     expect((await stored())?.emailByCategory.PERSONAL).toBe(true);
   });
 
-  it("E7-W05 step 5 (R-11-04): the departure's keepalive PUT is held across pagehide(persisted) and pageshow(persisted) — the kept change goes again as a normal save once it settles, and the outbox clears only when that save is answered", async () => {
+  it("E7-W05 step 5 (R-11-04), E11-W02 INC-55 #2: the departure's keepalive PUT is held across pagehide(persisted) and pageshow(persisted) — the kept change waits for it, and its 2xx (sent alone, nothing out since) saves it: the outbox clears and nothing goes again", async () => {
     const departure = gate();
     const save = gate();
     planPuts([{ answerAfter: departure.opened }, { answerAfter: save.opened }]);
@@ -770,17 +770,14 @@ describe("T-11-38 D10 «Preferències d'avisos» (S11 §2, R-11-04)", () => {
     expect(outbox()).toMatchObject({ patch: { emailByCategory: { OPERATIONAL: true } } });
     expect(operational()).toHaveAttribute("aria-checked", "true");
     departure.open();
-    await waitFor(() => {
-      expect(puts).toHaveLength(2);
-    });
-    expect(puts[1]).toEqual({ body: { emailByCategory: { OPERATIONAL: true } }, keepalive: false });
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    // That save has not been answered: the outbox stays.
-    expect(outbox()).toMatchObject({ patch: { emailByCategory: { OPERATIONAL: true } } });
-    save.open();
+    // INC-55 #2: the departure's 2xx is the kept change's own answer — saved, it leaves the outbox
+    // and is never sent again (over a change made elsewhere meanwhile).
     await waitFor(() => {
       expect(outbox()).toBeNull();
     });
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    expect(puts).toHaveLength(1);
+    save.open();
     expect(operational()).toHaveAttribute("aria-checked", "true");
     expect((await stored())?.emailByCategory.OPERATIONAL).toBe(true);
   });

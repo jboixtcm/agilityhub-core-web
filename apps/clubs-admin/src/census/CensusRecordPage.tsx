@@ -56,9 +56,8 @@ function isNotificationPreferences(value: unknown): value is NotificationPrefere
   );
 }
 type ApiDogDetail = components["schemas"]["DogDetail"];
-type License = components["schemas"]["LicenseWithPendingFields"];
-type Dog = Omit<components["schemas"]["Dog"], "licenses"> &
-  components["schemas"]["DogPendingFields"] & { licenses: License[] };
+type License = components["schemas"]["License"];
+type Dog = Omit<components["schemas"]["Dog"], "licenses"> & { licenses: License[] };
 type DogDetail = Omit<ApiDogDetail, "dog" | "licenses"> &
   Dog & {
     dog: Dog;
@@ -67,13 +66,10 @@ type DogDetail = Omit<ApiDogDetail, "dog" | "licenses"> &
 /** The transfer's new owner: the member list asked for the name only (`fields`). */
 const TRANSFER_MEMBER_FIELDS = ["fullName"] as const;
 type TransferMember = ListItemWith<components["schemas"]["MemberListItem"], "fullName">;
-type DogPatchRequest = components["schemas"]["DogPatch"] &
-  components["schemas"]["DogPatchPendingFields"];
+type DogPatchRequest = components["schemas"]["DogPatch"];
 type LevelSummary = components["schemas"]["LevelSummary"];
 type DogDocument = components["schemas"]["DogDocument"];
-type Plan = components["schemas"]["Plan"] & {
-  billingMode?: components["schemas"]["PlanBillingMode"];
-};
+type Plan = components["schemas"]["Plan"];
 type Role = "ADMIN" | "INSTRUCTOR" | "MEMBER";
 type MemberDialog =
   "block" | "impersonate" | "inactivity" | "leave" | "payment" | "plan" | "resend" | "roles" | null;

@@ -4,7 +4,7 @@
     "close": "Cerrar",
     "loading": "Cargando",
     "none": "—",
-    "retry": "Vuelve a intentarlo",
+    "retry": "Volver a intentarlo",
     "save": "Guardar",
     "saving": "Guardando"
   },
@@ -13,7 +13,7 @@
     "title": "Biblioteca de recorridos",
     "description": "Los recorridos del club, la biblioteca de AgilityHub y los tuyos.",
     "caption": "Listado de recorridos",
-    "search": "Busca un recorrido",
+    "search": "Buscar un recorrido",
     "new": "Nuevo recorrido",
     "newSmarter": "Importar un archivo Smarter (.txt)",
     "newImage": "Subir un plano o foto",

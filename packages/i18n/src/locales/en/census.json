@@ -177,6 +177,10 @@
     "save": "SAVE"
   },
   "myDogs": {
+    "sex": {
+      "FEMALE": "Female",
+      "MALE": "Male"
+    },
     "addDocument": "＋ DOC.",
     "addDog": "＋ ADD A DOG",
     "available": "{count} available",
