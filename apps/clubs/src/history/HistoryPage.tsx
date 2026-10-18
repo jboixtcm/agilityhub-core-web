@@ -1,6 +1,15 @@
 import { type ApiClient, type components, isApiError } from "@agilityhub/api-client";
 import { type ClubFormats, useClubFormats } from "@agilityhub/i18n";
-import { AppBar, Button, Card, IconButton, Skeleton, Toast, type Tone } from "@agilityhub/ui";
+import {
+  AppBar,
+  Button,
+  Card,
+  EmptyState,
+  IconButton,
+  Skeleton,
+  Toast,
+  type Tone,
+} from "@agilityhub/ui";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -258,7 +267,7 @@ export function HistoryPage({ client }: { client: ApiClient }) {
       </p>
       {data.items.length === 0 ? (
         <Card>
-          <p>{t("history:empty")}</p>
+          <EmptyState icon="clock" title={t("history:empty")} />
         </Card>
       ) : (
         <ul aria-label={t("history:list")} className="history-screen__list">

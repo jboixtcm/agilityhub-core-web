@@ -1,0 +1,16 @@
+$ pnpm --filter clubs-admin exec vitest run src/census/CensusListPage.test.tsx -t "never codes"   # before
+     × D5: the payment method and the pending documents by their labels 1527ms
+     × D15: «Al nivell des de» and «Data d'alta» are instants, shown as the club's calendar day 10616ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+TestingLibraryElementError: Unable to find an element with the text: Efectiu. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+TestingLibraryElementError: Unable to find an element with the text: Duna. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+RangeError: Invalid plain date: 2025-01-31T23:30:00Z
+    128|   if (date === undefined) throw new RangeError(`Invalid plain date: ${…
+      Tests  2 failed | 6 skipped (8)
+exit 1
+$ pnpm --filter clubs-admin exec vitest run src/census/CensusListPage.test.tsx   # after
+ ✓ src/census/CensusListPage.test.tsx > E11-W02 round 2 (INC-41): D5 and D15 show labels and the club's dates, never codes > D5: the payment method and the pending documents by their labels 1413ms
+ ✓ src/census/CensusListPage.test.tsx > E11-W02 round 2 (INC-41): D5 and D15 show labels and the club's dates, never codes > D15: «Al nivell des de» and «Data d'alta» are instants, shown as the club's calendar day 928ms
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+exit 0

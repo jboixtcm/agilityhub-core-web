@@ -1,5 +1,14 @@
 import type { ApiClient, components } from "@agilityhub/api-client";
-import { Card, Icon, LimitedMarkdown, Skeleton, Tabs, useBranding } from "@agilityhub/ui";
+import {
+  Card,
+  EmptyState,
+  ErrorState,
+  Icon,
+  LimitedMarkdown,
+  Skeleton,
+  Tabs,
+  useBranding,
+} from "@agilityhub/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -36,7 +45,7 @@ function FaqPanel({ items }: { items: FaqItem[] }) {
   const categories = useMemo(() => faqGroups(items), [items]);
 
   if (items.length === 0) {
-    return <p className="info-page__empty">{t("shell:info.noFaq")}</p>;
+    return <EmptyState title={t("shell:info.noFaq")} />;
   }
 
   return (
@@ -178,9 +187,9 @@ export function InfoPage({ client }: { client: ApiClient }) {
     <section className="info-page">
       <h1>{t("shell:nav.info")}</h1>
       {loading ? <Skeleton label={t("shell:info.loading")} /> : null}
-      {failed ? <p role="alert">{t("shell:info.loadError")}</p> : null}
+      {failed ? <ErrorState title={t("shell:info.loadError")} /> : null}
       {!loading && !failed && tabItems.length === 0 ? (
-        <p className="info-page__empty">{t("shell:info.empty")}</p>
+        <EmptyState title={t("shell:info.empty")} />
       ) : null}
       {!loading && !failed && tabItems.length > 0 ? (
         <Tabs

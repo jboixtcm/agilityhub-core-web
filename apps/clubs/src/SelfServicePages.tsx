@@ -16,6 +16,7 @@ import {
   Input,
   Modal,
   Select,
+  Skeleton,
   Textarea,
   useBranding,
 } from "@agilityhub/ui";
@@ -907,7 +908,7 @@ export function MyDogsPage({ client }: { client: ApiClient }) {
             title={t("census:selfService.errorTitle")}
           />
         ) : data === undefined ? (
-          <p role="status">{t("census:myDogs.loading")}</p>
+          <Skeleton height="12rem" label={t("census:myDogs.loading")} />
         ) : data.dogs.length === 0 ? (
           <EmptyState
             action={
@@ -1112,9 +1113,11 @@ export function MyDataPage({ client }: { client: ApiClient }) {
     return (
       <div className="self-page">
         <PageHeader title={t("census:myData.title")} />
-        <p className="self-page__loading" role="status">
-          {t("census:myData.loading")}
-        </p>
+        <Skeleton
+          className="self-page__loading"
+          height="12rem"
+          label={t("census:myData.loading")}
+        />
       </div>
     );
   }

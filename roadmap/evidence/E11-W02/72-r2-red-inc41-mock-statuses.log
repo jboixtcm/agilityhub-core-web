@@ -1,0 +1,17 @@
+$ pnpm --filter @agilityhub/api-client exec vitest run src/mocks/mock-statuses.contract.test.ts   # before
+     × no handler's apiError status differs from the contract's for that operation and code 34ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
++   "handlers.ts: POST /api/v1/me/dogs/{}/documents DOCUMENT_TYPE_UNKNOWN: mock 400, api 422",
++   "handlers.ts: POST /api/v1/dogs/{}/transfer TARGET_MEMBER_NOT_ACTIVE: mock 409, api 422",
++   "handlers.ts: POST /api/v1/dogs/{}/deactivation DOG_NOT_ACTIVE: mock 409, api 422",
++   "handlers.ts: POST /api/v1/dogs/{}/reactivation TARGET_MEMBER_NOT_ACTIVE: mock 409, api 422",
++   "handlers.ts: POST /api/v1/dogs/{}/documents DOCUMENT_TYPE_UNKNOWN: mock 400, api 422",
++   "handlers.ts: POST /api/v1/dogs/{}/documents/reminder DOCUMENT_REMINDER_TOO_SOON: mock 409, api 422",
++   "member-billing-handlers.ts: POST /api/v1/pack-balances/{}/adjustments: mock 201, api 200",
+      Tests  1 failed | 1 passed (2)
+exit 1
+$ pnpm --filter @agilityhub/api-client exec vitest run src/mocks/mock-statuses.contract.test.ts   # after
+ ✓ src/mocks/mock-statuses.contract.test.ts > E11-W02 round 2 (INC-41): the mocks answer each error with the api's status > no handler's apiError status differs from the contract's for that operation and code 30ms
+ ✓ src/mocks/mock-statuses.contract.test.ts > E11-W02 round 2 (INC-41): the mocks answer each error with the api's status > the check finds a mismatch when there is one (a 409 the contract gives as 422) 0ms
+      Tests  2 passed (2)
+exit 0

@@ -30,6 +30,7 @@ import {
   ToastProvider,
   type TabBarItem,
   useBranding,
+  useBrandingLogo,
 } from "@agilityhub/ui";
 import {
   lazy,
@@ -51,7 +52,14 @@ import { DataExportCard } from "./profile/DataExportCard";
 import { NoticesCard } from "./profile/NoticesCard";
 import { ProfileLifecycleSection } from "./profile/ProfileLifecycleSection";
 import { PublicFooter } from "./PublicFooter";
-import { navigate as navigateTo, useInAppLinks } from "./router";
+import {
+  navigate as navigateTo,
+  type NavigationKind,
+  takeNavigation,
+  useInAppLinks,
+} from "./router";
+import { ScreenBoundary } from "./ScreenBoundary";
+import { useDocumentScroll } from "./scroll";
 import { useTrainingCacheIdentity, useTrainingTab } from "./training/shared";
 
 /** The screens' chunk (`./screens`): loaded once, the first time a screen behind the access opens. */
@@ -273,7 +281,7 @@ async function routeAfterLogin(me: Me, authClient: AuthClient): Promise<string> 
 
 function LogoMark({ compact = false }: { compact?: boolean }) {
   const branding = useBranding();
-  const logo = resolveBrandingLogo(branding.theme, { placement: "full" });
+  const logo = useBrandingLogo("full");
   return (
     <div className={compact ? "auth-logo auth-logo--compact" : "auth-logo"}>
       {logo.kind === "initial" ? (
@@ -485,10 +493,13 @@ function ImpersonationBanner({ authClient }: { authClient: AuthClient }) {
   );
 }
 
-/** The screens' chunk on its way (E11-W02 step 6): the UI kit's loading state. */
-function ScreenLoading() {
-  const { t } = useTranslation("shell");
-  return <Skeleton height="12rem" label={t("shell:loading")} />;
+/** The screen the app shows (A38): its address, how the app came to it, and which visit it is. */
+interface AppLocation {
+  kind: NavigationKind;
+  /** The address's path and query, as the app last read them. */
+  path: string;
+  /** Counts the screens shown: a new one remounts the screen and sets the document's scroll. */
+  visit: number;
 }
 
 function MobileShell({
@@ -496,25 +507,22 @@ function MobileShell({
   children,
   client,
   detail = false,
+  location,
   pathname,
-  screen,
 }: {
   authClient: AuthClient;
   children: ReactNode;
   client: ApiClient;
   detail?: boolean;
+  /** The screen shown and how the app came to it (`AppContent`'s location). */
+  location: AppLocation;
   pathname: string;
-  /** The route pattern of the screen shown (`MOBILE_ROUTES`' `path`). */
-  screen: string;
 }) {
   const branding = useBranding();
   const session = useSession();
   const { t } = useTranslation("shell");
-  const content = useRef<HTMLElement>(null);
-  // A38: the shell stays mounted from one screen to the next, so each new screen starts at its top.
-  useEffect(() => {
-    if (content.current !== null) content.current.scrollTop = 0;
-  }, [pathname]);
+  // A38: the shell stays mounted from one screen to the next; the document's scroll follows them.
+  useDocumentScroll(location.visit, location.kind);
   const logo = resolveBrandingLogo(branding.theme, { placement: "compact" });
   // `GET /me/training-summary` is the member's (also impersonated): no call for staff-only roles.
   const trainingTab = useTrainingTab(
@@ -556,13 +564,13 @@ function MobileShell({
           />
         )}
       </div>
-      <main className="clubs-shell__content" ref={content}>
-        {/* A38: one boundary per route. A screen the user left unmounts at once, as when the
-            screens were static: under a shared boundary it would stay mounted, hidden, while the
-            next screen's chunk loads, and a late answer could still take the user back (R-16-11). */}
-        <Suspense fallback={<ScreenLoading />} key={screen}>
-          {children}
-        </Suspense>
+      <main className="clubs-shell__content">
+        {/* A38: one boundary per screen shown. A screen the user left unmounts at once, as when
+            the screens were static: under a shared boundary it would stay mounted, hidden, while
+            the next screen's chunk loads, and a late answer could still take the user back
+            (R-16-11). Keyed by the visit, not the route: the same screen opened at another
+            address (`/historic?tipus=…` → `/historic`) reads that address again (round 2). */}
+        <ScreenBoundary key={location.visit}>{children}</ScreenBoundary>
       </main>
       <MobileNavigation
         activeProfile={session.activeProfile}
@@ -1567,12 +1575,24 @@ function AppContent({
   publicApiClient = defaultApiClient,
 }: AppProps) {
   useInAppLinks();
-  const [location, setLocation] = useState(
-    () => `${window.location.pathname}${window.location.search}`,
-  );
+  const [location, setLocation] = useState<AppLocation>(() => ({
+    kind: "load",
+    path: `${window.location.pathname}${window.location.search}`,
+    visit: 0,
+  }));
   useEffect(() => {
     const handlePopState = () => {
-      setLocation(`${window.location.pathname}${window.location.search}`);
+      const { from, kind } = takeNavigation();
+      const path = `${window.location.pathname}${window.location.search}`;
+      setLocation((current) => {
+        // A screen rewrites its query in place (`writeParam`), leaving `current.path` behind the
+        // document's: a navigation away from the address the document showed is a new visit too.
+        const moved = path !== current.path || (from !== undefined && from !== path);
+        // A jump to a hash of the same page (the browser's own) keeps the screen and its scroll.
+        return moved || kind !== "pop"
+          ? { kind, path, visit: current.visit + (moved ? 1 : 0) }
+          : current;
+      });
     };
     window.addEventListener("popstate", handlePopState);
     return () => {
@@ -1582,7 +1602,7 @@ function AppContent({
   // The offline copy of 08 belongs to one club and person: a change of identity drops it.
   useTrainingCacheIdentity();
   const session = useSession();
-  const address = new URL(location, window.location.origin);
+  const address = new URL(location.path, window.location.origin);
   const pathname = address.pathname;
   if (
     session.status === "impersonationExpired" &&
@@ -1609,9 +1629,9 @@ function AppContent({
   if (pathname === "/comunicats/baixa") {
     // S11 R-11-08: the «Deixar de rebre aquests comunicats» link of a CLUB_NEWS e-mail.
     return (
-      <Suspense fallback={<ScreenLoading />}>
+      <ScreenBoundary>
         <UnsubscribePage client={publicApiClient} logo={<LogoMark compact />} />
-      </Suspense>
+      </ScreenBoundary>
     );
   }
   if (pathname === "/benvinguda") {
@@ -1652,13 +1672,13 @@ function AppContent({
   }
   if (pathname === "/apuntat-hi" || pathname.startsWith("/apuntat-hi/")) {
     return (
-      <Suspense fallback={<ScreenLoading />}>
+      <ScreenBoundary>
         <SignupPage
           authenticated={session.status === "signedIn"}
           client={publicApiClient}
           onNavigate={loadSignupStep}
         />
-      </Suspense>
+      </ScreenBoundary>
     );
   }
   if (pathname === "/gossos/nou" || pathname.startsWith("/gossos/nou/")) {
@@ -1671,9 +1691,9 @@ function AppContent({
         presentation="modal"
       >
         <RequireAuth>
-          <Suspense fallback={<ScreenLoading />}>
+          <ScreenBoundary>
             <SignupPage addDog client={apiClient} onNavigate={loadSignupStep} />
-          </Suspense>
+          </ScreenBoundary>
         </RequireAuth>
       </OnboardingExperience>
     );
@@ -1899,8 +1919,8 @@ function AppContent({
       <MobileShell
         authClient={authClient}
         client={apiClient}
+        location={location}
         pathname={pathname}
-        screen={route.path}
         detail={
           [
             "/gossos",
@@ -1919,6 +1939,9 @@ function AppContent({
             "/reservar/confirmar",
             "/entrenaments",
             "/historic",
+            // Mockup 12 has no shell header: its own «Idioma» card is the screen's only selector
+            // (E11-W02 round 2, INC-41: two language selectors).
+            "/perfil",
           ].includes(pathname) ||
           [
             "/activitats/:id",

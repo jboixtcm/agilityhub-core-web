@@ -686,6 +686,30 @@ describe("E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMI
     expect(screen.queryByRole("button", { name: "Exportacions" })).toBeNull();
   });
 
+  it.each(["/tauler", "/no-existeix", "/abonats"])(
+    "E11-W02 round 2 (INC-41): an INSTRUCTOR without ADMIN who opens %s lands on D12, its week, never on an empty page; the address says /agenda",
+    async (path) => {
+      mockScenario("instructor");
+      const client = authClient();
+      await client.login("marc@example.test", "secret-password");
+      window.history.pushState(null, "", path);
+      const entries = window.history.length;
+      await renderApplication(client);
+      expect(
+        await screen.findByRole(
+          "heading",
+          { level: 1, name: "Agenda de la setmana" },
+          { timeout: 5_000 },
+        ),
+      ).toBeVisible();
+      await waitFor(() => {
+        expect(window.location.pathname).toBe("/agenda");
+      });
+      // Replaced, not pushed: [Enrere] never returns to a page the account cannot open.
+      expect(window.history.length).toBe(entries);
+    },
+  );
+
   it("an unknown path lands a platform-only account on the console list, never on D1", async () => {
     await renderPlatform("/");
     expect(

@@ -20,6 +20,7 @@ import {
   AppBar,
   Button,
   Card,
+  EmptyState,
   Icon,
   IconButton,
   Input,
@@ -387,12 +388,12 @@ export function RingBlockPage({
       ) : null}
       {grid.status === "closed" ? (
         <Card className="training-closed">
-          <p>{t("training:day.closed")}</p>
+          <EmptyState icon="cal" title={t("training:day.closed")} />
         </Card>
       ) : null}
       {grid.status === "ready" ? (
         rows.length === 0 ? (
-          <p className="booking-screen__intro">{t("instructor:ringBlock.noSlots")}</p>
+          <EmptyState icon="cal" title={t("instructor:ringBlock.noSlots")} />
         ) : (
           // Inert while the block is sent: the answer belongs to the cells shown.
           <fieldset className="training-fieldset" disabled={pending}>

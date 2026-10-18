@@ -1,6 +1,6 @@
 import { type ApiClient, studentSearchGuide, useStudentSearch } from "@agilityhub/api-client";
 import { useFollowupTexts } from "@agilityhub/i18n";
-import { Button, Card, Icon, Input, Skeleton, Toast } from "@agilityhub/ui";
+import { Button, Card, EmptyState, Icon, Input, Skeleton, Toast } from "@agilityhub/ui";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -62,7 +62,7 @@ export function StudentsPage({
       ) : null}
       {dogs.loading || dogs.firstFailed ? null : dogs.items.length === 0 ? (
         <Card>
-          <p>{t("instructor:students.empty")}</p>
+          <EmptyState icon="search" title={t("instructor:students.empty")} />
         </Card>
       ) : (
         <Card>

@@ -39,19 +39,6 @@
   font-size: 0.8125rem;
 }
 
-.notifications-page__empty {
-  display: grid;
-  justify-items: center;
-  gap: var(--ah-space-2);
-  padding: var(--ah-space-6) var(--ah-space-4);
-  color: var(--ah-color-text-muted);
-  text-align: center;
-}
-
-.notifications-page__empty p {
-  margin: 0;
-}
-
 .notifications-page__more {
   display: grid;
 }

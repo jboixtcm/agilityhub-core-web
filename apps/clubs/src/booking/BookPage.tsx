@@ -5,6 +5,7 @@ import {
   Badge,
   Button,
   Card,
+  EmptyState,
   Icon,
   Modal,
   Skeleton,
@@ -320,7 +321,7 @@ export function BookPage({ client }: { client: ApiClient }) {
           {t("booking:classes.title")}
         </h2>
         {data.classes.length === 0 ? (
-          <p className="booking-screen__intro">{t("booking:classes.empty")}</p>
+          <EmptyState icon="cal" title={t("booking:classes.empty")} />
         ) : (
           data.classes.map((row) => {
             const start = localParts(row.startsAtLocal);

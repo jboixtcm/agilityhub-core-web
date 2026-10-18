@@ -164,7 +164,7 @@ function Detail({ client, id }: { client: ApiClient; id: string }) {
         <h1>{t("billing:detail.title")}</h1>
       </header>
       {state === "moduleOff" ? (
-        <EmptyState description={t("errors:MODULE_DISABLED")} title={t("errors:MODULE_DISABLED")} />
+        <EmptyState title={t("errors:MODULE_DISABLED")} />
       ) : state === "error" ? (
         <ErrorState
           action={
@@ -332,9 +332,9 @@ export function InvoicesPage({
           title={t("billing:loadError")}
         />
       ) : state === "moduleOff" ? (
-        <EmptyState description={t("errors:MODULE_DISABLED")} title={t("errors:MODULE_DISABLED")} />
+        <EmptyState title={t("errors:MODULE_DISABLED")} />
       ) : items.length === 0 ? (
-        <EmptyState description={t("billing:empty")} title={t("billing:empty")} />
+        <EmptyState title={t("billing:empty")} />
       ) : (
         <Card className="receipt-list">
           {items.map((item) => (

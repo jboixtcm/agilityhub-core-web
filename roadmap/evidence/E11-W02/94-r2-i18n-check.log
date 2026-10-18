@@ -1,0 +1,13 @@
+$ pnpm i18n:check
+
+> agilityhub-core-web@0.0.0 i18n:check /home/user/agilityhub-core-web
+> node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs && node scripts/check-parameter-keys.mjs
+
+i18n check passed
+ca: 5091 keys
+es: 5091 keys
+en: 5091 keys
+3915 statically used keys, 0 unused
+251 codes, 0 missing
+150 catalog parameters (118 in D11, 32 system-only), 11 blocks, 0 missing
+exit=0

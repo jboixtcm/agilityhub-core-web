@@ -1,0 +1,437 @@
+$ (cd apps/clubs && pnpm exec vitest run src/screen-load-error.test.tsx src/chunk-reload.test.ts src/router-shell.test.tsx)
+# round 2 red run (points 3-5): main 012f05b's router and shell (no chunk-reload module yet); 2026-10-18T11:57:37Z
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs
+
+ ❯ src/screen-load-error.test.tsx (0 test)
+ ❯ src/chunk-reload.test.ts (0 test)
+ ❯ src/router-shell.test.tsx (3 tests | 3 failed) 17280ms
+   ❯ E11-W02 round 2 (review #5): the same screen with another query reads it again (1)
+     × 25 opened from «tipus=TRAINING» and then from its plain address shows every type 11031ms
+   ❯ E11-W02 round 2 (review #6): the document's scroll on push, Back and a hash (2)
+     × a tab opens its screen at the top; Back returns to where the reader was 834ms
+     × «/perfil#avisos» opens 12 at its notices card 5408ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/chunk-reload.test.ts [ src/chunk-reload.test.ts ]
+Error: Failed to resolve import "./chunk-reload" from "src/chunk-reload.test.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /home/user/agilityhub-core-web/apps/clubs/src/chunk-reload.test.ts:3:45
+  1  |  import { afterEach, describe, expect, it, vi } from "vitest";
+  2  |  import { isChunkLoadError, reloadOnce } from "./chunk-reload";
+     |                                                ^
+  3  |  afterEach(() => {
+  4  |  	sessionStorage.clear();
+ ❯ TransformPluginContext._formatLog ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:31147:39
+ ❯ TransformPluginContext.error ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:31144:14
+ ❯ normalizeUrl ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28083:18
+ ❯ ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28153:30
+ ❯ TransformPluginContext.transform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28119:4
+ ❯ EnvironmentPluginContainer.transform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:30932:14
+ ❯ loadAndTransform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:20671:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/screen-load-error.test.tsx [ src/screen-load-error.test.tsx ]
+Error: Failed to resolve import "./chunk-reload" from "src/screen-load-error.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /home/user/agilityhub-core-web/apps/clubs/src/screen-load-error.test.tsx:12:0
+  13 |  const __vi_import_7__ = await import("react-i18next");
+  14 |  const __vi_import_8__ = await import("./App");
+  15 |  const __vi_import_9__ = await import("./chunk-reload");
+     |                                       ^
+  16 |  const __vi_import_10__ = await import("react/jsx-dev-runtime");
+  17 |  
+ ❯ TransformPluginContext._formatLog ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:31147:39
+ ❯ TransformPluginContext.error ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:31144:14
+ ❯ normalizeUrl ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28083:18
+ ❯ ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28153:30
+ ❯ TransformPluginContext.transform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:28119:4
+ ❯ EnvironmentPluginContainer.transform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:30932:14
+ ❯ loadAndTransform ../../node_modules/.pnpm/vite@8.2.2_@types+node@24.13.3_jiti@2.7.0_terser@5.51.2_yaml@2.9.0/node_modules/vite/dist/node/chunks/node.js:20671:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/router-shell.test.tsx > E11-W02 round 2 (review #5): the same screen with another query reads it again > 25 opened from «tipus=TRAINING» and then from its plain address shows every type
+AssertionError: expected '?type=TRAINING' to be '' // Object.is equality
+
+Ignored nodes: comments, script, style
+<html
+  data-scheme="dark"
+  data-theme="dark"
+  style="color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"
+>
+  <head>
+    <meta
+      content="#0B0B0B"
+      name="theme-color"
+    />
+  </head>
+  <body>
+    <div>
+      <div
+        class="clubs-shell"
+      >
+        <div
+          class="clubs-shell__top"
+        />
+        <main
+          class="clubs-shell__content"
+        >
+          <section
+            class="history-screen"
+          >
+            <header
+              class="ah-app-bar history-screen__bar"
+            >
+              <div
+                class="ah-app-bar__side"
+              >
+                <button
+                  aria-label="Torna"
+                  class="ah-button ah-button--ghost ah-icon-button history-screen__back"
+                  type="button"
+                >
+                  <span
+                    class="ah-button__content"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="ah-icon"
+                    >
+                      <use
+                        href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+              <div
+                class="ah-app-bar__title"
+              >
+                <h1>
+                  Històric
+                </h1>
+              </div>
+              <div
+                class="ah-app-bar__side ah-app-bar__side--end"
+              />
+            </header>
+            <div
+              aria-label="Gossos"
+              class="dog-chips"
+              role="group"
+            >
+              <button
+                aria-pressed="false"
+                class="ah-chip dog-chip"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="ah-icon"
+                >
+                  <use
+                    href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-paw"
+                  />
+                </svg>
+                Duna · C
+              </button>
+              <button
+                aria-pressed="false"
+                class="ah-chip dog-chip"
+                type="button"
+              >
+                Rock · D
+              </button>
+              <button
+                aria-pressed="false"
+                class="ah-chip dog-chip"
+                type="button"
+              >
+                Toby · B (Joan Antoni)
+              </button>
+              <button
+                aria-pressed="true"
+                class="ah-chip dog-chip dog-chip--selected"
+                type="button"
+              >
+                Tots
+              </button>
+            </div>
+            <div
+              aria-label="Tipus"
+              class="history-screen__chips"
+              role="group"
+            >
+              <button
+                aria-pressed="false"
+                class="history-screen__type"
+                type="button"
+              >
+                Tot
+              </button>
+              <button
+                aria-pressed="false"
+                class="history-screen__type"
+                type="button"
+              >
+                Classes
+              </button>
+              <button
+                aria-pressed="true"
+                class="history-screen__type"
+                type="button"
+              >
+                Entrenaments
+              </button>
+              <button
+                aria-pressed="false"
+                class="history-screen__type"
+                type="button"
+              >
+                Activitats
+              </button>
+            </div>
+            <p
+              class="history-screen__window"
+            >
+              Darrers 2 mesos, del més recent al més antic
+            </p>
+            <ul
+              aria-label="Històric de classes, entrenaments i activitats"
+              class="history-screen__list"
+            >
+              <li>
+                <div
+                  class="ah-card history-row"
+                >
+                  <div
+                    class="history-row__line"
+                  >
+                    <span
+                      class="history-row__date"
+                    >
+                      dv 24/07
+                    </span>
+                    <span
+                      class="history-row__title"
+                    >
+                      Entrenament · amb Rock
+                    </span>
+                    <span
+                      class="ah-badge ah-tone--success history-row__badge"
+                    >
+                      fet
+                    </span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </section>
+        </main>
+        <nav
+          aria-label="Navegació principal"
+          class="ah-tab-bar"
+        >
+          <a
+            aria-current="page"
+            class="ah-tab-bar__item"
+            href="/inici"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+              />
+            </svg>
+            <span>
+              Inici
+            </span>
+          </a>
+          <a
+            class="ah-tab-bar__item"
+            href="/reservar"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+              />
+            </svg>
+            <span>
+              Reservar
+            </span>
+          </a>
+          <a
+            class="ah-tab-bar__item"
+            href="/entrenaments"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+              />
+            </svg>
+            <span>
+              Entrenaments
+            </span>
+          </a>
+          <a
+            class="ah-tab-bar__item"
+            href="/avui"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+              />
+            </svg>
+            <span>
+              Avui
+            </span>
+          </a>
+          <a
+            class="ah-tab-bar__item"
+            href="/perfil"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+              />
+            </svg>
+            <span>
+              Perfil
+            </span>
+          </a>
+          <a
+            class="ah-tab-bar__item"
+            href="/info"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+              />
+            </svg>
+            <span>
+              Info
+            </span>
+          </a>
+        </nav>
+      </div>
+      <div
+        aria-live="polite"
+        class="ah-toast-viewport"
+      />
+    </div>
+  </body>
+</html>
+
+- Expected
++ Received
+
++ ?type=TRAINING
+
+ ❯ src/router-shell.test.tsx:99:28
+     97|     });
+     98|     await waitFor(() => {
+     99|       expect(reads.at(-1)).toBe("");
+       |                            ^
+    100|     });
+    101|     server.events.removeListener("request:start", listener);
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/router-shell.test.tsx > E11-W02 round 2 (review #6): the document's scroll on push, Back and a hash > a tab opens its screen at the top; Back returns to where the reader was
+AssertionError: expected 420 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 420
+
+ ❯ src/router-shell.test.tsx:114:28
+    112|     fireEvent.click(within(tabs).getByRole("link", { name: "Reservar" …
+    113|     await screen.findByRole("heading", { level: 1, name: "Reservar" },…
+    114|     expect(window.scrollY).toBe(0);
+       |                            ^
+    115|
+    116|     window.history.back();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/router-shell.test.tsx > E11-W02 round 2 (review #6): the document's scroll on push, Back and a hash > «/perfil#avisos» opens 12 at its notices card
+AssertionError: expected [] to include 'avisos'
+
+Ignored nodes: comments, script, style
+<html
+  data-scheme="dark"
+  data-theme="dark"
+  style="color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"
+>
+  <head>
+    <meta
+      content="#0B0B0B"
+      name="theme-color"
+    />
+  </head>
+  <body>
+    <div>
+      <div
+        class="clubs-shell"
+      >
+        <div
+          class="clubs-shell__top"
+        >
+          <header
+            class="ah-app-bar clubs-shell__header"
+          >
+            <div
+              class="ah-app-bar__side"
+            >
+              <img
+                alt=""
+                class="clubs-shell__logo"
+                src="data:image/png;base64,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...
+ ❯ timeout src/router-shell.test.tsx:135:55
+    133|     await waitFor(
+    134|       () => {
+    135|         expect(scrolled.map((element) => element.id)).toContain("aviso…
+       |                                                       ^
+    136|       },
+    137|       { timeout: 5_000 },
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  3 failed (3)
+   Start at  11:57:38
+   Duration  21.73s (tests 74%, transform 12%, environment 10%, import 3%, setup 2%)
+
+exit=1

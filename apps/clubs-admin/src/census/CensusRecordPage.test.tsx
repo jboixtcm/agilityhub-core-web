@@ -1,6 +1,7 @@
 import { createApiClient } from "@agilityhub/api-client";
 import {
   ERASED_MEMBER_ID,
+  handlers,
   mockScenario,
   resetCensusRecordState,
 } from "@agilityhub/api-client/mocks";
@@ -9,7 +10,7 @@ import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { HttpResponse, http } from "msw";
+import { getResponse, HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
@@ -88,9 +89,9 @@ describe("T-03-39 D10 member record", () => {
     fireEvent.click(within(dialog).getByRole("button", { name: "Desa" }));
 
     expect(await screen.findByText("Pack 10: 4/6 · caduca 12-11")).toBeVisible();
-    const refreshedBillingPack = screen.getByText(/Rock · Pack 10/u).closest(
-      ".member-billing__pack",
-    );
+    const refreshedBillingPack = screen
+      .getByText(/Rock · Pack 10/u)
+      .closest(".member-billing__pack");
     expect(refreshedBillingPack).toHaveTextContent("4 consumides");
     expect(refreshedBillingPack).toHaveTextContent("6 disponibles");
   });
@@ -170,12 +171,16 @@ describe("T-03-39 D10 member record", () => {
     await screen.findByRole("heading", { name: "Laura Serra Vidal" });
     fireEvent.click(screen.getByRole("button", { name: "Baixa (amb data)" }));
     const drawer = await screen.findByRole("dialog", { name: "Baixa (amb data)" });
-    fireEvent.change(await within(drawer).findByLabelText("Data d'efecte"), { target: { value: "2026-11-30" } });
+    fireEvent.change(await within(drawer).findByLabelText("Data d'efecte"), {
+      target: { value: "2026-11-30" },
+    });
     fireEvent.click(within(drawer).getByRole("button", { name: "Programa la baixa" }));
     const confirmation = screen.getAllByRole("dialog", { name: "Programa la baixa" }).at(-1);
     if (confirmation === undefined) throw new TypeError("Missing direct-leave confirmation");
     fireEvent.click(within(confirmation).getByRole("button", { name: "Programa la baixa" }));
-    await waitFor(() => { expect(refreshCounters).toHaveBeenCalledTimes(1); });
+    await waitFor(() => {
+      expect(refreshCounters).toHaveBeenCalledTimes(1);
+    });
   });
 
   it("E8-W03 round 2 #8 opens the exact period carried by queue navigation", async () => {
@@ -197,9 +202,9 @@ describe("T-03-39 D10 member record", () => {
 
     await renderRecord("member");
     expect(await screen.findByText("Compte no informat")).toBeVisible();
-    const row = screen.getByText("Pagament", { selector: "dt" }).closest<HTMLElement>(
-      ".census-record__data-row",
-    );
+    const row = screen
+      .getByText("Pagament", { selector: "dt" })
+      .closest<HTMLElement>(".census-record__data-row");
     if (row === null) throw new TypeError("Missing payment row");
     fireEvent.click(within(row).getByRole("button", { name: "Edita" }));
     const drawer = screen.getByRole("dialog", { name: "Mètode de pagament" });
@@ -443,7 +448,9 @@ describe("E7-W07 step 3 (E7-W06 review #4, A8; S14 §5, T-14-19): D10's changes 
       },
       submit: "Desa",
       unchanged: () => {
-        expect(screen.getAllByText("···· ···· ···· ···· 2231", { exact: false }).length).toBeGreaterThan(0);
+        expect(
+          screen.getAllByText("···· ···· ···· ···· 2231", { exact: false }).length,
+        ).toBeGreaterThan(0);
       },
     },
     {
@@ -881,5 +888,48 @@ describe("T-03-38 dog record", () => {
     fireEvent.click(within(reactivation).getByRole("button", { name: "Reactiva" }));
     expect(await screen.findByText("El gos s'ha reactivat.")).toBeVisible();
     expect(screen.getByText("actiu")).toBeVisible();
+  });
+});
+
+describe("E11-W02 round 2 (INC-41): no «+34» typed in D10", () => {
+  it("a new phone of the member takes the club's country prefix (its countryProfile), not Spain's", async () => {
+    server.use(
+      // D10 reads the member through its overview: Laura without phones.
+      http.get("*/api/v1/members/member-laura/overview", async ({ request }) => {
+        const real = await getResponse(handlers, request);
+        const overview = (await real?.json()) as { member: Record<string, unknown> };
+        return HttpResponse.json({ ...overview, member: { ...overview.member, phones: [] } });
+      }),
+    );
+    const andorran: Branding = {
+      ...branding,
+      countryProfile: { code: "AD", idDocumentTypes: ["PASSPORT"], phonePrefix: "+376" },
+    };
+    await renderRecord("member", andorran);
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+    const editButton = screen.getAllByRole("button", { name: "Edita" }).at(0);
+    if (editButton === undefined) throw new Error("Expected the member edit button");
+    fireEvent.click(editButton);
+    const drawer = screen.getByRole("dialog", { name: "Edita l'abonat" });
+    const prefixes = within(drawer).getAllByLabelText("Prefix");
+    expect(prefixes.map((input) => (input as HTMLInputElement).value)).toEqual(["+376", "+376"]);
+  });
+});
+
+describe("E11-W02 round 2 (INC-41): the dog transfer offers every active member", () => {
+  it("«Abonat de destí» lists all the club's active members but the owner, not the first 12", async () => {
+    const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });
+    const active = await client.GET("/members", {
+      params: { query: { fields: "id", filter: ["status:eq:ACTIVE"], page: 0, size: 20 } },
+    });
+    const total = active.data?.totalItems ?? 0;
+    expect(total).toBeGreaterThan(12);
+    await renderRecord("dog");
+    await screen.findByRole("heading", { name: "Duna" });
+    fireEvent.click(screen.getByRole("button", { name: "Transfereix" }));
+    const drawer = screen.getByRole("dialog", { name: "Transfereix el gos" });
+    const target = within(drawer).getByLabelText("Abonat de destí");
+    // The placeholder, then every active member but Duna's owner.
+    expect(within(target).getAllByRole("option")).toHaveLength(total);
   });
 });

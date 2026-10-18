@@ -1,5 +1,7 @@
 import {
+  cloneElement,
   createContext,
+  isValidElement,
   type ButtonHTMLAttributes,
   type HTMLAttributes,
   type InputHTMLAttributes,
@@ -190,13 +192,36 @@ export interface FormFieldProps {
   help?: string;
 }
 
+interface DescribedControlProps {
+  "aria-describedby"?: string;
+  "aria-invalid"?: boolean | "true" | "false";
+  id?: string;
+}
+
+/**
+ * The field's control with its error linked (E11-W02 round 2, INC-41): `aria-invalid` and the
+ * error's id in its description, beside what it already names. Only the control the label is for.
+ */
+function linkedControl(children: ReactNode, id: string, error: string | undefined): ReactNode {
+  if (error === undefined || !isValidElement<DescribedControlProps>(children)) return children;
+  if (children.props.id !== id) return children;
+  const described = (children.props["aria-describedby"] ?? "").split(/\s+/u).filter(Boolean);
+  const errorId = `${id}-error`;
+  return cloneElement(children, {
+    "aria-describedby": (described.includes(errorId) ? described : [...described, errorId]).join(
+      " ",
+    ),
+    "aria-invalid": children.props["aria-invalid"] ?? true,
+  });
+}
+
 export function FormField({ children, error, help, id, label }: FormFieldProps) {
   return (
     <div className={classes("ah-form-field", error !== undefined && "ah-form-field--error")}>
       <label className="ah-form-field__label" htmlFor={id}>
         {label}
       </label>
-      {children}
+      {linkedControl(children, id, error)}
       {help !== undefined ? (
         <div className="ah-form-field__help" id={`${id}-help`}>
           {help}
@@ -251,6 +276,55 @@ function topOverlay(event: Event): { current: HTMLElement | null } | undefined {
   return escapeTargets.get(event);
 }
 
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/** A region that speaks for itself (a toast, a status): it stays readable over an overlay. */
+function isLiveRegion(element: Element): boolean {
+  return element.matches('[aria-live], [role="status"], [role="alert"], [role="log"]');
+}
+
+/**
+ * E11-W02 round 2 (INC-41): the page outside an open overlay is `inert`, so neither the keyboard
+ * nor a screen reader reaches what the backdrop covers: every sibling of the overlay and of each of
+ * its ancestors, live regions aside. The undo clears only what this overlay made inert, so a
+ * confirmation over a drawer gives the drawer back as the drawer left the page.
+ */
+function inertOutside(root: HTMLElement): () => void {
+  const made: Element[] = [];
+  for (let node: HTMLElement = root; node.parentElement !== null; node = node.parentElement) {
+    if (node === document.body) break;
+    for (const sibling of node.parentElement.children) {
+      if (sibling === node || sibling.hasAttribute("inert") || isLiveRegion(sibling)) continue;
+      if (["SCRIPT", "STYLE", "TEMPLATE"].includes(sibling.tagName)) continue;
+      sibling.setAttribute("inert", "");
+      made.push(sibling);
+    }
+  }
+  return () => {
+    for (const element of made) element.removeAttribute("inert");
+  };
+}
+
+/** Tab and Shift+Tab cycle inside the overlay: from its last control to its first, and back. */
+function trapTab(event: KeyboardEvent, root: HTMLElement): void {
+  const focusable = [...root.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
+    (element) => element.closest("[inert]") === null,
+  );
+  const first = focusable[0];
+  const last = focusable.at(-1);
+  if (first === undefined || last === undefined) {
+    event.preventDefault();
+    return;
+  }
+  const active = document.activeElement;
+  const inside = active instanceof Node && root.contains(active);
+  if (event.shiftKey ? !inside || active === first : !inside || active === last) {
+    event.preventDefault();
+    (event.shiftKey ? last : first).focus();
+  }
+}
+
 function useOverlay(open: boolean, onClose: () => void, dismissible: boolean) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -272,8 +346,13 @@ function useOverlay(open: boolean, onClose: () => void, dismissible: boolean) {
     // Every open overlay takes part, the ones that need an explicit action too: an Escape over
     // them closes nothing below.
     openOverlays.add(rootRef);
+    const restoreOutside = rootRef.current === null ? undefined : inertOutside(rootRef.current);
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape" || topOverlay(event) !== rootRef) return;
+      if ((event.key !== "Escape" && event.key !== "Tab") || topOverlay(event) !== rootRef) return;
+      if (event.key === "Tab") {
+        if (rootRef.current !== null) trapTab(event, rootRef.current);
+        return;
+      }
       if (dismissible) {
         onCloseRef.current();
       }
@@ -285,6 +364,7 @@ function useOverlay(open: boolean, onClose: () => void, dismissible: boolean) {
     return () => {
       openOverlays.delete(rootRef);
       document.removeEventListener("keydown", onKeyDown);
+      restoreOutside?.();
       previousFocus?.focus();
     };
   }, [dismissible, open]);
@@ -584,18 +664,26 @@ export function Sidebar({ groups, label }: { groups: SidebarGroup[]; label: stri
 }
 
 export interface EmptyStateProps {
-  description: ReactNode;
   title: ReactNode;
   action?: ReactNode;
+  className?: string;
+  /** A second line under the title; a one-line empty state has none (E11-W02 round 2). */
+  description?: ReactNode;
   icon?: IconName;
 }
 
-export function EmptyState({ action, description, icon = "info", title }: EmptyStateProps) {
+export function EmptyState({
+  action,
+  className,
+  description,
+  icon = "info",
+  title,
+}: EmptyStateProps) {
   return (
-    <section className="ah-empty-state">
+    <section className={classes("ah-empty-state", className)}>
       <Icon aria-hidden="true" name={icon} />
       <h2>{title}</h2>
-      <p>{description}</p>
+      {description === undefined ? null : <p>{description}</p>}
       {action}
     </section>
   );
@@ -605,7 +693,11 @@ export function EmptyState({ action, description, icon = "info", title }: EmptyS
  * The empty state of a read that failed (E11-W02 step 4): the same layout, with the warning icon,
  * announced as an alert so a screen reader hears that the content is missing and why.
  */
-export function ErrorState({ action, description, title }: Omit<EmptyStateProps, "icon">) {
+export function ErrorState({
+  action,
+  description,
+  title,
+}: Omit<EmptyStateProps, "className" | "icon">) {
   return (
     <section className="ah-empty-state ah-empty-state--error" role="alert">
       <Icon aria-hidden="true" name="warn" />

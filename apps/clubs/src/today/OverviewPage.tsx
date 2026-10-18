@@ -14,6 +14,7 @@ import {
   Chip,
   DayGrid,
   Drawer,
+  EmptyState,
   RegistrantsPanel,
   Skeleton,
   Toast,
@@ -403,7 +404,7 @@ export function OverviewPage({ client }: { client: ApiClient }) {
         <>
           <Card className="day-screen__card">
             {mapped.rows.length === 0 ? (
-              <p className="day-screen__empty">{t("home:today.empty")}</p>
+              <EmptyState icon="cal" title={t("home:today.empty")} />
             ) : (
               <DayGrid
                 columns={mapped.columns}

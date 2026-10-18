@@ -138,6 +138,8 @@
     "title": "Exports"
   },
   "filters": {
+    "from": "From",
+    "to": "To",
     "action": "Action",
     "actor": "Actor",
     "actorRole": "Actor role",

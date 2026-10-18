@@ -1,0 +1,22 @@
+$ node --test scripts/check-initial-budget.test.mjs   # before: the budget counts index-*.js only
+ok 1 - the scripts index.html loads: its module script and its modulepreloads, no stylesheet
+ok 2 - a budget that counts only the entry misses the chunks split off it
+not ok 3 - the repository's clubs budget counts every script index.html loads
+    + actual - expected
+    + [
+    +   'assets/jsx-runtime-B-hcVAMW.js is loaded by apps/clubs/dist/index.html but not counted by «clubs initial JavaScript»',
+    +   'assets/shared-DEazxljT.js is loaded by apps/clubs/dist/index.html but not counted by «clubs initial JavaScript»'
+    + ]
+    - []
+ok 4 - an app without an «initial JavaScript» budget is a problem, not a pass
+# pass 3
+# fail 1
+exit 1
+$ node --test scripts/check-initial-budget.test.mjs   # after
+ok 1 - the scripts index.html loads: its module script and its modulepreloads, no stylesheet
+ok 2 - a budget that counts only the entry misses the chunks split off it
+ok 3 - the repository's clubs budget counts every script index.html loads
+ok 4 - an app without an «initial JavaScript» budget is a problem, not a pass
+# pass 4
+# fail 0
+exit 0

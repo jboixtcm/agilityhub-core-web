@@ -1,0 +1,22 @@
+$ pnpm --filter clubs-admin exec vitest run src/census/CensusListPage.test.tsx -t "review #12"   # before
+     × a failed count read hides the header badge instead of «0 d'alta» 785ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/census/CensusListPage.test.tsx > E11-W02 round 2 (review #12): D5's active count > a failed count read hides the header badge instead of «0 d'alta»
+AssertionError: expected <span …(1)></span> to be null
+- Expected:
++ Received:
+  0 d'alta
+    241|     expect(screen.queryByText(/d'alta$/u)).toBeNull();
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+exit 1
+$ pnpm --filter clubs-admin exec vitest run --reporter=verbose src/census/CensusListPage.test.tsx   # after
+ ✓ src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > renders applied filters and preserves selection when page size changes 1022ms
+ ✓ src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > E4-W12 step 5: a fresh /abonats applies only the status chip «Alta», so a club whose plan ids differ from the fixture's lists its members 300ms
+ ✓ src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > toggles visible columns and synchronizes the ordered fields to the URL 615ms
+ ✓ src/census/CensusListPage.test.tsx > T-03-38 D5 universal member list > T-13-22 offers the leave columns and keeps the system leave view non-deletable 1174ms
+ ✓ src/census/CensusListPage.test.tsx > T-03-42 D15 translated dog list > renders the approved columns and dog record links 2527ms
+ ✓ src/census/CensusListPage.test.tsx > E11-W02 round 2 (review #12): D5's active count > a failed count read hides the header badge instead of «0 d'alta» 472ms
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+exit 0

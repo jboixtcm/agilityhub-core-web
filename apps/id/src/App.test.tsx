@@ -372,3 +372,56 @@ describe("T-01-22 apps/id", () => {
     );
   });
 });
+
+describe("E11-W02 round 2 (INC-41): apps/id's login after a 429, and the magic link's token", () => {
+  it("a 429 on the password login counts down its Retry-After and holds the buttons until it ends", async () => {
+    window.history.replaceState(null, "", "/login");
+    const { fetcher: base } = testFetcher();
+    const fetcher = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      const request = input instanceof Request ? input : new Request(input, init);
+      if (new URL(request.url).pathname === "/oauth2/token") {
+        return new Response(
+          JSON.stringify({ code: "LOGIN_LOCKED", message: "Login locked", traceId: "t-429" }),
+          { headers: { "Content-Type": "application/json", "Retry-After": "3" }, status: 429 },
+        );
+      }
+      return base(input, init);
+    }) as typeof fetch;
+    await renderApp(createClient(fetcher));
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      fireEvent.change(await screen.findByLabelText("Correu electrònic"), {
+        target: { value: "biel.roca@example.test" },
+      });
+      fireEvent.change(screen.getByLabelText("Contrasenya"), {
+        target: { value: "secret-password" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+      expect(
+        await screen.findByText("Massa intents. Torna-ho a provar d'aquí a 3 s"),
+      ).toBeVisible();
+      expect(screen.getByRole("button", { name: "ENTRA" })).toBeDisabled();
+      await vi.advanceTimersByTimeAsync(3_000);
+      await waitFor(() => {
+        expect(screen.getByRole("button", { name: "ENTRA" })).toBeEnabled();
+      });
+      expect(screen.queryByText(/Massa intents/u)).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("the magic link's token leaves the address bar once read; the continuation stays", async () => {
+    window.history.replaceState(null, "", "/magic-link?t=valid&flow=flow-123");
+    const { fetcher } = testFetcher();
+    const navigate = vi.fn<(destination: string) => void>();
+    await renderApp(createClient(fetcher), "ca", navigate);
+    await waitFor(() => {
+      expect(new URLSearchParams(window.location.search).has("t")).toBe(false);
+    });
+    expect(new URLSearchParams(window.location.search).get("flow")).toBe("flow-123");
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalled();
+    });
+  });
+});

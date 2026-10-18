@@ -1,0 +1,4147 @@
+$ (cd apps/clubs && pnpm exec vitest run src/states.test.tsx)
+# round 2 red run (points 1-2): main 012f05b's code, the new matrix; 2026-10-18T11:36:56Z
+
+ RUN  v5.0.0 /home/user/agilityhub-core-web/apps/clubs
+
+ ❯ src/states.test.tsx (46 tests | 12 failed) 72132ms
+   ❯ E11-W02 step 4: the members' app says when its data is loading, failed or empty (46)
+     × 13 (/gossos) shows its own loading status while its reads are out 5027ms
+     × 28 (/dades) shows its own loading status while its reads are out 5019ms
+     × 03 (/inici) shows the UI kit's empty state when its lists answer nothing 5018ms
+     × 04 (/reservar) shows the UI kit's empty state when its lists answer nothing 5017ms
+     × 08 (/entrenaments) shows the UI kit's empty state when its lists answer nothing 5020ms
+     × 10 (/avui) shows the UI kit's empty state when its lists answer nothing 5025ms
+     × 11 (/notificacions) shows the UI kit's empty state when its lists answer nothing 5025ms
+     × 25 (/historic) shows the UI kit's empty state when its lists answer nothing 5018ms
+     × 30 (/info) shows the UI kit's empty state when its lists answer nothing 5018ms
+     × 20 (/instructor/dia) shows the UI kit's empty state when its lists answer nothing 5019ms
+     × 23 (/instructor/avui) shows the UI kit's empty state when its lists answer nothing 5018ms
+     × alumnes (/instructor/alumnes) shows the UI kit's empty state when its lists answer nothing 5018ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 13 (/gossos) shows its own loading status while its reads are out
+TestingLibraryElementError: Unable to find role="status" and name "Carregant els teus gossos"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page my-dogs-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Els meus gossos
+            </h1>
+          </header>
+          <div
+            class="self-page__body"
+          >
+            <p
+              role="status"
+            >
+              Carregant els teus gossos
+            </p>
+          </div>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page my-dogs-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Els meus gossos
+            </h1>
+          </header>
+          <div
+            class="self-page__body"
+          >
+            <p
+              role="status"
+            >
+              Carregant els teus gossos
+            </p>
+          </div>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:192:22
+    190|       await renderAt(path, email, "pending");
+    191|       expect(
+    192|         await screen.findByRole("status", { name: loading }, { timeout…
+       |                      ^
+    193|       ).toBeInTheDocument();
+    194|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/12]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 28 (/dades) shows its own loading status while its reads are out
+TestingLibraryElementError: Unable to find role="status" and name "Carregant les teves dades"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Les meves dades
+            </h1>
+          </header>
+          <p
+            class="self-page__loading"
+            role="status"
+          >
+            Carregant les teves dades
+          </p>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <div
+          class="self-page"
+        >
+          <header
+            class="self-page__header"
+          >
+            <a
+              aria-label="Torna al perfil"
+              href="/perfil"
+            >
+              <span
+                aria-hidden="true"
+              >
+                ‹
+              </span>
+            </a>
+            <h1>
+              Les meves dades
+            </h1>
+          </header>
+          <p
+            class="self-page__loading"
+            role="status"
+          >
+            Carregant les teves dades
+          </p>
+        </div>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:192:22
+    190|       await renderAt(path, email, "pending");
+    191|       expect(
+    192|         await screen.findByRole("status", { name: loading }, { timeout…
+       |                      ^
+    193|       ).toBeInTheDocument();
+    194|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/12]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 03 (/inici) shows the UI kit's empty state when its lists answer nothing
+TestingLibraryElementError: Unable to find role="heading" and name "Encara no tens cap reserva"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="booking-screen"
+        >
+          <header
+            class="home-header"
+          >
+            <img
+              alt="Club Agility Cànic"
+              class="home-header__logo"
+              src="data:image/png;base64,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...
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="booking-screen"
+        >
+          <header
+            class="home-header"
+          >
+            <img
+              alt="Club Agility Cànic"
+              class="home-header__logo"
+              src="data:image/png;base64,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...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:211:34
+    209|       mockScenario(scenario);
+    210|       await renderAt(path, email, "empty");
+    211|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    212|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    213|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/12]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 04 (/reservar) shows the UI kit's empty state when its lists answer nothing
+TestingLibraryElementError: Unable to find role="heading" and name "Ara mateix no hi ha cap classe per reservar amb aquest gos."
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="booking-screen"
+          style=""
+        >
+          <header
+            class="ah-app-bar booking-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Reservar
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <div
+            aria-label="Gossos"
+            class="dog-chips"
+            role="group"
+          />
+          <div
+            class="ah-card pack-card pack-card--active"
+          >
+            <div
+              class="pack-card__head"
+            >
+              <strong>
+                Pack 10 — amb la Duna
+              </strong>
+              <span
+                class="ah-badge ah-tone--warning"
+              >
+                caduca 12/11/2026
+              </span>
+            </div>
+            <div
+              aria-hidden="true"
+              class="pack-card__bar"
+            >
+              <span
+                class="pack-card__used"
+                style="flex-grow: 6;"
+              />
+              <span
+                class="pack-card__left"
+                style="flex-grow: 4;"
+              />
+            </div>
+            <p
+              class="pack-card__counts"
+            >
+              <strong>
+                6 consumides
+              </strong>
+               · 
+              <strong
+                class="pack-card__available"
+              >
+                4 disponibles
+              </strong>
+            </p>
+          </div>
+          <p
+            class="booking-screen__intro"
+          >
+            Seleccioneu l'activitat o classe que vulgueu reservar.
+          </p>
+          <section
+            aria-labelledby="booking-classes-title"
+            class="booking-section"
+          >
+            <h2
+              class="booking-section__title"
+              id="booking-classes-title"
+            >
+              Classes
+            </h2>
+            <p
+              class="booking-screen__intro"
+            >
+              Ara mateix no hi ha cap classe per reservar amb aquest gos.
+            </p>
+          </section>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="booking-screen"
+          style=""
+        >
+          <header
+            class="ah-app-bar booking-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Reservar
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <div
+            aria-label="Gossos"
+            class="dog-chips"
+            role="group"
+          />
+          <div
+            class="ah-card pack-card pack-card--active"
+          >
+            <div
+              class="pack-card__head"
+            >
+              <strong>
+                Pack 10 — amb la Duna
+              </strong>
+              <span
+                class="ah-badge ah-tone--warning"
+              >
+                caduca 12/11/2026
+              </span>
+            </div>
+            <div
+              aria-hidden="true"
+              class="pack-card__bar"
+            >
+              <span
+                class="pack-card__used"
+                style="flex-grow: 6;"
+              />
+              <span
+                class="pack-card__left"
+                style="flex-grow: 4;"
+              />
+            </div>
+            <p
+              class="pack-card__counts"
+            >
+              <strong>
+                6 consumides
+              </strong>
+               · 
+              <strong
+                class="pack-card__available"
+              >
+                4 disponibles
+              </strong>
+            </p>
+          </div>
+          <p
+            class="booking-screen__intro"
+          >
+            Seleccioneu l'activitat o classe que vulgueu reservar.
+          </p>
+          <section
+            aria-labelledby="booking-classes-title"
+            class="booking-section"
+          >
+            <h2
+              class="booking-section__title"
+              id="booking-classes-title"
+            >
+              Classes
+            </h2>
+            <p
+              class="booking-screen__intro"
+            >
+              Ara mateix no hi ha cap classe per reservar amb aquest gos.
+            </p>
+          </section>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:211:34
+    209|       mockScenario(scenario);
+    210|       await renderAt(path, email, "empty");
+    211|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    212|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    213|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/12]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 08 (/entrenaments) shows the UI kit's empty state when its lists answer nothing
+TestingLibraryElementError: Unable to find role="heading" and name "El club està tancat aquest dia"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="booking-screen training-screen"
+        >
+          <header
+            class="ah-app-bar booking-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Entrenaments
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <div
+            aria-label="Gossos"
+            class="dog-chips"
+            role="group"
+          >
+            <button
+              aria-pressed="true"
+              class="ah-chip dog-chip dog-chip--selected"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="ah-icon"
+              >
+                <use
+                  href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-paw"
+                />
+              </svg>
+              Rock · D
+            </button>
+            <button
+              aria-pressed="false"
+              class="ah-chip dog-chip"
+              type="button"
+            >
+              Toby · B (Joan Antoni)
+            </button>
+          </div>
+          <div
+            aria-label="Dia"
+            class="training-chips"
+            role="group"
+          />
+          <div
+            aria-label="Pista"
+            class="training-chips"
+            role="group"
+          >
+            <button
+              aria-pressed="true"
+              class="ah-chip training-chip training-chip--selected"
+              type="button"
+            >
+              Qualsevol
+            </button>
+          </div>
+          <div
+            class="ah-card training-closed"
+          >
+            <p>
+              El club està tancat aquest dia
+            </p>
+          </div>
+          <div
+            aria-label="Carregant els entrenaments"
+            class="ah-skeleton"
+            role="status"
+            style="height: 3.5rem;"
+          />
+          <button
+            class="ah-button ah-button--primary training-confirm"
+            disabled=""
+            type="button"
+          >
+            <span
+              class="ah-button__content"
+            >
+              Confirma
+            </span>
+          </button>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="booking-screen training-screen"
+        >
+          <header
+            class="ah-app-bar booking-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Entrenaments
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <div
+            aria-label="Gossos"
+            class="dog-chips"
+            role="group"
+          >
+            <button
+              aria-pressed="true"
+              class="ah-chip dog-chip dog-chip--selected"
+              type="button"
+            >
+              <svg
+                aria-hidden="true"
+                class="ah-icon"
+              >
+                <use
+                  href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-paw"
+                />
+              </svg>
+              Rock · D
+            </button>
+            <button
+              aria-pressed="false"
+              class="ah-chip dog-chip"
+              type="button"
+            >
+              Toby · B (Joan Antoni)
+            </button>
+          </div>
+          <div
+            aria-label="Dia"
+            class="training-chips"
+            role="group"
+          />
+          <div
+            aria-label="Pista"
+            class="training-chips"
+            role="group"
+          >
+            <button
+              aria-pressed="true"
+              class="ah-chip training-chip training-chip--selected"
+              type="button"
+            >
+              Qualsevol
+            </button>
+          </div>
+          <div
+            class="ah-card training-closed"
+          >
+            <p>
+              El club està tancat aquest dia
+            </p>
+          </div>
+          <div
+            aria-label="Carregant els entrenaments"
+            class="ah-skeleton"
+            role="status"
+            style="height: 3.5rem;"
+          />
+          <button
+            class="ah-button ah-button--primary training-confirm"
+            disabled=""
+            type="button"
+          >
+            <span
+              class="ah-button__content"
+            >
+              Confirma
+            </span>
+          </button>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:211:34
+    209|       mockScenario(scenario);
+    210|       await renderAt(path, email, "empty");
+    211|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    212|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    213|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/12]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 10 (/avui) shows the UI kit's empty state when its lists answer nothing
+TestingLibraryElementError: Unable to find role="heading" and name "Cap classe aquest dia"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="day-screen"
+        >
+          <header
+            class="ah-app-bar day-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Classes del dia
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            >
+              <div
+                class="day-screen__date"
+              >
+                <button
+                  aria-label="Dia anterior"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                  >
+                    ‹
+                  </span>
+                </button>
+                <span
+                  aria-live="polite"
+                >
+                  dg 18 d’octubre
+                </span>
+                <button
+                  aria-label="Dia següent"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                  >
+                    ›
+                  </span>
+                </button>
+              </div>
+            </div>
+          </header>
+          <div
+            aria-label="Dies de la setmana"
+            class="day-screen__chips"
+            role="group"
+          >
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dl 12
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dt 13
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dc 14
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dj 15
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dv 16
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              ds 17
+            </button>
+          </div>
+          <div
+            class="day-screen__member"
+          >
+            <div
+              class="ah-card day-screen__card"
+            >
+              <p
+                class="day-screen__empty"
+              >
+                Cap classe aquest dia
+              </p>
+              <p
+                class="day-screen__footer"
+              >
+                Ocupada = pista reservada per a entrenament o bloquejada
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="day-screen"
+        >
+          <header
+            class="ah-app-bar day-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Classes del dia
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            >
+              <div
+                class="day-screen__date"
+              >
+                <button
+                  aria-label="Dia anterior"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                  >
+                    ‹
+                  </span>
+                </button>
+                <span
+                  aria-live="polite"
+                >
+                  dg 18 d’octubre
+                </span>
+                <button
+                  aria-label="Dia següent"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                  >
+                    ›
+                  </span>
+                </button>
+              </div>
+            </div>
+          </header>
+          <div
+            aria-label="Dies de la setmana"
+            class="day-screen__chips"
+            role="group"
+          >
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dl 12
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dt 13
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dc 14
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dj 15
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dv 16
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              ds 17
+            </button>
+          </div>
+          <div
+            class="day-screen__member"
+          >
+            <div
+              class="ah-card day-screen__card"
+            >
+              <p
+                class="day-screen__empty"
+              >
+                Cap classe aquest dia
+              </p>
+              <p
+                class="day-screen__footer"
+              >
+                Ocupada = pista reservada per a entrenament o bloquejada
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:211:34
+    209|       mockScenario(scenario);
+    210|       await renderAt(path, email, "empty");
+    211|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    212|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    213|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/12]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 11 (/notificacions) shows the UI kit's empty state when its lists answer nothing
+TestingLibraryElementError: Unable to find role="heading" and name "Encara no tens cap avís"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="notifications-page"
+        >
+          <header
+            class="ah-app-bar notifications-page__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Notificacions
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <div
+            class="ah-card notifications-page__empty"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-bell"
+              />
+            </svg>
+            <p>
+              Encara no tens cap avís
+            </p>
+          </div>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="notifications-page"
+        >
+          <header
+            class="ah-app-bar notifications-page__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Notificacions
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <div
+            class="ah-card notifications-page__empty"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-bell"
+              />
+            </svg>
+            <p>
+              Encara no tens cap avís
+            </p>
+          </div>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:211:34
+    209|       mockScenario(scenario);
+    210|       await renderAt(path, email, "empty");
+    211|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    212|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    213|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/12]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 25 (/historic) shows the UI kit's empty state when its lists answer nothing
+TestingLibraryElementError: Unable to find role="heading" and name "Encara no hi ha res a l'històric"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="history-screen"
+          style=""
+        >
+          <header
+            class="ah-app-bar history-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            >
+              <button
+                aria-label="Torna"
+                class="ah-button ah-button--ghost ah-icon-button history-screen__back"
+                type="button"
+              >
+                <span
+                  class="ah-button__content"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="ah-icon"
+                  >
+                    <use
+                      href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Històric
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <div
+            aria-label="Gossos"
+            class="dog-chips"
+            role="group"
+          />
+          <p
+            class="history-screen__window"
+          >
+            Darrers 2 mesos, del més recent al més antic
+          </p>
+          <div
+            class="ah-card"
+          >
+            <p>
+              Encara no hi ha res a l'històric
+            </p>
+          </div>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="history-screen"
+          style=""
+        >
+          <header
+            class="ah-app-bar history-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            >
+              <button
+                aria-label="Torna"
+                class="ah-button ah-button--ghost ah-icon-button history-screen__back"
+                type="button"
+              >
+                <span
+                  class="ah-button__content"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="ah-icon"
+                  >
+                    <use
+                      href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-chev"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Històric
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <div
+            aria-label="Gossos"
+            class="dog-chips"
+            role="group"
+          />
+          <p
+            class="history-screen__window"
+          >
+            Darrers 2 mesos, del més recent al més antic
+          </p>
+          <div
+            class="ah-card"
+          >
+            <p>
+              Encara no hi ha res a l'històric
+            </p>
+          </div>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:211:34
+    209|       mockScenario(scenario);
+    210|       await renderAt(path, email, "empty");
+    211|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    212|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    213|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/12]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 30 (/info) shows the UI kit's empty state when its lists answer nothing
+TestingLibraryElementError: Unable to find role="heading" and name "El club encara no ha publicat preguntes"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="info-page"
+        >
+          <h1>
+            Info
+          </h1>
+          <div
+            class="ah-tabs"
+          >
+            <div
+              aria-label="Informació del club"
+              class="ah-tabs__list"
+              role="tablist"
+            >
+              <button
+                aria-controls="_r_5_-panel-faq"
+                aria-selected="true"
+                class="ah-tabs__tab"
+                id="_r_5_-tab-faq"
+                role="tab"
+                type="button"
+              >
+                FAQ
+              </button>
+            </div>
+            <div
+              aria-labelledby="_r_5_-tab-faq"
+              class="ah-tabs__panel"
+              id="_r_5_-panel-faq"
+              role="tabpanel"
+            >
+              <p
+                class="info-page__empty"
+              >
+                El club encara no ha publicat preguntes
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="info-page"
+        >
+          <h1>
+            Info
+          </h1>
+          <div
+            class="ah-tabs"
+          >
+            <div
+              aria-label="Informació del club"
+              class="ah-tabs__list"
+              role="tablist"
+            >
+              <button
+                aria-controls="_r_5_-panel-faq"
+                aria-selected="true"
+                class="ah-tabs__tab"
+                id="_r_5_-tab-faq"
+                role="tab"
+                type="button"
+              >
+                FAQ
+              </button>
+            </div>
+            <div
+              aria-labelledby="_r_5_-tab-faq"
+              class="ah-tabs__panel"
+              id="_r_5_-panel-faq"
+              role="tabpanel"
+            >
+              <p
+                class="info-page__empty"
+              >
+                El club encara no ha publicat preguntes
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/inici"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"
+            />
+          </svg>
+          <span>
+            Inici
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/reservar"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"
+            />
+          </svg>
+          <span>
+            Reservar
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/entrenaments"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"
+            />
+          </svg>
+          <span>
+            Entrenaments
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            Avui
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/info"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"
+            />
+          </svg>
+          <span>
+            Info
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:211:34
+    209|       mockScenario(scenario);
+    210|       await renderAt(path, email, "empty");
+    211|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    212|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    213|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/12]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 20 (/instructor/dia) shows the UI kit's empty state when its lists answer nothing
+TestingLibraryElementError: Unable to find role="heading" and name "Cap classe aquest dia"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="instructor-screen instructor-day"
+        >
+          <header
+            class="ah-app-bar instructor-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Grups del dia
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <div
+            aria-label="Dies"
+            class="instructor-day__chips"
+            role="group"
+          />
+          <div
+            class="ah-card instructor-day__empty"
+          >
+            <p>
+              Cap classe aquest dia
+            </p>
+          </div>
+          <button
+            class="ah-button ah-button--secondary instructor-day__book"
+            type="button"
+          >
+            <span
+              class="ah-button__content"
+            >
+              Reservar o bloquejar pista
+            </span>
+          </button>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/instructor/dia"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            El meu dia
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"
+            />
+          </svg>
+          <span>
+            Visió global
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/alumnes"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"
+            />
+          </svg>
+          <span>
+            Alumnes
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="instructor-screen instructor-day"
+        >
+          <header
+            class="ah-app-bar instructor-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Grups del dia
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <div
+            aria-label="Dies"
+            class="instructor-day__chips"
+            role="group"
+          />
+          <div
+            class="ah-card instructor-day__empty"
+          >
+            <p>
+              Cap classe aquest dia
+            </p>
+          </div>
+          <button
+            class="ah-button ah-button--secondary instructor-day__book"
+            type="button"
+          >
+            <span
+              class="ah-button__content"
+            >
+              Reservar o bloquejar pista
+            </span>
+          </button>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/instructor/dia"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            El meu dia
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"
+            />
+          </svg>
+          <span>
+            Visió global
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/alumnes"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"
+            />
+          </svg>
+          <span>
+            Alumnes
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:211:34
+    209|       mockScenario(scenario);
+    210|       await renderAt(path, email, "empty");
+    211|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    212|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    213|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/12]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 23 (/instructor/avui) shows the UI kit's empty state when its lists answer nothing
+TestingLibraryElementError: Unable to find role="heading" and name "Cap classe aquest dia"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="day-screen"
+        >
+          <header
+            class="ah-app-bar day-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Visió global
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            >
+              <div
+                class="day-screen__date"
+              >
+                <button
+                  aria-label="Dia anterior"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                  >
+                    ‹
+                  </span>
+                </button>
+                <span
+                  aria-live="polite"
+                >
+                  dg 18 d’octubre
+                </span>
+                <button
+                  aria-label="Dia següent"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                  >
+                    ›
+                  </span>
+                </button>
+              </div>
+            </div>
+          </header>
+          <div
+            aria-label="Dies de la setmana"
+            class="day-screen__chips"
+            role="group"
+          >
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dl 12
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dt 13
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dc 14
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dj 15
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dv 16
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              ds 17
+            </button>
+          </div>
+          <div
+            class="ah-card day-screen__card"
+          >
+            <p
+              class="day-screen__empty"
+            >
+              Cap classe aquest dia
+            </p>
+          </div>
+          <p
+            class="day-screen__footer day-screen__footer--outside"
+          >
+            n/n +e = inscrits/places + llista d'espera · l'instructor previst es mostra sempre
+          </p>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/dia"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            El meu dia
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/instructor/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"
+            />
+          </svg>
+          <span>
+            Visió global
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/alumnes"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"
+            />
+          </svg>
+          <span>
+            Alumnes
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="day-screen"
+        >
+          <header
+            class="ah-app-bar day-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Visió global
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            >
+              <div
+                class="day-screen__date"
+              >
+                <button
+                  aria-label="Dia anterior"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                  >
+                    ‹
+                  </span>
+                </button>
+                <span
+                  aria-live="polite"
+                >
+                  dg 18 d’octubre
+                </span>
+                <button
+                  aria-label="Dia següent"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                  >
+                    ›
+                  </span>
+                </button>
+              </div>
+            </div>
+          </header>
+          <div
+            aria-label="Dies de la setmana"
+            class="day-screen__chips"
+            role="group"
+          >
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dl 12
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dt 13
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dc 14
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dj 15
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              dv 16
+            </button>
+            <button
+              aria-pressed="false"
+              class="day-screen__chip"
+              type="button"
+            >
+              ds 17
+            </button>
+          </div>
+          <div
+            class="ah-card day-screen__card"
+          >
+            <p
+              class="day-screen__empty"
+            >
+              Cap classe aquest dia
+            </p>
+          </div>
+          <p
+            class="day-screen__footer day-screen__footer--outside"
+          >
+            n/n +e = inscrits/places + llista d'espera · l'instructor previst es mostra sempre
+          </p>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/dia"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            El meu dia
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/instructor/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"
+            />
+          </svg>
+          <span>
+            Visió global
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/alumnes"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"
+            />
+          </svg>
+          <span>
+            Alumnes
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:211:34
+    209|       mockScenario(scenario);
+    210|       await renderAt(path, email, "empty");
+    211|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    212|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    213|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/12]⎯
+
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > alumnes (/instructor/alumnes) shows the UI kit's empty state when its lists answer nothing
+TestingLibraryElementError: Unable to find role="heading" and name "Cap alumne amb aquesta cerca"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="instructor-screen instructor-students"
+        >
+          <header
+            class="ah-app-bar instructor-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Alumnes
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <label
+            class="instructor-students__search"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"
+              />
+            </svg>
+            <span
+              class="ah-sr-only"
+            >
+              Cerca un alumne
+            </span>
+            <input
+              class="ah-input"
+              placeholder="Cerca un alumne"
+              type="search"
+              value=""
+            />
+          </label>
+          <div
+            class="ah-card instructor-day__empty"
+          >
+            <p>
+              Cap alumne amb aquesta cerca
+            </p>
+          </div>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/dia"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            El meu dia
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"
+            />
+          </svg>
+          <span>
+            Visió global
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/instructor/alumnes"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"
+            />
+          </svg>
+          <span>
+            Alumnes
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="clubs-shell"
+    >
+      <div
+        class="clubs-shell__top"
+      />
+      <main
+        class="clubs-shell__content"
+      >
+        <section
+          class="instructor-screen instructor-students"
+        >
+          <header
+            class="ah-app-bar instructor-screen__bar"
+          >
+            <div
+              class="ah-app-bar__side"
+            />
+            <div
+              class="ah-app-bar__title"
+            >
+              <h1>
+                Alumnes
+              </h1>
+            </div>
+            <div
+              class="ah-app-bar__side ah-app-bar__side--end"
+            />
+          </header>
+          <label
+            class="instructor-students__search"
+          >
+            <svg
+              aria-hidden="true"
+              class="ah-icon"
+            >
+              <use
+                href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-search"
+              />
+            </svg>
+            <span
+              class="ah-sr-only"
+            >
+              Cerca un alumne
+            </span>
+            <input
+              class="ah-input"
+              placeholder="Cerca un alumne"
+              type="search"
+              value=""
+            />
+          </label>
+          <div
+            class="ah-card instructor-day__empty"
+          >
+            <p>
+              Cap alumne amb aquesta cerca
+            </p>
+          </div>
+        </section>
+      </main>
+      <nav
+        aria-label="Navegació principal"
+        class="ah-tab-bar"
+      >
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/dia"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"
+            />
+          </svg>
+          <span>
+            El meu dia
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/instructor/avui"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"
+            />
+          </svg>
+          <span>
+            Visió global
+          </span>
+        </a>
+        <a
+          aria-current="page"
+          class="ah-tab-bar__item"
+          href="/instructor/alumnes"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-list"
+            />
+          </svg>
+          <span>
+            Alumnes
+          </span>
+        </a>
+        <a
+          class="ah-tab-bar__item"
+          href="/perfil"
+        >
+          <svg
+            aria-hidden="true"
+            class="ah-icon"
+          >
+            <use
+              href="http://localhost:3000/@fs/home/user/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+            />
+          </svg>
+          <span>
+            Perfil
+          </span>
+        </a>
+      </nav>
+    </div>
+    <div
+      aria-live="polite"
+      class="ah-toast-viewport"
+    />
+  </div>
+</body>
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/states.test.tsx:211:34
+    209|       mockScenario(scenario);
+    210|       await renderAt(path, email, "empty");
+    211|       const title = await screen.findByRole("heading", { name: empty }…
+       |                                  ^
+    212|       expect(title.closest(".ah-empty-state:not(.ah-empty-state--error…
+    213|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/12]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  12 failed | 34 passed (46)
+   Start at  11:36:57
+   Duration  76.18s (tests 95%, transform 3%, environment 1%, import 1%)
+
+exit=1

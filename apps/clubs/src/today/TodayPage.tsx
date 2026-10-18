@@ -1,5 +1,5 @@
 import type { ApiClient } from "@agilityhub/api-client";
-import { Card, DayGrid, useBranding } from "@agilityhub/ui";
+import { Card, DayGrid, EmptyState, useBranding } from "@agilityhub/ui";
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -85,7 +85,7 @@ export function TodayPage({ client }: { client: ApiClient }) {
         <div className="day-screen__member" ref={cardRef}>
           <Card className="day-screen__card">
             {mapped.rows.length === 0 ? (
-              <p className="day-screen__empty">{t("home:today.empty")}</p>
+              <EmptyState icon="cal" title={t("home:today.empty")} />
             ) : (
               <DayGrid
                 columns={mapped.columns}

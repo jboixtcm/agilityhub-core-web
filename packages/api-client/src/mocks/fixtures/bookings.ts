@@ -602,10 +602,42 @@ function inWeek(item: StoredBooking, week: BookingWeek, now: number): boolean {
   return session !== undefined && classWeek(session, now) === week;
 }
 
+/** `bookingWeekKey` of W0 or W1 at `now` (R-08-01); none for the weeks after («Properament»). */
+function weekKeyOf(week: BookingWeek, now: number): string | undefined {
+  const current = bookingWeekOf(now);
+  if (week === "CURRENT") return current.key;
+  return week === "NEXT" ? clubLocalDateOf(current.end) : undefined;
+}
+
+/**
+ * INC-55 #3 (R2-A6): the club's one booking store. The member world's bookings and the staff
+ * worlds' registrants (the calendar's and the day grid's, `registrantAllocations`) are the same
+ * club's bookings: a back-office booking of the member's dog is the member's booking (R-08-19) and
+ * counts the same (R-08-02). These are the registrants' bookings of `dogId` that count in the week
+ * `weekKey`, as each class last drew them; the staff draws never book after W1 (R-08-01).
+ */
+function staffBookingsOf(dogId: string, weekKey: string | undefined) {
+  if (weekKey === undefined) return [];
+  return [...registrantAllocations.values()].flatMap((allocation) =>
+    allocation.session.weekKey === weekKey
+      ? allocation.counted
+          .filter((booking) => booking.dogId === dogId)
+          .map((booking) => ({ ...booking, session: allocation.session }))
+      : [],
+  );
+}
+
 function weekCount(dogIds: readonly string[], week: BookingWeek, now: number): number {
-  return bookingState.bookings.filter(
-    (item) => dogIds.includes(item.dogId) && counts(item) && inWeek(item, week, now),
-  ).length;
+  const weekKey = weekKeyOf(week, now);
+  return dogIds.reduce(
+    (total, dogId) =>
+      total +
+      bookingState.bookings.filter(
+        (item) => item.dogId === dogId && counts(item) && inWeek(item, week, now),
+      ).length +
+      staffBookingsOf(dogId, weekKey).length,
+    0,
+  );
 }
 
 /** `GET /me/home?dogId=` (S08 §6): the 03 aggregate, future rows only, ordered by `startsAt`. */
@@ -956,7 +988,20 @@ function weekBookings(dogId: string, week: BookingWeek, options: BookingOptions)
         startsAtLocal: session.startsAtLocal,
       });
   }
-  return { count: counted.length, notSelectable, swappable };
+  // The back office's bookings of the dog that week (INC-55 #3): they count, and one that has
+  // begun is DONE. The member world cannot cancel a staff world's booking, so none is offered to
+  // swap (a mock's limit: the api would offer one still cancellable in time, R-08-09).
+  const staff = staffBookingsOf(dogId, weekKeyOf(week, options.now));
+  for (const booking of staff) {
+    if (Date.parse(booking.session.startsAt) > options.now) continue;
+    notSelectable.push({
+      bookingId: booking.id,
+      description: booking.session.description,
+      reason: "DONE",
+      startsAtLocal: booking.session.startsAtLocal,
+    });
+  }
+  return { count: counted.length + staff.length, notSelectable, swappable };
 }
 
 /**
@@ -1294,6 +1339,12 @@ function lateCancellerOf(
 /** The dog id the staff reads give a registrant (the member world's own dogs share it: Duna). */
 const registrantDogId = (dog: string) => `dog-${slug(dog)}`;
 
+/** The id of a registrant's booking (`ClassBookingItem.id`): its class and its row. */
+const registrantBookingId = (classId: string, index: number) => `cb-${classId}-${String(index)}`;
+
+/** The member world's dogs: the same dogs in every world (INC-55 #3). */
+const MEMBER_DOG_IDS: ReadonlySet<string> = new Set(DOGS.map((dog) => dog.id));
+
 /**
  * R-08-03 at the clock: the most bookings that count (R-08-02) a dog can hold in the booking week
  * `weekKey`, `nowKey` being the week of now. The api checks the limit of the week as it stands at
@@ -1380,6 +1431,15 @@ function drawRegistrants(
     }
   }
   const live = world.filter((item) => item.state !== "DRAFT");
+  // INC-55 #3, the one booking store: the member's dogs are the same dogs in every world, so what
+  // the other world's classes hold of them counts here too (the fictional pool is drawn per world).
+  const here = new Set(live.map((item) => item.id));
+  for (const [classId, allocation] of registrantAllocations) {
+    if (here.has(classId)) continue;
+    for (const { dogId } of allocation.counted) {
+      if (MEMBER_DOG_IDS.has(dogId)) hold(dogId, allocation.session.weekKey);
+    }
+  }
   // What the world's classes already hold, while it counts (R-08-02).
   for (const session of live) {
     const allocation = registrantAllocations.get(session.id);
@@ -1396,7 +1456,17 @@ function drawRegistrants(
   const drawn = new Map<string, DrawnRegistrants>();
   for (const session of [...live].sort(drawOrder)) {
     const weekKey = bookingWeekKeyOf(session.startsAt);
-    const allocation = registrantAllocations.get(session.id) ?? { booked: [], late: undefined };
+    const allocation = registrantAllocations.get(session.id) ?? {
+      booked: [],
+      counted: [],
+      late: undefined,
+      session: {
+        description: session.displayDescription,
+        startsAt: session.startsAt,
+        startsAtLocal: `${session.date}T${session.startTime}`,
+        weekKey,
+      },
+    };
     registrantAllocations.set(session.id, allocation);
     const allowed = allowedLevels(session, levelsEnabled);
     const candidates = candidatesOf(session, allowed);
@@ -1446,11 +1516,17 @@ function drawRegistrants(
         }
       }
     }
-    drawn.set(session.id, {
-      booked: listedBookings(session, allocation),
-      late: allocation.late,
-      weekKey,
-    });
+    const booked = listedBookings(session, allocation);
+    // What counts in its week (R-08-02): its live bookings, never the club's cancellation's, and
+    // its late cancellation.
+    allocation.counted = [
+      ...(session.state === "CANCELLED" ? [] : booked),
+      ...(allocation.late === undefined ? [] : [allocation.late]),
+    ].map(({ index, person }) => ({
+      dogId: registrantDogId(person[1]),
+      id: registrantBookingId(session.id, index),
+    }));
+    drawn.set(session.id, { booked, late: allocation.late, weekKey });
   }
   return drawn;
 }
@@ -1542,7 +1618,7 @@ function registrantItems(
       state === "ACTIVE" ? (Date.parse(session.endsAt) <= now ? "DONE" : "CONFIRMED") : state,
     dogId: registrantDogId(dog),
     dogName: dog,
-    id: `cb-${session.id}-${String(index)}`,
+    id: registrantBookingId(session.id, index),
     late: state === "CANCELLED_LATE" ? true : state === "ACTIVE" ? null : false,
     levelCode: levelsEnabled ? (registrantLevel(dog) ?? null) : null,
     memberId: `member-${slug(member)}`,

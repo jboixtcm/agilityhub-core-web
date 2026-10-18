@@ -1,3 +1,4 @@
+import { isApiError } from "@agilityhub/api-client";
 import { BootFailure } from "@agilityhub/ui";
 import { useTranslation } from "react-i18next";
 
@@ -11,16 +12,22 @@ export const BOOT_FAILURE_BRANDING: { defaultLocale: string; locales: string[] }
 };
 
 export function BootFailurePage({
+  cause,
   reload = () => {
     window.location.reload();
   },
 }: {
+  /** What stopped the boot (E11-W02 round 2): an address no club has says so; the rest is offline. */
+  cause?: unknown;
   reload?: () => void;
 }) {
+  // `errors` is loaded with `common` before the page shows (`showBootFailure`).
   const { t } = useTranslation("common");
   return (
     <BootFailure
-      message={t("common:boot.offline")}
+      message={
+        isApiError(cause, "UNKNOWN_HOST") ? t("errors:UNKNOWN_HOST") : t("common:boot.offline")
+      }
       onRetry={reload}
       retryLabel={t("common:boot.retry")}
       title={t("common:unavailable.title")}

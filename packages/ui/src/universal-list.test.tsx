@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -578,5 +578,46 @@ describe("E7-W06 step 5 (ruling E82, E6-W04 Q6) · stable data attributes on a l
       ["f-1", "true", "unread"],
       ["f-2", "false", null],
     ]);
+  });
+});
+
+describe("E11-W02 round 2 (INC-41): `between` is offered only where it can be filled", () => {
+  it("a date column without a range offers no «entre» (it would ask for one value)", async () => {
+    const state: UniversalListState = {
+      columns: ["id"],
+      filters: [],
+      page: 0,
+      q: "",
+      size: 50,
+      sort: [],
+    };
+    render(
+      <UniversalList<Row>
+        appliedFilters={[]}
+        caption="Gossos"
+        columns={[{ key: "id", label: "Id", render: (row) => row.id }]}
+        filterColumns={[{ key: "registeredAt", label: "Data d'alta", type: "date" }]}
+        labels={listLabels}
+        listKey="between-without-range"
+        loadFilterValues={() => Promise.resolve([])}
+        onCreateView={() => Promise.reject(new Error("unused"))}
+        onDeleteView={() => Promise.resolve()}
+        onExport={() => undefined}
+        onRenameView={() => Promise.reject(new Error("unused"))}
+        onRetry={() => undefined}
+        onStateChange={vi.fn()}
+        rowKey={(row) => row.id}
+        rows={[{ id: "dog-1" }]}
+        savedViews={[]}
+        state={state}
+        totalPages={1}
+      />,
+    );
+    const operators = await screen.findByRole("combobox", { name: "Operador" });
+    const offered = within(operators)
+      .getAllByRole("option")
+      .map((option) => (option as HTMLOptionElement).value);
+    expect(offered).not.toContain("between");
+    expect(offered).toContain("gte");
   });
 });

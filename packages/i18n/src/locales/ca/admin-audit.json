@@ -138,6 +138,8 @@
     "title": "Exportacions"
   },
   "filters": {
+    "from": "Des de",
+    "to": "Fins a",
     "action": "Acció",
     "actor": "Actor",
     "actorRole": "Rol de l'actor",

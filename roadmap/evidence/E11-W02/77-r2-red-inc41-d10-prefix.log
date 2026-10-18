@@ -1,0 +1,9 @@
+$ pnpm --filter clubs-admin exec vitest run src/census/CensusRecordPage.test.tsx -t "country prefix"   # before (the drawer's default back to "+34")
+     × a new phone of the member takes the club's country prefix (its countryProfile), not Spain's 691ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected [ '+34', '+34' ] to deeply equal [ '+376', '+376' ]
+      Tests  1 failed | 31 skipped (32)
+exit 1
+$ pnpm --filter clubs-admin exec vitest run src/census/CensusRecordPage.test.tsx   # after
+      Tests  32 passed (32)
+exit 0

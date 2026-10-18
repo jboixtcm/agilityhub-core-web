@@ -33,6 +33,7 @@
     "magic": "Send me a sign-in link",
     "forgot": "Forgot your password? Recover it",
     "emailRequired": "Enter your email address",
+    "countdown": "Too many attempts. Try again in {seconds} s",
     "magicSent": "If the account exists, you will receive the link"
   },
   "magic": {

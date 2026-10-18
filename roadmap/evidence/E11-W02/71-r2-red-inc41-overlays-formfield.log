@@ -1,0 +1,16 @@
+$ pnpm --filter @agilityhub/ui exec vitest run src/components.test.tsx -t "INC-41"   # before
+       × the rest of the page is inert while it is open, and as it was once it closes 126ms
+       × Tab from its last control goes to its first, and Shift+Tab from its first to its last 211ms
+       × FormField links its error to its control: aria-invalid, and the error in its description 57ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"inert"[32m[39m[2m) // element.hasAttribute("inert")[22m
+Expected the element to have attribute:
+Received:
+Error: [2mexpect([22m[31melement[39m[2m).toHaveFocus()[22m
+Expected element with focus:
+Received element with focus:
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"aria-invalid"[32m[39m[2m, [22m[32m[32m"true"[32m[39m[2m) // element.getAttribute("aria-invalid") === "true"[22m
+Expected the element to have attribute:
+Received:
+      Tests  3 failed | 33 skipped (36)
+exit 1

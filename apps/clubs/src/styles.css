@@ -971,8 +971,7 @@ div.lifecycle-error p {
 }
 
 .self-page__loading {
-  padding: var(--ah-space-5);
-  color: var(--ah-color-text-muted);
+  margin: var(--ah-space-5) var(--ah-space-4);
 }
 
 .self-page__message {
@@ -2241,8 +2240,7 @@ div.lifecycle-error p {
   color: var(--ah-color-primary);
 }
 
-.info-club-page__updated,
-.info-page__empty {
+.info-club-page__updated {
   color: var(--ah-color-text-muted);
   font-size: 0.75rem;
 }

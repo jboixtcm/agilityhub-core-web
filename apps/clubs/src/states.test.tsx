@@ -1,12 +1,12 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { mockScenario, resetMemberBillingState } from "@agilityhub/api-client/mocks";
+import { handlers, mockScenario, resetMemberBillingState } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
 import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
-import { delay, http, HttpResponse } from "msw";
+import { cleanup, render, screen } from "@testing-library/react";
+import { delay, getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
@@ -30,7 +30,25 @@ afterAll(() => {
 /** The session's own reads: the shell needs them, every screen's data is something else. */
 const SESSION_PATHS = /\/api\/v1\/(me|me\/training-summary|branding)$|\/oauth2\//u;
 
-async function renderAt(path: string, email: string, reads: "fail" | "pending") {
+/**
+ * A read's answer with nothing in it (E11-W02 round 2, point 2): the mock's own answer with every list
+ * emptied — a bare array, or the arrays and totals of a page.
+ */
+async function emptied(request: Request): Promise<Response | undefined> {
+  const real = await getResponse(handlers, request);
+  if (!real?.ok) return real;
+  const body: unknown = await real.clone().json();
+  if (Array.isArray(body)) return HttpResponse.json([]);
+  if (body === null || typeof body !== "object") return real;
+  const page: Record<string, unknown> = { ...(body as Record<string, unknown>) };
+  for (const [key, value] of Object.entries(page)) {
+    if (Array.isArray(value)) page[key] = [];
+    else if (typeof value === "number" && key.startsWith("total")) page[key] = 0;
+  }
+  return HttpResponse.json(page);
+}
+
+async function renderAt(path: string, email: string, reads: "empty" | "fail" | "pending") {
   const client = new AuthClient({
     apiBaseUrl: `${window.location.origin}/api/v1`,
     clientId: "clubs-app",
@@ -47,6 +65,7 @@ async function renderAt(path: string, email: string, reads: "fail" | "pending") 
         await delay("infinite");
         return undefined;
       }
+      if (reads === "empty") return emptied(request);
       return HttpResponse.json(
         { code: "INTERNAL_ERROR", details: {}, message: "Down", traceId: "t-states" },
         { status: 500 },
@@ -81,38 +100,97 @@ async function renderAt(path: string, email: string, reads: "fail" | "pending") 
 const MEMBER = "laura@example.test";
 const INSTRUCTOR = "ivet.puig@example.test";
 
-/** Every list and detail screen of the members' app that reads data of its own. */
-const SCREENS: [string, string, string, "instructor" | "member"][] = [
-  ["03", "/inici", MEMBER, "member"],
-  ["04", "/reservar", MEMBER, "member"],
-  ["07", "/reserves/booking-duna-mon3", MEMBER, "member"],
-  ["08", "/entrenaments", MEMBER, "member"],
-  ["10", "/avui", MEMBER, "member"],
-  ["11", "/notificacions", MEMBER, "member"],
-  ["13", "/gossos", MEMBER, "member"],
-  ["25", "/historic", MEMBER, "member"],
-  ["rebuts", "/rebuts", MEMBER, "member"],
-  ["rebut", "/rebuts/invoice-laura-sep", MEMBER, "member"],
-  ["28", "/dades", MEMBER, "member"],
-  ["14", "/inactivitat", MEMBER, "member"],
-  ["15", "/baixa", MEMBER, "member"],
-  ["30", "/info", MEMBER, "member"],
-  ["20", "/instructor/dia", INSTRUCTOR, "instructor"],
-  ["23", "/instructor/avui", INSTRUCTOR, "instructor"],
-  ["alumnes", "/instructor/alumnes", INSTRUCTOR, "instructor"],
+/**
+ * Every list and detail screen of the members' app that reads data of its own: its loading label
+ * (its own `Skeleton`, never the shell's chunk fallback «Carregant») and, for a list, the title of
+ * its empty state.
+ */
+const SCREENS: [string, string, string, "instructor" | "member", string, string | null][] = [
+  ["03", "/inici", MEMBER, "member", "Carregant les teves reserves", "Encara no tens cap reserva"],
+  [
+    "04",
+    "/reservar",
+    MEMBER,
+    "member",
+    "Carregant les classes",
+    "Ara mateix no hi ha cap classe per reservar amb aquest gos.",
+  ],
+  ["07", "/reserves/booking-duna-mon3", MEMBER, "member", "Carregant la reserva", null],
+  [
+    "08",
+    "/entrenaments",
+    MEMBER,
+    "member",
+    "Carregant els entrenaments",
+    "El club està tancat aquest dia",
+  ],
+  ["10", "/avui", MEMBER, "member", "Carregant el quadre del dia", "Cap classe aquest dia"],
+  [
+    "11",
+    "/notificacions",
+    MEMBER,
+    "member",
+    "Carregant les notificacions",
+    "Encara no tens cap avís",
+  ],
+  [
+    "13",
+    "/gossos",
+    MEMBER,
+    "member",
+    "Carregant els teus gossos",
+    "Encara no tens cap gos donat d'alta",
+  ],
+  ["25", "/historic", MEMBER, "member", "Carregant l'històric", "Encara no hi ha res a l'històric"],
+  ["rebuts", "/rebuts", MEMBER, "member", "Carregant els rebuts", "Encara no tens cap rebut."],
+  ["rebut", "/rebuts/invoice-laura-sep", MEMBER, "member", "Carregant els rebuts", null],
+  ["28", "/dades", MEMBER, "member", "Carregant les teves dades", null],
+  ["14", "/inactivitat", MEMBER, "member", "Carregant el període d'inactivitat", null],
+  ["15", "/baixa", MEMBER, "member", "Carregant la sol·licitud de baixa", null],
+  [
+    "30",
+    "/info",
+    MEMBER,
+    "member",
+    "Carregant la informació",
+    "El club encara no ha publicat preguntes",
+  ],
+  ["20", "/instructor/dia", INSTRUCTOR, "instructor", "Carregant el dia", "Cap classe aquest dia"],
+  [
+    "23",
+    "/instructor/avui",
+    INSTRUCTOR,
+    "instructor",
+    "Carregant el quadre del dia",
+    "Cap classe aquest dia",
+  ],
+  [
+    "alumnes",
+    "/instructor/alumnes",
+    INSTRUCTOR,
+    "instructor",
+    "Carregant els alumnes",
+    "Cap alumne amb aquesta cerca",
+  ],
 ];
 
-// E11-W02 step 4: each screen's reads have their states from the UI kit — a status while they
-// load (the Skeleton's `role="status"`) and an alert when they fail.
-describe("E11-W02 step 4: the members' app says when its data is loading or failed", () => {
+const LISTS = SCREENS.filter(
+  (row): row is [string, string, string, "instructor" | "member", string, string] =>
+    row[5] !== null,
+);
+
+// E11-W02 step 4 (round 2, points 1 and 2): each screen's reads have their states from the UI kit —
+// its own loading status while they are out, an alert when they fail, and for a list the UI kit's
+// `EmptyState` when the answer has nothing in it.
+describe("E11-W02 step 4: the members' app says when its data is loading, failed or empty", () => {
   it.each(SCREENS)(
-    "%s (%s) shows a loading status while its reads are out",
-    async (_screen, path, email, scenario) => {
+    "%s (%s) shows its own loading status while its reads are out",
+    async (_screen, path, email, scenario, loading) => {
       mockScenario(scenario);
       await renderAt(path, email, "pending");
-      await waitFor(() => {
-        expect(screen.getAllByRole("status").length).toBeGreaterThan(0);
-      });
+      expect(
+        await screen.findByRole("status", { name: loading }, { timeout: 5_000 }),
+      ).toBeInTheDocument();
     },
   );
 
@@ -122,6 +200,16 @@ describe("E11-W02 step 4: the members' app says when its data is loading or fail
       mockScenario(scenario);
       await renderAt(path, email, "fail");
       expect((await screen.findAllByRole("alert")).length).toBeGreaterThan(0);
+    },
+  );
+
+  it.each(LISTS)(
+    "%s (%s) shows the UI kit's empty state when its lists answer nothing",
+    async (_screen, path, email, scenario, _loading, empty) => {
+      mockScenario(scenario);
+      await renderAt(path, email, "empty");
+      const title = await screen.findByRole("heading", { name: empty }, { timeout: 5_000 });
+      expect(title.closest(".ah-empty-state:not(.ah-empty-state--error)")).not.toBeNull();
     },
   );
 });

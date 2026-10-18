@@ -1,3 +1,4 @@
+import { ApiError } from "@agilityhub/api-client";
 import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { I18nextProvider } from "react-i18next";
@@ -33,4 +34,32 @@ describe("E11-W02 (INC-41): the app that cannot read /branding says so instead o
       expect(reload).toHaveBeenCalledOnce();
     },
   );
+});
+
+describe("E11-W02 round 2 (INC-41): the boot failure says what failed", () => {
+  it.each([
+    [
+      "an address no club has (404 UNKNOWN_HOST)",
+      new ApiError({ code: "UNKNOWN_HOST", message: "Unknown host", status: 404 }),
+      "No hi ha cap club configurat per a aquesta adreça.",
+    ],
+    [
+      "no answer (NETWORK)",
+      new ApiError({ code: "NETWORK", message: "Failed to fetch", status: 0 }),
+      "No hi ha connexió amb el servidor.",
+    ],
+  ] as const)("%s", async (_case, cause, message) => {
+    const i18n = await createClubsI18n({
+      branding: BOOT_FAILURE_BRANDING,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["common", "errors"],
+      storage: undefined,
+    });
+    render(
+      <I18nextProvider i18n={i18n}>
+        <BootFailurePage cause={cause} reload={vi.fn()} />
+      </I18nextProvider>,
+    );
+    expect(screen.getByText(message)).toBeVisible();
+  });
 });

@@ -1,0 +1,21 @@
+$ pnpm --filter @agilityhub/ui exec vitest run src/universal-list.test.tsx -t "can be filled"   # before
+     × a date column without a range offers no «entre» (it would ask for one value) 230ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected [ 'eq', 'ne', 'lt', 'lte', 'gt', …(3) ] to not include 'between'
+      Tests  1 failed | 14 skipped (15)
+exit 1
+$ pnpm --filter clubs-admin exec vitest run src/audit/AuditPage.test.tsx -t "can be filled"   # before
+     × «Data» between two club days: two date inputs, sent as the club-local bounds of those days 483ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+Expected the element to have value:
+Received:
+      Tests  1 failed | 9 skipped (10)
+exit 1
+$ pnpm --filter clubs-admin exec vitest run src/audit/AuditPage.test.tsx   # after
+ ✓ src/audit/AuditPage.test.tsx > E11-W02 round 2 (INC-41): the audit's «Data» filter can be filled > «Data» between two club days: two date inputs, sent as the club-local bounds of those days 238ms
+      Tests  10 passed (10)
+exit 0
+$ pnpm --filter @agilityhub/ui exec vitest run src/universal-list.test.tsx   # after
+ ✓ src/universal-list.test.tsx > E11-W02 round 2 (INC-41): `between` is offered only where it can be filled > a date column without a range offers no «entre» (it would ask for one value) 41ms
+      Tests  15 passed (15)
+exit 0

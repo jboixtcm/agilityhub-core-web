@@ -1,0 +1,14 @@
+$ pnpm --filter id exec vitest run src/App.test.tsx -t "INC-41"   # before
+     × a 429 on the password login counts down its Retry-After and holds the buttons until it ends 10514ms
+     × the magic link's token leaves the address bar once read; the continuation stays 15ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+TestingLibraryElementError: Unable to find an element with the text: Massa intents. Torna-ho a provar d'aquí a 3 s. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+AssertionError: expected true to be false // Object.is equality
+      Tests  2 failed | 10 skipped (12)
+exit 1
+$ pnpm --filter id exec vitest run src/App.test.tsx   # after
+ ✓ src/App.test.tsx > E11-W02 round 2 (INC-41): apps/id's login after a 429, and the magic link's token > a 429 on the password login counts down its Retry-After and holds the buttons until it ends 2141ms
+ ✓ src/App.test.tsx > E11-W02 round 2 (INC-41): apps/id's login after a 429, and the magic link's token > the magic link's token leaves the address bar once read; the continuation stays 20ms
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+exit 0

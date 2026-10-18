@@ -1,0 +1,34 @@
+     × an address no club has (404 UNKNOWN_HOST) 43ms
+     × ca: a request with no answer (code NETWORK) has its message 11ms
+     × es: a request with no answer (code NETWORK) has its message 35ms
+     × en: a request with no answer (code NETWORK) has its message 38ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 4 passed (8)
+     × an address no club has (404 UNKNOWN_HOST) 36ms
+     × ca: a request with no answer (code NETWORK) has its message 10ms
+     × es: a request with no answer (code NETWORK) has its message 31ms
+     × en: a request with no answer (code NETWORK) has its message 17ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  4 failed | 4 passed (8)
+$ pnpm --filter clubs exec vitest run src/BootFailurePage.test.tsx   # after
+ ✓ src/BootFailurePage.test.tsx > E11-W02 (INC-41): the app that cannot read /branding says so instead of a blank page > ca: the product's texts and a retry that loads the page again 196ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 (INC-41): the app that cannot read /branding says so instead of a blank page > es: the product's texts and a retry that loads the page again 22ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 (INC-41): the app that cannot read /branding says so instead of a blank page > en: the product's texts and a retry that loads the page again 23ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 round 2 (INC-41): the boot failure says what failed > an address no club has (404 UNKNOWN_HOST) 43ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 round 2 (INC-41): the boot failure says what failed > no answer (NETWORK) 11ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 round 2 (INC-41): the boot failure says what failed > ca: a request with no answer (code NETWORK) has its message 4ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 round 2 (INC-41): the boot failure says what failed > es: a request with no answer (code NETWORK) has its message 34ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 round 2 (INC-41): the boot failure says what failed > en: a request with no answer (code NETWORK) has its message 33ms
+      Tests  8 passed (8)
+exit 0
+$ pnpm --filter clubs-admin exec vitest run src/BootFailurePage.test.tsx   # after
+ ✓ src/BootFailurePage.test.tsx > E11-W02 (INC-41): the app that cannot read /branding says so instead of a blank page > ca: the product's texts and a retry that loads the page again 249ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 (INC-41): the app that cannot read /branding says so instead of a blank page > es: the product's texts and a retry that loads the page again 34ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 (INC-41): the app that cannot read /branding says so instead of a blank page > en: the product's texts and a retry that loads the page again 28ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 round 2 (INC-41): the boot failure says what failed > an address no club has (404 UNKNOWN_HOST) 59ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 round 2 (INC-41): the boot failure says what failed > no answer (NETWORK) 17ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 round 2 (INC-41): the boot failure says what failed > ca: a request with no answer (code NETWORK) has its message 4ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 round 2 (INC-41): the boot failure says what failed > es: a request with no answer (code NETWORK) has its message 42ms
+ ✓ src/BootFailurePage.test.tsx > E11-W02 round 2 (INC-41): the boot failure says what failed > en: a request with no answer (code NETWORK) has its message 29ms
+      Tests  8 passed (8)
+exit 0

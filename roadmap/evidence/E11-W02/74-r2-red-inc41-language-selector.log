@@ -1,0 +1,13 @@
+$ pnpm --filter clubs exec vitest run src/router-shell.test.tsx -t "one language selector"   # before
+     × «/perfil» draws as mockup 12, without the shell's header: its «Idioma» card is the only selector 610ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected [ <select …(1)>…(2)</select>, …(1) ] to have a length of 1 but got 2
+      Tests  1 failed | 3 skipped (4)
+exit 1
+$ pnpm --filter clubs exec vitest run src/router-shell.test.tsx   # after
+ ✓ src/router-shell.test.tsx > E11-W02 round 2 (review #5): the same screen with another query reads it again > 25 opened from «tipus=TRAINING» and then from its plain address shows every type 1025ms
+ ✓ src/router-shell.test.tsx > E11-W02 round 2 (review #6): the document's scroll on push, Back and a hash > a tab opens its screen at the top; Back returns to where the reader was 998ms
+ ✓ src/router-shell.test.tsx > E11-W02 round 2 (review #6): the document's scroll on push, Back and a hash > «/perfil#avisos» opens 12 at its notices card 742ms
+ ✓ src/router-shell.test.tsx > E11-W02 round 2 (INC-41): one language selector on 12 > «/perfil» draws as mockup 12, without the shell's header: its «Idioma» card is the only selector 382ms
+      Tests  4 passed (4)
+exit 0

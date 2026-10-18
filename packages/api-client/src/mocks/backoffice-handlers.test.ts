@@ -1171,6 +1171,8 @@ describe("E7-W07 step 5 · the staff reads never book a dog over its week's limi
     state?: string;
   }
   const WEEK_MS = 7 * 86_400_000;
+  /** The member world's dogs (`me-member.json`): the dogs every world shares. */
+  const MEMBER_DOGS = ["dog-duna", "dog-rock", "dog-toby"];
 
   /** R-08-02: what counts towards a week's limit (never CANCELLED nor CANCELLED_BY_CLUB). */
   const counts = (state: string | undefined) =>
@@ -1201,8 +1203,14 @@ describe("E7-W07 step 5 · the staff reads never book a dog over its week's limi
    * Reads every class of the calendar and day-grid worlds (and D10's list) at the clock and lists
    * what breaks R-08-02/R-08-03/R-08-04: a dog over its week's limit, counted with the member's own
    * bookings; a class whose rows miss its counters; a dog twice; a level the class does not allow.
+   * `together` (E11-W02 round 2, INC-55 #3: one booking store) counts the member world's own dogs
+   * (Duna, Rock, Toby: the dogs the worlds share) over the two staff worlds and the member world at
+   * once; `read` receives every row read.
    */
-  async function weekLimitProblems(): Promise<string[]> {
+  async function weekLimitProblems(
+    { together = false }: { together?: boolean } = {},
+    read: Row[] = [],
+  ): Promise<string[]> {
     // The booking week of now, as the member's 03 counts it (R-08-01).
     const home = await as<components["schemas"]["MeHome"]>("member", "GET", "/me/home");
     expect(home.status).toBe(200);
@@ -1225,11 +1233,13 @@ describe("E7-W07 step 5 · the staff reads never book a dog over its week's limi
       ["calendar", planningState.sessions],
       ["day grid", dayGridClassSessions()],
     ];
+    read.push(...memberWorld);
+    const allRows: Row[] = [...memberWorld];
     for (const [world, sessions] of worlds) {
-      const rows: Row[] = [...memberWorld];
-      const read = sessions.filter((session) => session.state !== "DRAFT");
-      expect(read.length, world).toBeGreaterThan(0);
-      for (const session of read) {
+      const rows: Row[] = together ? allRows : [...memberWorld];
+      const live = sessions.filter((session) => session.state !== "DRAFT");
+      expect(live.length, world).toBeGreaterThan(0);
+      for (const session of live) {
         const answer = await as<ClassBookings>(
           "admin",
           "GET",
@@ -1257,7 +1267,9 @@ describe("E7-W07 step 5 · the staff reads never book a dog over its week's limi
           }
         }
         rows.push(...items);
+        read.push(...items);
       }
+      if (together && world !== "day grid") continue;
       if (world === "calendar") {
         // D10 lists the very registrants D4 reads.
         const ids = (items: readonly Row[]) =>
@@ -1277,9 +1289,14 @@ describe("E7-W07 step 5 · the staff reads never book a dog over its week's limi
         });
       }
       for (const [key, { count, weekKey }] of perWeek) {
+        // The two staff worlds draw the same club week twice from a fictional pool: only the member
+        // world's dogs are one dog in every world.
+        if (together && !MEMBER_DOGS.some((dog) => key.includes(`(${dog})`))) continue;
         const limit = weekLimit(weekKey, currentKey);
         if (count > limit) {
-          problems.push(`${world}: ${key}: ${String(count)} > ${String(limit)}`);
+          problems.push(
+            `${together ? "every world" : world}: ${key}: ${String(count)} > ${String(limit)}`,
+          );
         }
       }
     }
@@ -1299,6 +1316,40 @@ describe("E7-W07 step 5 · the staff reads never book a dog over its week's limi
       resetPlanningState();
       resetBookingMockState();
       expect(await weekLimitProblems()).toEqual([]);
+    },
+  );
+
+  it.each([
+    ["dl 10 at 8:12 (D1 and D10, S15's example day)", JOBS_MOCK_NOW],
+    ["dc 12 at 10:00 (D4)", "2026-08-12T10:00:00+02:00"],
+    ["dl 3 at 7:10 (the ring-usage register)", "2026-08-03T07:10:00+02:00"],
+    ["dl 3 at 21:00 (screen 23's drawer)", "2026-08-03T21:00:00+02:00"],
+    ["dg 2 at 20:30 (the member world)", BOOKING_MOCK_NOW],
+  ])(
+    "E11-W02 round 2 (INC-55 #3, R-08-02, R-08-03, R-08-19): at %s one booking store: no dog of the member's is over its week's limit counted over the calendar, the day grid and the member world together, and the member's /me/home counts Duna's bookings in both staff worlds",
+    async (_clock, now) => {
+      vi.setSystemTime(new Date(now));
+      resetPlanningState();
+      resetBookingMockState();
+      const rows: Row[] = [];
+      expect(await weekLimitProblems({ together: true }, rows)).toEqual([]);
+      // Duna's bookings that count, wherever the club holds them (R-08-19: a back-office booking
+      // is the member's booking, and counts the same, R-08-02).
+      const home = await as<components["schemas"]["MeHome"]>(
+        "member",
+        "GET",
+        "/me/home?dogId=dog-duna",
+      );
+      expect(home.status).toBe(200);
+      const held = (weekKey: string) =>
+        rows.filter(
+          (row) => row.dogId === "dog-duna" && counts(row.state) && row.bookingWeekKey === weekKey,
+        ).length;
+      const { currentWeek, nextWeek } = home.body.limits;
+      expect([currentWeek.count, nextWeek.count]).toEqual([
+        held(currentWeek.weekKey),
+        held(nextWeek.weekKey),
+      ]);
     },
   );
 
@@ -1373,7 +1424,8 @@ describe("E7-W07 step 5 · the staff reads never book a dog over its week's limi
     expect(await weekLimitProblems()).toEqual([]);
     await cancelTuesday();
     expect(await weekLimitProblems()).toEqual([]);
-  });
+    // Every class of both staff worlds read twice: about a second alone, more under a loaded CI.
+  }, 15_000);
 });
 
 describe("E7-W07 round 2 #5b · the staff rows were booked, and the waiting entries joined, before now (S08 R-08-01)", () => {

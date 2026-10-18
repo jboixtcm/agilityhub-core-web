@@ -1,0 +1,19 @@
+$ pnpm --filter @agilityhub/api-client exec vitest run src/pending-contract.test.ts   # before dropping publishedElsewhere
+     × round 2 (review #9): a mocks-first schema with common property names is not «published» 7ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected [ 'ClubDraftNote' ] to deeply equal []
+- Expected
++ Received
+- []
++ [
++   "ClubDraftNote",
++ ]
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+exit 1
+$ pnpm --filter @agilityhub/api-client exec vitest run --reporter=verbose src/pending-contract.test.ts   # after
+ ✓ src/pending-contract.test.ts > E11-W02 step 3: pending.json keeps only unpublished contracts > no pending schema is already in the snapshot 4ms
+ ✓ src/pending-contract.test.ts > E11-W02 step 3: pending.json keeps only unpublished contracts > round 2 (review #9): a mocks-first schema with common property names is not «published» 1ms
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+exit 0

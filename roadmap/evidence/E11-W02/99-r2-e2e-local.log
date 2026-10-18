@@ -1,0 +1,41 @@
+# E11-W02 round 2: the three apps' Playwright MSW suites, run locally for diagnosis (cloud session, no Docker, E110); CI runs them on the PR.
+# Each app's playwright.config.ts with outputDir in the scratchpad and launchOptions.executablePath=/opt/pw-browsers/chromium (Playwright 1.63 asks for a headless shell this image does not ship); the evidence PNGs the specs write for other tasks were restored afterwards (git checkout).
+
+## clubs-admin, the whole suite
+$ pnpm --filter clubs-admin exec playwright test --config <scratch>/pw-clubs-admin.config.ts --workers=2
+  1) e2e/agenda-ring-card.spec.ts:45:3 › E5-W02 D12 card «Reservar o bloquejar pista (sense alumne)» › T-09-40 (D12) an instructor reserves Petita on Thursday 13 from the
+  2) e2e/activities.spec.ts:148:3 › E4-W04 D7 activities › INSTRUCTOR reads D7 without actions ─────
+  3) e2e/activities.spec.ts:190:3 › T-07-29 E4-W08 D7 follow-ups › R-07-14 an INSTRUCTOR sees no «Nivells» on an activity without levels (no /parameters access)
+  4) e2e/e5-backoffice.spec.ts:107:3 › E5-W03 D4 · the registrants of the selected class (S08 §6, R-08-16) › an INSTRUCTOR reads the same panel without actions (A22 c)
+  5) e2e/follow-up.spec.ts:102:3 › E6-W03 T-10-30 D14 «Seguiment alumnes» against MSW › an INSTRUCTOR reaches D14 from «Persones»; a row click reads it, drops the counter
+  6) e2e/e5-backoffice.spec.ts:159:3 › E5-W03 «Entrenaments» · the ring-usage register (S09 §2, §13-8, no mockup) › an INSTRUCTOR reads the register without exports nor b
+  7) e2e/follow-up.spec.ts:121:3 › E6-W03 T-10-30 D14 «Seguiment alumnes» against MSW › everything read (followupAllRead): no counter, «0 pendents de llegir», no highligh
+  8) e2e/planning-templates.spec.ts:170:3 › E4-W01 D3 + D3b weekly templates › T-06-26 INSTRUCTOR reads D3 without any action (A22 c)
+  9) e2e/planning-calendar.spec.ts:220:3 › E4-W02 D4 + D4b + D4c class calendar › T-06-28 INSTRUCTOR reads D4 without any action (A22 c)
+  10) e2e/shell.spec.ts:76:3 › T-02-14 clubs-admin shell › does not show Configuració to an instructor
+  11) e2e/student-record.spec.ts:62:3 › E6-W02 T-10-28 D13 «Fitxa d'alumne» (desktop) against MSW › from «Alumnes» to D13: the header, the metrics, the three blocks and t
+  12) e2e/week-agenda.spec.ts:72:3 › E6-W03 T-10-29 D12 «Agenda de la setmana» against MSW › the instructor's week, the selected class's list saved through the same PUT a
+  13) e2e/student-record.spec.ts:114:3 › E6-W02 T-10-28 D13 «Fitxa d'alumne» (desktop) against MSW › round 2 #3: the history takes the drawer's place and gives it back wi
+  14) e2e/week-agenda.spec.ts:161:3 › E6-W03 T-10-29 D12 «Agenda de la setmana» against MSW › round 2 #4 (review #6, R-10-15): a training's «{guia} + {gos}» clipped by th
+  15) e2e/student-record.spec.ts:144:3 › E6-W05 step 3: Escape closes only the topmost overlay (AGENTS rule 6) › Escape in the delete confirmation over D13's drawer close
+  16) e2e/week-agenda.spec.ts:202:3 › E6-W03 T-10-29 D12 «Agenda de la setmana» against MSW › the instructor filter asks for «Els meus» without hiding trainings or blocks
+  (16 of them: waiting for navigation to "**/tauler" until "load" — the INSTRUCTOR now lands on /agenda)
+  12 skipped
+  77 passed (9.6m)
+exit 1
+
+## clubs-admin, the nine specs that sign in an INSTRUCTOR, after their helpers wait for the account's landing (/tauler or /agenda: INC-41 item 13)
+$ pnpm --filter clubs-admin exec playwright test --config <scratch>/pw-clubs-admin.config.ts --workers=2 e2e/{agenda-ring-card,activities,e5-backoffice,follow-up,planning-templates,planning-calendar,shell,student-record,week-agenda}.spec.ts
+  42 passed (4.5m)
+exit 0
+
+## id
+$ pnpm --filter id exec playwright test --config <scratch>/pw-id.config.ts --workers=2
+  1 passed (10.5s)
+exit 0
+
+## clubs
+$ pnpm --filter clubs exec playwright test --config <scratch>/pw-clubs.config.ts --workers=2
+  8 skipped
+  86 passed (6.0m)
+exit 0

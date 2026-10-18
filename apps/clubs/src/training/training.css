@@ -61,11 +61,6 @@
   font-size: 0.75rem;
 }
 
-.training-closed p {
-  margin: 0;
-  color: var(--ah-color-text-muted);
-}
-
 .training-chooser {
   display: grid;
   gap: var(--ah-space-1);

@@ -1,0 +1,5 @@
+$ node shots/ring.mjs   # Playwright + Chromium against `VITE_MOCK=1 pnpm --filter clubs-admin dev --port 4174`, admin scenario, the Cànic fixture (theme dark), /pistes/ring-muntanya/geometria at 1280 px
+{"name":"dark","scheme":"dark","theme":"dark","floorFill":"rgb(11, 11, 11)","ringStroke":"rgb(43, 43, 43)","axisLabels":[{"text":"0,0","fill":"rgb(255, 255, 255)"},{"text":"40 m","fill":"rgb(255, 255, 255)"},{"text":"25 m","fill":"rgb(255, 255, 255)"}]}
+# COLORS.axis fills only the three labels (0,0 and the two sides), never a line: the ring outline keeps COLORS.ring (#2B2B2B, unchanged).
+# Labels #FFFFFF on the floor #0B0B0B: 19.7:1 (before INC-60: #2B2B2B on #0B0B0B, 1.4:1). Captures: 68-ring-diagram-dark.png, 68-D16-geometria-dark-1280.png
+exit=0

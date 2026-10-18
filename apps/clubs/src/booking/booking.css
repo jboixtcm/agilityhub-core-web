@@ -340,18 +340,6 @@
   color: var(--ah-color-text-muted);
 }
 
-.home-empty {
-  display: grid;
-  gap: var(--ah-space-3);
-  justify-items: center;
-  text-align: center;
-}
-
-.home-empty p {
-  margin: 0;
-  color: var(--ah-color-text-muted);
-}
-
 .home-history {
   justify-self: center;
   color: var(--ah-color-primary);

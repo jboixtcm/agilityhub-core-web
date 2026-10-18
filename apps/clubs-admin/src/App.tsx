@@ -787,15 +787,23 @@ function AdminShell({
 }
 
 /**
- * Where a signed-in account lands: D1, or D19 for a platform account without a club role (S17 §2
- * row «Entrada»: the console has no club context).
+ * The club screen an account lands on (E11-W02 round 2, INC-41): D1 for an ADMIN; an INSTRUCTOR
+ * without ADMIN cannot open D1, so it lands on D12, its week (S10 §2).
+ */
+function clubLandingPath(roles: readonly string[]): string {
+  return roles.includes("ADMIN") || !roles.includes("INSTRUCTOR") ? "/tauler" : "/agenda";
+}
+
+/**
+ * Where a signed-in account lands: its club landing, or D19 for a platform account without a club
+ * role (S17 §2 row «Entrada»: the console has no club context).
  */
 function landingPath(authClient: AuthClient): string {
   const me = authClient.getMe();
   const clubRoles = me?.membership?.roles ?? [];
   return clubRoles.length === 0 && me?.account.platformRoles.includes("AGILITYHUB_ADMIN") === true
     ? "/consola/clubs"
-    : "/tauler";
+    : clubLandingPath(clubRoles);
 }
 
 function AccessPage({ authClient }: { authClient: AuthClient }) {
@@ -1013,15 +1021,30 @@ export function App({ authClient }: { authClient: AuthClient }) {
     session.roles.length === 0 && session.platformRoles.includes("AGILITYHUB_ADMIN");
   // A platform-only account on an unknown path is shown D19's list and the address is replaced
   // by it, so the address, the lit «Consola» entry and a reload agree (E10-W01 round 2 #6).
+  const ownPath = ["/_gallery", "/acces", "/entrar", SUPPORT_PATH].includes(requested.pathname);
   const strayPlatformPath =
-    platformOnly &&
-    currentRoute(requested.pathname) === undefined &&
-    !["/_gallery", "/acces", "/entrar", SUPPORT_PATH].includes(requested.pathname);
-  const url = strayPlatformPath ? new URL("/consola/clubs", window.location.origin) : requested;
+    platformOnly && currentRoute(requested.pathname) === undefined && !ownPath;
+  // E11-W02 round 2 (INC-41): a club account on an unknown path, or on a club screen its roles
+  // cannot open (an INSTRUCTOR on D1), is shown its own landing instead of an empty page, and the
+  // address is replaced by it, as for a platform-only account.
+  const requestedRoute = currentRoute(requested.pathname);
+  const strayClubPath =
+    session.status === "signedIn" &&
+    session.roles.length > 0 &&
+    !ownPath &&
+    (requestedRoute === undefined ||
+      (requestedRoute.platformOnly !== true &&
+        !(requestedRoute.roles ?? ["ADMIN"]).some((role) => session.roles.includes(role))));
+  const strayTarget = strayPlatformPath
+    ? "/consola/clubs"
+    : strayClubPath
+      ? clubLandingPath(session.roles)
+      : undefined;
+  const url = strayTarget === undefined ? requested : new URL(strayTarget, window.location.origin);
   const pathname = url.pathname;
   useEffect(() => {
-    if (strayPlatformPath) window.history.replaceState(null, "", "/consola/clubs");
-  }, [strayPlatformPath]);
+    if (strayTarget !== undefined) window.history.replaceState(null, "", strayTarget);
+  }, [strayTarget]);
 
   if (import.meta.env.DEV && pathname === "/_gallery") {
     return <Gallery />;
@@ -1048,11 +1071,7 @@ export function App({ authClient }: { authClient: AuthClient }) {
   return route === undefined ? null : (
     <OnboardingExperience authClient={authClient} presentation="modal">
       <ExportJobsProvider client={client}>
-        <AdminShell
-          client={client}
-          onNavigate={navigate}
-          pathname={pathname}
-        >
+        <AdminShell client={client} onNavigate={navigate} pathname={pathname}>
           {gatedRoute(route, routeContent(route, client, navigate, pathname, url.search))}
         </AdminShell>
       </ExportJobsProvider>

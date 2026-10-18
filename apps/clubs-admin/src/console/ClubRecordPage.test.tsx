@@ -268,6 +268,35 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     expect(theme?.body).not.toHaveProperty("markFileKey");
   });
 
+  it("E11-W02 round 2 (review #7): Tema previews «Automàtic» in the reader's dark scheme, dark logo included", async () => {
+    // jsdom has no `matchMedia`: a reader who asks for the dark scheme.
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      value: (media: string) =>
+        ({
+          addEventListener: () => undefined,
+          matches: media === "(prefers-color-scheme: dark)",
+          media,
+          removeEventListener: () => undefined,
+        }) as unknown as MediaQueryList,
+    });
+    try {
+      await openTab(MINIM, "tema");
+      fireEvent.change(screen.getByLabelText("Mode"), { target: { value: "auto" } });
+      const frame = screen
+        .getByTestId("theme-preview-clubs")
+        .querySelector<HTMLElement>("[data-theme]");
+      expect(frame).toHaveAttribute("data-scheme", "dark");
+      expect(frame?.style.getPropertyValue("--ah-color-background")).toBe(
+        "var(--ah-product-dark-background)",
+      );
+      fireEvent.change(screen.getByLabelText("Mode"), { target: { value: "light" } });
+      expect(frame).toHaveAttribute("data-scheme", "light");
+    } finally {
+      Reflect.deleteProperty(window, "matchMedia");
+    }
+  });
+
   it("Mòduls: dependencies (R-17-04) gate the switches; the list or the preset is saved with the version", async () => {
     const puts = captureRequests(
       (method, url) => method === "PUT" && url.pathname.endsWith("/modules"),

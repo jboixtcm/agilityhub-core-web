@@ -1,0 +1,9 @@
+$ pnpm --filter clubs-admin exec vitest run src/census/CensusRecordPage.test.tsx -t "dog transfer"   # before
+     × «Abonat de destí» lists all the club's active members but the owner, not the first 12 787ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected [ <option value></option>, …(12) ] to have a length of 184 but got 13
+      Tests  1 failed | 32 skipped (33)
+exit 1
+$ pnpm --filter clubs-admin exec vitest run src/census/CensusRecordPage.test.tsx   # after
+      Tests  33 passed (33)
+exit 0

@@ -1,0 +1,15 @@
+$ pnpm --filter clubs exec vitest run --reporter=verbose src/screen-load-error.test.tsx src/chunk-reload.test.ts src/router-shell.test.tsx
+ ✓ src/chunk-reload.test.ts > E11-W02 round 2 (review #4): a chunk that cannot load reloads the document once > «Failed to fetch dynamically imported module: https://club.example/assets/screens-a1.js» is a chunk-load error 2ms
+ ✓ src/chunk-reload.test.ts > E11-W02 round 2 (review #4): a chunk that cannot load reloads the document once > «Importing a module script failed.» is a chunk-load error 0ms
+ ✓ src/chunk-reload.test.ts > E11-W02 round 2 (review #4): a chunk that cannot load reloads the document once > «error loading dynamically imported module: https://club.example/assets/screens-a1.js» is a chunk-load error 0ms
+ ✓ src/chunk-reload.test.ts > E11-W02 round 2 (review #4): a chunk that cannot load reloads the document once > «Unable to preload CSS for /assets/screens-a1.css» is a chunk-load error 1ms
+ ✓ src/chunk-reload.test.ts > E11-W02 round 2 (review #4): a chunk that cannot load reloads the document once > a loader's error that wraps one (its `cause`) is one too 0ms
+ ✓ src/chunk-reload.test.ts > E11-W02 round 2 (review #4): a chunk that cannot load reloads the document once > an error of the screen itself is not 0ms
+ ✓ src/chunk-reload.test.ts > E11-W02 round 2 (review #4): a chunk that cannot load reloads the document once > reloads the first time, and not again within a minute (no loop when the chunk stays missing) 3ms
+ ✓ src/screen-load-error.test.tsx > E11-W02 round 2 (review #4): a screen whose chunk cannot load never blanks the app > 04 with its chunk gone: the shell stays, an ErrorState says so, and the document reloads once 376ms
+ ✓ src/router-shell.test.tsx > E11-W02 round 2 (review #5): the same screen with another query reads it again > 25 opened from «tipus=TRAINING» and then from its plain address shows every type 1263ms
+ ✓ src/router-shell.test.tsx > E11-W02 round 2 (review #6): the document's scroll on push, Back and a hash > a tab opens its screen at the top; Back returns to where the reader was 908ms
+ ✓ src/router-shell.test.tsx > E11-W02 round 2 (review #6): the document's scroll on push, Back and a hash > «/perfil#avisos» opens 12 at its notices card 731ms
+ Test Files  3 passed (3)
+      Tests  11 passed (11)
+exit 0
