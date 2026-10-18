@@ -1,5 +1,5 @@
 import { type ApiClient, studentSearchGuide, useStudentSearch } from "@agilityhub/api-client";
-import { AppBar, Button, Card, Icon, Input, Skeleton, Toast } from "@agilityhub/ui";
+import { AppBar, Button, Card, EmptyState, Icon, Input, Skeleton, Toast } from "@agilityhub/ui";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -69,7 +69,7 @@ export function StudentSearchPage({ client }: { client: ApiClient }) {
       ) : null}
       {dogs.loading || dogs.firstFailed ? null : dogs.items.length === 0 ? (
         <Card className="instructor-day__empty">
-          <p>{t("instructor:students.empty")}</p>
+          <EmptyState icon="search" title={t("instructor:students.empty")} />
         </Card>
       ) : (
         <Card className="instructor-students__list">

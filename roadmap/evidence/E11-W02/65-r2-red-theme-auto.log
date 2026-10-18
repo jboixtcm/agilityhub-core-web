@@ -1,0 +1,16 @@
+     × a mounted full logo turns to the dark one, and back, as the reader's scheme flips 15ms
+     × unmounting the provider restores the page's scheme, accent and theme-color 97ms
+     × a preview of `auto` (D19) paints the dark scheme for a dark reader 1ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+TypeError: useBrandingLogo is not a function
+AssertionError: expected 'dark' to be 'light' // Object.is equality
+AssertionError: expected '#0B0B0B' to be 'var(--ah-product-dark-background)' // Object.is equality
+ Test Files  1 failed (1)
+      Tests  3 failed | 9 passed (12)
+     × E11-W02 round 2 (review #7): Tema previews «Automàtic» in the reader's dark scheme, dark logo included 444ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"data-scheme"[32m[39m[2m, [22m[32m[32m"dark"[32m[39m[2m) // element.getAttribute("data-scheme") === "dark"[22m
+Expected the element to have attribute:
+Received:
+ Test Files  1 failed (1)
+      Tests  1 failed | 21 skipped (22)

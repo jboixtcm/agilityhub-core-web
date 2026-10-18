@@ -235,7 +235,7 @@ export function AnnouncementsPage({
                 ))}
               </ul>
               {list.data.items.length === 0 ? (
-                <p className="messaging-templates__empty">{t("admin-messaging:templates.empty")}</p>
+                <EmptyState icon="mail" title={t("admin-messaging:templates.empty")} />
               ) : (
                 <ul aria-label={t("admin-messaging:templates.list")} className="messaging-list">
                   {list.data.items.map((item) => (

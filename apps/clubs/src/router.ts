@@ -29,6 +29,29 @@ function appUrl(target: string): URL | null {
   return url;
 }
 
+/**
+ * How the app came to its current address (E11-W02 round 2, review #6): the document's load, a
+ * history move (Back, Forward), or an in-app navigation that added or replaced an entry.
+ */
+export type NavigationKind = "load" | "pop" | "push" | "replace";
+
+/** A `popstate` the app handles: how it came, and for `navigate`'s own, the address it left. */
+export interface Navigation {
+  kind: "pop" | "push" | "replace";
+  /** The document's address (path and query) before `navigate` moved it; none for a pop. */
+  from?: string;
+}
+
+/** The navigation `navigate` is dispatching; outside it, a `popstate` is the browser's own. */
+let pending: Required<Navigation> | null = null;
+
+/** The navigation behind the `popstate` being handled: `navigate`'s own push or replace, else a pop. */
+export function takeNavigation(): Navigation {
+  const navigation = pending ?? { kind: "pop" };
+  pending = null;
+  return navigation;
+}
+
 /** Opens `path`: in place when it is a screen of this app, as a document load otherwise. */
 export function navigate(path: string, { replace = false, state = null }: NavigateOptions = {}) {
   const url = appUrl(path);
@@ -38,9 +61,12 @@ export function navigate(path: string, { replace = false, state = null }: Naviga
     return;
   }
   const target = `${url.pathname}${url.search}${url.hash}`;
+  const from = `${window.location.pathname}${window.location.search}`;
   if (replace) window.history.replaceState(state, "", target);
   else window.history.pushState(state, "", target);
+  pending = { from, kind: replace ? "replace" : "push" };
   window.dispatchEvent(new PopStateEvent("popstate", { state }));
+  pending = null;
 }
 
 /**

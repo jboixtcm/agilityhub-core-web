@@ -1,5 +1,15 @@
 import { isApiError } from "@agilityhub/api-client";
-import { Badge, Button, Card, Icon, IconButton, Skeleton, Toast, type Tone } from "@agilityhub/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  EmptyState,
+  Icon,
+  IconButton,
+  Skeleton,
+  Toast,
+  type Tone,
+} from "@agilityhub/ui";
 import {
   type CSSProperties,
   type DragEvent,
@@ -124,7 +134,7 @@ export function CatalogTable<Row extends { active?: boolean; id: string }>({
                       : 1)
                   }
                 >
-                  {empty}
+                  <EmptyState title={empty} />
                 </td>
               </tr>
             ) : (

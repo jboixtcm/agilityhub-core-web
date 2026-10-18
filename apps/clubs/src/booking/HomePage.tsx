@@ -3,6 +3,7 @@ import { useSession } from "@agilityhub/auth";
 import {
   Button,
   Card,
+  EmptyState,
   Icon,
   resolveBrandingLogo,
   Skeleton,
@@ -195,10 +196,15 @@ export function HomePage({ client }: { client: ApiClient }) {
         </h2>
         {data.reservations.length === 0 ? (
           <Card className="home-empty">
-            <p>{t("home:reservations.empty")}</p>
-            <a className="ah-button ah-button--primary" href="/reservar">
-              {t("home:reservations.bookClass")}
-            </a>
+            <EmptyState
+              action={
+                <a className="ah-button ah-button--primary" href="/reservar">
+                  {t("home:reservations.bookClass")}
+                </a>
+              }
+              icon="cal"
+              title={t("home:reservations.empty")}
+            />
           </Card>
         ) : (
           data.reservations.map((row) => {

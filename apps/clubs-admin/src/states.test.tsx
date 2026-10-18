@@ -1,11 +1,11 @@
-import { mockScenario } from "@agilityhub/api-client/mocks";
+import { handlers, mockScenario } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { AuthClient, MemoryRefreshTokenStore, SessionProvider } from "@agilityhub/auth";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
-import { delay, http, HttpResponse } from "msw";
+import { cleanup, render, screen } from "@testing-library/react";
+import { delay, getResponse, http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
@@ -29,7 +29,25 @@ afterAll(() => {
 /** The session's own reads: the shell needs them, every screen's data is something else. */
 const SESSION_PATHS = /\/api\/v1\/(me|branding|dashboard\/counters)$|\/oauth2\//u;
 
-async function renderAt(path: string, reads: "fail" | "pending") {
+/**
+ * A read's answer with nothing in it (E11-W02 round 2, point 2): the mock's own answer with every list
+ * emptied — a bare array, or the arrays and totals of a page.
+ */
+async function emptied(request: Request): Promise<Response | undefined> {
+  const real = await getResponse(handlers, request);
+  if (!real?.ok) return real;
+  const body: unknown = await real.clone().json();
+  if (Array.isArray(body)) return HttpResponse.json([]);
+  if (body === null || typeof body !== "object") return real;
+  const page: Record<string, unknown> = { ...(body as Record<string, unknown>) };
+  for (const [key, value] of Object.entries(page)) {
+    if (Array.isArray(value)) page[key] = [];
+    else if (typeof value === "number" && key.startsWith("total")) page[key] = 0;
+  }
+  return HttpResponse.json(page);
+}
+
+async function renderAt(path: string, reads: "empty" | "fail" | "pending") {
   const client = new AuthClient({
     ...ADMIN_AUTH_OPTIONS,
     apiBaseUrl: `${window.location.origin}/api/v1`,
@@ -45,6 +63,7 @@ async function renderAt(path: string, reads: "fail" | "pending") {
         await delay("infinite");
         return undefined;
       }
+      if (reads === "empty") return emptied(request);
       return HttpResponse.json(
         { code: "INTERNAL_ERROR", details: {}, message: "Down", traceId: "t-states" },
         { status: 500 },
@@ -69,41 +88,52 @@ async function renderAt(path: string, reads: "fail" | "pending") {
   );
 }
 
-/** The back office's list and detail screens that read data of their own. */
-const SCREENS: [string, string][] = [
-  ["D1", "/tauler"],
-  ["D2", "/preinscripcions/42000000-0000-4000-8000-000000000001"],
-  ["D3", "/plantilles"],
-  ["D4", "/calendari"],
-  ["D5", "/abonats"],
-  ["D10", "/abonats/member-laura"],
-  ["D15", "/gossos"],
-  ["D6", "/facturacio"],
-  ["activitats", "/activitats"],
-  ["D8", "/modalitats"],
-  ["D9", "/comunicats"],
-  ["D11", "/parametres"],
-  ["D12", "/agenda"],
-  ["entrenaments", "/entrenaments"],
-  ["D13", "/alumnes"],
-  ["D14", "/seguiment"],
-  ["D16", "/pistes"],
-  ["D17", "/equip"],
-  ["D18", "/recorreguts"],
-  ["inactivitats", "/inactivitats"],
-  ["auditoria", "/auditoria"],
+/**
+ * The back office's list and detail screens that read data of their own: the label of their own
+ * loading status and, for a list, the title of its empty state.
+ */
+const SCREENS: [string, string, string, string | null][] = [
+  ["D1", "/tauler", "Carregant el tauler", null],
+  [
+    "D2",
+    "/preinscripcions/42000000-0000-4000-8000-000000000001",
+    "Carregant la preinscripció…",
+    null,
+  ],
+  ["D3", "/plantilles", "Carregant…", "Encara no hi ha cap plantilla"],
+  ["D4", "/calendari", "Carregant…", "Cap classe aquesta setmana"],
+  ["D5", "/abonats", "Carregant el llistat", "Cap abonat amb aquests criteris"],
+  ["D10", "/abonats/member-laura", "Carregant la fitxa…", null],
+  ["D15", "/gossos", "Carregant el llistat", "Cap gos amb aquests criteris"],
+  ["D6", "/facturacio", "Carregant la facturació…", "Encara no hi ha cap simulació d'aquest mes"],
+  ["activitats", "/activitats", "Carregant el llistat", "Encara no hi ha cap activitat"],
+  ["D8", "/modalitats", "Carregant", "Encara no hi ha cap modalitat"],
+  ["D9", "/comunicats", "Carregant les plantilles", "No hi ha cap plantilla en aquesta categoria."],
+  ["D11", "/parametres", "Carregant", "Encara no hi ha cap nivell"],
+  ["D12", "/agenda", "Carregant l'agenda", "Aquesta setmana no hi ha res a l'agenda"],
+  ["entrenaments", "/entrenaments", "Carregant el llistat", "Cap reserva d'entrenament"],
+  ["D13", "/alumnes", "Carregant els alumnes", "Cap alumne amb aquesta cerca"],
+  ["D14", "/seguiment", "Carregant el llistat", "No hi ha res al seguiment"],
+  ["D16", "/pistes", "Carregant", "Encara no hi ha cap pista"],
+  ["D17", "/equip", "Carregant", "Encara no hi ha cap instructor"],
+  ["D18", "/recorreguts", "Carregant el llistat", "Encara no hi ha cap recorregut"],
+  ["inactivitats", "/inactivitats", "Carregant la fitxa…", "No hi ha inactivitats"],
+  ["auditoria", "/auditoria", "Carregant el llistat", "No hi ha entrades d'auditoria"],
 ];
 
-// E11-W02 step 4: each screen's reads have their states from the UI kit — a status while they
-// load and an alert when they fail.
-describe("E11-W02 step 4: the back office says when its data is loading or failed", () => {
+const LISTS = SCREENS.filter((row): row is [string, string, string, string] => row[3] !== null);
+
+// E11-W02 step 4 (round 2, points 1 and 2): each screen's reads have their states from the UI kit —
+// its own loading status while they are out, an alert when they fail, and for a list the UI kit's
+// `EmptyState` when the answer has nothing in it.
+describe("E11-W02 step 4: the back office says when its data is loading, failed or empty", () => {
   it.each(SCREENS)(
-    "%s (%s) shows a loading status while its reads are out",
-    async (_screen, path) => {
+    "%s (%s) shows its own loading status while its reads are out",
+    async (_screen, path, loading) => {
       await renderAt(path, "pending");
-      await waitFor(() => {
-        expect(screen.getAllByRole("status").length).toBeGreaterThan(0);
-      });
+      expect(
+        (await screen.findAllByRole("status", { name: loading }, { timeout: 5_000 })).length,
+      ).toBeGreaterThan(0);
     },
   );
 
@@ -111,4 +141,13 @@ describe("E11-W02 step 4: the back office says when its data is loading or faile
     await renderAt(path, "fail");
     expect((await screen.findAllByRole("alert")).length).toBeGreaterThan(0);
   });
+
+  it.each(LISTS)(
+    "%s (%s) shows the UI kit's empty state when its lists answer nothing",
+    async (_screen, path, _loading, empty) => {
+      await renderAt(path, "empty");
+      const title = await screen.findByRole("heading", { name: empty }, { timeout: 5_000 });
+      expect(title.closest(".ah-empty-state:not(.ah-empty-state--error)")).not.toBeNull();
+    },
+  );
 });

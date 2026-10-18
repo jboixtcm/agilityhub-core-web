@@ -37,8 +37,8 @@
     "lint": "eslint . --max-warnings 0 --config ../../eslint.config.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run && pnpm test:bundle-check",
-    "test:bundle-check": "node --test ../../scripts/check-clubs-bundle.test.mjs",
-    "build": "tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs",
+    "test:bundle-check": "node --test ../../scripts/check-clubs-bundle.test.mjs ../../scripts/check-initial-budget.test.mjs",
+    "build": "tsc --noEmit && vite build && node ../../scripts/check-clubs-bundle.mjs && node ../../scripts/check-initial-budget.mjs clubs",
     "e2e": "playwright test",
     "preview": "vite preview"
   },

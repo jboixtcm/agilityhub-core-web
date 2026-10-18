@@ -2198,7 +2198,7 @@ export const handlers = [
     // R-03-15: a key of `census.dogDocumentTypes`, else 400 DOCUMENT_TYPE_UNKNOWN.
     const documentType = dogDocumentTypesCatalog.find((type) => type.key === body.type);
     if (documentType === undefined) {
-      return apiError("DOCUMENT_TYPE_UNKNOWN", "Document type unknown", 400);
+      return apiError("DOCUMENT_TYPE_UNKNOWN", "Document type unknown", 422);
     }
     const existing = dog.documents.find((document) => document.type === body.type);
     const file = {
@@ -3569,7 +3569,7 @@ export const handlers = [
       (member) => member.id === body.toMemberId && member.displayStatus.kind !== "LEFT",
     );
     if (target === undefined) {
-      return apiError("TARGET_MEMBER_NOT_ACTIVE", "Target member not active", 409);
+      return apiError("TARGET_MEMBER_NOT_ACTIVE", "Target member not active", 422);
     }
     dog.owner = {
       firstName: censusMemberFirstNames.get(target.id) ?? target.fullName,
@@ -3587,7 +3587,7 @@ export const handlers = [
       return apiError("NOT_FOUND", "Dog not found", 404);
     }
     if (dog.dog.status !== "ACTIVE") {
-      return apiError("DOG_NOT_ACTIVE", "Dog not active", 409);
+      return apiError("DOG_NOT_ACTIVE", "Dog not active", 422);
     }
     dog.dog.status = "INACTIVE";
     dog.dog.deactivatedAt = "2026-09-06T15:00:00Z";
@@ -3600,7 +3600,7 @@ export const handlers = [
       return apiError("NOT_FOUND", "Dog not found", 404);
     }
     if (dog.owner.status !== "ACTIVE") {
-      return apiError("TARGET_MEMBER_NOT_ACTIVE", "Target member not active", 409);
+      return apiError("TARGET_MEMBER_NOT_ACTIVE", "Target member not active", 422);
     }
     dog.dog.status = "ACTIVE";
     delete dog.dog.deactivatedAt;
@@ -3663,7 +3663,7 @@ export const handlers = [
     const body = (await request.json()) as DogDocumentUploadRequest;
     const document = dog.documents.find((candidate) => candidate.type === body.type);
     if (document === undefined) {
-      return apiError("DOCUMENT_TYPE_UNKNOWN", "Document type unknown", 400);
+      return apiError("DOCUMENT_TYPE_UNKNOWN", "Document type unknown", 422);
     }
     const file = {
       id: `file-${String(document.files.length + 1)}-${dog.dog.id}`,
@@ -3721,7 +3721,7 @@ export const handlers = [
       return apiError("DOCUMENT_NOT_PENDING", "Document not pending", 422);
     }
     if (document.lastReminderAt !== undefined) {
-      return apiError("DOCUMENT_REMINDER_TOO_SOON", "Document reminder too soon", 409);
+      return apiError("DOCUMENT_REMINDER_TOO_SOON", "Document reminder too soon", 422);
     }
     document.lastReminderAt = "2026-09-06T15:00:00Z";
     return new HttpResponse(null, { status: 202 });

@@ -38,7 +38,8 @@ async function signIn(page: Page, scenario: "admin" | "instructor") {
   await page.getByRole("button", { name: "Tinc contrasenya" }).click();
   await page.getByLabel("Contrasenya").fill("secret-password");
   await page.getByRole("button", { name: "ENTRA" }).click();
-  await page.waitForURL("**/tauler");
+  // The account's landing (E11-W02 round 2, INC-41): D1 for an ADMIN, D12 for an INSTRUCTOR.
+  await page.waitForURL(/\/(tauler|agenda)$/u);
 }
 
 test.describe("E5-W02 D12 card «Reservar o bloquejar pista (sense alumne)»", () => {

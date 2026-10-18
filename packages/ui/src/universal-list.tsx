@@ -39,6 +39,20 @@ export const UNIVERSAL_FILTER_OPERATORS = {
   text: ["contains", "startsWith", "eq", "ne"],
 } as const satisfies Record<UniversalFilterType, readonly UniversalFilterOperator[]>;
 
+/**
+ * The operators a filter column offers: its own, else its type's; `between` only with a `range`
+ * (two inputs), since one value cannot fill it (E11-W02 round 2, INC-41).
+ */
+export function offeredFilterOperators(
+  column: Pick<UniversalListFilterColumn, "operators" | "range" | "type"> | undefined,
+): readonly UniversalFilterOperator[] {
+  if (column === undefined) return ["eq"];
+  const operators = column.operators ?? UNIVERSAL_FILTER_OPERATORS[column.type];
+  return column.range === undefined
+    ? operators.filter((operator) => operator !== "between")
+    : operators;
+}
+
 export interface UniversalFilter {
   field: string;
   operator: UniversalFilterOperator;
@@ -375,11 +389,7 @@ export function UniversalList<Row>({
   const firstFilterColumn = filterColumns[0];
   const [filterField, setFilterField] = useState(firstFilterColumn?.key ?? "");
   const selectedFilterColumn = filterColumns.find((column) => column.key === filterField);
-  const initialOperator =
-    selectedFilterColumn?.operators?.[0] ??
-    (selectedFilterColumn === undefined
-      ? "eq"
-      : UNIVERSAL_FILTER_OPERATORS[selectedFilterColumn.type][0]);
+  const initialOperator = offeredFilterOperators(selectedFilterColumn)[0] ?? "eq";
   const [filterOperator, setFilterOperator] = useState<UniversalFilterOperator>(initialOperator);
   const [filterValue, setFilterValue] = useState("");
   const [filterValues, setFilterValues] = useState<UniversalFilterValue[]>([]);
@@ -507,9 +517,7 @@ export function UniversalList<Row>({
       return;
     }
     const definition = filterColumns.find((column) => column.key === field);
-    const operator =
-      definition?.operators?.[0] ??
-      (definition === undefined ? "eq" : UNIVERSAL_FILTER_OPERATORS[definition.type][0]);
+    const operator = offeredFilterOperators(definition)[0] ?? "eq";
     setFilterField(field);
     setFilterOperator(operator);
     setFilterValue("");
@@ -699,12 +707,7 @@ export function UniversalList<Row>({
                 }}
                 value={filterOperator}
               >
-                {(
-                  selectedFilterColumn?.operators ??
-                  (selectedFilterColumn === undefined
-                    ? ["eq"]
-                    : UNIVERSAL_FILTER_OPERATORS[selectedFilterColumn.type])
-                ).map((operator) => (
+                {offeredFilterOperators(selectedFilterColumn).map((operator) => (
                   <option key={operator} value={operator}>
                     {labels.operators[operator]}
                   </option>

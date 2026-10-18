@@ -135,12 +135,12 @@ async function showBootFailure(root: HTMLElement, cause: unknown) {
   console.error(cause);
   const i18n = await createClubsI18n({
     branding: BOOT_FAILURE_BRANDING,
-    initialNamespaces: ["common"],
+    initialNamespaces: ["common", "errors"],
   });
   createRoot(root).render(
     <StrictMode>
       <I18nextProvider i18n={i18n}>
-        <BootFailurePage />
+        <BootFailurePage cause={cause} />
       </I18nextProvider>
     </StrictMode>,
   );

@@ -1,0 +1,12 @@
+# round 2 point 1, by mutation: 13 (/gossos) with its loading state removed (its Skeleton replaced by null).
+$ (cd apps/clubs && pnpm exec vitest run src/zz-old-states.test.tsx -t "13 \(/gossos\) shows a loading")   # main 012f05b's test, a temporary copy
+      Tests  1 passed | 33 skipped (34)
+exit=0
+
+$ (cd apps/clubs && pnpm exec vitest run src/states.test.tsx -t "13 \(/gossos\) shows its own loading")   # round 2's test
+     × 13 (/gossos) shows its own loading status while its reads are out 5119ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/states.test.tsx > E11-W02 step 4: the members' app says when its data is loading, failed or empty > 13 (/gossos) shows its own loading status while its reads are out
+TestingLibraryElementError: Unable to find role="status" and name "Carregant els teus gossos"
+      Tests  1 failed | 45 skipped (46)
+exit=1

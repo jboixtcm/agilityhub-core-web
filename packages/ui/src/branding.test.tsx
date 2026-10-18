@@ -8,8 +8,10 @@ import {
   applyBrandingTheme,
   type Branding,
   BrandingProvider,
+  brandingThemeStyle,
   resolveBrandingLogo,
   useBranding,
+  useBrandingLogo,
 } from "./branding";
 
 function canicBranding(): Branding {
@@ -149,6 +151,97 @@ describe("T-02-05 BrandingProvider", () => {
 
     expect(warn).toHaveBeenCalledWith(expect.stringContaining("below WCAG AA"));
     warn.mockRestore();
+  });
+});
+
+describe("E11-W02 round 2 (review #7): theme `auto` is live", () => {
+  const autoCanic = (): Branding => ({
+    ...canicBranding(),
+    theme: { ...canicBranding().theme, mode: "auto" },
+  });
+
+  function FullLogo() {
+    const logo = useBrandingLogo("full");
+    return <img alt="logo" src={logo.src} />;
+  }
+
+  it("a mounted full logo turns to the dark one, and back, as the reader's scheme flips", () => {
+    const scheme = colorScheme(false);
+    const branding = autoCanic();
+    const { unmount } = render(
+      <BrandingProvider branding={branding}>
+        <FullLogo />
+      </BrandingProvider>,
+    );
+    const logo = () => screen.getByRole("img", { name: "logo" });
+    expect(logo()).toHaveAttribute("src", branding.theme.logoUrl);
+    act(() => {
+      scheme.set(true);
+    });
+    expect(logo()).toHaveAttribute("src", branding.theme.logoDarkUrl);
+    act(() => {
+      scheme.set(false);
+    });
+    expect(logo()).toHaveAttribute("src", branding.theme.logoUrl);
+    unmount();
+    scheme.restore();
+  });
+
+  it("unmounting the provider restores the page's scheme, accent and theme-color", () => {
+    const scheme = colorScheme(true);
+    const root = document.documentElement;
+    // The page's own values before the provider: another club's (the minimal fixture's).
+    const page = (minimFixture as unknown as Branding).theme.colors;
+    for (const stale of document.head.querySelectorAll('meta[name="theme-color"]')) stale.remove();
+    root.dataset.scheme = "light";
+    root.style.setProperty("--ah-color-primary", page.primary);
+    const meta = document.createElement("meta");
+    meta.name = "theme-color";
+    meta.content = page.background;
+    document.head.append(meta);
+
+    const { unmount } = render(
+      <BrandingProvider branding={autoCanic()}>
+        <BrandingName />
+      </BrandingProvider>,
+    );
+    expect(root.dataset.scheme).toBe("dark");
+    expect(meta.content).not.toBe(page.background);
+    unmount();
+    expect(root.dataset.scheme).toBe("light");
+    expect(root.style.getPropertyValue("--ah-color-primary")).toBe(page.primary);
+    expect(document.head.querySelector('meta[name="theme-color"]')).toHaveAttribute(
+      "content",
+      page.background,
+    );
+
+    // A page that had none: the provider's own scheme and meta go with it.
+    meta.remove();
+    delete root.dataset.scheme;
+    root.style.removeProperty("--ah-color-primary");
+    const second = render(
+      <BrandingProvider branding={autoCanic()}>
+        <BrandingName />
+      </BrandingProvider>,
+    );
+    second.unmount();
+    expect(root.dataset.scheme).toBeUndefined();
+    expect(root.style.getPropertyValue("--ah-color-primary")).toBe("");
+    expect(document.head.querySelector('meta[name="theme-color"]')).toBeNull();
+    scheme.restore();
+  });
+
+  it("a preview of `auto` (D19) paints the dark scheme for a dark reader", () => {
+    const theme = autoCanic().theme;
+    expect(brandingThemeStyle(theme)["--ah-color-background"]).toBe(theme.colors.background);
+    expect(brandingThemeStyle(theme, { dark: true })["--ah-color-background"]).toBe(
+      "var(--ah-product-dark-background)",
+    );
+    // A fixed scheme previews as it is.
+    const light = { ...theme, mode: "light" as const };
+    expect(brandingThemeStyle(light, { dark: true })["--ah-color-background"]).toBe(
+      theme.colors.background,
+    );
   });
 });
 

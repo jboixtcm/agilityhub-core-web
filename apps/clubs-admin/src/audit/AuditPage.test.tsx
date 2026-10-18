@@ -7,7 +7,7 @@ import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
@@ -352,5 +352,32 @@ describe("T-14-26 E7-W03 round 2 #5 (AGENTS rule 1): every audit action and acto
       }
     }
     expect(missing).toEqual([]);
+  });
+});
+
+describe("E11-W02 round 2 (INC-41): the audit's «Data» filter can be filled", () => {
+  it("«Data» between two club days: two date inputs, sent as the club-local bounds of those days", async () => {
+    const filters: string[] = [];
+    const listener = ({ request }: { request: Request }) => {
+      const url = new URL(request.url);
+      if (url.pathname.endsWith("/audit-entries"))
+        filters.push(...url.searchParams.getAll("filter"));
+    };
+    server.events.on("request:start", listener);
+    window.history.replaceState(null, "", "/abonats/member-laura/auditoria");
+    await renderAudit();
+    expect(await screen.findByRole("heading", { name: "Auditoria de l'abonat" })).toBeVisible();
+    fireEvent.change(screen.getByRole("combobox", { name: "Columna" }), {
+      target: { value: "at" },
+    });
+    expect(screen.getByRole("combobox", { name: "Operador" })).toHaveValue("between");
+    fireEvent.change(screen.getByLabelText("Des de"), { target: { value: "2026-08-03" } });
+    fireEvent.change(screen.getByLabelText("Fins a"), { target: { value: "2026-08-04" } });
+    fireEvent.click(screen.getByRole("button", { name: "Afegeix el filtre" }));
+    // Europe/Madrid in August is +02:00: the 3rd starts at 22:00Z on the 2nd; the 5th ends the range.
+    await waitFor(() => {
+      expect(filters).toContain("at:between:2026-08-02T22:00:00Z,2026-08-04T22:00:00Z");
+    });
+    server.events.removeListener("request:start", listener);
   });
 });

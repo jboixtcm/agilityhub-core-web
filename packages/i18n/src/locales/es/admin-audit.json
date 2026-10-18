@@ -138,6 +138,8 @@
     "title": "Exportaciones"
   },
   "filters": {
+    "from": "Desde",
+    "to": "Hasta",
     "action": "Acción",
     "actor": "Actor",
     "actorRole": "Rol del actor",

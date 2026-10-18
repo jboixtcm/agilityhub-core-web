@@ -26,6 +26,8 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { addDays, clubInstant } from "../planning/calendar-shared";
+
 import { SupportAccessesCard } from "./SupportAccessesCard";
 import { useListExport } from "./useListExport";
 
@@ -507,7 +509,20 @@ export function AuditTrail({ client, memberId }: { client: ApiClient; memberId?:
 
   const filterColumns: UniversalListFilterColumn[] = [
     { key: "action", label: t("admin-audit:filters.action"), type: "enum" },
-    { key: "at", label: t("admin-audit:filters.at"), operators: ["between"], type: "date" },
+    // E11-W02 round 2 (INC-41): two club days, sent as the club-local bounds of those days (as the
+    // ring-usage register's blocks), never one value `between` cannot take.
+    {
+      key: "at",
+      label: t("admin-audit:filters.at"),
+      operators: ["between"],
+      range: {
+        endLabel: t("admin-audit:filters.to"),
+        startLabel: t("admin-audit:filters.from"),
+        toValue: (start, end) =>
+          `${clubInstant(start, "00:00", branding.timeZone)},${clubInstant(addDays(end, 1), "00:00", branding.timeZone)}`,
+      },
+      type: "date",
+    },
     { key: "entityType", label: t("admin-audit:filters.entity"), type: "relation" },
     { key: "entityId", label: t("admin-audit:filters.entityId"), type: "relation" },
     { key: "actorAccountId", label: t("admin-audit:filters.actor"), type: "relation" },

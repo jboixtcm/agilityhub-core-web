@@ -1,6 +1,16 @@
 import type { ApiClient } from "@agilityhub/api-client";
 import { useClubFormats } from "@agilityhub/i18n";
-import { AppBar, Badge, Button, Card, Icon, Skeleton, Toast, useBranding } from "@agilityhub/ui";
+import {
+  AppBar,
+  Badge,
+  Button,
+  Card,
+  EmptyState,
+  Icon,
+  Skeleton,
+  Toast,
+  useBranding,
+} from "@agilityhub/ui";
 import { type CSSProperties, type MouseEvent, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -240,7 +250,7 @@ export function DayPage({ client }: { client: ApiClient }) {
         <>
           {data.classes.length === 0 ? (
             <Card className="instructor-day__empty">
-              <p>{t("instructor:day.empty")}</p>
+              <EmptyState icon="cal" title={t("instructor:day.empty")} />
             </Card>
           ) : (
             <>

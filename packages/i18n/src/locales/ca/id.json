@@ -33,6 +33,7 @@
     "magic": "Envia'm un enllaç per entrar",
     "forgot": "Has oblidat la contrasenya? Recupera-la",
     "emailRequired": "Escriu el teu correu",
+    "countdown": "Massa intents. Torna-ho a provar d'aquí a {seconds} s",
     "magicSent": "Si el compte existeix, hi rebràs l'enllaç"
   },
   "magic": {

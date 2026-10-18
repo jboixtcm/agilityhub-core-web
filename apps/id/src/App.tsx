@@ -249,8 +249,24 @@ function ProtectedPage({ children, navigate }: { children: ReactNode; navigate: 
   return children;
 }
 
+/** The seconds a 429's `Retry-After` still holds the login (E11-W02 round 2, INC-41). */
+function useCountdown() {
+  const [seconds, setSeconds] = useState(0);
+  useEffect(() => {
+    if (seconds <= 0) return undefined;
+    const timer = window.setTimeout(() => {
+      setSeconds((current) => Math.max(0, current - 1));
+    }, 1000);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [seconds]);
+  return { seconds, start: setSeconds };
+}
+
 function LoginPage({ authClient, navigate }: PageProps) {
   const { t } = useTranslation(["id", "errors"]);
+  const countdown = useCountdown();
   const [email, setEmail] = useState(initialLoginEmail);
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState<"login" | "magic" | "reset" | null>(null);
@@ -280,7 +296,11 @@ function LoginPage({ authClient, navigate }: PageProps) {
       await authClient.login(email, password);
       navigate(await destinationAfterLogin(authClient, flow, continuation));
     } catch (loginFailure) {
-      setError(loginError(loginFailure, t));
+      if (isApiError(loginFailure) && loginFailure.status === 429) {
+        countdown.start(loginFailure.retryAfter ?? 60);
+      } else {
+        setError(loginError(loginFailure, t));
+      }
       setPending(null);
     }
   };
@@ -297,7 +317,11 @@ function LoginPage({ authClient, navigate }: PageProps) {
       await authClient.requestMagicLink(email, purpose);
       setMessage(t("id:login.magicSent"));
     } catch (requestFailure) {
-      setError(loginError(requestFailure, t));
+      if (isApiError(requestFailure) && requestFailure.status === 429) {
+        countdown.start(requestFailure.retryAfter ?? 60);
+      } else {
+        setError(loginError(requestFailure, t));
+      }
     } finally {
       setPending(null);
     }
@@ -331,6 +355,7 @@ function LoginPage({ authClient, navigate }: PageProps) {
           />
           <Button
             className="id-form__submit"
+            disabled={countdown.seconds > 0}
             loading={pending === "login"}
             loadingLabel={t("id:login.entering")}
             type="submit"
@@ -338,6 +363,7 @@ function LoginPage({ authClient, navigate }: PageProps) {
             {t("id:login.submit")}
           </Button>
           <Button
+            disabled={countdown.seconds > 0}
             loading={pending === "magic"}
             onClick={() => void requestLink("LOGIN")}
             type="button"
@@ -348,12 +374,15 @@ function LoginPage({ authClient, navigate }: PageProps) {
           </Button>
           <button
             className="id-text-button"
-            disabled={pending !== null}
+            disabled={pending !== null || countdown.seconds > 0}
             onClick={() => void requestLink("RESET")}
             type="button"
           >
             {t("id:login.forgot")}
           </button>
+          {countdown.seconds > 0 ? (
+            <p role="alert">{t("id:login.countdown", { seconds: countdown.seconds })}</p>
+          ) : null}
           {error === undefined ? null : <p role="alert">{error}</p>}
           {message === undefined ? null : <p role="status">{message}</p>}
         </form>
@@ -364,7 +393,7 @@ function LoginPage({ authClient, navigate }: PageProps) {
 
 function MagicLinkPage({ authClient, navigate }: PageProps) {
   const { t } = useTranslation("id");
-  const token = new URLSearchParams(window.location.search).get("t");
+  const [token] = useState(() => new URLSearchParams(window.location.search).get("t"));
   const [failure, setFailure] = useState(token === null || token === "");
   const started = useRef(false);
 
@@ -373,6 +402,17 @@ function MagicLinkPage({ authClient, navigate }: PageProps) {
       return;
     }
     started.current = true;
+    // E11-W02 round 2 (INC-41): the one-time token leaves the address bar (and the history, a
+    // shared screen, a copied address) as soon as it is read; the rest of the query stays.
+    const address = new URL(window.location.href);
+    if (address.searchParams.has("t")) {
+      address.searchParams.delete("t");
+      window.history.replaceState(
+        window.history.state,
+        "",
+        `${address.pathname}${address.search}${address.hash}`,
+      );
+    }
     if (token === null || token === "") {
       return;
     }

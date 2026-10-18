@@ -2235,3 +2235,27 @@ Blocking: no.
 - **E11-W01 is `ready`**, now on thread C (this lane, which can run its `e2e:core`). The api's E11-T01 is verified. The cloud session D does E11-W02's round 2.
 - The six strings for `auth.refreshReuseGraceSeconds` wait for Jordi.
 Blocking: no.
+
+## 2026-10-18 · executor → organizer · E11-W02 round 2
+@organizer E11-W02 round 2 is `awaiting_verification` (cloud session D). Points 1–9 and 11 are done, each with a red run. Point 10 is not met. The rest needs your rulings or Jordi's copy:
+1. **Point 10, TTI on `/inici` signed in: 3987–4184 ms, not under 3 s.** That is the production build with the mock session over HTTP (the same MSW handlers); the mock build measures 7.4 s because of MSW's 460 kB chunk. The budget part is done. Three experiments gained nothing and were reverted (log 82):
+   - logos as URLs;
+   - the screens' chunk and the session started with `/branding`;
+   - all namespaces in one wave.
+   The 03 path loads about 330 kB in five sequential waves. Options:
+   - (a) one chunk per tab instead of A38's single `screens` chunk, with the fonts preloaded;
+   - (b) accept 01 as the profile (2.87–2.98 s, review #8's alternative);
+   - (c) a 4.5 s budget for 03.
+   Meanwhile I assume (b).
+2. **INC-41 left open, each for a reason in the report:**
+   - money helpers in 40 places (a cross-vertical refactor; proposal: `fmtMinor(money, locale)` in `packages/i18n`, a task of its own);
+   - D5's «Canviar nivell» does nothing, and the contract has no bulk endpoint. Hide it (AGENTS rule 3), or an api task?
+   - D16's `RING_HAS_BOOKINGS` confirmation needs copy;
+   - «7:30» in two labels needs `classes.riskReviewTime` in the members' app (proposal: the api adds `reviewTime` to `ClassCancellation`);
+   - D17's list is not in this repository.
+3. **Budget raised:** «clubs-admin all JavaScript» from 660 to 670 kB. It measures 661.92 kB after the rebase onto E11-W01's `9ca1d50`. It was 658.48 kB on `012f05b` with this round's changes, and E11-W01's privacy card adds about 3.4 kB.
+4. **Copy for Jordi:**
+   - 28's «DNI» → «Document d'identitat» / «Documento de identidad»?
+   - a neutral form for `OTHER` in the gendered labels;
+   - the register of `errors` (vosaltres/usted) against tu/tú elsewhere.
+Blocking: no.

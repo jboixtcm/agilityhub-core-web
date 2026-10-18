@@ -4,6 +4,7 @@ import {
   AppBar,
   Button,
   Card,
+  EmptyState,
   Icon,
   Skeleton,
   SlotGrid,
@@ -497,7 +498,7 @@ export function TrainingPage({ client }: { client: ApiClient }) {
       ) : null}
       {current === undefined || current.closed ? (
         <Card className="training-closed">
-          <p>{t("training:day.closed")}</p>
+          <EmptyState icon="cal" title={t("training:day.closed")} />
         </Card>
       ) : (
         (["morning", "afternoon"] as const).map((band) => {
@@ -558,7 +559,8 @@ export function TrainingPage({ client }: { client: ApiClient }) {
           </div>
         </div>
       )}
-      {counter.status === "error" ? (
+      {/* A week with no day (E11-W02 round 2): no counter to wait for. */}
+      {selectedDay === null ? null : counter.status === "error" ? (
         // The selected day's counter failed: its own error and retry, and no [Confirma] until
         // the summary is there (the limit is the api's, never guessed).
         <Card className="booking-error training-counter" role="alert">

@@ -1,7 +1,11 @@
 [
   {
     "name": "clubs initial JavaScript",
-    "path": "apps/clubs/dist/assets/index-*.js",
+    "path": [
+      "apps/clubs/dist/assets/index-*.js",
+      "apps/clubs/dist/assets/shared-*.js",
+      "apps/clubs/dist/assets/jsx-runtime-*.js"
+    ],
     "limit": "300 kB",
     "gzip": true
   },
@@ -46,7 +50,7 @@
       "!apps/clubs-admin/dist/assets/CoursesRoute-*.js",
       "!apps/clubs-admin/dist/assets/CourseViewer3D-*.js"
     ],
-    "limit": "660 kB",
+    "limit": "670 kB",
     "gzip": true
   },
   {

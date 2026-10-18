@@ -1,7 +1,16 @@
 import type { ApiClient, components } from "@agilityhub/api-client";
 import { useSession } from "@agilityhub/auth";
 import { useClubFormats } from "@agilityhub/i18n";
-import { AppBar, Button, Card, Icon, Skeleton, Toast, useBranding } from "@agilityhub/ui";
+import {
+  AppBar,
+  Button,
+  Card,
+  EmptyState,
+  Icon,
+  Skeleton,
+  Toast,
+  useBranding,
+} from "@agilityhub/ui";
 import { type MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -222,8 +231,7 @@ export function NotificationsPage({ client }: { client: ApiClient }) {
       <section className="notifications-page">
         {bar}
         <Card className="notifications-page__empty">
-          <Icon aria-hidden="true" name="bell" />
-          <p>{t("notifications:feed.empty")}</p>
+          <EmptyState icon="bell" title={t("notifications:feed.empty")} />
         </Card>
       </section>
     );

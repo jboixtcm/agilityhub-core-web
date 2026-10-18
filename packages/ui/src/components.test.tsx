@@ -208,6 +208,67 @@ describe("base components", () => {
     expect(closed).toHaveBeenCalledExactlyOnceWith("Ki");
   });
 
+  describe("E11-W02 round 2 (INC-41): an overlay keeps the keyboard and the reader inside it", () => {
+    function Page({ open = true }: { open?: boolean }) {
+      return (
+        <>
+          <header>
+            <a href="/inici">Inici</a>
+          </header>
+          <main>
+            <button>Darrere</button>
+            <Modal closeLabel="Tanca" onClose={() => undefined} open={open} title="Segur?">
+              <button>Primer</button>
+              <button>Darrer</button>
+            </Modal>
+          </main>
+          <div aria-live="polite" data-testid="toasts" />
+          <footer data-testid="already" inert />
+        </>
+      );
+    }
+
+    it("the rest of the page is inert while it is open, and as it was once it closes", () => {
+      const { container, rerender } = render(<Page />);
+      const header = container.querySelector("header");
+      const behind = screen.getByText("Darrere");
+      expect(header).toHaveAttribute("inert");
+      expect(behind).toHaveAttribute("inert");
+      // A live region keeps speaking (a toast over a drawer), and the dialog is not inert.
+      expect(screen.getByTestId("toasts")).not.toHaveAttribute("inert");
+      expect(screen.getByRole("dialog", { name: "Segur?" }).closest("[inert]")).toBeNull();
+      rerender(<Page open={false} />);
+      expect(header).not.toHaveAttribute("inert");
+      expect(behind).not.toHaveAttribute("inert");
+      // What was inert before the overlay stays so.
+      expect(screen.getByTestId("already")).toHaveAttribute("inert");
+    });
+
+    it("Tab from its last control goes to its first, and Shift+Tab from its first to its last", () => {
+      render(<Page />);
+      const close = screen.getByRole("button", { name: "Tanca" });
+      const last = screen.getByRole("button", { name: "Darrer" });
+      expect(close).toHaveFocus();
+      last.focus();
+      fireEvent.keyDown(last, { key: "Tab" });
+      expect(close).toHaveFocus();
+      fireEvent.keyDown(close, { key: "Tab", shiftKey: true });
+      expect(last).toHaveFocus();
+    });
+
+    it("FormField links its error to its control: aria-invalid, and the error in its description", () => {
+      render(
+        <FormField error="Cal un nom." id="name" label="Nom">
+          <Input aria-describedby="name-hint" id="name" />
+        </FormField>,
+      );
+      const input = screen.getByRole("textbox", { name: "Nom" });
+      expect(input).toHaveAttribute("aria-invalid", "true");
+      expect(input).toHaveAttribute("aria-describedby", "name-hint name-error");
+      expect(input).toHaveAccessibleDescription("Cal un nom.");
+    });
+  });
+
   describe("E6-W05 step 3: Escape closes only the topmost overlay (AGENTS rule 6)", () => {
     function Stacked({
       confirmDismissible = true,

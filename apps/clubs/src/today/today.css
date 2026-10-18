@@ -100,13 +100,6 @@
   padding: 0 var(--ah-space-1);
 }
 
-.day-screen__empty {
-  margin: 0;
-  padding: var(--ah-space-6) var(--ah-space-2);
-  color: var(--ah-color-text-muted);
-  text-align: center;
-}
-
 .day-screen__balloon {
   position: relative;
   padding: var(--ah-space-2) var(--ah-space-3);

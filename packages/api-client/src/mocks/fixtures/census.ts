@@ -721,9 +721,13 @@ function memberListItem(input: MemberFixtureInput): MemberListItem {
     ...("inactivityUntil" in input ? { inactivityUntil: input.inactivityUntil } : {}),
     memberNumber: input.memberNumber,
     nextInvoiceDate: input.nextInvoiceDate,
+    // The contract's codes (E11-W02 round 2, INC-41): a card is `CARD`; a manual payment is `MANUAL`
+    // through a channel (`CASH`), never the label the fixture row is written with.
     paymentMethod: input.paymentMethod.includes("····")
       ? { maskedAccount: input.paymentMethod, type: "SEPA_DD" }
-      : { channel: input.paymentMethod, type: "MANUAL" },
+      : input.paymentMethod === "Targeta"
+        ? { type: "CARD" }
+        : { channel: "CASH", type: "MANUAL" },
     pendingDocuments: input.pendingDocuments === 0 ? [] : ["VACCINATION_CARD"],
     plan: { id: input.plan.id, name: input.plan.name },
     postalCode: input.postalCode,

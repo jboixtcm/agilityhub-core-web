@@ -1,0 +1,15 @@
+$ pnpm --filter clubs-admin exec vitest run src/App.test.tsx -t "INSTRUCTOR without ADMIN"   # before
+     × E11-W02 round 2 (INC-41): an INSTRUCTOR without ADMIN who opens /tauler lands on D12, its week, never on an empty page; the address says /agenda 5158ms
+     × E11-W02 round 2 (INC-41): an INSTRUCTOR without ADMIN who opens /no-existeix lands on D12, its week, never on an empty page; the address says /agenda 5028ms
+     × E11-W02 round 2 (INC-41): an INSTRUCTOR without ADMIN who opens /abonats lands on D12, its week, never on an empty page; the address says /agenda 5027ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+TestingLibraryElementError: Unable to find role="heading" and name "Agenda de la setmana"
+      Tests  3 failed | 27 skipped (30)
+exit 1
+$ pnpm --filter clubs-admin exec vitest run src/App.test.tsx   # after
+ ✓ src/App.test.tsx > E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMIN only) > E11-W02 round 2 (INC-41): an INSTRUCTOR without ADMIN who opens /tauler lands on D12, its week, never on an empty page; the address says /agenda 195ms
+ ✓ src/App.test.tsx > E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMIN only) > E11-W02 round 2 (INC-41): an INSTRUCTOR without ADMIN who opens /no-existeix lands on D12, its week, never on an empty page; the address says /agenda 176ms
+ ✓ src/App.test.tsx > E10-W01 step 1 · D19 access (S17 §2 row «Entrada», AGILITYHUB_ADMIN only) > E11-W02 round 2 (INC-41): an INSTRUCTOR without ADMIN who opens /abonats lands on D12, its week, never on an empty page; the address says /agenda 171ms
+ Test Files  1 passed (1)
+      Tests  30 passed (30)
+exit 0

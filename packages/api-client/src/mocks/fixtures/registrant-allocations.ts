@@ -17,9 +17,22 @@ export interface HeldRegistrant {
   person: Registrant;
 }
 
+/** A booking that counts in its class's booking week (R-08-02): its id and its dog. */
+export interface CountedBooking {
+  dogId: string;
+  id: string;
+}
+
 /** A class's registrants: its bookings (ACTIVE, or CANCELLED_BY_CLUB once the club cancels it). */
 export interface RegistrantAllocation {
   booked: HeldRegistrant[];
+  /**
+   * The class's bookings that count in its week (R-08-02), as of its world's last read: what the
+   * club's one booking store adds up for a dog (INC-55 #3), the member world's limit included.
+   */
+  counted: CountedBooking[];
+  /** The class as a booking of it reads elsewhere: its week (R-08-01), start and description. */
+  session: { description: string; startsAt: string; startsAtLocal: string; weekKey: string };
   /** The 18:50 classes' late cancellation (the api's «any state»): it keeps CANCELLED_LATE. */
   late: HeldRegistrant | undefined;
 }

@@ -1091,6 +1091,6 @@ export const memberBillingHandlers = [
         total: balance.sessionsTotal,
       };
     }
-    return HttpResponse.json(balance, { status: 201 });
+    return HttpResponse.json(balance);
   }),
 ];

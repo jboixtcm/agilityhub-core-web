@@ -19,6 +19,7 @@ import {
   Input,
   Modal,
   Select,
+  Skeleton,
   Tabs,
   Textarea,
   useBranding,
@@ -66,6 +67,35 @@ type DogDetail = Omit<ApiDogDetail, "dog" | "licenses"> &
   };
 /** The transfer's new owner: the member list asked for the name only (`fields`). */
 const TRANSFER_MEMBER_FIELDS = ["fullName"] as const;
+
+/**
+ * Every active member, the transfer's possible targets (E11-W02 round 2, INC-41: never the first
+ * dozen): the list's pages of 200, read until its `totalItems`.
+ */
+async function activeMembers(client: ApiClient) {
+  const read = (page: number) =>
+    client.GET("/members", {
+      params: {
+        query: {
+          fields: listFields(TRANSFER_MEMBER_FIELDS),
+          filter: ["status:eq:ACTIVE"],
+          page,
+          size: 200,
+          sort: ["lastName,asc"],
+        },
+      },
+    });
+  const first = await read(0);
+  if (first.data === undefined) return first;
+  const items = [...first.data.items];
+  for (let page = 1; items.length < first.data.totalItems; page += 1) {
+    const next = await read(page);
+    if (next.data === undefined) return next;
+    if (next.data.items.length === 0) break;
+    items.push(...next.data.items);
+  }
+  return { ...first, data: { ...first.data, items } };
+}
 type TransferMember = ListItemWith<components["schemas"]["MemberListItem"], "fullName">;
 type DogPatchRequest = components["schemas"]["DogPatch"];
 type LevelSummary = components["schemas"]["LevelSummary"];
@@ -141,9 +171,11 @@ function FeedbackMessage({ feedback }: { feedback: Feedback | undefined }) {
 function LoadingRecord() {
   const { t } = useTranslation("admin-census");
   return (
-    <div aria-busy="true" className="census-record__loading" role="status">
-      {t("admin-census:common.loading")}
-    </div>
+    <Skeleton
+      className="census-record__loading"
+      height="12rem"
+      label={t("admin-census:common.loading")}
+    />
   );
 }
 
@@ -183,6 +215,13 @@ function DataRow({ label, children }: { children: ReactNode; label: string }) {
   );
 }
 
+/** `countryProfile.phonePrefix` of the club's branding (`+34` for ES), `""` when it has none. */
+function countryPhonePrefix(countryProfile: unknown): string {
+  if (typeof countryProfile !== "object" || countryProfile === null) return "";
+  const prefix: unknown = Reflect.get(countryProfile, "phonePrefix");
+  return typeof prefix === "string" ? prefix : "";
+}
+
 function MemberEditDrawer({
   client,
   erased,
@@ -202,9 +241,13 @@ function MemberEditDrawer({
   open: boolean;
 }) {
   const { t } = useTranslation(["admin-census", "errors"]);
+  const branding = useBranding();
   const [draft, setDraft] = useState(member);
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<string>();
+  // A new phone takes the prefix of the club's country (`countryProfile`, as signup does), never a
+  // typed one (E11-W02 round 2, INC-41).
+  const phonePrefix = countryPhonePrefix(branding.countryProfile);
   // The api sends `address`/`birthDate` null only for an erased member (S14 R-14-15), whose record
   // is never edited: the form shows them empty and the patch leaves them out.
   const address = draft.address ?? { city: "", postalCode: "", street: "" };
@@ -373,7 +416,7 @@ function MemberEditDrawer({
         <fieldset className="census-record__fieldset">
           <legend>{t("admin-census:member.fields.phones")}</legend>
           {[0, 1].map((index) => {
-            const phone = draft.phones[index] ?? { label: "", number: "", prefix: "+34" };
+            const phone = draft.phones[index] ?? { label: "", number: "", prefix: phonePrefix };
             return (
               <div className="census-record__form-grid" key={index}>
                 <FormField
@@ -1869,17 +1912,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
     void Promise.all([
       client.GET("/dogs/{id}", { params: { path: { id } } }),
       client.GET("/levels", { params: { query: { includeInactive: false } } }),
-      client.GET("/members", {
-        params: {
-          query: {
-            fields: listFields(TRANSFER_MEMBER_FIELDS),
-            filter: ["status:eq:ACTIVE"],
-            page: 0,
-            size: 200,
-            sort: ["lastName,asc"],
-          },
-        },
-      }),
+      activeMembers(client),
     ]).then(
       ([dogResult, levelResult, memberResult]) => {
         if (!current) return;
@@ -2291,7 +2324,6 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
             <option value="">{t("admin-census:dog.transfer.select")}</option>
             {members
               .filter((member) => member.id !== dog.owner.id)
-              .slice(0, 12)
               .map((member) => (
                 <option key={member.id} value={member.id}>
                   {member.fullName}

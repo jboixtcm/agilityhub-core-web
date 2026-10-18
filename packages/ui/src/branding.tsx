@@ -101,10 +101,14 @@ function nonEmptyAssetUrl(value: string | null | undefined): string | undefined 
   return normalized === "" ? undefined : normalized;
 }
 
-/** Resolves the approved asset and name treatment for compact or full placements. */
+/**
+ * Resolves the approved asset and name treatment for compact or full placements. `dark` is the
+ * reader's scheme, for an `auto` club's full logo (default: `prefersDarkScheme()` now); a component
+ * uses `useBrandingLogo`, which follows the scheme as it changes.
+ */
 export function resolveBrandingLogo(
   theme: BrandingTheme,
-  { placement }: { placement: BrandingLogoPlacement },
+  { dark, placement }: { dark?: boolean; placement: BrandingLogoPlacement },
 ): BrandingLogoAssets {
   const markUrl = nonEmptyAssetUrl(theme.markUrl);
   if (placement === "compact") {
@@ -115,7 +119,7 @@ export function resolveBrandingLogo(
 
   const logoUrl = nonEmptyAssetUrl(theme.logoUrl);
   const themedLogoUrl =
-    resolvedThemeMode(theme) === "dark"
+    resolvedThemeMode(theme, dark) === "dark"
       ? (nonEmptyAssetUrl(theme.logoDarkUrl) ?? logoUrl)
       : logoUrl;
   if (themedLogoUrl !== undefined) {
@@ -132,6 +136,8 @@ interface BrandingProviderProps {
 }
 
 const BrandingContext = createContext<Branding | undefined>(undefined);
+/** The reader's `prefers-color-scheme` as `BrandingProvider` follows it (E11-W02 round 2). */
+const DarkSchemeContext = createContext<boolean | undefined>(undefined);
 
 const tokenByColor = {
   background: "--ah-color-background",
@@ -283,9 +289,16 @@ function themeProperties(
 /**
  * A theme's `--ah-*` custom properties as an inline style, for a preview that scopes a theme to
  * one element (S17 D19 «Tema»): its descendants read the draft's tokens, the page keeps its own.
+ * `dark` previews an `auto` theme as a dark reader sees it (E11-W02 round 2).
  */
-export function brandingThemeStyle(theme: BrandingTheme): Record<string, string> {
-  return Object.fromEntries(themeProperties(theme));
+export function brandingThemeStyle(
+  theme: BrandingTheme,
+  { dark = false, productDark }: ApplyThemeOptions = {},
+): Record<string, string> {
+  const readDark =
+    productDark ??
+    (typeof document === "undefined" ? () => "" : computedProductDark(document.documentElement));
+  return Object.fromEntries(themeProperties(theme, dark, readDark));
 }
 
 export function applyBrandingTheme(
@@ -323,7 +336,7 @@ function setThemeColor(color: string): void {
 }
 
 /** The reader's `prefers-color-scheme`, kept up to date (R-02-08: what `auto` follows). */
-function usePrefersDarkScheme(): boolean {
+function useMediaDarkScheme(): boolean {
   const [dark, setDark] = useState(prefersDarkScheme);
   useLayoutEffect(() => {
     const query = darkSchemeQuery();
@@ -339,18 +352,41 @@ function usePrefersDarkScheme(): boolean {
   return dark;
 }
 
+/**
+ * The reader's `prefers-color-scheme`, live: what an `auto` theme paints in (R-02-08). Inside a
+ * `BrandingProvider`, the one it follows; outside one, the scheme at render.
+ */
+export function usePrefersDarkScheme(): boolean {
+  return useContext(DarkSchemeContext) ?? prefersDarkScheme();
+}
+
+/** The club's logo for a placement, redrawn when an `auto` club's reader changes scheme. */
+export function useBrandingLogo(placement: BrandingLogoPlacement): BrandingLogoAssets {
+  const { theme } = useBranding();
+  return resolveBrandingLogo(theme, { dark: usePrefersDarkScheme(), placement });
+}
+
+function setAttribute(element: Element, name: string, value: string | null): void {
+  if (value === null) element.removeAttribute(name);
+  else element.setAttribute(name, value);
+}
+
 export function BrandingProvider({ branding, children }: BrandingProviderProps) {
-  const dark = usePrefersDarkScheme();
+  const dark = useMediaDarkScheme();
   useLayoutEffect(() => {
     const root = document.documentElement;
-    const properties = themeProperties(branding.theme, dark);
+    const productDark = computedProductDark(root);
+    const properties = themeProperties(branding.theme, dark, productDark);
     const previousTheme = root.getAttribute("data-theme");
+    const previousScheme = root.getAttribute("data-scheme");
     const previousColorScheme = root.style.colorScheme;
     const previousValues = new Map(
       properties.map(([property]) => [property, root.style.getPropertyValue(property)]),
     );
+    const previousMeta = document.head.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    const previousThemeColor = previousMeta?.getAttribute("content") ?? null;
 
-    applyBrandingTheme(branding.theme, root, { dark });
+    applyBrandingTheme(branding.theme, root, { dark, productDark });
 
     const ratio = contrastRatio(branding.theme.colors.primary, branding.theme.colors.onPrimary);
     if (ratio !== undefined && ratio < 4.5) {
@@ -360,12 +396,13 @@ export function BrandingProvider({ branding, children }: BrandingProviderProps) 
     }
 
     return () => {
-      if (previousTheme === null) {
-        root.removeAttribute("data-theme");
-      } else {
-        root.setAttribute("data-theme", previousTheme);
-      }
+      setAttribute(root, "data-theme", previousTheme);
+      setAttribute(root, "data-scheme", previousScheme);
       root.style.colorScheme = previousColorScheme;
+      // The page's own theme-color back, or none when the provider brought it.
+      const meta = document.head.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+      if (previousMeta === null) meta?.remove();
+      else setAttribute(previousMeta, "content", previousThemeColor);
       previousValues.forEach((value, property) => {
         if (value === "") {
           root.style.removeProperty(property);
@@ -376,7 +413,11 @@ export function BrandingProvider({ branding, children }: BrandingProviderProps) 
     };
   }, [branding, dark]);
 
-  return <BrandingContext.Provider value={branding}>{children}</BrandingContext.Provider>;
+  return (
+    <BrandingContext.Provider value={branding}>
+      <DarkSchemeContext.Provider value={dark}>{children}</DarkSchemeContext.Provider>
+    </BrandingContext.Provider>
+  );
 }
 
 export function useBranding(): Branding {

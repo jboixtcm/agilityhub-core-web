@@ -16,7 +16,9 @@ import {
   Icon,
   IconButton,
   Input,
+  resolvedThemeMode,
   Select,
+  usePrefersDarkScheme,
 } from "@agilityhub/ui";
 import { type CSSProperties, type SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -142,7 +144,10 @@ export function ThemePreview({
   theme: BrandingTheme;
 }) {
   const { t } = useTranslation("console");
-  const style = brandingThemeStyle(theme) as CSSProperties;
+  // `auto` previews in the reader's own scheme, as the apps would paint it (E11-W02 round 2).
+  const dark = usePrefersDarkScheme();
+  const scheme = resolvedThemeMode(theme, dark);
+  const style = brandingThemeStyle(theme, { dark }) as CSSProperties;
   const mark =
     logos.mark === undefined ? (
       <span aria-hidden="true" className="console-preview__initial">
@@ -151,12 +156,18 @@ export function ThemePreview({
     ) : (
       <img alt="" src={logos.mark} />
     );
-  const fullLogo = theme.mode === "dark" ? (logos.logoDark ?? logos.logo) : logos.logo;
+  const fullLogo = scheme === "dark" ? (logos.logoDark ?? logos.logo) : logos.logo;
   return (
     <div className="console-preview">
       <figure className="console-preview__frame" data-testid="theme-preview-clubs">
         <figcaption>{t("console:theme.preview.clubs")}</figcaption>
-        <div className="console-preview__app" data-theme={theme.mode} inert style={style}>
+        <div
+          className="console-preview__app"
+          data-scheme={scheme}
+          data-theme={theme.mode}
+          inert
+          style={style}
+        >
           <div className="console-preview__appbar">
             {mark}
             <strong>{clubName}</strong>
@@ -194,7 +205,13 @@ export function ThemePreview({
       </figure>
       <figure className="console-preview__frame" data-testid="theme-preview-clubs-admin">
         <figcaption>{t("console:theme.preview.clubsAdmin")}</figcaption>
-        <div className="console-preview__admin" data-theme={theme.mode} inert style={style}>
+        <div
+          className="console-preview__admin"
+          data-scheme={scheme}
+          data-theme={theme.mode}
+          inert
+          style={style}
+        >
           <div className="console-preview__header">
             {mark}
             <strong>{clubName}</strong>

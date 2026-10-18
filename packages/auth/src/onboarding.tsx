@@ -7,9 +7,9 @@ import {
   FormField,
   Input,
   Modal,
-  resolveBrandingLogo,
   Select,
   useBranding,
+  useBrandingLogo,
 } from "@agilityhub/ui";
 import { type ReactNode, type SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -72,7 +72,7 @@ function nonEmptyFields(fields: OnboardingFields): OnboardingFields | undefined 
 
 function OnboardingBrand() {
   const branding = useBranding();
-  const logo = resolveBrandingLogo(branding.theme, { placement: "full" });
+  const logo = useBrandingLogo("full");
 
   return (
     <div className="onboarding-brand">

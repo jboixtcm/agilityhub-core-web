@@ -6,7 +6,13 @@ import {
   type components,
   type ListItemWith,
 } from "@agilityhub/api-client";
-import { fmtMaskedIban, fmtPlainDate, normalizeLocale } from "@agilityhub/i18n";
+import {
+  fmtDate,
+  fmtMaskedIban,
+  fmtPlainDate,
+  isPlainDate,
+  normalizeLocale,
+} from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -27,6 +33,7 @@ import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react
 import { useTranslation } from "react-i18next";
 
 import { useListExport } from "../audit/useListExport";
+import { loadDogDocumentTypes } from "../dashboard/readmission";
 import {
   type AnnouncementAudience,
   AnnouncementSent,
@@ -156,8 +163,16 @@ function queryFor(kind: CensusKind, state: UniversalListState) {
   };
 }
 
-function formatDate(value: string, locale: string, withYear = false): string {
-  return fmtPlainDate(value, normalizeLocale(locale), withYear ? "short" : "dayMonthNumeric");
+/**
+ * A list date: a business date (`YYYY-MM-DD`) is the day it names (R-06-14); an instant
+ * (`levelAssignedAt`, `registeredAt`) is the club's calendar day of it, never UTC's nor the
+ * browser's (E11-W02 round 2, INC-41).
+ */
+function formatDate(value: string, locale: string, timeZone: string, withYear = false): string {
+  const presentation = withYear ? "short" : "dayMonthNumeric";
+  return isPlainDate(value)
+    ? fmtPlainDate(value, normalizeLocale(locale), presentation)
+    : fmtDate(value, normalizeLocale(locale), timeZone, presentation);
 }
 
 function toneForStatus(kind: components["schemas"]["DisplayStatus"]["kind"]) {
@@ -392,8 +407,9 @@ function useFilterValues(client: ApiClient, kind: CensusKind, state: UniversalLi
   );
 }
 
-function useActiveCount(client: ApiClient, kind: CensusKind) {
-  const [count, setCount] = useState(0);
+/** The active count for the header's badge; `undefined` until read, or when the read fails. */
+function useActiveCount(client: ApiClient, kind: CensusKind): number | undefined {
+  const [count, setCount] = useState<{ kind: CensusKind; value: number | undefined }>();
   useEffect(() => {
     let current = true;
     const query = {
@@ -407,25 +423,41 @@ function useActiveCount(client: ApiClient, kind: CensusKind) {
       kind === "members"
         ? client.GET("/members", { params: { query } })
         : client.GET("/dogs", { params: { query } });
+    // E11-W02 round 2 (review #12): no badge without a count read (never a false «0 d'alta»);
+    // the list's own read says what failed.
     void request.then(
       (result) => {
-        if (current && result.data !== undefined) {
-          setCount(result.data.totalItems);
-        }
+        if (current) setCount({ kind, value: result.data?.totalItems });
       },
-      () => {
-        // E11-W02 step 4: the count stays at 0; the list's own read says what failed.
-      },
+      () => undefined,
     );
     return () => {
       current = false;
     };
   }, [client, kind]);
-  return count;
+  return count?.kind === kind ? count.value : undefined;
+}
+
+/** The club's dog document types' labels by key (`census.dogDocumentTypes`), read once. */
+function useDocumentTypeLabels(client: ApiClient, language: string): ReadonlyMap<string, string> {
+  const [labels, setLabels] = useState<ReadonlyMap<string, string>>(() => new Map());
+  useEffect(() => {
+    let current = true;
+    loadDogDocumentTypes(client, language).then(
+      (types) => {
+        if (current) setLabels(new Map(types.map((type) => [type.key, type.label])));
+      },
+      () => undefined,
+    );
+    return () => {
+      current = false;
+    };
+  }, [client, language]);
+  return labels;
 }
 
 function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind }) {
-  const { i18n, t } = useTranslation(["census", "enums", "errors"]);
+  const { i18n, t } = useTranslation(["census", "enums", "errors", "admin-census"]);
   const branding = useBranding();
   const modules = branding.modules;
   const [state, setState, applySavedView] = useSyncedListState(kind, modules);
@@ -435,6 +467,19 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
   const activeCount = useActiveCount(client, kind);
   const listExport = useListExport(client);
   const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
+  const timeZone = branding.timeZone;
+  const documentTypeLabels = useDocumentTypeLabels(client, i18n.resolvedLanguage ?? i18n.language);
+  // A pending document by its type's label (`census.dogDocumentTypes`), as D10 names it; while the
+  // labels load, or for a type the club no longer lists, «Document pendent» (never its key).
+  const documentLabels = useCallback(
+    (documents: readonly string[] | undefined) =>
+      documents === undefined || documents.length === 0
+        ? t("census:values.empty")
+        : documents
+            .map((key) => documentTypeLabels.get(key) ?? t("admin-census:member.documentPending"))
+            .join(" · "),
+    [documentTypeLabels, t],
+  );
   // «Enviar comunicat» (S11 R-11-13): the recipients the dialog was opened with.
   const [announcement, setAnnouncement] = useState<AnnouncementAudience>();
   const [announcementSent, setAnnouncementSent] = useState<number>();
@@ -528,15 +573,17 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           : status.kind === "INACTIVE_PERIOD"
             ? status.date == null
               ? t("census:members.status.inactive")
-              : t("census:members.status.inactiveUntil", { date: formatDate(status.date, locale) })
+              : t("census:members.status.inactiveUntil", {
+                  date: formatDate(status.date, locale, timeZone),
+                })
             : status.kind === "LEAVE_SCHEDULED" && status.date != null
               ? t("census:members.status.leaveScheduled", {
-                  date: formatDate(status.date, locale),
+                  date: formatDate(status.date, locale, timeZone),
                 })
               : status.label;
       return <Badge tone={toneForStatus(status.kind)}>{label}</Badge>;
     },
-    [locale, t],
+    [locale, t, timeZone],
   );
 
   const dogStatus = useCallback(
@@ -608,11 +655,14 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
               {
                 key: "paymentMethod",
                 label: t("census:members.columns.paymentMethod"),
+                // The masked account, else the channel's or the type's label, never its code.
                 render: (item: MemberRow) =>
                   fmtMaskedIban(item.paymentMethod?.maskedAccount) ??
-                  item.paymentMethod?.channel ??
-                  item.paymentMethod?.type ??
-                  t("census:values.empty"),
+                  (item.paymentMethod?.channel == null
+                    ? item.paymentMethod === undefined
+                      ? t("census:values.empty")
+                      : t(`enums:paymentMethodType.${item.paymentMethod.type}`)
+                    : t(`enums:paymentChannel.${item.paymentMethod.channel}`)),
               },
               {
                 key: "nextInvoiceDate",
@@ -620,7 +670,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
                 render: (item: MemberRow) =>
                   item.nextInvoiceDate === undefined
                     ? t("census:values.empty")
-                    : formatDate(item.nextInvoiceDate, locale),
+                    : formatDate(item.nextInvoiceDate, locale, timeZone),
                 sortKey: "nextInvoiceDate",
               },
             ]
@@ -647,7 +697,9 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           key: "leaveDate",
           label: t("census:members.columns.leaveDate"),
           render: (item) =>
-            item.leaveDate == null ? t("census:values.empty") : formatDate(item.leaveDate, locale),
+            item.leaveDate == null
+              ? t("census:values.empty")
+              : formatDate(item.leaveDate, locale, timeZone),
           sortKey: "leaveDate",
         },
         {
@@ -664,7 +716,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           render: (item) =>
             item.inactivityUntil == null
               ? t("census:values.empty")
-              : formatDate(item.inactivityUntil, locale),
+              : formatDate(item.inactivityUntil, locale, timeZone),
         },
         {
           key: "bookingBlocked",
@@ -705,7 +757,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
         {
           key: "pendingDocuments",
           label: t("census:members.columns.pendingDocuments"),
-          render: (item) => item.pendingDocuments?.join(" · ") ?? t("census:values.empty"),
+          render: (item) => documentLabels(item.pendingDocuments),
         },
         ...(modules.includes("FREE_TRAINING")
           ? [
@@ -723,7 +775,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           render: (item) =>
             item.birthDate === undefined
               ? t("census:values.empty")
-              : formatDate(item.birthDate, locale),
+              : formatDate(item.birthDate, locale, timeZone),
         },
         {
           key: "gender",
@@ -741,7 +793,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           render: (item) => item.idDocument,
         },
       ] satisfies UniversalListColumn<MemberRow>[],
-    [locale, memberStatus, modules, t],
+    [documentLabels, locale, memberStatus, modules, t, timeZone],
   );
 
   const dogColumns = useMemo<UniversalListColumn<DogRow>[]>(
@@ -829,7 +881,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
         {
           key: "pendingDocuments",
           label: t("census:dogs.columns.pendingDocuments"),
-          render: (item) => item.pendingDocuments?.join(" · ") ?? t("census:values.empty"),
+          render: (item) => documentLabels(item.pendingDocuments),
         },
         {
           key: "levelAssignedAt",
@@ -837,7 +889,7 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           render: (item) =>
             item.levelAssignedAt === undefined
               ? t("census:values.empty")
-              : formatDate(item.levelAssignedAt, locale),
+              : formatDate(item.levelAssignedAt, locale, timeZone),
           sortKey: "levelAssignedAt",
         },
         ...(modules.includes("PACKS")
@@ -858,11 +910,11 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
           render: (item) =>
             item.registeredAt === undefined
               ? t("census:values.empty")
-              : formatDate(item.registeredAt, locale),
+              : formatDate(item.registeredAt, locale, timeZone),
           sortKey: "registeredAt",
         },
       ] satisfies UniversalListColumn<DogRow>[],
-    [dogStatus, locale, modules, t],
+    [documentLabels, dogStatus, locale, modules, t, timeZone],
   );
 
   const memberFilterColumns: UniversalListFilterColumn[] = [
@@ -1061,11 +1113,13 @@ function CensusListPage({ client, kind }: { client: ApiClient; kind: CensusKind 
       <header className="census-page__header">
         <h1>
           {kind === "members" ? t("census:members.title") : t("census:dogs.title")}
-          <Badge>
-            {kind === "members"
-              ? t("census:members.activeCount", { count: activeCount })
-              : t("census:dogs.activeCount", { count: activeCount })}
-          </Badge>
+          {activeCount === undefined ? null : (
+            <Badge>
+              {kind === "members"
+                ? t("census:members.activeCount", { count: activeCount })
+                : t("census:dogs.activeCount", { count: activeCount })}
+            </Badge>
+          )}
         </h1>
         {/* «Nou abonat» opens the S04 signup form inside the back office (S03 §2 D5, open point 1);
             that form does not exist yet, so the button stays hidden instead of a dead link. */}

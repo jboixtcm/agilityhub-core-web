@@ -1,11 +1,11 @@
 import { createApiClient } from "@agilityhub/api-client";
-import { mockScenario } from "@agilityhub/api-client/mocks";
+import { handlers, mockScenario } from "@agilityhub/api-client/mocks";
 import brandingCanicFixture from "@agilityhub/api-client/mocks/branding-canic";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { HttpResponse, http } from "msw";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { getResponse, HttpResponse, http } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
@@ -187,8 +187,12 @@ describe("T-03-38 D5 universal member list", () => {
     expect(await screen.findByText("Filtre (1): Estat visible = «baixa prevista»")).toBeVisible();
     expect(screen.queryByText(/LEAVE_SCHEDULED/u)).not.toBeInTheDocument();
     expect(await screen.findByRole("columnheader", { name: "Origen de la baixa" })).toBeVisible();
-    expect(memberRequests.some((fields) => fields?.split(",").includes("leaveSource") === true)).toBe(true);
-    expect(memberRequests.some((fields) => fields?.split(",").includes("inactivityUntil") === true)).toBe(true);
+    expect(
+      memberRequests.some((fields) => fields?.split(",").includes("leaveSource") === true),
+    ).toBe(true);
+    expect(
+      memberRequests.some((fields) => fields?.split(",").includes("inactivityUntil") === true),
+    ).toBe(true);
   });
 });
 
@@ -209,5 +213,90 @@ describe("T-03-42 D15 translated dog list", () => {
       "href",
       "/gossos/dog-duna",
     );
+  });
+});
+
+describe("E11-W02 round 2 (review #12): D5's active count", () => {
+  it("a failed count read hides the header badge instead of «0 d'alta»", async () => {
+    window.history.pushState(null, "", "/abonats");
+    let answered = false;
+    server.use(
+      http.get("*/api/v1/members", ({ request }) => {
+        // The count's read (`fields=id`, the active filter) fails; the list's own read does not.
+        if (new URL(request.url).searchParams.get("fields") !== "id") return undefined;
+        answered = true;
+        return HttpResponse.json(
+          { code: "INTERNAL_ERROR", details: {}, message: "Internal error", traceId: "t-count" },
+          { status: 500 },
+        );
+      }),
+    );
+    await renderPage("members");
+
+    expect(await screen.findByText("Laura Serra Vidal")).toBeVisible();
+    await waitFor(() => {
+      expect(answered).toBe(true);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(screen.queryByText(/d'alta$/u)).toBeNull();
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(/^Abonats$/u);
+  });
+});
+
+describe("E11-W02 round 2 (INC-41): D5 and D15 show labels and the club's dates, never codes", () => {
+  function showColumn(name: string) {
+    const box = screen.getByRole("checkbox", { name });
+    if (!(box as HTMLInputElement).checked) fireEvent.click(box);
+  }
+
+  it("D5: the payment method and the pending documents by their labels", async () => {
+    window.history.pushState(null, "", "/abonats?size=100");
+    await renderPage("members");
+    expect(await screen.findByText("Anna Ballart Consul")).toBeVisible();
+    fireEvent.click(screen.getByText("Columnes"));
+    showColumn("Pagament");
+    showColumn("Documents pendents");
+    // A new column reads the list again (its fields): the rows come back with it.
+    const anna = (await screen.findByText("Anna Ballart Consul")).closest("tr");
+    const marc = (await screen.findByText("Marc Prats García")).closest("tr");
+    if (anna === null || marc === null) throw new Error("Expected the members' rows");
+    expect(await within(marc).findByText("Targeta")).toBeVisible();
+    expect(within(anna).getByText("Efectiu")).toBeVisible();
+    expect(await within(anna).findByText("Cartilla de vacunes")).toBeVisible();
+    for (const code of ["CARD", "MANUAL", "CASH", "VACCINATION_CARD"]) {
+      expect(screen.queryByText(code)).toBeNull();
+    }
+  });
+
+  it("D15: «Al nivell des de» and «Data d'alta» are instants, shown as the club's calendar day", async () => {
+    server.use(
+      http.get("*/api/v1/dogs", async ({ request }) => {
+        const real = await getResponse(handlers, request);
+        const page = (await real?.json()) as { items: Record<string, unknown>[] };
+        // 23:30 UTC on 31 January is already 1 February in the club (Europe/Madrid).
+        return HttpResponse.json({
+          ...page,
+          items: page.items.map((item) =>
+            item.id === "dog-duna"
+              ? {
+                  ...item,
+                  levelAssignedAt: "2025-01-31T23:30:00Z",
+                  registeredAt: "2023-02-02T23:30:00Z",
+                }
+              : item,
+          ),
+        });
+      }),
+    );
+    window.history.pushState(null, "", "/gossos");
+    await renderPage("dogs");
+    expect(await screen.findByText("Duna")).toBeVisible();
+    fireEvent.click(screen.getByText("Columnes"));
+    showColumn("Al nivell des de");
+    showColumn("Data d'alta");
+    const duna = (await screen.findAllByText("Duna"))[0]?.closest("tr");
+    if (duna === null || duna === undefined) throw new Error("Expected Duna's row");
+    expect(await within(duna).findByText("01/02")).toBeVisible();
+    expect(within(duna).getByText("03/02")).toBeVisible();
   });
 });
