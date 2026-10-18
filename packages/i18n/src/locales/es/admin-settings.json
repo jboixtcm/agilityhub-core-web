@@ -10,6 +10,7 @@
     "modules": "Módulos",
     "privacy": "Privacidad y auditoría",
     "signup": "Alta y consentimientos",
+    "system": "Sistema",
     "training": "Entrenamientos libres",
     "waitlist": "Lista de espera"
   },
@@ -169,6 +170,84 @@
     }
   },
   "param": {
+    "dashboard": {
+      "pendingSignupAgeWarnDays": {
+        "help": "Días a partir de los que una preinscripción pendiente se destaca en el panel.",
+        "label": "Aviso de antigüedad de las preinscripciones"
+      }
+    },
+    "files": {
+      "allowedTypes": {
+        "help": "Tipos MIME que se pueden subir como archivos.",
+        "label": "Tipos de archivo permitidos"
+      },
+      "dogPhotoMaxMb": {
+        "help": "Tamaño máximo, en MB, de la foto de un perro.",
+        "label": "Tamaño máximo de la foto del perro"
+      },
+      "maxAttachmentsPerEntity": {
+        "help": "Número máximo de archivos adjuntos en una misma ficha.",
+        "label": "Máximo de archivos adjuntos"
+      },
+      "maxSizeMb": {
+        "help": "Tamaño máximo, en MB, de cada archivo adjunto.",
+        "label": "Tamaño máximo por archivo"
+      }
+    },
+    "history": {
+      "monthsVisible": {
+        "help": "Meses de historial que se muestran en la app.",
+        "label": "Meses visibles del historial"
+      }
+    },
+    "learn": {
+      "baseUrl": {
+        "help": "Dirección base del producto Learn.",
+        "label": "Dirección de Learn"
+      },
+      "linkText": {
+        "help": "Texto del acceso a Learn que se muestra en la app.",
+        "label": "Texto del enlace a Learn"
+      },
+      "recommendationsTtlMinutes": {
+        "help": "Minutos durante los que se conservan las recomendaciones de Learn.",
+        "label": "Vigencia de las recomendaciones de Learn"
+      }
+    },
+    "migration": {
+      "exportRetentionDays": {
+        "help": "Días durante los que se conservan los archivos de exportación de una migración.",
+        "label": "Conservación de las exportaciones de migración"
+      },
+      "leftMaxYears": {
+        "help": "Antigüedad máxima, en años, de las bajas incluidas en una migración.",
+        "label": "Años máximos de bajas para migrar"
+      },
+      "playoffReadOnlyMonths": {
+        "help": "Meses durante los que Playoff se mantiene en modo de solo lectura después de migrar.",
+        "label": "Meses de Playoff en solo lectura"
+      },
+      "reconciliationTolerancePct": {
+        "help": "Porcentaje máximo de diferencia admitido en la conciliación de una migración.",
+        "label": "Tolerancia de conciliación"
+      }
+    },
+    "platform": {
+      "domainRecheckDays": {
+        "help": "Días entre las comprobaciones automáticas de los dominios verificados; 0 las desactiva.",
+        "label": "Frecuencia de comprobación de los dominios"
+      },
+      "supportAccessMinutes": {
+        "help": "Minutos de vigencia de un acceso de soporte del equipo AgilityHub.",
+        "label": "Duración del acceso de soporte"
+      }
+    },
+    "security": {
+      "eventRetentionDays": {
+        "help": "Días durante los que se conservan los eventos de seguridad.",
+        "label": "Conservación de los eventos de seguridad"
+      }
+    },
     "activities": {
       "cancelDeadline": {
         "help": "Momento límite para cancelar una inscripción.",
@@ -192,9 +271,45 @@
       }
     },
     "auth": {
+      "checkCompromisedPasswords": {
+        "help": "Comprueba si una contraseña aparece en filtraciones conocidas antes de aceptarla.",
+        "label": "Comprobación de contraseñas comprometidas"
+      },
+      "impersonationMinutes": {
+        "help": "Minutos de vigencia del acceso «Entrar como el abonado».",
+        "label": "Duración del acceso como abonado"
+      },
+      "lockoutMaxAttempts": {
+        "help": "Número de intentos fallidos antes de bloquear temporalmente el acceso.",
+        "label": "Intentos antes del bloqueo"
+      },
+      "lockoutMinutes": {
+        "help": "Minutos que dura el bloqueo tras superar los intentos permitidos.",
+        "label": "Duración del bloqueo de acceso"
+      },
+      "magicLinkMinutes": {
+        "help": "Minutos de vigencia de un enlace mágico de acceso.",
+        "label": "Duración del enlace mágico"
+      },
+      "maxSessions": {
+        "help": "Número máximo de sesiones abiertas a la vez por cuenta.",
+        "label": "Máximo de sesiones por cuenta"
+      },
+      "passwordMinLength": {
+        "help": "Número mínimo de caracteres de una contraseña.",
+        "label": "Longitud mínima de la contraseña"
+      },
       "refreshReuseGraceSeconds": {
         "help": "Segundos durante los que se puede recuperar una única respuesta de renovación perdida. Un valor de 0 desactiva el margen.",
         "label": "Margen de reutilización del token de renovación"
+      },
+      "sessionDays": {
+        "help": "Días de vigencia de la sesión con renovación deslizante.",
+        "label": "Duración de la sesión"
+      },
+      "welcomeLinkDays": {
+        "help": "Días de vigencia del enlace de bienvenida y activación.",
+        "label": "Duración del enlace de bienvenida"
       }
     },
     "billing": {
@@ -486,6 +601,28 @@
           "label": "Recordatorios"
         }
       },
+      "retention": {
+        "domainEventsDays": {
+          "help": "Días durante los que se conservan los eventos de dominio.",
+          "label": "Conservación de los eventos de dominio"
+        },
+        "exportFilesDays": {
+          "help": "Días durante los que se conservan los archivos de exportación.",
+          "label": "Conservación de los archivos de exportación"
+        },
+        "jobRunsDays": {
+          "help": "Días durante los que se conserva el historial de ejecuciones de los procesos.",
+          "label": "Conservación de las ejecuciones"
+        },
+        "orphanUploadsHours": {
+          "help": "Horas antes de eliminar una subida que no se ha vinculado a ninguna ficha.",
+          "label": "Conservación de las subidas huérfanas"
+        },
+        "stripeEventsDays": {
+          "help": "Días durante los que se conservan los eventos recibidos de Stripe.",
+          "label": "Conservación de los eventos de Stripe"
+        }
+      },
       "riskReview": {
         "enabled": {
           "help": "Revisa cada día las clases con pocos inscritos y las cancela o avisa.",
@@ -570,6 +707,12 @@
         "help": "Antelaciones que cada abonado puede elegir para el recordatorio de clase.",
         "label": "Opciones del recordatorio de clase"
       },
+      "push": {
+        "ttlMinutes": {
+          "help": "Minutos durante los que una notificación push pendiente sigue vigente.",
+          "label": "Vigencia de las notificaciones push"
+        }
+      },
       "sms": {
         "monthlyCap": {
           "help": "Límite mensual de seguridad de los SMS.",
@@ -625,6 +768,10 @@
       "pendingExpiryDays": {
         "help": "Días hasta que una solicitud pendiente genera un recordatorio.",
         "label": "Caducidad de las altas pendientes"
+      },
+      "rateLimit": {
+        "help": "Límites de seguridad por hora y por día de las operaciones del alta pública.",
+        "label": "Límites de peticiones del alta pública"
       },
       "requireDogDocumentAtSignup": {
         "help": "Solicita documentación del perro antes de terminar el alta.",

@@ -18,6 +18,7 @@ import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
+import { StrictMode } from "react";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -374,20 +375,50 @@ describe("E10-W03 step 2 · the support access's banner, its end and its expiry 
     expect(screen.queryByRole("button", { name: "Exportacions" })).toBeNull();
   });
 
-  it("«Surt» revokes the support token (POST /oauth2/revoke) and leaves the tab on /suport?sortit=1", async () => {
+  it("«Surt» leaves the shell immediately but shows a pending state until POST /oauth2/revoke succeeds", async () => {
     const client = authClient();
     await client.acceptImpersonation(
       "mock-support-token",
       new Date(Date.now() + 3_600_000).toISOString(),
     );
+    let releaseRevoke: () => void = () => undefined;
+    const revokePending = new Promise<void>((resolve) => {
+      releaseRevoke = resolve;
+    });
+    server.use(
+      http.post("*/oauth2/revoke", async () => {
+        await revokePending;
+        return new HttpResponse(null, { status: 200 });
+      }),
+    );
     const revokes = captureRequests(
       (method, url) => method === "POST" && url.pathname.endsWith("/oauth2/revoke"),
     );
     window.history.pushState(null, "", "/tauler");
-    await renderApplication(client);
+    await renderApplication(
+      client,
+      <StrictMode>
+        <App authClient={client} />
+      </StrictMode>,
+    );
     const pageLoads = stubPageLoads();
     const banner = within(await screen.findByRole("region", { name: "Accés de suport" }));
     fireEvent.click(banner.getByRole("button", { name: "Surt" }));
+    const pending = await screen
+      .findByText("Sortint de l'accés de suport…", {}, { timeout: 1_000 })
+      .catch((error: unknown) => {
+        // The counterfactual implementation never rendered the pending page. Let its in-flight
+        // request finish so the deliberately failing test does not leak a request into the suite.
+        releaseRevoke();
+        throw error;
+      });
+    expect(pending).toBeInTheDocument();
+    expect(
+      screen.queryByText("Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya."),
+    ).toBeNull();
+    expect(`${window.location.pathname}${window.location.search}`).toBe("/suport?sortit=1");
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).not.toBeNull();
+    releaseRevoke();
     expect(
       await screen.findByText("Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya."),
     ).toBeInTheDocument();
@@ -399,6 +430,50 @@ describe("E10-W03 step 2 · the support access's banner, its end and its expiry 
     expect(pageLoads.assign).not.toHaveBeenCalled();
     expect(pageLoads.replace).not.toHaveBeenCalled();
     expect(revokes[0]?.headers.get("Authorization")).toBe("Bearer mock-support-token");
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+  });
+
+  it("a failed support revocation stays on /suport, shows the failure and retries with the same token", async () => {
+    const client = authClient();
+    await client.acceptImpersonation(
+      "mock-support-token",
+      new Date(Date.now() + 3_600_000).toISOString(),
+    );
+    let attempt = 0;
+    const authorizations: (null | string)[] = [];
+    server.use(
+      http.post("*/oauth2/revoke", ({ request }) => {
+        attempt += 1;
+        authorizations.push(request.headers.get("Authorization"));
+        return attempt === 1
+          ? HttpResponse.json(
+              {
+                code: "INTERNAL_ERROR",
+                details: {},
+                message: "Temporary failure",
+                traceId: "trace-support-revoke",
+              },
+              { status: 500 },
+            )
+          : new HttpResponse(null, { status: 200 });
+      }),
+    );
+    window.history.pushState(null, "", "/tauler");
+    await renderApplication(client);
+    const banner = within(await screen.findByRole("region", { name: "Accés de suport" }));
+    fireEvent.click(banner.getByRole("button", { name: "Surt" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No s'ha pogut acabar l'accés de suport.",
+    );
+    expect(`${window.location.pathname}${window.location.search}`).toBe("/suport?sortit=1");
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).not.toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Torna a provar de sortir" }));
+
+    expect(
+      await screen.findByText("Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya."),
+    ).toBeInTheDocument();
+    expect(authorizations).toEqual(["Bearer mock-support-token", "Bearer mock-support-token"]);
     expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
   });
 
@@ -492,5 +567,62 @@ describe("E10-W03 step 2 · the club's ADMIN ends a live support access from «A
         now,
       ).map((access) => access.id),
     ).toEqual(["live"]);
+  });
+
+  it("R-17-10 reads every audit page, so all 51 live support grants can be ended", async () => {
+    const expiresAt = new Date(Date.now() + 3_600_000).toISOString();
+    const starts = Array.from({ length: 51 }, (_, index) => ({
+      action: "SUPPORT_ACCESS_STARTED" as const,
+      actorName: `Suport ${String(index + 1)}`,
+      actorRole: "PLATFORM" as const,
+      at: new Date(Date.now() - index * 1_000).toISOString(),
+      details: { expiresAt },
+      entityId: `70000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
+      entityType: "ImpersonationGrant",
+      id: `a1000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
+      origin: "PLATFORM_SUPPORT" as const,
+      reason: `Assistència ${String(index + 1)}`,
+    }));
+    const supportReads: string[] = [];
+    server.use(
+      http.get(`${API_BASE}/audit-entries`, ({ request }) => {
+        const url = new URL(request.url);
+        const action = url.searchParams
+          .getAll("filter")
+          .find((filter) => filter.startsWith("action:eq:"))
+          ?.slice("action:eq:".length);
+        if (action !== "SUPPORT_ACCESS_STARTED" && action !== "SUPPORT_ACCESS_ENDED") {
+          return HttpResponse.json({
+            items: [],
+            page: 0,
+            size: 20,
+            totalItems: 0,
+            totalPages: 0,
+          });
+        }
+        const page = Number(url.searchParams.get("page") ?? "0");
+        const size = Number(url.searchParams.get("size") ?? "50");
+        const rows = action === "SUPPORT_ACCESS_STARTED" ? starts : [];
+        supportReads.push(`${action}:${String(page)}`);
+        return HttpResponse.json({
+          items: rows.slice(page * size, (page + 1) * size),
+          page,
+          size,
+          totalItems: rows.length,
+          totalPages: Math.ceil(rows.length / size),
+        });
+      }),
+    );
+
+    const card = await openAudit("adminSupportAccess");
+    await waitFor(() => {
+      expect(card.getAllByRole("listitem")).toHaveLength(51);
+    });
+    expect(supportReads).toEqual([
+      "SUPPORT_ACCESS_STARTED:0",
+      "SUPPORT_ACCESS_ENDED:0",
+      "SUPPORT_ACCESS_STARTED:1",
+    ]);
+    expect(card.getByText(/Suport 51/u)).toBeInTheDocument();
   });
 });

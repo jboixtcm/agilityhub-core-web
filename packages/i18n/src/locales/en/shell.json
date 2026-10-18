@@ -23,10 +23,12 @@
     "ended": "The support access has ended: it expired or the club's administrator ended it. You can close this tab.",
     "entering": "Opening the club's back office…",
     "exit": "Exit",
-    "leaving": "Leaving",
+    "exitFailed": "The support access could not be ended. Check the connection and try again.",
+    "leavingMessage": "Leaving the support access…",
     "left": "You left the support access. You can close this tab.",
     "noOpener": "This access opens from the club console, with «Enter as the club's administrator».",
     "refused": "The support access could not be opened. Try again from the club console.",
+    "retryExit": "Try exiting again",
     "timeout": "The support access did not arrive. Try again from the club console.",
     "title": "Support access"
   },

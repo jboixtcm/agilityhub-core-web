@@ -27,9 +27,9 @@ const blockKeys = new Map([
   ["Recorreguts", "courses"],
 ]);
 
-// System-only parameters: the core sends them in its `system` block (`editableBy: PLATFORM`), which
-// D11 never renders, so they need no label. Keep in step with the catalog's «bloc sistema» rows
-// and the core; a catalog key that is neither here nor labelled fails the check.
+// Platform parameters: D11 hides them, but D19 renders them in its `system` block and lets the
+// platform edit them. They therefore need the same ca/es/en label and help coverage as the club
+// parameters. Keep this set in step with the catalog's «bloc sistema» rows and the core.
 const systemOnly = new Set([
   "auth.checkCompromisedPasswords",
   "auth.impersonationMinutes",
@@ -154,10 +154,10 @@ function translation(locale, dotted) {
 const missing = [];
 let rendered = 0;
 for (const [key, { block, enumValues: values }] of [...parameters].sort()) {
-  if (systemOnly.has(key)) continue;
-  rendered += 1;
+  if (!systemOnly.has(key)) rendered += 1;
   const blockName = block?.replace(/\s*\(.*$/u, "").trim();
-  if (blockName !== undefined && !blockName.startsWith("sistema")) blockNames.add(blockName);
+  if (systemOnly.has(key)) blockNames.add("system");
+  else if (blockName !== undefined && !blockName.startsWith("sistema")) blockNames.add(blockName);
   for (const locale of locales) {
     for (const suffix of ["label", "help"]) {
       if (translation(locale, `param.${key}.${suffix}`) === undefined) {
@@ -173,7 +173,7 @@ for (const [key, { block, enumValues: values }] of [...parameters].sort()) {
 }
 
 for (const name of [...blockNames].sort()) {
-  const blockKey = blockKeys.get(name);
+  const blockKey = name === "system" ? "system" : blockKeys.get(name);
   if (blockKey === undefined) {
     missing.push(`block «${name}» has no core key in scripts/check-parameter-keys.mjs`);
     continue;

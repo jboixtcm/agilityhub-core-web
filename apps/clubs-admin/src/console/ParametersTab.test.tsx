@@ -5,6 +5,7 @@ import {
 } from "@agilityhub/api-client/mocks";
 import { server } from "@agilityhub/api-client/mocks/server";
 import { cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { captureRequests, renderConsole } from "./console-test-utils";
@@ -63,9 +64,11 @@ describe("E10-W03 step 4 · D19 «Paràmetres» on the club's own values (S17 §
     expect(override).toHaveTextContent("valor del club");
     expect(override).toHaveTextContent("4 h");
     expect(override).toHaveTextContent("Per defecte: 2 h");
-    const platformKey = parameterRow(/auth\.sessionDays/u);
+    const platformKey = parameterRow(/Durada de la sessió/u);
     expect(platformKey).toHaveTextContent("només plataforma");
     expect(platformKey).toHaveTextContent("per defecte");
+    expect(screen.getByRole("heading", { level: 2, name: "Sistema" })).toBeInTheDocument();
+    expect(screen.queryByText("auth.sessionDays")).toBeNull();
     // PLATFORM_ONLY keys are editable here (S17 §9), unlike D11.
     expect(platformKey).toBeEnabled();
   });
@@ -82,7 +85,7 @@ describe("E10-W03 step 4 · D19 «Paràmetres» on the club's own values (S17 §
     );
     expect(puts[0]?.body).toEqual({ value: 180, version: 3 });
 
-    editor = await openEditor(/auth\.sessionDays/u);
+    editor = await openEditor(/Durada de la sessió/u);
     fireEvent.change(editor.getByRole("spinbutton"), { target: { value: "45" } });
     fireEvent.click(editor.getByRole("button", { name: "DESA" }));
     await waitFor(() => {
@@ -91,7 +94,7 @@ describe("E10-W03 step 4 · D19 «Paràmetres» on the club's own values (S17 §
     expect(puts[1]?.body).toEqual({ value: 45, version: 0 });
     // The list is read again: the saved key is the club's now.
     await waitFor(() => {
-      expect(parameterRow(/auth\.sessionDays/u)).toHaveTextContent("valor del club");
+      expect(parameterRow(/Durada de la sessió/u)).toHaveTextContent("valor del club");
     });
   });
 
@@ -120,5 +123,79 @@ describe("E10-W03 step 4 · D19 «Paràmetres» on the club's own values (S17 §
       { value: 180, version: 3 },
       { value: 180, version: 4 },
     ]);
+  });
+
+  it("after STALE_VERSION and a failed reread, it shows the error, keeps the draft and disables save until retry succeeds", async () => {
+    const puts = captureRequests((method) => method === "PUT");
+    await openParameters();
+    const editor = await openEditor(/Llindar d.anul·lació/u);
+    const current = consoleState.parameters[CANIC]?.["bookings.lateCancelThresholdMinutes"];
+    if (current === undefined) throw new TypeError("No seeded override");
+    consoleState.parameters[CANIC] = {
+      ...consoleState.parameters[CANIC],
+      "bookings.lateCancelThresholdMinutes": { ...current, value: 300, version: 4 },
+    };
+    server.use(
+      http.get(`${window.location.origin}/api/v1/platform/clubs/:id/parameters`, () =>
+        HttpResponse.json(
+          {
+            code: "INTERNAL_ERROR",
+            details: {},
+            message: "Reread failed",
+            traceId: "trace-parameters-reread",
+          },
+          { status: 500 },
+        ),
+      ),
+    );
+    fireEvent.change(editor.getByRole("spinbutton"), { target: { value: "180" } });
+    fireEvent.click(editor.getByRole("button", { name: "DESA" }));
+
+    expect(await editor.findByRole("alert")).toHaveTextContent("error inesperat");
+    expect(editor.getByRole("spinbutton")).toHaveValue(180);
+    expect(editor.getByRole("button", { name: "DESA" })).toBeDisabled();
+    expect(puts).toHaveLength(1);
+
+    server.resetHandlers();
+    fireEvent.click(editor.getByRole("button", { name: "Torna-ho a provar" }));
+    await waitFor(() => {
+      expect(editor.getByRole("button", { name: "DESA" })).toBeEnabled();
+    });
+    expect(editor.getByRole("spinbutton")).toHaveValue(180);
+    fireEvent.click(editor.getByRole("button", { name: "DESA" }));
+    await screen.findByText(/valor desat\./u);
+    expect(puts.map((request) => request.body)).toEqual([
+      { value: 180, version: 3 },
+      { value: 180, version: 4 },
+    ]);
+  });
+
+  it("after a successful save and failed reread, it shows retry and blocks every editor until fresh values arrive", async () => {
+    await openParameters();
+    const editor = await openEditor(/Llindar d.anul·lació/u);
+    server.use(
+      http.get(`${window.location.origin}/api/v1/platform/clubs/:id/parameters`, () =>
+        HttpResponse.json(
+          {
+            code: "INTERNAL_ERROR",
+            details: {},
+            message: "Reread failed",
+            traceId: "trace-parameters-after-save",
+          },
+          { status: 500 },
+        ),
+      ),
+    );
+    fireEvent.change(editor.getByRole("spinbutton"), { target: { value: "180" } });
+    fireEvent.click(editor.getByRole("button", { name: "DESA" }));
+
+    const error = await screen.findByRole("alert");
+    expect(error).toHaveTextContent("error inesperat");
+    expect(parameterRow(/Llindar d.anul·lació/u)).toBeDisabled();
+    server.resetHandlers();
+    fireEvent.click(within(error).getByRole("button", { name: "Torna-ho a provar" }));
+    await waitFor(() => {
+      expect(parameterRow(/Llindar d.anul·lació/u)).toBeEnabled();
+    });
   });
 });

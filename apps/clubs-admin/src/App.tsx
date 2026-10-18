@@ -679,13 +679,11 @@ function gatedRoute(route: AdminRouteDefinition, content: ReactNode): ReactNode 
 }
 
 function AdminShell({
-  authClient,
   children,
   client,
   onNavigate,
   pathname,
 }: {
-  authClient: AuthClient;
   children: ReactNode;
   client: ReturnType<typeof createAuthenticatedApiClient>;
   onNavigate: (path: string) => void;
@@ -775,7 +773,7 @@ function AdminShell({
         roles={session.roles}
       />
       <main className="admin-shell__content">
-        <SupportBanner authClient={authClient} onNavigate={onNavigate} />
+        <SupportBanner onNavigate={onNavigate} />
         {/* A D14 row read that failed (R-10-13): said here, on whatever page the user went to. */}
         <FollowUpReadFailureNotice unread={unreadFollowUp} />
         <CountersRefreshContext.Provider value={refreshCounters}>
@@ -1051,7 +1049,6 @@ export function App({ authClient }: { authClient: AuthClient }) {
     <OnboardingExperience authClient={authClient} presentation="modal">
       <ExportJobsProvider client={client}>
         <AdminShell
-          authClient={authClient}
           client={client}
           onNavigate={navigate}
           pathname={pathname}

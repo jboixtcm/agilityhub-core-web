@@ -10,6 +10,7 @@
     "modules": "Modules",
     "privacy": "Privacy and audit",
     "signup": "Registration and consent",
+    "system": "System",
     "training": "Free training",
     "waitlist": "Waitlist"
   },
@@ -169,6 +170,84 @@
     }
   },
   "param": {
+    "dashboard": {
+      "pendingSignupAgeWarnDays": {
+        "help": "Number of days after which a pending signup is highlighted on the dashboard.",
+        "label": "Pending-signup age warning"
+      }
+    },
+    "files": {
+      "allowedTypes": {
+        "help": "MIME types that may be uploaded as files.",
+        "label": "Allowed file types"
+      },
+      "dogPhotoMaxMb": {
+        "help": "Maximum size, in MB, of a dog's photo.",
+        "label": "Maximum dog-photo size"
+      },
+      "maxAttachmentsPerEntity": {
+        "help": "Maximum number of attachments on one record.",
+        "label": "Maximum attachments"
+      },
+      "maxSizeMb": {
+        "help": "Maximum size, in MB, of each attachment.",
+        "label": "Maximum file size"
+      }
+    },
+    "history": {
+      "monthsVisible": {
+        "help": "Number of history months shown in the app.",
+        "label": "Visible history months"
+      }
+    },
+    "learn": {
+      "baseUrl": {
+        "help": "Base address of the Learn product.",
+        "label": "Learn address"
+      },
+      "linkText": {
+        "help": "Text of the Learn link shown in the app.",
+        "label": "Learn link text"
+      },
+      "recommendationsTtlMinutes": {
+        "help": "Number of minutes for which Learn recommendations are retained.",
+        "label": "Learn recommendation lifetime"
+      }
+    },
+    "migration": {
+      "exportRetentionDays": {
+        "help": "Number of days for which migration export files are retained.",
+        "label": "Migration export retention"
+      },
+      "leftMaxYears": {
+        "help": "Maximum age, in years, of former memberships included in a migration.",
+        "label": "Maximum years of former memberships"
+      },
+      "playoffReadOnlyMonths": {
+        "help": "Number of months for which Playoff remains read-only after a migration.",
+        "label": "Playoff read-only months"
+      },
+      "reconciliationTolerancePct": {
+        "help": "Maximum percentage difference accepted when reconciling a migration.",
+        "label": "Reconciliation tolerance"
+      }
+    },
+    "platform": {
+      "domainRecheckDays": {
+        "help": "Number of days between automatic checks of verified domains; 0 disables them.",
+        "label": "Domain-check frequency"
+      },
+      "supportAccessMinutes": {
+        "help": "Number of minutes for which an AgilityHub team support access remains valid.",
+        "label": "Support-access duration"
+      }
+    },
+    "security": {
+      "eventRetentionDays": {
+        "help": "Number of days for which security events are retained.",
+        "label": "Security-event retention"
+      }
+    },
     "activities": {
       "cancelDeadline": {
         "help": "The final point at which a person can cancel a registration.",
@@ -192,9 +271,45 @@
       }
     },
     "auth": {
+      "checkCompromisedPasswords": {
+        "help": "Checks whether a password appears in known breaches before accepting it.",
+        "label": "Compromised-password check"
+      },
+      "impersonationMinutes": {
+        "help": "Number of minutes for which an ‘Enter as the member’ access remains valid.",
+        "label": "Member-access duration"
+      },
+      "lockoutMaxAttempts": {
+        "help": "Number of failed attempts before access is temporarily locked.",
+        "label": "Attempts before lockout"
+      },
+      "lockoutMinutes": {
+        "help": "Number of minutes the lockout lasts after the allowed attempts are exceeded.",
+        "label": "Access-lockout duration"
+      },
+      "magicLinkMinutes": {
+        "help": "Number of minutes for which a sign-in magic link remains valid.",
+        "label": "Magic-link lifetime"
+      },
+      "maxSessions": {
+        "help": "Maximum number of sessions open at once for one account.",
+        "label": "Maximum sessions per account"
+      },
+      "passwordMinLength": {
+        "help": "Minimum number of characters in a password.",
+        "label": "Minimum password length"
+      },
       "refreshReuseGraceSeconds": {
         "help": "Seconds during which one lost refresh response may be recovered. A value of 0 disables the grace period.",
         "label": "Refresh-token reuse grace period"
+      },
+      "sessionDays": {
+        "help": "Number of days for which the sliding session remains valid.",
+        "label": "Session duration"
+      },
+      "welcomeLinkDays": {
+        "help": "Number of days for which the welcome and activation link remains valid.",
+        "label": "Welcome-link lifetime"
       }
     },
     "billing": {
@@ -486,6 +601,28 @@
           "label": "Reminders"
         }
       },
+      "retention": {
+        "domainEventsDays": {
+          "help": "Days for which processed domain events are retained.",
+          "label": "Domain event retention"
+        },
+        "exportFilesDays": {
+          "help": "Days for which generated export files are retained.",
+          "label": "Export file retention"
+        },
+        "jobRunsDays": {
+          "help": "Days for which automated process run history is retained.",
+          "label": "Process run retention"
+        },
+        "orphanUploadsHours": {
+          "help": "Hours before unattached uploads are removed.",
+          "label": "Unattached upload retention"
+        },
+        "stripeEventsDays": {
+          "help": "Days for which processed Stripe events are retained.",
+          "label": "Stripe event retention"
+        }
+      },
       "riskReview": {
         "enabled": {
           "help": "Checks classes with few registrants every day and cancels them or sends a warning.",
@@ -566,6 +703,12 @@
         "help": "Sends a notice when the following week opens.",
         "label": "Week-opening notice"
       },
+      "push": {
+        "ttlMinutes": {
+          "help": "Minutes for which a push notification remains deliverable.",
+          "label": "Push notification lifetime"
+        }
+      },
       "reminderOptionsMinutes": {
         "help": "Advance times each member can choose for class reminders.",
         "label": "Class reminder options"
@@ -625,6 +768,10 @@
       "pendingExpiryDays": {
         "help": "Days before a pending application generates a reminder.",
         "label": "Pending registration expiry"
+      },
+      "rateLimit": {
+        "help": "Maximum number of public registration requests allowed during the control interval.",
+        "label": "Registration request limit"
       },
       "requireDogDocumentAtSignup": {
         "help": "Requests dog documents before registration can be completed.",

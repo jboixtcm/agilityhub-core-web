@@ -23,10 +23,12 @@
     "ended": "El acceso de soporte ha terminado: ha caducado o el administrador del club lo ha terminado. Ya puedes cerrar esta pestaña.",
     "entering": "Abriendo el backoffice del club…",
     "exit": "Salir",
-    "leaving": "Saliendo",
+    "exitFailed": "No se ha podido terminar el acceso de soporte. Comprueba la conexión y vuelve a intentarlo.",
+    "leavingMessage": "Saliendo del acceso de soporte…",
     "left": "Has salido del acceso de soporte. Ya puedes cerrar esta pestaña.",
     "noOpener": "Este acceso se abre desde la consola de clubs, con «Entrar como administrador del club».",
     "refused": "No se ha podido abrir el acceso de soporte. Vuelve a intentarlo desde la consola de clubs.",
+    "retryExit": "Volver a intentar salir",
     "timeout": "No ha llegado el acceso de soporte. Vuelve a intentarlo desde la consola de clubs.",
     "title": "Acceso de soporte"
   },

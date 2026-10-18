@@ -1,0 +1,191 @@
+heavy.sh: 13:31 waiting for the host lock, held by: 13:09 agilityhub-core-api: ./mvnw -q clean verify
+heavy.sh: 13:35 got the host lock after 3 min 30 s
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint, typecheck, test, build in 11 packages
+   • Remote caching disabled
+
+@agilityhub/course-core:lint: cache hit, replaying logs 983b4c192821f2d7
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:lint: > @agilityhub/course-core@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:lint: 
+@agilityhub/course-ui:lint: cache hit, replaying logs a5a634dee919338b
+@agilityhub/course-ui:lint: 
+@agilityhub/course-ui:lint: > @agilityhub/course-ui@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+@agilityhub/course-ui:lint: > eslint src tests harness e2e playwright.config.ts vite.harness.config.ts --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-ui:lint: 
+@agilityhub/course-core:build: cache hit, replaying logs 8b12f2a8463a0190
+@agilityhub/course-core:build: 
+@agilityhub/course-core:build: > @agilityhub/course-core@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:build: > tsc -p tsconfig.build.json
+@agilityhub/course-core:build: 
+@agilityhub/config:typecheck: cache hit, replaying logs 3b91b65bf26db588
+@agilityhub/config:typecheck: 
+@agilityhub/config:typecheck: > @agilityhub/config@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:typecheck: > node --check eslint.config.mjs && node --check prettier.config.mjs && node --check scripts/prepare-husky.mjs
+@agilityhub/config:typecheck: 
+@agilityhub/ui:lint: cache hit, replaying logs e4a911564f246210
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/course-core:typecheck: cache hit, replaying logs d4749fbcab628743
+@agilityhub/course-core:typecheck: 
+@agilityhub/course-core:typecheck: > @agilityhub/course-core@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:typecheck: > tsc --noEmit
+@agilityhub/course-core:typecheck: 
+clubs-admin:lint: cache miss, executing 756e6fa583ca4dad
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+clubs-admin:lint: 
+clubs-admin:lint: /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/support/SupportPages.tsx
+clubs-admin:lint:   121:36  error  Returning a void expression from an arrow function shorthand is forbidden. Please add braces to the arrow function  @typescript-eslint/no-confusing-void-expression
+clubs-admin:lint:   154:3   error  'authClient' is defined but never used                                                                              @typescript-eslint/no-unused-vars
+clubs-admin:lint: 
+clubs-admin:lint: ✖ 2 problems (2 errors, 0 warnings)
+clubs-admin:lint:   1 error and 0 warnings potentially fixable with the `--fix` option.
+clubs-admin:lint: 
+clubs-admin:lint:  ELIFECYCLE  Command failed with exit code 1.
+@agilityhub/ui:test: cache hit, replaying logs 7982dd2c6205f3de
+@agilityhub/ui:test: 
+@agilityhub/ui:test: > @agilityhub/ui@0.0.0 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: > vitest run
+@agilityhub/ui:test: 
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  ✓ src/polish-styles.test.ts (2 tests) 3ms
+@agilityhub/ui:test:  ✓ src/on-primary.test.ts (3 tests) 41ms
+@agilityhub/ui:test:  ✓ src/attendance-contrast.test.ts (34 tests) 12ms
+@agilityhub/ui:test:  ✓ src/modules.test.ts (3 tests) 4ms
+@agilityhub/ui:test:  ✓ src/limited-markdown.test.tsx (1 test) 99ms
+@agilityhub/ui:test:  ✓ src/icons/Icon.test.tsx (1 test) 84ms
+@agilityhub/ui:test: stderr | src/day-grid.test.tsx > DayGrid presenter (screens 10 / 23) > renders the api's «Sense» column as delivered and never adds one of its own
+@agilityhub/ui:test: [DayGrid] cells without a matching column are not drawn: cls-1 (ringId null)
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  ✓ src/index.test.ts (2 tests) 2ms
+@agilityhub/ui:test:  ✓ src/branding.test.tsx (9 tests) 145ms
+@agilityhub/ui:test:  ✓ src/attendance-sheet.test.tsx (4 tests) 239ms
+@agilityhub/ui:test:  ✓ src/day-grid.test.tsx (11 tests) 266ms
+@agilityhub/ui:test:  ✓ src/schedule-grid.test.tsx (3 tests) 257ms
+@agilityhub/ui:test:  ✓ src/slot-grid.test.tsx (9 tests) 339ms
+@agilityhub/ui:test:  ✓ src/rich-text.test.tsx (13 tests) 360ms
+@agilityhub/ui:test:  ✓ src/components.test.tsx (33 tests) 471ms
+@agilityhub/ui:test:  ✓ src/attendance.test.tsx (16 tests) 313ms
+@agilityhub/ui:test:  ✓ src/universal-list.test.tsx (14 tests) 719ms
+@agilityhub/ui:test:    ✓ E5-W05 round 2 #2 · a range filter with no suggested values (ruling E80) (1)
+@agilityhub/ui:test:      ✓ offers two dates instead of the value list, never asks for the field's values, and adds the range's own value 325ms
+@agilityhub/ui:test:  ✓ src/tasks-panel.test.tsx (14 tests) 617ms
+@agilityhub/ui:test:  ✓ src/universal-list-layout.test.ts (1 test) 2ms
+@agilityhub/ui:test:  ✓ src/schedule-contrast.test.ts (3 tests) 3ms
+@agilityhub/ui:test: 
+@agilityhub/ui:test:  Test Files  19 passed (19)
+@agilityhub/ui:test:       Tests  176 passed (176)
+@agilityhub/ui:test:    Start at  13:06:00
+@agilityhub/ui:test:    Duration  3.46s (environment 66%, setup 15%, tests 10%, transform 8%, import 1%)
+@agilityhub/ui:test: 
+clubs:lint: cache hit, replaying logs 8507c9e68c581928
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+@agilityhub/config:lint: cache hit, replaying logs 72c1d9c821df515c
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/api-client:lint: cache miss, executing 9afa45d8802a6bfc
+@agilityhub/ui:typecheck: cache hit, replaying logs fc9e9c187346d88b
+@agilityhub/ui:typecheck: 
+@agilityhub/ui:typecheck: > @agilityhub/ui@0.0.0 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:typecheck: > tsc --noEmit
+@agilityhub/ui:typecheck: 
+@agilityhub/auth:lint: cache miss, executing 3fb1454ea0a4cbff
+@agilityhub/shared-types:lint: cache hit, replaying logs a946566fb9efb741
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:lint: > eslint src tests scripts --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+@agilityhub/i18n:lint: cache miss, executing 9159c0ae0dca4c24
+id:lint: cache hit, replaying logs 3cc6dbebe87e1826
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/course-core:test: cache hit, replaying logs 65fa9f6847f7b7eb
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: > @agilityhub/course-core@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: > vitest run
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  ✓ tests/geometry-primitives.test.ts (15 tests) 6ms
+@agilityhub/course-core:test:  ✓ tests/units.test.ts (6 tests) 15ms
+@agilityhub/course-core:test:  ✓ tests/apriltag-36h11.test.ts (31 tests) 19ms
+@agilityhub/course-core:test:  ✓ tests/marker-svg.test.ts (29 tests) 12ms
+@agilityhub/course-core:test:  ✓ tests/coords.test.ts (5 tests) 6ms
+@agilityhub/course-core:test:  ✓ tests/ring.test.ts (7 tests) 19ms
+@agilityhub/course-core:test:  ✓ tests/calibration.test.ts (9 tests) 4ms
+@agilityhub/course-core:test:  ✓ tests/marker-id.test.ts (11 tests) 5ms
+@agilityhub/course-core:test:  ✓ tests/placement.test.ts (20 tests) 9ms
+@agilityhub/course-core:test:  ✓ tests/path.test.ts (2 tests) 9ms
+@agilityhub/course-core:test:  ✓ tests/heading.test.ts (11 tests) 4ms
+@agilityhub/course-core:test:  ✓ tests/summarize-course.test.ts (8 tests) 13ms
+@agilityhub/course-core:test:  ✓ tests/parse-smarter-txt.test.ts (113 tests) 19ms
+@agilityhub/course-core:test:  ✓ tests/smarter-writer.test.ts (8 tests) 12ms
+@agilityhub/course-core:test:  ✓ tests/geometry-transform.test.ts (6 tests) 4ms
+@agilityhub/course-core:test:  ✓ tests/wrapper.test.ts (5 tests) 3ms
+@agilityhub/course-core:test:  ✓ tests/parse-smarter-colors-txt.test.ts (6 tests) 3ms
+@agilityhub/course-core:test:  ✓ tests/warnings-engine.test.ts (13 tests) 6ms
+@agilityhub/course-core:test:  ✓ tests/warnings-rules.test.ts (26 tests) 16ms
+@agilityhub/course-core:test:  ✓ tests/smarter-fixtures.test.ts (25 tests) 11ms
+@agilityhub/course-core:test:  ✓ tests/course-data-json-schema.test.ts (22 tests) 57ms
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:  Test Files  21 passed (21)
+@agilityhub/course-core:test:       Tests  378 passed (378)
+@agilityhub/course-core:test:    Start at  13:06:00
+@agilityhub/course-core:test:    Duration  879ms (transform 79%, import 15%, tests 5%, worker 1%)
+@agilityhub/course-core:test: 
+@agilityhub/course-core:test:   Transform  transforming modules took 4.18s · 79% of tracked time, re-done on every run
+@agilityhub/course-core:test:              persist transforms across runs with fsModuleCache: true
+@agilityhub/course-core:test:              learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+@agilityhub/course-core:test: 
+@agilityhub/shared-types:build: cache hit, replaying logs 1caf5b33f1294437
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:build: > @agilityhub/shared-types@0.0.1 build /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:build: > tsc -p tsconfig.build.json
+@agilityhub/shared-types:build: 
+@agilityhub/shared-types:typecheck: cache hit, replaying logs 7874ef022804ec1c
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:typecheck: > @agilityhub/shared-types@0.0.1 typecheck /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:typecheck: > tsc --noEmit
+@agilityhub/shared-types:typecheck: 
+@agilityhub/shared-types:test: cache hit, replaying logs 92bd95f3df24e115
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: > @agilityhub/shared-types@0.0.1 test /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: > vitest run
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test:  RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test:  ✓ tests/build-session-export.test.ts (21 tests) 21ms
+@agilityhub/shared-types:test:  ✓ tests/json-schemas.test.ts (17 tests) 50ms
+@agilityhub/shared-types:test: 
+@agilityhub/shared-types:test:  Test Files  2 passed (2)
+@agilityhub/shared-types:test:       Tests  38 passed (38)
+@agilityhub/shared-types:test:    Start at  13:06:07
+@agilityhub/shared-types:test:    Duration  917ms (transform 82%, import 12%, tests 5%)
+@agilityhub/shared-types:test: 
+clubs-admin#lint:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run lint exited (1)
+
+ Tasks:    16 successful, 20 total
+Cached:    16 cached, 20 total
+  Time:    24.211s 
+Failed:    clubs-admin#lint
+
+ ERROR  run failed: command  exited (1)

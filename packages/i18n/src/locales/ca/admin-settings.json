@@ -10,6 +10,7 @@
     "modules": "Mòduls",
     "privacy": "Privacitat i auditoria",
     "signup": "Alta i consentiments",
+    "system": "Sistema",
     "training": "Entrenaments lliures",
     "waitlist": "Llista d'espera"
   },
@@ -169,6 +170,84 @@
     }
   },
   "param": {
+    "dashboard": {
+      "pendingSignupAgeWarnDays": {
+        "help": "Dies a partir dels quals una preinscripció pendent es destaca al tauler.",
+        "label": "Avís d'antiguitat de les preinscripcions"
+      }
+    },
+    "files": {
+      "allowedTypes": {
+        "help": "Tipus MIME que es poden pujar com a fitxers.",
+        "label": "Tipus de fitxer permesos"
+      },
+      "dogPhotoMaxMb": {
+        "help": "Mida màxima, en MB, de la foto d'un gos.",
+        "label": "Mida màxima de la foto del gos"
+      },
+      "maxAttachmentsPerEntity": {
+        "help": "Nombre màxim de fitxers adjunts en una mateixa fitxa.",
+        "label": "Màxim de fitxers adjunts"
+      },
+      "maxSizeMb": {
+        "help": "Mida màxima, en MB, de cada fitxer adjunt.",
+        "label": "Mida màxima per fitxer"
+      }
+    },
+    "history": {
+      "monthsVisible": {
+        "help": "Mesos d'històric que es mostren a l'app.",
+        "label": "Mesos visibles de l'històric"
+      }
+    },
+    "learn": {
+      "baseUrl": {
+        "help": "Adreça base del producte Learn.",
+        "label": "Adreça de Learn"
+      },
+      "linkText": {
+        "help": "Text de l'accés a Learn que es mostra a l'app.",
+        "label": "Text de l'enllaç a Learn"
+      },
+      "recommendationsTtlMinutes": {
+        "help": "Minuts durant els quals es conserven les recomanacions de Learn.",
+        "label": "Vigència de les recomanacions de Learn"
+      }
+    },
+    "migration": {
+      "exportRetentionDays": {
+        "help": "Dies durant els quals es conserven els fitxers d'exportació d'una migració.",
+        "label": "Conservació de les exportacions de migració"
+      },
+      "leftMaxYears": {
+        "help": "Antiguitat màxima, en anys, de les baixes que s'inclouen en una migració.",
+        "label": "Anys màxims de baixes per migrar"
+      },
+      "playoffReadOnlyMonths": {
+        "help": "Mesos durant els quals Playoff es manté en mode de només lectura després de migrar.",
+        "label": "Mesos de Playoff en només lectura"
+      },
+      "reconciliationTolerancePct": {
+        "help": "Percentatge màxim de diferència admès en la conciliació d'una migració.",
+        "label": "Tolerància de conciliació"
+      }
+    },
+    "platform": {
+      "domainRecheckDays": {
+        "help": "Dies entre les comprovacions automàtiques dels dominis verificats; 0 les desactiva.",
+        "label": "Freqüència de comprovació dels dominis"
+      },
+      "supportAccessMinutes": {
+        "help": "Minuts de vigència d'un accés de suport de l'equip AgilityHub.",
+        "label": "Durada de l'accés de suport"
+      }
+    },
+    "security": {
+      "eventRetentionDays": {
+        "help": "Dies durant els quals es conserven els esdeveniments de seguretat.",
+        "label": "Conservació dels esdeveniments de seguretat"
+      }
+    },
     "activities": {
       "cancelDeadline": {
         "help": "Moment límit perquè una persona anul·li la inscripció.",
@@ -192,9 +271,45 @@
       }
     },
     "auth": {
+      "checkCompromisedPasswords": {
+        "help": "Comprova si una contrasenya consta en filtracions conegudes abans d'acceptar-la.",
+        "label": "Comprovació de contrasenyes compromeses"
+      },
+      "impersonationMinutes": {
+        "help": "Minuts de vigència de l'accés «Entra com l'abonat».",
+        "label": "Durada de l'accés com a abonat"
+      },
+      "lockoutMaxAttempts": {
+        "help": "Nombre d'intents fallits abans de bloquejar temporalment l'accés.",
+        "label": "Intents abans del bloqueig"
+      },
+      "lockoutMinutes": {
+        "help": "Minuts que dura el bloqueig després de superar els intents permesos.",
+        "label": "Durada del bloqueig d'accés"
+      },
+      "magicLinkMinutes": {
+        "help": "Minuts de vigència d'un enllaç màgic d'accés.",
+        "label": "Durada de l'enllaç màgic"
+      },
+      "maxSessions": {
+        "help": "Nombre màxim de sessions obertes alhora per compte.",
+        "label": "Màxim de sessions per compte"
+      },
+      "passwordMinLength": {
+        "help": "Nombre mínim de caràcters d'una contrasenya.",
+        "label": "Longitud mínima de la contrasenya"
+      },
       "refreshReuseGraceSeconds": {
         "help": "Segons durant els quals es pot recuperar una única resposta de renovació perduda. Un valor de 0 desactiva el marge.",
         "label": "Marge de reutilització del token de renovació"
+      },
+      "sessionDays": {
+        "help": "Dies de vigència de la sessió amb renovació lliscant.",
+        "label": "Durada de la sessió"
+      },
+      "welcomeLinkDays": {
+        "help": "Dies de vigència de l'enllaç de benvinguda i activació.",
+        "label": "Durada de l'enllaç de benvinguda"
       }
     },
     "billing": {
@@ -486,6 +601,28 @@
           "label": "Recordatoris"
         }
       },
+      "retention": {
+        "domainEventsDays": {
+          "help": "Dies durant els quals es conserven els esdeveniments de domini.",
+          "label": "Conservació dels esdeveniments de domini"
+        },
+        "exportFilesDays": {
+          "help": "Dies durant els quals es conserven els fitxers d'exportació.",
+          "label": "Conservació dels fitxers d'exportació"
+        },
+        "jobRunsDays": {
+          "help": "Dies durant els quals es conserva l'històric d'execucions dels processos.",
+          "label": "Conservació de les execucions"
+        },
+        "orphanUploadsHours": {
+          "help": "Hores abans d'eliminar una pujada que no s'ha vinculat a cap fitxa.",
+          "label": "Conservació de les pujades orfes"
+        },
+        "stripeEventsDays": {
+          "help": "Dies durant els quals es conserven els esdeveniments rebuts de Stripe.",
+          "label": "Conservació dels esdeveniments de Stripe"
+        }
+      },
       "riskReview": {
         "enabled": {
           "help": "Revisa cada dia les classes amb pocs inscrits i les anul·la o avisa.",
@@ -570,6 +707,12 @@
         "help": "Antelacions que cada abonat pot triar per al recordatori de classe.",
         "label": "Opcions del recordatori de classe"
       },
+      "push": {
+        "ttlMinutes": {
+          "help": "Minuts durant els quals una notificació push pendent continua vigent.",
+          "label": "Vigència de les notificacions push"
+        }
+      },
       "sms": {
         "monthlyCap": {
           "help": "Límit mensual de seguretat dels SMS.",
@@ -625,6 +768,10 @@
       "pendingExpiryDays": {
         "help": "Dies fins que una sol·licitud pendent genera un recordatori.",
         "label": "Caducitat de les altes pendents"
+      },
+      "rateLimit": {
+        "help": "Límits de seguretat per hora i per dia de les operacions de l'alta pública.",
+        "label": "Límits de peticions de l'alta pública"
       },
       "requireDogDocumentAtSignup": {
         "help": "Demana documentació del gos abans d'acabar l'alta.",

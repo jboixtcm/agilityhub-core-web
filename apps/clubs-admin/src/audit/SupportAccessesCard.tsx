@@ -60,17 +60,34 @@ export function liveSupportAccesses(
 
 /** The club audit's support entries (both actions, newest first) → the accesses still alive. */
 async function readLiveSupportAccesses(client: ApiClient): Promise<LiveSupportAccess[]> {
-  const list = (action: "SUPPORT_ACCESS_ENDED" | "SUPPORT_ACCESS_STARTED") =>
-    client.GET("/audit-entries", {
-      params: {
-        query: { fields: FIELDS, filter: [`action:eq:${action}`], size: 50, sort: ["at,desc"] },
-      },
-    });
+  const list = async (action: "SUPPORT_ACCESS_ENDED" | "SUPPORT_ACCESS_STARTED") => {
+    const items: AuditEntryListItem[] = [];
+    let page = 0;
+    let totalPages = 1;
+    while (page < totalPages) {
+      const result = await client.GET("/audit-entries", {
+        params: {
+          query: {
+            fields: FIELDS,
+            filter: [`action:eq:${action}`],
+            page,
+            size: 50,
+            sort: ["at,desc"],
+          },
+        },
+      });
+      if (result.data === undefined) throw new TypeError("Audit page without data");
+      items.push(...result.data.items);
+      totalPages = result.data.totalPages;
+      page += 1;
+    }
+    return items;
+  };
   const [started, ended] = await Promise.all([
     list("SUPPORT_ACCESS_STARTED"),
     list("SUPPORT_ACCESS_ENDED"),
   ]);
-  return liveSupportAccesses(started.data?.items ?? [], ended.data?.items ?? [], Date.now());
+  return liveSupportAccesses(started, ended, Date.now());
 }
 
 /**

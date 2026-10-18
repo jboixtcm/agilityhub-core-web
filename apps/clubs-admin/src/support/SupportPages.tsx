@@ -2,7 +2,7 @@ import type { AuthClient } from "@agilityhub/auth";
 import { useSession } from "@agilityhub/auth";
 import { useClubFormats } from "@agilityhub/i18n";
 import { Button, Card } from "@agilityhub/ui";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -16,7 +16,8 @@ import {
 /** How often the new tab tells the console it is ready, until the access arrives. */
 const READY_INTERVAL_MS = 500;
 
-type EntryState = "entering" | "left" | "noOpener" | "refused" | "timeout" | "waiting";
+type EntryState =
+  "entering" | "leaveFailed" | "leaving" | "left" | "noOpener" | "refused" | "timeout" | "waiting";
 
 function SupportNotice({ message, title }: { message: string; title: string }) {
   return (
@@ -37,13 +38,34 @@ function SupportNotice({ message, title }: { message: string; title: string }) {
  */
 export function SupportEntryPage({ authClient }: { authClient: AuthClient }) {
   const { t } = useTranslation("shell");
+  const revokeAttempt = useRef<Promise<void> | undefined>(undefined);
   const [state, setState] = useState<EntryState>(() =>
     new URLSearchParams(window.location.search).get("sortit") === "1"
-      ? "left"
+      ? "leaving"
       : window.opener === null
         ? "noOpener"
         : "waiting",
   );
+
+  useEffect(() => {
+    if (state !== "leaving") return undefined;
+    let active = true;
+    // React StrictMode replays effects in development. Reuse the in-flight attempt so one click
+    // never sends two revocations with the same one-time token.
+    const attempt = revokeAttempt.current ?? authClient.revokeImpersonation();
+    revokeAttempt.current = attempt;
+    void attempt.then(
+      () => {
+        if (active) setState("left");
+      },
+      () => {
+        if (active) setState("leaveFailed");
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, [authClient, state]);
 
   useEffect(() => {
     if (state !== "waiting") return undefined;
@@ -95,6 +117,26 @@ export function SupportEntryPage({ authClient }: { authClient: AuthClient }) {
 
   const title = t("shell:support.title");
   switch (state) {
+    case "leaveFailed":
+      return (
+        <main className="access-page">
+          <Card className="access-card">
+            <h1>{title}</h1>
+            <p role="alert">{t("shell:support.exitFailed")}</p>
+            <Button
+              onClick={() => {
+                revokeAttempt.current = undefined;
+                setState("leaving");
+              }}
+              variant="secondary"
+            >
+              {t("shell:support.retryExit")}
+            </Button>
+          </Card>
+        </main>
+      );
+    case "leaving":
+      return <SupportNotice message={t("shell:support.leavingMessage")} title={title} />;
     case "left":
       return <SupportNotice message={t("shell:support.left")} title={title} />;
     case "noOpener":
@@ -120,17 +162,14 @@ export function SupportEndedPage() {
  * who of the AgilityHub team is in and until when, in the club's time; «Surt» revokes the token.
  */
 export function SupportBanner({
-  authClient,
   onNavigate,
 }: {
-  authClient: AuthClient;
   /** The app's in-app navigation: the tab leaves the shell before the token is revoked. */
   onNavigate: (path: string) => void;
 }) {
   const { t } = useTranslation("shell");
   const session = useSession();
   const formats = useClubFormats();
-  const [leaving, setLeaving] = useState(false);
   const support = session.me?.support;
   if (support === undefined) return null;
   return (
@@ -142,14 +181,10 @@ export function SupportBanner({
         })}
       </p>
       <Button
-        loading={leaving}
-        loadingLabel={t("shell:support.leaving")}
         onClick={() => {
-          setLeaving(true);
-          // `/suport?sortit=1` first: the shell (and its sign-in redirect) is gone when the
-          // revoke signs the tab out, so it lands there and never on `/entrar`.
+          // `/suport?sortit=1` leaves the shell first. That page owns the revoke, its pending and
+          // failure states, and a retry that keeps this one-time token until the revoke succeeds.
           onNavigate(`${SUPPORT_PATH}?sortit=1`);
-          void authClient.logout().catch(() => undefined);
         }}
         variant="secondary"
       >

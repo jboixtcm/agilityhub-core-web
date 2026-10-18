@@ -6,6 +6,7 @@ import { type Page, type Response } from "@playwright/test";
 import { expect, test } from "./oauth-token-log";
 
 const adminUrl = "http://127.0.0.1:4174";
+const coreUrl = requiredEnvironment("CORE_URL");
 const corePassword = requiredEnvironment("E1_CORE_PASSWORD");
 const evidenceDirectory =
   process.env.CORE_EVIDENCE_DIRECTORY ?? resolve(process.cwd(), "roadmap/evidence/E10-W01");
@@ -252,6 +253,22 @@ async function w03Screenshot(page: Page, name: string): Promise<void> {
   await page.screenshot({ fullPage: true, path: join(w03Directory, name) });
 }
 
+/** Publishes a deterministic record through the core's local/test-only FakeDomainDns hook. */
+async function publishFakeCname(page: Page, host: string, target: string): Promise<void> {
+  const response = await page.evaluate(
+    async ({ name, value }) => {
+      const result = await fetch("/api/v1/test/dns", {
+        body: JSON.stringify({ name, type: "CNAME", values: [value] }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      return { body: await result.text(), status: result.status };
+    },
+    { name: host, value: target },
+  );
+  expect(response.status, response.body).toBeLessThan(300);
+}
+
 /** Opens a seeded club's record tab from D19's list (its id is the api's). */
 async function openSeededRecord(page: Page, slug: string, tab: string): Promise<void> {
   await navigateSpa(page, "/consola/clubs");
@@ -265,7 +282,7 @@ async function openSeededRecord(page: Page, slug: string, tab: string): Promise<
   await page.getByRole("link", { exact: true, name: tab }).click();
 }
 
-test("E10-W03 · «Dominis» (add, DNS records, [Verifica] on the local fake DNS) and the support access against the core (T-17-12, T-17-09)", async ({
+test("E10-W03 · «Dominis» (positive and negative fake DNS), allowed host and support access against the core (T-17-03, T-17-12, T-17-09)", async ({
   browser,
 }) => {
   test.setTimeout(300_000);
@@ -303,6 +320,7 @@ test("E10-W03 · «Dominis» (add, DNS records, [Verifica] on the local fake DNS
   await expect(records.getByText(domain.verification.recordName, { exact: true })).toBeVisible();
   await expect(records.getByText(domain.verification.recordValue, { exact: true })).toBeVisible();
   await w03Screenshot(page, "core-D19-dominis-afegit-1280.png");
+  await publishFakeCname(page, host, domain.verification.cnameTarget);
   const verified = page.waitForResponse(isPlatform("POST", /\/verification$/u));
   await page.getByRole("button", { name: `Verifica ${host}` }).click();
   const verification = await verified;
@@ -311,45 +329,76 @@ test("E10-W03 · «Dominis» (add, DNS records, [Verifica] on the local fake DNS
     body: (await verification.json()) as unknown,
   };
   const row = page.getByRole("row").filter({ hasText: host });
-  if (verification.status() === 200) {
-    // The local DomainDns double found a record: VERIFIED, the challenge gone.
-    await expect(
-      page.getByText(new RegExp(`S'ha verificat ${host.replace(/\./gu, "\\.")}`, "u")),
-    ).toBeVisible();
-    await expect(row.getByText("verificat")).toBeVisible();
-  } else {
-    // No record on the double: 422 HOST_NOT_VERIFIED with the expected records; still pending.
-    expect(verification.status()).toBe(422);
-    const refusal = notes.verification as {
-      body: { code: string; details: Record<string, unknown> };
-    };
-    expect(refusal.body.code).toBe("HOST_NOT_VERIFIED");
-    expect(refusal.body.details).toMatchObject({
-      cnameTarget: domain.verification.cnameTarget,
-      host,
-      recordName: domain.verification.recordName,
-      recordValue: domain.verification.recordValue,
-    });
-    await expect(
-      page.getByText(
-        new RegExp(
-          `No s'ha trobat cap dels dos registres DNS de ${host.replace(/\./gu, "\\.")}`,
-          "u",
-        ),
-      ),
-    ).toBeVisible();
-    await expect(row.getByText("pendent")).toBeVisible();
-  }
+  expect(verification.status()).toBe(200);
+  const verifiedDomain = (await verification.json()) as { method: string; status: string };
+  expect(verifiedDomain).toMatchObject({ method: "CNAME", status: "VERIFIED" });
+  await expect(
+    page.getByText(new RegExp(`S'ha verificat ${host.replace(/\./gu, "\\.")}`, "u")),
+  ).toBeVisible();
+  await expect(row.getByText("verificat")).toBeVisible();
+  // The verification response is DomainVerification; the reloaded PlatformDomain row proves the
+  // first verified domain for this app became primary.
+  await expect(row.getByText("principal")).toBeVisible();
+  // The Caddy ask endpoint deliberately lives outside /api/v1 and accepts only loopback/RFC1918
+  // peers. Playwright's container calls the core directly on the private compose network.
+  const allowedResponse = await page.request.get(
+    `${coreUrl}/internal/domains/allowed?host=${encodeURIComponent(host)}`,
+  );
+  const allowed = { body: await allowedResponse.text(), status: allowedResponse.status() };
+  notes.allowed = allowed;
+  expect(allowed.status, allowed.body).toBe(200);
   await w03Screenshot(page, "core-D19-dominis-verifica-1280.png");
-  // A domain that is not its app's primary is removed (E123): the add's own row.
-  if (!(await row.getByText("principal").isVisible())) {
-    await row.getByRole("button", { name: `Elimina ${host}` }).click();
-    const removed = page.waitForResponse(isPlatform("DELETE", /\/domains\/[^/]+$/u));
-    await page.getByRole("dialog").getByRole("button", { name: "ELIMINA" }).click();
-    expect((await removed).status()).toBe(204);
-    await expect(page.getByText(`S'ha eliminat ${host}.`)).toBeVisible();
-    notes.removed = true;
-  }
+
+  // The negative control has no fake-DNS record: the api returns the catalogued 422 details and
+  // leaves it pending. It is not primary, so E123 permits removing it afterwards.
+  const missingHost = `e10w03-missing-${String(Date.now() % 100_000)}.example.test`;
+  await page.getByLabel("Host").fill(missingHost);
+  const missingAdded = page.waitForResponse(
+    isPlatform("POST", /\/api\/v1\/platform\/clubs\/[^/]+\/domains$/u),
+  );
+  await page.getByRole("button", { name: "Afegeix domini" }).click();
+  const missingAddedResponse = await missingAdded;
+  expect(missingAddedResponse.status()).toBe(201);
+  const missingDomain = (await missingAddedResponse.json()) as {
+    status: string;
+    verification: { cnameTarget: string; recordName: string; recordValue: string };
+  };
+  expect(missingDomain.status).toBe("PENDING");
+  const missingRow = page.getByRole("row").filter({ hasText: missingHost });
+  await expect(missingRow.getByText("pendent")).toBeVisible();
+  const missingVerificationResponse = page.waitForResponse(isPlatform("POST", /\/verification$/u));
+  await missingRow.getByRole("button", { name: `Verifica ${missingHost}` }).click();
+  const missingVerification = await missingVerificationResponse;
+  const missingError = (await missingVerification.json()) as {
+    code: string;
+    details: Record<string, unknown>;
+  };
+  notes.missingVerification = {
+    body: missingError,
+    status: missingVerification.status(),
+  };
+  expect(missingVerification.status()).toBe(422);
+  expect(missingError).toMatchObject({
+    code: "HOST_NOT_VERIFIED",
+    details: {
+      cnameTarget: missingDomain.verification.cnameTarget,
+      host: missingHost,
+      recordName: missingDomain.verification.recordName,
+      recordValue: missingDomain.verification.recordValue,
+    },
+  });
+  await expect(
+    page.getByText(
+      `No s'ha trobat cap dels dos registres DNS de ${missingHost}. Comprova'ls i torna-ho a provar d'aquí a uns minuts.`,
+    ),
+  ).toBeVisible();
+  await expect(missingRow.getByText("pendent")).toBeVisible();
+  await missingRow.getByRole("button", { name: `Elimina ${missingHost}` }).click();
+  const removed = page.waitForResponse(isPlatform("DELETE", /\/domains\/[^/]+$/u));
+  await page.getByRole("dialog").getByRole("button", { name: "ELIMINA" }).click();
+  expect((await removed).status()).toBe(204);
+  await expect(page.getByText(`S'ha eliminat ${missingHost}.`)).toBeVisible();
+  notes.removedNegativeControl = true;
 
   // Step 2: «Entra com a administrador del club» on the Cànic: a new tab on its back office.
   await openSeededRecord(page, "canic", "Estat");

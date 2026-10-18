@@ -23,10 +23,12 @@
     "ended": "L'accés de suport ha acabat: ha caducat o l'administrador del club l'ha acabat. Ja pots tancar aquesta pestanya.",
     "entering": "Obrint el backoffice del club…",
     "exit": "Surt",
-    "leaving": "Sortint",
+    "exitFailed": "No s'ha pogut acabar l'accés de suport. Comprova la connexió i torna-ho a provar.",
+    "leavingMessage": "Sortint de l'accés de suport…",
     "left": "Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya.",
     "noOpener": "Aquest accés s'obre des de la consola de clubs, amb «Entra com a administrador del club».",
     "refused": "No s'ha pogut obrir l'accés de suport. Torna-ho a provar des de la consola de clubs.",
+    "retryExit": "Torna a provar de sortir",
     "timeout": "No ha arribat l'accés de suport. Torna-ho a provar des de la consola de clubs.",
     "title": "Accés de suport"
   },

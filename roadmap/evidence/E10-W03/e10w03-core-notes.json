@@ -8,20 +8,32 @@
     ]
   },
   "verification": {
-    "status": 422,
+    "status": 200,
+    "body": {
+      "status": "VERIFIED",
+      "checkedAt": "2026-10-18T10:57:42.461922846Z",
+      "method": "CNAME"
+    }
+  },
+  "allowed": {
+    "body": "",
+    "status": 200
+  },
+  "missingVerification": {
     "body": {
       "code": "HOST_NOT_VERIFIED",
       "message": "El domini no està verificat.",
       "details": {
-        "host": "e10w03-10265.example.test",
+        "host": "e10w03-missing-62636.example.test",
         "cnameTarget": "clubs.agilitydoghub.com",
-        "recordName": "_agilityhub-verify.e10w03-10265.example.test",
-        "recordValue": "agh-verify-f3qds8CH7DmN1yYUs5xrsC2CFvHkfKUG"
+        "recordName": "_agilityhub-verify.e10w03-missing-62636.example.test",
+        "recordValue": "agh-verify-gPHT1BhERSttBWLMns65_JEFUMFSG1e6"
       },
-      "traceId": "3e5ca0f3-64db-4a8b-b175-bfbdbabf3b48"
-    }
+      "traceId": "23c40426-c0d3-4b03-bd2c-808c4d39fc45"
+    },
+    "status": 422
   },
-  "removed": true,
+  "removedNegativeControl": true,
   "supportMe": {
     "roles": [
       "ADMIN"

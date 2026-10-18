@@ -83,6 +83,9 @@ function ParameterEditor({
   onSaved,
   onStale,
   parameter,
+  rereadError,
+  rereadPending,
+  retryReread,
 }: {
   client: ConsoleTabProps["client"];
   clubId: string;
@@ -95,6 +98,9 @@ function ParameterEditor({
   onStale: () => Promise<unknown>;
   /** The row as last read: after a `STALE_VERSION` reread, the fresh one (the draft is kept). */
   parameter: Parameter;
+  rereadError: unknown;
+  rereadPending: boolean;
+  retryReread: () => void;
 }) {
   const { i18n, t } = useTranslation(["console", "admin-settings", "auth", "errors", "common"]);
   const locale = i18n.resolvedLanguage ?? i18n.language;
@@ -143,7 +149,11 @@ function ParameterEditor({
         {t(`admin-settings:param.${parameter.key}.help`, { defaultValue: parameter.help })}
       </p>
       <p className="settings-editor__future">{t("admin-settings:editor.appliesFromNow")}</p>
-      <fieldset className="console-fieldset" disabled={write.pending}>
+      {rereadError === undefined ? null : <LoadError error={rereadError} onRetry={retryReread} />}
+      <fieldset
+        className="console-fieldset"
+        disabled={write.pending || rereadPending || rereadError !== undefined}
+      >
         <ParameterControl
           defaultLocale={defaultLocale}
           draft={draft}
@@ -168,14 +178,16 @@ function ParameterEditor({
       </fieldset>
       <FormMessage
         message={
-          invalid ??
-          (stale
-            ? t("console:parameters.stale", {
-                value: valueSummary(parameter, locale, formats, t),
-              })
-            : write.error === undefined
-              ? undefined
-              : consoleErrorMessage(t, write.error))
+          rereadError === undefined
+            ? (invalid ??
+              (stale
+                ? t("console:parameters.stale", {
+                    value: valueSummary(parameter, locale, formats, t),
+                  })
+                : write.error === undefined
+                  ? undefined
+                  : consoleErrorMessage(t, write.error)))
+            : undefined
         }
         tone="danger"
       />
@@ -183,7 +195,12 @@ function ParameterEditor({
         <Button disabled={write.pending} onClick={onClose} variant="ghost">
           {t("console:common.cancel")}
         </Button>
-        <Button loading={write.pending} loadingLabel={t("console:common.saving")} type="submit">
+        <Button
+          disabled={rereadPending || rereadError !== undefined}
+          loading={write.pending}
+          loadingLabel={t("console:common.saving")}
+          type="submit"
+        >
           {t("console:common.save")}
         </Button>
       </div>
@@ -225,6 +242,7 @@ export function ParametersTab({ client, club }: ConsoleTabProps) {
   const editing = blocks
     .flatMap((block) => block.rows)
     .find((parameter) => parameter.key === editingKey);
+  const rereadBlocked = parameters.loading || parameters.error !== undefined;
 
   if (parameters.error !== undefined && parameters.data === undefined)
     return <LoadError error={parameters.error} onRetry={() => void parameters.reload()} />;
@@ -235,6 +253,9 @@ export function ParametersTab({ client, club }: ConsoleTabProps) {
       <p className="console-message console-message--info" role="note">
         {t("console:parameters.note")}
       </p>
+      {parameters.error === undefined ? null : (
+        <LoadError error={parameters.error} onRetry={() => void parameters.reload()} />
+      )}
       <FormMessage message={done} tone="success" />
       {blocks.map((block) => (
         <SectionCard
@@ -248,6 +269,7 @@ export function ParametersTab({ client, club }: ConsoleTabProps) {
                 <div className="settings-parameter console-parameter" key={parameter.key}>
                   <button
                     className="settings-parameter__main"
+                    disabled={rereadBlocked}
                     onClick={() => {
                       setDone(undefined);
                       setEditingKey(parameter.key);
@@ -280,6 +302,7 @@ export function ParametersTab({ client, club }: ConsoleTabProps) {
                     ) : null}
                   </button>
                   <IconButton
+                    disabled={rereadBlocked}
                     icon="edit"
                     label={t("admin-settings:editor.open", { label: name })}
                     onClick={() => {
@@ -319,6 +342,9 @@ export function ParametersTab({ client, club }: ConsoleTabProps) {
             }}
             onStale={parameters.reload}
             parameter={editing}
+            rereadError={parameters.error}
+            rereadPending={parameters.loading}
+            retryReread={() => void parameters.reload()}
           />
         )}
       </Drawer>

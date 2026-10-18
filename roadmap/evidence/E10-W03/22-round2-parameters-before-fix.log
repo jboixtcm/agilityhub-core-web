@@ -1,0 +1,970 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/console/ParametersTab.test.tsx (5 tests | 3 failed | 2 skipped) 10259ms
+   ❯ E10-W03 step 4 · D19 «Paràmetres» on the club's own values (S17 §2, E118, E10-T04) (5)
+     × reads GET /platform/clubs/{id}/parameters: the club's override, the defaults, and PLATFORM_ONLY keys marked 139ms
+     × after STALE_VERSION and a failed reread, it shows the error, keeps the draft and disables save until retry succeeds 68ms
+     × after a successful save and failed reread, it shows retry and blocks every editor until fresh values arrive 10050ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/console/ParametersTab.test.tsx > E10-W03 step 4 · D19 «Paràmetres» on the club's own values (S17 §2, E118, E10-T04) > reads GET /platform/clubs/{id}/parameters: the club's override, the defaults, and PLATFORM_ONLY keys marked
+TypeError: No parameter row /Durada de la sessió/u
+ ❯ parameterRow src/console/ParametersTab.test.tsx:46:35
+     44|         name.test(candidate.textContent),
+     45|     );
+     46|   if (button === undefined) throw new TypeError(`No parameter row ${St…
+       |                                   ^
+     47|   return button;
+     48| }
+ ❯ src/console/ParametersTab.test.tsx:67:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/console/ParametersTab.test.tsx > E10-W03 step 4 · D19 «Paràmetres» on the club's own values (S17 §2, E118, E10-T04) > after STALE_VERSION and a failed reread, it shows the error, keeps the draft and disables save until retry succeeds
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  error intern
+Received:
+  Algú l'ha canviat mentrestant: ara val 4 h. Si deses, el substitueixes pel teu valor.
+ ❯ src/console/ParametersTab.test.tsx:154:46
+    152|     fireEvent.click(editor.getByRole("button", { name: "DESA" }));
+    153|
+    154|     expect(await editor.findByRole("alert")).toHaveTextContent("error …
+       |                                              ^
+    155|     expect(editor.getByRole("spinbutton")).toHaveValue(180);
+    156|     expect(editor.getByRole("button", { name: "DESA" })).toBeDisabled(…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/console/ParametersTab.test.tsx > E10-W03 step 4 · D19 «Paràmetres» on the club's own values (S17 §2, E118, E10-T04) > after a successful save and failed reread, it shows retry and blocks every editor until fresh values arrive
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"console-page"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"console-back"[39m
+        [33mhref[39m=[32m"/consola/clubs"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [0mClubs[0m
+      [36m</a>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"console-page__header console-record__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<h1>[39m
+            [0mClub Agility Cànic[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"console-record__meta"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mcanic[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mActiu[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"console-checklist-summary"[39m
+            [36m>[39m
+              [36m<strong>[39m
+                [0m7/7[0m
+              [36m</strong>[39m
+            [36m</span>[39m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Seccions de la fitxa del club"[39m
+        [33mclass[39m=[32m"console-tabs"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/identitat"[39m
+        [36m>[39m
+          [0mIdentitat[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/localitzacio"[39m
+        [36m>[39m
+          [0mLocalització[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/dominis"[39m
+        [36m>[39m
+          [0mDominis[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/tema"[39m
+        [36m>[39m
+          [0mTema[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/moduls"[39m
+        [36m>[39m
+          [0mMòduls[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/pagaments"[39m
+        [36m>[39m
+          [0mPagaments[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/legal"[39m
+        [36m>[39m
+          [0mLegal[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/parametres"[39m
+        [36m>[39m
+          [0mParàmetres[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/catalegs"[39m
+        [36m>[39m
+          [0mCatàlegs base[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/equip"[39m
+        [36m>[39m
+          [0mEquip[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/processos"[39m
+        [36m>[39m
+          [0mProcessos[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/auditoria"[39m
+        [36m>[39m
+          [0mAuditoria[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/us"[39m
+        [36m>[39m
+          [0mÚs[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/estat"[39m
+        [36m>[39m
+          [0mEstat[0m
+        [36m</a>[39m
+      [36m</nav>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Paràmetres"[39m
+        [33mclass[39m=[32m"console-tab-panel"[39m
+      [36m>[39m
+        [36m<fieldset[39m
+          [33mclass[39m=[32m"console-tab-panel__writes"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"console-form"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"console-message console-message--info"[39m
+              [33mrole[39m=[32m"note"[39m
+            [36m>[39m
+              [0mEls valors del club: els que ha canviat i, la resta, el valor per defecte. Des d'aquí també es poden editar els paràmetres de plataforma.[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"console-message console-message--success"[39m
+              [33mrole[39m=[32m"status"[39m
+            [36m>[39m
+              [0mLlindar d'anul·lació tardana («classe feta»): valor desat.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card console-card"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0msystem[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"settings-parameters"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mauth.sessionDays[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+                      [36m>[39m
+                        [0mnomés plataforma[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0mper defecte[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0m30[0m
+                    [36m</strong>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita auth.sessionDays"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mauth.magicLinkMinutes[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+                      [36m>[39m
+                        [0mnomés plataforma[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0mper defecte[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0m15[0m
+                    [36m</strong>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita auth.magicLinkMinutes"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mauth.impersonationMinutes[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+                      [36m>[39m
+                        [0mnomés plataforma[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0mper defecte[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0m60[0m
+                    [36m</strong>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita auth.impersonationMinutes"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mauth.passwordMinLength[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+                      [36m>[39m
+                        [0mnomés plataforma[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0mper defecte[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0m8[0m
+                    [36m</strong>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita auth.passwordMinLength"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card console-card"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mbookings[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"settings-parameters"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mLlindar d'anul·lació tardana («classe feta»)[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                      [36m>[39m
+                        [0mvalor del club[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0m4 h[0m
+                    [36m</strong>[39m
+                    [36m<small[39m
+                      [33mclass[39m=[32m"console-muted"[39m
+                    [36m>[39m
+                      [0mPer defecte: 2 h[0m
+                    [36m</small>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita Llindar d'anul·lació tardana («classe feta»)"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card console-card"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mAlta i consentiments[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"settings-parameters"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mAltes públiques[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0mper defecte[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0mSí[0m
+                    [36m</strong>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita Altes públiques"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</fieldset>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"console-page"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"console-back"[39m
+        [33mhref[39m=[32m"/consola/clubs"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [0mClubs[0m
+      [36m</a>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"console-page__header console-record__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<h1>[39m
+            [0mClub Agility Cànic[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"console-record__meta"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mcanic[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mActiu[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"console-checklist-summary"[39m
+            [36m>[39m
+              [36m<strong>[39m
+                [0m7/7[0m
+              [36m</strong>[39m
+            [36m</span>[39m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Seccions de la fitxa del club"[39m
+        [33mclass[39m=[32m"console-tabs"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/identitat"[39m
+        [36m>[39m
+          [0mIdentitat[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/localitzacio"[39m
+        [36m>[39m
+          [0mLocalització[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/dominis"[39m
+        [36m>[39m
+          [0mDominis[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/tema"[39m
+        [36m>[39m
+          [0mTema[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/moduls"[39m
+        [36m>[39m
+          [0mMòduls[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/pagaments"[39m
+        [36m>[39m
+          [0mPagaments[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/legal"[39m
+        [36m>[39m
+          [0mLegal[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33maria-current[39m=[32m"page"[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/parametres"[39m
+        [36m>[39m
+          [0mParàmetres[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/catalegs"[39m
+        [36m>[39m
+          [0mCatàlegs base[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/equip"[39m
+        [36m>[39m
+          [0mEquip[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/processos"[39m
+        [36m>[39m
+          [0mProcessos[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/auditoria"[39m
+        [36m>[39m
+          [0mAuditoria[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/us"[39m
+        [36m>[39m
+          [0mÚs[0m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-tabs__tab"[39m
+          [33mhref[39m=[32m"/consola/clubs/50000000-0000-4000-8000-000000000001/estat"[39m
+        [36m>[39m
+          [0mEstat[0m
+        [36m</a>[39m
+      [36m</nav>[39m
+      [36m<section[39m
+        [33maria-label[39m=[32m"Paràmetres"[39m
+        [33mclass[39m=[32m"console-tab-panel"[39m
+      [36m>[39m
+        [36m<fieldset[39m
+          [33mclass[39m=[32m"console-tab-panel__writes"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"console-form"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"console-message console-message--info"[39m
+              [33mrole[39m=[32m"note"[39m
+            [36m>[39m
+              [0mEls valors del club: els que ha canviat i, la resta, el valor per defecte. Des d'aquí també es poden editar els paràmetres de plataforma.[0m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"console-message console-message--success"[39m
+              [33mrole[39m=[32m"status"[39m
+            [36m>[39m
+              [0mLlindar d'anul·lació tardana («classe feta»): valor desat.[0m
+            [36m</p>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card console-card"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0msystem[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"settings-parameters"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mauth.sessionDays[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+                      [36m>[39m
+                        [0mnomés plataforma[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0mper defecte[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0m30[0m
+                    [36m</strong>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita auth.sessionDays"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mauth.magicLinkMinutes[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+                      [36m>[39m
+                        [0mnomés plataforma[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0mper defecte[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0m15[0m
+                    [36m</strong>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita auth.magicLinkMinutes"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mauth.impersonationMinutes[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+                      [36m>[39m
+                        [0mnomés plataforma[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0mper defecte[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0m60[0m
+                    [36m</strong>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita auth.impersonationMinutes"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mauth.passwordMinLength[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--info"[39m
+                      [36m>[39m
+                        [0mnomés plataforma[0m
+                      [36m</span>[39m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0mper defecte[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0m8[0m
+                    [36m</strong>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita auth.passwordMinLength"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card console-card"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mbookings[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"settings-parameters"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mLlindar d'anul·lació tardana («classe feta»)[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+                      [36m>[39m
+                        [0mvalor del club[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0m4 h[0m
+                    [36m</strong>[39m
+                    [36m<small[39m
+                      [33mclass[39m=[32m"console-muted"[39m
+                    [36m>[39m
+                      [0mPer defecte: 2 h[0m
+                    [36m</small>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita Llindar d'anul·lació tardana («classe feta»)"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card console-card"[39m
+            [36m>[39m
+              [36m<h2>[39m
+                [0mAlta i consentiments[0m
+              [36m</h2>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"settings-parameters"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"settings-parameter console-parameter"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"settings-parameter__main"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span>[39m
+                      [0mAltes públiques[0m
+                      [36m<span[39m
+                        [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+                      [36m>[39m
+                        [0mper defecte[0m
+                      [36m</span>[39m
+                    [36m</span>[39m
+                    [36m<strong>[39m
+                      [0mSí[0m
+                    [36m</strong>[39m
+                  [36m</button>[39m
+                  [36m<button[39m
+                    [33maria-label[39m=[32m"Edita Altes públiques"[39m
+                    [33mclass[39m=[32m"ah-button ah-button--ghost ah-icon-button"[39m
+                    [33mtype[39m=[32m"button"[39m
+                  [36m>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"ah-button__content"[39m
+                    [36m>[39m
+                      [36m<svg[39m
+                        [33maria-hidden[39m=[32m"true"[39m
+                        [33mclass[39m=[32m"ah-icon"[39m
+                      [36m>[39m
+                        [36m<use[39m
+                          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                        [36m/>[39m
+                      [36m</svg>[39m
+                    [36m</span>[39m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</fieldset>[39m
+      [36m</section>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/console/ParametersTab.test.tsx:195:32
+    193|     fireEvent.click(editor.getByRole("button", { name: "DESA" }));
+    194|
+    195|     const error = await screen.findByRole("alert");
+       |                                ^
+    196|     expect(error).toHaveTextContent("error intern");
+    197|     expect(parameterRow(/Llindar d.anul·lació/u)).toBeDisabled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 skipped (5)
+   Start at  13:20:15
+   Duration  11.59s (tests 89%, transform 6%, environment 2%, import 2%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/console/ParametersTab.test.tsx -t failed reread|failed reread, it shows retry|PLATFORM_ONLY keys marked

@@ -771,6 +771,25 @@ export class AuthClient extends EventTarget {
     }
   }
 
+  /**
+   * Ends a one-time impersonated/support session only after the provider accepted its revoke.
+   * Unlike the ordinary logout, a network error or 5xx keeps the bearer and the tab-local
+   * handoff record so an explicit retry can revoke the same grant (S17 R-17-10).
+   */
+  async revokeImpersonation(): Promise<void> {
+    if (this.accessToken === null || (this.impersonation === null && !this.holdsHandoffSession())) {
+      return;
+    }
+    const response = await this.revoke();
+    // A 401 means that this one-time grant has already expired or been ended by the club.
+    if (!response.ok && response.status !== 401) {
+      throw await ApiError.fromResponse(response);
+    }
+    this.leaveImpersonation();
+    this.clearLocalSession();
+    this.emitSignedOut();
+  }
+
   handleRefreshFailure(): void {
     if (this.impersonation !== null) {
       this.handleImpersonationExpired();
