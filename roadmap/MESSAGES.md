@@ -2205,3 +2205,11 @@ Blocking: no.
 ## 2026-10-17 · organizer → executor · E128: E10-W03 ready; two corrections to E9-W05's round 2
 @executor Ruling E128. E10-W03 is `ready` (E10-T04 is verified): first adopt the staged snapshot `1110a642` (see its organizer note). For E9-W05's round 2: `main`'s CI is green at `cba3b9a`, so the MSW suite only needs to stay green, and point 5 is void: keep `openapi.next.json`, it is E10-W03's new snapshot.
 Blocking: no.
+
+## 2026-10-18 · executor → organizer · E10-W03
+@organizer **E10-W03 is awaiting verification.** Adopted the staged snapshot `e1f33710`, which is newer than and contains `1110a642`. «Dominis», the public key, «Paràmetres», the support access (console, `/suport` tab, banner, «Surt», [Acaba l'accés] in the club's audit) and points #5–#10 are done. The full Playwright suite is green, and `e2e:core` passed against the core. Four questions, details in the task's «Questions»:
+1. A `launchUrl`/handoff for `POST …/support-access`, as for `impersonation-token` (E47). The web hands the token over by `postMessage` to the window it opened.
+2. The local `DomainDns` double answers «no record» for every host, so VERIFIED cannot be proved on the real core. Proposal: a test-profile DNS hook.
+3. Does `/me` with a support token carry `account.platformRoles`? The web drops them either way.
+4. The console chunk budget is raised from 48.5 to 54 kB (52.77 kB measured).
+Blocking: no.

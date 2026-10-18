@@ -75,6 +75,7 @@
     "SIGNUP_EDITED": "Preinscripció modificada",
     "SIGNUP_REJECTED": "Preinscripció rebutjada",
     "SIGNUP_SUBMITTED": "Sol·licitud d'alta enviada",
+    "SUPPORT_ACCESS_ENDED": "Accés de suport acabat",
     "SUPPORT_ACCESS_STARTED": "Accés de suport iniciat",
     "TEMPLATE_BAND_DELETED": "Franja de plantilla esborrada",
     "TEMPLATE_CLASS_DELETED": "Classe de plantilla eliminada",
@@ -157,6 +158,17 @@
   "memberCaption": "Entrades d'auditoria de l'abonat",
   "memberTitle": "Auditoria de l'abonat",
   "none": "—",
+  "support": {
+    "alreadyEnded": "Aquest accés ja s'havia acabat.",
+    "end": "Acaba l'accés",
+    "ended": "S'ha acabat l'accés de suport de {name}.",
+    "endFailed": "No s'ha pogut acabar l'accés. Torna-ho a provar.",
+    "ending": "Acabant",
+    "item": "{name}, de l'equip AgilityHub · des del {from} fins al {until}",
+    "reason": "Motiu: {reason}",
+    "title": "Accessos de suport en curs",
+    "unknownActor": "Equip AgilityHub"
+  },
   "origins": {
     "APP": "App",
     "BACKOFFICE": "Backoffice",

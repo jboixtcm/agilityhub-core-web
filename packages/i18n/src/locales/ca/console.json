@@ -20,7 +20,6 @@
     "currencyWarning": "La plantilla cobra en {template} i el club en {club}: les modalitats i els preus no es poden copiar.",
     "description": "Copia nivells, pistes, modalitats amb els preus vigents, preguntes freqüents i plantilles de comunicat d'un club plantilla.",
     "emptyOnly": "Només es copien les parts que el club encara té buides.",
-    "localeFallback": "Alguns textos no existien en l'idioma predeterminat del club: s'hi han copiat des d'un altre idioma. Revisa'ls.",
     "localeWarning": "La plantilla no té textos en {locales}: caldrà completar-los al club.",
     "noTemplates": "No hi ha cap club plantilla.",
     "parts": {
@@ -33,7 +32,11 @@
     "partsLabel": "Què es copia",
     "template": "Club plantilla",
     "templateOption": "{name} · {locales} · {currency}",
-    "title": "Catàlegs base"
+    "title": "Catàlegs base",
+    "warnings": {
+      "DEFAULT_LOCALE_COPIED": "{part}: alguns textos no tenien versió en {defaultLocale} i s'hi ha copiat el text en {from}. Revisa'ls.",
+      "LOCALE_OMITTED": "{part}: els textos en {from} no s'han copiat, perquè el club no fa servir aquest idioma."
+    }
   },
   "checklist": {
     "count": "{done}/{total}",
@@ -71,6 +74,8 @@
   },
   "errors": {
     "catalogNotEmpty": "{part}: el club ja en té. Només es copien les parts buides.",
+    "domainState": "No es pot fer amb un domini en estat «{status}».",
+    "primaryDomain": "És el domini principal de la seva app: abans fes principal un altre domini verificat.",
     "fileTooLarge": "El fitxer és massa gran: com a màxim {maxSizeMb} MB.",
     "generic": "No s'ha pogut completar l'acció. Torna-ho a provar.",
     "moduleDependency": "Per activar {module} cal activar {requires}.",
@@ -275,8 +280,7 @@
     "removeConfirm": "Se n'esborrarà la configuració. Si hi ha abonats que l'utilitzen, no es podrà retirar.",
     "removeTitle": "Retira {name}",
     "sepa": {
-      "creditorId": "Identificador de creditor",
-      "creditorName": "Nom del creditor",
+      "creditorId": "Identificador de creditor",      "creditorName": "Nom del creditor",
       "iban": "IBAN",
       "ibanHelpNew": "Només d'escriptura: un cop desat no es torna a mostrar.",
       "ibanHelpStored": "IBAN desat: {masked}. Deixa-ho en blanc per mantenir-lo.",
@@ -305,6 +309,99 @@
     },
     "writeOnly": "Només d'escriptura: un cop desada no es torna a mostrar.",
     "writeOnlyKept": "Desada. Deixa-ho en blanc per mantenir-la."
+  },
+  "domains": {
+    "add": "Afegeix domini",
+    "added": "S'ha afegit {host}. Crea un dels registres DNS i després verifica'l.",
+    "addHelp": "Escriu el host sense https://, per exemple app.exemple.cat.",
+    "adding": "Afegint",
+    "addTitle": "Afegeix domini",
+    "adminHostsNote": "Un domini del backoffice verificat ja té certificat, però el backoffice no s'hi serveix fins que operacions l'afegeix a la llista de hosts del backoffice i recarrega el servidor.",
+    "app": "App",
+    "apps": {
+      "clubs": "App dels abonats",
+      "clubs-admin": "Backoffice"
+    },
+    "caption": "Dominis del club",
+    "cnameTitle": "Opció 1 · CNAME",
+    "columns": {
+      "actions": "Accions",
+      "app": "App",
+      "host": "Host",
+      "status": "Estat",
+      "verifiedAt": "Verificat"
+    },
+    "description": "Els hosts del club per app. Un domini nou queda pendent fins que se'n verifica el registre DNS.",
+    "dnsIntro": "Crea un d'aquests dos registres al proveïdor de DNS del domini i després fes clic a Verifica. Els canvis de DNS poden trigar uns minuts.",
+    "empty": "El club encara no té cap domini.",
+    "host": "Host",
+    "hostPlaceholder": "app.exemple.cat",
+    "instructionsTitle": "Registres DNS de {host}",
+    "makePrimary": "Fes-lo principal",
+    "makePrimaryLabel": "Fes-lo principal: {host}",
+    "method": {
+      "ADDRESS": "adreça del host",
+      "CNAME": "registre CNAME",
+      "TXT": "registre TXT"
+    },
+    "notVerified": "No s'ha trobat cap dels dos registres DNS de {host}. Comprova'ls i torna-ho a provar d'aquí a uns minuts.",
+    "primary": "principal",
+    "primaryChanged": "{host} és ara el domini principal ({app}).",
+    "recordName": "Nom",
+    "recordType": "Tipus",
+    "recordValue": "Valor",
+    "remove": "Elimina",
+    "removeConfirm": "L'app deixarà d'obrir-se en aquest host. Es pot tornar a afegir més endavant.",
+    "removeConfirmAction": "ELIMINA",
+    "removed": "S'ha eliminat {host}.",
+    "removeLabel": "Elimina {host}",
+    "removeTitle": "Elimina {host}",
+    "removing": "Eliminant",
+    "status": {
+      "BROKEN": "trencat",
+      "PENDING": "pendent",
+      "VERIFIED": "verificat"
+    },
+    "templateClub": "Un club plantilla no té dominis.",
+    "title": "Dominis",
+    "txtTitle": "Opció 2 · TXT",
+    "verified": "S'ha verificat {host} ({method}).",
+    "verify": "Verifica",
+    "verifying": "Verificant",
+    "verifyLabel": "Verifica {host}"
+  },
+  "parameters": {
+    "default": "Per defecte: {value}",
+    "defaultValue": "per defecte",
+    "note": "Els valors del club: els que ha canviat i, la resta, el valor per defecte. Des d'aquí també es poden editar els paràmetres de plataforma.",
+    "override": "valor del club",
+    "platformOnly": "només plataforma",
+    "saved": "{label}: valor desat.",
+    "stale": "Algú l'ha canviat mentrestant: ara val {value}. Si deses, el substitueixes pel teu valor."
+  },
+  "publicKey": {
+    "confirm": "GENERA LA CLAU",
+    "confirmText": "La clau actual deixarà de funcionar d'aquí a 24 hores: abans cal posar la nova al web del club.",
+    "confirmTitle": "Genera una clau d'API nova",
+    "copied": "Copiada",
+    "copy": "Copia",
+    "description": "La clau amb què el web del club llegeix el calendari i les activitats públiques. Només es mostra un cop: una clau nova substitueix l'anterior, que continua funcionant 24 hores.",
+    "generate": "Genera una clau nova",
+    "generating": "Generant la clau",
+    "keyLabel": "Clau d'API pública nova",
+    "shownOnce": "Copia-la ara: no es tornarà a mostrar.",
+    "title": "Clau d'API pública"
+  },
+  "support": {
+    "description": "Obre el backoffice del club en una pestanya nova, com a administrador i durant un temps limitat. Totes les accions queden a l'auditoria del club, i no s'hi poden veure IBAN complets ni exportar dades personals.",
+    "enter": "Entra com a administrador del club",
+    "entering": "Obrint l'accés",
+    "granted": "S'ha obert el backoffice del club en una pestanya nova. L'accés dura fins al {until}.",
+    "noAdminHost": "El club no té cap domini del backoffice verificat: afegeix-ne un a la pestanya Dominis.",
+    "opensHost": "S'obrirà {host}.",
+    "popupBlocked": "El navegador no ha deixat obrir la pestanya nova. Permet les finestres emergents per a aquesta pàgina i torna-ho a provar.",
+    "reason": "Motiu de l'accés",
+    "title": "Accés de suport"
   },
   "presets": {
     "CANIC": "Com el club pilot",
@@ -362,6 +459,7 @@
   "tabs": {
     "auditoria": "Auditoria",
     "catalegs": "Catàlegs base",
+    "dominis": "Dominis",
     "equip": "Equip",
     "estat": "Estat",
     "identitat": "Identitat",
@@ -369,6 +467,7 @@
     "localitzacio": "Localització",
     "moduls": "Mòduls",
     "pagaments": "Pagaments",
+    "parametres": "Paràmetres",
     "processos": "Processos",
     "tema": "Tema",
     "us": "Ús"

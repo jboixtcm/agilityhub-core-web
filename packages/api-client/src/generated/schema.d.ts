@@ -50,7 +50,7 @@ export interface paths {
         put?: never;
         /**
          * Request account erasure
-         * @description S14 §6. Global account erasure request; AGILITYHUB_ADMIN only, no request tenant.
+         * @description S14 R-14-14. Global account erasure (scope ACCOUNT, every membership); AGILITYHUB_ADMIN only, no request tenant. The checks of every club of the account's members, plus no ACTIVE membership left (OTHER_MEMBERSHIPS_ACTIVE): 422 ERASURE_BLOCKED {reasons[]}. A live request, or an erased account, is 409 ERASURE_ALREADY_REQUESTED; an unknown account 404. An account without members is erased at once (ERASING).
          */
         post: operations["requestAccountErasure"];
         delete?: never;
@@ -478,7 +478,7 @@ export interface paths {
         put?: never;
         /**
          * Register an uploaded attachment
-         * @description Roles: INSTRUCTOR_NOTE → the dog's owner, MEMBER (also the impersonation token, audited; an account with MEMBER and a staff role that owns the dog too, S01 R-01-07; staff otherwise → 403); TASK (a live task) and DOG_OBSERVATIONS (a dog) → INSTRUCTOR, ADMIN (MEMBER → 403, impersonation → IMPERSONATION_DENIED), TASKS required. R-10-11: the same fileKey again → the same attachment and no second AttachmentAdded; at most files.maxAttachmentsPerEntity live ones per entity → ATTACHMENT_LIMIT_REACHED{max}; a fileKey whose upload purpose is not the entityType (e.g. DOG_DOCUMENT) or another account's → ATTACHMENT_ENTITY_MISMATCH; the stored object must match the upload (FILE_TOO_LARGE, FILE_TYPE_NOT_ALLOWED); name ≤ 80. AttachmentAdded, and a task's attachmentCount + 1. Two simultaneous registrations on one entity are serialized: at the limit, the second → ATTACHMENT_LIMIT_REACHED. An optional Idempotency-Key (S10 §6, CONVENCIONS_API §7) replays the same 201 body; the same key with another body → IDEMPOTENCY_KEY_REUSED. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
+         * @description Roles: INSTRUCTOR_NOTE → the dog's owner, MEMBER (also the impersonation token, audited; an account with MEMBER and a staff role that owns the dog too, S01 R-01-07; staff otherwise → 403); TASK (a live task) and DOG_OBSERVATIONS (a dog) → INSTRUCTOR, ADMIN (MEMBER → 403, impersonation → IMPERSONATION_DENIED), TASKS required. R-10-11: the same fileKey again → the same attachment and no second AttachmentAdded; at most files.maxAttachmentsPerEntity live ones per entity → ATTACHMENT_LIMIT_REACHED{max}; a fileKey whose upload purpose is not the entityType (e.g. DOG_DOCUMENT) or another account's → ATTACHMENT_ENTITY_MISMATCH; the stored object must match the upload (FILE_TOO_LARGE, FILE_TYPE_NOT_ALLOWED); name ≤ 80. AttachmentAdded, and a task's attachmentCount + 1. Two simultaneous registrations on one entity are serialized: at the limit, the second → ATTACHMENT_LIMIT_REACHED. An optional Idempotency-Key (S10 §6, CONVENCIONS_API §7) replays the same 201 body; the same key with another body → IDEMPOTENCY_KEY_REUSED. The reused dog of a pending readmission (S04 R-04-06, E38) is frozen: 409 INVALID_STATE with details.reason = READMISSION_PENDING; an upload whose grant expired before it was registered → 409 INVALID_STATE with details.reason = UPLOAD_EXPIRED.
          */
         post: operations["add"];
         delete?: never;
@@ -2853,7 +2853,7 @@ export interface paths {
         get?: never;
         /**
          * switchJob
-         * @description Roles: ADMIN. Writes jobs.<name>.enabled through the parameter service (ParameterChanged, audited PARAMETER_CHANGED). Tenant comes from the JWT.
+         * @description Roles: ADMIN. Writes jobs.<name>.enabled through the parameter service (ParameterChanged, audited PARAMETER_CHANGED). S14's erasures and retention-sweep have no switch (a legal duty): 404 JOB_UNKNOWN {reason: NO_SWITCH}. Tenant comes from the JWT.
          */
         put: operations["switchJob"];
         post?: never;
@@ -2874,7 +2874,7 @@ export interface paths {
         put?: never;
         /**
          * triggerJob
-         * @description Roles: ADMIN. [Simula] (dryRun true: only the plan, actions WOULD_*, nothing written but the JobRun) or [Executa ara]; synchronous, also when the switch is off; audited JOB_TRIGGERED (R-15-09). Tenant comes from the JWT.
+         * @description Roles: ADMIN. [Simula] (dryRun true: only the plan, actions WOULD_*, nothing written but the JobRun) or [Executa ara]; synchronous, also when the switch is off; audited JOB_TRIGGERED (R-15-09). An optional Idempotency-Key answers its own run to a retry whose answer was lost, without running again (CONVENCIONS_API §7, E75). Tenant comes from the JWT.
          */
         post: operations["triggerJob"];
         delete?: never;
@@ -3186,7 +3186,7 @@ export interface paths {
         put?: never;
         /**
          * Export my data
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented.
+         * @description S14 R-14-13. The caller's own data package (as POST /members/{id}/data-export, always delivered: N-50 when ready). One every 24 hours (DATA_EXPORT_TOO_SOON, catalog 422); an impersonation token is 403 IMPERSONATION_DENIED. Only its owner reads the job (GET /exports/{id}); another member gets 404. Tenant comes from the JWT.
          */
         post: operations["exportMyData"];
         delete?: never;
@@ -3598,7 +3598,7 @@ export interface paths {
         put?: never;
         /**
          * readAllNotifications
-         * @description Roles: MEMBER, INSTRUCTOR, ADMIN, and the impersonation token. Entering screen 11 marks every notification of the caller created until now read (DECISIONS_PENDENTS part C S11; idempotent); the bell of 03 goes out. Tenant comes from the JWT.
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN, and the impersonation token. Entering screen 11 marks every notification of the caller created until now read (DECISIONS_PENDENTS part C S11; idempotent); the bell of 03 goes out. INC-53: the optional upTo (the instant screen 11 was read) marks only those created until then, so a retry sent later never marks read a notice the member has not seen; a bound in the future is now; a value that is not an instant → 400 VALIDATION_ERROR. Tenant comes from the JWT.
          */
         post: operations["readAllNotifications"];
         delete?: never;
@@ -4020,7 +4020,7 @@ export interface paths {
         };
         /**
          * Member consents
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S14 R-14-18. The member's full consent history (S04's append-only ledger), oldest first; it survives an erasure. Tenant comes from the JWT; another club's member is 404. ADMIN endpoints reject impersonation.
          */
         get: operations["memberConsents"];
         put?: never;
@@ -4042,7 +4042,7 @@ export interface paths {
         put?: never;
         /**
          * Export member data
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S14 R-14-13. Queues the member's data package (ExportJob MEMBER_DATA, ZIP: data.json memberData.v1, resum.pdf, fitxers/), always asynchronous; GET /exports/{id} follows it and gives a signed link for 7 days. One per member every 24 hours (DATA_EXPORT_TOO_SOON, catalog 422). deliverToMember sends N-50 to the member when it is ready; audited MEMBER_DATA_EXPORTED. An erased member is 409 MEMBER_ERASED. Tenant comes from the JWT; another club's member is 404. ADMIN endpoints reject impersonation.
          */
         post: operations["exportMemberData"];
         delete?: never;
@@ -4060,18 +4060,18 @@ export interface paths {
         };
         /**
          * Member erasure
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S14 §6. The member's live request (SCHEDULED, BLOCKED with its blockReasons, or ERASING); none is 404. Tenant comes from the JWT; another club's member is 404. ADMIN endpoints reject impersonation.
          */
         get: operations["memberErasure"];
         put?: never;
         /**
          * Request member erasure
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S14 R-14-14. Checks first (LEFT member, no open invoice or upfront payment, no future booking): any failure is 422 ERASURE_BLOCKED {reasons[]} and nothing is created. SCHEDULED at max(now, leaveDate + rgpd.erasureMinDaysAfterLeave); one live request per member (409 ERASURE_ALREADY_REQUESTED); an erased member is 409 MEMBER_ERASED. Emits AccountErasureRequested (N-52 to the account), audited ERASURE_REQUESTED. Tenant comes from the JWT; another club's member is 404. ADMIN endpoints reject impersonation.
          */
         post: operations["requestMemberErasure"];
         /**
          * Cancel member erasure
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description S14 R-14-14. SCHEDULED or BLOCKED → CANCELLED, audited ERASURE_CANCELLED; ERASING (or the console's account request) is 409 INVALID_STATE; no live request is 404. Tenant comes from the JWT. ADMIN endpoints reject impersonation.
          */
         delete: operations["cancelMemberErasure"];
         options?: never;
@@ -4934,7 +4934,7 @@ export interface paths {
         put?: never;
         /**
          * platformTriggerJob
-         * @description Roles: AGILITYHUB_ADMIN. Same execution as POST /jobs/{name}/trigger inside the club scope; audited JOB_TRIGGERED.
+         * @description Roles: AGILITYHUB_ADMIN. Same execution as POST /jobs/{name}/trigger inside the club scope; audited JOB_TRIGGERED. An optional Idempotency-Key answers its own run to a retry (CONVENCIONS_API §7, E75).
          */
         post: operations["platformTriggerJob"];
         delete?: never;
@@ -5103,7 +5103,7 @@ export interface paths {
         post?: never;
         /**
          * deletePlatformDomain
-         * @description S17 §5. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Only a PENDING domain is removed; a VERIFIED or BROKEN one answers 409 INVALID_STATE {status}. An unknown host of the club is 404 NOT_FOUND. Audited CLUB_DOMAIN_CHANGED.
+         * @description S17 §5. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. A PENDING, VERIFIED or BROKEN domain is removed, and Caddy's ask and GET /branding stop accepting it once the write commits; the primary domain of its app answers 409 INVALID_STATE {status, primary: true} until another domain is made primary (PUT …/domains/{host}/primary). An unknown host of the club is 404 NOT_FOUND. Audited CLUB_DOMAIN_CHANGED.
          */
         delete: operations["deletePlatformDomain"];
         options?: never;
@@ -5142,7 +5142,7 @@ export interface paths {
         put?: never;
         /**
          * verifyPlatformDomain
-         * @description S17 R-17-03. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Looks up (a) a CNAME from the host to verification.cnameTarget, else (b) the TXT record verification.recordName = verification.recordValue. Found: the domain is VERIFIED (verifiedAt, the challenge removed), the primary one of its app when the app has no verified primary yet, Caddy's ask (GET /internal/domains/allowed) accepts it and GET /branding resolves it; publishes ClubDomainVerified and ClubUpdated, audited CLUB_DOMAIN_CHANGED. Not found: 422 HOST_NOT_VERIFIED {host, cnameTarget, recordName, recordValue} (the records it expects; the TXT pair is null without a challenge), nothing changes and the key is released, so a retry checks again. A VERIFIED domain answers 409 INVALID_STATE {status}. The DNS lookup runs before the write's transaction.
+         * @description S17 R-17-03. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Looks up (a) a CNAME from the host to verification.cnameTarget, else (b) the TXT record verification.recordName = verification.recordValue. Found: the domain is VERIFIED (verifiedAt, the challenge removed), the primary one of its app when the app has no verified primary yet, Caddy's ask (GET /internal/domains/allowed) accepts it and GET /branding resolves it; publishes ClubDomainVerified and ClubUpdated, audited CLUB_DOMAIN_CHANGED. Not found: 422 HOST_NOT_VERIFIED {host, cnameTarget, recordName, recordValue} (the records it expects; the TXT pair is null without a challenge), nothing changes and the key is released, so a retry checks again. A VERIFIED domain answers 409 INVALID_STATE {status}. A BROKEN domain (S15 P9's re-check failed three times in a row) also passes when the host shares an address with verification.cnameTarget (method ADDRESS: an apex domain has no CNAME and no challenge left). The DNS lookup runs before the write's transaction. A verified clubs-admin domain gets its certificate at once, but Caddy serves the back-office app on it only after the host is added to CLUB_ADMIN_HOSTS and Caddy is reloaded (docs/DEPLOY.md, «Alta d'un domini de club»; choosing the app from the domain is INC-64); until then the host serves the members' app.
          */
         post: operations["verifyPlatformDomain"];
         delete?: never;
@@ -5428,7 +5428,7 @@ export interface paths {
         };
         /**
          * Platform erasure requests
-         * @description Contract only; implementation is deferred. Tenant comes from the JWT. Role-reduced projections and ownership checks apply when implemented. No fields parameter until then (CONVENCIONS_API §4).
+         * @description S14 §6 / S17. Every erasure request, newest first; clubId filters the clubs a request covers, clubId:exists:false the platform's account requests. Ids, states and dates only, so no free-text search (a non-blank q is 400 INVALID_FILTER).
          */
         get: operations["platformErasureRequests"];
         put?: never;
@@ -5904,7 +5904,7 @@ export interface paths {
         };
         /**
          * getRingSetup
-         * @description Roles: MEMBER, INSTRUCTOR, ADMIN. Module: COURSES. R-16-09: INSTRUCTOR and ADMIN read any setup of the club (view STAFF); a MEMBER (impersonation included) reads only an ACTIVE one while courses.showSetupToMembers (else NOT_FOUND), without builtByAccountId, dismantledByAccountId or notes (view MEMBER). imageUrl is a short-lived signed URL of imageFileKey.
+         * @description Roles: MEMBER, INSTRUCTOR, ADMIN. Module: COURSES. R-16-09: INSTRUCTOR and ADMIN read any setup of the club (view STAFF, with builtByName: who built it, S16 §2); a MEMBER (impersonation included) reads only an ACTIVE one while courses.showSetupToMembers (else NOT_FOUND), without builtByAccountId, builtByName, dismantledByAccountId or notes (view MEMBER). The MEMBER view's courseId is the course the setup shows (its own, else its placement's), which R-16-16 lets the member read with GET /courses/{id}, and its placement is where that placement stands on the ring (transform, resolvedObstacles, the ring's size) (E9-T07). imageUrl is a short-lived signed URL of imageFileKey.
          */
         get: operations["getRingSetup"];
         put?: never;
@@ -6008,7 +6008,7 @@ export interface paths {
         };
         /**
          * Get ring
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation.
+         * @description Tenant comes from the JWT; impersonation is rejected. ADMIN reads the whole ring; INSTRUCTOR reads it too, as S16 §6 lets it read the ring's geometry (E9-T07), in the reader projection of S05 §6 (RingReaderView: no trainingCapacity, usage or lastChange). Writes stay ADMIN.
          */
         get: operations["getRing"];
         put?: never;
@@ -6315,6 +6315,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/support-accesses/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * endSupportAccess
+         * @description S17 R-17-10. Roles: ADMIN of the club (MEMBER, INSTRUCTOR → 403; an impersonation token → 403; a support token → 403 SUPPORT_RESTRICTED: the platform ends its own access with POST /oauth2/revoke). No module. Ends a live support access of the AgilityHub team to this club: {id} is the grant, the entityId of its SUPPORT_ACCESS_STARTED audit entry (GET /audit-entries?filter=action:eq:SUPPORT_ACCESS_STARTED; details.expiresAt says until when it lives). Its token answers 401 from its next request. Audited SUPPORT_ACCESS_ENDED (entityType ImpersonationGrant, details.actorAccountId = the platform account), also listed in the platform's audit; publishes SupportAccessEnded{clubId, actorAccountId}. Another club's access, a member impersonation or an unknown id → 404 NOT_FOUND; an access already ended or expired → 409 INVALID_STATE {status: ENDED | EXPIRED}. No body.
+         */
+        delete: operations["endSupportAccess"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/tasks": {
         parameters: {
             query?: never;
@@ -6330,7 +6350,7 @@ export interface paths {
         put?: never;
         /**
          * createTask
-         * @description Roles: INSTRUCTOR, ADMIN (MEMBER → 403; impersonation → IMPERSONATION_DENIED). «＋ Afegir» (R-10-10): the dog must be ACTIVE (DOG_NOT_ACTIVE); text 1–2000; attachmentIds are the fileKeys of the caller's TASK uploads, registered in the same Mongo transaction as the task, its D14 row and TaskCreated (→ N-20 to the owner): a refused one (ATTACHMENT_LIMIT_REACHED, ATTACHMENT_ENTITY_MISMATCH, …) leaves no task. Same Idempotency-Key → same 201. Requires TASKS (MODULE_DISABLED). Tenant comes from the JWT.
+         * @description Roles: INSTRUCTOR, ADMIN (MEMBER → 403; impersonation → IMPERSONATION_DENIED). «＋ Afegir» (R-10-10): the dog must be ACTIVE (DOG_NOT_ACTIVE); text 1–2000; attachmentIds are the fileKeys of the caller's TASK uploads, registered in the same Mongo transaction as the task, its D14 row and TaskCreated (→ N-20 to the owner): a refused one (ATTACHMENT_LIMIT_REACHED, ATTACHMENT_ENTITY_MISMATCH, an upload whose grant expired before it was registered → 409 INVALID_STATE with details.reason = UPLOAD_EXPIRED, …) leaves no task. Same Idempotency-Key → same 201. Requires TASKS (MODULE_DISABLED). Tenant comes from the JWT.
          */
         post: operations["createTask"];
         delete?: never;
@@ -6586,7 +6606,7 @@ export interface paths {
         put?: never;
         /**
          * joinWaitlist
-         * @description Roles: MEMBER (also the impersonation token). R-08-12: the class must be full by bookings alone (CLASS_NOT_FULL otherwise), the booking eligibility chain runs, then waitlist.maxPerClass, waitlist.maxPerDogPerWeek / maxPerDogPerWeekIfAttended (details WAITLIST_LIMIT{scope: CLASS|DOG_WEEK}) and the seat must be acceptable (BOOKING_LIMIT_REACHED). Requires WAITLIST. Tenant comes from the JWT.
+         * @description Roles: MEMBER (also the impersonation token). R-08-12: the class must be full by bookings alone (CLASS_NOT_FULL otherwise), the booking eligibility chain runs, then waitlist.maxPerClass, waitlist.maxPerDogPerWeek / maxPerDogPerWeekIfAttended (details WAITLIST_LIMIT{scope: CLASS|DOG_WEEK}) and the seat must be acceptable (BOOKING_LIMIT_REACHED). Requires WAITLIST. Joins of one class are serialised by its seat lock, so a dog is never twice on the list (ALREADY_ON_WAITLIST). An optional Idempotency-Key replays the same 201 to a retry whose answer was lost (CONVENCIONS_API §7). Tenant comes from the JWT.
          */
         post: operations["joinWaitlist"];
         delete?: never;
@@ -6646,7 +6666,7 @@ export interface paths {
         put?: never;
         /**
          * claimSeat
-         * @description Roles: MEMBER (own or family group, also the impersonation token). R-08-15: the entry must be NOTIFIED (FIFO: confirmBy > now) and the seat hold taken with its waitlistEntryId; then the same transaction as R-08-08 (checks, swap with swapBookingId, BR-01) plus entry → CONSOLIDATED and WaitlistConsolidated; in ALL_AT_ONCE the last seat sends the other NOTIFIED entries back to ACTIVE. Waiting-list limits do not apply. Idempotency-Key: a repeated key returns the same response, also a 409/422. Requires WAITLIST. Tenant comes from the JWT.
+         * @description Roles: MEMBER (own or family group, also the impersonation token). R-08-15: the entry must be NOTIFIED (FIFO: confirmBy > now) and the seat hold taken with its waitlistEntryId; then the same transaction as R-08-08 (checks, swap with swapBookingId, BR-01) plus entry → CONSOLIDATED and WaitlistConsolidated; in ALL_AT_ONCE the last seat sends the other NOTIFIED entries back to ACTIVE. Waiting-list limits do not apply. Idempotency-Key: as R-08-08's, one UUID per request body (a swap included); a repeated key returns the same response, also a 409/422 (INC-42). Requires WAITLIST. Tenant comes from the JWT.
          */
         post: operations["claimSeat"];
         delete?: never;
@@ -7673,6 +7693,10 @@ export interface components {
             sizeBytes: number;
             /** Format: date-time */
             uploadedAt: string;
+            /**
+             * Format: uri-reference
+             * @description A path of the api on the local store, an absolute URL on S3 (INC-53)
+             */
             url: string;
         };
         AttachmentLimitReachedDetails: {
@@ -7802,7 +7826,7 @@ export interface components {
             SMS: boolean;
         };
         /** @enum {string} */
-        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
+        AuditAction: "MEMBER_VALIDATED" | "SIGNUP_REJECTED" | "SIGNUP_EDITED" | "SIGNUP_SUBMITTED" | "MEMBER_UPDATED" | "MEMBER_PAYMENT_METHOD_CHANGED" | "MEMBER_STATUS_CHANGED" | "MEMBER_ROLES_CHANGED" | "MEMBER_CONSENT_CHANGED" | "BOOKING_BLOCK_SET" | "BOOKING_BLOCK_CLEARED" | "ACCESS_RESENT" | "DOG_UPDATED" | "DOG_LEVEL_CHANGED" | "DOG_FREE_TRAINING_CHANGED" | "DOG_TRANSFERRED" | "DOG_DEACTIVATED" | "DOG_REACTIVATED" | "DOG_DOCUMENT_FILE_REMOVED" | "FAMILY_GROUP_CHANGED" | "MEMBER_PLAN_CHANGED" | "INVOICE_MARKED_PAID" | "INVOICE_MARKED_FAILED" | "INVOICE_CANCELLED" | "REMITTANCE_GENERATED" | "REMITTANCE_ROLLED_BACK" | "UPFRONT_PAYMENT_RECORDED" | "PAYMENT_REFUNDED" | "PAYMENT_REFUND_INTERVENTION" | "PACK_ADJUSTED" | "INVOICE_CREATED_MANUAL" | "REMITTANCE_SUBMITTED" | "CARD_CHARGES_STARTED" | "IMPERSONATION_STARTED" | "ACCOUNT_EMAIL_STATUS_CHANGED" | "PLATFORM_ROLES_CHANGED" | "BOOKING_CREATED_BY_CLUB" | "BOOKING_CANCELLED_BY_CLUB" | "BOOKING_CANCELLED_LATE" | "TRAINING_BOOKED_BY_CLUB" | "TRAINING_CANCELLED_BY_CLUB" | "ATTENDANCE_OVERRIDDEN" | "JOB_TRIGGERED" | "WEEK_VALIDATED" | "CLASS_CANCELLED" | "CLASS_UPDATED_WITH_BOOKINGS" | "CLASS_RISK_EXEMPTION_CHANGED" | "RING_BLOCK_CREATED" | "RING_BLOCK_CANCELLED" | "TEMPLATE_CLASS_DELETED" | "TEMPLATE_BAND_DELETED" | "ACTIVITY_PUBLISHED" | "ACTIVITY_CANCELLED" | "ACTIVITY_UPDATED" | "ACTIVITY_REGISTERED_BY_CLUB" | "ACTIVITY_REGISTRATION_CANCELLED_BY_CLUB" | "INACTIVITY_RESOLVED" | "LEAVE_RESOLVED" | "LEAVE_CANCELLED" | "PARAMETER_CHANGED" | "CLUB_UPDATED" | "CLUB_MODULES_CHANGED" | "CLUB_STATUS_CHANGED" | "CLUB_CREATED" | "CLUB_PAYMENT_PROVIDER_CHANGED" | "CLUB_ADMIN_INVITED" | "CLUB_DOMAIN_CHANGED" | "SUPPORT_ACCESS_STARTED" | "SUPPORT_ACCESS_ENDED" | "PUBLIC_API_KEY_ROTATED" | "CATALOG_CHANGED" | "MIGRATION_APPLIED" | "ANNOUNCEMENT_SENT" | "DATA_EXPORTED" | "MEMBER_DATA_EXPORTED" | "ERASURE_REQUESTED" | "ERASURE_CANCELLED" | "MEMBER_ERASED" | "ACCOUNT_ERASED" | "ONBOARDING_COMPLETED" | "COURSE_FORCED_PLACEMENT" | "RING_GEOMETRY_CHANGED" | "RING_SETUP_REGISTERED";
         /** @description Values are masked by the audit writer. */
         AuditChange: {
             after: unknown;
@@ -8031,7 +8055,7 @@ export interface components {
         };
         BookedBy: {
             displayName: string;
-            /** @description True when the reader's own account made the booking (07: «Reservada el…» instead of «Reservada per {displayName} el…») */
+            /** @description True when the reader's own account made the booking (07: «Reservada el…» instead of «Reservada per {displayName} el…»). For the member's screens: an ADMIN or INSTRUCTOR reading with their own token a booking they made (also one made impersonating) reads true together with viaClub (INC-42) */
             self: boolean;
             /** @description True when booked by the club (BACKOFFICE) */
             viaClub: boolean;
@@ -9865,6 +9889,11 @@ export interface components {
             source?: "SMARTER" | "EDITOR" | "IMAGE" | "AGILITYHUB_COPY";
             stats?: components["schemas"]["CourseStats"];
             thumbnailUrl?: string | null;
+            /**
+             * Format: date-time
+             * @description The course's last change (D18's date column, S16 §2; INC-62)
+             */
+            updatedAt?: string;
         };
         CourseModelInvalidDetails: {
             schemaErrors: components["schemas"]["SchemaError"][];
@@ -10344,8 +10373,11 @@ export interface components {
         DomainVerification: {
             /** Format: date-time */
             checkedAt: string;
-            /** @enum {string} */
-            method: "CNAME" | "TXT";
+            /**
+             * @description How the domain was found: CNAME to cnameTarget, the TXT challenge, or ADDRESS (E10-T03: a BROKEN domain, verified once and without a challenge left, that shares an address with cnameTarget, as S15 P9's re-check of an apex domain).
+             * @enum {string}
+             */
+            method: "CNAME" | "TXT" | "ADDRESS";
             /** @enum {string} */
             status: "PENDING" | "VERIFIED" | "BROKEN";
         };
@@ -10433,7 +10465,7 @@ export interface components {
         ExportAccepted: {
             /** Format: uuid */
             jobId: string;
-            /** Format: uri */
+            /** Format: uri-reference */
             statusUrl: string;
         };
         ExportError: {
@@ -10620,6 +10652,11 @@ export interface components {
              * @description Task creation or last note change; completing does not move it
              */
             activityAt?: string;
+            /**
+             * Format: int64
+             * @description INC-53: the row's live attachments (a task's TASK files; a member note's INSTRUCTOR_NOTE files of the dog)
+             */
+            attachmentCount?: number;
             /**
              * @description Only MEMBER_NOTE rows: the gender of the member who wrote the note, as it was then (never the dog's current owner), for the author label «Laura (alumna)» (S10 §3, §6, §10)
              * @enum {string|null}
@@ -11430,7 +11467,7 @@ export interface components {
             /** Format: date-time */
             finishedAt?: string | null;
             /** @enum {string} */
-            job: "WEEK_OPENING" | "RISK_REVIEW" | "NO_SHOW_NOTICES" | "REMINDERS" | "EXPIRATIONS" | "WAITLIST_FIFO" | "PAYMENT_TIMEOUTS" | "CLASS_FINISHING" | "CLEANUP" | "BILLING_REMINDER";
+            job: "WEEK_OPENING" | "RISK_REVIEW" | "NO_SHOW_NOTICES" | "REMINDERS" | "EXPIRATIONS" | "WAITLIST_FIFO" | "PAYMENT_TIMEOUTS" | "CLASS_FINISHING" | "CLEANUP" | "BILLING_REMINDER" | "ERASURES" | "RETENTION_SWEEP";
             /** @description Values of the parameters the run read, for example classes.minDogs */
             parametersSnapshot: {
                 [key: string]: unknown;
@@ -11492,7 +11529,7 @@ export interface components {
         JobSummary: {
             enabled: boolean;
             /** @enum {string} */
-            jobName: "WEEK_OPENING" | "RISK_REVIEW" | "NO_SHOW_NOTICES" | "REMINDERS" | "EXPIRATIONS" | "WAITLIST_FIFO" | "PAYMENT_TIMEOUTS" | "CLASS_FINISHING" | "CLEANUP" | "BILLING_REMINDER";
+            jobName: "WEEK_OPENING" | "RISK_REVIEW" | "NO_SHOW_NOTICES" | "REMINDERS" | "EXPIRATIONS" | "WAITLIST_FIFO" | "PAYMENT_TIMEOUTS" | "CLASS_FINISHING" | "CLEANUP" | "BILLING_REMINDER" | "ERASURES" | "RETENTION_SWEEP";
             lastRun?: components["schemas"]["JobLastRun"] | null;
             /** @enum {string|null} */
             module?: "FREE_TRAINING" | "BILLING" | "PACKS" | "SINGLE_CLASS" | "ACTIVITIES" | "FAMILY_GROUP" | "WAITLIST" | "TASKS" | "FAQ" | "SMS" | "PUSH" | "INACTIVITY" | "COURSES" | "LEARN_LINK" | "STATS" | "SOCIAL_LEAGUE" | null;
@@ -11938,6 +11975,18 @@ export interface components {
             /** Format: int32 */
             totalPages: number;
         };
+        ListPagePlatformAuditEntry: {
+            appliedFilters: components["schemas"]["Filter"][];
+            items: components["schemas"]["PlatformAuditEntry"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalItems: number;
+            /** Format: int32 */
+            totalPages: number;
+        };
         ListPageRingBlockListItem: {
             appliedFilters: components["schemas"]["Filter"][];
             items: components["schemas"]["RingBlockListItem"][];
@@ -12277,11 +12326,15 @@ export interface components {
             /** Format: uuid */
             accountId?: string | null;
             accountMissing?: boolean;
-            address: components["schemas"]["Address"];
+            /** @description null only for an erased member (S14 R-14-15) */
+            address?: components["schemas"]["Address"] | null;
             /** Format: uuid */
             billedViaMemberId?: string | null;
-            /** Format: date */
-            birthDate: string;
+            /**
+             * Format: date
+             * @description null only for an erased member (S14 R-14-15)
+             */
+            birthDate?: string | null;
             bookingBlock: components["schemas"]["BookingBlock"];
             consents?: components["schemas"]["MemberConsents"] | null;
             contactEmails: components["schemas"]["ContactEmail"][];
@@ -12539,6 +12592,7 @@ export interface components {
             agilityhubLevel?: "EASY" | "MEDIUM" | "HARD" | null;
             /** Format: date-time */
             builtAt: string;
+            /** @description R-16-16 (E9-T07): the course the setup shows, which the member reads with GET /courses/{id}: its own, else its placement's; null when it shows none or that course was deleted */
             courseId?: string | null;
             /** Format: date-time */
             createdAt: string;
@@ -12554,6 +12608,8 @@ export interface components {
             /** @enum {string} */
             kind: "AGILITY" | "JUMPING" | "FUN" | "OBSTACLE_DRILL" | "EMPTY";
             levelIds: string[];
+            /** @description E9-T07: where the setup's placement stands on the ring, so the members' viewer draws its course in the ring's frame; null for a setup without a placement */
+            placement?: components["schemas"]["MemberSetupPlacement"] | null;
             placementId?: string | null;
             ringId: string;
             /** @enum {string} */
@@ -12563,6 +12619,20 @@ export interface components {
              * @enum {string}
              */
             view: "MEMBER";
+        };
+        MemberSetupPlacement: {
+            resolvedObstacles: components["schemas"]["ResolvedObstacle"][];
+            /**
+             * Format: double
+             * @description the ring geometry's lengthM; null without a geometry
+             */
+            ringLengthM?: number | null;
+            /**
+             * Format: double
+             * @description the ring geometry's widthM; null without a geometry
+             */
+            ringWidthM?: number | null;
+            transform: components["schemas"]["PlacementTransform"];
         };
         MemberSignupView: {
             dogs: components["schemas"]["SignupDogView"][];
@@ -12690,7 +12760,7 @@ export interface components {
             /** @description Last audited change (CATALOG_CHANGED, R-14-11); null when never edited */
             lastChange?: components["schemas"]["LastChange"];
             matrix: components["schemas"]["ChannelMatrix"];
-            /** @description The title in the admin's language */
+            /** @description INC-53: CATALOG → the product name of CATALEG_NOTIFICACIONS («Nom») in the admin's language; CUSTOM → the title the club gave it, in the admin's language */
             name: string;
             /** @description Audiences with a web push (fixed by the code; the Push column of D9 is informative, PUSH module) */
             push: components["schemas"]["NotificationAudience"][];
@@ -12819,6 +12889,8 @@ export interface components {
         NotificationListItem: {
             /** @description null on a row written before E7-T02 that does not tell it */
             audience?: components["schemas"]["NotificationAudience"] | null;
+            /** @description INC-53: the announcement batch of an N-24 or CUSTOM row (AnnouncementSent); null otherwise */
+            batchId?: string | null;
             category?: components["schemas"]["NotificationCategory"];
             /** @description One per delivery */
             channels?: components["schemas"]["ChannelState"][];
@@ -13176,8 +13248,11 @@ export interface components {
         ParameterHistoryEntry: {
             /** Format: date-time */
             changedAt: string;
-            /** Format: uuid */
-            changedByAccountId: string;
+            /**
+             * Format: uuid
+             * @description null for a change written by the platform (a club definition, a migration), not by an account (INC-08)
+             */
+            changedByAccountId: string | null;
             reason?: string;
             value: unknown;
         };
@@ -13630,6 +13705,35 @@ export interface components {
             /** Format: email */
             email: string;
             name: string;
+        };
+        PlatformAuditEntry: {
+            action: components["schemas"]["AuditAction"];
+            /** Format: uuid */
+            actorAccountId?: string | null;
+            actorName?: string | null;
+            /** @enum {string} */
+            actorRole: "ADMIN" | "INSTRUCTOR" | "MEMBER" | "SYSTEM" | "PLATFORM" | "WEBHOOK";
+            /** Format: date-time */
+            at: string;
+            changes: components["schemas"]["AuditChange"][];
+            /** Format: uuid */
+            clubId?: string | null;
+            details?: {
+                [key: string]: unknown;
+            } | null;
+            entityId: string;
+            entityLabel?: string | null;
+            entityType: string;
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            impersonatedMemberId?: string | null;
+            impersonatedName?: string | null;
+            /** Format: uuid */
+            memberId?: string | null;
+            /** @enum {string} */
+            origin: "APP" | "BACKOFFICE" | "SYSTEM" | "WEBHOOK" | "PUBLIC" | "PLATFORM_SUPPORT";
+            reason?: string | null;
         };
         PlatformClub: {
             address?: components["schemas"]["ClubAddress"] | null;
@@ -14248,7 +14352,7 @@ export interface components {
         };
         /** @description A short-lived signed URL of the pain.008 XML; its download answers Content-Disposition attachment with fileName */
         RemittanceFile: {
-            /** Format: uri */
+            /** Format: uri-reference */
             downloadUrl: string;
             /** Format: date-time */
             expiresAt: string;
@@ -14474,6 +14578,16 @@ export interface components {
             /** Format: int64 */
             version: number;
         };
+        RingBooking: {
+            bookingId: string;
+            dogName: string;
+            /** Format: date-time */
+            from: string;
+            memberName: string;
+            ringId: string;
+            /** Format: date-time */
+            to: string;
+        };
         RingConflicts: {
             conflicts: components["schemas"]["ActivityRingConflict"][];
             trainingBookings: components["schemas"]["ActivityTrainingBooking"][];
@@ -14546,7 +14660,7 @@ export interface components {
         };
         /** @description details of 422 RING_HAS_BOOKINGS */
         RingHasBookingsDetails: {
-            bookings: components["schemas"]["SlotOccupant"][];
+            bookings: components["schemas"]["RingBooking"][];
         };
         RingMarker: {
             /** Format: int32 */
@@ -14622,12 +14736,19 @@ export interface components {
             /** Format: date-time */
             builtAt: string;
             builtByAccountId: string;
+            /** @description S16 §2 «muntat … per {instructor}» (E9-T07): the name of the builder's account in the club; null when that account has no membership of the club */
+            builtByName?: string | null;
             courseId?: string | null;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
             dismantledAt?: string | null;
             dismantledByAccountId?: string | null;
+            /**
+             * @description INC-62: only DISMANTLED — REPLACED (another setup on the ring), MANUAL or RING_INACTIVE
+             * @enum {string|null}
+             */
+            dismantledReason?: "REPLACED" | "MANUAL" | "RING_INACTIVE" | null;
             /** Format: date */
             expectedUntil?: string | null;
             /** Format: date-time */
@@ -14640,6 +14761,11 @@ export interface components {
             levelIds: string[];
             notes?: string | null;
             placementId?: string | null;
+            /**
+             * Format: uuid
+             * @description INC-62: the setup that replaced it (dismantledReason REPLACED)
+             */
+            replacedBySetupId?: string | null;
             ringId: string;
             /** @enum {string} */
             status: "ACTIVE" | "EXPIRED" | "DISMANTLED";
@@ -15050,7 +15176,7 @@ export interface components {
             type: string;
         };
         SignupDocumentFile: {
-            /** Format: uri */
+            /** Format: uri-reference */
             downloadUrl: string;
             /** @description R-04-19 (E5-T19): the file's key. A D2 PATCH /dogs/{id} that sends it back in documents[].files[] keeps this file with its stored name (the name sent with it is not applied); the type's files it does not send are removed */
             fileKey: string;
@@ -15454,6 +15580,8 @@ export interface components {
             bookingId?: string | null;
             /** @description Only for INSTRUCTOR and ADMIN; never in the MEMBER projection (R-09-12). */
             classSession?: components["schemas"]["SlotClassSession"] | null;
+            /** @description INC-44: the club-local start (HH:mm) of the class that occupies the cell («18:50 classe», S09 §13-3); every viewer */
+            classStartsAtLocal?: string | null;
             /** @description Only for INSTRUCTOR and ADMIN; never in the MEMBER projection (R-09-12). */
             occupants?: components["schemas"]["SlotOccupant"][] | null;
             /** @enum {string|null} */
@@ -15565,6 +15693,16 @@ export interface components {
             dogId: string;
             text: string;
         };
+        TaskDoneBy: {
+            displayName: string;
+            /**
+             * @description Personal article of the member (personArticle)
+             * @enum {string}
+             */
+            gender?: "MALE" | "FEMALE" | "OTHER";
+            /** @enum {string} */
+            role: "MEMBER" | "INSTRUCTOR" | "ADMIN";
+        };
         TaskItem: {
             /** Format: int64 */
             attachmentsCount: number;
@@ -15572,6 +15710,8 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             doneAt?: string;
+            /** @description INC-53: «feta per {article}{name} el {date}» of screen 13; only on a done task, never an account id */
+            doneBy?: components["schemas"]["TaskDoneBy"];
             /** Format: uuid */
             id: string;
             instructorName: string;
@@ -16068,6 +16208,7 @@ export interface components {
             headers: {
                 [key: string]: string;
             };
+            /** Format: uri-reference */
             uploadUrl: string;
         };
         UploadRequest: {
@@ -16086,7 +16227,10 @@ export interface components {
             headers: {
                 [key: string]: string;
             };
-            /** Format: uri */
+            /**
+             * Format: uri-reference
+             * @description A path of the api on the local store (INC-53), an absolute URL on S3
+             */
             uploadUrl: string;
         };
         UploadUrlRequest: {
@@ -16669,7 +16813,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not Found */
+            /** @description NOT_FOUND */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -37411,7 +37555,7 @@ export interface operations {
             };
             header?: never;
             path: {
-                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder */
+                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder, erasures, retention-sweep */
                 name: string;
             };
             cookie?: never;
@@ -37526,7 +37670,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder */
+                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder, erasures, retention-sweep */
                 name: string;
                 runId: string;
             };
@@ -37642,7 +37786,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder */
+                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder, erasures, retention-sweep */
                 name: string;
             };
             cookie?: never;
@@ -37759,9 +37903,11 @@ export interface operations {
     triggerJob: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
             path: {
-                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder */
+                /** @description R-15-01 route id: week-opening, risk-review, no-show-notices, reminders, expirations, waitlist-fifo, payment-timeouts, class-finishing, cleanup, billing-reminder, erasures, retention-sweep */
                 name: string;
             };
             cookie?: never;
@@ -37817,7 +37963,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description JOB_ALREADY_RUNNING */
+            /** @description JOB_ALREADY_RUNNING, IDEMPOTENCY_KEY_REUSED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -42982,7 +43128,10 @@ export interface operations {
     };
     readAllNotifications: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description ISO-8601 instant; default now */
+                upTo?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -42998,7 +43147,7 @@ export interface operations {
                     "application/json": components["schemas"]["ReadResult"];
                 };
             };
-            /** @description Bad Request */
+            /** @description VALIDATION_ERROR */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -46442,7 +46591,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
+            /** @description MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -46565,7 +46714,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE */
+            /** @description Conflict */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -46692,7 +46841,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description ERASURE_ALREADY_REQUESTED, INVALID_STATE */
+            /** @description ERASURE_ALREADY_REQUESTED, MEMBER_ERASED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -53319,13 +53468,13 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description ListPage<AuditEntryListItem> */
+            /** @description ListPage<PlatformAuditEntry>: whole rows (no fields parameter) */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ListPageAuditEntryListItem"];
+                    "application/json": components["schemas"]["ListPagePlatformAuditEntry"];
                 };
             };
             /** @description INVALID_FILTER */
@@ -53816,7 +53965,9 @@ export interface operations {
     platformTriggerJob: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
             path: {
                 clubId: string;
                 /** @description R-15-01 route id */
@@ -53875,7 +54026,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description JOB_ALREADY_RUNNING */
+            /** @description JOB_ALREADY_RUNNING, IDEMPOTENCY_KEY_REUSED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -57355,8 +57506,6 @@ export interface operations {
                 size?: 20 | 50 | 200 | 1000;
                 /** @description Repeat field,asc or field,desc; only x-sortable fields. */
                 sort?: string[];
-                /** @description Free-text search within the caller's permitted projection. */
-                q?: string;
                 /** @description Repeat field:op:value; operators eq, ne, in, nin, lt, lte, gt, gte, contains, startsWith, exists, between. Only x-filterable fields; otherwise INVALID_FILTER. */
                 filter?: string[];
             };
@@ -64371,6 +64520,127 @@ export interface operations {
             };
         };
     };
+    endSupportAccess: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description void */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description SUPPORT_RESTRICTED */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     tasks: {
         parameters: {
             query: {
@@ -64559,7 +64829,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IDEMPOTENCY_KEY_REUSED */
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -66540,7 +66810,9 @@ export interface operations {
     joinWaitlist: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                "Idempotency-Key"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -66595,7 +66867,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description ALREADY_BOOKED, ALREADY_ON_WAITLIST, WAITLIST_LIMIT, BOOKING_LIMIT_REACHED */
+            /** @description ALREADY_BOOKED, ALREADY_ON_WAITLIST, WAITLIST_LIMIT, BOOKING_LIMIT_REACHED, IDEMPOTENCY_KEY_REUSED */
             409: {
                 headers: {
                     [name: string]: unknown;

@@ -26,6 +26,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { SupportAccessesCard } from "./SupportAccessesCard";
 import { useListExport } from "./useListExport";
 
 type AuditEntry = components["schemas"]["AuditEntry"];
@@ -750,6 +751,7 @@ export function AuditPage({ client }: { client: ApiClient }) {
       <header>
         <h1>{t("admin-audit:title")}</h1>
       </header>
+      <SupportAccessesCard client={client} />
       <AuditTrail client={client} />
     </section>
   );

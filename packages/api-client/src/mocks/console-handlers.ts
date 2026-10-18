@@ -6,10 +6,14 @@ import {
   CONSOLE_CLUB_IDS,
   CONSOLE_MOCK_NOW,
   CONSOLE_MONTH,
+  CONSOLE_PLATFORM_ACCOUNT_ID,
   clubTemplates,
   consoleFallbackColors,
   consoleParameterCatalog,
   consoleState,
+  DOMAIN_CNAME_TARGETS,
+  domainChallenge,
+  parameterRow,
   resetConsoleState,
   type PlatformClub,
 } from "./fixtures/console";
@@ -32,6 +36,101 @@ type StatusRequest = components["schemas"]["PlatformClubStatusRequest"];
 type JobRun = components["schemas"]["JobRun"];
 type ClubModule = PlatformClub["modules"][number];
 type Filter = components["schemas"]["Filter"];
+type PlatformDomain = PlatformClub["domains"][number];
+type AuditEntryListItem = components["schemas"]["AuditEntryListItem"];
+
+/**
+ * S17 R-17-10 (E10-W03): the support access token the mock grants, and the `/me` it opens. The
+ * expiry follows the real clock (the support tab compares it with the browser's), 60 minutes as
+ * `platform.supportAccessMinutes`.
+ */
+export const MOCK_SUPPORT_TOKEN = "mock-support-token";
+export const SUPPORT_ACCESS_MINUTES = 60;
+/** The live grant and an ended one of the `adminSupportAccess` audit (fictional ids). */
+export const MOCK_SUPPORT_GRANTS = {
+  ended: "70000000-0000-4000-8000-000000000002",
+  live: "70000000-0000-4000-8000-000000000001",
+} as const;
+
+export function supportExpiry(from = Date.now()): string {
+  return new Date(from + SUPPORT_ACCESS_MINUTES * 60_000).toISOString();
+}
+
+export function isSupportToken(request: Request): boolean {
+  return request.headers.get("Authorization") === `Bearer ${MOCK_SUPPORT_TOKEN}`;
+}
+
+/**
+ * The club audit's support entries (`SUPPORT_ACCESS_STARTED {reason, details.expiresAt}` and
+ * `SUPPORT_ACCESS_ENDED`, entity = the grant), as the api writes them: one access still alive, one
+ * the club already ended, and the end of every grant ended meanwhile.
+ */
+export function supportAuditEntries(now = Date.now()): AuditEntryListItem[] {
+  const entry = (
+    id: string,
+    action: "SUPPORT_ACCESS_ENDED" | "SUPPORT_ACCESS_STARTED",
+    grant: string,
+    at: number,
+    extra: Partial<AuditEntryListItem>,
+  ): AuditEntryListItem => ({
+    action,
+    actorName: "Pol Ferrer",
+    actorRole: action === "SUPPORT_ACCESS_STARTED" ? "PLATFORM" : "ADMIN",
+    at: new Date(at).toISOString(),
+    changes: [],
+    clubId: CONSOLE_CLUB_IDS.canic,
+    entityId: grant,
+    entityLabel: "Pol Ferrer",
+    entityType: "ImpersonationGrant",
+    id,
+    origin: action === "SUPPORT_ACCESS_STARTED" ? "PLATFORM_SUPPORT" : "BACKOFFICE",
+    ...extra,
+  });
+  const liveStart = now - 10 * 60_000;
+  const endedStart = now - 3 * 24 * 60 * 60_000;
+  const entries = [
+    entry(
+      "a1000000-0000-4000-8000-000000000001",
+      "SUPPORT_ACCESS_STARTED",
+      MOCK_SUPPORT_GRANTS.live,
+      liveStart,
+      {
+        details: { expiresAt: supportExpiry(liveStart) },
+        reason: "Revisar la configuració de la remesa",
+      },
+    ),
+    entry(
+      "a1000000-0000-4000-8000-000000000002",
+      "SUPPORT_ACCESS_STARTED",
+      MOCK_SUPPORT_GRANTS.ended,
+      endedStart,
+      {
+        details: { expiresAt: supportExpiry(endedStart) },
+        reason: "Alta del primer administrador",
+      },
+    ),
+    entry(
+      "a1000000-0000-4000-8000-000000000003",
+      "SUPPORT_ACCESS_ENDED",
+      MOCK_SUPPORT_GRANTS.ended,
+      endedStart + 20 * 60_000,
+      {
+        actorName: "Aina Serra",
+        details: { actorAccountId: CONSOLE_PLATFORM_ACCOUNT_ID },
+      },
+    ),
+  ];
+  for (const grant of consoleState.supportEnded) {
+    if (grant === MOCK_SUPPORT_GRANTS.ended) continue;
+    entries.unshift(
+      entry(`a1000000-0000-4000-8000-${grant.slice(-12)}`, "SUPPORT_ACCESS_ENDED", grant, now, {
+        actorName: "Aina Serra",
+        details: { actorAccountId: CONSOLE_PLATFORM_ACCOUNT_ID },
+      }),
+    );
+  }
+  return entries;
+}
 
 /** `x-fields` of `GET /platform/clubs` in the adopted snapshot (E10-T01). */
 const PLATFORM_CLUB_FIELDS = [
@@ -588,7 +687,7 @@ export const consoleHandlers = [
           ([field, op, value]) => field !== "clubId" || op !== "eq" || entry.clubId === value,
         ),
       )
-      .sort((left, right) => (right.at ?? "").localeCompare(left.at ?? ""));
+      .sort((left, right) => right.at.localeCompare(left.at));
     return HttpResponse.json({
       appliedFilters: filters.map(([field = "", op = "eq", value = ""]) => ({ field, op, value })),
       items: rows.slice(page * size, page * size + size),
@@ -960,16 +1059,17 @@ export const consoleHandlers = [
     }
     consoleState.catalogParts[club.id] = [...filled, ...body.parts];
     const missingDefault = !source.locales.includes(club.defaultLocale);
+    // The source's languages the target does not use: their texts are left out.
+    const omitted = source.locales.filter((locale) => !club.locales.includes(locale));
     // R-17-08 (E10-T04 snapshot): one `CatalogCloneWarning` per code, part and source locale.
     const result: CatalogCloneResult = {
       copied: Object.fromEntries(body.parts.map((part) => [part, CATALOG_COUNTS[part] ?? 0])),
-      warnings: missingDefault
-        ? body.parts.map((part) => ({
-            code: "DEFAULT_LOCALE_COPIED" as const,
-            from: source.defaultLocale,
-            part,
-          }))
-        : [],
+      warnings: body.parts.flatMap((part) => [
+        ...omitted.map((from) => ({ code: "LOCALE_OMITTED" as const, from, part })),
+        ...(missingDefault
+          ? [{ code: "DEFAULT_LOCALE_COPIED" as const, from: source.defaultLocale, part }]
+          : []),
+      ]),
     };
     return HttpResponse.json(result);
   }),
@@ -1069,4 +1169,207 @@ export const consoleHandlers = [
     }
     return HttpResponse.json(touch(club, { status: body.status }));
   }),
+  ...domainHandlers(),
+  ...supportHandlers(),
 ];
+
+/** R-17-02: the product hosts no club may take (`clubs.*`, `clubsadmin.*`, `id.*`, `core.*`). */
+const RESERVED_HOST = /^(clubs|clubsadmin|id|core)\./u;
+const HOST_PATTERN = /^(?=.{4,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/u;
+
+function findDomain(club: PlatformClub, host: unknown): PlatformDomain | undefined {
+  return club.domains.find((domain) => domain.host === host);
+}
+
+function domainNotFound() {
+  return apiError("NOT_FOUND", "Domain not found", 404);
+}
+
+/** S17 R-17-02/03 and §5 (E10-T04 round 2): the domain routes, on the fake DNS (`consoleState.dns`). */
+function domainHandlers() {
+  return [
+    http.post("*/api/v1/platform/clubs/:id/domains", async ({ params, request }) => {
+      const denied = refused();
+      if (denied !== undefined) return denied;
+      const club = findClub(params.id);
+      if (club === undefined) return clubNotFound();
+      if (club.template) {
+        return apiError("VALIDATION_ERROR", "A template club has no domains", 400, {
+          field: "template",
+        });
+      }
+      const body = (await request.json()) as components["schemas"]["PlatformDomainRequest"];
+      const host = body.host.trim().toLowerCase().replace(/\.$/u, "");
+      if (!HOST_PATTERN.test(host)) return fieldError("host");
+      if (RESERVED_HOST.test(host))
+        return apiError("HOST_RESERVED", "Reserved host", 422, { host });
+      if (consoleState.clubs.some((candidate) => findDomain(candidate, host) !== undefined)) {
+        return apiError("HOST_ALREADY_USED", "Host already used", 409, { host });
+      }
+      const domain: PlatformDomain = {
+        app: body.app,
+        host,
+        primary: false,
+        status: "PENDING",
+        verification: domainChallenge(body.app, host, `t${String(club.domains.length + 1)}x9`),
+        verifiedAt: null,
+      };
+      touch(club, { domains: [...club.domains, domain] });
+      return HttpResponse.json(domain, { status: 201 });
+    }),
+    http.delete("*/api/v1/platform/clubs/:id/domains/:host", ({ params }) => {
+      const denied = refused();
+      if (denied !== undefined) return denied;
+      const club = findClub(params.id);
+      if (club === undefined) return clubNotFound();
+      const domain = findDomain(club, params.host);
+      if (domain === undefined) return domainNotFound();
+      if (domain.primary) {
+        return apiError("INVALID_STATE", "The primary domain of its app", 409, {
+          primary: true,
+          status: domain.status,
+        });
+      }
+      touch(club, { domains: club.domains.filter((candidate) => candidate !== domain) });
+      return new HttpResponse(null, { status: 204 });
+    }),
+    http.put("*/api/v1/platform/clubs/:id/domains/:host/primary", ({ params }) => {
+      const denied = refused();
+      if (denied !== undefined) return denied;
+      const club = findClub(params.id);
+      if (club === undefined) return clubNotFound();
+      const domain = findDomain(club, params.host);
+      if (domain === undefined) return domainNotFound();
+      if (domain.status !== "VERIFIED") {
+        return apiError("INVALID_STATE", "Only a verified domain is primary", 409, {
+          status: domain.status,
+        });
+      }
+      const next = touch(club, {
+        domains: club.domains.map((candidate) =>
+          candidate.app === domain.app
+            ? { ...candidate, primary: candidate === domain }
+            : candidate,
+        ),
+      });
+      return HttpResponse.json(next.domains);
+    }),
+    http.post("*/api/v1/platform/clubs/:id/domains/:host/verification", ({ params }) => {
+      const denied = refused();
+      if (denied !== undefined) return denied;
+      const club = findClub(params.id);
+      if (club === undefined) return clubNotFound();
+      const domain = findDomain(club, params.host);
+      if (domain === undefined) return domainNotFound();
+      if (domain.status === "VERIFIED") {
+        return apiError("INVALID_STATE", "Already verified", 409, { status: domain.status });
+      }
+      const method = consoleState.dns[domain.host];
+      if (method === undefined) {
+        // Nothing changes, and the expected records are in the refusal (the TXT pair is null
+        // for a domain without a challenge left).
+        return apiError("HOST_NOT_VERIFIED", "No DNS record found", 422, {
+          cnameTarget: domain.verification?.cnameTarget ?? DOMAIN_CNAME_TARGETS[domain.app],
+          host: domain.host,
+          recordName: domain.verification?.recordName ?? null,
+          recordValue: domain.verification?.recordValue ?? null,
+        });
+      }
+      const hasPrimary = club.domains.some(
+        (candidate) =>
+          candidate.app === domain.app && candidate.primary && candidate.status === "VERIFIED",
+      );
+      touch(club, {
+        domains: club.domains.map((candidate) =>
+          candidate === domain
+            ? {
+                ...candidate,
+                primary: candidate.primary || !hasPrimary,
+                status: "VERIFIED" as const,
+                verification: null,
+                verifiedAt: now(),
+              }
+            : candidate,
+        ),
+      });
+      const verification: components["schemas"]["DomainVerification"] = {
+        checkedAt: now(),
+        method,
+        status: "VERIFIED",
+      };
+      return HttpResponse.json(verification);
+    }),
+    // E10-T04: the club's own values and versions, every catalog key grouped by block (`version`
+    // 0 and the default for a key the club has not overridden).
+    http.get("*/api/v1/platform/clubs/:id/parameters", ({ params, request }) => {
+      const denied = refused();
+      if (denied !== undefined) return denied;
+      const club = findClub(params.id);
+      if (club === undefined) return clubNotFound();
+      const only = new URL(request.url).searchParams.get("block");
+      const stored = consoleState.parameters[club.id] ?? {};
+      const rows = consoleParameterCatalog
+        .filter((definition) => only === null || definition.block === only)
+        .map((definition) => stored[definition.key] ?? parameterRow(definition.key));
+      const blocks = [...new Set(rows.map((row) => row.block))].map((block) => ({
+        key: block,
+        rows: rows.filter((row) => row.block === block),
+        title: block,
+      }));
+      return HttpResponse.json({ blocks });
+    }),
+  ];
+}
+
+/** S17 R-17-10/11 (E10-T04): the support access, its end by the club, and the public key. */
+function supportHandlers() {
+  return [
+    http.post("*/api/v1/platform/clubs/:id/support-access", async ({ params, request }) => {
+      const denied = refused();
+      if (denied !== undefined) return denied;
+      const club = findClub(params.id);
+      if (club === undefined) return clubNotFound();
+      const body = (await request.json()) as components["schemas"]["SupportAccessRequest"];
+      if (body.reason.trim() === "") return fieldError("reason", "REQUIRED");
+      const access: components["schemas"]["SupportAccess"] = {
+        expiresAt: supportExpiry(),
+        token: MOCK_SUPPORT_TOKEN,
+      };
+      return HttpResponse.json(access, { status: 201 });
+    }),
+    http.post("*/api/v1/platform/clubs/:id/public-api-key", ({ params }) => {
+      const denied = refused();
+      if (denied !== undefined) return denied;
+      const club = findClub(params.id);
+      if (club === undefined) return clubNotFound();
+      consoleState.publicKeys += 1;
+      // `agh_pub_` + 43 URL-safe characters (R-17-11); a fictional value.
+      const apiKey = `agh_pub_mock${String(consoleState.publicKeys).padStart(39, "x")}`;
+      return HttpResponse.json({ apiKey }, { status: 201 });
+    }),
+    // The club's ADMIN ends a live support access (E123): `{id}` is the grant of the audit entry.
+    http.delete("*/api/v1/support-accesses/:id", ({ params, request }) => {
+      if (isSupportToken(request)) {
+        return apiError("SUPPORT_RESTRICTED", "Not with a support access", 403);
+      }
+      const me = currentMockScenario().me;
+      if (me.impersonation !== undefined) {
+        return apiError("IMPERSONATION_DENIED", "Impersonation cannot end it", 403);
+      }
+      if (!(me.membership?.roles ?? []).includes("ADMIN")) {
+        return apiError("FORBIDDEN", "ADMIN role required", 403);
+      }
+      const id = String(params.id);
+      if (!(Object.values(MOCK_SUPPORT_GRANTS) as string[]).includes(id)) {
+        return apiError("NOT_FOUND", "Support access not found", 404);
+      }
+      if (id === MOCK_SUPPORT_GRANTS.ended || consoleState.supportEnded.includes(id)) {
+        return apiError("INVALID_STATE", "Support access already ended", 409, {
+          status: "ENDED",
+        });
+      }
+      consoleState.supportEnded = [...consoleState.supportEnded, id];
+      return new HttpResponse(null, { status: 204 });
+    }),
+  ];
+}

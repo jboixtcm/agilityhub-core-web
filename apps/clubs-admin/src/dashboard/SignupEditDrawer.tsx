@@ -89,10 +89,12 @@ export function idDocumentLabel(
 function personForm(member: Member, paymentType: PaymentType | ""): PersonForm {
   const [email1, email2] = member.contactEmails;
   const [phone1, phone2] = member.phones;
+  // `null` only for an erased member (S14 R-14-15), never a signup's person: read as empty.
+  const address = member.address ?? { city: "", postalCode: "", street: "" };
   return {
     accountHolder: member.paymentMethod?.holderName ?? member.fullName,
-    birthDate: member.birthDate,
-    city: member.address.city,
+    birthDate: member.birthDate ?? "",
+    city: address.city,
     email1: email1?.email ?? "",
     email2: email2?.email ?? "",
     firstName: member.firstName,
@@ -110,8 +112,8 @@ function personForm(member: Member, paymentType: PaymentType | ""): PersonForm {
     phone2Label: phone2?.label ?? "",
     phone2Number: phone2?.number ?? "",
     phone2Prefix: phone2?.prefix ?? phone1?.prefix ?? "",
-    postalCode: member.address.postalCode,
-    street: member.address.street,
+    postalCode: address.postalCode,
+    street: address.street,
   };
 }
 
@@ -159,9 +161,16 @@ function memberPatch(
       .map((email) => ({ email }));
   }
   if (
-    (["phone1Prefix", "phone1Number", "phone1Label", "phone2Prefix", "phone2Number", "phone2Label"] as const).some(
-      (key) => changed.has(key),
-    )
+    (
+      [
+        "phone1Prefix",
+        "phone1Number",
+        "phone1Label",
+        "phone2Prefix",
+        "phone2Number",
+        "phone2Label",
+      ] as const
+    ).some((key) => changed.has(key))
   ) {
     body.phones = [
       { label: value.phone1Label, number: value.phone1Number, prefix: value.phone1Prefix },
@@ -186,7 +195,10 @@ function memberPatch(
   if (
     billing &&
     value.paymentType === "SEPA_DD" &&
-    (methodChanged || changed.has("iban") || changed.has("accountHolder") || changed.has("holderTaxId"))
+    (methodChanged ||
+      changed.has("iban") ||
+      changed.has("accountHolder") ||
+      changed.has("holderTaxId"))
   ) {
     // R-04-10: the IBAN is optional (without it the member shows «Compte no informat»).
     body.paymentMethod = {
@@ -246,7 +258,9 @@ function SignupDogDocuments({
         setDocuments([]);
         setError(
           isApiError(cause)
-            ? t(`errors:${cause.code}`, { defaultValue: t("admin-census:signupReview.genericError") })
+            ? t(`errors:${cause.code}`, {
+                defaultValue: t("admin-census:signupReview.genericError"),
+              })
             : t("admin-census:signupReview.genericError"),
         );
       },
@@ -318,7 +332,9 @@ function SignupDogDocuments({
 
   return (
     <div aria-busy={documents === undefined || undefined} className="signup-edit-documents">
-      <span className="ah-form-field__label">{t("admin-census:signupReview.fields.documents")}</span>
+      <span className="ah-form-field__label">
+        {t("admin-census:signupReview.fields.documents")}
+      </span>
       <ul>
         {(documents ?? []).flatMap((document) =>
           document.files.map((documentFile) => (
@@ -481,7 +497,12 @@ function ReadmissionDogDocuments({
     setError(undefined);
     try {
       const result = await client.PATCH("/dogs/{id}", {
-        body: { documents: [{ files: files.map(({ fileKey, name }) => ({ fileKey, name })), type: documentType }], version },
+        body: {
+          documents: [
+            { files: files.map(({ fileKey, name }) => ({ fileKey, name })), type: documentType },
+          ],
+          version,
+        },
         params: { path: { id: dogId } },
       });
       // A withdrawn type shows the record's own row again, or no row when the record has none.
@@ -509,7 +530,9 @@ function ReadmissionDogDocuments({
   const remove = (documentType: string, fileKey: string) =>
     send(
       documentType,
-      (documents.find((document) => document.type === documentType)?.files ?? []).filter((item) => item.fileKey !== fileKey),
+      (documents.find((document) => document.type === documentType)?.files ?? []).filter(
+        (item) => item.fileKey !== fileKey,
+      ),
       fileKey,
     );
 
@@ -537,7 +560,9 @@ function ReadmissionDogDocuments({
   const disabled = busy || pending !== undefined;
   return (
     <div className="signup-edit-documents">
-      <span className="ah-form-field__label">{t("admin-census:signupReview.fields.documents")}</span>
+      <span className="ah-form-field__label">
+        {t("admin-census:signupReview.fields.documents")}
+      </span>
       <ul>
         {documents.flatMap((document) =>
           document.files.map((documentFile) => (
@@ -655,7 +680,9 @@ export function SignupEditDrawer({
   // method is changed on D10) shows the current one read-only; an empty list shows no row.
   const methods = billing ? signup.paymentMethods : [];
   const currentMethod = methods.find((method) => method.current)?.type ?? "";
-  const assignableMethods = methods.filter((method) => method.assignable).map((method) => method.type);
+  const assignableMethods = methods
+    .filter((method) => method.assignable)
+    .map((method) => method.type);
 
   const person: PersonForm = { ...personForm(member, currentMethod), ...personEdits };
   const requestedPlanId = signup.signup.planIdRequested ?? signup.proposals.planId;
@@ -682,7 +709,8 @@ export function SignupEditDrawer({
   };
 
   /** A dog's version: the one its last document PATCH answered while the view is still older. */
-  const dogVersion = (dog: Dog): number => Math.max(dog.version, sentDocuments[dog.id]?.version ?? 0);
+  const dogVersion = (dog: Dog): number =>
+    Math.max(dog.version, sentDocuments[dog.id]?.version ?? 0);
 
   /** `READMISSION_PENDING` names what is frozen: the person's document, or the reused dog's record. */
   const showError = (cause: unknown, entity: "dog" | "member") => {
@@ -708,7 +736,9 @@ export function SignupEditDrawer({
     let saved = false;
     let entity: "dog" | "member" = "member";
     try {
-      const body = addDogMode ? undefined : memberPatch(member, currentMethod, personEdits, billing);
+      const body = addDogMode
+        ? undefined
+        : memberPatch(member, currentMethod, personEdits, billing);
       if (body !== undefined) {
         await client.PATCH("/members/{id}", { body, params: { path: { id: member.id } } });
         setPersonEdits({});
@@ -725,7 +755,9 @@ export function SignupEditDrawer({
             : undefined;
         if (dogBody === undefined) continue;
         await client.PATCH("/dogs/{id}", { body: dogBody, params: { path: { id: dog.id } } });
-        setDogEdits((current) => Object.fromEntries(Object.entries(current).filter(([id]) => id !== dog.id)));
+        setDogEdits((current) =>
+          Object.fromEntries(Object.entries(current).filter(([id]) => id !== dog.id)),
+        );
         saved = true;
       }
       reset();
@@ -793,7 +825,10 @@ export function SignupEditDrawer({
             </Select>
           </FormField>
           {readmissionPending ? (
-            <FormField id="signup-edit-idDocument" label={idDocumentLabel(member.idDocument?.type, t)}>
+            <FormField
+              id="signup-edit-idDocument"
+              label={idDocumentLabel(member.idDocument?.type, t)}
+            >
               <Input
                 aria-describedby="signup-edit-idDocument-help"
                 id="signup-edit-idDocument"
@@ -819,14 +854,22 @@ export function SignupEditDrawer({
               {personInput("phone2Prefix", t("admin-census:signupReview.fields.phonePrefix"))}
               {personInput("phone2Number", t("admin-census:signupReview.fields.phone"), "tel")}
               {/* R-04-03: the second phone needs its label. */}
-              {personInput("phone2Label", t("admin-census:signupReview.fields.phoneLabel"), "text", person.phone2Number.trim() !== "")}
+              {personInput(
+                "phone2Label",
+                t("admin-census:signupReview.fields.phoneLabel"),
+                "text",
+                person.phone2Number.trim() !== "",
+              )}
             </div>
           </fieldset>
           {personInput("street", t("admin-census:signupReview.fields.street"))}
           {personInput("postalCode", t("admin-census:signupReview.fields.postalCode"))}
           {personInput("city", t("admin-census:signupReview.fields.city"))}
           {methods.length === 0 ? null : (
-            <FormField id="signup-edit-paymentType" label={t("admin-census:signupReview.fields.paymentMethod")}>
+            <FormField
+              id="signup-edit-paymentType"
+              label={t("admin-census:signupReview.fields.paymentMethod")}
+            >
               {assignableMethods.length === 0 ? (
                 <Input
                   id="signup-edit-paymentType"
@@ -846,7 +889,9 @@ export function SignupEditDrawer({
                   }}
                   value={person.paymentType}
                 >
-                  {person.paymentType === "" ? <option value="">{t("admin-census:values.empty")}</option> : null}
+                  {person.paymentType === "" ? (
+                    <option value="">{t("admin-census:values.empty")}</option>
+                  ) : null}
                   {/* The applicant's method whose provider is off since stays shown, but cannot be chosen again. */}
                   {methods.map((method) => (
                     <option disabled={!method.assignable} key={method.type} value={method.type}>
@@ -861,12 +906,20 @@ export function SignupEditDrawer({
           {person.paymentType === "SEPA_DD" && assignableMethods.includes("SEPA_DD") ? (
             <>
               {/* The api replaces the SEPA data: a stored IBAN must be typed again with a new holder. */}
-              {personInput("iban", t("admin-census:signupReview.fields.iban"), "text", hasStoredIban && paymentTouched)}
+              {personInput(
+                "iban",
+                t("admin-census:signupReview.fields.iban"),
+                "text",
+                hasStoredIban && paymentTouched,
+              )}
               {personInput("accountHolder", t("admin-census:signupReview.fields.accountHolder"))}
               {personInput("holderTaxId", t("admin-census:signupReview.fields.holderTaxId"))}
             </>
           ) : null}
-          <FormField id="signup-edit-requested-plan" label={t("admin-census:signupReview.fields.requestedPlan")}>
+          <FormField
+            id="signup-edit-requested-plan"
+            label={t("admin-census:signupReview.fields.requestedPlan")}
+          >
             <Input id="signup-edit-requested-plan" readOnly value={requestedPlan} />
           </FormField>
         </fieldset>
@@ -874,7 +927,11 @@ export function SignupEditDrawer({
           const value = dogValue(dog);
           const idPrefix = `signup-edit-dog-${String(index)}`;
           const dogInput = (key: DogTextKey) => (
-            <FormField id={`${idPrefix}-${key}`} key={key} label={t(`admin-census:signupReview.fields.${key}`)}>
+            <FormField
+              id={`${idPrefix}-${key}`}
+              key={key}
+              label={t(`admin-census:signupReview.fields.${key}`)}
+            >
               <Input
                 id={`${idPrefix}-${key}`}
                 onChange={(event) => {
@@ -887,17 +944,31 @@ export function SignupEditDrawer({
           // R-04-06, E38: the reused dog of a pending readmission (`null` for any other dog).
           const reused = dog.readmission != null;
           const sent = sentDocuments[dog.id];
-          const submittedDocuments = sent !== undefined && sent.version > dog.version ? sent.documents : dog.documents;
+          const submittedDocuments =
+            sent !== undefined && sent.version > dog.version ? sent.documents : dog.documents;
           return (
             <fieldset disabled={dog.status !== "PENDING" || working || documentsBusy} key={dog.id}>
-              <legend>{t("admin-census:signupReview.dog", { current: index + 1, total: signup.dogs.length })}</legend>
+              <legend>
+                {t("admin-census:signupReview.dog", {
+                  current: index + 1,
+                  total: signup.dogs.length,
+                })}
+              </legend>
               {dogInput("name")}
               {dogInput("breed")}
               {dogInput("birthMonth")}
               {reused ? (
                 // R-04-06 (b): the readmission matched on the chip, so it cannot change while it waits.
-                <FormField id={`${idPrefix}-chip`} label={t("admin-census:signupReview.fields.chip")}>
-                  <Input aria-describedby={`${idPrefix}-chip-help`} id={`${idPrefix}-chip`} readOnly value={dog.chip} />
+                <FormField
+                  id={`${idPrefix}-chip`}
+                  label={t("admin-census:signupReview.fields.chip")}
+                >
+                  <Input
+                    aria-describedby={`${idPrefix}-chip-help`}
+                    id={`${idPrefix}-chip`}
+                    readOnly
+                    value={dog.chip}
+                  />
                   <small className="ah-form-field__help" id={`${idPrefix}-chip-help`}>
                     {t("admin-census:signupReview.readmission.dogLocked")}
                   </small>
@@ -920,7 +991,10 @@ export function SignupEditDrawer({
                   ))}
                 </Select>
               </FormField>
-              <FormField id={`${idPrefix}-notes`} label={t("admin-census:signupReview.fields.notes")}>
+              <FormField
+                id={`${idPrefix}-notes`}
+                label={t("admin-census:signupReview.fields.notes")}
+              >
                 <Textarea
                   id={`${idPrefix}-notes`}
                   maxLength={1000}
@@ -947,7 +1021,12 @@ export function SignupEditDrawer({
                   version={dogVersion(dog)}
                 />
               ) : (
-                <SignupDogDocuments client={client} dog={dog} idPrefix={idPrefix} onChanged={onReload} />
+                <SignupDogDocuments
+                  client={client}
+                  dog={dog}
+                  idPrefix={idPrefix}
+                  onChanged={onReload}
+                />
               )}
             </fieldset>
           );

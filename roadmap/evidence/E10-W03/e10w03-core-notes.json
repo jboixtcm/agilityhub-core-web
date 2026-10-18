@@ -1,0 +1,35 @@
+{
+  "added": {
+    "status": "PENDING",
+    "verification": [
+      "cnameTarget",
+      "recordName",
+      "recordValue"
+    ]
+  },
+  "verification": {
+    "status": 422,
+    "body": {
+      "code": "HOST_NOT_VERIFIED",
+      "message": "El domini no està verificat.",
+      "details": {
+        "host": "e10w03-10265.example.test",
+        "cnameTarget": "clubs.agilitydoghub.com",
+        "recordName": "_agilityhub-verify.e10w03-10265.example.test",
+        "recordValue": "agh-verify-f3qds8CH7DmN1yYUs5xrsC2CFvHkfKUG"
+      },
+      "traceId": "3e5ca0f3-64db-4a8b-b175-bfbdbabf3b48"
+    }
+  },
+  "removed": true,
+  "supportMe": {
+    "roles": [
+      "ADMIN"
+    ],
+    "support": [
+      "actorName",
+      "expiresAt"
+    ]
+  },
+  "revoke": 200
+}

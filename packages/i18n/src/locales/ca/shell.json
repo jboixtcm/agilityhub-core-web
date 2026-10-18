@@ -17,6 +17,19 @@
     "updated": "Actualitzat el {date}"
   },
   "loading": "Carregant",
+  "support": {
+    "banner": "Accés de suport de l'equip AgilityHub · {name} · fins al {until}",
+    "bannerLabel": "Accés de suport",
+    "ended": "L'accés de suport ha acabat: ha caducat o l'administrador del club l'ha acabat. Ja pots tancar aquesta pestanya.",
+    "entering": "Obrint el backoffice del club…",
+    "exit": "Surt",
+    "leaving": "Sortint",
+    "left": "Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya.",
+    "noOpener": "Aquest accés s'obre des de la consola de clubs, amb «Entra com a administrador del club».",
+    "refused": "No s'ha pogut obrir l'accés de suport. Torna-ho a provar des de la consola de clubs.",
+    "timeout": "No ha arribat l'accés de suport. Torna-ho a provar des de la consola de clubs.",
+    "title": "Accés de suport"
+  },
   "language": {
     "ca": "Català",
     "en": "Anglès",

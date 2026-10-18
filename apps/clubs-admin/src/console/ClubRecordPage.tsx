@@ -17,10 +17,12 @@ import {
 } from "./shared";
 import { AuditTab } from "./tabs/AuditTab";
 import { CatalogsTab } from "./tabs/CatalogsTab";
+import { DomainsTab } from "./tabs/DomainsTab";
 import { IdentityTab } from "./tabs/IdentityTab";
 import { LegalTab } from "./tabs/LegalTab";
 import { LocalizationTab } from "./tabs/LocalizationTab";
 import { ModulesTab } from "./tabs/ModulesTab";
+import { ParametersTab } from "./tabs/ParametersTab";
 import { PaymentsTab } from "./tabs/PaymentsTab";
 import { ProcessesTab } from "./tabs/ProcessesTab";
 import { StatusTab } from "./tabs/StatusTab";
@@ -44,6 +46,8 @@ function tabContent(tab: ConsoleTab, props: ConsoleTabProps): ReactNode {
       return <IdentityTab {...props} />;
     case "localitzacio":
       return <LocalizationTab {...props} />;
+    case "dominis":
+      return <DomainsTab {...props} />;
     case "tema":
       return <ThemeTab {...props} />;
     case "moduls":
@@ -52,6 +56,8 @@ function tabContent(tab: ConsoleTab, props: ConsoleTabProps): ReactNode {
       return <PaymentsTab {...props} />;
     case "legal":
       return <LegalTab {...props} />;
+    case "parametres":
+      return <ParametersTab {...props} />;
     case "catalegs":
       return <CatalogsTab {...props} />;
     case "equip":
@@ -221,13 +227,17 @@ export function ClubRecordPage({
         })}
       </nav>
       <section aria-label={t(`console:tabs.${tab}`)} className="console-tab-panel">
-        {tabContent(tab, {
-          client,
-          club,
-          onNavigate,
-          onReload: record.reload,
-          onReplace: record.replace,
-        })}
+        {/* While the reread failed, no write goes out with the possibly stale `version` (E10-W01
+            review #2): the tab stays readable, its fields and actions disabled until the retry. */}
+        <fieldset className="console-tab-panel__writes" disabled={record.error !== undefined}>
+          {tabContent(tab, {
+            client,
+            club,
+            onNavigate,
+            onReload: record.reload,
+            onReplace: record.replace,
+          })}
+        </fieldset>
       </section>
     </div>
   );

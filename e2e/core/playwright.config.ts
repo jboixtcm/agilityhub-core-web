@@ -10,6 +10,18 @@ function requiredEnvironment(name: string): string {
 
 const coreUrl = requiredEnvironment("CORE_URL");
 
+/**
+ * E10-W03 (S17 R-17-10): the console runs on the Cànic's admin server (4174), and a support access
+ * opens a club's back-office host at its local server, never `https://{host}`.
+ */
+const SUPPORT_ENVIRONMENT = {
+  VITE_CLUB_ADMIN_ORIGINS: JSON.stringify({
+    "admin.example.test": "http://127.0.0.1:4174",
+    "fifo.example.test": "http://127.0.0.1:4177",
+  }),
+  VITE_CONSOLE_ORIGIN: "http://127.0.0.1:4174",
+};
+
 function webServer(
   app: "clubs" | "clubs-admin" | "id",
   port: number,
@@ -24,6 +36,7 @@ function webServer(
       VITE_ID_URL: coreUrl,
       VITE_PROXY_HOST: host,
       VITE_PROXY_ORIGIN: origin,
+      ...(app === "clubs-admin" ? SUPPORT_ENVIRONMENT : {}),
     },
     reuseExistingServer: false,
     timeout: 120_000,

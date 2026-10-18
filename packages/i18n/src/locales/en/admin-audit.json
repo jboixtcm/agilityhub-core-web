@@ -75,6 +75,7 @@
     "SIGNUP_EDITED": "Signup changed",
     "SIGNUP_REJECTED": "Signup rejected",
     "SIGNUP_SUBMITTED": "Signup request submitted",
+    "SUPPORT_ACCESS_ENDED": "Support access ended",
     "SUPPORT_ACCESS_STARTED": "Support access started",
     "TEMPLATE_BAND_DELETED": "Template time band deleted",
     "TEMPLATE_CLASS_DELETED": "Template class deleted",
@@ -157,6 +158,17 @@
   "memberCaption": "Member audit entries",
   "memberTitle": "Member audit",
   "none": "—",
+  "support": {
+    "alreadyEnded": "This access had already ended.",
+    "end": "End the access",
+    "ended": "{name}'s support access was ended.",
+    "endFailed": "The access could not be ended. Try again.",
+    "ending": "Ending",
+    "item": "{name}, AgilityHub team · from {from} until {until}",
+    "reason": "Reason: {reason}",
+    "title": "Live support accesses",
+    "unknownActor": "AgilityHub team"
+  },
   "origins": {
     "APP": "App",
     "BACKOFFICE": "Back office",

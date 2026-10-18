@@ -67,7 +67,7 @@
       "apps/clubs-admin/dist/assets/ConsolePage-*.js",
       "apps/clubs-admin/dist/assets/console-*.js"
     ],
-    "limit": "48.5 kB",
+    "limit": "54 kB",
     "gzip": true
   },
   {

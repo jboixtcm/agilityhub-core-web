@@ -8,7 +8,7 @@ export type PlatformAdmin = components["schemas"]["PlatformAdmin"];
 export type PlatformClubTemplate = components["schemas"]["PlatformClubTemplate"];
 export type ParameterDefinition = components["schemas"]["ParameterDefinition"];
 export type PlatformJobsOverview = components["schemas"]["PlatformJobsOverview"];
-export type AuditEntryListItem = components["schemas"]["AuditEntryListItem"];
+export type PlatformAuditEntry = components["schemas"]["PlatformAuditEntry"];
 type Theme = components["schemas"]["Theme"];
 type OnboardingChecklist = components["schemas"]["OnboardingChecklist"];
 type ProviderSummary = components["schemas"]["PlatformProviderSummary"];
@@ -98,6 +98,25 @@ function club(overrides: Partial<PlatformClub> & Pick<PlatformClub, "id" | "name
   return { ...base, ...overrides };
 }
 
+/** The product host a domain's CNAME points to, by app (R-17-03: `verification.cnameTarget`). */
+export const DOMAIN_CNAME_TARGETS = {
+  clubs: "clubs.agilitydoghub.com",
+  "clubs-admin": "clubsadmin.agilitydoghub.com",
+} as const;
+
+/** R-17-03's DNS instructions of a PENDING domain (`_agilityhub-verify.{host} = agh-verify-{token}`). */
+export function domainChallenge(
+  app: keyof typeof DOMAIN_CNAME_TARGETS,
+  host: string,
+  token: string,
+): NonNullable<PlatformClub["domains"][number]["verification"]> {
+  return {
+    cnameTarget: DOMAIN_CNAME_TARGETS[app],
+    recordName: `_agilityhub-verify.${host}`,
+    recordValue: `agh-verify-${token}`,
+  };
+}
+
 function initialClubs(): PlatformClub[] {
   return [
     club({
@@ -111,9 +130,25 @@ function initialClubs(): PlatformClub[] {
       contactEmail: "info@canic.example.test",
       contactPhone: "+34 600 000 101",
       displayCity: brandingCanic.club.city,
+      // The api's shape (E10-T04): a VERIFIED domain has no challenge left, and the first
+      // verified one of each app is its primary.
       domains: [
-        { app: "clubs", host: "app.example.test", primary: true, status: "VERIFIED" },
-        { app: "clubs-admin", host: "admin.example.test", primary: false, status: "VERIFIED" },
+        {
+          app: "clubs",
+          host: "app.example.test",
+          primary: true,
+          status: "VERIFIED",
+          verification: null,
+          verifiedAt: "2026-09-01T08:20:00Z",
+        },
+        {
+          app: "clubs-admin",
+          host: "admin.example.test",
+          primary: true,
+          status: "VERIFIED",
+          verification: null,
+          verifiedAt: "2026-09-01T08:25:00Z",
+        },
       ],
       id: CONSOLE_CLUB_IDS.canic,
       legal: {
@@ -159,7 +194,16 @@ function initialClubs(): PlatformClub[] {
     }),
     club({
       contactEmail: "hola@minim.example.test",
-      domains: [{ app: "clubs", host: "minim.example.test", primary: true, status: "PENDING" }],
+      domains: [
+        {
+          app: "clubs",
+          host: "minim.example.test",
+          primary: false,
+          status: "PENDING",
+          verification: domainChallenge("clubs", "minim.example.test", "m1n1m"),
+          verifiedAt: null,
+        },
+      ],
       id: CONSOLE_CLUB_IDS.minim,
       locales: ["ca", "es", "en"],
       name: brandingMinim.club.name,
@@ -274,6 +318,26 @@ function definition(
   };
 }
 
+/** A catalog key as `GET /platform/clubs/{id}/parameters` answers it without an override. */
+export function parameterRow(key: string): components["schemas"]["Parameter"] {
+  const found = consoleParameterCatalog.find((candidate) => candidate.key === key);
+  if (found === undefined) throw new TypeError(`No console parameter ${key}`);
+  return {
+    block: found.block,
+    constraints: found.constraints,
+    default: found.default,
+    editableBy: found.editableBy,
+    help: found.help,
+    history: [],
+    isOverride: false,
+    key: found.key,
+    label: found.label,
+    type: found.type,
+    value: found.default,
+    version: 0,
+  };
+}
+
 function initialJobs(): PlatformJobsOverview {
   const run = (
     status: "FAILED" | "PARTIAL" | "SUCCEEDED",
@@ -326,9 +390,28 @@ function initialJobs(): PlatformJobsOverview {
   };
 }
 
-function initialAudit(): AuditEntryListItem[] {
+/**
+ * A club entry of the platform audit as the api answers it (`PlatformAuditEntry`, E10-T04): the
+ * club as the entity, the platform account as the actor, and `null` for what it does not carry.
+ */
+function platformEntry(
+  entry: Omit<PlatformAuditEntry, "actorAccountId" | "entityId"> & { clubId: string },
+): PlatformAuditEntry {
+  return {
+    actorAccountId: CONSOLE_PLATFORM_ACCOUNT_ID,
+    details: null,
+    entityId: entry.clubId,
+    impersonatedMemberId: null,
+    impersonatedName: null,
+    memberId: null,
+    reason: null,
+    ...entry,
+  };
+}
+
+function initialAudit(): PlatformAuditEntry[] {
   return [
-    {
+    platformEntry({
       action: "CLUB_STATUS_CHANGED",
       actorName: "Pol Ferrer",
       actorRole: "PLATFORM",
@@ -339,8 +422,8 @@ function initialAudit(): AuditEntryListItem[] {
       entityType: "Club",
       id: "a0000000-0000-4000-8000-000000000001",
       origin: "BACKOFFICE",
-    },
-    {
+    }),
+    platformEntry({
       action: "CLUB_MODULES_CHANGED",
       actorName: "Pol Ferrer",
       actorRole: "PLATFORM",
@@ -351,8 +434,8 @@ function initialAudit(): AuditEntryListItem[] {
       entityType: "Club",
       id: "a0000000-0000-4000-8000-000000000002",
       origin: "BACKOFFICE",
-    },
-    {
+    }),
+    platformEntry({
       action: "CLUB_CREATED",
       actorName: "Pol Ferrer",
       actorRole: "PLATFORM",
@@ -363,18 +446,27 @@ function initialAudit(): AuditEntryListItem[] {
       entityType: "Club",
       id: "a0000000-0000-4000-8000-000000000003",
       origin: "BACKOFFICE",
-    },
+    }),
   ];
 }
 
 export interface ConsoleState {
   admins: Record<string, PlatformAdmin[]>;
   /**
+   * The fake DNS (the api's `DomainDns` double): the hosts whose record is already there, and
+   * which one (R-17-03). Any other host is `422 HOST_NOT_VERIFIED`.
+   */
+  dns: Record<string, "CNAME" | "TXT">;
+  /** Public API keys handed out so far (R-17-11), to vary the fictional value. */
+  publicKeys: number;
+  /** Support grants ended by the club's ADMIN (`DELETE /support-accesses/{id}`, R-17-10). */
+  supportEnded: string[];
+  /**
    * The parameters the console wrote, by club and key (a key never written is the catalog's
    * default at version 0): `PUT /platform/clubs/{id}/parameters/{key}` answers the `Parameter`.
    */
   parameters: Record<string, Record<string, components["schemas"]["Parameter"]>>;
-  audit: AuditEntryListItem[];
+  audit: PlatformAuditEntry[];
   /** Catalog parts each club already has (R-17-08: a clone only fills empty parts). */
   catalogParts: Record<string, string[]>;
   clubs: PlatformClub[];
@@ -395,8 +487,28 @@ function initialState(): ConsoleState {
       [CONSOLE_CLUB_IDS.template]: ["LEVELS", "RINGS", "PLANS", "FAQ", "MESSAGE_TEMPLATES"],
     },
     clubs: initialClubs(),
+    dns: { "admin.minim.example.test": "CNAME" },
     jobs: initialJobs(),
-    parameters: {},
+    // The Cànic overrides one key (its override at version 3); every other key is the default.
+    parameters: {
+      [CONSOLE_CLUB_IDS.canic]: {
+        "bookings.lateCancelThresholdMinutes": {
+          ...parameterRow("bookings.lateCancelThresholdMinutes"),
+          history: [
+            {
+              changedAt: "2026-09-12T10:00:00Z",
+              changedByAccountId: "10000000-0000-4000-8000-000000000001",
+              value: 240,
+            },
+          ],
+          isOverride: true,
+          value: 240,
+          version: 3,
+        },
+      },
+    },
+    publicKeys: 0,
+    supportEnded: [],
     platformRoles: { [CONSOLE_PLATFORM_ACCOUNT_ID]: ["AGILITYHUB_ADMIN"] },
     uploads: {},
   };

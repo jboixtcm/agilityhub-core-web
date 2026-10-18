@@ -162,9 +162,23 @@ export function CatalogsTab({ client, club, onReload }: ConsoleTabProps) {
                 .join(" · "),
             })}
           </p>
-          {/* `warnings` are the api's free text (R-17-08's locale fallback): the reader gets
-              them in their own language, never the api's wording. */}
-          {result.warnings.length === 0 ? null : <p>{t("console:catalogs.localeFallback")}</p>}
+          {/* R-17-08 (E118): one warning per code, part and source locale, each with its own
+              message in the reader's language. */}
+          {result.warnings.length === 0 ? null : (
+            <ul className="console-clone-warnings">
+              {result.warnings.map((warning) => (
+                <li key={`${warning.code}:${warning.part}:${warning.from}`}>
+                  {t(`console:catalogs.warnings.${warning.code}`, {
+                    defaultLocale: t(`console:locales.${club.defaultLocale}`, {
+                      defaultValue: club.defaultLocale,
+                    }),
+                    from: t(`console:locales.${warning.from}`, { defaultValue: warning.from }),
+                    part: t(`console:catalogs.parts.${warning.part}`),
+                  })}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
       <div className="console-actions">

@@ -74,6 +74,8 @@ import { CalendarPage } from "./planning/CalendarPage";
 import { parseDay } from "./planning/shared";
 import { TemplateDayPage } from "./planning/TemplateDayPage";
 import { TemplatesPage } from "./planning/TemplatesPage";
+import { SUPPORT_PATH } from "./support/support-access";
+import { SupportBanner, SupportEndedPage, SupportEntryPage } from "./support/SupportPages";
 import { TrainingRegisterPage } from "./training/TrainingRegisterPage";
 
 // D19 (S17): the platform console is its own chunk; club admins never download it.
@@ -677,12 +679,16 @@ function gatedRoute(route: AdminRouteDefinition, content: ReactNode): ReactNode 
 }
 
 function AdminShell({
+  authClient,
   children,
   client,
+  onNavigate,
   pathname,
 }: {
+  authClient: AuthClient;
   children: ReactNode;
   client: ReturnType<typeof createAuthenticatedApiClient>;
+  onNavigate: (path: string) => void;
   pathname: string;
 }) {
   const branding = useBranding();
@@ -741,8 +747,9 @@ function AdminShell({
         </div>
         <div className="admin-shell__actions">
           <LanguageSelector />
-          {/* The exports are a club's (S14): a platform account without a club role has none. */}
-          {session.roles.includes("ADMIN") ? (
+          {/* The exports are a club's (S14): a platform account without a club role has none, and
+              a support access never reaches them (R-17-10: `403 SUPPORT_RESTRICTED`). */}
+          {session.roles.includes("ADMIN") && session.me?.support === undefined ? (
             <button
               aria-label={t("admin-audit:exports.open")}
               onClick={() => {
@@ -768,6 +775,7 @@ function AdminShell({
         roles={session.roles}
       />
       <main className="admin-shell__content">
+        <SupportBanner authClient={authClient} onNavigate={onNavigate} />
         {/* A D14 row read that failed (R-10-13): said here, on whatever page the user went to. */}
         <FollowUpReadFailureNotice unread={unreadFollowUp} />
         <CountersRefreshContext.Provider value={refreshCounters}>
@@ -1010,7 +1018,7 @@ export function App({ authClient }: { authClient: AuthClient }) {
   const strayPlatformPath =
     platformOnly &&
     currentRoute(requested.pathname) === undefined &&
-    !["/_gallery", "/acces", "/entrar"].includes(requested.pathname);
+    !["/_gallery", "/acces", "/entrar", SUPPORT_PATH].includes(requested.pathname);
   const url = strayPlatformPath ? new URL("/consola/clubs", window.location.origin) : requested;
   const pathname = url.pathname;
   useEffect(() => {
@@ -1027,13 +1035,27 @@ export function App({ authClient }: { authClient: AuthClient }) {
   if (pathname === "/entrar") {
     return <AccessPage authClient={authClient} />;
   }
+  // S17 R-17-10: the tab «Entra com a administrador del club» opened, before any session.
+  if (pathname === SUPPORT_PATH) {
+    return <SupportEntryPage authClient={authClient} />;
+  }
+  // The back office holds no member impersonation (`handoffSessions: "account"`): a tab session
+  // that ended is a support access that expired or that the club's ADMIN ended.
+  if (session.status === "impersonationExpired") {
+    return <SupportEndedPage />;
+  }
 
   // An unknown path lands where the account belongs: D1, or D19 for a platform-only account.
   const route = currentRoute(pathname) ?? currentRoute(platformOnly ? "/consola" : "/tauler");
   return route === undefined ? null : (
     <OnboardingExperience authClient={authClient} presentation="modal">
       <ExportJobsProvider client={client}>
-        <AdminShell client={client} pathname={pathname}>
+        <AdminShell
+          authClient={authClient}
+          client={client}
+          onNavigate={navigate}
+          pathname={pathname}
+        >
           {gatedRoute(route, routeContent(route, client, navigate, pathname, url.search))}
         </AdminShell>
       </ExportJobsProvider>

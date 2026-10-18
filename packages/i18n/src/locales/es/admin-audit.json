@@ -75,6 +75,7 @@
     "SIGNUP_EDITED": "Preinscripción modificada",
     "SIGNUP_REJECTED": "Preinscripción rechazada",
     "SIGNUP_SUBMITTED": "Solicitud de alta enviada",
+    "SUPPORT_ACCESS_ENDED": "Acceso de soporte terminado",
     "SUPPORT_ACCESS_STARTED": "Acceso de soporte iniciado",
     "TEMPLATE_BAND_DELETED": "Franja de plantilla borrada",
     "TEMPLATE_CLASS_DELETED": "Clase de plantilla eliminada",
@@ -157,6 +158,17 @@
   "memberCaption": "Entradas de auditoría del abonado",
   "memberTitle": "Auditoría del abonado",
   "none": "—",
+  "support": {
+    "alreadyEnded": "Este acceso ya había terminado.",
+    "end": "Terminar el acceso",
+    "ended": "Se ha terminado el acceso de soporte de {name}.",
+    "endFailed": "No se ha podido terminar el acceso. Vuelve a intentarlo.",
+    "ending": "Terminando",
+    "item": "{name}, del equipo AgilityHub · desde el {from} hasta el {until}",
+    "reason": "Motivo: {reason}",
+    "title": "Accesos de soporte en curso",
+    "unknownActor": "Equipo AgilityHub"
+  },
   "origins": {
     "APP": "App",
     "BACKOFFICE": "Backoffice",

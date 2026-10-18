@@ -654,7 +654,9 @@ describe("MSW bootstrap handlers", () => {
     // placements and the build sheet, ring geometry, inventories, setups) and S05's `GET /rings/{id}`.
     // E9-W04: + S16's `GET /me/ring-setups` and the five build-session handlers (create, join,
     // read, obstacle PATCH, finish) of course-handlers.ts.
-    expect(handlers).toHaveLength(382);
+    // E10-W03: + E10-T04's eight routes in console-handlers.ts (a domain's add, removal, primary
+    // and verification, a club's parameters read, the support access and its end, the public key).
+    expect(handlers).toHaveLength(390);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

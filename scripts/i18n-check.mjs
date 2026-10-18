@@ -196,11 +196,11 @@ const dynamicKeyPrefixes = [
   "console:identity.fields.",
   "console:locales.",
   "console:modules.",
-  // Only the four SEPA fields the «Nou club» wizard labels by name, not the whole SEPA subtree.
-  "console:payments.sepa.creditorId",
-  "console:payments.sepa.creditorName",
-  "console:payments.sepa.invoiceSeriesPattern",
-  "console:payments.sepa.suffix",
+  // E10-W03: the domain apps, states and verification methods, and the clone warnings by code.
+  "console:catalogs.warnings.",
+  "console:domains.apps.",
+  "console:domains.method.",
+  "console:domains.status.",
   "console:payments.stripe.modes.",
   "console:presets.",
   "console:processes.health.",
@@ -304,9 +304,21 @@ for (const parameterKey of parameterKeys) {
   }
 }
 
+/**
+ * Whole keys rendered by name, not by prefix (E10-W01 review #5): the four SEPA fields the «Nou
+ * club» wizard labels, so a new key next to them (`…creditorIdHelp`) is still checked.
+ */
+const dynamicExactKeys = new Set([
+  "console:payments.sepa.creditorId",
+  "console:payments.sepa.creditorName",
+  "console:payments.sepa.invoiceSeriesPattern",
+  "console:payments.sepa.suffix",
+]);
+
 for (const key of canonicalKeys) {
   if (
     !key.startsWith("errors:") &&
+    !dynamicExactKeys.has(key) &&
     !dynamicKeyPrefixes.some((prefix) => key.startsWith(prefix)) &&
     !usedKeys.has(key)
   ) {

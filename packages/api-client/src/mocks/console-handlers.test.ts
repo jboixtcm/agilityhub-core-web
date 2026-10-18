@@ -109,7 +109,7 @@ describe("E10-W01 · the console's mock world follows the E10-T01 contract", () 
     for (const item of clubTemplates()) expectValid("PlatformClubTemplate", item);
     for (const item of consoleParameterCatalog) expectValid("ParameterDefinition", item);
     expectValid("PlatformJobsOverview", consoleState.jobs);
-    for (const item of consoleState.audit) expectValid("AuditEntryListItem", item);
+    for (const item of consoleState.audit) expectValid("PlatformAuditEntry", item);
     for (const admins of Object.values(consoleState.admins)) {
       for (const admin of admins) expectValid("PlatformAdmin", admin);
     }

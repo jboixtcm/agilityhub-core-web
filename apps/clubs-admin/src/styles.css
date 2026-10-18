@@ -101,6 +101,26 @@ select {
   align-items: start;
 }
 
+/* S17 R-17-10: the persistent banner of an AgilityHub support access, above every page. */
+.admin-support-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+  margin-bottom: var(--ah-space-4);
+  padding: var(--ah-space-3) var(--ah-space-4);
+  border: 1px solid var(--ah-color-warning);
+  border-left-width: 4px;
+  border-radius: var(--ah-radius-md);
+  background: var(--ah-color-surface);
+}
+
+.admin-support-banner p {
+  margin: 0;
+  font-weight: 600;
+}
+
 .admin-shell__content .ah-empty-state {
   width: min(100%, 42rem);
   background: var(--ah-color-surface);
@@ -168,6 +188,44 @@ select {
   width: 100%;
   min-width: 0;
   gap: var(--ah-space-5);
+}
+
+.audit-support {
+  display: grid;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-5);
+  border-left: 4px solid var(--ah-color-warning);
+}
+
+.audit-support h2,
+.audit-support p {
+  margin: 0;
+}
+
+.audit-support h2 {
+  font-size: 1.05rem;
+}
+
+.audit-support__items {
+  display: grid;
+  gap: var(--ah-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.audit-support__items li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+}
+
+.audit-support__reason {
+  display: block;
+  color: var(--ah-color-text-muted);
+  font-size: 0.86rem;
 }
 
 .audit-page > header h1 {

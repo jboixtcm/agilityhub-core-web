@@ -378,10 +378,15 @@ export class AuthClient extends EventTarget {
     );
   }
 
-  /** Enters an impersonated session from its access token (R-01-09): no refresh, ever. */
-  async acceptImpersonation(token: string): Promise<Me> {
+  /**
+   * Enters an impersonated session from its access token (R-01-09): no refresh, ever. The back
+   * office enters an AgilityHub support access the same way (S17 R-17-10: a clubs-admin access
+   * token without refresh), with the grant's `expiresAt` so a reload after it never asks again.
+   */
+  async acceptImpersonation(token: string, expiresAt?: string): Promise<Me> {
     this.clearLocalSession();
-    this.enterImpersonation(token, undefined);
+    const expiry = expiresAt === undefined ? Number.NaN : Date.parse(expiresAt);
+    this.enterImpersonation(token, Number.isNaN(expiry) ? undefined : expiry);
     try {
       const me = await this.loadMe();
       this.currentMe = me;

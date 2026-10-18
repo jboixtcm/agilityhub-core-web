@@ -21,7 +21,13 @@ import {
 } from "./billing-handlers";
 import { bookingHandlers, bookingState, resetBookingMockState } from "./booking-handlers";
 import { calendarHandlers } from "./calendar-handlers";
-import { consoleHandlers, resetConsoleMockState } from "./console-handlers";
+import {
+  consoleHandlers,
+  isSupportToken,
+  resetConsoleMockState,
+  supportAuditEntries,
+  supportExpiry,
+} from "./console-handlers";
 import { courseHandlers, resetCourseKeys } from "./course-handlers";
 import { dayGridHandlers } from "./day-grid-handlers";
 import { activityState, resetActivityState } from "./fixtures/activities";
@@ -158,6 +164,7 @@ import {
   mockScenario,
   type MockScenario,
   type MockScenarioDefinition,
+  supportMe,
 } from "./scenarios";
 import { resetTrainingMockState, trainingHandlers } from "./training-handlers";
 
@@ -1610,6 +1617,11 @@ export const handlers = [
     });
   }),
   http.get("*/api/v1/me", ({ request }) => {
+    if (isSupportToken(request)) {
+      // S17 R-17-10: a support access answers an ADMIN membership without a member and
+      // `support {actorName, expiresAt}` for the banner.
+      return HttpResponse.json(supportMe(supportExpiry()));
+    }
     if (
       request.headers.get("Authorization") === "Bearer mock-impersonation-token" &&
       currentMockScenario().me.impersonation === undefined
@@ -2577,7 +2589,12 @@ export const handlers = [
   }),
   http.get("*/api/v1/audit-entries", async ({ request }) => {
     await delay(80);
-    const page = auditPage(request, auditEntries);
+    const page = auditPage(
+      request,
+      currentMockScenario().supportAccesses === true
+        ? [...(supportAuditEntries() as AuditEntryListItem[]), ...auditEntries]
+        : auditEntries,
+    );
     return page === undefined
       ? apiError("INVALID_FILTER", "Invalid audit filter", 400)
       : HttpResponse.json(page);
@@ -4315,6 +4332,7 @@ export {
   JOBS_MOCK_NOW,
   mockExportBody,
   mockScenario,
+  supportMe,
   NOTIFICATIONS_MOCK_NOW,
   planningState,
   resetActivityState,

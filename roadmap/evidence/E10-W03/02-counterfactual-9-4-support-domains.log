@@ -1,0 +1,758 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/console/ClubRecordPage.test.tsx (21 tests | 1 failed) 1547ms
+   ❯ E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») (21)
+     × T-17-12 Tema: the live preview reads the draft's tokens, AA contrast blocks the save, and a logo goes through the one upload route 206ms
+ ❯ src/console/ParametersTab.test.tsx (3 tests | 1 failed) 10383ms
+   ❯ E10-W03 step 4 · D19 «Paràmetres» on the club's own values (S17 §2, E118, E10-T04) (3)
+     × 409 STALE_VERSION rereads the row: the editor says the current value, keeps the draft, and resends with the fresh version 10055ms
+ ❯ src/console/DomainsTab.test.tsx (11 tests | 1 failed) 10916ms
+   ❯ E10-W03 step 1 · D19 «Dominis» (S17 §2, R-17-02/03, T-17-12) (10)
+     × §5 (E123) [Elimina] asks first, removes a non-primary domain, and a 409 «primary» from the api is said in the tab 10109ms
+ ❯ src/support/support-access.test.tsx (13 tests | 2 failed) 10871ms
+   ❯ E10-W03 step 2 · the club's back-office tab of a support access (`/suport`) (3)
+     × T-17-09 says it is ready to its opener (the console's origin only), enters the access as this tab's session and opens D1 10020ms
+   ❯ E10-W03 step 2 · the support access's banner, its end and its expiry in clubs-admin (R-17-10) (3)
+     × T-17-09 shows the persistent banner (who, until when in the club's time), no console entry and no exports 67ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/console/ClubRecordPage.test.tsx > E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») > T-17-12 Tema: the live preview reads the draft's tokens, AA contrast blocks the save, and a logo goes through the one upload route
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAccessibleDescription()[22m
+
+Expected element to have accessible description:
+[32m  logo.png es publicarà en desar.[39m
+Received:
+[31m[39m
+ ❯ src/console/ClubRecordPage.test.tsx:244:75
+    242|     expect(await screen.findByText("logo.png es publicarà en desar."))…
+    243|     // E10-W03 #9 (E10-W01 review #4): the visible button carries the …
+    244|     expect(screen.getByRole("button", { name: "Tria una imatge: Logo" …
+       |                                                                           ^
+    245|       "logo.png es publicarà en desar.",
+    246|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/console/DomainsTab.test.tsx > E10-W03 step 1 · D19 «Dominis» (S17 §2, R-17-02/03, T-17-12) > §5 (E123) [Elimina] asks first, removes a non-primary domain, and a 409 «primary» from the api is said in the tab
+TestingLibraryElementError: Unable to find an element with the text: És el domini principal de la seva app: abans fes principal un altre domini verificat.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"console-page"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"console-back"[39m
+        [33mhref[39m=[32m"/consola/clubs"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [0mClubs[0m
+      [36m</a>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"console-page__header console-record__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<h1>[39m
+            [0mClub Mínim[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"console-record__meta"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mminim[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mEn posada en marxa[0m
+            [36m</span>[39m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"console-checklist-title"[39m
+        [33mclass[39m=[32m"ah-card console-card console-checklist"[39m
+        [33mrole[39m=[32m"region"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mid[39m=[32m"console-checklist-title"[39m
+        [36m>[39m
+          [0mChecklist d'onboarding[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"console-checklist-summary"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0m4/7[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"console-checklist-summary__missing"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"console-checklist-summary__dot"[39m
+              [36m>[39m
+                [0m · [0m
+              [36m</span>[39m
+              [0mfalten: Dominis verificats, Preguntes freqüents, Política de privacitat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</p>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"console-checklist__items"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-warn"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mDominis verificats[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mpendent[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mProveïdor de pagament configurat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mMarca: logo i colors propis[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPlantilles de comunicat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-warn"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPreguntes freqüents[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mpendent[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agi...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"console-page"[39m
+    [36m>[39m
+      [36m<a[39m
+        [33mclass[39m=[32m"console-back"[39m
+        [33mhref[39m=[32m"/consola/clubs"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [0mClubs[0m
+      [36m</a>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"console-page__header console-record__header"[39m
+      [36m>[39m
+        [36m<div>[39m
+          [36m<h1>[39m
+            [0mClub Mínim[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"console-record__meta"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0mminim[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mEn posada en marxa[0m
+            [36m</span>[39m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33maria-labelledby[39m=[32m"console-checklist-title"[39m
+        [33mclass[39m=[32m"ah-card console-card console-checklist"[39m
+        [33mrole[39m=[32m"region"[39m
+      [36m>[39m
+        [36m<h2[39m
+          [33mid[39m=[32m"console-checklist-title"[39m
+        [36m>[39m
+          [0mChecklist d'onboarding[0m
+        [36m</h2>[39m
+        [36m<p>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"console-checklist-summary"[39m
+          [36m>[39m
+            [36m<strong>[39m
+              [0m4/7[0m
+            [36m</strong>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"console-checklist-summary__missing"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"console-checklist-summary__dot"[39m
+              [36m>[39m
+                [0m · [0m
+              [36m</span>[39m
+              [0mfalten: Dominis verificats, Preguntes freqüents, Política de privacitat[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</p>[39m
+        [36m<ul[39m
+          [33mclass[39m=[32m"console-checklist__items"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-warn"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mDominis verificats[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mpendent[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mProveïdor de pagament configurat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mMarca: logo i colors propis[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"true"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPlantilles de comunicat[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+            [36m>[39m
+              [0mfet[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-warn"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<span>[39m
+              [0mPreguntes freqüents[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+            [36m>[39m
+              [0mpendent[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33mdata-done[39m=[32m"false"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agi...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/console/DomainsTab.test.tsx:225:20
+    223|     );
+    224|     expect(
+    225|       await screen.findByText(
+       |                    ^
+    226|         "És el domini principal de la seva app: abans fes principal un…
+    227|       ),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/console/ParametersTab.test.tsx > E10-W03 step 4 · D19 «Paràmetres» on the club's own values (S17 §2, E118, E10-T04) > 409 STALE_VERSION rereads the row: the editor says the current value, keeps the draft, and resends with the fresh version
+TestingLibraryElementError: Unable to find an element with the text: Algú l'ha canviat mentrestant: ara val 5 h. Si deses, el substitueixes pel teu valor.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_2_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_2_"[39m
+    [36m>[39m
+      [0mLlindar d'anul·lació tardana («classe feta»)[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"settings-editor"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"settings-editor__help"[39m
+      [36m>[39m
+        [0mA partir d'aquest llindar l'anul·lació compta com a classe feta.[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"settings-editor__future"[39m
+      [36m>[39m
+        [0mS'aplica a partir d'ara.[0m
+      [36m</p>[39m
+      [36m<fieldset[39m
+        [33mclass[39m=[32m"console-fieldset"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"parameter-value"[39m
+          [36m>[39m
+            [0mLlindar d'anul·lació tardana («classe feta»)[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"parameter-value"[39m
+            [33mmin[39m=[32m"0"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mstep[39m=[32m"1"[39m
+            [33mtype[39m=[32m"number"[39m
+            [33mvalue[39m=[32m"180"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"console-parameter-reason"[39m
+          [36m>[39m
+            [0mMotiu del canvi (opcional)[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"console-parameter-reason"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</fieldset>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"console-message console-message--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mAlgú l'ha canviat mentrestant: ara val 4 h. Si deses, el substitueixes pel teu valor.[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"settings-editor__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCancel·la[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDESA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+
+Ignored nodes: comments, script, style
+[36m<aside[39m
+  [33maria-labelledby[39m=[32m"_r_2_"[39m
+  [33maria-modal[39m=[32m"true"[39m
+  [33mclass[39m=[32m"ah-drawer"[39m
+  [33mrole[39m=[32m"dialog"[39m
+[36m>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__header"[39m
+  [36m>[39m
+    [36m<h2[39m
+      [33mid[39m=[32m"_r_2_"[39m
+    [36m>[39m
+      [0mLlindar d'anul·lació tardana («classe feta»)[0m
+    [36m</h2>[39m
+    [36m<button[39m
+      [33maria-label[39m=[32m"Tanca"[39m
+      [33mclass[39m=[32m"ah-overlay__close"[39m
+    [36m>[39m
+      [36m<svg[39m
+        [33maria-hidden[39m=[32m"true"[39m
+        [33mclass[39m=[32m"ah-icon"[39m
+      [36m>[39m
+        [36m<use[39m
+          [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+        [36m/>[39m
+      [36m</svg>[39m
+    [36m</button>[39m
+  [36m</div>[39m
+  [36m<div[39m
+    [33mclass[39m=[32m"ah-overlay__body"[39m
+  [36m>[39m
+    [36m<form[39m
+      [33mclass[39m=[32m"settings-editor"[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"settings-editor__help"[39m
+      [36m>[39m
+        [0mA partir d'aquest llindar l'anul·lació compta com a classe feta.[0m
+      [36m</p>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"settings-editor__future"[39m
+      [36m>[39m
+        [0mS'aplica a partir d'ara.[0m
+      [36m</p>[39m
+      [36m<fieldset[39m
+        [33mclass[39m=[32m"console-fieldset"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"parameter-value"[39m
+          [36m>[39m
+            [0mLlindar d'anul·lació tardana («classe feta»)[0m
+          [36m</label>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"ah-input"[39m
+            [33mid[39m=[32m"parameter-value"[39m
+            [33mmin[39m=[32m"0"[39m
+            [33mrequired[39m=[32m""[39m
+            [33mstep[39m=[32m"1"[39m
+            [33mtype[39m=[32m"number"[39m
+            [33mvalue[39m=[32m"180"[39m
+          [36m/>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-form-field"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"ah-form-field__label"[39m
+            [33mfor[39m=[32m"console-parameter-reason"[39m
+          [36m>[39m
+            [0mMotiu del canvi (opcional)[0m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33mclass[39m=[32m"ah-input ah-textarea"[39m
+            [33mid[39m=[32m"console-parameter-reason"[39m
+          [36m/>[39m
+        [36m</div>[39m
+      [36m</fieldset>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"console-message console-message--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mAlgú l'ha canviat mentrestant: ara val 4 h. Si deses, el substitueixes pel teu valor.[0m
+      [36m</p>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"settings-editor__actions"[39m
+      [36m>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mCancel·la[0m
+          [36m</span>[39m
+        [36m</button>[39m
+        [36m<button[39m
+          [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+          [33mtype[39m=[32m"submit"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-button__content"[39m
+          [36m>[39m
+            [0mDESA[0m
+          [36m</span>[39m
+        [36m</button>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</aside>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/console/ParametersTab.test.tsx:112:20
+    110|     fireEvent.click(editor.getByRole("button", { name: "DESA" }));
+    111|     expect(
+    112|       await editor.findByText(
+       |                    ^
+    113|         "Algú l'ha canviat mentrestant: ara val 5 h. Si deses, el subs…
+    114|       ),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/support/support-access.test.tsx > E10-W03 step 2 · the club's back-office tab of a support access (`/suport`) > T-17-09 says it is ready to its opener (the console's origin only), enters the access as this tab's session and opens D1
+AssertionError: expected "vi.fn()" to be called with arguments: [ '/tauler' ]
+
+Number of calls: 0
+
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"dark"[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#0B0B0B"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<iframe />[39m
+    [36m<div>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"access-page"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"ah-card access-card"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mAccés de suport[0m
+          [36m</h1>[39m
+          [36m<p[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m>[39m
+            [0mNo s'ha pogut obrir l'accés de suport. Torna-ho a provar des de la consola de clubs.[0m
+          [36m</p>[39m
+        [36m</div>[39m
+      [36m</main>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/support/support-access.test.tsx:259:23
+    257|     message({ expiresAt, token: "mock-support-token", type: SUPPORT_AC…
+    258|     await waitFor(() => {
+    259|       expect(replace).toHaveBeenCalledWith("/tauler");
+       |                       ^
+    260|     });
+    261|     expect(accept).toHaveBeenCalledWith("mock-support-token", expiresA…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/support/support-access.test.tsx > E10-W03 step 2 · the support access's banner, its end and its expiry in clubs-admin (R-17-10) > T-17-09 shows the persistent banner (who, until when in the club's time), no console entry and no exports
+AssertionError: expected <a class="ah-sidebar__entry" …(1)>…(2)</a> to be null
+
+- Expected:
+null
+
++ Received:
+<a
+  class="ah-sidebar__entry"
+  href="/consola/clubs"
+>
+  <svg
+    aria-hidden="true"
+    class="ah-icon"
+  >
+    <use
+      href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-globe"
+    />
+  </svg>
+  <span>
+    Consola
+  </span>
+</a>
+
+ ❯ src/support/support-access.test.tsx:351:61
+    349|     // 15:30 UTC is 17:30 in Madrid (the club's zone), whatever the de…
+    350|     expect(banner.getByText(/Accés de suport de l'equip AgilityHub · P…
+    351|     expect(screen.queryByRole("link", { name: "Consola" })).toBeNull();
+       |                                                             ^
+    352|     expect(screen.queryByRole("button", { name: "Exportacions" })).toB…
+    353|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  5 failed | 43 passed (48)
+   Start at  08:40:21
+   Duration  13.38s (tests 80%, transform 10%, environment 5%, import 3%, setup 1%)
+

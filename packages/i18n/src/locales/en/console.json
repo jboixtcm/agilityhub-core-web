@@ -20,7 +20,6 @@
     "currencyWarning": "The template charges in {template} and the club in {club}: plans and prices cannot be copied.",
     "description": "Copies levels, rings, plans with their current prices, frequently asked questions and message templates from a template club.",
     "emptyOnly": "Only the parts the club still has empty are copied.",
-    "localeFallback": "Some texts did not exist in the club's default language: they were copied from another language. Review them.",
     "localeWarning": "The template has no texts in {locales}: they will have to be completed in the club.",
     "noTemplates": "There is no template club.",
     "parts": {
@@ -33,7 +32,11 @@
     "partsLabel": "What is copied",
     "template": "Template club",
     "templateOption": "{name} · {locales} · {currency}",
-    "title": "Base catalogs"
+    "title": "Base catalogs",
+    "warnings": {
+      "DEFAULT_LOCALE_COPIED": "{part}: some texts had no {defaultLocale} version and were given the {from} text. Review them.",
+      "LOCALE_OMITTED": "{part}: the {from} texts were not copied, because the club does not use that language."
+    }
   },
   "checklist": {
     "count": "{done}/{total}",
@@ -71,6 +74,8 @@
   },
   "errors": {
     "catalogNotEmpty": "{part}: the club already has some. Only empty parts are copied.",
+    "domainState": "This cannot be done with a domain that is «{status}».",
+    "primaryDomain": "It is the primary domain of its app: first make another verified domain primary.",
     "fileTooLarge": "The file is too large: {maxSizeMb} MB at most.",
     "generic": "The action could not be completed. Try again.",
     "moduleDependency": "To turn on {module}, {requires} must be on.",
@@ -275,8 +280,7 @@
     "removeConfirm": "Its configuration will be deleted. If members use it, it cannot be removed.",
     "removeTitle": "Remove {name}",
     "sepa": {
-      "creditorId": "Creditor identifier",
-      "creditorName": "Creditor name",
+      "creditorId": "Creditor identifier",      "creditorName": "Creditor name",
       "iban": "IBAN",
       "ibanHelpNew": "Write-only: once saved it is never shown again.",
       "ibanHelpStored": "Stored IBAN: {masked}. Leave it blank to keep it.",
@@ -305,6 +309,99 @@
     },
     "writeOnly": "Write-only: once saved it is never shown again.",
     "writeOnlyKept": "Saved. Leave it blank to keep it."
+  },
+  "domains": {
+    "add": "Add domain",
+    "added": "{host} was added. Create one of the DNS records, then verify it.",
+    "addHelp": "Type the host without https://, for example app.example.org.",
+    "adding": "Adding",
+    "addTitle": "Add domain",
+    "adminHostsNote": "A verified back-office domain gets its certificate at once, but the back office is served on it only once operations add it to the back-office host list and reload the server.",
+    "app": "App",
+    "apps": {
+      "clubs": "Members' app",
+      "clubs-admin": "Back office"
+    },
+    "caption": "The club's domains",
+    "cnameTitle": "Option 1 · CNAME",
+    "columns": {
+      "actions": "Actions",
+      "app": "App",
+      "host": "Host",
+      "status": "Status",
+      "verifiedAt": "Verified"
+    },
+    "description": "The club's hosts by app. A new domain stays pending until its DNS record is verified.",
+    "dnsIntro": "Create one of these two records at the domain's DNS provider, then click Verify. DNS changes can take a few minutes.",
+    "empty": "The club has no domains yet.",
+    "host": "Host",
+    "hostPlaceholder": "app.example.org",
+    "instructionsTitle": "DNS records for {host}",
+    "makePrimary": "Make primary",
+    "makePrimaryLabel": "Make primary: {host}",
+    "method": {
+      "ADDRESS": "host address",
+      "CNAME": "CNAME record",
+      "TXT": "TXT record"
+    },
+    "notVerified": "Neither DNS record of {host} was found. Check them and try again in a few minutes.",
+    "primary": "primary",
+    "primaryChanged": "{host} is now the primary domain ({app}).",
+    "recordName": "Name",
+    "recordType": "Type",
+    "recordValue": "Value",
+    "remove": "Remove",
+    "removeConfirm": "The app will no longer open on this host. It can be added again later.",
+    "removeConfirmAction": "REMOVE",
+    "removed": "{host} was removed.",
+    "removeLabel": "Remove {host}",
+    "removeTitle": "Remove {host}",
+    "removing": "Removing",
+    "status": {
+      "BROKEN": "broken",
+      "PENDING": "pending",
+      "VERIFIED": "verified"
+    },
+    "templateClub": "A template club has no domains.",
+    "title": "Domains",
+    "txtTitle": "Option 2 · TXT",
+    "verified": "{host} was verified ({method}).",
+    "verify": "Verify",
+    "verifying": "Verifying",
+    "verifyLabel": "Verify {host}"
+  },
+  "parameters": {
+    "default": "Default: {value}",
+    "defaultValue": "default",
+    "note": "The club's values: the ones it changed and, for the rest, the default. Platform parameters can be edited here too.",
+    "override": "club value",
+    "platformOnly": "platform only",
+    "saved": "{label}: value saved.",
+    "stale": "Someone changed it meanwhile: it is now {value}. If you save, you replace it with your value."
+  },
+  "publicKey": {
+    "confirm": "GENERATE THE KEY",
+    "confirmText": "The current key stops working in 24 hours: put the new one on the club's website before then.",
+    "confirmTitle": "Generate a new API key",
+    "copied": "Copied",
+    "copy": "Copy",
+    "description": "The key the club's website reads the public calendar and activities with. It is shown only once: a new key replaces the previous one, which keeps working for 24 hours.",
+    "generate": "Generate a new key",
+    "generating": "Generating the key",
+    "keyLabel": "New public API key",
+    "shownOnce": "Copy it now: it will not be shown again.",
+    "title": "Public API key"
+  },
+  "support": {
+    "description": "Opens the club's back office in a new tab, as an administrator and for a limited time. Every action goes to the club's audit, and no full IBAN can be seen nor personal data exported.",
+    "enter": "Enter as the club's administrator",
+    "entering": "Opening the access",
+    "granted": "The club's back office opened in a new tab. The access lasts until {until}.",
+    "noAdminHost": "The club has no verified back-office domain: add one in the Domains tab.",
+    "opensHost": "{host} will open.",
+    "popupBlocked": "The browser did not let the new tab open. Allow pop-ups for this page and try again.",
+    "reason": "Reason for the access",
+    "title": "Support access"
   },
   "presets": {
     "CANIC": "Like the pilot club",
@@ -362,6 +459,7 @@
   "tabs": {
     "auditoria": "Audit",
     "catalegs": "Base catalogs",
+    "dominis": "Domains",
     "equip": "Team",
     "estat": "Status",
     "identitat": "Identity",
@@ -369,6 +467,7 @@
     "localitzacio": "Localization",
     "moduls": "Modules",
     "pagaments": "Payments",
+    "parametres": "Parameters",
     "processos": "Processes",
     "tema": "Theme",
     "us": "Usage"

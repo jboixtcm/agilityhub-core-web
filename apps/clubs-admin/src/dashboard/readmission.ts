@@ -50,8 +50,8 @@ export function signupPerson(signup: SignupView): Member {
     submitted.lastName2 === record.lastName2;
   const person: Member = {
     ...record,
-    address: submitted.address ?? record.address,
-    birthDate: submitted.birthDate ?? record.birthDate,
+    address: submitted.address ?? record.address ?? null,
+    birthDate: submitted.birthDate ?? record.birthDate ?? null,
     contactEmails: submitted.contactEmails,
     firstName: submitted.firstName,
     fullName: sameName

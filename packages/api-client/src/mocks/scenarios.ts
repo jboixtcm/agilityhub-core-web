@@ -91,6 +91,11 @@ export interface MockScenarioDefinition {
   signupMemberWithoutPlan?: boolean;
   /** The D2 variant of the Marta Roca signup (`fixtures/signup-review.ts`). */
   signupReview?: SignupReviewVariant;
+  /**
+   * S17 R-17-10 (E10-W03): the club's audit lists the AgilityHub team's support accesses (one
+   * alive, one ended), so D19's [Acaba l'accés] has a grant to end.
+   */
+  supportAccesses?: boolean;
   /** The S09 world (`fixtures/training.ts`): Rock at the limit, or no dog with the right. */
   training?: "atLimit" | "atLimitNone" | "default" | "noRight";
 }
@@ -131,6 +136,26 @@ const platformMe: Me = {
   },
   features: [],
 };
+/**
+ * S17 R-17-10: `GET /me` with a support access token — the platform account, an ADMIN membership
+ * of the club without a member, and `support {actorName, expiresAt}` for the banner.
+ */
+export function supportMe(expiresAt: string): Me {
+  if (adminMembership === undefined) throw new TypeError("The admin fixture has no membership");
+  return {
+    account: platformMe.account,
+    features: admin.features,
+    membership: {
+      activeProfile: "ADMIN",
+      clubId: adminMembership.clubId,
+      profiles: ["ADMIN"],
+      rememberProfile: false,
+      roles: ["ADMIN"],
+    },
+    support: { actorName: platformMe.account.name, expiresAt },
+  };
+}
+
 const productBranding: Branding = {
   ...minimal,
   club: { ...minimal.club, name: "AgilityHub", slug: "agilityhub" },
@@ -163,6 +188,13 @@ const scenarios = {
     branding: { ...canic, locales: ["ca", "es", "en"] },
     me: meAdmin as Me,
     sessions: accountSessions,
+  },
+  /** S17 R-17-10 (E10-W03): the club's ADMIN with a live support access in its audit. */
+  adminSupportAccess: {
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+    supportAccesses: true,
   },
   /**
    * E5-W05 step 5: the ring-usage register with more than 1000 rows in the week of Monday 3, where

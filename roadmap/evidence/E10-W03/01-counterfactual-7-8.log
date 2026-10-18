@@ -1,0 +1,233 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/console/ClubRecordPage.test.tsx (21 tests | 1 failed | 20 skipped) 10147ms
+   ❯ E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») (21)
+     × E10-W03 #8 (E10-W01 review #3): an unknown tab segment shows Identitat and the address says /identitat 10145ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/console/ClubRecordPage.test.tsx > E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») > E10-W03 #8 (E10-W01 review #3): an unknown tab segment shows Identitat and the address says /identitat
+AssertionError: expected '/consola/clubs/50000000-0000-4000-800…' to be '/consola/clubs/50000000-0000-4000-800…' // Object.is equality
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"light"[39m
+  [33mdata-theme[39m=[32m"light"[39m
+  [33mstyle[39m=[32m"color-scheme: light; --ah-color-primary: #2457D6; --ah-color-primary-fg: #FFFFFF; --ah-color-background: #FFFFFF; --ah-color-surface: #FFFFFF; --ah-color-surface-2: #F4F6FA; --ah-color-text: #17191F; --ah-color-text-muted: #626875; --ah-color-border: #D8DCE5; --ah-color-success: #237A4B; --ah-color-warning: #A66400; --ah-color-danger: #B42318; --ah-color-info: #2457D6; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#FFFFFF"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"console-page"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"console-back"[39m
+          [33mhref[39m=[32m"/consola/clubs"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-undo"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [0mClubs[0m
+        [36m</a>[39m
+        [36m<header[39m
+          [33mclass[39m=[32m"console-page__header console-record__header"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<h1>[39m
+              [0mClub Mínim[0m
+            [36m</h1>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"console-record__meta"[39m
+            [36m>[39m
+              [36m<span>[39m
+                [0mminim[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mEn posada en marxa[0m
+              [36m</span>[39m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</header>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"console-checklist-title"[39m
+          [33mclass[39m=[32m"ah-card console-card console-checklist"[39m
+          [33mrole[39m=[32m"region"[39m
+        [36m>[39m
+          [36m<h2[39m
+            [33mid[39m=[32m"console-checklist-title"[39m
+          [36m>[39m
+            [0mChecklist d'onboarding[0m
+          [36m</h2>[39m
+          [36m<p>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"console-checklist-summary"[39m
+            [36m>[39m
+              [36m<strong>[39m
+                [0m4/7[0m
+              [36m</strong>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"console-checklist-summary__missing"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                  [33mclass[39m=[32m"console-checklist-summary__dot"[39m
+                [36m>[39m
+                  [0m · [0m
+                [36m</span>[39m
+                [0mfalten: Dominis verificats, Preguntes freqüents, Política de privacitat[0m
+              [36m</span>[39m
+            [36m</span>[39m
+          [36m</p>[39m
+          [36m<ul[39m
+            [33mclass[39m=[32m"console-checklist__items"[39m
+          [36m>[39m
+            [36m<li[39m
+              [33mdata-done[39m=[32m"false"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-warn"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mDominis verificats[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--warning"[39m
+              [36m>[39m
+                [0mpendent[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li[39m
+              [33mdata-done[39m=[32m"true"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mProveïdor de pagament configurat[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mfet[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li[39m
+              [33mdata-done[39m=[32m"true"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mMarca: logo i colors propis[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              [36m>[39m
+                [0mfet[0m
+              [36m</span>[39m
+            [36m</li>[39m
+            [36m<li[39m
+              [33mdata-done[39m=[32m"true"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-check"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [36m<span>[39m
+                [0mPlantilles de comunicat[0m
+              [36m</span>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+              ...
+
+Expected: "/consola/clubs/50000000-0000-4000-8000-000000000002/identitat"
+Received: "/consola/clubs/50000000-0000-4000-8000-000000000002/parametres-antics"
+
+ ❯ src/console/ClubRecordPage.test.tsx:503:40
+    501|     expect(tabs.getByRole("link", { name: "Identitat" })).toHaveAttrib…
+    502|     await waitFor(() => {
+    503|       expect(window.location.pathname).toBe(`/consola/clubs/${MINIM}/i…
+       |                                        ^
+    504|     });
+    505|     expect(replaced).toHaveBeenCalledWith(null, "", `/consola/clubs/${…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 skipped (21)
+   Start at  08:39:46
+   Duration  11.84s (tests 86%, transform 7%, environment 3%, import 2%, setup 1%)
+
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+ ❯ src/console/ClubRecordPage.test.tsx (21 tests | 1 failed | 20 skipped) 200ms
+   ❯ E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») (21)
+     × E10-W01 round 2 #8: a failed reread after a successful write says so and retries 197ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/console/ClubRecordPage.test.tsx > E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa») > E10-W01 round 2 #8: a failed reread after a successful write says so and retries
+Error: [2mexpect([22m[31melement[39m[2m).toBeDisabled()[22m
+
+Received element is not disabled:
+  [31m<button
+  aria-checked="true"
+  aria-label="Facturació"
+  class="ah-switch ah-switch--checked"
+  role="switch"
+  type="button"
+/>[39m
+ ❯ src/console/ClubRecordPage.test.tsx:365:64
+    363|     // possibly stale version — the tab's controls and its DESA are di…
+    364|     const modules = captureRequests((method, url) => method === "PUT" …
+    365|     expect(screen.getByRole("switch", { name: "Facturació" })).toBeDis…
+       |                                                                ^
+    366|     expect(screen.getByRole("button", { name: "DESA" })).toBeDisabled(…
+    367|     fireEvent.click(screen.getByRole("button", { name: "DESA" }));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 skipped (21)
+   Start at  08:40:03
+   Duration  2.02s (transform 46%, environment 21%, import 17%, tests 10%, setup 6%)
+

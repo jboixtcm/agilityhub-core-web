@@ -535,6 +535,18 @@ export function ThemeTab({ client, club, onReload }: ConsoleTabProps) {
                       type="file"
                     />
                     <Button
+                      // The visible control: it carries the field's help (the pending file) and
+                      // its upload error, which a screen reader would otherwise never reach.
+                      aria-describedby={
+                        [
+                          change !== undefined && "name" in change
+                            ? `console-theme-${slot}-help`
+                            : undefined,
+                          uploadError?.slot === slot ? `console-theme-${slot}-error` : undefined,
+                        ]
+                          .filter((value) => value !== undefined)
+                          .join(" ") || undefined
+                      }
                       aria-label={t("console:theme.chooseLogoLabel", {
                         logo: t(`console:theme.logos.${slot}`),
                       })}

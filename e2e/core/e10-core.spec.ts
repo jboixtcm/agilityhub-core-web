@@ -242,3 +242,199 @@ test("E10-W01 · D19 against the core: the list, the Identitat tab and the «Nou
   await screenshot(page, "core-D19-fitxa-checklist-1280.png");
   await context.close();
 });
+
+/** E10-W03's evidence folder (the stage writes E10-W01's by default). */
+const w03Directory = resolve(evidenceDirectory, "..", "E10-W03");
+mkdirSync(w03Directory, { recursive: true });
+
+async function w03Screenshot(page: Page, name: string): Promise<void> {
+  await page.evaluate(async () => document.fonts.ready);
+  await page.screenshot({ fullPage: true, path: join(w03Directory, name) });
+}
+
+/** Opens a seeded club's record tab from D19's list (its id is the api's). */
+async function openSeededRecord(page: Page, slug: string, tab: string): Promise<void> {
+  await navigateSpa(page, "/consola/clubs");
+  const row = page
+    .getByRole("row")
+    .filter({ has: page.getByRole("cell", { exact: true, name: slug }) });
+  const record = page.waitForResponse(isPlatform("GET", /\/api\/v1\/platform\/clubs\/[^/]+$/u));
+  await row.getByRole("link").first().click();
+  expect((await record).status()).toBe(200);
+  await page.waitForURL("**/identitat");
+  await page.getByRole("link", { exact: true, name: tab }).click();
+}
+
+test("E10-W03 · «Dominis» (add, DNS records, [Verifica] on the local fake DNS) and the support access against the core (T-17-12, T-17-09)", async ({
+  browser,
+}) => {
+  test.setTimeout(300_000);
+  const context = await browser.newContext({ viewport: { height: 900, width: 1280 } });
+  await context.addInitScript(() => {
+    localStorage.setItem("agilityhub.locale", "ca");
+  });
+  const page = await context.newPage();
+  recordPlatformCalls(page);
+  await loginPlatformAdmin(page);
+  const notes: Record<string, unknown> = {};
+
+  // Step 1: a domain on the «club mínim», its DNS records as the api answers them, [Verifica].
+  await openSeededRecord(page, "minim", "Dominis");
+  await expect(page.getByRole("heading", { level: 2, name: "Dominis" })).toBeVisible();
+  const host = `e10w03-${String(Date.now() % 100_000)}.example.test`;
+  await page.getByLabel("Host").fill(host);
+  const added = page.waitForResponse(
+    isPlatform("POST", /\/api\/v1\/platform\/clubs\/[^/]+\/domains$/u),
+  );
+  await page.getByRole("button", { name: "Afegeix domini" }).click();
+  const addedResponse = await added;
+  expect(addedResponse.status()).toBe(201);
+  expect(addedResponse.request().headers()["idempotency-key"]).toMatch(/[0-9a-f-]{36}/u);
+  const domain = (await addedResponse.json()) as {
+    status: string;
+    verification: { cnameTarget: string; recordName: string; recordValue: string };
+  };
+  notes.added = { status: domain.status, verification: Object.keys(domain.verification).sort() };
+  expect(domain.status).toBe("PENDING");
+  const records = page.locator(".console-card").filter({
+    has: page.getByRole("heading", { name: `Registres DNS de ${host}` }),
+  });
+  await expect(records.getByText(domain.verification.cnameTarget, { exact: true })).toBeVisible();
+  await expect(records.getByText(domain.verification.recordName, { exact: true })).toBeVisible();
+  await expect(records.getByText(domain.verification.recordValue, { exact: true })).toBeVisible();
+  await w03Screenshot(page, "core-D19-dominis-afegit-1280.png");
+  const verified = page.waitForResponse(isPlatform("POST", /\/verification$/u));
+  await page.getByRole("button", { name: `Verifica ${host}` }).click();
+  const verification = await verified;
+  notes.verification = {
+    status: verification.status(),
+    body: (await verification.json()) as unknown,
+  };
+  const row = page.getByRole("row").filter({ hasText: host });
+  if (verification.status() === 200) {
+    // The local DomainDns double found a record: VERIFIED, the challenge gone.
+    await expect(
+      page.getByText(new RegExp(`S'ha verificat ${host.replace(/\./gu, "\\.")}`, "u")),
+    ).toBeVisible();
+    await expect(row.getByText("verificat")).toBeVisible();
+  } else {
+    // No record on the double: 422 HOST_NOT_VERIFIED with the expected records; still pending.
+    expect(verification.status()).toBe(422);
+    const refusal = notes.verification as {
+      body: { code: string; details: Record<string, unknown> };
+    };
+    expect(refusal.body.code).toBe("HOST_NOT_VERIFIED");
+    expect(refusal.body.details).toMatchObject({
+      cnameTarget: domain.verification.cnameTarget,
+      host,
+      recordName: domain.verification.recordName,
+      recordValue: domain.verification.recordValue,
+    });
+    await expect(
+      page.getByText(
+        new RegExp(
+          `No s'ha trobat cap dels dos registres DNS de ${host.replace(/\./gu, "\\.")}`,
+          "u",
+        ),
+      ),
+    ).toBeVisible();
+    await expect(row.getByText("pendent")).toBeVisible();
+  }
+  await w03Screenshot(page, "core-D19-dominis-verifica-1280.png");
+  // A domain that is not its app's primary is removed (E123): the add's own row.
+  if (!(await row.getByText("principal").isVisible())) {
+    await row.getByRole("button", { name: `Elimina ${host}` }).click();
+    const removed = page.waitForResponse(isPlatform("DELETE", /\/domains\/[^/]+$/u));
+    await page.getByRole("dialog").getByRole("button", { name: "ELIMINA" }).click();
+    expect((await removed).status()).toBe(204);
+    await expect(page.getByText(`S'ha eliminat ${host}.`)).toBeVisible();
+    notes.removed = true;
+  }
+
+  // Step 2: «Entra com a administrador del club» on the Cànic: a new tab on its back office.
+  await openSeededRecord(page, "canic", "Estat");
+  await expect(page.getByRole("heading", { level: 2, name: "Accés de suport" })).toBeVisible();
+  const reason = `Prova E10-W03 ${String(Date.now() % 100_000)}`;
+  await page.getByLabel("Motiu de l'accés").fill(reason);
+  const popup = context.waitForEvent("page");
+  const granted = page.waitForResponse(isPlatform("POST", /\/support-access$/u));
+  await page.getByRole("button", { name: "Entra com a administrador del club" }).click();
+  const grantedResponse = await granted;
+  expect(grantedResponse.status()).toBe(201);
+  const support = await popup;
+  // Every `/me` of the tab: the cookie's own session may answer first; the support one follows.
+  const supportMes: unknown[] = [];
+  support.on("response", (response) => {
+    if (response.url().endsWith("/api/v1/me") && response.request().method() === "GET") {
+      void response.json().then(
+        (body: unknown) => supportMes.push(body),
+        () => undefined,
+      );
+    }
+  });
+  await support.waitForURL("**/tauler", { timeout: 60_000 });
+  const banner = support.getByRole("region", { name: "Accés de suport" });
+  await expect(banner).toContainText("Accés de suport de l'equip AgilityHub ·");
+  const withSupport = supportMes.find(
+    (body) => typeof body === "object" && body !== null && "support" in body,
+  ) as { membership?: { roles?: string[] }; support: Record<string, unknown> } | undefined;
+  notes.supportMe =
+    withSupport === undefined
+      ? null
+      : {
+          roles: withSupport.membership?.roles ?? null,
+          support: Object.keys(withSupport.support).sort(),
+        };
+  expect(withSupport).toBeDefined();
+  await expect(support.getByRole("link", { name: "Consola" })).toHaveCount(0);
+  await w03Screenshot(support, "core-D19-suport-backoffice-1280.png");
+
+  // Step 3: the club's ADMIN (the same seeded admin, in its own tab) ends it from «Auditoria».
+  await navigateSpa(page, "/auditoria");
+  const card = page.getByRole("region", { name: "Accessos de suport en curs" });
+  const item = card.getByRole("listitem").filter({ hasText: reason });
+  await expect(item).toHaveCount(1);
+  await w03Screenshot(page, "core-D19-auditoria-acces-suport-1280.png");
+  const ended = page.waitForResponse(
+    (response) =>
+      response.request().method() === "DELETE" &&
+      response.url().includes("/api/v1/support-accesses/"),
+  );
+  await item.getByRole("button", { name: "Acaba l'accés" }).click();
+  expect((await ended).status()).toBe(204);
+  await expect(card.getByText(/S'ha acabat l'accés de suport de/u)).toBeVisible();
+  // The support tab's token answers 401 from its next request: the tab says the access ended.
+  await support.reload();
+  await expect(
+    support.getByText(
+      /L'accés de suport ha acabat: ha caducat o l'administrador del club l'ha acabat/u,
+    ),
+  ).toBeVisible();
+  await w03Screenshot(support, "core-D19-suport-acabat-1280.png");
+
+  // Step 4: a second access, left with «Surt» (POST /oauth2/revoke with the support token).
+  await openSeededRecord(page, "canic", "Estat");
+  await page.getByLabel("Motiu de l'accés").fill(`${reason} · surt`);
+  const second = context.waitForEvent("page");
+  await page.getByRole("button", { name: "Entra com a administrador del club" }).click();
+  const leaving = await second;
+  await leaving.waitForURL("**/tauler", { timeout: 60_000 });
+  const revoked = leaving.waitForResponse((response) => response.url().endsWith("/oauth2/revoke"));
+  await leaving
+    .getByRole("region", { name: "Accés de suport" })
+    .getByRole("button", { name: "Surt" })
+    .click();
+  const revokeResponse = await revoked;
+  notes.revoke = revokeResponse.status();
+  expect(revokeResponse.ok()).toBe(true);
+  await expect(leaving).toHaveURL(/\/suport\?sortit=1$/u);
+  await expect(
+    leaving.getByText("Has sortit de l'accés de suport. Ja pots tancar aquesta pestanya."),
+  ).toBeVisible();
+
+  writeFileSync(
+    join(w03Directory, "e10w03-core-notes.json"),
+    `${JSON.stringify(notes, null, 2)}\n`,
+  );
+  await context.close();
+});

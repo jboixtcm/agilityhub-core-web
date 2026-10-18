@@ -85,8 +85,10 @@ function sessionFromMe(me: Me): SessionSnapshot {
   const roles = [...(me.membership?.roles ?? [])];
   const preferredProfile = me.membership?.activeProfile ?? me.membership?.defaultProfile;
   const activeProfile = roles.find((role) => role === preferredProfile) ?? roles[0] ?? null;
-  // An impersonation token acts as the member, never with the actor's platform roles (S01 R-01-16).
-  const platformRoles = me.impersonation === undefined ? [...me.account.platformRoles] : [];
+  // An impersonation token acts as the member, and a support access token as the club's ADMIN
+  // (S17 R-17-10: no `platformRoles` in it), never with the actor's platform roles (S01 R-01-16).
+  const platformRoles =
+    me.impersonation === undefined && me.support === undefined ? [...me.account.platformRoles] : [];
   return { activeProfile, me, platformRoles, roles, status: "signedIn" };
 }
 

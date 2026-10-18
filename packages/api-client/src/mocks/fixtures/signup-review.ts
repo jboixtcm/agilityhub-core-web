@@ -18,11 +18,7 @@ type Warning = components["schemas"]["SignupWarning"];
  * `readmissionNoCard` is the same readmission whose reused dog's record has no card document.
  */
 export type SignupReviewVariant =
-  | "addDog"
-  | "familyPending"
-  | "manual"
-  | "readmission"
-  | "readmissionNoCard";
+  "addDog" | "familyPending" | "manual" | "readmission" | "readmissionNoCard";
 
 export const signupReviewBaseline = memberSignupReviewFixture as MemberSignupView;
 
@@ -63,7 +59,11 @@ export function signupReviewVariant(
   }
   if (variant === "familyPending") {
     // What the applicant typed on 17; the api found no ACTIVE member with it.
-    view.familyGroupClaim = { dogName: "Duna", holderName: "Laura Serra", status: "NOT_FOUND_PENDING" };
+    view.familyGroupClaim = {
+      dogName: "Duna",
+      holderName: "Laura Serra",
+      status: "NOT_FOUND_PENDING",
+    };
     delete view.proposals.familyGroupId;
     view.warnings = [...view.warnings, "FAMILY_HOLDER_NOT_FOUND"];
   }
@@ -117,7 +117,9 @@ export function signupReviewVariant(
               ],
         name: "Kivi",
         sex: kiwi.sex,
-        ...(kiwi.notesToInstructors === undefined ? {} : { notesToInstructors: kiwi.notesToInstructors }),
+        ...(kiwi.notesToInstructors === undefined
+          ? {}
+          : { notesToInstructors: kiwi.notesToInstructors }),
       };
       kiwi.readmission = {
         changedFields: dogReadmissionChanges(current, kiwi),
@@ -174,8 +176,8 @@ export function withReadmissionValues(
 ): MemberSignupView["member"] {
   const person: MemberSignupView["member"] = {
     ...member,
-    address: values.address ?? member.address,
-    birthDate: values.birthDate ?? member.birthDate,
+    address: values.address ?? member.address ?? null,
+    birthDate: values.birthDate ?? member.birthDate ?? null,
     contactEmails: values.contactEmails.map((entry) => ({ ...entry })),
     firstName: values.firstName,
     fullName: [values.firstName, values.lastName1, values.lastName2].filter(Boolean).join(" "),
@@ -199,9 +201,12 @@ export function withReadmissionValues(
 
 /** The submitted values of a pending readmission, as the D2 view shows them (payment masked). */
 export function readmissionValues(member: MemberSignupView["member"]): ReadmissionValues {
+  // A signup's person is never an erased member: its address and birth date are there (the
+  // snapshot makes them nullable only for an erased one, S14 R-14-15).
+  const address = member.address ?? { city: "", postalCode: "", street: "" };
   return {
-    address: { city: member.address.city, postalCode: member.address.postalCode, street: member.address.street },
-    birthDate: member.birthDate,
+    address: { city: address.city, postalCode: address.postalCode, street: address.street },
+    ...(member.birthDate == null ? {} : { birthDate: member.birthDate }),
     contactEmails: member.contactEmails.map((entry) => ({ ...entry })),
     firstName: member.firstName,
     gender: member.gender,
@@ -214,7 +219,10 @@ export function readmissionValues(member: MemberSignupView["member"]): Readmissi
 }
 
 /** `SignupReadmission.changedFields`: the fields whose submitted value differs from the record. */
-export function readmissionChanges(current: ReadmissionValues, submitted: ReadmissionValues): string[] {
+export function readmissionChanges(
+  current: ReadmissionValues,
+  submitted: ReadmissionValues,
+): string[] {
   const fields = [
     "firstName",
     "lastName1",
@@ -226,7 +234,9 @@ export function readmissionChanges(current: ReadmissionValues, submitted: Readmi
     "address",
     "paymentMethod",
   ] as const;
-  return fields.filter((field) => JSON.stringify(current[field]) !== JSON.stringify(submitted[field]));
+  return fields.filter(
+    (field) => JSON.stringify(current[field]) !== JSON.stringify(submitted[field]),
+  );
 }
 
 type PaymentMethodOption = MemberSignupView["paymentMethods"][number];
@@ -246,10 +256,15 @@ export function signupReviewPaymentMethods(
   billing: boolean,
 ): PaymentMethodOption[] {
   if (!billing) return [];
-  const person = view.readmission == null ? view.member : withReadmissionValues(view.member, view.readmission.submitted);
+  const person =
+    view.readmission == null
+      ? view.member
+      : withReadmissionValues(view.member, view.readmission.submitted);
   const current = person.paymentMethod?.type;
   if (view.member.status !== "PENDING") {
-    return current === undefined ? [] : [{ assignable: false, current: true, label: labelOf(current), type: current }];
+    return current === undefined
+      ? []
+      : [{ assignable: false, current: true, label: labelOf(current), type: current }];
   }
   const options = offered.map((method) => ({
     assignable: true,
@@ -263,8 +278,15 @@ export function signupReviewPaymentMethods(
 }
 
 /** The ca labels of the fixture views (the handler resolves them in the request's language). */
-const fixtureLabels: Readonly<Record<PaymentType, string>> = { CARD: "Targeta", MANUAL: "Efectiu", SEPA_DD: "Domiciliació" };
-const fixtureOffered = (["SEPA_DD", "MANUAL"] as const).map((type) => ({ label: fixtureLabels[type], type }));
+const fixtureLabels: Readonly<Record<PaymentType, string>> = {
+  CARD: "Targeta",
+  MANUAL: "Efectiu",
+  SEPA_DD: "Domiciliació",
+};
+const fixtureOffered = (["SEPA_DD", "MANUAL"] as const).map((type) => ({
+  label: fixtureLabels[type],
+  type,
+}));
 
 function fixturePaymentMethods(view: MemberSignupView): PaymentMethodOption[] {
   return signupReviewPaymentMethods(view, fixtureOffered, (type) => fixtureLabels[type], true);
@@ -283,7 +305,12 @@ export function addDogSignupReview(base: MemberSignupView): MemberSignupView {
     version: 7,
   };
   view.version = 7;
-  view.signup = { ...view.signup, pendingDays: 1, source: "APP_ADD_DOG", submittedAt: "2026-08-09T18:40:00Z" };
+  view.signup = {
+    ...view.signup,
+    pendingDays: 1,
+    source: "APP_ADD_DOG",
+    submittedAt: "2026-08-09T18:40:00Z",
+  };
   view.dogs = [
     {
       birthMonth: "2025-11",
@@ -313,8 +340,20 @@ export function addDogSignupReview(base: MemberSignupView): MemberSignupView {
   delete view.proposals.familyGroupId;
   view.upfront = {
     lines: [
-      { amount: eur(10000), concept: "ENTRY_FEE", id: "45000000-0000-4000-8000-000000000009", provider: "MANUAL", status: "DUE" },
-      { amount: eur(3000), concept: "ADDITIONAL_DOG_FEE", id: "45000000-0000-4000-8000-000000000010", provider: "MANUAL", status: "DUE" },
+      {
+        amount: eur(10000),
+        concept: "ENTRY_FEE",
+        id: "45000000-0000-4000-8000-000000000009",
+        provider: "MANUAL",
+        status: "DUE",
+      },
+      {
+        amount: eur(3000),
+        concept: "ADDITIONAL_DOG_FEE",
+        id: "45000000-0000-4000-8000-000000000010",
+        provider: "MANUAL",
+        status: "DUE",
+      },
     ],
     totalDue: eur(13000),
     totalPaid: eur(0),
@@ -338,9 +377,13 @@ export function addDogPendingSignup(item: PendingSignup): PendingSignup {
  * The views of the other D1 rows (Pol C., Núria T.): the Marta view with the row's person, dogs,
  * plan and payment, each dog with its own version and the plan's upfront lines still due.
  */
-export function derivedSignupReview(base: MemberSignupView, pending: PendingSignup): MemberSignupView {
+export function derivedSignupReview(
+  base: MemberSignupView,
+  pending: PendingSignup,
+): MemberSignupView {
   const view = structuredClone(base);
-  const plan = view.planOptions.find((option) => option.name === pending.planName) ?? view.planOptions[0];
+  const plan =
+    view.planOptions.find((option) => option.name === pending.planName) ?? view.planOptions[0];
   view.member.id = pending.memberId;
   view.member.firstName = pending.shortName.split(" ")[0] ?? pending.shortName;
   view.member.fullName = pending.shortName;
@@ -378,7 +421,11 @@ export function derivedSignupReview(base: MemberSignupView, pending: PendingSign
     else view.proposals.priceId = price.priceId;
     if (plan.type !== "MONTHLY") delete view.proposals.nextInvoiceDate;
     // Nothing collected yet: the plan's lines are all due.
-    view.upfront = quoteUpfront({ ...view, upfront: { lines: [], totalDue: eur(0), totalPaid: eur(0) } }, plan.planId, []);
+    view.upfront = quoteUpfront(
+      { ...view, upfront: { lines: [], totalDue: eur(0), totalPaid: eur(0) } },
+      plan.planId,
+      [],
+    );
   }
   view.paymentMethods = fixturePaymentMethods(view);
   return view;
@@ -401,16 +448,32 @@ function quoteLines(
   const plan = view.planOptions.find((option) => option.planId === planId);
   const price = plan?.prices.find((candidate) => candidate.priceId === priceId) ?? plan?.prices[0];
   if (plan === undefined || price === undefined) return { lines: [] };
-  if (plan.type === "PACK") return { lines: [{ amount: price.amount.amountMinor, concept: "PACK" }] };
+  if (plan.type === "PACK")
+    return { lines: [{ amount: price.amount.amountMinor, concept: "PACK" }] };
   if (price.concept === "MAINTENANCE_FEE") {
-    return { lines: [{ amount: 5000, concept: "ENTRY_FEE" }], nextInvoiceDate: REQUESTED_NEXT_INVOICE };
+    return {
+      lines: [{ amount: 5000, concept: "ENTRY_FEE" }],
+      nextInvoiceDate: REQUESTED_NEXT_INVOICE,
+    };
   }
   const requested = planId === view.signup.planIdRequested;
   const frozen = view.upfront?.firstMonth;
   const firstMonth =
     requested && frozen !== undefined
-      ? { ...frozen, amountDue: eur(frozen.portion === "HALF" ? Math.round(price.amount.amountMinor / 2) : price.amount.amountMinor) }
-      : { amountDue: price.amount, option: "TODAY" as const, portion: "FULL" as const, startDate: MOCK_TODAY };
+      ? {
+          ...frozen,
+          amountDue: eur(
+            frozen.portion === "HALF"
+              ? Math.round(price.amount.amountMinor / 2)
+              : price.amount.amountMinor,
+          ),
+        }
+      : {
+          amountDue: price.amount,
+          option: "TODAY" as const,
+          portion: "FULL" as const,
+          startDate: MOCK_TODAY,
+        };
   return {
     firstMonth,
     lines: [
@@ -460,7 +523,10 @@ function quoteUpfront(
   let remaining = Math.max(0, quoteTotal - paid);
   const fresh: UpfrontLine[] = [];
   quote.lines.forEach((line, index) => {
-    const alreadyPaid = kept.some((candidate) => candidate.concept === line.concept && candidate.amount.amountMinor === line.amount);
+    const alreadyPaid = kept.some(
+      (candidate) =>
+        candidate.concept === line.concept && candidate.amount.amountMinor === line.amount,
+    );
     if (alreadyPaid || remaining === 0) return;
     const amount = Math.min(line.amount, remaining);
     remaining -= amount;
@@ -498,12 +564,20 @@ export function signupViewWarnings(view: MemberSignupView): Warning[] {
 }
 
 /** `POST /members/{id}/validation?dryRun=true` of the mock world. */
-export function signupReviewDryRun(view: MemberSignupView, body: ValidationRequest): ValidationDryRun {
+export function signupReviewDryRun(
+  view: MemberSignupView,
+  body: ValidationRequest,
+): ValidationDryRun {
   const planId = body.planId ?? view.proposals.planId ?? view.signup.planIdRequested ?? "";
   const plan = view.planOptions.find((option) => option.planId === planId);
-  const price = plan?.prices.find((candidate) => candidate.priceId === body.priceId) ?? plan?.prices[0];
-  const warnings: Warning[] = signupViewWarnings(view).filter((warning) => warning !== "UPFRONT_UNPAID");
-  const checkoutPending = (view.upfront?.lines ?? []).some((line) => line.status === "CHECKOUT_PENDING");
+  const price =
+    plan?.prices.find((candidate) => candidate.priceId === body.priceId) ?? plan?.prices[0];
+  const warnings: Warning[] = signupViewWarnings(view).filter(
+    (warning) => warning !== "UPFRONT_UNPAID",
+  );
+  const checkoutPending = (view.upfront?.lines ?? []).some(
+    (line) => line.status === "CHECKOUT_PENDING",
+  );
   if (checkoutPending && planId !== view.signup.planIdRequested) warnings.push("CHECKOUT_PENDING");
   const upfront = quoteUpfront(view, planId, warnings, price?.priceId);
   const quote = quoteLines(view, planId, price?.priceId);
@@ -514,14 +588,19 @@ export function signupReviewDryRun(view: MemberSignupView, body: ValidationReque
         ? {}
         : { nextInvoiceDate: quote.nextInvoiceDate }
       : { nextInvoiceDate: body.nextInvoiceDate }),
-    ...(price === undefined ? {} : { price: { amount: price.amount, id: price.priceId, periodicity: price.periodicity } }),
+    ...(price === undefined
+      ? {}
+      : { price: { amount: price.amount, id: price.priceId, periodicity: price.periodicity } }),
     upfront,
     warnings,
   };
 }
 
 /** Whether the plan of a validation request needs `nextInvoiceDate` (BILLING and a MONTHLY plan). */
-export function signupReviewNeedsInvoiceDate(view: MemberSignupView, body: ValidationRequest): boolean {
+export function signupReviewNeedsInvoiceDate(
+  view: MemberSignupView,
+  body: ValidationRequest,
+): boolean {
   const planId = body.planId ?? view.proposals.planId;
   return view.planOptions.find((option) => option.planId === planId)?.type === "MONTHLY";
 }
@@ -559,7 +638,11 @@ export function signupDogDocuments(dog: SignupDog): DogDocument[] {
  * file keeps its key (a new one is the key its upload URL carries).
  */
 export function storeSignupDogDocuments(dog: SignupDog, documents: readonly DogDocument[]): void {
-  const keys = new Map(dog.documents.flatMap((document) => document.files).map((file) => [file.downloadUrl, file.fileKey]));
+  const keys = new Map(
+    dog.documents
+      .flatMap((document) => document.files)
+      .map((file) => [file.downloadUrl, file.fileKey]),
+  );
   dog.documents = documents.map((document) => ({
     files: document.files.map((file) => ({
       downloadUrl: file.url,
@@ -603,7 +686,9 @@ export function patchSignupDogDocuments(
         },
     );
     if (files.length === 0 && dog.readmission != null) {
-      const own = dog.readmission.current.documents.find((candidate) => candidate.type === document.type);
+      const own = dog.readmission.current.documents.find(
+        (candidate) => candidate.type === document.type,
+      );
       const ownRow: SignupDocumentView | undefined =
         own !== undefined
           ? { ...own, files: own.files.map((file) => ({ ...file })) }
@@ -618,7 +703,11 @@ export function patchSignupDogDocuments(
             : documents.map((candidate) => (candidate.type === document.type ? ownRow : candidate));
       continue;
     }
-    const row: SignupDocumentView = { files, state: files.length === 0 ? "PENDING" : "RECEIVED", type: document.type };
+    const row: SignupDocumentView = {
+      files,
+      state: files.length === 0 ? "PENDING" : "RECEIVED",
+      type: document.type,
+    };
     documents =
       existing === undefined
         ? [...documents, row]
@@ -630,6 +719,8 @@ export function patchSignupDogDocuments(
 /** R-04-23: a rejection with a collected payment tells the admin to refund it through billing. */
 export function signupReviewHasCollectedPayment(view: MemberSignupView): boolean {
   return (view.upfront?.lines ?? []).some(
-    (line) => line.status === "PAID" || (line.status === "PARTIAL" && (line.paidAmount?.amountMinor ?? 0) > 0),
+    (line) =>
+      line.status === "PAID" ||
+      (line.status === "PARTIAL" && (line.paidAmount?.amountMinor ?? 0) > 0),
   );
 }

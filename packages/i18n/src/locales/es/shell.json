@@ -17,6 +17,19 @@
     "updated": "Actualizado el {date}"
   },
   "loading": "Cargando",
+  "support": {
+    "banner": "Acceso de soporte del equipo AgilityHub · {name} · hasta el {until}",
+    "bannerLabel": "Acceso de soporte",
+    "ended": "El acceso de soporte ha terminado: ha caducado o el administrador del club lo ha terminado. Ya puedes cerrar esta pestaña.",
+    "entering": "Abriendo el backoffice del club…",
+    "exit": "Salir",
+    "leaving": "Saliendo",
+    "left": "Has salido del acceso de soporte. Ya puedes cerrar esta pestaña.",
+    "noOpener": "Este acceso se abre desde la consola de clubs, con «Entrar como administrador del club».",
+    "refused": "No se ha podido abrir el acceso de soporte. Vuelve a intentarlo desde la consola de clubs.",
+    "timeout": "No ha llegado el acceso de soporte. Vuelve a intentarlo desde la consola de clubs.",
+    "title": "Acceso de soporte"
+  },
   "language": {
     "ca": "Catalán",
     "en": "Inglés",

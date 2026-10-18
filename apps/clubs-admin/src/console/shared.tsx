@@ -19,17 +19,18 @@ export type ConsoleNavigate = (path: string) => void;
 type Translate = ReturnType<typeof useTranslation>["t"];
 
 /**
- * S17 §2 row «D19 Fitxa»: the record's tabs, in the spec's order, by their route segment.
- * «Paràmetres» stays out until the api publishes a club's parameters for the platform (E10-T04,
- * then E10-W03): without that read the tab could only show the catalog's defaults as the club's.
+ * S17 §2 row «D19 Fitxa»: the record's tabs, in the spec's order, by their route segment
+ * («Dominis» and «Paràmetres» since E10-W03, on E10-T04's domain routes and club parameters read).
  */
 export const CONSOLE_TABS = [
   "identitat",
   "localitzacio",
+  "dominis",
   "tema",
   "moduls",
   "pagaments",
   "legal",
+  "parametres",
   "catalegs",
   "equip",
   "processos",
@@ -240,6 +241,16 @@ export function consoleErrorMessage(t: Translate, error: unknown): string {
   }
   if (error.code === "FILE_TOO_LARGE" && typeof details.maxSizeMb === "number") {
     return t("console:errors.fileTooLarge", { maxSizeMb: details.maxSizeMb });
+  }
+  // S17 §6 (E123): the primary domain of its app is removed only once another one is primary.
+  if (error.code === "INVALID_STATE" && details.primary === true) {
+    return t("console:errors.primaryDomain");
+  }
+  // R-17-03: `{status}` of a domain that is not (or is already) VERIFIED.
+  if (error.code === "INVALID_STATE" && typeof details.status === "string") {
+    return t("console:errors.domainState", {
+      status: t(`console:domains.status.${details.status}`, { defaultValue: details.status }),
+    });
   }
   return t(`errors:${error.code}`, { defaultValue: t("console:errors.generic") });
 }

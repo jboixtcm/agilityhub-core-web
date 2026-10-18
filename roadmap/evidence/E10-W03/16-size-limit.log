@@ -1,0 +1,52 @@
+
+> agilityhub-core-web@0.0.0 size-limit /Users/jordib/dev/agilityhub/agilityhub-core-web
+> size-limit
+
+  
+  clubs initial JavaScript
+  Size limit: 300 kB
+  Size:       73.5 kB gzipped
+  
+  clubs all JavaScript
+  Size limit: 420 kB
+  Size:       305.02 kB gzipped
+  
+  clubs courses JavaScript (viewer, «Registra què hi ha muntat», build session; lazy, COURSES only)
+  Size limit: 40 kB
+  Size:       35.71 kB gzipped
+  
+  clubs course 3D viewer JavaScript (the viewer's 3D tab, lazy, three.js)
+  Size limit: 167 kB
+  Size:       149.27 kB gzipped
+  
+  clubs-admin initial JavaScript
+  Size limit: 460 kB
+  Size:       433.25 kB gzipped
+  
+  clubs-admin all JavaScript
+  Size limit: 660 kB
+  Size:       653.31 kB gzipped
+  
+  clubs-admin courses JavaScript (D18, D16 «Geometria», lazy, COURSES only)
+  Size limit: 66 kB
+  Size:       62.59 kB gzipped
+  
+  clubs-admin course 3D viewer JavaScript (D18's 3D tab, lazy, three.js)
+  Size limit: 167 kB
+  Size:       149.28 kB gzipped
+  
+  clubs-admin platform console JavaScript (D19, lazy, AGILITYHUB_ADMIN only)
+  Package size limit has exceeded by 4.27 kB
+  Size limit: 48.5 kB
+  Size:       52.77 kB gzipped
+  
+  id initial JavaScript
+  Size limit: 110 kB
+  Size:       99.85 kB gzipped
+  
+  id all JavaScript
+  Size limit: 310 kB
+  Size:       129.75 kB gzipped
+  
+  Try to reduce size or increase limit at .size-limit.json
+ ELIFECYCLE  Command failed with exit code 1.

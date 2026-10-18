@@ -204,6 +204,9 @@ function MemberEditDrawer({
   const [draft, setDraft] = useState(member);
   const [pending, setPending] = useState(false);
   const [failure, setFailure] = useState<string>();
+  // The api sends `address`/`birthDate` null only for an erased member (S14 R-14-15), whose record
+  // is never edited: the form shows them empty and the patch leaves them out.
+  const address = draft.address ?? { city: "", postalCode: "", street: "" };
 
   return (
     <Drawer
@@ -220,8 +223,8 @@ function MemberEditDrawer({
           setPending(true);
           setFailure(undefined);
           const body: MemberPatchRequest = {
-            address: draft.address,
-            birthDate: draft.birthDate,
+            ...(draft.address == null ? {} : { address: draft.address }),
+            ...(draft.birthDate == null ? {} : { birthDate: draft.birthDate }),
             // The core sends `null` for an optional value it does not have: read as absent.
             ...(draft.consents == null
               ? {}
@@ -337,7 +340,7 @@ function MemberEditDrawer({
                 setDraft({ ...draft, birthDate: event.currentTarget.value });
               }}
               type="date"
-              value={draft.birthDate}
+              value={draft.birthDate ?? ""}
             />
           </FormField>
         </div>
@@ -428,10 +431,10 @@ function MemberEditDrawer({
               onChange={(event) => {
                 setDraft({
                   ...draft,
-                  address: { ...draft.address, street: event.currentTarget.value },
+                  address: { ...address, street: event.currentTarget.value },
                 });
               }}
-              value={draft.address.street}
+              value={address.street}
             />
           </FormField>
           <div className="census-record__form-grid">
@@ -441,10 +444,10 @@ function MemberEditDrawer({
                 onChange={(event) => {
                   setDraft({
                     ...draft,
-                    address: { ...draft.address, postalCode: event.currentTarget.value },
+                    address: { ...address, postalCode: event.currentTarget.value },
                   });
                 }}
-                value={draft.address.postalCode}
+                value={address.postalCode}
               />
             </FormField>
             <FormField id="member-city" label={t("admin-census:member.fields.city")}>
@@ -453,10 +456,10 @@ function MemberEditDrawer({
                 onChange={(event) => {
                   setDraft({
                     ...draft,
-                    address: { ...draft.address, city: event.currentTarget.value },
+                    address: { ...address, city: event.currentTarget.value },
                   });
                 }}
-                value={draft.address.city}
+                value={address.city}
               />
             </FormField>
           </div>
@@ -1420,7 +1423,8 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
               ...overview,
               member: {
                 ...member,
-                accountMissing: paymentMethod.type === "SEPA_DD" && paymentMethod.maskedAccount == null,
+                accountMissing:
+                  paymentMethod.type === "SEPA_DD" && paymentMethod.maskedAccount == null,
                 paymentMethod,
               },
             });

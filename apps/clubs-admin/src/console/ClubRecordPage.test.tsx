@@ -51,16 +51,18 @@ async function openTab(id: string, tab: string) {
 }
 
 describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
-  it("lists the cut #1 tabs only (no «Dominis», no support access) and keeps the tab in the route", async () => {
+  it("T-17-12 lists every tab of S17 §2 in its order (E10-W03: Dominis, Paràmetres) and keeps the tab in the route", async () => {
     const { navigations } = await openTab(CANIC, "identitat");
     const tabs = within(screen.getByRole("navigation", { name: "Seccions de la fitxa del club" }));
     expect(tabs.getAllByRole("link").map((link) => link.textContent)).toEqual([
       "Identitat",
       "Localització",
+      "Dominis",
       "Tema",
       "Mòduls",
       "Pagaments",
       "Legal",
+      "Paràmetres",
       "Catàlegs base",
       "Equip",
       "Processos",
@@ -74,7 +76,10 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     expect(screen.queryByRole("button", { name: /Entra com a administrador/u })).toBeNull();
     fireEvent.click(tabs.getByRole("link", { name: "Estat" }));
     expect(await screen.findByRole("heading", { name: "Estat" })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /Entra com a administrador/u })).toBeNull();
+    // R-17-10: the support access lives in «Estat».
+    expect(
+      screen.getByRole("button", { name: "Entra com a administrador del club" }),
+    ).toBeInTheDocument();
   });
 
   it("T-17-12 an ONBOARDING club shows its onboarding checklist item by item (R-17-06)", async () => {
@@ -235,6 +240,13 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
       target: { files: [new File(["logo"], "logo.png", { type: "image/png" })] },
     });
     expect(await screen.findByText("logo.png es publicarà en desar.")).toBeInTheDocument();
+    // E10-W03 #9 (E10-W01 review #4): the visible button carries the pending-file help.
+    expect(
+      screen.getByRole("button", { name: "Tria una imatge: Logo" }),
+    ).toHaveAccessibleDescription("logo.png es publicarà en desar.");
+    expect(
+      screen.getByRole("button", { name: "Tria una imatge: Marca (versió petita)" }),
+    ).not.toHaveAttribute("aria-describedby");
     const grant = writes.find((request) => request.url.pathname.endsWith("/theme/upload-url"));
     expect(grant?.headers.get("Idempotency-Key")).toMatch(/[0-9a-f-]{36}/u);
     expect(grant?.body).toEqual({ fileName: "logo.png", mimeType: "image/png", sizeBytes: 4 });
@@ -347,12 +359,22 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     expect(alert).toHaveTextContent(
       "No s'ha pogut tornar a llegir el club: les dades que es mostren poden no ser les últimes.",
     );
+    // E10-W03 #7 (E10-W01 review #2): while the reread failed, nothing can be written with the
+    // possibly stale version — the tab's controls and its DESA are disabled; the retry is not.
+    const modules = captureRequests(
+      (method, url) => method === "PUT" && url.pathname.endsWith("/modules"),
+    );
+    expect(screen.getByRole("switch", { name: "Facturació" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "DESA" })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "DESA" }));
+    expect(modules).toEqual([]);
     server.resetHandlers();
     fireEvent.click(within(alert).getByRole("button", { name: "Torna-ho a provar" }));
     await waitFor(() => {
       expect(screen.queryByText(/No s'ha pogut tornar a llegir el club/u)).toBeNull();
     });
     expect(screen.getByRole("switch", { name: "Facturació" })).toBeChecked();
+    expect(screen.getByRole("switch", { name: "Facturació" })).toBeEnabled();
   });
 
   it("E10-W01 round 2 #8: the Stripe secrets are never offered to the browser's password manager", async () => {
@@ -474,16 +496,20 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     });
   });
 
-  it("E10-W01 round 2 #1: no Paràmetres until the api publishes a club's parameters (no tab, no catalog read, no write)", async () => {
-    const parameterCalls = captureRequests((_, url) => url.pathname.includes("parameter"));
-    await openTab(MINIM, "parametres");
+  it("E10-W03 #8 (E10-W01 review #3): an unknown tab segment shows Identitat and the address says /identitat", async () => {
+    const replaced = vi.spyOn(window.history, "replaceState");
+    await openTab(MINIM, "parametres-antics");
     const tabs = within(screen.getByRole("navigation", { name: "Seccions de la fitxa del club" }));
-    expect(tabs.queryByRole("link", { name: "Paràmetres" })).toBeNull();
-    // The old route opens the record's first tab, never a list of defaults shown as the club's.
     expect(tabs.getByRole("link", { name: "Identitat" })).toHaveAttribute("aria-current", "page");
-    expect(screen.queryByText("només plataforma")).toBeNull();
-    expect(screen.queryByRole("button", { name: /^Edita / })).toBeNull();
-    expect(parameterCalls).toEqual([]);
+    await waitFor(() => {
+      expect(window.location.pathname).toBe(`/consola/clubs/${MINIM}/identitat`);
+    });
+    expect(replaced).toHaveBeenCalledWith(null, "", `/consola/clubs/${MINIM}/identitat`);
+    // A known tab is never rewritten.
+    replaced.mockClear();
+    fireEvent.click(tabs.getByRole("link", { name: "Ús" }));
+    await screen.findByRole("heading", { name: "Ús" });
+    expect(replaced).not.toHaveBeenCalled();
   });
 
   it("Catàlegs base: only empty parts are cloned (409 CATALOG_NOT_EMPTY names the part), with one key per payload", async () => {
@@ -510,6 +536,42 @@ describe("E10-W01 step 3 · D19 record (S17 §2 «D19 Fitxa»)", () => {
     });
     const keys = posts.map((request) => request.headers.get("Idempotency-Key"));
     expect(keys[0]).not.toBe(keys[1]);
+  });
+
+  it("T-17-07 E10-W03 #5: the clone's warnings by code, part and locale, one translated message each (R-17-08)", async () => {
+    // Riera speaks ca and es; the template club also en: its English texts are left out.
+    await openTab(CONSOLE_CLUB_IDS.riera, "catalegs");
+    fireEvent.click(await screen.findByRole("checkbox", { name: "Nivells" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Pistes" }));
+    fireEvent.click(screen.getByRole("checkbox", { name: "Modalitats i preus" }));
+    fireEvent.click(screen.getByRole("button", { name: "Clona d'un club plantilla" }));
+    const result = await screen.findByRole("status");
+    expect(
+      within(result)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual([
+      "Preguntes freqüents: els textos en Anglès no s'han copiat, perquè el club no fa servir aquest idioma.",
+      "Plantilles de comunicat: els textos en Anglès no s'han copiat, perquè el club no fa servir aquest idioma.",
+    ]);
+  });
+
+  it("E10-W03 #5: DEFAULT_LOCALE_COPIED names the club's default and the source locale it took", async () => {
+    server.use(
+      http.post(`${API_BASE}/platform/clubs/:id/catalog-clone`, () =>
+        HttpResponse.json({
+          copied: { FAQ: 6 },
+          warnings: [{ code: "DEFAULT_LOCALE_COPIED", from: "es", part: "FAQ" }],
+        }),
+      ),
+    );
+    await openTab(CONSOLE_CLUB_IDS.riera, "catalegs");
+    fireEvent.click(await screen.findByRole("button", { name: "Clona d'un club plantilla" }));
+    expect(
+      await screen.findByText(
+        "Preguntes freqüents: alguns textos no tenien versió en Català i s'hi ha copiat el text en Castellà. Revisa'ls.",
+      ),
+    ).toBeInTheDocument();
   });
 
   it("Equip: invite (key per submission), LAST_ADMIN on the last one, and the platform role per account (R-17-09)", async () => {

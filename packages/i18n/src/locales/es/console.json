@@ -20,7 +20,6 @@
     "currencyWarning": "La plantilla cobra en {template} y el club en {club}: las modalidades y los precios no se pueden copiar.",
     "description": "Copia niveles, pistas, modalidades con los precios vigentes, preguntas frecuentes y plantillas de comunicado de un club plantilla.",
     "emptyOnly": "Solo se copian las partes que el club todavía tiene vacías.",
-    "localeFallback": "Algunos textos no existían en el idioma predeterminado del club: se han copiado desde otro idioma. Revísalos.",
     "localeWarning": "La plantilla no tiene textos en {locales}: habrá que completarlos en el club.",
     "noTemplates": "No hay ningún club plantilla.",
     "parts": {
@@ -33,7 +32,11 @@
     "partsLabel": "Qué se copia",
     "template": "Club plantilla",
     "templateOption": "{name} · {locales} · {currency}",
-    "title": "Catálogos base"
+    "title": "Catálogos base",
+    "warnings": {
+      "DEFAULT_LOCALE_COPIED": "{part}: algunos textos no tenían versión en {defaultLocale} y se ha copiado el texto en {from}. Revísalos.",
+      "LOCALE_OMITTED": "{part}: los textos en {from} no se han copiado, porque el club no usa este idioma."
+    }
   },
   "checklist": {
     "count": "{done}/{total}",
@@ -71,6 +74,8 @@
   },
   "errors": {
     "catalogNotEmpty": "{part}: el club ya tiene. Solo se copian las partes vacías.",
+    "domainState": "No se puede hacer con un dominio en estado «{status}».",
+    "primaryDomain": "Es el dominio principal de su app: antes haz principal otro dominio verificado.",
     "fileTooLarge": "El archivo es demasiado grande: como máximo {maxSizeMb} MB.",
     "generic": "No se ha podido completar la acción. Vuelve a intentarlo.",
     "moduleDependency": "Para activar {module} hay que activar {requires}.",
@@ -275,8 +280,7 @@
     "removeConfirm": "Se borrará su configuración. Si hay abonados que lo usan, no se podrá retirar.",
     "removeTitle": "Retirar {name}",
     "sepa": {
-      "creditorId": "Identificador de acreedor",
-      "creditorName": "Nombre del acreedor",
+      "creditorId": "Identificador de acreedor",      "creditorName": "Nombre del acreedor",
       "iban": "IBAN",
       "ibanHelpNew": "Solo de escritura: una vez guardado no se vuelve a mostrar.",
       "ibanHelpStored": "IBAN guardado: {masked}. Déjalo en blanco para mantenerlo.",
@@ -305,6 +309,99 @@
     },
     "writeOnly": "Solo de escritura: una vez guardada no se vuelve a mostrar.",
     "writeOnlyKept": "Guardada. Déjalo en blanco para mantenerla."
+  },
+  "domains": {
+    "add": "Añadir dominio",
+    "added": "Se ha añadido {host}. Crea uno de los registros DNS y después verifícalo.",
+    "addHelp": "Escribe el host sin https://, por ejemplo app.ejemplo.es.",
+    "adding": "Añadiendo",
+    "addTitle": "Añadir dominio",
+    "adminHostsNote": "Un dominio del backoffice verificado ya tiene certificado, pero el backoffice no se sirve en él hasta que operaciones lo añade a la lista de hosts del backoffice y recarga el servidor.",
+    "app": "App",
+    "apps": {
+      "clubs": "App de los socios",
+      "clubs-admin": "Backoffice"
+    },
+    "caption": "Dominios del club",
+    "cnameTitle": "Opción 1 · CNAME",
+    "columns": {
+      "actions": "Acciones",
+      "app": "App",
+      "host": "Host",
+      "status": "Estado",
+      "verifiedAt": "Verificado"
+    },
+    "description": "Los hosts del club por app. Un dominio nuevo queda pendiente hasta que se verifica su registro DNS.",
+    "dnsIntro": "Crea uno de estos dos registros en el proveedor de DNS del dominio y después haz clic en Verificar. Los cambios de DNS pueden tardar unos minutos.",
+    "empty": "El club todavía no tiene ningún dominio.",
+    "host": "Host",
+    "hostPlaceholder": "app.ejemplo.es",
+    "instructionsTitle": "Registros DNS de {host}",
+    "makePrimary": "Hacerlo principal",
+    "makePrimaryLabel": "Hacerlo principal: {host}",
+    "method": {
+      "ADDRESS": "dirección del host",
+      "CNAME": "registro CNAME",
+      "TXT": "registro TXT"
+    },
+    "notVerified": "No se ha encontrado ninguno de los dos registros DNS de {host}. Compruébalos y vuelve a intentarlo dentro de unos minutos.",
+    "primary": "principal",
+    "primaryChanged": "{host} es ahora el dominio principal ({app}).",
+    "recordName": "Nombre",
+    "recordType": "Tipo",
+    "recordValue": "Valor",
+    "remove": "Eliminar",
+    "removeConfirm": "La app dejará de abrirse en este host. Se puede volver a añadir más adelante.",
+    "removeConfirmAction": "ELIMINAR",
+    "removed": "Se ha eliminado {host}.",
+    "removeLabel": "Eliminar {host}",
+    "removeTitle": "Eliminar {host}",
+    "removing": "Eliminando",
+    "status": {
+      "BROKEN": "roto",
+      "PENDING": "pendiente",
+      "VERIFIED": "verificado"
+    },
+    "templateClub": "Un club plantilla no tiene dominios.",
+    "title": "Dominios",
+    "txtTitle": "Opción 2 · TXT",
+    "verified": "Se ha verificado {host} ({method}).",
+    "verify": "Verificar",
+    "verifying": "Verificando",
+    "verifyLabel": "Verificar {host}"
+  },
+  "parameters": {
+    "default": "Por defecto: {value}",
+    "defaultValue": "por defecto",
+    "note": "Los valores del club: los que ha cambiado y, el resto, el valor por defecto. Desde aquí también se pueden editar los parámetros de plataforma.",
+    "override": "valor del club",
+    "platformOnly": "solo plataforma",
+    "saved": "{label}: valor guardado.",
+    "stale": "Alguien lo ha cambiado mientras tanto: ahora vale {value}. Si guardas, lo sustituyes por tu valor."
+  },
+  "publicKey": {
+    "confirm": "GENERAR LA CLAVE",
+    "confirmText": "La clave actual dejará de funcionar dentro de 24 horas: antes hay que poner la nueva en la web del club.",
+    "confirmTitle": "Generar una clave de API nueva",
+    "copied": "Copiada",
+    "copy": "Copiar",
+    "description": "La clave con la que la web del club lee el calendario y las actividades públicas. Solo se muestra una vez: una clave nueva sustituye a la anterior, que sigue funcionando 24 horas.",
+    "generate": "Generar una clave nueva",
+    "generating": "Generando la clave",
+    "keyLabel": "Clave de API pública nueva",
+    "shownOnce": "Cópiala ahora: no se volverá a mostrar.",
+    "title": "Clave de API pública"
+  },
+  "support": {
+    "description": "Abre el backoffice del club en una pestaña nueva, como administrador y durante un tiempo limitado. Todas las acciones quedan en la auditoría del club, y no se pueden ver IBAN completos ni exportar datos personales.",
+    "enter": "Entrar como administrador del club",
+    "entering": "Abriendo el acceso",
+    "granted": "Se ha abierto el backoffice del club en una pestaña nueva. El acceso dura hasta el {until}.",
+    "noAdminHost": "El club no tiene ningún dominio del backoffice verificado: añade uno en la pestaña Dominios.",
+    "opensHost": "Se abrirá {host}.",
+    "popupBlocked": "El navegador no ha dejado abrir la pestaña nueva. Permite las ventanas emergentes para esta página y vuelve a intentarlo.",
+    "reason": "Motivo del acceso",
+    "title": "Acceso de soporte"
   },
   "presets": {
     "CANIC": "Como el club piloto",
@@ -362,6 +459,7 @@
   "tabs": {
     "auditoria": "Auditoría",
     "catalegs": "Catálogos base",
+    "dominis": "Dominios",
     "equip": "Equipo",
     "estat": "Estado",
     "identitat": "Identidad",
@@ -369,6 +467,7 @@
     "localitzacio": "Localización",
     "moduls": "Módulos",
     "pagaments": "Pagos",
+    "parametres": "Parámetros",
     "processos": "Procesos",
     "tema": "Tema",
     "us": "Uso"

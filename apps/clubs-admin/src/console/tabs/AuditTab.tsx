@@ -7,7 +7,7 @@ import { useListData } from "../../lists/list-helpers";
 import type { ConsoleTabProps } from "../ClubRecordPage";
 import { consoleErrorMessage, formatClubDateTime, LoadError, SectionCard } from "../shared";
 
-type AuditRow = components["schemas"]["AuditEntryListItem"];
+type AuditRow = components["schemas"]["PlatformAuditEntry"];
 
 const PAGE_SIZE = 20;
 
@@ -31,7 +31,7 @@ export function AuditTab({ client, club }: ConsoleTabProps) {
   const { data, error, loading, retry } = useListData<AuditRow>(load, `${club.id}|${String(page)}`);
 
   const changes = (row: AuditRow) =>
-    (row.changes ?? [])
+    row.changes
       .map((change) =>
         t("console:audit.change", {
           after: JSON.stringify(change.after),
@@ -61,10 +61,7 @@ export function AuditTab({ client, club }: ConsoleTabProps) {
           {
             header: t("admin-audit:columns.action"),
             key: "action",
-            render: (row) =>
-              row.action === undefined
-                ? ""
-                : t(`admin-audit:actions.${row.action}`, { defaultValue: row.action }),
+            render: (row) => t(`admin-audit:actions.${row.action}`, { defaultValue: row.action }),
           },
           {
             header: t("admin-audit:columns.entity"),
@@ -74,20 +71,17 @@ export function AuditTab({ client, club }: ConsoleTabProps) {
           {
             header: t("admin-audit:columns.actor"),
             key: "actor",
+            // The api sends `null` for a value it does not have (an actor without a name).
             render: (row) =>
-              [
-                row.actorName,
-                row.actorRole === undefined ? undefined : t(`admin-audit:roles.${row.actorRole}`),
-              ]
-                .filter((part) => part !== undefined && part !== "")
+              [row.actorName, t(`admin-audit:roles.${row.actorRole}`)]
+                .filter((part) => part != null && part !== "")
                 .join(" · "),
           },
           { header: t("admin-audit:columns.changes"), key: "changes", render: changes },
           {
             header: t("admin-audit:columns.origin"),
             key: "origin",
-            render: (row) =>
-              row.origin === undefined ? "" : t(`admin-audit:origins.${row.origin}`),
+            render: (row) => t(`admin-audit:origins.${row.origin}`),
           },
         ]}
         empty={t("console:audit.empty")}

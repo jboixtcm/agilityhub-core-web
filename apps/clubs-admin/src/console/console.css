@@ -255,6 +255,88 @@
   min-width: 0;
 }
 
+.console-tab-panel__writes {
+  display: grid;
+  gap: var(--ah-space-4);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* E10-W03 «Dominis»: the DNS records to create, copied as they are (monospace, never wrapped
+   inside a value). */
+.console-dns {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--ah-space-2) var(--ah-space-4);
+  margin: 0;
+}
+
+.console-dns dt {
+  color: var(--ah-color-text-muted);
+  font-size: 0.86rem;
+}
+
+.console-dns dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, monospace;
+}
+
+.console-dns-options {
+  display: grid;
+  gap: var(--ah-space-3);
+}
+
+.console-domain {
+  display: grid;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-4) 0;
+  border-bottom: 1px solid var(--ah-color-border);
+}
+
+.console-domain:last-child {
+  border-bottom: 0;
+}
+
+.console-domain__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ah-space-3);
+}
+
+.console-domain__host {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ah-space-2);
+  overflow-wrap: anywhere;
+}
+
+.console-domain__host strong {
+  font-family: ui-monospace, monospace;
+}
+
+.console-domains {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.console-api-key {
+  display: block;
+  padding: var(--ah-space-3);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+  background: var(--ah-color-surface-2);
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, monospace;
+}
+
 .console-checklist__items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));

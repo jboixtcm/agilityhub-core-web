@@ -1,19 +1,16 @@
 import type { ApiClient } from "@agilityhub/api-client";
+import { useEffect } from "react";
 
 import { ClubRecordPage } from "./ClubRecordPage";
 import { ClubsListPage } from "./ClubsListPage";
 import "./console.css";
 import { NewClubWizard } from "./NewClubWizard";
-import { type ConsoleNavigate, isConsoleTab } from "./shared";
+import { type ConsoleNavigate, type ConsoleTab, isConsoleTab } from "./shared";
 
 export type ConsoleRoute =
   | { kind: "list" }
   | { kind: "new" }
-  | { id: string; kind: "record"; tab: ReturnType<typeof recordTab> };
-
-function recordTab(segment: string | undefined) {
-  return isConsoleTab(segment) ? segment : "identitat";
-}
+  | { id: string; kind: "record"; known: boolean; tab: ConsoleTab };
 
 /** `/consola/clubs[/nou | /:id[/:tab]]` (S17 §2); `/consola` alone is the list. */
 export function consoleRoute(pathname: string): ConsoleRoute {
@@ -21,7 +18,13 @@ export function consoleRoute(pathname: string): ConsoleRoute {
   if (root !== "consola" || section !== "clubs" || id === undefined || id === "")
     return { kind: "list" };
   if (id === "nou") return { kind: "new" };
-  return { id: decodeURIComponent(id), kind: "record", tab: recordTab(tab) };
+  const known = isConsoleTab(tab);
+  return {
+    id: decodeURIComponent(id),
+    kind: "record",
+    known,
+    tab: known ? tab : "identitat",
+  };
 }
 
 /** D19 «Consola de clubs» (WP-17-C), loaded on demand by the app (its own chunk). */
@@ -37,6 +40,15 @@ export default function ConsolePage({
   search: string;
 }) {
   const route = consoleRoute(pathname);
+  const shownPath =
+    route.kind === "record" && !route.known
+      ? `/consola/clubs/${encodeURIComponent(route.id)}/${route.tab}`
+      : undefined;
+  // A record path without a tab, or with one the record has not (an old link), shows Identitat:
+  // the address says so too, so the lit tab, the address and a reload agree (E10-W01 review #3).
+  useEffect(() => {
+    if (shownPath !== undefined) window.history.replaceState(null, "", `${shownPath}${search}`);
+  }, [search, shownPath]);
   if (route.kind === "new") return <NewClubWizard client={client} onNavigate={onNavigate} />;
   if (route.kind === "record") {
     return (
