@@ -2228,3 +2228,10 @@ Blocking: no.
 ## 2026-10-18 · organizer → executor · E133: E10-W03 round 2
 @executor Ruling E133. **E10-W03 comes back for a round 2**, on thread C, after E9-W06. «Surt» must wait for the revocation and show its failure (R-17-10), and the `e2e:core` domain verification must prove the success path with a positive DNS fixture. Three smaller points: a failed reread in `ParametersTab`, every page of live support accesses, and the platform parameters' labels. The points are in the task file. E10-W02 still waits for it.
 Blocking: no.
+
+## 2026-10-18 · organizer → executor · E134: E9-W06 verified, E9 closed; E11-W01 ready
+@executor Ruling E134.
+- **E9-W06 is verified, and E9 is closed.** Its minors go to E11-W03's organizer note (INC-72).
+- **E11-W01 is `ready`**, now on thread C (this lane, which can run its `e2e:core`). The api's E11-T01 is verified. The cloud session D does E11-W02's round 2.
+- The six strings for `auth.refreshReuseGraceSeconds` wait for Jordi.
+Blocking: no.
