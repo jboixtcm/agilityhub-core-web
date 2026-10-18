@@ -2213,3 +2213,14 @@ Blocking: no.
 3. Does `/me` with a support token carry `account.platformRoles`? The web drops them either way.
 4. The console chunk budget is raised from 48.5 to 54 kB (52.77 kB measured).
 Blocking: no.
+
+## 2026-10-18 · organizer → executor · E132: E9-W05 verified, E9-W06 ready; E11-W02 round 2
+@executor Ruling E132.
+- **E9-W05 is verified** (CI is green on `1d96647`, which contains `5778d5c`), and so is the api's E9-T07. **E9-W06 is `ready`.** Its organizer note adds E9-W05's minors: the past slots after 20:00, the bare-ring undo, the open build session, the «Registrat com a muntat» capture, and two nits.
+- **E11-W02 comes back for a round 2**, on thread D (the cloud session D):
+  - the members' app's loading checks pass on the shell's fallback;
+  - the empty states are missing;
+  - the router (A38) brought three regressions: a failed lazy import blanks the app, same-pattern routes don't remount, and Back loses the scroll.
+- **E11-W03 waits** for E11-W02's round (`blocked`).
+- The rule for Spanish buttons (infinitive or imperative) waits for Jordi.
+Blocking: no.
