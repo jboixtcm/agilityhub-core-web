@@ -1,0 +1,74 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/core-api-store.test.ts (21 tests | 1 failed) 283ms
+   ❯ CoreApiStore implements PlannerStore (9)
+     × R-16-16 E9-T07: getRing has no catalog fallback after GET /rings/{id} allows INSTRUCTOR 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/core-api-store.test.ts > CoreApiStore implements PlannerStore > R-16-16 E9-T07: getRing has no catalog fallback after GET /rings/{id} allows INSTRUCTOR
+AssertionError: promise resolved "{ border_clearance_m: 1, …(16) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "border_clearance_m": 1,
++   "created_at": "2026-10-16T10:00:00Z",
++   "default_units": "m",
++   "doors": [],
++   "geometry_version": 1,
++   "id": "ring-1",
++   "is_active": true,
++   "length_m": 40,
++   "markers": [
++     {
++       "april_tag_id": 101,
++       "id": "m-a",
++       "is_active": true,
++       "is_fixed": true,
++       "label": "A",
++       "marker_uid": "muntanya-a",
++       "notes": null,
++       "physical_height_m": 0.2,
++       "physical_width_m": 0.2,
++       "ring_id": "ring-1",
++       "role": "reference",
++       "rotation_y_deg": 0,
++       "x_m": 0,
++       "y_m": 0,
++       "z_m": 0,
++     },
++   ],
++   "name": "Muntanya",
++   "no_go_zones": [],
++   "notes": null,
++   "obstacle_inventory": [],
++   "surface": null,
++   "updated_at": "2026-10-16T10:00:00Z",
++   "venue_id": "club-1",
++   "width_m": 20,
+  }
+
+ ❯ src/core-api-store.test.ts:243:42
+    241|     });
+    242|
+    243|     await expect(store.getRing("ring-1")).rejects.toMatchObject({
+       |                                          ^
+    244|       code: "FORBIDDEN",
+    245|       status: 403,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  11:50:24
+   Duration  535ms (tests 61%, transform 29%, import 9%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/core-api-store.test.ts

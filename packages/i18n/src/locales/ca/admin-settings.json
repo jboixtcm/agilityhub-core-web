@@ -191,6 +191,12 @@
         "label": "Conservació de l'auditoria"
       }
     },
+    "auth": {
+      "refreshReuseGraceSeconds": {
+        "help": "Segons durant els quals es pot recuperar una única resposta de renovació perduda. Un valor de 0 desactiva el marge.",
+        "label": "Marge de reutilització del token de renovació"
+      }
+    },
     "billing": {
       "accountingExportFormat": {
         "help": "Format predeterminat de les exportacions comptables.",

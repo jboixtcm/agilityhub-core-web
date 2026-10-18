@@ -1,0 +1,117 @@
+{
+  "ringId": "3a4ef98b-bcaa-4f88-832a-127408ddc549",
+  "slots": [
+    {
+      "date": "2026-10-19",
+      "endTime": "11:00",
+      "startTime": "10:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "endTime": "18:00",
+      "startTime": "17:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "endTime": "18:00",
+      "startTime": "17:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-20",
+      "endTime": "20:00",
+      "startTime": "19:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "endTime": "18:00",
+      "startTime": "17:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-21",
+      "endTime": "20:00",
+      "startTime": "19:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-22",
+      "endTime": "13:00",
+      "startTime": "12:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-22",
+      "endTime": "18:00",
+      "startTime": "17:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "endTime": "18:00",
+      "startTime": "17:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-23",
+      "endTime": "20:00",
+      "startTime": "19:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-24",
+      "endTime": "18:00",
+      "startTime": "17:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-24",
+      "endTime": "20:00",
+      "startTime": "19:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-25",
+      "endTime": "18:00",
+      "startTime": "17:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    },
+    {
+      "date": "2026-10-25",
+      "endTime": "20:00",
+      "startTime": "19:00",
+      "instructorIds": [
+        "f8609798-b184-4b5b-8610-a40beb2f83ef"
+      ]
+    }
+  ]
+}

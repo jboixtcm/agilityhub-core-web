@@ -81,7 +81,9 @@ test.describe("E9-W04 S16 in the members' app (WP-16-F′) against MSW, 375 px",
     await line.click();
     await expect(page).toHaveURL(/\/recorreguts\/setup-muntanya-dijous$/u);
     await expect(page.getByText("Jumping · nivell C–D")).toBeVisible();
-    await expect(page.getByRole("img", { name: "Foto o plànol del muntatge" })).toBeVisible();
+    const plan = page.getByRole("img", { name: "Plànol de Jumping del dijous" });
+    await expect(plan).toBeVisible();
+    await expect(plan.getByText("1", { exact: true }).first()).toBeVisible();
     await expect(page.getByRole("button", { name: "Marca com a desmuntat" })).toHaveCount(0);
     await shot(page, "visor-alumne-375.png");
 

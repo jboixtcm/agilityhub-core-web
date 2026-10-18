@@ -698,6 +698,7 @@ function setup(
   return {
     agilityhubLevel: null,
     builtByAccountId: INSTRUCTOR_ACCOUNT,
+    builtByName: "Ivet Puig",
     courseId: null,
     createdAt: fields.builtAt,
     dismantledAt: null,
@@ -897,7 +898,9 @@ export function courseShownBy(item: RingSetup): Course | undefined {
   const courseId =
     item.courseId ??
     courseState.placements.find((placement) => placement.id === item.placementId)?.courseId;
-  return courseId == null ? undefined : courseState.courses.find((course) => course.id === courseId);
+  return courseId == null
+    ? undefined
+    : courseState.courses.find((course) => course.id === courseId);
 }
 
 /**

@@ -9,6 +9,7 @@
   "separator": " · ",
   "level": "nivel {level}",
   "builtAgo": "montado {days, plural, =0 {hoy} =1 {ayer} other {hace # días}}",
+  "builtBy": "{when} por {instructor}",
   "viewer": {
     "title": "Recorrido montado",
     "loading": "Cargando el montaje",

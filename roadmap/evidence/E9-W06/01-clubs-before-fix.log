@@ -1,0 +1,567 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/courses/courses.test.tsx (29 tests | 2 failed) 23698ms
+   ❯ T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) (8)
+     × 08: the ring's line «Muntanya: Jumping · nivell C–D · muntat ahir» opens the viewer, read-only for a MEMBER 10781ms
+   ❯ the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) (13)
+     × R-16-06 / R-16-16: staff see the course placed on the ring and «Geometria canviada: revisa la col·locació» 386ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/courses/courses.test.tsx > T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09) > 08: the ring's line «Muntanya: Jumping · nivell C–D · muntat ahir» opens the viewer, read-only for a MEMBER
+TestingLibraryElementError: Unable to find role="img" and name "Plànol de Jumping del dijous"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen course-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back course-back"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mMuntanya[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card course-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"course-card__heading"[39m
+            [36m>[39m
+              [36m<strong>[39m
+                [0mJumping · nivell C–D[0m
+              [36m</strong>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"course-card__line"[39m
+            [36m>[39m
+              [0mmuntat ahir[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<figure[39m
+            [33mclass[39m=[32m"course-figure"[39m
+          [36m>[39m
+            [36m<img[39m
+              [33malt[39m=[32m"Foto o plànol del muntatge"[39m
+              [33mclass[39m=[32m"course-figure__image"[39m
+              [33msrc[39m=[32m"https://files.example.test/thumbnails/course-jumping-dijous.svg"[39m
+            [36m/>[39m
+          [36m</figure>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen course-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back course-back"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mMuntanya[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card course-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"course-card__heading"[39m
+            [36m>[39m
+              [36m<strong>[39m
+                [0mJumping · nivell C–D[0m
+              [36m</strong>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"course-card__line"[39m
+            [36m>[39m
+              [0mmuntat ahir[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<figure[39m
+            [33mclass[39m=[32m"course-figure"[39m
+          [36m>[39m
+            [36m<img[39m
+              [33malt[39m=[32m"Foto o plànol del muntatge"[39m
+              [33mclass[39m=[32m"course-figure__image"[39m
+              [33msrc[39m=[32m"https://files.example.test/thumbnails/course-jumping-dijous.svg"[39m
+            [36m/>[39m
+          [36m</figure>[39m
+        [36m</section>[39m
+      [36m</main>[39m
+      [36m<nav[39m
+        [33maria-label[39m=[32m"Navegació principal"[39m
+        [33mclass[39m=[32m"ah-tab-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/inici"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-home"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInici[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/reservar"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cal"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mReservar[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/entrenaments"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-cone"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mEntrenaments[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/avui"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-day"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mAvui[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/perfil"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mPerfil[0m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<a[39m
+          [33mclass[39m=[32m"ah-tab-bar__item"[39m
+          [33mhref[39m=[32m"/info"[39m
+        [36m>[39m
+          [36m<svg[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-icon"[39m
+          [36m>[39m
+            [36m<use[39m
+              [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-info"[39m
+            [36m/>[39m
+          [36m</svg>[39m
+          [36m<span>[39m
+            [0mInfo[0m
+          [36m</span>[39m
+        [36m</a>[39m
+      [36m</nav>[39m
+    [36m</div>[39m
+    [36m<div[39m
+      [33maria-live[39m=[32m"polite"[39m
+      [33mclass[39m=[32m"ah-toast-viewport"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/courses/courses.test.tsx:56:31
+     54|     // placement's course and ring frame, so the viewer draws the numb…
+     55|     // signed thumbnail or «No hi ha cap plànol per mostrar».
+     56|     const plan = await screen.findByRole("img", { name: "Plànol de Jum…
+       |                               ^
+     57|     expect(plan).toBeVisible();
+     58|     expect(plan).toHaveAttribute("viewBox", "-1.5 -1.5 43 23");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/courses/courses.test.tsx > the instructor's viewer, «Registra què hi ha muntat» and the build session (S16 §2) > R-16-06 / R-16-16: staff see the course placed on the ring and «Geometria canviada: revisa la col·locació»
+TestingLibraryElementError: Unable to find an element with the text: muntat ahir per Ivet Puig. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"clubs-shell"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"clubs-shell__top"[39m
+      [36m/>[39m
+      [36m<main[39m
+        [33mclass[39m=[32m"clubs-shell__content"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33mclass[39m=[32m"booking-screen course-screen"[39m
+        [36m>[39m
+          [36m<header[39m
+            [33mclass[39m=[32m"ah-app-bar booking-screen__bar"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"Torna enrere"[39m
+                [33mclass[39m=[32m"booking-screen__back course-back"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33maria-hidden[39m=[32m"true"[39m
+                [36m>[39m
+                  [0m‹[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__title"[39m
+            [36m>[39m
+              [36m<h1>[39m
+                [0mMuntanya[0m
+              [36m</h1>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-app-bar__side ah-app-bar__side--end"[39m
+            [36m/>[39m
+          [36m</header>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-card course-card"[39m
+          [36m>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"course-card__heading"[39m
+            [36m>[39m
+              [36m<strong>[39m
+                [0mJumping · nivell C–D[0m
+              [36m</strong>[39m
+            [36m</p>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"course-card__line"[39m
+            [36m>[39m
+              [0mmuntat ahir[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"course-card__course"[39m
+          [36m>[39m
+            [0mRecorregut: Jumping del dijous[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"booking-note booking-note--warning"[39m
+            [33mrole[39m=[32m"status"[39m
+          [36m>[39m
+            [0mGeometria canviada: revisa la col·locació[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"course-viewer"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33maria-label[39m=[32m"Vista"[39m
+              [33mclass[39m=[32m"course-viewer__modes"[39m
+              [33mrole[39m=[32m"group"[39m
+            [36m>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-chip training-chip training-chip--selected"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m2D[0m
+              [36m</button>[39m
+              [36m<button[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"ah-chip training-chip"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0m3D[0m
+              [36m</button>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"course-viewer__frame"[39m
+              [33mdata-testid[39m=[32m"course-viewer-2d"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"course-viewer__plan"[39m
+                [33mstyle[39m=[32m"--course-viewer-rotate: 0deg; --course-viewer-scale: 1;"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"w-full aspect-square max-h-[80vh] bg-surface-2 border border-border rounded-2xl overflow-hidden"[39m
+                [36m>[39m
+                  [36m<svg[39m
+                    [33maria-label[39m=[32m"Plànol de Jumping del dijous"[39m
+                    [33mclass[39m=[32m"w-full h-full"[39m
+                    [33mrole[39m=[32m"img"[39m
+                    [33mviewBox[39m=[32m"-1.5 -1.5 43 28"[39m
+                    [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+                  [36m>[39m
+                    [36m<g[39m
+                      [33mtransform[39m=[32m"scale(1 -1) translate(0 -25)"[39m
+                    [36m>[39m
+                      [36m<rect[39m
+                        [33mfill[39m=[32m"var(--ah-color-course-floor)"[39m
+                        [33mheight[39m=[32m"25"[39m
+                        [33mstroke[39m=[32m"var(--ah-color-course-ring)"[39m
+                        [33mstroke-width[39m=[32m"0.06"[39m
+                        [33mwidth[39m=[32m"40"[39m
+                        [33mx[39m=[32m"0"[39m
+                        [33my[39m=[32m"0"[39m
+                      [36m/>[39m
+                      [36m<g>[39m
+                        [36m<polygon[39m
+                          [33mfill[39m=[32m"var(--ah-color-course-door)"[39m
+                          [33mfill-opacity[39m=[32m"0.95"[39m
+                          [33mpoints[39m=[32m"3,25 5,25 5,24.9 3,24.9"[39m
+                          [33mstroke[39m=[32m"var(--ah-color-course-door-accent)"[39m
+                          [33mstroke-width[39m=[32m"0.08"[39m
+                        [36m/>[39m
+                        [36m<polygon[39m
+                          [33mfill[39m=[32m"none"[39m
+                          [33mpoints[39m=[32m"3,25 5,25 5,24.9 3,24.9"[39m
+                          [33mstroke[39m=[32m"var(--ah-color-course-door-accent)"[39m
+                          [33mstroke-opacity[39m=[32m"0.25"[39m
+                          [33mstroke-width[39m=[32m"0.25"[39m
+                        [36m/>[39m
+                        [36m<g>[39m
+                          [36m<line[39m
+                            [33mstroke[39m=[32m"var(--ah-color-course-obstacle)"[39m
+                            [33mstroke-linecap[39m=[32m"round"[39m
+                            [33mstroke-width[39m=[32m"0.13"[39m
+                            [33mx1[39m=[32m"4"[39m
+                            [33mx2[39m=[32m"4"[39m
+                            [33my1[39m=[32m"25.7"[39m
+                            [33my2[39m=[32m"24.3"[39m
+                          [36m/>[39m
+                          [36m<polygon[39m
+                            [33mfill[39m=[32m"var(--ah-color-course-obstacle)"[39m
+                            [33mpoints[39m=[32m"4,24.3 4.28,24.75 3.7199999999999998,24.75"[39m
+                          [36m/>[39m
+                        [36m</g>[39m
+                        [36m<g[39m
+           ...
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/courses/courses.test.tsx:151:19
+    149|     await viewer(`/recorreguts/${SETUP_IDS.muntanyaActive}`, "instruct…
+    150|     expect(await screen.findByText("Geometria canviada: revisa la col·…
+    151|     expect(screen.getByText("muntat ahir per Ivet Puig")).toBeVisible(…
+       |                   ^
+    152|     expect(await screen.findByRole("img", { name: /^Plànol de / })).to…
+    153|     expect(screen.getByRole("button", { name: "Sessió de muntatge" }))…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 27 passed (29)
+   Start at  11:50:24
+   Duration  25.22s (tests 94%, transform 3%, environment 2%, import 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/courses/courses.test.tsx

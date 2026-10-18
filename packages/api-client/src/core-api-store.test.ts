@@ -162,7 +162,7 @@ describe("CoreApiStore implements PlannerStore", () => {
     expect(result.obstacle_inventory).toEqual([{ obstacle_type: "Jump", quantity: 12 }]);
   });
 
-  it("T-16-10 R-16-11 E9-W04: an INSTRUCTOR refused the ring's record reads it from the catalog, with its geometry and markers", async () => {
+  it("R-16-16 E9-T07: getRing has no catalog fallback after GET /rings/{id} allows INSTRUCTOR", async () => {
     const requests: string[] = [];
     const fetchMock = vi.fn((input: RequestInfo | URL) => {
       const request = input instanceof Request ? input : new Request(input);
@@ -240,12 +240,11 @@ describe("CoreApiStore implements PlannerStore", () => {
       venue,
     });
 
-    const ring = await store.getRing("ring-1");
-
-    expect(ring).toMatchObject({ length_m: 40, name: "Muntanya", width_m: 20 });
-    expect(ring?.markers.map((marker) => marker.label)).toEqual(["A"]);
-    expect(requests).toContain("GET /rings?includeInactive=false");
-    expect(requests).toContain("GET /rings/ring-1/geometry");
+    await expect(store.getRing("ring-1")).rejects.toMatchObject({
+      code: "FORBIDDEN",
+      status: 403,
+    });
+    expect(requests).toEqual(["GET /rings/ring-1"]);
   });
 
   it("R-16-11 keeps the caller's opaque Idempotency-Key for one build-session payload", async () => {

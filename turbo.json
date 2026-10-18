@@ -16,6 +16,16 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "clubs#test": {
+      "dependsOn": ["^typecheck"],
+      "inputs": ["$TURBO_DEFAULT$", "../../scripts/check-clubs-bundle*.mjs"],
+      "outputs": []
+    },
+    "clubs#build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "../../scripts/check-clubs-bundle*.mjs"],
+      "outputs": ["dist/**"]
+    },
     "e2e": {
       "dependsOn": ["build"],
       "cache": false,

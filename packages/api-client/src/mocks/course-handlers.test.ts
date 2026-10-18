@@ -579,8 +579,25 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
       );
       expect(active.status).toBe(200);
       valid("MemberRingSetup", active.body);
-      expect(active.body).toMatchObject({ id: SETUP_IDS.muntanyaActive, view: "MEMBER" });
+      expect(active.body).toMatchObject({
+        courseId: COURSE_IDS.jumping,
+        id: SETUP_IDS.muntanyaActive,
+        placement: {
+          ringLengthM: 40,
+          ringWidthM: 25,
+          transform: {
+            flipX: false,
+            flipY: false,
+            offsetXM: 20,
+            offsetYM: 12.5,
+            rotationDeg: 0,
+          },
+        },
+        view: "MEMBER",
+      });
+      expect(active.body.placement?.resolvedObstacles).not.toHaveLength(0);
       expect(active.body).not.toHaveProperty("builtByAccountId");
+      expect(active.body).not.toHaveProperty("builtByName");
       expect(active.body).not.toHaveProperty("dismantledByAccountId");
       expect(active.body).not.toHaveProperty("notes");
       for (const id of [SETUP_IDS.muntanyaExpired, SETUP_IDS.muntanyaDismantled]) {
@@ -594,7 +611,7 @@ describe("E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRO
       "GET",
       `/ring-setups/${SETUP_IDS.muntanyaExpired}`,
     );
-    expect(staff.body).toMatchObject({ notes: null, view: "STAFF" });
+    expect(staff.body).toMatchObject({ builtByName: "Ivet Puig", notes: null, view: "STAFF" });
 
     const parameter = findParameter("courses.showSetupToMembers");
     if (parameter === undefined) throw new Error("PARAMETER_NOT_FOUND");
@@ -1337,7 +1354,7 @@ describe("E9-W04 · what the members' app reads of S16, and the build sessions (
     // The photo is served by the mock storage.
     const photo = await fetch("https://files.example.test/courses/gimcana.svg");
     expect(photo.headers.get("Content-Type")).toBe("image/svg+xml");
-    // The member reads the course the viewer draws (through the placement: courseId is null).
+    // The stored setup remains placement-only; E9-T07 projects that placement's course to members.
     expect(courseState.setups.find((item) => item.id === SETUP_IDS.muntanyaActive)?.courseId).toBe(
       null,
     );
@@ -1383,7 +1400,11 @@ describe("E9-W04 · what the members' app reads of S16, and the build sessions (
     valid("ApiError", unknown.body);
     const off = await call<Schemas["ApiError"]>("memberNoCourses", "GET", "/me/ring-setups");
     expect(off).toMatchObject({ body: { code: "MODULE_DISABLED" }, status: 404 });
-    const other = await call<Schemas["MeRingSetup"][]>("coursesOtherClub", "GET", "/me/ring-setups");
+    const other = await call<Schemas["MeRingSetup"][]>(
+      "coursesOtherClub",
+      "GET",
+      "/me/ring-setups",
+    );
     expect(other).toMatchObject({ body: [], status: 200 });
     const theirs = await call<Schemas["ApiError"]>(
       "coursesOtherClub",
@@ -1549,7 +1570,11 @@ describe("E9-W04 · what the members' app reads of S16, and the build sessions (
       expect(hidden.status).toBe(200);
       expect(hidden.body, scenario).not.toHaveProperty("plannedPlacement");
     }
-    const staff = await call<Schemas["ClassSession"]>("instructor", "GET", `/class-sessions/${mon3}`);
+    const staff = await call<Schemas["ClassSession"]>(
+      "instructor",
+      "GET",
+      `/class-sessions/${mon3}`,
+    );
     valid("ClassSession", staff.body);
     expect(staff.body).toMatchObject({
       instructorNames: ["Marc"],

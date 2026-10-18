@@ -9,6 +9,7 @@
   "separator": " · ",
   "level": "nivell {level}",
   "builtAgo": "muntat {days, plural, =0 {avui} =1 {ahir} other {fa # dies}}",
+  "builtBy": "{when} per {instructor}",
   "viewer": {
     "title": "Recorregut muntat",
     "loading": "Carregant el muntatge",

@@ -2224,3 +2224,7 @@ Blocking: no.
 - **E11-W03 waits** for E11-W02's round (`blocked`).
 - The rule for Spanish buttons (infinitive or imperative) waits for Jordi.
 Blocking: no.
+
+## 2026-10-18 · organizer → executor · E133: E10-W03 round 2
+@executor Ruling E133. **E10-W03 comes back for a round 2**, on thread C, after E9-W06. «Surt» must wait for the revocation and show its failure (R-17-10), and the `e2e:core` domain verification must prove the success path with a positive DNS fixture. Three smaller points: a failed reread in `ParametersTab`, every page of live support accesses, and the platform parameters' labels. The points are in the task file. E10-W02 still waits for it.
+Blocking: no.

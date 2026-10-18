@@ -191,6 +191,12 @@
         "label": "Audit retention"
       }
     },
+    "auth": {
+      "refreshReuseGraceSeconds": {
+        "help": "Seconds during which one lost refresh response may be recovered. A value of 0 disables the grace period.",
+        "label": "Refresh-token reuse grace period"
+      }
+    },
     "billing": {
       "accountingExportFormat": {
         "help": "Default format for accounting exports.",

@@ -1,0 +1,103 @@
+
+> clubs@0.0.0 test:e9-core-helpers /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+> vitest run --config ../../e2e/core/vitest.config.ts
+
+../../e2e/core/vitest.config.ts (3:29) [33m[UNRESOLVED_IMPORT] [0mCould not resolve 'vitest/config' in ../../e2e/core/vitest.config.ts
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m ../../e2e/core/vitest.config.ts:3:30 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m3 │[0m [38;5;249mi[0m[38;5;249mm[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249m{[0m[38;5;249m [0m[38;5;249md[0m[38;5;249me[0m[38;5;249mf[0m[38;5;249mi[0m[38;5;249mn[0m[38;5;249me[0m[38;5;249mC[0m[38;5;249mo[0m[38;5;249mn[0m[38;5;249mf[0m[38;5;249mi[0m[38;5;249mg[0m[38;5;249m [0m[38;5;249m}[0m[38;5;249m [0m[38;5;249mf[0m[38;5;249mr[0m[38;5;249mo[0m[38;5;249mm[0m[38;5;249m [0m"vitest/config"[38;5;249m;[0m
+ [38;5;240m  │[0m                              ───────┬───────  
+ [38;5;240m  │[0m                                     ╰───────── Module not found, treating it as an external dependency
+[38;5;246m───╯[0m
+
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (../../e2e/core/vitest.config.ts:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/e2e/core
+
+ ❯ e9-core-helpers.test.ts (2 tests | 2 failed) 4ms
+   ❯ E9-W06 · E9-W05 review regressions in the real-core scenario (2)
+     × keeps today's one-off class starts at or after `first`, including after 20:00 3ms
+     × copies every optional placement value through the full-replace archive PUT 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  e9-core-helpers.test.ts > E9-W06 · E9-W05 review regressions in the real-core scenario > keeps today's one-off class starts at or after `first`, including after 20:00
+AssertionError: expected [ 17, 19 ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   17,
++   19,
++ ]
+
+ ❯ e9-core-helpers.test.ts:7:46
+      5| describe("E9-W06 · E9-W05 review regressions in the real-core scenario…
+      6|   it("keeps today's one-off class starts at or after `first`, includin…
+      7|     expect(futureClassStarts(22, new Set())).toEqual([]);
+       |                                              ^
+      8|     expect(futureClassStarts(18, new Set([19]))).toEqual([18, 20]);
+      9|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  e9-core-helpers.test.ts > E9-W06 · E9-W05 review regressions in the real-core scenario > copies every optional placement value through the full-replace archive PUT
+AssertionError: expected { courseId: 'course-1', …(9) } to deeply equal { activityId: 'activity-1', …(17) }
+
+- Expected
++ Received
+
+  {
+-   "activityId": "activity-1",
+    "courseId": "course-1",
+    "courseVersion": 4,
+-   "displayName": "Dijous",
+    "force": true,
+-   "grades": [
+-     "G2",
+-   ],
+-   "mode": "EVENT",
+-   "name": "Final",
+    "placementMode": "CENTERED",
+    "resolvedObstacles": [
+      {
+        "obstacleId": "1",
+      },
+    ],
+    "ringId": "ring-1",
+-   "scheduledAt": "2026-10-18T18:00:00Z",
+-   "sizes": [
+-     "M",
+-   ],
+    "status": "ARCHIVED",
+    "transform": {
+      "flipX": false,
+    },
+    "version": 7,
+-   "warningThresholdM": 1.5,
+    "warnings": [],
+  }
+
+ ❯ e9-core-helpers.test.ts:31:7
+     29|         warnings: [],
+     30|       }),
+     31|     ).toEqual({
+       |       ^
+     32|       activityId: "activity-1",
+     33|       courseId: "course-1",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  11:52:06
+   Duration  92ms (transform 50%, tests 23%, import 21%, worker 7%)
+
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  clubs@0.0.0 test:e9-core-helpers: `vitest run --config ../../e2e/core/vitest.config.ts`
+Exit status 1

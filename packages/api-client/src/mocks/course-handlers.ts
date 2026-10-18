@@ -565,18 +565,20 @@ function setupExpiry(expectedUntil: string | null | undefined): string {
 }
 
 /**
- * R-16-09: the STAFF view as stored; the MEMBER view without `builtByAccountId`,
- * `dismantledByAccountId` or `notes`.
+ * R-16-09/R-16-16: the STAFF view as stored; E9-T07's MEMBER projection without builder or notes,
+ * with the placement's course, resolved geometry and ring size.
  */
 function setupForReader(
   setup: RingSetup,
   view: "MEMBER" | "STAFF" = "STAFF",
 ): RingSetup | Schemas["MemberRingSetup"] {
   if (view === "STAFF") return setup;
+  const placement = setup.placementId == null ? undefined : clubPlacement(setup.placementId);
+  const geometry = placement === undefined ? undefined : courseState.geometries[placement.ringId];
   return {
     agilityhubLevel: setup.agilityhubLevel ?? null,
     builtAt: setup.builtAt,
-    courseId: setup.courseId ?? null,
+    courseId: setup.courseId ?? placement?.courseId ?? null,
     createdAt: setup.createdAt,
     dismantledAt: setup.dismantledAt ?? null,
     expectedUntil: setup.expectedUntil ?? null,
@@ -586,6 +588,15 @@ function setupForReader(
     imageUrl: setup.imageUrl ?? null,
     kind: setup.kind,
     levelIds: setup.levelIds,
+    placement:
+      placement === undefined
+        ? null
+        : {
+            resolvedObstacles: placement.resolvedObstacles,
+            ringLengthM: geometry?.lengthM ?? null,
+            ringWidthM: geometry?.widthM ?? null,
+            transform: placement.transform,
+          },
     placementId: setup.placementId ?? null,
     ringId: setup.ringId,
     status: setup.status,
@@ -609,6 +620,7 @@ function registerSetup(source: Schemas["RingSetupRequest"]): Schemas["RingSetupC
     agilityhubLevel: source.agilityhubLevel ?? null,
     builtAt: at,
     builtByAccountId: meId(),
+    builtByName: scenario().me.account.name,
     courseId: source.courseId ?? null,
     createdAt: at,
     dismantledAt: null,
@@ -734,6 +746,7 @@ function finishedSetup(session: BuildSession, course: Course): Response | string
       ...active,
       builtAt: nowIso(),
       builtByAccountId: meId(),
+      builtByName: scenario().me.account.name,
       expiresAt: setupExpiry(active.expectedUntil),
     };
     courseState.setups = courseState.setups.map((item) =>
@@ -1486,9 +1499,7 @@ export const courseHandlers = [
     if (refused !== undefined) return refused;
     const text = await request.text();
     return keyed(request, text, () => {
-      const body = (text === "" ? {} : JSON.parse(text)) as Partial<
-        Schemas["BuildSessionRequest"]
-      >;
+      const body = (text === "" ? {} : JSON.parse(text)) as Partial<Schemas["BuildSessionRequest"]>;
       if (typeof body.placementId !== "string" || body.placementId === "") {
         return fieldError("placementId", "REQUIRED");
       }
@@ -1552,7 +1563,11 @@ export const courseHandlers = [
         ...session,
         participants: [
           ...session.participants,
-          { accountId: meId(), joinedAt: nowIso(), joinedVia: byToken === undefined ? "CODE" : "QR" },
+          {
+            accountId: meId(),
+            joinedAt: nowIso(),
+            joinedVia: byToken === undefined ? "CODE" : "QR",
+          },
         ],
       }),
     );

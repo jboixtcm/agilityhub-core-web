@@ -39,7 +39,7 @@ import {
   type ViewedRingSetup,
 } from "./shared";
 import { useCourseStore } from "./store";
-import { frameScene, isCourseData, type ViewerScene } from "./viewer-model";
+import { frameScene, isCourseData, memberPlacementScene, type ViewerScene } from "./viewer-model";
 
 function goBack() {
   if (window.history.length > 1) window.history.back();
@@ -74,8 +74,8 @@ interface ViewerData {
 
 /**
  * What the viewer draws, by what the reader may read (R-16-16): a MEMBER reads the setup and its
- * course (`GET /courses/{id}`), drawn in the course's own frame; staff read the placement and the
- * ring's geometry too, so the course is drawn where it stands on the ring. `stale` = R-16-06.
+ * course (`GET /courses/{id}`), with E9-T07's projected placement; staff read the full placement
+ * and ring geometry. `stale` = R-16-06 (staff only).
  */
 interface ViewerContent {
   courseName: string | null;
@@ -223,7 +223,14 @@ export function SetupViewerPage({
             <Badge tone="neutral">{t(`enums:setupStatus.${setup.status}`)}</Badge>
           )}
         </p>
-        <p className="course-card__line">{builtAgoText(t, setup.builtAt, branding.timeZone)}</p>
+        <p className="course-card__line">
+          {staff && setup.builtByName != null && setup.builtByName !== ""
+            ? t("courses:builtBy", {
+                instructor: setup.builtByName,
+                when: builtAgoText(t, setup.builtAt, branding.timeZone),
+              })
+            : builtAgoText(t, setup.builtAt, branding.timeZone)}
+        </p>
         {setup.expectedUntil === null || setup.expectedUntil === undefined ? null : (
           <p className="course-card__line">
             {t("courses:viewer.until", {
@@ -303,9 +310,16 @@ function SetupContent({
     if (course === undefined) return none;
     const model = course.normalizedJson;
     if (!isCourseData(model)) return { courseName: course.name, scene: null, stale };
+    const memberScene =
+      !isStaffSetup(setup) && setup.placement != null
+        ? memberPlacementScene(model, setup.placement)
+        : null;
     return {
       courseName: course.name,
-      scene: placed === null ? frameScene(model) : { course: model, placed: true, ...placed },
+      scene:
+        placed === null
+          ? (memberScene ?? frameScene(model))
+          : { course: model, placed: true, ...placed },
       stale,
     };
   }, [client, setup, store]);

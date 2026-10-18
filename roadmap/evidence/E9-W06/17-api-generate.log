@@ -1,0 +1,9 @@
+
+> agilityhub-core-web@0.0.0 api:generate /Users/jordib/dev/agilityhub/agilityhub-core-web
+> pnpm --filter @agilityhub/api-client api:generate
+
+
+> @agilityhub/api-client@0.0.0 api:generate /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+> node scripts/generate.mjs
+
+Generated /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/src/generated/schema.d.ts from /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/openapi/openapi.json merged with /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client/openapi/pending.json

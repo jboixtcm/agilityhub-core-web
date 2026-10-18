@@ -9,6 +9,7 @@
   "separator": " · ",
   "level": "level {level}",
   "builtAgo": "set up {days, plural, =0 {today} =1 {yesterday} other {# days ago}}",
+  "builtBy": "{when} by {instructor}",
   "viewer": {
     "title": "Course set up",
     "loading": "Loading the setup",

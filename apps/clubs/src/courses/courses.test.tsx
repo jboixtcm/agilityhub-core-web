@@ -50,8 +50,15 @@ describe("T-16-16 the viewer from 08, 10 and 07 (S16 §2, R-16-09)", () => {
     expect(await screen.findByRole("heading", { level: 1, name: "Muntanya" })).toBeVisible();
     expect(await screen.findByText("Jumping · nivell C–D")).toBeVisible();
     expect(screen.getByText("muntat ahir")).toBeVisible();
-    // R-16-09: a MEMBER reads no placement (R-16-16): the course's thumbnail the api signs.
-    expect(await screen.findByRole("img", { name: "Foto o plànol del muntatge" })).toBeVisible();
+    // R-16-16 (E9-T07): this setup stores only placementId. The member projection carries the
+    // placement's course and ring frame, so the viewer draws the numbered plan rather than the
+    // signed thumbnail or «No hi ha cap plànol per mostrar».
+    const plan = await screen.findByRole("img", { name: "Plànol de Jumping del dijous" });
+    expect(plan).toBeVisible();
+    expect(plan).toHaveAttribute("viewBox", "-1.5 -1.5 43 28");
+    expect(plan).toHaveTextContent("1");
+    expect(screen.getByText("Recorregut: Jumping del dijous")).toBeVisible();
+    expect(screen.queryByText("No hi ha cap plànol per mostrar.")).not.toBeInTheDocument();
     for (const action of [
       "Marca com a desmuntat",
       "Sessió de muntatge",
@@ -141,6 +148,7 @@ describe("the instructor's viewer, «Registra què hi ha muntat» and the build 
   it("R-16-06 / R-16-16: staff see the course placed on the ring and «Geometria canviada: revisa la col·locació»", async () => {
     await viewer(`/recorreguts/${SETUP_IDS.muntanyaActive}`, "instructor");
     expect(await screen.findByText("Geometria canviada: revisa la col·locació")).toBeVisible();
+    expect(screen.getByText("muntat ahir per Ivet Puig")).toBeVisible();
     expect(await screen.findByRole("img", { name: /^Plànol de / })).toBeVisible();
     expect(screen.getByRole("button", { name: "Sessió de muntatge" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Marca com a desmuntat" })).toBeVisible();

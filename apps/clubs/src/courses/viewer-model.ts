@@ -1,5 +1,8 @@
+import type { components } from "@agilityhub/api-client";
 import { centerCourseInRing, type CourseData, type CoursePlacement } from "@agilityhub/course-core";
 import { type PlannerRing, ringToCore } from "@agilityhub/course-ui";
+
+type MemberSetupPlacement = components["schemas"]["MemberSetupPlacement"];
 
 /** `Course.normalizedJson` is course-core's `CourseData` (schema v1) when the course has a model. */
 export function isCourseData(value: unknown): value is CourseData {
@@ -49,4 +52,52 @@ export interface ViewerScene {
 export function frameScene(course: CourseData): ViewerScene {
   const ring = courseFrameRing(course);
   return { course, placed: false, placement: framePlacement(course, ring), ring };
+}
+
+/**
+ * E9-T07's member projection has no staff-only ring record, but it carries the exact transform and
+ * the ring's dimensions. That is enough to draw the numbered course in the ring frame (R-16-16).
+ * A legacy or geometry-less projection falls back to the course's own frame in the caller.
+ */
+export function memberPlacementScene(
+  course: CourseData,
+  memberPlacement: MemberSetupPlacement,
+): ViewerScene | null {
+  const length = memberPlacement.ringLengthM ?? null;
+  const width = memberPlacement.ringWidthM ?? null;
+  if (length === null || width === null || length <= 0 || width <= 0) return null;
+  const ring: PlannerRing = {
+    border_clearance_m: 0,
+    created_at: "",
+    default_units: "m",
+    doors: [],
+    geometry_version: 0,
+    id: `member-setup-${course.id}`,
+    is_active: true,
+    length_m: length,
+    markers: [],
+    name: course.title,
+    no_go_zones: [],
+    notes: null,
+    obstacle_inventory: [],
+    surface: null,
+    updated_at: "",
+    venue_id: "",
+    width_m: width,
+  };
+  const transform = memberPlacement.transform;
+  return {
+    course,
+    placed: true,
+    placement: {
+      flipX: transform.flipX,
+      flipY: transform.flipY,
+      offsetXMeters: transform.offsetXM,
+      offsetYMeters: transform.offsetYM,
+      // Placement mode is a UI hint; the persisted transform contains the resolved geometry.
+      placementMode: "preserveMeters",
+      rotationDegrees: transform.rotationDeg,
+    },
+    ring,
+  };
 }

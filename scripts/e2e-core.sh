@@ -21,6 +21,7 @@ export CORE_URL="${CORE_URL:-http://core:8080}"
 # anchors below are computed from, so a run proves them for another day (only later days: the
 # seed refuses a week start before the real Monday).
 export CORE_CLOCK_DETECTION=""
+export E9_FORCE_BARE_RING_UNDO=""
 club_today_override=""
 anchors_only=false
 for argument in "${@:3}"; do
@@ -37,8 +38,12 @@ for argument in "${@:3}"; do
     anchors-only)
       anchors_only=true
       ;;
+    force-bare-ring)
+      export E9_FORCE_BARE_RING_UNDO="1"
+      echo "E9_FORCE_BARE_RING_UNDO=1 (exercise the geometry/placement rollback)"
+      ;;
     *)
-      echo "Unknown argument: $argument (expected no-clock, today=YYYY-MM-DD or anchors-only)" >&2
+      echo "Unknown argument: $argument (expected no-clock, today=YYYY-MM-DD, anchors-only or force-bare-ring)" >&2
       exit 2
       ;;
   esac
@@ -547,6 +552,11 @@ if [[ "$staged" == true ]]; then
 else
   export CORE_TEST_FILES="$2"
   if [[ "$2" == *e5-core* || "$2" == *e6-core* || "$2" == *e7-core* ]]; then
+    export SEED_WEEK_START="$E5_WEEK_START"
+  fi
+  # E9-W06: a Sunday current-week seed has no bookable lifecycle left. The forced bare-ring
+  # receipt uses E5's future validated week; the ordinary E9 run keeps E4_WEEK_START.
+  if [[ "$2" == *e9-core* && "$E9_FORCE_BARE_RING_UNDO" == "1" ]]; then
     export SEED_WEEK_START="$E5_WEEK_START"
   fi
   if [[ "$2" == *e8-core* ]]; then

@@ -14,6 +14,7 @@ import {
   type Ring as CoreRing,
 } from "../../packages/course-core/src/index";
 
+import { archivedPlacementBody, futureClassStarts } from "./e9-core-helpers";
 import { expect, test } from "./oauth-token-log";
 
 const clubsUrl = "http://127.0.0.1:4173";
@@ -192,6 +193,68 @@ async function api(
   );
 }
 
+/** Move the isolated test core without leaking a session across the clock change. */
+async function setTestClock(browser: Browser, instant: string): Promise<ApiAnswer> {
+  const call = async (page: Page, authorization?: string): Promise<ApiAnswer> =>
+    page.evaluate(
+      async ({ auth, value }) => {
+        const response = await fetch("/api/v1/test/clock", {
+          body: JSON.stringify({ instant: value }),
+          headers: {
+            "Content-Type": "application/json",
+            ...(auth === undefined ? {} : { Authorization: auth }),
+          },
+          method: "POST",
+        });
+        const text = await response.text();
+        return {
+          body: text === "" ? null : (JSON.parse(text) as unknown),
+          status: response.status,
+        };
+      },
+      { auth: authorization, value: instant },
+    );
+
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto(`${adminUrl}/entrar`);
+  let answer = await call(page);
+  await context.close();
+  if (answer.status === 401 || answer.status === 403) {
+    const admin = await adminBearer(browser);
+    answer = await call(admin.page, admin.bearer);
+    await admin.page.context().close();
+  }
+  return answer;
+}
+
+/** Monday 06:00 of the future seed week, converted from Europe/Madrid wall time. */
+function forcedClockInstant(): string {
+  const date = requiredEnvironment("E5_WEEK_START");
+  const wall = Date.parse(`${date}T06:00:00Z`);
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      day: "2-digit",
+      hour: "2-digit",
+      hourCycle: "h23",
+      minute: "2-digit",
+      month: "2-digit",
+      timeZone: "Europe/Madrid",
+      year: "numeric",
+    })
+      .formatToParts(new Date(wall))
+      .map((part) => [part.type, part.value]),
+  );
+  const localAtWall = Date.UTC(
+    Number(parts.year),
+    Number(parts.month) - 1,
+    Number(parts.day),
+    Number(parts.hour),
+    Number(parts.minute),
+  );
+  return new Date(wall - (localAtWall - wall)).toISOString();
+}
+
 interface Seeded {
   courseName: string;
   obstacles: number;
@@ -362,8 +425,25 @@ function isFinish(response: Response): boolean {
   );
 }
 
-test.afterAll(() => {
+let forcedClockMoved = false;
+let forcedCoreNow: Date | undefined;
+
+test.beforeAll(async ({ browser }) => {
+  if (process.env.E9_FORCE_BARE_RING_UNDO !== "1") return;
+  const instant = forcedClockInstant();
+  const answer = await setTestClock(browser, instant);
+  note("forced-clock", { instant, status: answer.status });
+  expect(answer.status, "POST /test/clock for the forced bare-ring evidence run").toBe(200);
+  forcedClockMoved = true;
+  forcedCoreNow = new Date(instant);
+});
+
+test.afterAll(async ({ browser }) => {
   writeFileSync(join(evidenceDirectory, "e9-core-course-calls.log"), `${courseCalls.join("\n")}\n`);
+  if (!forcedClockMoved) return;
+  const restored = await setTestClock(browser, new Date().toISOString());
+  note("forced-clock-restored", { status: restored.status });
+  expect(restored.status, "restore POST /test/clock after forced bare-ring evidence").toBe(200);
 });
 
 test("E9-W04 · T-16-16 against the core: the member's viewer, registering, and a build session on two phones (R-16-09, R-16-07, R-16-11)", async ({
@@ -377,7 +457,9 @@ test("E9-W04 · T-16-16 against the core: the member's viewer, registering, and 
   const member = await clubsPage(browser, "member@example.test", "/inici", "member");
   await navigateSpa(member, `/recorreguts/muntat/${seeded.ringId}`);
   await expect(member.getByText("Jumping", { exact: true })).toBeVisible();
-  await expect(member.getByText("muntat avui")).toBeVisible();
+  await expect(
+    member.getByText(forcedCoreNow === undefined ? "muntat avui" : /^muntat /u),
+  ).toBeVisible();
   await expect(member.getByRole("button", { name: "Marca com a desmuntat" })).toHaveCount(0);
   await expect(member.getByRole("button", { name: "Sessió de muntatge" })).toHaveCount(0);
   await screenshot(member, "core-visor-alumne-375.png");
@@ -387,6 +469,9 @@ test("E9-W04 · T-16-16 against the core: the member's viewer, registering, and 
   const phoneB = await clubsPage(browser, "instructor.2@example.test", "/instructor/dia", "phoneB");
   await navigateSpa(phoneA, `/recorreguts/${seeded.setupId}`);
   await expect(phoneA.getByRole("img", { name: `Plànol de ${seeded.courseName}` })).toBeVisible();
+  await expect(
+    phoneA.getByText(forcedCoreNow === undefined ? /^muntat avui per /u : /^muntat .+ per /u),
+  ).toBeVisible();
   await screenshot(phoneA, "core-visor-instructor-375.png");
   const started = phoneA.waitForResponse(
     (response) =>
@@ -414,10 +499,14 @@ test("E9-W04 · T-16-16 against the core: the member's viewer, registering, and 
   await phoneB.getByRole("button", { name: "Uneix-t'hi" }).click();
   await phoneB.waitForURL(`**/instructor/muntatge/${session.id}`);
   await expect(obstacleList(phoneB).getByRole("button")).toHaveCount(seeded.obstacles);
-  // An INSTRUCTOR's phone reads the ring through the catalog and its geometry (the first run of
-  // this stage showed neither: `GET /rings/{id}` refuses an INSTRUCTOR): its name and, for each
-  // obstacle, the two nearest markers a builder measures from.
+  // E9-T07: an INSTRUCTOR reads the ring record directly (`GET /rings/{id}`), with its geometry:
+  // its name and, for each obstacle, the two nearest markers a builder measures from.
   await expect(phoneB.getByText("Muntanya", { exact: true })).toBeVisible();
+  await expect
+    .poll(() =>
+      courseCalls.some((line) => /^phoneB GET \/api\/v1\/rings\/[^/]+ → 200$/u.test(line)),
+    )
+    .toBe(true);
   await expect(
     obstacleList(phoneB)
       .getByRole("button")
@@ -462,6 +551,14 @@ test("E9-W04 · T-16-16 against the core: the member's viewer, registering, and 
   await expect(phoneB.getByRole("button", { name: "FINALITZA" })).toHaveCount(0);
   await screenshot(phoneB, "core-sessio-tancada-telefon-b-375.png");
 
+  // E9-W06 / R-16-16: the setup the build session renewed is still placement-only. The member
+  // projection carries its course and ring frame, so the 375 px viewer draws the numbered plan.
+  await navigateSpa(member, `/recorreguts/muntat/${seeded.ringId}`);
+  const builtPlan = member.getByRole("img", { name: `Plànol de ${seeded.courseName}` });
+  await expect(builtPlan).toBeVisible();
+  await expect(builtPlan.getByText("1", { exact: true }).first()).toBeVisible();
+  await screenshot(member, "core-visor-alumne-muntatge-375.png");
+
   // 5. «Registra què hi ha muntat» on another ring in three taps: the library's course (T-16-16).
   const rings = (await api(admin.page, admin.bearer, "GET", "/rings")).body as {
     items: { id: string; name: string }[];
@@ -483,6 +580,7 @@ test("E9-W04 · T-16-16 against the core: the member's viewer, registering, and 
   await phoneA.getByRole("button", { name: "REGISTRA" }).click();
   expect((await registered).status()).toBe(201);
   await expect(phoneA.getByText(/^Registrat com a muntat/u)).toBeVisible();
+  await expect(phoneA.getByRole("img", { name: `Plànol de ${seeded.courseName}` })).toBeVisible();
   await screenshot(phoneA, "core-registrat-375.png");
 
   // 6. The member reads it on the viewer of that ring too, drawn from the course (R-16-16).
@@ -671,9 +769,9 @@ interface PlannedClass {
 }
 
 /**
- * What a test changed on the stage's core (E9-W05 round 2 #2): each step is undone, in reverse
- * order, in the test's `finally`, so the next test of the stage (or a retry) finds the seed's
- * preconditions — the member without INSTRUCTOR, the bare ring without geometry, no booking.
+ * What a test changed on the stage's core (E9-W05 round 2 #2): each mutable resource is undone in
+ * reverse order, so the next test (or retry) finds the seed's preconditions. A LIVE build session
+ * has no abandon operation in E9-T07; the note records that it remains open until P9 closes it.
  */
 type Undo = { label: string; run: () => Promise<ApiAnswer> }[];
 
@@ -695,6 +793,7 @@ async function runUndo(undo: Undo): Promise<string[]> {
 
 /** What the running test changed on the core; `afterEach` undoes it. */
 let pendingUndo: Undo = [];
+let liveSessionsLeftForP9: string[] = [];
 
 // After every test, a timed-out one included: the undo runs, newest first. An undo that fails
 // fails a test that passed, and is only attached to one that already failed (never hiding its
@@ -704,8 +803,19 @@ test.afterEach(async () => {
   const testInfo = test.info();
   const undo = pendingUndo;
   pendingUndo = [];
+  const liveSessions = liveSessionsLeftForP9;
+  liveSessionsLeftForP9 = [];
   const problems = await runUndo(undo);
-  note("undo", { problems, steps: undo.map((step) => step.label), testStatus: testInfo.status });
+  note("undo", {
+    liveSessionsLeftForP9: liveSessions,
+    note:
+      liveSessions.length === 0
+        ? "No LIVE build session left open"
+        : "No abandon operation: each LIVE session stays open until P9 closes it",
+    problems,
+    steps: undo.map((step) => step.label),
+    testStatus: testInfo.status,
+  });
   if (problems.length === 0) return;
   testInfo.annotations.push({ description: problems.join("; "), type: "undo failed" });
   if (testInfo.status === testInfo.expectedStatus) {
@@ -737,18 +847,13 @@ async function archivePlacement(
   const stored = await api(admin.page, admin.bearer, "GET", `/placements/${placementId}`);
   if (stored.status !== 200) return stored;
   const placement = stored.body as Record<string, unknown>;
-  return api(admin.page, admin.bearer, "PUT", `/placements/${placementId}`, {
-    courseId: placement.courseId,
-    courseVersion: placement.courseVersion,
-    force: true,
-    placementMode: placement.placementMode,
-    resolvedObstacles: placement.resolvedObstacles,
-    ringId: placement.ringId,
-    status: "ARCHIVED",
-    transform: placement.transform,
-    version: placement.version,
-    warnings: placement.warnings,
-  });
+  return api(
+    admin.page,
+    admin.bearer,
+    "PUT",
+    `/placements/${placementId}`,
+    archivedPlacementBody(placement),
+  );
 }
 
 /** `PATCH /class-sessions/{id} {placementId}` at the class's stored version (R-16-13). */
@@ -773,7 +878,7 @@ async function planClass(
 }
 
 /** Today's date and time at the club («YYYY-MM-DD», «HH:mm»). */
-function clubNow(timeZone: string): { date: string; time: string } {
+function clubNow(timeZone: string, instant = new Date()): { date: string; time: string } {
   const parts = Object.fromEntries(
     new Intl.DateTimeFormat("en-CA", {
       day: "2-digit",
@@ -784,7 +889,7 @@ function clubNow(timeZone: string): { date: string; time: string } {
       timeZone,
       year: "numeric",
     })
-      .formatToParts(new Date())
+      .formatToParts(instant)
       .map((part) => [part.type, part.value]),
   );
   return {
@@ -821,10 +926,9 @@ async function newClassSlots(
   const utcToday = new Date().toISOString().slice(0, 10);
   const probe = await api(admin.page, admin.bearer, "GET", `/day-grid?date=${utcToday}`);
   const timeZone = (probe.body as { timeZone?: string } | null)?.timeZone ?? "Europe/Madrid";
-  const now = clubNow(timeZone);
+  const now = clubNow(timeZone, forcedCoreNow);
   const hour = Number(now.time.slice(0, 2));
   const slots: Omit<NewClassSlot, "instructorIds">[] = [];
-  const classIds: string[] = [];
   const seen: string[] = [];
   for (let offset = 0; offset < 7; offset += 1) {
     const date = addDays(now.date, offset);
@@ -853,11 +957,6 @@ async function newClassSlots(
         )
         .join(", ")}`,
     );
-    for (const row of day.rows) {
-      for (const cell of row.cells) {
-        if (cell.kind === "CLASS" && cell.classId !== undefined) classIds.push(cell.classId);
-      }
-    }
     // The hours a cell of the ring touches (a 16:30 class keeps 16:00 and 17:00 busy).
     const busy = new Set(
       day.rows
@@ -868,9 +967,7 @@ async function newClassSlots(
         }),
     );
     const first = offset === 0 ? hour + 2 : 10;
-    const free = [first, first + 1, first + 2, 17, 19]
-      .filter((start) => start <= 21 && !busy.has(start))
-      .slice(0, 2);
+    const free = futureClassStarts(first, busy);
     for (const start of new Set(free)) {
       slots.push({
         date,
@@ -880,15 +977,15 @@ async function newClassSlots(
     }
     if (day.dayOfWeek === "SUNDAY") break;
   }
-  let instructorIds: string[] = [];
-  for (const classId of classIds) {
-    const session = await api(admin.page, admin.bearer, "GET", `/class-sessions/${classId}`);
-    const ids = (session.body as { instructorIds?: string[] } | null)?.instructorIds ?? [];
-    if (ids.length > 0) {
-      instructorIds = ids.slice(0, 1);
-      break;
-    }
-  }
+  // Sunday has no seeded class from which to recover an instructor. The catalog is the canonical
+  // source and lets the run create a future Sunday class without ever considering a past slot.
+  const instructors = await api(admin.page, admin.bearer, "GET", "/instructors");
+  const instructor = (
+    instructors.status === 200
+      ? (instructors.body as { items: { active: boolean; id: string }[] }).items
+      : []
+  ).find((item) => item.active);
+  const instructorIds = instructor === undefined ? [] : [instructor.id];
   note("new-class-slots", { clubNow: now, instructorIds, seen, slots, timeZone });
   return instructorIds.length === 0 ? [] : slots.map((slot) => ({ ...slot, instructorIds }));
 }
@@ -1093,12 +1190,53 @@ async function plannedClassOf(
     };
   };
 
+  // E9-W06 evidence: one run deliberately creates the one-off class on a ring with neither
+  // geometry nor placement. That makes the cleanup archive the created placement and only then
+  // delete the geometry; `e9-core-undo.json` is the receipt for both successful operations.
+  if (process.env.E9_FORCE_BARE_RING_UNDO === "1") {
+    let bareRingId: string | undefined;
+    for (const ring of rings.items) {
+      if (ring.id === planned.ringId) continue;
+      const geometry = await api(admin.page, admin.bearer, "GET", `/rings/${ring.id}/geometry`);
+      const placements = await api(
+        admin.page,
+        admin.bearer,
+        "GET",
+        `/placements?ringId=${ring.id}`,
+      );
+      const placementRows = Array.isArray(placements.body) ? placements.body : [];
+      if (geometry.status === 404 && placements.status === 200 && placementRows.length === 0) {
+        bareRingId = ring.id;
+        break;
+      }
+    }
+    if (bareRingId === undefined) return "the forced bare-ring run found no geometry-less ring";
+    const slots = await newClassSlots(admin, bareRingId);
+    note("forced-bare-ring", { ringId: bareRingId, slots });
+    if (slots.length === 0) {
+      return "the forced bare-ring run found no future free hour this week; no class was tried";
+    }
+    for (const slot of slots.slice(0, 3)) {
+      const found = await tryCandidate({
+        bookingId: "",
+        create: slot,
+        id: "",
+        ringId: bareRingId,
+      });
+      if (found !== undefined) return found;
+    }
+    return `the forced bare-ring run could not use its future slots: ${reasons.join("; ")}`;
+  }
+
   // Own bookings first, then bookable classes, then (at most three tries) a one-off class.
   for (const candidate of [...byRing(booked), ...byRing(classes)]) {
     const found = await tryCandidate(candidate);
     if (found !== undefined) return found;
   }
   const slots = await newClassSlots(admin, planned.ringId);
+  if (slots.length === 0) {
+    return `no future free hour remains this week for a one-off class (${String(booked.length)} own bookings, ${String(classes.length)} bookable): ${reasons.join("; ")}`;
+  }
   for (const slot of slots.slice(0, 3)) {
     const found = await tryCandidate({
       bookingId: "",
@@ -1195,6 +1333,7 @@ async function plannedFrom07(
       .placementId,
   ).toBe(plannedClass.placementId);
   const session = (await startedResponse.json()) as { id: string; joinCode: string };
+  liveSessionsLeftForP9.push(session.id);
   await phoneA.waitForURL(`**/instructor/muntatge/${session.id}`);
   await expect(obstacleList(phoneA).getByRole("button").first()).toBeVisible();
   await screenshot(phoneA, "core-07-sessio-iniciada-375.png");

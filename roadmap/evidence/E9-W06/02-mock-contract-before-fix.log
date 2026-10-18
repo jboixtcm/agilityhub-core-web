@@ -1,0 +1,53 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/course-handlers.test.ts (32 tests | 1 failed) 589ms
+   ❯ E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) (22)
+     × R-16-09 / R-16-16 a MEMBER (impersonation included) reads a PUBLIC course, a course an ACTIVE setup shows and an ACTIVE setup (view MEMBER), only while courses.showSetupToMembers 24ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/course-handlers.test.ts > E9-W03 · the S16 mock world answers as the api (S16 §6, CATALEG_ERRORS §1) > R-16-09 / R-16-16 a MEMBER (impersonation included) reads a PUBLIC course, a course an ACTIVE setup shows and an ACTIVE setup (view MEMBER), only while courses.showSetupToMembers
+AssertionError: expected { agilityhubLevel: null, …(15) } to match object { …(4) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "courseId": "course-jumping-dijous",
++   "courseId": null,
+    "id": "setup-muntanya-dijous",
+-   "placement": {
+-     "ringLengthM": 40,
+-     "ringWidthM": 20,
+-     "transform": {
+-       "flipX": false,
+-       "flipY": false,
+-       "offsetXM": 20,
+-       "offsetYM": 10,
+-       "rotationDeg": 0,
+-     },
+-   },
+    "view": "MEMBER",
+  }
+
+ ❯ src/mocks/course-handlers.test.ts:582:27
+    580|       expect(active.status).toBe(200);
+    581|       valid("MemberRingSetup", active.body);
+    582|       expect(active.body).toMatchObject({
+       |                           ^
+    583|         courseId: COURSE_IDS.jumping,
+    584|         id: SETUP_IDS.muntanyaActive,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 31 passed (32)
+   Start at  11:50:24
+   Duration  1.55s (tests 40%, transform 38%, import 22%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/course-handlers.test.ts

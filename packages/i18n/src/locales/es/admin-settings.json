@@ -191,6 +191,12 @@
         "label": "Conservación de la auditoría"
       }
     },
+    "auth": {
+      "refreshReuseGraceSeconds": {
+        "help": "Segundos durante los que se puede recuperar una única respuesta de renovación perdida. Un valor de 0 desactiva el margen.",
+        "label": "Margen de reutilización del token de renovación"
+      }
+    },
     "billing": {
       "accountingExportFormat": {
         "help": "Formato predeterminado de las exportaciones contables.",

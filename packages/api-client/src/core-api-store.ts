@@ -465,22 +465,8 @@ export class CoreApiStore implements PlannerStore {
       return await this.#hydrateRing(ring);
     } catch (error) {
       if (isApiError(error) && error.status === 404) return null;
-      // E9-W04 (found by the real-core run): an INSTRUCTOR is refused the ring's record, but reads
-      // the club's catalog (`RingReaderView`) and the ring's geometry (S16 §6: GET for INSTRUCTOR),
-      // which is all the build session and the viewer draw.
-      if (isApiError(error, "FORBIDDEN")) return this.#getRingFromCatalog(ringId);
       throw error;
     }
-  }
-
-  async #getRingFromCatalog(ringId: string): Promise<PlannerRing | null> {
-    const result = await this.#client.GET("/rings", {
-      params: { query: { includeInactive: false } },
-    });
-    const ring = required(result.data, "getRing:catalog").items.find((item) => item.id === ringId);
-    if (ring === undefined) return null;
-    this.#ringBase.set(ring.id, ring);
-    return this.#hydrateRing(ring);
   }
 
   async updateRingInventory(

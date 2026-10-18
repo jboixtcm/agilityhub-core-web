@@ -1,0 +1,91 @@
+{
+  "clubNow": {
+    "date": "2026-10-19",
+    "time": "06:00"
+  },
+  "instructorIds": [
+    "f8609798-b184-4b5b-8610-a40beb2f83ef"
+  ],
+  "seen": [
+    "2026-10-19 MONDAY: 08:30 CLASS/ACTIVE+CLASS/ACTIVE, 09:30 CLASS/ACTIVE, 11:00 TRAINING/-+TRAINING/-, 17:40 CLASS/ACTIVE, 18:50 CLASS/ACTIVE+CLASS/ACTIVE, 20:00 CLASS/ACTIVE",
+    "2026-10-20 TUESDAY: 08:30 CLASS/ACTIVE, 11:00 BLOCK/-+TRAINING/-, 17:40 CLASS/ACTIVE, 18:50 CLASS/ACTIVE, 20:00 CLASS/ACTIVE+CLASS/ACTIVE",
+    "2026-10-21 WEDNESDAY: 08:30 CLASS/ACTIVE+CLASS/ACTIVE, 09:30 CLASS/ACTIVE, 16:30 CLASS/ACTIVE, 17:40 CLASS/ACTIVE, 18:50 CLASS/ACTIVE+CLASS/ACTIVE, 20:00 CLASS/ACTIVE+CLASS/ACTIVE",
+    "2026-10-22 THURSDAY: 08:30 CLASS/ACTIVE, 16:30 CLASS/ACTIVE, 17:40 CLASS/ACTIVE, 18:50 CLASS/ACTIVE+CLASS/ACTIVE, 20:00 CLASS/ACTIVE",
+    "2026-10-23 FRIDAY: 08:30 CLASS/ACTIVE, 09:30 CLASS/ACTIVE, 17:40 CLASS/ACTIVE, 18:50 CLASS/ACTIVE+CLASS/ACTIVE",
+    "2026-10-24 SATURDAY: 08:30 CLASS/ACTIVE+CLASS/ACTIVE, 09:30 CLASS/ACTIVE+CLASS/ACTIVE, 16:30 CLASS/ACTIVE, 18:30 CLASS/ACTIVE",
+    "2026-10-25 SUNDAY: "
+  ],
+  "slots": [
+    {
+      "date": "2026-10-19",
+      "endTime": "11:00",
+      "startTime": "10:00"
+    },
+    {
+      "date": "2026-10-19",
+      "endTime": "18:00",
+      "startTime": "17:00"
+    },
+    {
+      "date": "2026-10-20",
+      "endTime": "18:00",
+      "startTime": "17:00"
+    },
+    {
+      "date": "2026-10-20",
+      "endTime": "20:00",
+      "startTime": "19:00"
+    },
+    {
+      "date": "2026-10-21",
+      "endTime": "18:00",
+      "startTime": "17:00"
+    },
+    {
+      "date": "2026-10-21",
+      "endTime": "20:00",
+      "startTime": "19:00"
+    },
+    {
+      "date": "2026-10-22",
+      "endTime": "13:00",
+      "startTime": "12:00"
+    },
+    {
+      "date": "2026-10-22",
+      "endTime": "18:00",
+      "startTime": "17:00"
+    },
+    {
+      "date": "2026-10-23",
+      "endTime": "18:00",
+      "startTime": "17:00"
+    },
+    {
+      "date": "2026-10-23",
+      "endTime": "20:00",
+      "startTime": "19:00"
+    },
+    {
+      "date": "2026-10-24",
+      "endTime": "18:00",
+      "startTime": "17:00"
+    },
+    {
+      "date": "2026-10-24",
+      "endTime": "20:00",
+      "startTime": "19:00"
+    },
+    {
+      "date": "2026-10-25",
+      "endTime": "18:00",
+      "startTime": "17:00"
+    },
+    {
+      "date": "2026-10-25",
+      "endTime": "20:00",
+      "startTime": "19:00"
+    }
+  ],
+  "timeZone": "Europe/Madrid"
+}

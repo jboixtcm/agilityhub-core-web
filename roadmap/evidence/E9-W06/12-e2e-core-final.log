@@ -1,0 +1,169 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E9-W06 e9-core.spec.ts force-bare-ring
+
+E9_FORCE_BARE_RING_UNDO=1 (exercise the geometry/placement rollback)
+E4_WEEK_START=2026-10-12 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-19 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-17T15:53:06.178739049Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:8cdabb7cf20946057faa5f4dafd38a86d359c19f57b1d12048ad6cba2551e24a]
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E9-W06/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E9-W06/demo-fifo.yaml (62 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-e9-w06_default Creating 
+ Network agilityhub-e9-w06_default Creating 
+ Volume agilityhub-e9-w06_mailbox Creating 
+ Volume agilityhub-e9-w06_mailbox Creating 
+ Volume agilityhub-e9-w06_export-files Creating 
+ Volume agilityhub-e9-w06_export-files Creating 
+ Volume agilityhub-e9-w06_mongo-data Creating 
+ Volume agilityhub-e9-w06_mongo-data Creating 
+ Volume agilityhub-e9-w06_mailbox Created 
+ Volume agilityhub-e9-w06_mailbox Created 
+ Volume agilityhub-e9-w06_mongo-data Created 
+ Volume agilityhub-e9-w06_mongo-data Created 
+ Volume agilityhub-e9-w06_export-files Created 
+ Volume agilityhub-e9-w06_export-files Created 
+ Network agilityhub-e9-w06_default Created 
+ Network agilityhub-e9-w06_default Created 
+ Container agilityhub-e9-w06-mongo-1 Creating 
+ Container agilityhub-e9-w06-mongo-1 Created 
+ Container agilityhub-e9-w06-seed-1 Creating 
+ Container agilityhub-e9-w06-seed-1 Created 
+ Container agilityhub-e9-w06-activate-demo-club-1 Creating 
+ Container agilityhub-e9-w06-activate-demo-club-1 Created 
+ Container agilityhub-e9-w06-core-1 Creating 
+ Container agilityhub-e9-w06-core-1 Created 
+ Container agilityhub-e9-w06-mongo-1 Starting 
+ Container agilityhub-e9-w06-mongo-1 Started 
+ Container agilityhub-e9-w06-mongo-1 Waiting 
+ Container agilityhub-e9-w06-mongo-1 Healthy 
+ Container agilityhub-e9-w06-seed-1 Starting 
+ Container agilityhub-e9-w06-seed-1 Started 
+ Container agilityhub-e9-w06-seed-1 Waiting 
+ Container agilityhub-e9-w06-seed-1 Exited 
+ Container agilityhub-e9-w06-activate-demo-club-1 Starting 
+ Container agilityhub-e9-w06-activate-demo-club-1 Started 
+ Container agilityhub-e9-w06-mongo-1 Waiting 
+ Container agilityhub-e9-w06-activate-demo-club-1 Waiting 
+ Container agilityhub-e9-w06-activate-demo-club-1 Exited 
+ Container agilityhub-e9-w06-mongo-1 Healthy 
+ Container agilityhub-e9-w06-core-1 Starting 
+ Container agilityhub-e9-w06-core-1 Started 
+ Container agilityhub-e9-w06-mongo-1 Waiting 
+ Container agilityhub-e9-w06-seed-1 Waiting 
+ Container agilityhub-e9-w06-activate-demo-club-1 Waiting 
+ Container agilityhub-e9-w06-core-1 Waiting 
+ Container agilityhub-e9-w06-seed-1 Exited 
+ Container agilityhub-e9-w06-activate-demo-club-1 Exited 
+ Container agilityhub-e9-w06-mongo-1 Healthy 
+ Container agilityhub-e9-w06-core-1 Healthy 
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E9-W06/seed-files.log (191 lines)
+ Container agilityhub-e9-w06-playwright-run-7d2b1889ba6c Creating 
+ Container agilityhub-e9-w06-playwright-run-7d2b1889ba6c Created 
+! Corepack is about to download https://registry.npmjs.org/pnpm/-/pnpm-9.15.9.tgz
+ WARN  Unsupported engine: wanted: {"node":">=22 <23"} (current: {"node":"v24.20.0","pnpm":"9.15.9"})
+(node:33) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Scope: all 12 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +858
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 858, reused 600, downloaded 0, added 0
+Progress: resolved 858, reused 854, downloaded 0, added 102
+Progress: resolved 858, reused 857, downloaded 0, added 326
+Progress: resolved 858, reused 858, downloaded 0, added 574
+Progress: resolved 858, reused 858, downloaded 0, added 793
+Progress: resolved 858, reused 858, downloaded 0, added 840
+Progress: resolved 858, reused 858, downloaded 0, added 849
+Progress: resolved 858, reused 858, downloaded 0, added 857
+Progress: resolved 858, reused 858, downloaded 0, added 858, done
+
+devDependencies:
++ @commitlint/cli 21.2.2
++ @commitlint/config-conventional 21.2.2
++ @eslint/css 2.0.0
++ @eslint/js 9.39.5
++ @playwright/test 1.63.0
++ @size-limit/file 13.0.3
++ @types/node 24.13.3
++ eslint 9.39.5
++ eslint-import-resolver-typescript 4.4.5
++ eslint-plugin-import 2.32.0
++ eslint-plugin-jsx-a11y 6.10.2
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 7.1.1
++ globals 17.12.0
++ husky 9.1.7
++ i18next-parser 9.4.0
++ lint-staged 17.5.0
++ msw 2.15.0
++ prettier 3.9.6
++ size-limit 13.0.3
++ turbo 2.10.12
++ typescript 5.9.3
++ typescript-eslint 8.69.0
+
+. prepare$ node packages/config/scripts/prepare-husky.mjs
+. prepare: .git can't be found
+. prepare: Done
+Done in 9.6s using pnpm v9.15.9
+
+[WebServer] (node:116) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:196) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:294) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+[WebServer] (node:392) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+[WebServer] (node:487) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+[WebServer] (Use `node --trace-deprecation ...` to show where the warning was created)
+
+
+Running 3 tests using 1 worker
+
+[1/3] e2e/core/e9-core.spec.ts:434:5 › E9-W04 · T-16-16 against the core: the member's viewer, registering, and a build session on two phones (R-16-09, R-16-07, R-16-11)
+[2/3] e2e/core/e9-core.spec.ts:617:5 › E9-W05 · T-16-15 against the core: D18's library and import wizard, the course page, the placement editor, the stored build sheet and «Registra-ho com a muntat» (R-16-02, R-16-05, R-16-10, R-16-07)
+[3/3] e2e/core/e9-core.spec.ts:1249:5 › E9-W05 · T-16-16 against the core: a planned placement built from 07 on the phone, joined from a ring with no setup (R-16-13, R-16-11, WP-16-F′)
+  1) e2e/core/e9-core.spec.ts:1249:5 › E9-W05 · T-16-16 against the core: a planned placement built from 07 on the phone, joined from a ring with no setup (R-16-13, R-16-11, WP-16-F′) 
+
+    Error: 07's «Recorregut previst» leg could not run: the forced bare-ring run could not use its future slots: Cadells: POST /seat-holds → 422 CLASS_NOT_BOOKABLE; Cadells: POST /seat-holds → 422 CLASS_NOT_BOOKABLE; Cadells: POST /seat-holds → 422 CLASS_NOT_BOOKABLE
+
+      1302 |     // book, the test fails with the reason, never passes without it.
+      1303 |     note("planned-07", { notRun: plannedClass });
+    > 1304 |     throw new Error(`07's «Recorregut previst» leg could not run: ${plannedClass}`);
+           |           ^
+      1305 |   }
+      1306 |   await navigateSpa(phoneA, `/reserves/${plannedClass.bookingId}`);
+      1307 |   await expect(phoneA.getByText(`Recorregut previst: ${plannedClass.courseName}`)).toBeVisible();
+        at plannedFrom07 (/work/e2e/core/e9-core.spec.ts:1304:11)
+        at /work/e2e/core/e9-core.spec.ts:1280:3
+
+    attachment #1: oauth-token-calls (text/plain) ──────────────────────────────────────────────────
+    2026-10-18T09:07:29.072Z grant_type=refresh_token status=400 cookie=none context=w0c7 page=127.0.0.1:4174/entrar started=2026-10-18T09:07:29.070Z overlap=no set-cookie=ah_refresh(empty)(Path=/oauth2/token; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict) test="E9-W05 · T-...
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/core-e1/e9-core-E9-W05-·-T-16-16-a-3a40a-p-R-16-13-R-16-11-WP-16-F′-/error-context.md
+
+    Error Context: test-results/core-e1/e9-core-E9-W05-·-T-16-16-a-3a40a-p-R-16-13-R-16-11-WP-16-F′-/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/core-e1/e9-core-E9-W05-·-T-16-16-a-3a40a-p-R-16-13-R-16-11-WP-16-F′-/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/core-e1/e9-core-E9-W05-·-T-16-16-a-3a40a-p-R-16-13-R-16-11-WP-16-F′-/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    e2e/core/e9-core.spec.ts:1249:5 › E9-W05 · T-16-16 against the core: a planned placement built from 07 on the phone, joined from a ring with no setup (R-16-13, R-16-11, WP-16-F′) 
+  2 passed (21.5s)
+
+ ELIFECYCLE  Command failed with exit code 1.
