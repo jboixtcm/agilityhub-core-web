@@ -5439,6 +5439,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/platform/erasure-requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Cancel account erasure
+         * @description S14 §5 (E11-T01 round 2). The console cancels an account request (scope ACCOUNT) that is SCHEDULED or BLOCKED → CANCELLED, audited ERASURE_CANCELLED on the platform; AGILITYHUB_ADMIN only, no request tenant. The clubs it already erased (a request blocked halfway) stay erased. Another state, or a club's member request (its club cancels it), is 409 INVALID_STATE {status, scope}; an unknown id is 404.
+         */
+        delete: operations["cancelAccountErasure"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/platform/jobs/overview": {
         parameters: {
             query?: never;
@@ -5596,7 +5616,7 @@ export interface paths {
         };
         /**
          * publicFile
-         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Public states: PUBLISHED, FINISHED and CANCELLED; DRAFT hidden. No names, member data or registrations. No API key. Redirect to a short-lived signed URL.
+         * @description Roles: ANON, MEMBER, INSTRUCTOR, ADMIN, AGILITYHUB_ADMIN. Public states: PUBLISHED, FINISHED and CANCELLED; DRAFT hidden. No names, member data or registrations. No API key. Redirect to a short-lived signed URL. The signed URL of the local storage (`expires` and `signature`) answers the file itself, with byte ranges (INC-43, CONVENCIONS_API §5).
          */
         get: operations["publicFile"];
         put?: never;
@@ -16512,7 +16532,17 @@ export interface components {
             validatedClassIds: string[];
         };
     };
-    responses: never;
+    responses: {
+        /** @description STALE_VERSION: the keyed write met a transient transaction conflict; its effects were rolled back and the key released. Read again and retry (CONVENCIONS_API §7, INC-47). */
+        StaleVersion: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["ApiError"];
+            };
+        };
+    };
     parameters: never;
     requestBodies: never;
     headers: never;
@@ -17864,15 +17894,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description ADMIN_TEXT_REQUIRED */
             422: {
                 headers: {
@@ -18613,15 +18636,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE, RING_BLOCK_CONFLICT, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description INVALID_STATE, RING_BLOCK_CONFLICT, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description RING_HAS_BOOKINGS, ACTIVITY_INCOMPLETE, ACTIVITY_IN_PAST, OUTSIDE_OPENING_HOURS, ADMIN_TEXT_REQUIRED */
             422: {
                 headers: {
@@ -19122,15 +19138,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description ACTIVITY_FULL, ALREADY_REGISTERED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description ACTIVITY_FULL, ALREADY_REGISTERED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description ACTIVITY_NOT_PUBLISHED, REGISTRATION_CLOSED, LEVEL_NOT_ALLOWED, MEMBER_NOT_ACTIVE, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING */
             422: {
                 headers: {
@@ -20275,15 +20284,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, INVALID_STATE */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, INVALID_STATE, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description ATTACHMENT_LIMIT_REACHED, ATTACHMENT_ENTITY_MISMATCH */
             422: {
                 headers: {
@@ -20523,15 +20525,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -21965,14 +21960,7 @@ export interface operations {
                 };
             };
             /** @description RUN_EXISTS, SIMULATION_STALE, BILLING_BUSY, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description COLLECTION_DATE_TOO_SOON, NO_INVOICES, SEPA_NOT_CONFIGURED */
             422: {
                 headers: {
@@ -22212,15 +22200,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description PAYMENT_PROVIDER_NOT_ENABLED, PROVIDER_CONFIG_INVALID */
             422: {
                 headers: {
@@ -22342,14 +22323,7 @@ export interface operations {
                 };
             };
             /** @description RUN_NOT_ROLLBACKABLE, BILLING_BUSY, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -22726,15 +22700,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description SEAT_HOLD_EXPIRED, CLASS_FULL, BOOKING_LIMIT_REACHED, ALREADY_BOOKED, SEAT_TAKEN, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description SEAT_HOLD_EXPIRED, CLASS_FULL, BOOKING_LIMIT_REACHED, ALREADY_BOOKED, SEAT_TAKEN, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description SWAP_NOT_ALLOWED, CLASS_NOT_BOOKABLE, NOT_YET_OPEN, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING, MEMBER_NOT_ACTIVE, LEVEL_NOT_ALLOWED, PACK_EMPTY */
             422: {
                 headers: {
@@ -23482,14 +23449,7 @@ export interface operations {
                 };
             };
             /** @description STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -23609,14 +23569,7 @@ export interface operations {
                 };
             };
             /** @description STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -24103,14 +24056,7 @@ export interface operations {
                 };
             };
             /** @description STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description BUILD_SESSION_FINISHED, RING_WITHOUT_GEOMETRY */
             422: {
                 headers: {
@@ -24603,15 +24549,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -24731,14 +24670,7 @@ export interface operations {
                 };
             };
             /** @description MEMBER_ERASED, INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description PAYMENT_PROVIDER_NOT_ENABLED, PROVIDER_CONFIG_INVALID */
             422: {
                 headers: {
@@ -25616,14 +25548,7 @@ export interface operations {
                 };
             };
             /** @description STALE_VERSION, INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description ATTENDANCE_NOT_OPEN, ATTENDANCE_WINDOW_CLOSED, ATTENDANCE_NOTIFIED_FINAL, ATTENDANCE_BOOKING_NOT_ACTIVE, INSTRUCTOR_NOTICE_DISABLED */
             422: {
                 headers: {
@@ -25867,15 +25792,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description ADMIN_TEXT_REQUIRED */
             422: {
                 headers: {
@@ -28108,15 +28026,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description LEVELS_DISABLED */
             422: {
                 headers: {
@@ -28735,15 +28646,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -28864,15 +28768,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -31290,14 +31187,7 @@ export interface operations {
                 };
             };
             /** @description STALE_VERSION, INVALID_STATE, MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -33791,15 +33681,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -34035,15 +33918,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -36197,14 +36073,7 @@ export interface operations {
                 };
             };
             /** @description MEMBER_ERASED, BILLING_BUSY, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description CURRENCY_MISMATCH */
             422: {
                 headers: {
@@ -36469,14 +36338,7 @@ export interface operations {
                 };
             };
             /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -36721,14 +36583,7 @@ export interface operations {
                 };
             };
             /** @description INVALID_STATE, STALE_VERSION, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -36974,14 +36829,7 @@ export interface operations {
                 };
             };
             /** @description INVALID_STATE, STALE_VERSION, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -37103,14 +36951,7 @@ export interface operations {
                 };
             };
             /** @description INVALID_STATE, STALE_VERSION, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -37231,15 +37072,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description REFUND_EXCEEDS_PAID, CURRENCY_MISMATCH, PAYMENT_PROVIDER_NOT_ENABLED, PROVIDER_CONFIG_INVALID */
             422: {
                 headers: {
@@ -37361,14 +37195,7 @@ export interface operations {
                 };
             };
             /** @description INVALID_STATE, STALE_VERSION, MAX_ATTEMPTS, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description NO_PAYMENT_METHOD, PAYMENT_PROVIDER_NOT_ENABLED, PROVIDER_CONFIG_INVALID */
             422: {
                 headers: {
@@ -37963,15 +37790,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description JOB_ALREADY_RUNNING, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description JOB_ALREADY_RUNNING, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Too Many Requests */
             429: {
                 headers: {
@@ -40078,15 +39898,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description PAYMENT_PROVIDER_NOT_ENABLED, PROVIDER_CONFIG_INVALID */
             422: {
                 headers: {
@@ -40569,14 +40382,7 @@ export interface operations {
                 };
             };
             /** @description MEMBER_ERASED, CHIP_ALREADY_EXISTS, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description MEMBER_NOT_ACTIVE, PLAN_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, DOCUMENT_TYPE_UNKNOWN, CONSENT_VERSION_OUTDATED */
             422: {
                 headers: {
@@ -41572,15 +41378,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, LEAVE_ALREADY_SCHEDULED, INACTIVITY_OVERLAP, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description MEMBER_ERASED, LEAVE_ALREADY_SCHEDULED, INACTIVITY_OVERLAP, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description MEMBER_NOT_ACTIVE, INACTIVITY_DEADLINE_PASSED, INACTIVITY_INVALID_RANGE, INACTIVITY_NOT_APPLICABLE */
             422: {
                 headers: {
@@ -42565,15 +42364,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, LEAVE_ALREADY_REQUESTED, LEAVE_ALREADY_SCHEDULED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description MEMBER_ERASED, LEAVE_ALREADY_REQUESTED, LEAVE_ALREADY_SCHEDULED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description MEMBER_NOT_ACTIVE, LEAVE_DATE_INVALID, LEAVE_REASON_UNKNOWN */
             422: {
                 headers: {
@@ -46341,15 +46133,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description PAYMENT_PROVIDER_NOT_ENABLED, PROVIDER_CONFIG_INVALID */
             422: {
                 headers: {
@@ -47966,15 +47751,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description PLAN_NOT_AVAILABLE */
             422: {
                 headers: {
@@ -48089,15 +47867,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description NO_PLANNED_LEAVE */
             422: {
                 headers: {
@@ -49731,15 +49502,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description TEMPLATE_NOT_SENDABLE, NO_RECIPIENTS */
             422: {
                 headers: {
@@ -50756,15 +50520,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description PLAN_NOT_PACK */
             422: {
                 headers: {
@@ -50885,15 +50642,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description PACK_NEGATIVE */
             422: {
                 headers: {
@@ -51763,14 +51513,7 @@ export interface operations {
                 };
             };
             /** @description STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description PLACEMENT_BLOCKED, RING_WITHOUT_GEOMETRY, PLACEMENT_RING_MISMATCH */
             422: {
                 headers: {
@@ -53895,15 +53638,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description SLUG_TAKEN, HOST_ALREADY_USED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description SLUG_TAKEN, HOST_ALREADY_USED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description MODULE_DEPENDENCY, HOST_RESERVED */
             422: {
                 headers: {
@@ -54026,15 +53762,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description JOB_ALREADY_RUNNING, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description JOB_ALREADY_RUNNING, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Too Many Requests */
             429: {
                 headers: {
@@ -54519,15 +54248,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description LAST_ADMIN, MEMBERSHIP_EXISTS, INVALID_STATE */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description LAST_ADMIN, MEMBERSHIP_EXISTS, INVALID_STATE, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -54643,15 +54365,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description LAST_ADMIN */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description LAST_ADMIN, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -54772,15 +54487,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description CATALOG_NOT_EMPTY */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description CATALOG_NOT_EMPTY, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description CURRENCY_MISMATCH */
             422: {
                 headers: {
@@ -55148,14 +54856,7 @@ export interface operations {
                 };
             };
             /** @description HOST_ALREADY_USED, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description HOST_RESERVED */
             422: {
                 headers: {
@@ -55272,14 +54973,7 @@ export interface operations {
                 };
             };
             /** @description STALE_VERSION, INVALID_STATE */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -55522,14 +55216,7 @@ export interface operations {
                 };
             };
             /** @description STALE_VERSION, INVALID_STATE */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description HOST_NOT_VERIFIED */
             422: {
                 headers: {
@@ -56404,14 +56091,7 @@ export interface operations {
                 };
             };
             /** @description STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -56532,15 +56212,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description INVALID_STATE, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -56661,15 +56334,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -56917,15 +56583,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -57303,15 +56962,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Conflict */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -57561,6 +57213,127 @@ export interface operations {
                 };
             };
             /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
+    cancelAccountErasure: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Completed without a response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description INVALID_STATE */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -58778,6 +58551,28 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
+            /** @description The whole file (signed URL): no Range, several ranges, a malformed one or an If-Range */
+            200: {
+                headers: {
+                    "Accept-Ranges"?: "bytes";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": string;
+                };
+            };
+            /** @description The one byte range asked for (signed URL, Range: bytes=a-b, a- or -n) */
+            206: {
+                headers: {
+                    "Accept-Ranges"?: "bytes";
+                    /** @description bytes start-end/size */
+                    "Content-Range"?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/octet-stream": string;
+                };
+            };
             /** @description void */
             302: {
                 headers: {
@@ -58830,6 +58625,15 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ApiError"];
                 };
+            };
+            /** @description The range starts past the file (signed URL); no body */
+            416: {
+                headers: {
+                    /** @description bytes *\/size */
+                    "Content-Range"?: string;
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Unprocessable Entity */
             422: {
@@ -59951,14 +59755,7 @@ export interface operations {
                 };
             };
             /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -60211,15 +60008,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description RING_BLOCK_CONFLICT, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description RING_BLOCK_CONFLICT, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description OUTSIDE_OPENING_HOURS, RING_HAS_BOOKINGS */
             422: {
                 headers: {
@@ -60843,14 +60633,7 @@ export interface operations {
                 };
             };
             /** @description STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description RING_WITHOUT_GEOMETRY, PLACEMENT_RING_MISMATCH, SETUP_SOURCE_REQUIRED, LEVELS_DISABLED */
             422: {
                 headers: {
@@ -61091,14 +60874,7 @@ export interface operations {
                 };
             };
             /** @description INVALID_STATE, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -61220,14 +60996,7 @@ export interface operations {
                 };
             };
             /** @description INVALID_STATE, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -63956,14 +63725,7 @@ export interface operations {
                 };
             };
             /** @description MEMBER_ALREADY_EXISTS, MEMBER_ERASED, ID_DOCUMENT_ALREADY_EXISTS, CHIP_ALREADY_EXISTS, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description SIGNUP_CLOSED, SIGNUP_ALREADY_PENDING, PLAN_NOT_AVAILABLE, PAYMENT_METHOD_NOT_AVAILABLE, DOG_CHIP_ALREADY_REGISTERED, DOG_DOCUMENT_REQUIRED, DOCUMENT_TYPE_UNKNOWN, CONSENT_VERSION_OUTDATED, FAMILY_HOLDER_NOT_FOUND */
             422: {
                 headers: {
@@ -64829,15 +64591,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description DOG_NOT_ACTIVE, ATTACHMENT_ENTITY_MISMATCH, ATTACHMENT_LIMIT_REACHED */
             422: {
                 headers: {
@@ -65075,15 +64830,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description Unprocessable Entity */
             422: {
                 headers: {
@@ -65709,15 +65457,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description SLOT_TAKEN, TRAINING_LIMIT_REACHED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description SLOT_TAKEN, TRAINING_LIMIT_REACHED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description DOG_ALREADY_BOOKED, DOG_NOT_ALLOWED, RING_NOT_RESERVABLE, SLOT_OUT_OF_WINDOW, CLUB_CLOSED, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING, MEMBER_NOT_ACTIVE, DOG_NOT_ACTIVE */
             422: {
                 headers: {
@@ -66234,15 +65975,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description TRAINING_CANCEL_TOO_LATE */
             422: {
                 headers: {
@@ -66611,15 +66345,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description AMOUNT_EXCEEDS_DUE, PLAN_NOT_PACK, CURRENCY_MISMATCH */
             422: {
                 headers: {
@@ -66740,15 +66467,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description INVALID_STATE, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description REFUND_EXCEEDS_PAID, CURRENCY_MISMATCH, PAYMENT_PROVIDER_NOT_ENABLED, PROVIDER_CONFIG_INVALID */
             422: {
                 headers: {
@@ -66867,15 +66587,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description ALREADY_BOOKED, ALREADY_ON_WAITLIST, WAITLIST_LIMIT, BOOKING_LIMIT_REACHED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description ALREADY_BOOKED, ALREADY_ON_WAITLIST, WAITLIST_LIMIT, BOOKING_LIMIT_REACHED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description CLASS_NOT_FULL, BOOKING_BLOCKED, INACTIVITY_PERIOD, MEMBER_LEAVING, PACK_EMPTY, LEVEL_NOT_ALLOWED, MEMBER_NOT_ACTIVE */
             422: {
                 headers: {
@@ -67242,15 +66955,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description SEAT_TAKEN, SEAT_HOLD_EXPIRED, BOOKING_LIMIT_REACHED, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            /** @description SEAT_TAKEN, SEAT_HOLD_EXPIRED, BOOKING_LIMIT_REACHED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            409: components["responses"]["StaleVersion"];
             /** @description WAITLIST_NOT_NOTIFIED, WAITLIST_OFFER_EXPIRED, INACTIVITY_PERIOD, MEMBER_LEAVING, SWAP_NOT_ALLOWED */
             422: {
                 headers: {
@@ -69260,14 +68966,7 @@ export interface operations {
                 };
             };
             /** @description WEEK_ALREADY_GENERATED, INVALID_STATE, STALE_VERSION, IDEMPOTENCY_KEY_REUSED */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
+            409: components["responses"]["StaleVersion"];
             /** @description TEMPLATE_INCONSISTENT, TEMPLATE_KIND_MISMATCH, WEEK_IN_PAST */
             422: {
                 headers: {

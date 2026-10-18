@@ -226,6 +226,8 @@ type AuditEntryListItem = ListItemWith<
 >;
 type AuditListResponse = components["schemas"]["ListPageAuditEntryListItem"];
 type ExportJob = components["schemas"]["ExportJob"];
+type ErasureInput = components["schemas"]["ErasureInput"];
+type ErasureRequest = components["schemas"]["ErasureRequest"];
 type SignupIdentityCheckRequest = components["schemas"]["IdentityCheckRequest"];
 type SignupUploadRequest = components["schemas"]["UploadUrlRequest"];
 type SignupFamilyLookupRequest = components["schemas"]["FamilyGroupLookupRequest"];
@@ -359,8 +361,11 @@ const auditEntries = structuredClone(auditEntriesFixture) as AuditEntryListItem[
 const initialExportJobs = structuredClone(exportJobsFixture) as ExportJob[];
 let exportJobsState = structuredClone(initialExportJobs);
 let exportPolls = 0;
+const exportDetailPolls = new Map<string, number>();
 // Rows of each queued list export, reported once the worker marks it READY.
 const queuedExportRows = new Map<string, number>();
+const requestedMemberDataExports = new Set<string>();
+const memberErasureRequests = new Map<string, ErasureRequest>();
 
 let memberDogsState: MeDogs = structuredClone(meDogsFixture);
 let memberProfileState: MeProfile = structuredClone(meProfileFixture);
@@ -450,7 +455,10 @@ function resetMemberSelfServiceState(): void {
 function resetAuditMockState(): void {
   exportJobsState = structuredClone(initialExportJobs);
   exportPolls = 0;
+  exportDetailPolls.clear();
   queuedExportRows.clear();
+  requestedMemberDataExports.clear();
+  memberErasureRequests.clear();
 }
 
 function changedParameter(current: Parameter, value: unknown, reason?: string): Parameter {
@@ -984,6 +992,48 @@ function apiError(code: string, message: string, status: number, headers?: Heade
   );
 }
 
+function apiErrorWithDetails(
+  code: string,
+  message: string,
+  status: number,
+  details: Record<string, unknown>,
+) {
+  return HttpResponse.json<ApiErrorResponse>(
+    { code, details, message, traceId: "mock-trace-id" },
+    { status },
+  );
+}
+
+function memberDataExport(subjectMemberId: string, self: boolean) {
+  if (requestedMemberDataExports.has(subjectMemberId)) {
+    return apiError("DATA_EXPORT_TOO_SOON", "Data export requested too soon", 422);
+  }
+  const jobId = self
+    ? "71000000-0000-4000-8000-000000000001"
+    : "71000000-0000-4000-8000-000000000002";
+  const job: ExportJob = {
+    createdAt: "2026-10-18T09:00:00Z",
+    format: "ZIP",
+    id: jobId,
+    kind: "MEMBER_DATA",
+    progressPct: 0,
+    status: "QUEUED",
+  };
+  requestedMemberDataExports.add(subjectMemberId);
+  exportDetailPolls.set(jobId, 0);
+  exportJobsState = [job, ...exportJobsState.filter((item) => item.id !== jobId)];
+  return HttpResponse.json({ jobId, statusUrl: `/api/v1/exports/${jobId}` }, { status: 202 });
+}
+
+function privacyMemberRefusal(memberId: string) {
+  const refused = adminRouteRefusal();
+  if (refused !== undefined) return refused;
+  if (!callerClubOwnsTheWorld()) return apiError("NOT_FOUND", "Member not found", 404);
+  return lifecycleMemberOverview(memberId) === undefined && memberId !== ERASED_MEMBER_ID
+    ? apiError("NOT_FOUND", "Member not found", 404)
+    : undefined;
+}
+
 /**
  * `GET /{resource}/export` like the api (R-14-12, CONVENCIONS_API §4): `200` with the file up to
  * `SYNC_MAX_ROWS`; above it, or under the `exportsQueued` scenario switch, a queued job and
@@ -1016,6 +1066,7 @@ function exportDownloadSignature(jobId: string): string {
 }
 
 function exportJobFileName(job: ExportJob): string {
+  if (job.format === "ZIP") return "dades-personals_20261018-1100.zip";
   return exportFileName(
     job.listKey ?? "export",
     job.format === "PDF" ? "pdf" : "xlsx",
@@ -2660,6 +2711,118 @@ export const handlers = [
     };
     return HttpResponse.json(detail);
   }),
+  // S14 R-14-13 (E11-W01): every member-data package is asynchronous. The job is caller-owned,
+  // followed through `GET /exports/{id}` and built as a ZIP; a member can ask once every 24 h.
+  http.post("*/api/v1/me/data-export", () => {
+    const scenario = currentMockScenario();
+    if (scenario.me.impersonation !== undefined) {
+      return apiError("IMPERSONATION_DENIED", "Impersonation tokens cannot export data", 403);
+    }
+    const memberId = scenario.me.membership?.memberId;
+    if (memberId === undefined || scenario.me.membership?.roles.includes("MEMBER") !== true) {
+      return apiError("FORBIDDEN", "Forbidden", 403);
+    }
+    return memberDataExport(memberId, true);
+  }),
+  http.post("*/api/v1/members/:id/data-export", async ({ params, request }) => {
+    const memberId = String(params.id);
+    const refused = privacyMemberRefusal(memberId);
+    if (refused !== undefined) return refused;
+    if (memberId === ERASED_MEMBER_ID) return apiError("MEMBER_ERASED", "Member erased", 409);
+    const body = (await request.json()) as components["schemas"]["DataExportInput"];
+    if (typeof body.deliverToMember !== "boolean") {
+      return apiErrorWithDetails("VALIDATION_ERROR", "Validation failed", 400, {
+        field: "deliverToMember",
+      });
+    }
+    return memberDataExport(memberId, false);
+  }),
+  // S14 R-14-18: full, append-only consent history. `ipHash` is present only where the api stores
+  // it; absent optional fields stay absent (INC-08), never invented as `null`.
+  http.get("*/api/v1/members/:id/consents", ({ params }) => {
+    const memberId = String(params.id);
+    const refused = privacyMemberRefusal(memberId);
+    if (refused !== undefined) return refused;
+    return HttpResponse.json([
+      {
+        at: "2023-02-14T10:00:00Z",
+        granted: true,
+        locale: "ca",
+        source: "SIGNUP",
+        type: "PRIVACY_POLICY",
+        version: "2023-01",
+      },
+      {
+        at: "2026-09-01T08:15:00Z",
+        granted: false,
+        ipHash: "mock-ip-hash",
+        locale: "ca",
+        source: "PROFILE",
+        type: "IMAGE_USE",
+        version: "2026-09",
+      },
+    ] satisfies components["schemas"]["ConsentHistoryEntry"][]);
+  }),
+  // S14 R-14-14: role and tenant checks first; then eligibility, the one live request and its
+  // cancellation. The blocked response uses the api's top-level code and `details.reasons[]`.
+  http.get("*/api/v1/members/:id/erasure", ({ params }) => {
+    const memberId = String(params.id);
+    const refused = privacyMemberRefusal(memberId);
+    if (refused !== undefined) return refused;
+    const erasure = memberErasureRequests.get(memberId);
+    return erasure === undefined
+      ? apiError("NOT_FOUND", "Erasure request not found", 404)
+      : HttpResponse.json(erasure);
+  }),
+  http.post("*/api/v1/members/:id/erasure", async ({ params, request }) => {
+    const memberId = String(params.id);
+    const refused = privacyMemberRefusal(memberId);
+    if (refused !== undefined) return refused;
+    if (memberId === ERASED_MEMBER_ID) return apiError("MEMBER_ERASED", "Member erased", 409);
+    if (memberErasureRequests.has(memberId)) {
+      return apiError("ERASURE_ALREADY_REQUESTED", "Erasure already requested", 409);
+    }
+    const overview = lifecycleMemberOverview(memberId);
+    if (overview?.member.status !== "LEFT") {
+      return apiErrorWithDetails("ERASURE_BLOCKED", "Erasure blocked", 422, {
+        reasons: ["MEMBER_NOT_LEFT"],
+      });
+    }
+    const body = (await request.json()) as ErasureInput;
+    const erasure: ErasureRequest = {
+      accountId: "10000000-0000-4000-8000-000000000002",
+      blockReasons: [],
+      clubId: "50000000-0000-4000-8000-000000000001",
+      clubIds: ["50000000-0000-4000-8000-000000000001"],
+      executeAt: "2026-10-31T09:00:00Z",
+      id: "72000000-0000-4000-8000-000000000001",
+      memberIds: [overview.member.id],
+      ...(body.reason === undefined || body.reason === "" ? {} : { reason: body.reason }),
+      requestedAt: "2026-10-18T09:00:00Z",
+      requestedByAccountId: "10000000-0000-4000-8000-000000000001",
+      scope: "MEMBER",
+      source: "ADMIN",
+      status: "SCHEDULED",
+      version: 1,
+    };
+    memberErasureRequests.set(memberId, erasure);
+    return HttpResponse.json(erasure, { status: 201 });
+  }),
+  http.delete("*/api/v1/members/:id/erasure", ({ params }) => {
+    const memberId = String(params.id);
+    const refused = privacyMemberRefusal(memberId);
+    if (refused !== undefined) return refused;
+    const erasure = memberErasureRequests.get(memberId);
+    if (erasure === undefined) return apiError("NOT_FOUND", "Erasure request not found", 404);
+    if (erasure.status !== "SCHEDULED" && erasure.status !== "BLOCKED") {
+      return apiErrorWithDetails("INVALID_STATE", "Invalid erasure state", 409, {
+        scope: erasure.scope,
+        status: erasure.status,
+      });
+    }
+    memberErasureRequests.delete(memberId);
+    return new HttpResponse(null, { status: 204 });
+  }),
   http.get("*/api/v1/members/:id/audit-entries", async ({ request }) => {
     await delay(80);
     const memberEntries = auditEntries.filter(
@@ -2687,7 +2850,7 @@ export const handlers = [
               expiresAt: EXPORT_DOWNLOAD_EXPIRES_AT,
               fileName: exportJobFileName(job),
               progressPct: 100,
-              rows: queuedExportRows.get(job.id) ?? 0,
+              ...(job.kind === "MEMBER_DATA" ? {} : { rows: queuedExportRows.get(job.id) ?? 0 }),
               status: "READY",
             }
           : job,
@@ -2711,18 +2874,41 @@ export const handlers = [
       return apiError("FORBIDDEN", "Invalid download signature", 403);
     }
     const pdf = job.format === "PDF";
-    return new HttpResponse(mockExportBody(pdf ? "pdf" : "xlsx"), {
-      headers: {
-        "Content-Disposition": `attachment; filename="${job.fileName ?? exportJobFileName(job)}"`,
-        "Content-Type": pdf
-          ? "application/pdf"
-          : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    const zip = job.format === "ZIP";
+    return new HttpResponse(
+      zip ? new Uint8Array([0x50, 0x4b, 0x03, 0x04]) : mockExportBody(pdf ? "pdf" : "xlsx"),
+      {
+        headers: {
+          "Content-Disposition": `attachment; filename="${job.fileName ?? exportJobFileName(job)}"`,
+          "Content-Type": zip
+            ? "application/zip"
+            : pdf
+              ? "application/pdf"
+              : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        },
       },
-    });
+    );
   }),
   http.get("*/api/v1/exports/:id", ({ params }) => {
-    const job = exportJobsState.find((item) => item.id === String(params.id));
+    const id = String(params.id);
+    let job = exportJobsState.find((item) => item.id === id);
     if (job === undefined) return apiError("NOT_FOUND", "Export not found", 404);
+    if (job.kind === "MEMBER_DATA" && (job.status === "QUEUED" || job.status === "RUNNING")) {
+      const polls = (exportDetailPolls.get(id) ?? 0) + 1;
+      exportDetailPolls.set(id, polls);
+      const updatedJob: ExportJob =
+        polls >= 2
+          ? {
+              ...job,
+              expiresAt: EXPORT_DOWNLOAD_EXPIRES_AT,
+              fileName: exportJobFileName(job),
+              progressPct: 100,
+              status: "READY",
+            }
+          : { ...job, progressPct: 50, status: "RUNNING" };
+      job = updatedJob;
+      exportJobsState = exportJobsState.map((item) => (item.id === id ? updatedJob : item));
+    }
     return HttpResponse.json(
       job.status === "READY"
         ? {

@@ -1,0 +1,51 @@
+
+> agilityhub-core-web@0.0.0 e2e:core /Users/jordib/dev/agilityhub/agilityhub-core-web
+> bash scripts/e2e-core.sh E11-W01 e11-core.spec.ts
+
+E4_WEEK_START=2026-10-12 (club-local Monday, Europe/Madrid)
+E5_WEEK_START=2026-10-19 (the club-local Monday after today, Europe/Madrid)
+E8_WEEK_START=2026-11-23 (first club-local Monday from the second after today with day in [L-13, min(25, L-6)], Europe/Madrid)
+core image: ghcr.io/jboixtcm/agilityhub-core-api:main arm64 revision= created=2026-10-17T15:53:06.178739049Z digests=[ghcr.io/jboixtcm/agilityhub-core-api@sha256:8cdabb7cf20946057faa5f4dafd38a86d359c19f57b1d12048ad6cba2551e24a]
+core image seeds (/app/seeds): club-canic.yaml club-fifo.yaml club-minim.yaml club-perf.yaml club-template-default.yaml demo-canic.yaml demo-fifo.yaml demo-perf.yaml pages 
+demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E11-W01/demo-canic.yaml (412 lines)
+fifo demo seed: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E11-W01/demo-fifo.yaml (62 lines)
+pnpm store: /private/tmp/agilityhub-core-web-pnpm-store (package cache only)
+ Network agilityhub-e11-w01_default Creating 
+ Volume agilityhub-e11-w01_attachment-files Creating 
+ Volume agilityhub-e11-w01_attachment-files Creating 
+ Volume agilityhub-e11-w01_export-files Creating 
+ Volume agilityhub-e11-w01_export-files Creating 
+ Volume agilityhub-e11-w01_mongo-data Creating 
+ Network agilityhub-e11-w01_default Creating 
+ Volume agilityhub-e11-w01_mongo-data Creating 
+ Volume agilityhub-e11-w01_mailbox Creating 
+ Volume agilityhub-e11-w01_mailbox Creating 
+ Volume agilityhub-e11-w01_attachment-files Created 
+ Volume agilityhub-e11-w01_attachment-files Created 
+ Volume agilityhub-e11-w01_mongo-data Created 
+ Volume agilityhub-e11-w01_mongo-data Created 
+ Volume agilityhub-e11-w01_export-files Created 
+ Volume agilityhub-e11-w01_export-files Created 
+ Volume agilityhub-e11-w01_mailbox Created 
+ Volume agilityhub-e11-w01_mailbox Created 
+ Network agilityhub-e11-w01_default Created 
+ Network agilityhub-e11-w01_default Created 
+ Container agilityhub-e11-w01-mongo-1 Creating 
+ Container agilityhub-e11-w01-mongo-1 Created 
+ Container agilityhub-e11-w01-seed-1 Creating 
+ Container agilityhub-e11-w01-seed-1 Created 
+ Container agilityhub-e11-w01-activate-demo-club-1 Creating 
+ Container agilityhub-e11-w01-activate-demo-club-1 Created 
+ Container agilityhub-e11-w01-core-1 Creating 
+ Container agilityhub-e11-w01-core-1 Created 
+ Container agilityhub-e11-w01-mongo-1 Starting 
+ Container agilityhub-e11-w01-mongo-1 Started 
+ Container agilityhub-e11-w01-mongo-1 Waiting 
+ Container agilityhub-e11-w01-mongo-1 Healthy 
+ Container agilityhub-e11-w01-seed-1 Starting 
+ Container agilityhub-e11-w01-seed-1 Started 
+ Container agilityhub-e11-w01-seed-1 Waiting 
+ Container agilityhub-e11-w01-seed-1 Error service "seed" didn't complete successfully: exit 1
+service "seed" didn't complete successfully: exit 1
+seed log: /Users/jordib/dev/agilityhub/agilityhub-core-web/roadmap/evidence/E11-W01/seed-files.log (200 lines)
+ ELIFECYCLE  Command failed with exit code 1.

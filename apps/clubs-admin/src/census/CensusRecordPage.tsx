@@ -37,6 +37,7 @@ import { MemberInactivityDrawer } from "./MemberInactivityDrawer";
 import { MemberLeaveDrawer } from "./MemberLeaveDrawer";
 import { MemberPaymentMethodDrawer } from "./MemberPaymentMethodDrawer";
 import { MemberPlanDrawer } from "./MemberPlanDrawer";
+import { MemberDataExportButton, MemberPrivacyCard } from "./MemberPrivacyCard";
 type MemberOverview = components["schemas"]["MemberOverview"];
 type MemberDetail = components["schemas"]["Member"];
 type MemberPatchRequest = components["schemas"]["MemberPatch"];
@@ -923,6 +924,14 @@ function MemberSummary({
             </div>
           )}
         </Card>
+
+        <MemberPrivacyCard
+          client={client}
+          erased={erased}
+          key={member.id}
+          memberId={member.id}
+          status={member.status}
+        />
       </div>
 
       {/* S08/S09 (E5-W03): the member's class and training bookings, read-only (R-08-19). */}
@@ -1265,6 +1274,9 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
               })}
             </Badge>
           ) : null}
+          {member.displayStatus.kind === "ERASED" ? (
+            <Badge tone="neutral">{t("admin-census:member.privacy.erased")}</Badge>
+          ) : null}
           {branding.modules.includes("FAMILY_GROUP") && overview.familyGroup !== undefined ? (
             <Badge>
               {holder
@@ -1298,6 +1310,7 @@ export function MemberRecordPage({ client, id = pathId() }: { client: ApiClient;
           )}
           {erased ? null : (
             <>
+              <MemberDataExportButton client={client} memberId={member.id} />
               <Button
                 onClick={() => {
                   setMemberDialog("resend");

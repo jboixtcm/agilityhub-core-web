@@ -2,7 +2,7 @@ name: agilityhub-e1-w04
 
 x-core-environment: &core-environment
   SPRING_PROFILES_ACTIVE: local
-  ATTACHMENT_LOCAL_DIRECTORY: /tmp/agilityhub-attachments
+  ATTACHMENT_LOCAL_DIRECTORY: /app/attachments
   EXPORT_LOCAL_DIRECTORY: /app/exports
   MONGODB_HOST: mongo
   MONGODB_PORT: 27017
@@ -62,6 +62,7 @@ services:
         java -jar /app/app.jar --core.command=seed:demo --club=canic --seed=42 --week-start=${SEED_WEEK_START:-${E4_WEEK_START:?E4_WEEK_START is required}}
         java -jar /app/app.jar --core.command=seed:demo --club=fifo --seed=42 --week-start=${SEED_WEEK_START:-${E4_WEEK_START:?E4_WEEK_START is required}}
     volumes:
+      - attachment-files:/app/attachments
       - export-files:/app/exports
     healthcheck:
       disable: true
@@ -113,6 +114,7 @@ services:
     ports:
       - "127.0.0.1:${CONSUMER_PORT:-18080}:8080"
     volumes:
+      - attachment-files:/app/attachments
       - mailbox:/app/mailbox
       - export-files:/app/exports
     depends_on:
@@ -163,6 +165,7 @@ services:
         condition: service_healthy
 
 volumes:
+  attachment-files:
   mongo-data:
   mailbox:
   export-files:

@@ -549,6 +549,12 @@ if [[ "$staged" == true ]]; then
   export CORE_TEST_FILES="e10-core.spec.ts"
   export SEED_WEEK_START="$E4_WEEK_START"
   run_stage e10
+  cleanup
+  # E11-W01: the member data package and a clean LEFT member's erasure/consent flow, each through
+  # the real core contract and the two production frontends.
+  export CORE_TEST_FILES="e11-core.spec.ts"
+  export SEED_WEEK_START="$E4_WEEK_START"
+  run_stage e11
 else
   export CORE_TEST_FILES="$2"
   if [[ "$2" == *e5-core* || "$2" == *e6-core* || "$2" == *e7-core* ]]; then

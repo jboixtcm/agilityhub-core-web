@@ -73,8 +73,8 @@
     "plan": "Modalitat",
     "price": "Tarifa",
     "nextInvoiceDate": "Data del proper rebut",
-    "action": "Reactiva l'abonat"
-    ,"success": "L'abonat s'ha reactivat."
+    "action": "Reactiva l'abonat",
+    "success": "L'abonat s'ha reactivat."
   },
   "paymentMethod": {
     "current": "Mètode actual",
@@ -139,9 +139,32 @@
     "view": "Vista {name}",
     "views": "Vistes",
     "openMember": "Obre la fitxa de {name}",
-    "operators": {"between": "entre", "contains": "conté", "eq": "és", "exists": "existeix", "gt": "més gran que", "gte": "com a mínim", "in": "un de", "lt": "més petit que", "lte": "com a màxim", "ne": "no és", "nin": "cap de", "startsWith": "comença per"},
-    "inactivity": {"label": "Inactivitats", "search": "Cerca inactivitats", "emptyTitle": "No hi ha inactivitats", "emptyDescription": "No hi ha períodes amb aquests criteris."},
-    "leave": {"label": "Baixes", "search": "Cerca baixes", "emptyTitle": "No hi ha baixes", "emptyDescription": "No hi ha sol·licituds amb aquests criteris."}
+    "operators": {
+      "between": "entre",
+      "contains": "conté",
+      "eq": "és",
+      "exists": "existeix",
+      "gt": "més gran que",
+      "gte": "com a mínim",
+      "in": "un de",
+      "lt": "més petit que",
+      "lte": "com a màxim",
+      "ne": "no és",
+      "nin": "cap de",
+      "startsWith": "comença per"
+    },
+    "inactivity": {
+      "label": "Inactivitats",
+      "search": "Cerca inactivitats",
+      "emptyTitle": "No hi ha inactivitats",
+      "emptyDescription": "No hi ha períodes amb aquests criteris."
+    },
+    "leave": {
+      "label": "Baixes",
+      "search": "Cerca baixes",
+      "emptyTitle": "No hi ha baixes",
+      "emptyDescription": "No hi ha sol·licituds amb aquests criteris."
+    }
   },
   "dog": {
     "actions": {
@@ -366,6 +389,56 @@
       "ibanHelp": "El número complet queda ocult i no es torna a mostrar.",
       "sepa": "Domiciliació",
       "title": "Mètode de pagament"
+    },
+    "privacy": {
+      "title": "Privacitat i dades",
+      "erased": "suprimit",
+      "export": "Descarrega les dades (RGPD)",
+      "exportPreparing": "S'està preparant el paquet de dades.",
+      "exportQueued": "El paquet s'està preparant. El trobaràs a Exportacions.",
+      "consents": {
+        "title": "Historial de consentiments",
+        "loading": "Carregant els consentiments…",
+        "empty": "No hi ha consentiments registrats.",
+        "granted": "acceptat",
+        "withdrawn": "revocat",
+        "detail": "versió {version} · {date} · {locale}",
+        "types": {
+          "privacyPolicy": "Política de privacitat",
+          "imageRights": "Drets d'imatge",
+          "other": "Consentiment"
+        }
+      },
+      "erasure": {
+        "title": "Supressió de dades",
+        "action": "Suprimeix les dades (RGPD)",
+        "description": "La supressió pseudonimitza les dades personals i conserva els moviments que s'han de retenir legalment.",
+        "loading": "Comprovant si hi ha una supressió programada…",
+        "reason": "Motiu (opcional)",
+        "requesting": "Programant la supressió…",
+        "confirm": "PROGRAMA LA SUPRESSIÓ",
+        "requested": "La supressió s'ha programat.",
+        "scheduled": "Supressió programada per al {date}",
+        "cancel": "Anul·la la supressió",
+        "cancelDescription": "La sol·licitud es cancel·larà i les dades no se suprimiran en la data programada.",
+        "cancelling": "Anul·lant la supressió…",
+        "cancelConfirm": "ANUL·LA LA SUPRESSIÓ",
+        "cancelled": "La sol·licitud s'ha anul·lat.",
+        "checks": {
+          "left": "L'abonat ha d'estar de baixa.",
+          "invoices": "No hi pot haver cap rebut obert.",
+          "upfront": "No hi pot haver cap pagament inicial obert.",
+          "bookings": "No hi pot haver cap reserva futura activa."
+        },
+        "blockReasons": {
+          "memberNotLeft": "L'abonat encara no està de baixa.",
+          "invoicesOpen": "Hi ha rebuts pendents, en cobrament o impagats.",
+          "upfrontOpen": "Hi ha pagaments inicials oberts.",
+          "futureBookings": "Hi ha reserves futures actives.",
+          "otherMembershipsActive": "El compte té una altra afiliació activa.",
+          "other": "La supressió està bloquejada."
+        }
+      }
     },
     "preferences": {
       "alwaysOn": "Sempre actiu a l'app",

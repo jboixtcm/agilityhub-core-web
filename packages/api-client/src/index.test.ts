@@ -656,7 +656,9 @@ describe("MSW bootstrap handlers", () => {
     // read, obstacle PATCH, finish) of course-handlers.ts.
     // E10-W03: + E10-T04's eight routes in console-handlers.ts (a domain's add, removal, primary
     // and verification, a club's parameters read, the support access and its end, the public key).
-    expect(handlers).toHaveLength(390);
+    // E11-W01: + the member's data export, the admin data export, consent history and the
+    // GET/POST/DELETE erasure routes from E11-T01's contract.
+    expect(handlers).toHaveLength(396);
 
     const [authorizeResponse, sessionResponse, logoutResponse] = await Promise.all([
       fetch("https://id.agilitydoghub.com/oauth2/authorize?client_id=ar-app", {

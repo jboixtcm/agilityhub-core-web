@@ -47,6 +47,7 @@ import { safeDecode } from "./activities/shared";
 import { navigateInApp } from "./booking/shared";
 import type { CourseScreen as CourseScreenModel } from "./courses/CoursesRoute";
 import { logoutWithPush } from "./notifications/push";
+import { DataExportCard } from "./profile/DataExportCard";
 import { NoticesCard } from "./profile/NoticesCard";
 import { ProfileLifecycleSection } from "./profile/ProfileLifecycleSection";
 import { PublicFooter } from "./PublicFooter";
@@ -1392,6 +1393,9 @@ function ProfilePage({ authClient, client }: { authClient: AuthClient; client: A
         {/* R-11-15: only the notifications created from now on come in the new language. */}
         <small className="profile-language__help">{t("auth:profile.languageHelp")}</small>
       </Card>
+      {me.impersonation === undefined && me.membership.roles.includes("MEMBER") ? (
+        <DataExportCard accountId={me.account.id} client={client} key={me.account.id} />
+      ) : null}
       <ProfileLifecycleSection
         client={client}
         logoutDisabled={working}

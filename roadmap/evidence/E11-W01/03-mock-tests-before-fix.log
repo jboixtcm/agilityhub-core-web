@@ -1,0 +1,89 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/privacy-handlers.test.ts (3 tests | 3 failed) 101ms
+   ❯ S14 privacy mock contract (3)
+     × T-14-17 queues MEMBER_DATA, enforces 24 h and refuses impersonation like the api 89ms
+     × T-14-18 returns 422 ERASURE_BLOCKED reasons for ACTIVE and schedules/cancels LEFT 7ms
+     × T-14-30 returns the complete append-only consent history without inventing nulls 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/privacy-handlers.test.ts > S14 privacy mock contract > T-14-17 queues MEMBER_DATA, enforces 24 h and refuses impersonation like the api
+ApiError: fetch failed
+ ❯ Function.network src/api-error.ts:63:12
+     61|
+     62|   static network(error: unknown): ApiError {
+     63|     return new ApiError({
+       |            ^
+     64|       code: "NETWORK",
+     65|       details: error,
+ ❯ Object.onError src/client.ts:153:49
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:180:38
+ ❯ src/mocks/privacy-handlers.test.ts:42:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/mocks/privacy-handlers.test.ts > S14 privacy mock contract > T-14-18 returns 422 ERASURE_BLOCKED reasons for ACTIVE and schedules/cancels LEFT
+AssertionError: expected ApiError: fetch failed { …(5) } to match object { code: 'ERASURE_BLOCKED', …(2) }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "code": "ERASURE_BLOCKED",
+-   "details": {
+-     "reasons": [
+-       "MEMBER_NOT_LEFT",
+-     ],
++ ApiError {
++   "code": "NETWORK",
++   "details": TypeError {
++     "message": "fetch failed",
++     "cause": Error {
++       "message": "getaddrinfo ENOTFOUND core.example.test",
++       "errno": -3008,
++       "code": "ENOTFOUND",
++       "syscall": "getaddrinfo",
++       "hostname": "core.example.test",
++     },
+    },
+-   "status": 422,
++   "status": 0,
+  }
+
+ ❯ src/mocks/privacy-handlers.test.ts:64:21
+     62|       }),
+     63|     );
+     64|     expect(blocked).toMatchObject({
+       |                     ^
+     65|       code: "ERASURE_BLOCKED",
+     66|       details: { reasons: ["MEMBER_NOT_LEFT"] },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/mocks/privacy-handlers.test.ts > S14 privacy mock contract > T-14-30 returns the complete append-only consent history without inventing nulls
+ApiError: fetch failed
+ ❯ Function.network src/api-error.ts:63:12
+     61|
+     62|   static network(error: unknown): ApiError {
+     63|     return new ApiError({
+       |            ^
+     64|       code: "NETWORK",
+     65|       details: error,
+ ❯ Object.onError src/client.ts:153:49
+ ❯ coreFetch ../../node_modules/.pnpm/openapi-fetch@0.17.0/node_modules/openapi-fetch/src/index.js:180:38
+ ❯ src/mocks/privacy-handlers.test.ts:91:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  14:11:31
+   Duration  769ms (transform 53%, import 32%, tests 15%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/privacy-handlers.test.ts

@@ -427,6 +427,63 @@ select {
   justify-content: flex-end;
 }
 
+.member-privacy {
+  display: grid;
+  align-content: start;
+  gap: var(--ah-space-3);
+}
+
+.member-privacy h2,
+.member-privacy h3,
+.member-privacy p {
+  margin: 0;
+}
+
+.member-privacy__export,
+.member-privacy__erasure,
+.member-privacy__scheduled,
+.member-privacy__error {
+  display: grid;
+  align-items: start;
+  gap: var(--ah-space-2);
+}
+
+.member-privacy__export {
+  justify-items: start;
+}
+
+.member-privacy__export small,
+.member-privacy__consents small {
+  color: var(--ah-color-text-muted);
+}
+
+.member-privacy__consents,
+.member-privacy__checks {
+  display: grid;
+  gap: var(--ah-space-2);
+  margin: 0;
+  padding-left: var(--ah-space-5);
+}
+
+.member-privacy__consents li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--ah-space-1) var(--ah-space-2);
+}
+
+.member-privacy__consents small {
+  grid-column: 1 / -1;
+}
+
+.member-privacy__error {
+  padding: var(--ah-space-2) var(--ah-space-3);
+  color: var(--ah-color-danger);
+  border: 1px solid var(--ah-color-danger);
+  border-radius: var(--ah-radius-md);
+  background: color-mix(in srgb, var(--ah-color-danger) 10%, transparent);
+}
+
 .census-record__header-actions .ah-button,
 .census-record__action-link,
 .census-record__footer-actions .ah-button {

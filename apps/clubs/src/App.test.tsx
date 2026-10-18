@@ -571,6 +571,25 @@ describe("E6-W01 round 2 #7 (ruling E71, mockup 20 V6): an instructor lands on 2
 });
 
 describe("T-01-21 profile access rows and impersonation", () => {
+  it("T-14-17 shows the personal data export only to a non-impersonated member", async () => {
+    const memberClient = authClient();
+    await memberClient.login("laura@example.test", "secret-password");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(memberClient);
+    expect(await screen.findByRole("button", { name: "Descarrega les meves dades" })).toBeVisible();
+
+    cleanup();
+    mockScenario("impersonated");
+    const impersonatedClient = authClient();
+    await impersonatedClient.acceptImpersonation("mock-impersonation-token");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(impersonatedClient);
+    expect(await screen.findByText("Estàs veient l'app com Laura Serra Vidal")).toBeVisible();
+    expect(
+      screen.queryByRole("button", { name: "Descarrega les meves dades" }),
+    ).not.toBeInTheDocument();
+  });
+
   it("renders the mockup rows in order without account sessions or backoffice handoff", async () => {
     mockScenario("multiProfile");
     const client = authClient();
