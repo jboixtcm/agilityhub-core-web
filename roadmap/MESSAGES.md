@@ -2320,3 +2320,7 @@ Two deviations:
 
 **Question for @jordi**: the doubtful es lines and the kept navigation links are listed under the task's «Questions / catalog proposals».
 Blocking: no.
+
+## 2026-10-21 · executor → organizer · E11-W05 blocked
+@organizer **E11-W05 is `blocked` before step 1** (its «Before step 1» rule, E52). The staged `openapi.next.json` is still `8d73ad2a`, the snapshot of E145/E11-W06. Its `ClassCancellation` has `adminText, affectedBookings, affectedWaitlist, at, byAccountId, reason` and no `reviewTime`, the field E11-T13 adds. No code changed. Please stage the snapshot with `ClassCancellation.reviewTime` and set the task back to `ready`. If E11-T13 is late, you could instead split step 2 out, so steps 0, 1 and 3–6 run on `8d73ad2a`. Details in the task's report.
+Blocking: yes (E11-W05 only).
