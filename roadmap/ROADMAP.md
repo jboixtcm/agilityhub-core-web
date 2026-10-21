@@ -97,6 +97,8 @@ Sizes: S ≤ ½ session · M = 1 · L = 1–2 · XL = 2–3. Api tasks are liste
 **E11 · Hardening and QA.**
 - **E11-W01** · RGPD front: D10 «Suprimeix les dades», 12 «Descarrega les meves dades», consents (WP-14-G) · api E11-T01, E8-W03 · M
 - **E11-W02** · Polish: INC-11, INC-41, the `pending.json` cleanup, empty, loading and error states, a11y, Lighthouse PWA ≥ 90 and TTI < 3 s, the native es/en review, the router decision (A38) · E8-W04 · L
+- **E11-W04** · Spanish action labels in the infinitive (Jordi, 21-10, E137): the es rule applied to every action label, a `check-es-actions.mjs` guard in `i18n:check`; the 219 of E11-W02 round 1 kept · E11-W02 · M · **thread D, installed 21-10 (`ready`, E144)**
+- **E11-W05** · The last web correction pass (INC-75: the round-2 minors of E11-W02, the INC-41 leftovers — `fmtMinor`, the review time, `RING_HAS_BOOKINGS`, «DNI», `OTHER`, the `errors` register) and Jordi's copy decisions · E11-W02, E11-W04, api E11-T13 · M · **thread D, installed 21-10 (`not_open` until E11-T13 stages `reviewTime` and the copy is approved, E144)**
 - **E11-W03** · E2E of the five critical flows, and QA with Josep: the per-screen checklist, the literals (B24, B25), the club's own texts (B22) · E8-W04, E11-W02 · L
 
 **E12 · Go-live.**

@@ -2259,3 +2259,21 @@ Blocking: no.
    - a neutral form for `OTHER` in the gendered labels;
    - the register of `errors` (vosaltres/usted) against tu/tú elsewhere.
 Blocking: no.
+
+## 2026-10-18 · organizer → executor · E135: pause after the running tasks; E10-W03 round 3, paused
+@executor Ruling E135. Jordi pauses the roadmap after the tasks that are running now (E11-W01 here). Finish your session normally; nothing else starts until he resumes. **E10-W03 comes back for a round 3**, `blocked` during the pause: the primary-domain check must really prove the choice, a reload on «Surt» must never say the access ended without revoking it, and `main`'s CI is red since `012f05b` (`BillingPage.test.tsx`).
+Blocking: no.
+
+## 2026-10-18 · organizer → executor · E136: closing pass before the pause
+@executor Ruling E136. E11-W01 returns for a round 2 but stays `blocked` while the roadmap is paused (E135): a support session sees the data export, and a READY package cannot be opened again from the app. The web main CI is green again since `da0ba00`, so point 0 of E10-W03's round 3 is resolved. E11-W02's round 2, merged by cloud D, waits for its review at the resume.
+Blocking: no.
+
+## 2026-10-21 · organizer → executor · E137, E142–E144: the roadmap resumes — E11-W02 round 3, E11-W01 round 2 on thread D, E10-W03 round 3, E10-W02/E11-W03 ready, E11-W04/W05 installed
+@executor Rulings E137 and E142–E144 (details in `docs/DECISIONS_PENDENTS.md`; INC-75 and INC-76 in `docs/INCIDENCIES_OBERTES.md`). The pause (E135) is over: the web and web-c loops run with Claude; the organizer works continuously from the cloud and reviews each publish with its own reviewer besides the kit's.
+- **E11-W02 round 2 → round 3 (thread D)**: INC-62's and INC-44 #3's web parts (the adopted contract publishes `CourseListItem.updatedAt`, `RingSetup.dismantledReason`/`replacedBySetupId`, `SlotCell.classStartsAtLocal`), D5's dead «Canviar nivell» hidden, the console's lazy chunks under a boundary, 21's empty state, and the invented strings listed. **TTI ruling**: the 3 s target is met on 01; 03 gets a 4.5 s baseline budget (INC-76 after the launch). The 670 kB budget is accepted.
+- **E11-W01 round 2 (thread D now)**: the list of E136 plus INC-73 (the profile edit hidden during an impersonation).
+- **E10-W03 round 3 (thread C)**: the list of E135; point 0 is resolved (main's CI green since `da0ba00`).
+- **E10-W02 and E11-W03 are `ready`** and wait for their dependencies by `depends_on`.
+- **Spanish buttons in the infinitive** (Jordi, 21-10): E11-W04 (thread D, `ready` after E11-W02's round): the rule for every es action label, with a guard script in `i18n:check`; the 219 strings E11-W02 round 1 converted stay as they are. E11-W05 (thread D) collects INC-75 and the copy decisions; it opens when the api stages `ClassCancellation.reviewTime` (E11-T13) and Jordi approves the texts.
+- Docs: the api's spec edits of E11-T08/T09/T10/T11 are now in `docs/specs` here (21-10); the error codes already have their translations (`i18n:check` green).
+Blocking: no.
