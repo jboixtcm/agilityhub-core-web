@@ -15,8 +15,10 @@ import {
   createAuthenticatedApiClient,
   IMPERSONATION_STORAGE_KEY,
   MemoryRefreshTokenStore,
+  RETURN_PATH_STORAGE_KEY,
   SessionProvider,
 } from "@agilityhub/auth";
+import { LOCALE_STORAGE_KEY } from "@agilityhub/i18n";
 import { createClubsI18n } from "@agilityhub/i18n/clubs";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
@@ -360,6 +362,334 @@ describe("A38 (E11-W02 step 1): the members' app navigates without reloading", (
     });
     expect(await screen.findByRole("navigation", { name: "Navegació principal" })).toBeVisible();
     expect(refresh).not.toHaveBeenCalled();
+  });
+});
+
+/** `window.location.assign` (a full page load, which jsdom cannot do) recorded; the rest real. */
+function stubPageLoads() {
+  const real = window.location;
+  const assign = vi.fn();
+  vi.stubGlobal("location", {
+    assign,
+    get hash() {
+      return real.hash;
+    },
+    get host() {
+      return real.host;
+    },
+    get href() {
+      return real.href;
+    },
+    get origin() {
+      return real.origin;
+    },
+    get pathname() {
+      return real.pathname;
+    },
+    get search() {
+      return real.search;
+    },
+  });
+  return assign;
+}
+
+/** The api paths a render asks for, in order. */
+function recordApiRequests() {
+  const requests: string[] = [];
+  const listener = ({ request }: { request: Request }) => {
+    requests.push(`${request.method} ${new URL(request.url).pathname}`);
+  };
+  server.events.on("request:start", listener);
+  return {
+    requests,
+    stop: () => {
+      server.events.removeListener("request:start", listener);
+    },
+  };
+}
+
+function passwordLogin(email = "biel.roca@example.test") {
+  fireEvent.change(screen.getByPlaceholderText("correu@exemple.cat"), {
+    target: { value: email },
+  });
+  fireEvent.change(screen.getByPlaceholderText("contrasenya"), {
+    target: { value: "secret-password" },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+}
+
+describe("E11-W06 W1 (S11 R-11-11, S01 §2 01/02): a deep link survives the sign-in", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    localStorage.clear();
+    window.history.pushState(null, "", "/");
+  });
+
+  /** No session on this device: the restore's refresh is refused (the 30 days have passed). */
+  function refuseRefresh() {
+    server.use(
+      http.post("*/oauth2/token", async ({ request }) => {
+        const grant = new URLSearchParams(await request.clone().text()).get("grant_type");
+        return grant === "refresh_token"
+          ? HttpResponse.json(
+              { code: "REFRESH_EXPIRED", details: {}, message: "No session", traceId: "t" },
+              { status: 400 },
+            )
+          : undefined;
+      }),
+    );
+  }
+
+  /** The signed-out visit: the guard sends the tab to 01 with the address it asked for. */
+  async function visitSignedOut(path: string): Promise<string> {
+    refuseRefresh();
+    window.history.pushState(null, "", path);
+    const assign = stubPageLoads();
+    await renderApplication(authClient());
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalled();
+    });
+    cleanup();
+    vi.unstubAllGlobals();
+    return String(assign.mock.calls[0]?.[0]);
+  }
+
+  it("T-11-11 anonymous on /espera/e1 → signs in → lands on /espera/e1", async () => {
+    const access = await visitSignedOut("/espera/e1");
+    expect(access).toBe("/entrar?next=%2Fespera%2Fe1");
+
+    window.history.pushState(null, "", access);
+    await renderApplication(authClient());
+    passwordLogin();
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/espera/e1");
+    });
+    // Consumed once.
+    expect(localStorage.getItem(RETURN_PATH_STORAGE_KEY)).toBeNull();
+  });
+
+  it("T-11-11 the magic link opened in another tab: /activacio?token=… + «Continua» lands on /reserves/b1", async () => {
+    expect(await visitSignedOut("/reserves/b1")).toBe("/entrar?next=%2Freserves%2Fb1");
+
+    // The e-mail's link opens a new tab: no `?next=` there, the path kept for it.
+    window.history.pushState(null, "", "/activacio?token=valid&purpose=LOGIN");
+    await renderApplication(authClient());
+    fireEvent.click(await screen.findByRole("button", { name: "CONTINUAR" }));
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/reserves/b1");
+    });
+    expect(localStorage.getItem(RETURN_PATH_STORAGE_KEY)).toBeNull();
+  });
+
+  it.each(["/entrar?next=%2F%2Fevil.example%2Fespera", "/entrar?next=https%3A%2F%2Fevil.example%2F", "/entrar?next=%2Fentrar"])(
+    "a `next` to another origin or to /entrar is ignored (%s → /inici)",
+    async (access) => {
+      window.history.pushState(null, "", access);
+      await renderApplication(authClient());
+      passwordLogin();
+      await waitFor(() => {
+        expect(window.location.pathname).toBe("/inici");
+      });
+    },
+  );
+
+  it("a kept path waits for onboarding and 03b, and opens after the profile is chosen", async () => {
+    mockScenario("multiProfile");
+    window.history.pushState(null, "", "/entrar?next=%2Fespera%2Fe1");
+    await renderApplication(authClient());
+    passwordLogin();
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/perfil-acces");
+    });
+    fireEvent.click(await screen.findByRole("button", { name: /Com a alumna/u }));
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/espera/e1");
+    });
+  });
+});
+
+describe("E11-W06 W5 and W6 (CONVENCIONS_I18N §1, AGENTS rule 6): the account's language", () => {
+  afterEach(() => {
+    localStorage.clear();
+    window.history.pushState(null, "", "/");
+  });
+
+  async function memberWithLocale(locale: string) {
+    mockScenario("member");
+    const member = (await (await fetch(`${window.location.origin}/api/v1/me`)).json()) as {
+      account: Record<string, unknown>;
+    };
+    server.use(
+      http.get("*/api/v1/me", () =>
+        HttpResponse.json({ ...member, account: { ...member.account, locale } }),
+      ),
+    );
+  }
+
+  it("CONVENCIONS_I18N §1: me.account.locale = es, stored ca → renders in es", async () => {
+    // A second device, its browser in Catalan: the app starts and the cookie restores the session.
+    localStorage.setItem(LOCALE_STORAGE_KEY, "ca");
+    await memberWithLocale("es");
+    window.history.pushState(null, "", "/perfil");
+    await renderApplication(authClient(), canicBranding, "ca");
+
+    expect(await screen.findByRole("heading", { name: "Mi perfil" })).toBeVisible();
+    expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe("es");
+  });
+
+  it("CONVENCIONS_I18N §1: the account's locale also follows a sign-in on 01", async () => {
+    await memberWithLocale("es");
+    window.history.pushState(null, "", "/entrar");
+    await renderApplication(authClient(), canicBranding, "ca");
+    passwordLogin();
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/inici");
+    });
+    await waitFor(() => {
+      expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe("es");
+    });
+    // W6: `<html lang>` follows once the language has loaded.
+    await waitFor(() => {
+      expect(document.documentElement.lang).toBe("es");
+    });
+  });
+
+  it("CONVENCIONS_I18N §1: a locale the club does not enable is ignored", async () => {
+    localStorage.setItem(LOCALE_STORAGE_KEY, "ca");
+    await memberWithLocale("en");
+    window.history.pushState(null, "", "/perfil");
+    // The Cànic enables ca and es only.
+    await renderApplication(authClient(), canicBranding, "ca");
+
+    expect(await screen.findByRole("heading", { name: "El meu perfil" })).toBeVisible();
+    expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe("ca");
+  });
+
+  it("E11-W06 W6: changeLanguage('es') sets document.documentElement.lang", async () => {
+    document.documentElement.lang = "";
+    const i18n = await createClubsI18n({
+      branding: canicBranding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["common"],
+      storage: undefined,
+    });
+    expect(document.documentElement.lang).toBe("ca");
+    await i18n.changeLanguage("es");
+    expect(document.documentElement.lang).toBe("es");
+  });
+});
+
+describe("E11-W06 W2 and W13 (S01 R-01-07, R-01-13, E41): each profile lands where it can work", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    localStorage.clear();
+    window.history.pushState(null, "", "/");
+  });
+
+  it("R-01-13 remembered ADMIN profile → POST /auth/handoff and clubs-admin opened, no /me/home read", async () => {
+    // `me-admin`: ADMIN + INSTRUCTOR, «Recorda la meva tria» with «Com a administradora».
+    mockScenario("admin");
+    window.history.pushState(null, "", "/entrar");
+    const assign = stubPageLoads();
+    const recorded = recordApiRequests();
+    await renderApplication(authClient());
+    passwordLogin("aina.serra@example.test");
+
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("http://127.0.0.1:4174/entrar?handoff=mock-handoff-code");
+    });
+    recorded.stop();
+    expect(recorded.requests).toContain("POST /api/v1/auth/handoff");
+    expect(recorded.requests.filter((request) => /\/me\/(home|bookable-classes)$/u.test(request))).toEqual(
+      [],
+    );
+  });
+
+  it("R-01-13 the remembered ADMIN's handoff fails → 03b's error, and its cards stay to retry or choose", async () => {
+    mockScenario("admin");
+    let refuse = true;
+    server.use(
+      http.post("*/auth/handoff", () =>
+        refuse
+          ? HttpResponse.json(
+              { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t" },
+              { status: 503 },
+            )
+          : undefined,
+      ),
+    );
+    window.history.pushState(null, "", "/entrar");
+    const assign = stubPageLoads();
+    await renderApplication(authClient());
+    passwordLogin("aina.serra@example.test");
+
+    expect(await screen.findByRole("alert")).toHaveTextContent("No s'ha pogut canviar de perfil.");
+    expect(window.location.pathname).toBe("/perfil-acces");
+    refuse = false;
+    fireEvent.click(screen.getByRole("button", { name: /Com a administradora/u }));
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("http://127.0.0.1:4174/entrar?handoff=mock-handoff-code");
+    });
+  });
+
+  it("R-01-07 a remembered MEMBER on an account that lost the role falls back to 03b", async () => {
+    mockScenario("instructor");
+    const instructor = (await (await fetch(`${window.location.origin}/api/v1/me`)).json()) as {
+      membership: Record<string, unknown>;
+    };
+    server.use(
+      http.get("*/api/v1/me", () =>
+        HttpResponse.json({
+          ...instructor,
+          membership: {
+            ...instructor.membership,
+            activeProfile: "MEMBER",
+            defaultProfile: "MEMBER",
+            profiles: ["INSTRUCTOR", "ADMIN"],
+            rememberProfile: true,
+            roles: ["INSTRUCTOR", "ADMIN"],
+          },
+        }),
+      ),
+    );
+    window.history.pushState(null, "", "/entrar");
+    await renderApplication(authClient());
+    passwordLogin();
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/perfil-acces");
+    });
+    expect(await screen.findByRole("button", { name: /Com a instructor/u })).toBeVisible();
+    expect(screen.getByRole("button", { name: /Com a administrador/u })).toBeVisible();
+    expect(screen.queryByRole("button", { name: /Com a alumn/u })).toBeNull();
+  });
+
+  it("E11-W06 W13: an instructor-only session on /inici is sent to /instructor/dia", async () => {
+    mockScenario("instructor");
+    const client = authClient();
+    await client.login("estel.rius@example.test", "secret-password");
+    const recorded = recordApiRequests();
+    window.history.pushState(null, "", "/inici");
+    await renderApplication(client);
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/instructor/dia");
+    });
+    recorded.stop();
+    expect(recorded.requests.filter((request) => request.endsWith("/me/home"))).toEqual([]);
+  });
+
+  it("E11-W06 W13: a member-only session on an instructor screen is sent to /inici", async () => {
+    mockScenario("member");
+    const client = authClient();
+    await client.login("biel.roca@example.test", "secret-password");
+    window.history.pushState(null, "", "/instructor/alumnes");
+    await renderApplication(client);
+
+    await waitFor(() => {
+      expect(window.location.pathname).toBe("/inici");
+    });
   });
 });
 

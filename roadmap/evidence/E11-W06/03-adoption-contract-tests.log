@@ -1,0 +1,43 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+
+ ❯ src/mocks/fixtures.contract.test.ts (86 tests | 2 failed) 682ms
+   ❯ E8-W01 billing fixtures follow the S12 contract (BillingPeriod, BillingSimulation, BillingRun, Remittance, Invoice, InvoiceListItem) (9)
+     × validates every receipt, list row, remittance, run, simulation and month of the default world 27ms
+     × validates every receipt, list row, remittance, run, simulation and month of the rollbackBlocked world 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/mocks/fixtures.contract.test.ts > E8-W01 billing fixtures follow the S12 contract (BillingPeriod, BillingSimulation, BillingRun, Remittance, Invoice, InvoiceListItem) > validates every receipt, list row, remittance, run, simulation and month of the default world
+ FAIL  src/mocks/fixtures.contract.test.ts > E8-W01 billing fixtures follow the S12 contract (BillingPeriod, BillingSimulation, BillingRun, Remittance, Invoice, InvoiceListItem) > validates every receipt, list row, remittance, run, simulation and month of the rollbackBlocked world
+AssertionError: 2026-08: [{"instancePath":"/remittance","schemaPath":"#/required","keyword":"required","params":{"missingProperty":"requestedCollectionDate"},"message":"must have required property 'requestedCollectionDate'"},{"instancePath":"/remittance","schemaPath":"#/required","keyword":"required","params":{"missingProperty":"submissionDue"},"message":"must have required property 'submissionDue'"},{"instancePath":"/remittance","schemaPath":"#/properties/remittance/anyOf/1/type","keyword":"type","params":{"type":"null"},"message":"must be null"},{"instancePath":"/remittance","schemaPath":"#/properties/remittance/anyOf","keyword":"anyOf","params":{},"message":"must match a schema in anyOf"}]: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/mocks/fixtures.contract.test.ts:991:11
+    989|           month(billingPeriodOf(world, period)),
+    990|           `${period}: ${JSON.stringify(month.errors)}`,
+    991|         ).toBe(true);
+       |           ^
+    992|       }
+    993|     },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  2 failed | 170 passed (172)
+   Start at  22:20:15
+   Duration  1.65s (transform 40%, tests 31%, import 28%)
+
+  Transform  transforming modules took 2.23s · 40% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/mocks/mock-statuses.contract.test.ts src/mocks/fixtures.contract.test.ts src/mocks/billing-handlers.test.ts src/mocks/calendar-handlers.test.ts src/mocks/day-grid-handlers.test.ts

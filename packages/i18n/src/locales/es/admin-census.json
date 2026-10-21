@@ -339,6 +339,7 @@
       "street": "Calle y número"
     },
     "imageNotice": "{gender, select, FEMALE {No autoriza el uso de su imagen: no publique fotos en las que aparezca ella.} other {No autoriza el uso de su imagen: no publique fotos en las que aparezca él.}}",
+    "readmissionPending": "Este abonado tiene una readmisión pendiente: valídala o recházala desde el panel antes de cambiar la ficha.",
     "impersonate": {
       "description": "Se abrirá la app tal como la ve el abonado. Las acciones quedarán auditadas con el administrador que las realice.",
       "reason": "Motivo (opcional)",

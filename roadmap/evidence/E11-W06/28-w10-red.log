@@ -1,0 +1,816 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 409 READMISSION_PENDING on a D10 write points to D2
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 409 READMISSION_PENDING on a D10 write points to D2
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 409 READMISSION_PENDING on a D10 write points to D2
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 409 READMISSION_PENDING on a D10 write points to D2
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 409 READMISSION_PENDING on a D10 write points to D2
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+ ❯ src/census/MemberPaymentMethodDrawer.test.tsx (3 tests | 1 failed | 2 skipped) 10120ms
+   × E11-W06 W10 (R-04-06) 409 READMISSION_PENDING on the payment method points to D2 10118ms
+ ❯ src/census/MemberPlanDrawer.test.tsx (6 tests | 1 failed | 5 skipped) 10144ms
+   ❯ E8-W03 round 2 member plan change (6)
+     × E11-W06 W10 (R-04-06) 409 READMISSION_PENDING on the plan change points to D2 10143ms
+stderr | src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 a refused change of the notification preferences points to D2 too
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 a refused change of the notification preferences points to D2 too
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 a refused change of the notification preferences points to D2 too
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 a refused change of the notification preferences points to D2 too
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 a refused change of the notification preferences points to D2 too
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+ ❯ src/census/CensusRecordPage.test.tsx (37 tests | 2 failed | 35 skipped) 10301ms
+   ❯ E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission (2)
+     × R-04-06 409 READMISSION_PENDING on a D10 write points to D2 223ms
+     × R-04-06 a refused change of the notification preferences points to D2 too 10076ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 409 READMISSION_PENDING on a D10 write points to D2
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Aquest abonat té una readmissió pendent: valida-la o rebutja-la des del tauler abans de canviar la fitxa.[39m
+Received:
+[31m  Aquest element no està en un estat vàlid per a aquesta operació.[39m
+ ❯ src/census/CensusRecordPage.test.tsx:926:19
+    924|
+    925|     const alert = await within(dialog).findByRole("alert");
+    926|     expect(alert).toHaveTextContent(TEXT);
+       |                   ^
+    927|     expect(within(alert).getByRole("link", { name: "Preinscripcions pe…
+    928|       "href",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/census/CensusRecordPage.test.tsx > E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission > R-04-06 a refused change of the notification preferences points to D2 too
+TestingLibraryElementError: Unable to find an element with the text: Aquest abonat té una readmissió pendent: valida-la o rebutja-la des del tauler abans de canviar la fitxa.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__feedback census-record__feedback--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mAquest element no està en un estat vàlid per a aquesta operació.[0m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"member-privacy__export"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mDescarrega les dades (RGPD)[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mReenvia accés[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEntra com l'abonat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEdita[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_1i_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_1i_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_1i_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_1i_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_1i_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_1i_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_1i_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_1i_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"census-record"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"census-record__feedback census-record__feedback--danger"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [0mAquest element no està en un estat vàlid per a aquesta operació.[0m
+      [36m</div>[39m
+      [36m<header[39m
+        [33mclass[39m=[32m"census-record__header"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__identity"[39m
+        [36m>[39m
+          [36m<h1>[39m
+            [0mLaura Serra Vidal[0m
+          [36m</h1>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mnúm. 87[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--success"[39m
+          [36m>[39m
+            [0malta des de 2023[0m
+          [36m</span>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"ah-badge ah-tone--neutral"[39m
+          [36m>[39m
+            [0mtitular del grup familiar[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"census-record__header-actions"[39m
+        [36m>[39m
+          [36m<a[39m
+            [33mclass[39m=[32m"census-record__action-link"[39m
+            [33mhref[39m=[32m"https://wa.me/34655100101"[39m
+            [33mrel[39m=[32m"noreferrer"[39m
+            [33mtarget[39m=[32m"_blank"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"ah-icon"[39m
+            [36m>[39m
+              [36m<use[39m
+                [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-wa"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [0mWhatsApp[0m
+          [36m</a>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"member-privacy__export"[39m
+          [36m>[39m
+            [36m<button[39m
+              [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"ah-button__content"[39m
+              [36m>[39m
+                [0mDescarrega les dades (RGPD)[0m
+              [36m</span>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [0mReenvia accés[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--ghost"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEntra com l'abonat[0m
+            [36m</span>[39m
+          [36m</button>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"ah-button ah-button--secondary"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"ah-button__content"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-edit"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+              [0mEdita[0m
+            [36m</span>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</header>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-tabs"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33maria-label[39m=[32m"Apartats de la fitxa"[39m
+          [33mclass[39m=[32m"ah-tabs__list"[39m
+          [33mrole[39m=[32m"tablist"[39m
+        [36m>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_1i_-panel-summary"[39m
+            [33maria-selected[39m=[32m"true"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_1i_-tab-summary"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mFitxa[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_1i_-panel-tasks"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_1i_-tab-tasks"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mTasques[0m
+          [36m</button>[39m
+          [36m<button[39m
+            [33maria-controls[39m=[32m"_r_1i_-panel-audit"[39m
+            [33maria-selected[39m=[32m"false"[39m
+            [33mclass[39m=[32m"ah-tabs__tab"[39m
+            [33mid[39m=[32m"_r_1i_-tab-audit"[39m
+            [33mrole[39m=[32m"tab"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [0mAuditoria[0m
+          [36m</button>[39m
+        [36m</div>[39m
+        [36m<div[39m
+          [33maria-labelledby[39m=[32m"_r_1i_-tab-summary"[39m
+          [33mclass[39m=[32m"ah-tabs__panel"[39m
+          [33mid[39m=[32m"_r_1i_-panel-summary"[39m
+          [33mrole[39m=[32m"tabpanel"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"census-record__grid"[39m
+          [36m>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"ah-card"[39m
+            [36m>[39m
+              [36m<h2[39m
+                [33mclass[39m=[32m"census-record__section-title"[39m
+              [36m>[39m
+                [0mDades i pagament[0m
+              [36m</h2>[39m
+              [36m<dl[39m
+                [33mclass[39m=[32m"census-record__data-list"[39m
+              [36m>...
+ ❯ waitForWrapper ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/census/CensusRecordPage.test.tsx:940:32
+    938|     });
+    939|
+    940|     const alert = await screen.findByText(TEXT, { exact: false });
+       |                                ^
+    941|     expect(
+    942|       within(alert.closest("[role='alert']") ?? alert).getByRole("link…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/census/MemberPaymentMethodDrawer.test.tsx > E11-W06 W10 (R-04-06) 409 READMISSION_PENDING on the payment method points to D2
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Aquest abonat té una readmissió pendent[39m
+Received:
+[31m  Aquest element no està en un estat vàlid per a aquesta operació.[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"dark"[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mlang[39m=[32m"ca"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#0B0B0B"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-labelledby[39m=[32m"_r_0_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-drawer"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_0_"[39m
+            [36m>[39m
+              [0mMètode de pagament[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<section[39m
+              [33mclass[39m=[32m"census-record__fieldset"[39m
+            [36m>[39m
+              [36m<h3>[39m
+                [0mMètode actual[0m
+              [36m</h3>[39m
+              [36m<p>[39m
+                [0mDomiciliació[0m
+                [0m · ···· ···· ···· ···· 2231[0m
+                [0m · Laura Serra Vidal[0m
+              [36m</p>[39m
+            [36m</section>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"census-record__form"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-form-field"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-form-field__label"[39m
+                  [33mfor[39m=[32m"payment-method-type"[39m
+                [36m>[39m
+                  [0mTipus[0m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33mclass[39m=[32m"ah-input ah-select"[39m
+                  [33mid[39m=[32m"payment-method-type"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"SEPA_DD"[39m
+                  [36m>[39m
+                    [0mDomiciliació[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"CARD"[39m
+                  [36m>[39m
+                    [0mTargeta[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"MANUAL"[39m
+                  [36m>[39m
+                    [0mEfectiu[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-form-field"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-form-field__label"[39m
+                  [33mfor[39m=[32m"payment-channel"[39m
+                [36m>[39m
+                  [0mCanal[0m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33mclass[39m=[32m"ah-input ah-select"[39m
+                  [33mid[39m=[32m"payment-channel"[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"CASH"[39m
+                  [36m>[39m
+                    [0mEfectiu[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"TRANSFER"[39m
+                  [36m>[39m
+                    [0mTransferència[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"BIZUM"[39m
+                  [36m>[39m
+                    [0mBizum[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</div>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mDesa[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</form>[39m
+            [36m<p[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [0mAquest element no està en un estat vàlid per a aquesta operació.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/census/MemberPaymentMethodDrawer.test.tsx:118:19
+    116|   const alert = await within(drawer).findByRole("alert");
+    117|   await waitFor(() => {
+    118|     expect(alert).toHaveTextContent("Aquest abonat té una readmissió p…
+       |                   ^
+    119|   });
+    120|   expect(within(alert).getByRole("link", { name: "Preinscripcions pend…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/census/MemberPlanDrawer.test.tsx > E8-W03 round 2 member plan change > E11-W06 W10 (R-04-06) 409 READMISSION_PENDING on the plan change points to D2
+Error: [2mexpect([22m[31melement[39m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  Aquest abonat té una readmissió pendent[39m
+Received:
+[31m  Aquest element no està en un estat vàlid per a aquesta operació.[39m
+
+Ignored nodes: comments, script, style
+[36m<html[39m
+  [33mdata-scheme[39m=[32m"dark"[39m
+  [33mdata-theme[39m=[32m"dark"[39m
+  [33mlang[39m=[32m"ca"[39m
+  [33mstyle[39m=[32m"color-scheme: dark; --ah-color-primary: #E26A2A; --ah-color-primary-fg: #0B0B0B; --ah-color-background: #0B0B0B; --ah-color-surface: #161616; --ah-color-surface-2: #1E1E1E; --ah-color-text: #FFFFFF; --ah-color-text-muted: #B5B5B5; --ah-color-border: #2B2B2B; --ah-color-success: #4CAF7D; --ah-color-warning: #E5B93C; --ah-color-danger: #E05B5B; --ah-color-info: #85B8E8; --ah-font-sans: Montserrat, system-ui, sans-serif; --ah-font-display: Montserrat, system-ui, sans-serif; --ah-radius-sm: 4px; --ah-radius-md: 4px; --ah-color-ring-1: #F2B58C; --ah-color-ring-2: #8FCE8F; --ah-color-ring-3: #C9CDD3; --ah-color-ring-4: #F5D67A; --ah-color-ring-5: #85B8E8;"[39m
+[36m>[39m
+  [36m<head>[39m
+    [36m<meta[39m
+      [33mcontent[39m=[32m"#0B0B0B"[39m
+      [33mname[39m=[32m"theme-color"[39m
+    [36m/>[39m
+  [36m</head>[39m
+  [36m<body>[39m
+    [36m<div>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"ah-overlay ah-overlay--drawer"[39m
+      [36m>[39m
+        [36m<aside[39m
+          [33maria-labelledby[39m=[32m"_r_0_"[39m
+          [33maria-modal[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-drawer"[39m
+          [33mrole[39m=[32m"dialog"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__header"[39m
+          [36m>[39m
+            [36m<h2[39m
+              [33mid[39m=[32m"_r_0_"[39m
+            [36m>[39m
+              [0mModalitat[0m
+            [36m</h2>[39m
+            [36m<button[39m
+              [33maria-label[39m=[32m"Tanca"[39m
+              [33mclass[39m=[32m"ah-overlay__close"[39m
+            [36m>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"ah-icon"[39m
+              [36m>[39m
+                [36m<use[39m
+                  [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-x"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</div>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"ah-overlay__body"[39m
+          [36m>[39m
+            [36m<section[39m
+              [33mclass[39m=[32m"census-record__fieldset"[39m
+            [36m>[39m
+              [36m<h3>[39m
+                [0mModalitat actual[0m
+              [36m</h3>[39m
+              [36m<p>[39m
+                [0mAbonat · 2 gossos[0m
+              [36m</p>[39m
+              [36m<p>[39m
+                [0mQuota mensual[0m
+              [36m</p>[39m
+            [36m</section>[39m
+            [36m<form[39m
+              [33mclass[39m=[32m"census-record__form"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-form-field"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-form-field__label"[39m
+                  [33mfor[39m=[32m"member-plan"[39m
+                [36m>[39m
+                  [0mModalitat nova[0m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33mclass[39m=[32m"ah-input ah-select"[39m
+                  [33mid[39m=[32m"member-plan"[39m
+                  [33mrequired[39m=[32m""[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m>[39m
+                    [0mTria una opció[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"plan-member"[39m
+                  [36m>[39m
+                    [0mAbonat[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"plan-family"[39m
+                  [36m>[39m
+                    [0mAbonat · 2 gossos[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"plan-pack-6"[39m
+                  [36m>[39m
+                    [0mPack 6[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"plan-pack-10"[39m
+                  [36m>[39m
+                    [0mPack 10[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"plan-therapy"[39m
+                  [36m>[39m
+                    [0mTeràpia[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-form-field"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-form-field__label"[39m
+                  [33mfor[39m=[32m"member-price"[39m
+                [36m>[39m
+                  [0mTarifa[0m
+                [36m</label>[39m
+                [36m<select[39m
+                  [33mclass[39m=[32m"ah-input ah-select"[39m
+                  [33mid[39m=[32m"member-price"[39m
+                  [33mrequired[39m=[32m""[39m
+                [36m>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m>[39m
+                    [0mTria una opció[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"price-member-old"[39m
+                  [36m>[39m
+                    [0m55,00 €[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"price-member"[39m
+                  [36m>[39m
+                    [0m60,00 €[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"price-member-next"[39m
+                  [36m>[39m
+                    [0m65,00 €[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"ah-form-field"[39m
+              [36m>[39m
+                [36m<label[39m
+                  [33mclass[39m=[32m"ah-form-field__label"[39m
+                  [33mfor[39m=[32m"member-plan-effective-month"[39m
+                [36m>[39m
+                  [0mMes d'efecte (opcional)[0m
+                [36m</label>[39m
+                [36m<input[39m
+                  [33mclass[39m=[32m"ah-input"[39m
+                  [33mid[39m=[32m"member-plan-effective-month"[39m
+                  [33mtype[39m=[32m"month"[39m
+                  [33mvalue[39m=[32m""[39m
+                [36m/>[39m
+              [36m</div>[39m
+              [36m<button[39m
+                [33mclass[39m=[32m"ah-button ah-button--primary"[39m
+                [33mtype[39m=[32m"submit"[39m
+              [36m>[39m
+                [36m<span[39m
+                  [33mclass[39m=[32m"ah-button__content"[39m
+                [36m>[39m
+                  [0mDesa[0m
+                [36m</span>[39m
+              [36m</button>[39m
+            [36m</form>[39m
+            [36m<p[39m
+              [33mrole[39m=[32m"alert"[39m
+            [36m>[39m
+              [0mAquest element no està en un estat vàlid per a aquesta operació.[0m
+            [36m</p>[39m
+          [36m</div>[39m
+        [36m</aside>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</body>[39m
+[36m</html>[39m
+ ❯ src/census/MemberPlanDrawer.test.tsx:84:21
+     82|     const alert = await within(drawer).findByRole("alert");
+     83|     await waitFor(() => {
+     84|       expect(alert).toHaveTextContent("Aquest abonat té una readmissió…
+       |                     ^
+     85|     });
+     86|     expect(within(alert).getByRole("link", { name: "Preinscripcions pe…
+ ❯ runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  3 failed (3)
+      Tests  4 failed | 42 skipped (46)
+   Start at  23:03:56
+   Duration  11.92s (tests 87%, transform 5%, environment 4%, import 2%, setup 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/CensusRecordPage.test.tsx src/census/MemberPlanDrawer.test.tsx src/census/MemberPaymentMethodDrawer.test.tsx -t W10

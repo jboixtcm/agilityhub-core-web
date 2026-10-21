@@ -22,6 +22,7 @@ type InvoiceListItem = components["schemas"]["InvoiceListItem"];
 type InvoicePreview = components["schemas"]["InvoicePreview"];
 type Money = components["schemas"]["Money"];
 type PaymentMethodType = components["schemas"]["PaymentMethodType"];
+type PeriodRemittance = components["schemas"]["PeriodRemittance"];
 type Remittance = components["schemas"]["Remittance"];
 type RemittanceListItem = components["schemas"]["RemittanceListItem"];
 type RollbackBlocker = components["schemas"]["RollbackBlocker"];
@@ -833,6 +834,28 @@ export function listItem(item: StoredInvoice): InvoiceListItem {
     status: invoice.status,
     total: invoice.total,
   };
+}
+
+/**
+ * D6's month remittance (`BillingPeriod.remittance`). `submissionDue` (E147): still GENERATED and
+ * the club-local `today` is the day before the collection date or later.
+ */
+export function periodRemittance(remittance: Remittance, today: string): PeriodRemittance {
+  return {
+    fileAvailable: remittance.fileAvailable,
+    id: remittance.id,
+    requestedCollectionDate: remittance.requestedCollectionDate,
+    status: remittance.status,
+    submissionDue:
+      remittance.status === "GENERATED" &&
+      today >= addDaysToDate(remittance.requestedCollectionDate, -1),
+  };
+}
+
+function addDaysToDate(date: string, days: number): string {
+  const day = new Date(`${date}T00:00:00Z`);
+  day.setUTCDate(day.getUTCDate() + days);
+  return day.toISOString().slice(0, 10);
 }
 
 export function remittanceListItem(remittance: Remittance): RemittanceListItem {

@@ -1,11 +1,16 @@
 import { apiClient as defaultApiClient, isApiError, type ApiClient } from "@agilityhub/api-client";
 import {
   type AuthClient,
+  dropReturnPath,
+  keepReturnPath,
   type Me,
   OnboardingExperience,
   RequireAuth,
   RequireModule,
   RequireRole,
+  type SessionSnapshot,
+  takeReturnPath,
+  useAccountLocale,
   useSession,
 } from "@agilityhub/auth";
 import type { Role } from "@agilityhub/auth";
@@ -249,20 +254,88 @@ function profileRoles(me: CurrentMe): readonly Role[] {
 
 /**
  * Where a profile lands after 01/03b: an instructor on 20 «Grups del dia» (mockup 20, V6 note;
- * ruling E71), everyone else on 03.
+ * ruling E71), a member on 03. An administrator's landing is the back office (S01 R-01-07,
+ * R-01-13; E11-W06 W2): 03b opens it with the handoff and its pending and error states, so the
+ * app never shows an ADMIN 03, whose reads need MEMBER (E41). A profile the membership no longer
+ * has goes back to 03b.
  */
-function profileLanding(profile: Role | undefined): string {
-  return profile === "INSTRUCTOR" ? "/instructor/dia" : "/inici";
+function profileLanding(profile: Role | null | undefined, roles: readonly Role[]): string {
+  if (profile === "INSTRUCTOR" && roles.includes("INSTRUCTOR")) {
+    return "/instructor/dia";
+  }
+  if ((profile === "MEMBER" || profile === undefined || profile === null) && roles.includes("MEMBER")) {
+    return "/inici";
+  }
+  return "/perfil-acces";
+}
+
+/** R-01-07: the profile the access opens without asking (one role, or «Recorda la meva tria»). */
+function directProfile(me: CurrentMe): Role | undefined {
+  return profileRoles(me).length > 1 && !me.membership.rememberProfile
+    ? undefined
+    : (me.membership.activeProfile ?? profileRoles(me)[0]);
 }
 
 function routeAfterOnboarding(me: Me): string {
   if (!isCurrentClubMe(me)) {
     throw new TypeError("The club session did not contain a membership");
   }
-  if (profileRoles(me).length > 1 && !me.membership.rememberProfile) {
-    return "/perfil-acces";
+  const profile = directProfile(me);
+  return profile === undefined ? "/perfil-acces" : profileLanding(profile, me.membership.roles);
+}
+
+/**
+ * Screens whose reads are the member's own (`/me/home`, `/me/bookable-classes`, the member's
+ * history, activities and training): MEMBER, or an impersonation (E41). A booking's detail (07)
+ * is not one: staff open it too (S16 R-16-13, «Recorregut previst»).
+ */
+const MEMBER_PATHS: readonly string[] = [
+  "/inici",
+  "/reservar",
+  "/reservar/confirmar",
+  "/entrenaments",
+  "/entrenaments/:id",
+  "/historic",
+  "/activitats/:id",
+];
+
+/** The screens 01–03b and the public ones route themselves; the dev gallery is not a screen. */
+const SELF_ROUTED_PATHS: readonly string[] = [
+  "/entrar",
+  "/acces",
+  "/activacio",
+  "/benvinguda",
+  "/perfil-acces",
+  "/comunicats/baixa",
+];
+
+/**
+ * E11-W06 W13 (AGENTS rule 3): a signed-in session on a screen its roles cannot open (an
+ * instructor on 03, a member on 20) or on an unknown path is sent to its profile's landing, as the
+ * back office does, instead of an empty shell. Never an impersonated session (it acts as the member).
+ */
+function strayLanding(session: SessionSnapshot, pathname: string): string | undefined {
+  const { me } = session;
+  if (session.status !== "signedIn" || me === null || me.impersonation !== undefined) {
+    return undefined;
   }
-  return profileLanding(me.membership.activeProfile);
+  if (
+    !isCurrentClubMe(me) ||
+    SELF_ROUTED_PATHS.includes(pathname) ||
+    pathname.startsWith("/apuntat-hi") ||
+    pathname.startsWith("/gossos/nou") ||
+    pathname.startsWith("/_gallery")
+  ) {
+    return undefined;
+  }
+  const route = currentRoute(pathname);
+  const allowed =
+    route === undefined
+      ? false
+      : route.roles !== undefined
+        ? route.roles.some((role) => session.roles.includes(role))
+        : !MEMBER_PATHS.includes(route.path) || session.roles.includes("MEMBER");
+  return allowed ? undefined : profileLanding(session.activeProfile, session.roles);
 }
 
 async function routeAfterLogin(me: Me, authClient: AuthClient): Promise<string> {
@@ -277,6 +350,18 @@ async function routeAfterLogin(me: Me, authClient: AuthClient): Promise<string> 
     }
   }
   return routeAfterOnboarding(me);
+}
+
+/**
+ * E11-W06 W1 (S11 R-11-11, S01 §2 01/02): the address a signed-out visit asked for opens instead of
+ * the profile's landing, consumed once. Onboarding and 03b come first and keep it for their own
+ * «continua» and profile choice.
+ */
+function withReturnPath(path: string): string {
+  if (path === "/benvinguda" || path === "/perfil-acces") {
+    return path;
+  }
+  return takeReturnPath() ?? path;
 }
 
 function LogoMark({ compact = false }: { compact?: boolean }) {
@@ -310,8 +395,9 @@ function Placeholder() {
   );
 }
 
-function LanguageSelector() {
+function LanguageSelector({ authClient }: { authClient: AuthClient }) {
   const branding = useBranding();
+  const { me } = useSession();
   const { i18n, t } = useTranslation("shell");
   const locales = productLocales.filter((locale) => branding.locales.includes(locale));
 
@@ -321,8 +407,14 @@ function LanguageSelector() {
       <select
         aria-label={t("shell:header.language")}
         onChange={(event) => {
-          localStorage.setItem(LOCALE_STORAGE_KEY, event.currentTarget.value);
-          void i18n.changeLanguage(event.currentTarget.value);
+          const locale = event.currentTarget.value;
+          localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+          void i18n.changeLanguage(locale);
+          // CONVENCIONS_I18N §1 (E11-W06 W5): the choice is the account's (`PATCH /me`), so the
+          // next sign-in keeps it; an impersonated session cannot write it (403).
+          if (me !== null && me.impersonation === undefined && me.account.locale !== locale) {
+            void authClient.updateLocale(locale).catch(() => undefined);
+          }
         }}
         value={i18n.resolvedLanguage ?? branding.defaultLocale}
       >
@@ -541,7 +633,7 @@ function MobileShell({
             className="clubs-shell__header"
             end={
               <div className="clubs-shell__actions">
-                <LanguageSelector />
+                <LanguageSelector authClient={authClient} />
                 <a
                   aria-label={t("shell:header.userMenu")}
                   className="clubs-shell__user"
@@ -669,9 +761,20 @@ export function AccessPage({
   const [handoffUnconfirmed, setHandoffUnconfirmed] = useState(false);
   const countdown = useCountdown();
 
+  // E11-W06 W1: 01 opened with `?next=` keeps it for the steps that leave this address (the magic
+  // link's tab, onboarding, 03b).
+  useEffect(() => {
+    keepReturnPath();
+  }, []);
+
   const enterHandoff = useCallback(
     async (me: Me) => {
-      navigate(me.impersonation === undefined ? await routeAfterLogin(me, authClient) : "/inici");
+      // «Entra com l'abonat» opens the member's 03, never a path kept by the admin's own visit.
+      navigate(
+        me.impersonation === undefined
+          ? withReturnPath(await routeAfterLogin(me, authClient))
+          : "/inici",
+      );
     },
     [authClient, navigate],
   );
@@ -793,7 +896,7 @@ export function AccessPage({
     setPending("login");
     try {
       const me = await authClient.login(email, password);
-      navigate(await routeAfterLogin(me, authClient));
+      navigate(withReturnPath(await routeAfterLogin(me, authClient)));
     } catch (loginError) {
       if (isApiError(loginError) && loginError.status === 429) {
         countdown.start(loginError.retryAfter ?? 60);
@@ -1023,7 +1126,7 @@ function ActivationPage({ authClient }: { authClient: AuthClient }) {
           className="auth-form__primary"
           onClick={() => {
             void routeAfterLogin(me, authClient).then((path) => {
-              navigateTo(path);
+              navigateTo(withReturnPath(path));
             });
           }}
           type="button"
@@ -1121,6 +1224,32 @@ function ProfileChoicePage({
   const [remember, setRemember] = useState(true);
   const [pending, setPending] = useState<Role>();
   const [error, setError] = useState(false);
+  const backofficeStarted = useRef(false);
+  // R-01-07, R-01-13 (E11-W06 W2): an ADMIN the access opens without asking (one role, or the
+  // remembered choice) goes to the back office at once, with 03b's pending and error states; on an
+  // error the cards stay to try again or to choose another profile.
+  const directAdmin =
+    me !== null &&
+    isCurrentClubMe(me) &&
+    directProfile(me) === "ADMIN" &&
+    profileRoles(me).includes("ADMIN");
+  useEffect(() => {
+    if (!directAdmin || backofficeStarted.current) {
+      return;
+    }
+    backofficeStarted.current = true;
+    setPending("ADMIN");
+    authClient.createHandoff("clubs-admin").then(
+      (handoff) => {
+        dropReturnPath();
+        window.location.assign(handoff.url);
+      },
+      () => {
+        setError(true);
+        setPending(undefined);
+      },
+    );
+  }, [authClient, directAdmin]);
   if (me === null || !isCurrentClubMe(me)) {
     return null;
   }
@@ -1134,9 +1263,11 @@ function ProfileChoicePage({
       await authClient.updateProfile(role, remember);
       if (role === "ADMIN") {
         const handoff = await authClient.createHandoff("clubs-admin");
+        // The members' app paths mean nothing to the back office (E11-W06 W1).
+        dropReturnPath();
         window.location.assign(handoff.url);
       } else {
-        navigate(profileLanding(role));
+        navigate(takeReturnPath() ?? profileLanding(role, me.membership.roles));
       }
     } catch {
       setError(true);
@@ -1589,6 +1720,8 @@ function AppContent({
   publicApiClient = defaultApiClient,
 }: AppProps) {
   useInAppLinks();
+  // E11-W06 W5 (CONVENCIONS_I18N §1): the signed-in account's language.
+  useAccountLocale();
   const [location, setLocation] = useState<AppLocation>(() => ({
     kind: "load",
     path: `${window.location.pathname}${window.location.search}`,
@@ -1618,6 +1751,19 @@ function AppContent({
   const session = useSession();
   const address = new URL(location.path, window.location.origin);
   const pathname = address.pathname;
+  // E11-W06 W13: a screen the session's roles cannot open is replaced by its profile's landing.
+  const strayTarget = strayLanding(session, pathname);
+  const strayReplaced = useRef<string>(undefined);
+  useEffect(() => {
+    const replacement = strayTarget === undefined ? undefined : `${pathname} → ${strayTarget}`;
+    if (replacement === strayReplaced.current) {
+      return;
+    }
+    strayReplaced.current = replacement;
+    if (strayTarget !== undefined) {
+      navigate(strayTarget, true);
+    }
+  }, [navigate, pathname, strayTarget]);
   if (
     session.status === "impersonationExpired" &&
     !(pathname === "/entrar" && address.searchParams.has("handoff"))
@@ -1656,7 +1802,7 @@ function AppContent({
           onAccepted={() => {
             const me = authClient.getMe();
             if (me !== null) {
-              navigate(routeAfterOnboarding(me), false);
+              navigate(withReturnPath(routeAfterOnboarding(me)), false);
             }
           }}
           presentation="page"
@@ -1714,7 +1860,7 @@ function AppContent({
   }
 
   const route = currentRoute(pathname) ?? currentRoute("/inici");
-  if (route === undefined) {
+  if (route === undefined || strayTarget !== undefined) {
     return null;
   }
 

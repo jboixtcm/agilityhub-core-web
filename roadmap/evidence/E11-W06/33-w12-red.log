@@ -1,0 +1,79 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/SignupPage.test.tsx (107 tests | 3 failed | 104 skipped) 262ms
+   ❯ E11-W06 W12 (S04 §2 16): the signup codes the published POST /signup adds (3)
+     × S04 §2 16: the three codes route to their step and field — ID_DOCUMENT_ALREADY_EXISTS (409) → /apuntat-hi 162ms
+     × S04 §2 16: the three codes route to their step and field — CHIP_ALREADY_EXISTS (409) → /apuntat-hi/gos 51ms
+     × S04 §2 16: the three codes route to their step and field — PAYMENT_METHOD_NOT_AVAILABLE (422) → the method chooser of the payment step 47ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/SignupPage.test.tsx > E11-W06 W12 (S04 §2 16): the signup codes the published POST /signup adds > S04 §2 16: the three codes route to their step and field — ID_DOCUMENT_ALREADY_EXISTS (409) → /apuntat-hi
+AssertionError: expected last "vi.fn()" call to have been called with [ '/apuntat-hi' ]
+
+- Expected:
+[
+  "/apuntat-hi",
+]
+
++ Received:
+undefined
+
+ ❯ src/SignupPage.test.tsx:1187:24
+    1185|
+    1186|       expect(await screen.findByText(text)).toBeVisible();
+    1187|       expect(navigate).toHaveBeenLastCalledWith(path);
+       |                        ^
+    1188|       const field = screen.getByLabelText(focus, { exact: true });
+    1189|       await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/SignupPage.test.tsx > E11-W06 W12 (S04 §2 16): the signup codes the published POST /signup adds > S04 §2 16: the three codes route to their step and field — CHIP_ALREADY_EXISTS (409) → /apuntat-hi/gos
+AssertionError: expected last "vi.fn()" call to have been called with [ '/apuntat-hi/gos' ]
+
+- Expected:
+[
+  "/apuntat-hi/gos",
+]
+
++ Received:
+undefined
+
+ ❯ src/SignupPage.test.tsx:1187:24
+    1185|
+    1186|       expect(await screen.findByText(text)).toBeVisible();
+    1187|       expect(navigate).toHaveBeenLastCalledWith(path);
+       |                        ^
+    1188|       const field = screen.getByLabelText(focus, { exact: true });
+    1189|       await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/SignupPage.test.tsx > E11-W06 W12 (S04 §2 16): the signup codes the published POST /signup adds > S04 §2 16: the three codes route to their step and field — PAYMENT_METHOD_NOT_AVAILABLE (422) → the method chooser of the payment step
+Error: [2mexpect([22m[31melement[39m[2m).toHaveAttribute([22m[32m[32m"aria-invalid"[32m[39m[2m, [22m[32m[32m"true"[32m[39m[2m) // element.getAttribute("aria-invalid") === "true"[22m
+
+Expected the element to have attribute:
+[32m  aria-invalid="true"[39m
+Received:
+[31m  null[39m
+ ❯ src/SignupPage.test.tsx:1210:21
+    1208|     expect(navigate).not.toHaveBeenCalled();
+    1209|     const chooser = document.querySelector<HTMLElement>(".signup-segme…
+    1210|     expect(chooser).toHaveAttribute("aria-invalid", "true");
+       |                     ^
+    1211|     expect(window.document.getElementById(chooser?.getAttribute("aria-…
+    1212|     await waitFor(() => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 104 skipped (107)
+   Start at  23:11:40
+   Duration  2.19s (transform 41%, environment 25%, import 15%, tests 13%, setup 6%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/SignupPage.test.tsx -t E11-W06 W12

@@ -1,0 +1,152 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ❯ src/auth-client.test.ts (30 tests | 3 failed | 27 skipped) 82ms
+   ❯ T-01-21 AuthClient session flow (16)
+     × R-01-06 (E11-W06 W3) three clients sharing one cookie jar restore together → the token endpoint is called sequentially, never two in flight, and all three end signed in 47ms
+     × R-01-06 (E11-W06 W3) with Web Locks, the refresh runs inside the lock «agilityhub.refresh:<clientId>» 30ms
+     × R-01-06 (E11-W06 W3) a tab that waited for another tab's refresh and meanwhile got a live token skips its own 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > R-01-06 (E11-W06 W3) three clients sharing one cookie jar restore together → the token endpoint is called sequentially, never two in flight, and all three end signed in
+AssertionError: expected [ { account: { …(8) }, …(2) }, …(2) ] to deeply equal [ { account: { …(8) }, …(2) }, …(2) ]
+
+- Expected
++ Received
+
+@@ -57,36 +57,7 @@
+        "roles": [
+          "MEMBER",
+        ],
+      },
+    },
+-   {
+-     "account": {
+-       "email": "biel.roca@example.test",
+-       "emailVerifiedAt": "2026-08-01T08:00:00Z",
+-       "hasPassword": true,
+-       "id": "10000000-0000-4000-8000-000000000002",
+-       "locale": "ca",
+-       "name": "Biel Roca",
+-       "onboardingPending": false,
+-       "platformRoles": [],
+-     },
+-     "features": [
+-       "FREE_TRAINING",
+-       "COURSES",
+-     ],
+-     "membership": {
+-       "activeProfile": "MEMBER",
+-       "clubId": "50000000-0000-4000-8000-000000000001",
+-       "defaultProfile": "MEMBER",
+-       "gender": "MALE",
+-       "memberId": "20000000-0000-4000-8000-000000000002",
+-       "profiles": [
+-         "MEMBER",
+-       ],
+-       "rememberProfile": true,
+-       "roles": [
+-         "MEMBER",
+-       ],
+-     },
+-   },
++   null,
+  ]
+
+ ❯ src/auth-client.test.ts:484:22
+    482|     const restored = await Promise.all(tabs.map((tab) => tab.restoreSe…
+    483|
+    484|     expect(restored).toEqual([memberMe, memberMe, memberMe]);
+       |                      ^
+    485|     expect(family.refreshes).toBe(3);
+    486|     expect(family.maxInFlight).toBe(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > R-01-06 (E11-W06 W3) with Web Locks, the refresh runs inside the lock «agilityhub.refresh:<clientId>»
+AssertionError: expected [ { account: { …(8) }, …(2) }, …(2) ] to deeply equal [ { account: { …(8) }, …(2) }, …(2) ]
+
+- Expected
++ Received
+
+@@ -57,36 +57,7 @@
+        "roles": [
+          "MEMBER",
+        ],
+      },
+    },
+-   {
+-     "account": {
+-       "email": "biel.roca@example.test",
+-       "emailVerifiedAt": "2026-08-01T08:00:00Z",
+-       "hasPassword": true,
+-       "id": "10000000-0000-4000-8000-000000000002",
+-       "locale": "ca",
+-       "name": "Biel Roca",
+-       "onboardingPending": false,
+-       "platformRoles": [],
+-     },
+-     "features": [
+-       "FREE_TRAINING",
+-       "COURSES",
+-     ],
+-     "membership": {
+-       "activeProfile": "MEMBER",
+-       "clubId": "50000000-0000-4000-8000-000000000001",
+-       "defaultProfile": "MEMBER",
+-       "gender": "MALE",
+-       "memberId": "20000000-0000-4000-8000-000000000002",
+-       "profiles": [
+-         "MEMBER",
+-       ],
+-       "rememberProfile": true,
+-       "roles": [
+-         "MEMBER",
+-       ],
+-     },
+-   },
++   null,
+  ]
+
+ ❯ src/auth-client.test.ts:521:24
+    519|       );
+    520|       const restored = await Promise.all(tabs.map((tab) => tab.restore…
+    521|       expect(restored).toEqual([memberMe, memberMe, memberMe]);
+       |                        ^
+    522|       expect(names).toEqual([
+    523|         "agilityhub.refresh:clubs-admin",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/auth-client.test.ts > T-01-21 AuthClient session flow > R-01-06 (E11-W06 W3) a tab that waited for another tab's refresh and meanwhile got a live token skips its own
+AssertionError: expected { Object (access_token, expires_in, ...) } to match object { access_token: 'access-login' }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "access_token": "access-login",
++   "access_token": "access-refresh",
+  }
+
+ ❯ src/auth-client.test.ts:554:26
+    552|     localStorage.removeItem("agilityhub.refresh:clubs-app");
+    553|
+    554|     await expect(waiting).resolves.toMatchObject({ access_token: "acce…
+       |                          ^
+    555|     expect(refreshes).toBe(0);
+    556|     expect(client.getAccessToken()).toBe("access-login");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 27 skipped (30)
+   Start at  22:36:59
+   Duration  753ms (environment 55%, transform 16%, import 16%, tests 12%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/auth-client.test.ts -t E11-W06 W3

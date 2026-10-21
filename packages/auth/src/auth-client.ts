@@ -19,6 +19,15 @@ const RETRY_DELAYS_MS = [2_000, 5_000, 15_000, 30_000, 60_000] as const;
 /** `/me` after a handoff: the first try and two retries (2 s, 5 s) before the page offers a retry. */
 const HANDOFF_ME_ATTEMPTS = 3;
 /**
+ * S01 R-01-06 (E11-W06 W3): one refresh at a time across the tabs of a client, which share the
+ * refresh cookie — three restored together would otherwise send one rotated token three times,
+ * and the third is a reuse that revokes the family. Web Locks, or a `localStorage` lease where
+ * they are absent.
+ */
+const REFRESH_LOCK_PREFIX = "agilityhub.refresh:";
+const REFRESH_LEASE_MS = 10_000;
+const REFRESH_LEASE_POLL_MS = 50;
+/**
  * S01 D10 and R-01-09 (E47): the impersonated session lives in this tab's session storage only
  * (never `localStorage`), so it survives the app's full-page navigations and dies with the tab.
  * It holds the impersonation access token (never refreshed) or the mark that it has expired.
@@ -154,6 +163,72 @@ function waitForRetry(delayMs: number): Promise<void> {
   });
 }
 
+interface RefreshLease {
+  expiresAt: number;
+  owner: string;
+}
+
+function sharedStorage(): Storage | undefined {
+  try {
+    return typeof window === "undefined" ? undefined : window.localStorage;
+  } catch {
+    return undefined;
+  }
+}
+
+function readLease(storage: Storage, name: string): RefreshLease | undefined {
+  try {
+    const value = JSON.parse(storage.getItem(name) ?? "null") as Partial<RefreshLease> | null;
+    return typeof value?.expiresAt === "number" && typeof value.owner === "string"
+      ? { expiresAt: value.expiresAt, owner: value.owner }
+      : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * The fallback of Web Locks: a lease in `localStorage` that expires after 10 s (a tab closed while
+ * it held it), polled until it is free. Without storage there is nothing to share.
+ */
+async function acquireRefreshLease(name: string): Promise<() => void> {
+  const storage = sharedStorage();
+  if (storage === undefined) return () => undefined;
+  const owner = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  for (;;) {
+    const held = readLease(storage, name);
+    if (held === undefined || held.expiresAt <= Date.now()) {
+      try {
+        storage.setItem(name, JSON.stringify({ expiresAt: Date.now() + REFRESH_LEASE_MS, owner }));
+      } catch {
+        return () => undefined;
+      }
+      if (readLease(storage, name)?.owner === owner) {
+        return () => {
+          if (readLease(storage, name)?.owner === owner) storage.removeItem(name);
+        };
+      }
+    }
+    await new Promise((resolve) => setTimeout(resolve, REFRESH_LEASE_POLL_MS));
+  }
+}
+
+async function withRefreshLock<T>(name: string, task: () => Promise<T>): Promise<T> {
+  const locks =
+    typeof navigator === "undefined"
+      ? undefined
+      : (navigator as Navigator & { locks?: LockManager }).locks;
+  if (locks !== undefined && typeof locks.request === "function") {
+    return locks.request(name, task);
+  }
+  const release = await acquireRefreshLease(name);
+  try {
+    return await task();
+  } finally {
+    release();
+  }
+}
+
 function isAccountLocale(locale: string): locale is AccountLocale {
   return locale === "ca" || locale === "es" || locale === "en";
 }
@@ -178,6 +253,9 @@ export class AuthClient extends EventTarget {
   private readonly apiClient: ApiClient;
   private readonly clientId: string;
   private currentMe: Me | null = null;
+  /** The tokens last accepted, and how many were (a refresh that waited compares, E11-W06 W3). */
+  private currentTokens: TokenResponse | null = null;
+  private tokenGeneration = 0;
   private exchangeInFlight: Promise<Me> | null = null;
   private readonly fetcher: typeof globalThis.fetch;
   /** `account` mode: the tokens of a redeemed code whose `/me` has not answered yet (kept in memory). */
@@ -749,7 +827,12 @@ export class AuthClient extends EventTarget {
 
     try {
       if (this.accessToken !== null) {
-        let response = await this.revoke();
+        // S01 R-01-10 (E11-W06 step 14, ruling E151): «Surt» of «Entra com l'abonat» ends the
+        // grant itself (`RevokeRequest.token` = the impersonation JWT); `{}` only revokes the
+        // bearer's session, and the grant stayed valid until `auth.impersonationMinutes`.
+        let response = await this.revoke(
+          this.impersonation === "active" ? this.accessToken : undefined,
+        );
         if (response.status === 401 && !impersonated) {
           await this.refresh();
           response = await this.revoke();
@@ -866,6 +949,8 @@ export class AuthClient extends EventTarget {
   }
 
   private acceptTokens(tokens: TokenResponse): void {
+    this.tokenGeneration += 1;
+    this.currentTokens = tokens;
     this.accessToken = tokens.access_token;
     const lifetimeMs = tokens.expires_in * 1_000;
     this.refreshAt =
@@ -895,6 +980,7 @@ export class AuthClient extends EventTarget {
 
   private clearLocalSession(): void {
     this.accessToken = null;
+    this.currentTokens = null;
     this.currentMe = null;
     this.refreshAt = null;
     this.cancelScheduledRefresh();
@@ -975,15 +1061,33 @@ export class AuthClient extends EventTarget {
     return result.data;
   }
 
+  /**
+   * R-01-06 (E11-W06 W3): the refresh runs alone across the tabs of this client; each one that
+   * waited sends the cookie the previous one rotated. A tab that got a live token of its own while
+   * it waited (a sign-in) does not refresh again.
+   */
   private async performRefresh(): Promise<TokenResponse> {
-    const tokens = await this.issueToken(
-      new URLSearchParams({
-        client_id: this.clientId,
-        grant_type: "refresh_token",
-      }),
-    );
-    this.acceptTokens(tokens);
-    return tokens;
+    const generation = this.tokenGeneration;
+    return withRefreshLock(`${REFRESH_LOCK_PREFIX}${this.clientId}`, async () => {
+      const current = this.currentTokens;
+      if (
+        this.tokenGeneration !== generation &&
+        current !== null &&
+        this.accessToken === current.access_token &&
+        this.refreshAt !== null &&
+        Date.now() < this.refreshAt
+      ) {
+        return current;
+      }
+      const tokens = await this.issueToken(
+        new URLSearchParams({
+          client_id: this.clientId,
+          grant_type: "refresh_token",
+        }),
+      );
+      this.acceptTokens(tokens);
+      return tokens;
+    });
   }
 
   private refreshInBackground(): void {

@@ -2105,3 +2105,61 @@ describe("E8-W04 step 6(b): one wording per receipt state on D6, its drawer and 
     expect(words).toEqual(["reemborsat", "reembolsado", "refunded"]);
   });
 });
+
+describe("E11-W06 W9 (S12 §6, INC-68, E138): 409 PRICE_OVERLAP on the simulation and the run", () => {
+  const TEXT = "La modalitat Abonat té dos preus vigents per a Quota mensual.";
+
+  it("S12 §6 409 PRICE_OVERLAP names the plan and links D8", async () => {
+    const { onNavigate } = await renderPage({ scenario: "billingPriceOverlap", search: "?mes=2026-10" });
+    const [simulate] = screen.getAllByRole("button", { name: "1 · SIMULA EL MES" });
+    if (simulate === undefined) throw new TypeError("No simulate button");
+    fireEvent.click(simulate);
+
+    const alert = await screen.findByRole("alert");
+    await waitFor(() => {
+      expect(alert).toHaveTextContent(TEXT);
+    });
+    expect(alert).not.toHaveTextContent("Aquest preu se superposa amb un altre.");
+    const link = within(alert).getByRole("link", { name: "Modalitats i tarifes" });
+    expect(link).toHaveAttribute("href", "/modalitats");
+    fireEvent.click(link);
+    expect(onNavigate).toHaveBeenCalledWith("/modalitats");
+  });
+
+  it("S12 §6 the run's 409 PRICE_OVERLAP reads the same inside its modal, and an unknown plan reads its id", async () => {
+    // A month with its simulation and no run yet (the default world's September has its run).
+    await renderPage({ scenario: "billingStale" });
+    server.use(
+      http.post("*/api/v1/billing/runs", () =>
+        HttpResponse.json(
+          {
+            code: "PRICE_OVERLAP",
+            details: {
+              concept: "MAINTENANCE_FEE",
+              conflictingPriceId: "price-twin",
+              planId: "plan-gone",
+              priceId: "price-old",
+            },
+            message: "Overlap",
+            traceId: "t-409",
+          },
+          { status: 409 },
+        ),
+      ),
+    );
+    fireEvent.click(await screen.findByRole("button", { name: "2 · GENERA REMESA SEPA (XML)" }));
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.click(within(dialog).getByRole("button", { name: "Genera" }));
+
+    const alert = await within(dialog).findByRole("alert");
+    await waitFor(() => {
+      expect(alert).toHaveTextContent(
+        "La modalitat plan-gone té dos preus vigents per a Quota de manteniment.",
+      );
+    });
+    expect(within(alert).getByRole("link", { name: "Modalitats i tarifes" })).toHaveAttribute(
+      "href",
+      "/modalitats",
+    );
+  });
+});

@@ -120,7 +120,12 @@ test("T-14-27 renders the audit and PDF export state in ca/es/en without missing
 
   for (const item of cases) {
     await page.goto(`${baseUrl}/auditoria`);
-    await page.locator(".shell-language select").selectOption(item.locale);
+    // Signed in first (the account's language applies at the sign-in, E11-W06 W5); the language
+    // selector lives in the user menu (E11-W06 W4).
+    await expect(page.getByRole("table")).toBeVisible();
+    await page.getByRole("button", { name: /^(Menú d’usuari|Menú de usuario|User menu)$/u }).click();
+    await page.locator(".admin-user-menu .shell-language select").selectOption(item.locale);
+    await page.keyboard.press("Escape");
     await expect(page.getByRole("heading", { name: item.title })).toBeVisible();
     await expect(page.getByRole("table")).toBeVisible();
     await expect(page.locator("body")).not.toContainText(/(?:admin-audit|census):/u);

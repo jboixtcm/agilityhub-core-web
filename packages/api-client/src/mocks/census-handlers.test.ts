@@ -330,3 +330,62 @@ describe("E7-W07 round 2 #5c · the census refusals answer the snapshot's status
     });
   });
 });
+
+describe("E11-W06 W10 (S04 R-04-06, INC-39) · a record frozen by a pending readmission", () => {
+  const params = { path: { id: LIVE_MEMBER_ID } };
+  const frozenWrites: readonly (readonly [string, () => Promise<unknown>])[] = [
+    [
+      "POST /members/{id}/booking-block",
+      () => client.POST("/members/{id}/booking-block", { body: { reason: "Rebut pendent" }, params }),
+    ],
+    ["DELETE /members/{id}/booking-block", () => client.DELETE("/members/{id}/booking-block", { params })],
+    [
+      "PATCH /members/{id}/payment-method",
+      () =>
+        client.PATCH("/members/{id}/payment-method", {
+          body: { manual: { channel: "CASH" }, type: "MANUAL" },
+          params,
+        }),
+    ],
+    [
+      "POST /members/{id}/plan-change",
+      () =>
+        client.POST("/members/{id}/plan-change", {
+          body: { planId: "plan-member", priceId: "price-member" },
+          params: { ...params, header: { "Idempotency-Key": crypto.randomUUID() } },
+        }),
+    ],
+    [
+      "PUT /members/{id}/notification-preferences",
+      () =>
+        client.PUT("/members/{id}/notification-preferences", {
+          body: { pushClubNews: false },
+          params,
+        }),
+    ],
+  ];
+
+  it.each(frozenWrites)(
+    "%s answers 409 INVALID_STATE {reason: READMISSION_PENDING}",
+    async (_route, call) => {
+      mockScenario("adminMemberReadmissionPending");
+      expect(await failure(call())).toEqual({
+        code: "INVALID_STATE",
+        details: { reason: "READMISSION_PENDING" },
+        status: 409,
+      });
+    },
+  );
+
+  it("the record reads PENDING again (R-04-06), and the club's other scenarios write as before", async () => {
+    mockScenario("adminMemberReadmissionPending");
+    const { data } = await client.GET("/members/{id}/overview", { params });
+    expect(data?.member.status).toBe("PENDING");
+    mockScenario("admin");
+    const blocked = await client.POST("/members/{id}/booking-block", {
+      body: { reason: "Rebut pendent" },
+      params,
+    });
+    expect(blocked.response.status).toBe(201);
+  });
+});

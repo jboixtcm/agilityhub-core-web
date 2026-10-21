@@ -31,11 +31,12 @@ afterAll(() => {
   server.close();
 });
 
-async function renderInfo(runtimeBranding: Branding = branding) {
+async function renderInfo(runtimeBranding: Branding = branding, waitForTabs = true) {
   const i18n = await createClubsI18n({
     branding: runtimeBranding,
     browserLanguages: ["ca"],
-    initialNamespaces: ["shell"],
+    // The boot's namespaces (`main.tsx`) hold `common`, as the app's do.
+    initialNamespaces: ["common", "shell"],
     storage: undefined,
   });
   const client = createApiClient({
@@ -49,8 +50,37 @@ async function renderInfo(runtimeBranding: Branding = branding) {
       </BrandingProvider>
     </I18nextProvider>,
   );
-  await screen.findByRole("tab", { name: "FAQ" });
+  if (waitForTabs) await screen.findByRole("tab", { name: "FAQ" });
 }
+
+describe("E11-W06 W8 (the states matrix of E11-W02): screen 30's failed read", () => {
+  it("E11-W06 W8: a failed read of 30 offers a retry that reads again", async () => {
+    let failing = true;
+    let reads = 0;
+    server.use(
+      http.get("*/api/v1/club-pages", () => {
+        reads += 1;
+        return failing
+          ? HttpResponse.json(
+              { code: "INTERNAL_ERROR", details: {}, message: "Unavailable", traceId: "t" },
+              { status: 503 },
+            )
+          : undefined;
+      }),
+    );
+    await renderInfo(branding, false);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "No s'ha pogut carregar la informació.",
+    );
+    failing = false;
+    fireEvent.click(screen.getByRole("button", { name: "Torna-ho a provar" }));
+
+    expect(await screen.findByRole("tab", { name: "FAQ" })).toBeVisible();
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(reads).toBe(2);
+  });
+});
 
 describe("T-05-CP-07 screen 30 Info", () => {
   it("shows FAQ, rules and other active pages only", async () => {

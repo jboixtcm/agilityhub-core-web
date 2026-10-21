@@ -1,6 +1,19 @@
-import type { ApiClient, components } from "@agilityhub/api-client";
+import { isApiError, type ApiClient, type components } from "@agilityhub/api-client";
 
 type SignupView = components["schemas"]["MemberSignupView"];
+
+/**
+ * S04 R-04-06 (INC-39, E11-T10): `409 INVALID_STATE {reason: READMISSION_PENDING}` — the record a
+ * pending readmission froze (the member's on D10, the reused dog's on D2) waits for D2's decision.
+ */
+export function isReadmissionPending(error: unknown): boolean {
+  return (
+    isApiError(error, "INVALID_STATE") &&
+    typeof error.details === "object" &&
+    error.details !== null &&
+    (error.details as Record<string, unknown>).reason === "READMISSION_PENDING"
+  );
+}
 type Member = SignupView["member"];
 
 export interface DogDocumentType {

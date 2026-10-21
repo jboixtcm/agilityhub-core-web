@@ -45,6 +45,7 @@ import {
 } from "./BillingModals";
 import { InvoiceDrawer } from "./InvoiceDrawer";
 import { ManualInvoiceModal } from "./ManualInvoiceModal";
+import { isPriceOverlap, PriceOverlapMessage } from "./PriceOverlapMessage";
 import {
   type BillingPeriod,
   type BillingProvider,
@@ -439,25 +440,32 @@ export function BillingPage({
    * `POST /billing/simulations` for the month shown (no key: the contract declares none). The month
    * steppers wait for it, so its answer is always this month's. `undefined` = done, else the text.
    */
-  const runSimulation = async (): Promise<string | undefined> => {
+  const runSimulation = async (): Promise<ReactNode> => {
     setSimulating(true);
     try {
       await client.POST("/billing/simulations", { body: { period } });
       refreshAll();
       return undefined;
     } catch (error) {
-      return isApiError(error, "BILLING_BUSY")
-        ? t("admin-billing:errors.billingBusy")
-        : isApiError(error, "VALIDATION_ERROR") && errorFields(error).includes("period")
-          ? t("admin-billing:errors.periodTooFar")
-          : errorMessage(error);
+      return isApiError(error, "BILLING_BUSY") ? (
+        t("admin-billing:errors.billingBusy")
+      ) : isApiError(error, "VALIDATION_ERROR") && errorFields(error).includes("period") ? (
+        t("admin-billing:errors.periodTooFar")
+      ) : isPriceOverlap(error) ? (
+        <PriceOverlapMessage client={client} error={error} onNavigate={onNavigate} />
+      ) : (
+        errorMessage(error)
+      );
     } finally {
       setSimulating(false);
     }
   };
   const simulate = async () => {
     const failed = await runSimulation();
-    say(failed ?? t("admin-billing:toasts.simulated"), failed === undefined ? "success" : "danger");
+    say(
+      failed ?? t("admin-billing:toasts.simulated"),
+      failed === undefined || failed === null ? "success" : "danger",
+    );
   };
 
   // The month's receipts by member and amount, for the universal filter's values (no

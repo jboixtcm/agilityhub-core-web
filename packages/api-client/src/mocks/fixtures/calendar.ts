@@ -278,8 +278,9 @@ function activeSpecs(monday: string, now: number): SessionSpec[] {
             affectedBookings: 0,
             affectedWaitlist: 0,
             at: review,
-            byAccountId: "system",
+            byAccountId: null,
             reason: "RISK_REVIEW",
+            reviewTime: "07:30",
           },
           state: "CANCELLED",
         };
@@ -410,8 +411,9 @@ export function riskReviewSessions(date: string): ClassSession[] {
     at: new Date(Date.parse(clubInstant(date, "07:30")) + seconds * 1_000)
       .toISOString()
       .replace(".000Z", "Z"),
-    byAccountId: "system",
+    byAccountId: null,
     reason: "RISK_REVIEW" as const,
+    reviewTime: "07:30",
   });
   return [
     classSession({

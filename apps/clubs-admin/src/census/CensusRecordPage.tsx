@@ -7,7 +7,12 @@ import {
   type ListItemWith,
   uploadSigned,
 } from "@agilityhub/api-client";
-import { fmtMaskedIban, fmtPlainDate, isPlainDate, normalizeLocale } from "@agilityhub/i18n";
+import {
+  type ClubFormats,
+  fmtMaskedIban,
+  isPlainDate,
+  useClubFormats,
+} from "@agilityhub/i18n";
 import {
   Badge,
   Button,
@@ -29,7 +34,8 @@ import { useTranslation } from "react-i18next";
 
 import { AuditTrail, auditActionLabel, auditRoleLabel } from "../audit/AuditPage";
 import { useRefreshCounters } from "../dashboard/counters";
-import { loadDogDocumentTypes } from "../dashboard/readmission";
+import { isReadmissionPending, loadDogDocumentTypes } from "../dashboard/readmission";
+import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessage";
 import { NotificationPreferencesBlock } from "../messaging/NotificationPreferencesBlock";
 
 import { MemberBillingBlock } from "./MemberBillingBlock";
@@ -106,7 +112,7 @@ type MemberDialog =
   "block" | "impersonate" | "inactivity" | "leave" | "payment" | "plan" | "resend" | "roles" | null;
 
 interface Feedback {
-  message: string;
+  message: ReactNode;
   tone: "danger" | "success";
 }
 
@@ -116,18 +122,16 @@ function pathId(): string {
   return decodeURIComponent(window.location.pathname.split("/").filter(Boolean).at(-1) ?? "");
 }
 
-function formatDate(value: string, locale: string, withYear = true): string {
-  if (isPlainDate(value)) {
-    // R-06-14: a business date is the calendar day it names, whatever the zone.
-    return fmtPlainDate(value, normalizeLocale(locale), withYear ? "short" : "dayMonthNumeric");
-  }
-  const date = new Date(value);
-  return new Intl.DateTimeFormat(locale, {
-    day: "2-digit",
-    month: "2-digit",
-    ...(withYear ? { year: "numeric" } : {}),
-    timeZone: "UTC",
-  }).format(date);
+/**
+ * R-06-14: a business date (`YYYY-MM-DD`) is the calendar day it names, whatever the zone; an
+ * instant (`registeredAt`, `levelAssignedAt`, an audit's `at`) is its day in the club's time zone
+ * (CONVENCIONS_I18N §1, E11-W06 W7), never its UTC day.
+ */
+function formatDate(value: string, formats: ClubFormats, withYear = true): string {
+  const presentation = withYear ? "short" : "dayMonthNumeric";
+  return isPlainDate(value)
+    ? formats.formatPlainDate(value, presentation)
+    : formats.formatDate(value, presentation);
 }
 
 function formatMoney(value: number, locale: string, currency: string): string {
@@ -152,6 +156,18 @@ function errorText(error: unknown, t: TranslationFunction): string {
     return t(`errors:${error.code}`, { defaultValue: t("admin-census:common.genericError") });
   }
   return t("admin-census:common.genericError");
+}
+
+/**
+ * A member write's failure: a record frozen by a pending readmission (S04 R-04-06, E11-W06 W10)
+ * points to D2; anything else reads its code's text.
+ */
+function memberErrorText(error: unknown, t: TranslationFunction, memberId: string): ReactNode {
+  return isReadmissionPending(error) ? (
+    <ReadmissionPendingMessage memberId={memberId} />
+  ) : (
+    errorText(error, t)
+  );
 }
 
 function FeedbackMessage({ feedback }: { feedback: Feedback | undefined }) {
@@ -587,13 +603,14 @@ function MemberSummary({
   const branding = useBranding();
   // `admin-audit` names the actions and roles of «Darrers canvis» (S14 R-14-11).
   const { i18n, t } = useTranslation(["admin-census", "admin-audit", "errors"]);
+  const formats = useClubFormats();
   const member = overview.member;
   const modules = branding.modules;
   const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
   const [reason, setReason] = useState("");
   const [roles, setRoles] = useState<Role[]>(member.roles as Role[]);
   const [pending, setPending] = useState(false);
-  const [failure, setFailure] = useState<string>();
+  const [failure, setFailure] = useState<ReactNode>();
   const [plan, setPlan] = useState<Plan>();
   const [documentTypeLabels, setDocumentTypeLabels] = useState<ReadonlyMap<string, string>>(
     () => new Map(),
@@ -656,8 +673,9 @@ function MemberSummary({
       setDialog(null);
     } catch (error) {
       if (isApiError(error, "MEMBER_ERASED")) onErased();
-      if (failureOn === "page") onFeedback({ message: errorText(error, t), tone: "danger" });
-      else setFailure(errorText(error, t));
+      const message = memberErrorText(error, t, member.id);
+      if (failureOn === "page") onFeedback({ message, tone: "danger" });
+      else setFailure(message);
     } finally {
       setPending(false);
     }
@@ -738,7 +756,7 @@ function MemberSummary({
             ) : null}
             {modules.includes("BILLING") && overview.nextInvoice !== undefined ? (
               <DataRow label={t("admin-census:member.fields.nextInvoice")}>
-                <strong>{formatDate(overview.nextInvoice.date, locale)}</strong> ·{" "}
+                <strong>{formatDate(overview.nextInvoice.date, formats)}</strong> ·{" "}
                 {formatMoney(
                   overview.nextInvoice.amount.amountMinor / 100,
                   locale,
@@ -822,7 +840,7 @@ function MemberSummary({
                           date:
                             dog.pack.expiresOn === undefined
                               ? t("admin-census:values.empty")
-                              : formatDate(dog.pack.expiresOn, locale, false).replaceAll("/", "-"),
+                              : formatDate(dog.pack.expiresOn, formats, false).replaceAll("/", "-"),
                           remaining: dog.pack.remaining,
                           total: dog.pack.total,
                           used: dog.pack.total - dog.pack.remaining,
@@ -892,7 +910,7 @@ function MemberSummary({
               .map((audit) => {
                 const values = {
                   action: auditActionLabel(t, audit.action),
-                  date: formatDate(audit.at, locale, false),
+                  date: formatDate(audit.at, formats, false),
                   role: auditRoleLabel(t, audit.actorRole),
                 };
                 return audit.actorName === undefined || audit.actorName === ""
@@ -1229,7 +1247,8 @@ export function MemberRecordPage({
 }) {
   const branding = useBranding();
   const refreshCounters = useRefreshCounters();
-  const { i18n, t } = useTranslation(["admin-census", "errors"]);
+  const { t } = useTranslation(["admin-census", "errors"]);
+  const formats = useClubFormats();
   const [overview, setOverview] = useState<MemberOverview>();
   // Why the record could not be read: a `409 MEMBER_ERASED` is final, anything else retried.
   const [failure, setFailure] = useState<{ error: unknown }>();
@@ -1286,7 +1305,6 @@ export function MemberRecordPage({
     return <LoadingRecord />;
   }
   const member = overview.member;
-  const locale = normalizeLocale(i18n.resolvedLanguage ?? branding.defaultLocale);
   const joinedYear =
     member.joinedAt == null ? undefined : new Date(member.joinedAt).getUTCFullYear();
   const holder = overview.familyGroup?.holderMemberId === member.id;
@@ -1319,14 +1337,14 @@ export function MemberRecordPage({
               {member.displayStatus.date == null
                 ? t("admin-census:inactivity.badgeOpen")
                 : t("admin-census:inactivity.badgeUntil", {
-                    date: formatDate(member.displayStatus.date, locale, false),
+                    date: formatDate(member.displayStatus.date, formats, false),
                   })}
             </Badge>
           ) : null}
           {member.displayStatus.kind === "LEAVE_SCHEDULED" && member.displayStatus.date != null ? (
             <Badge tone="warning">
               {t("admin-census:leave.badgeScheduled", {
-                date: formatDate(member.displayStatus.date, locale),
+                date: formatDate(member.displayStatus.date, formats),
               })}
             </Badge>
           ) : null}
@@ -1384,15 +1402,19 @@ export function MemberRecordPage({
               >
                 {t("admin-census:member.actions.resend")}
               </Button>
-              <Button
-                onClick={() => {
-                  setMemberDialog("impersonate");
-                }}
-                variant="ghost"
-              >
-                <Icon aria-hidden="true" name="user" />
-                {t("admin-census:member.actions.impersonate")}
-              </Button>
+              {/* S17 R-17-10 (ruling E151): impersonation is closed to a support access, as the
+                  personal-data export is. */}
+              {supportAccess ? null : (
+                <Button
+                  onClick={() => {
+                    setMemberDialog("impersonate");
+                  }}
+                  variant="ghost"
+                >
+                  <Icon aria-hidden="true" name="user" />
+                  {t("admin-census:member.actions.impersonate")}
+                </Button>
+              )}
               <Button
                 onClick={() => {
                   setEditOpen(true);
@@ -1909,8 +1931,8 @@ function DocumentList({
 
 export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id?: string }) {
   const branding = useBranding();
-  const { i18n, t } = useTranslation(["admin-census", "errors"]);
-  const locale = i18n.resolvedLanguage ?? branding.defaultLocale;
+  const { t } = useTranslation(["admin-census", "errors"]);
+  const formats = useClubFormats();
   const [dog, setDog] = useState<DogDetail>();
   const [levels, setLevels] = useState<LevelSummary[]>([]);
   const [members, setMembers] = useState<TransferMember[]>([]);
@@ -2060,11 +2082,11 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
                 : t("admin-census:values.male")}
             </DataRow>
             <DataRow label={t("admin-census:dog.fields.birthDate")}>
-              {formatDate(dog.birthDate, locale)}
+              {formatDate(dog.birthDate, formats)}
             </DataRow>
             <DataRow label={t("admin-census:dog.fields.chip")}>{dog.chip}</DataRow>
             <DataRow label={t("admin-census:dog.fields.registeredAt")}>
-              {formatDate(dog.registeredAt, locale)}
+              {formatDate(dog.registeredAt, formats)}
             </DataRow>
           </dl>
         </Card>
@@ -2089,7 +2111,7 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
               {dog.levelAssignedAt === undefined
                 ? null
                 : t("admin-census:dog.level.since", {
-                    date: formatDate(dog.levelAssignedAt, locale),
+                    date: formatDate(dog.levelAssignedAt, formats),
                   })}
             </p>
           )}
@@ -2099,10 +2121,10 @@ export function DogRecordPage({ client, id = pathId() }: { client: ApiClient; id
                 <strong>
                   {levels.find((level) => level.id === entry.levelId)?.code ?? entry.levelId}
                 </strong>{" "}
-                · {formatDate(entry.from, locale)} —{" "}
+                · {formatDate(entry.from, formats)} —{" "}
                 {entry.to === undefined
                   ? t("admin-census:dog.level.current")
-                  : formatDate(entry.to, locale)}
+                  : formatDate(entry.to, formats)}
               </li>
             ))}
           </ul>

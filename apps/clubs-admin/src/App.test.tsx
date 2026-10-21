@@ -9,11 +9,12 @@ import {
   AuthClient,
   IMPERSONATION_STORAGE_KEY,
   MemoryRefreshTokenStore,
+  RETURN_PATH_STORAGE_KEY,
   SessionProvider,
 } from "@agilityhub/auth";
-import { createI18n } from "@agilityhub/i18n";
+import { createI18n, LOCALE_STORAGE_KEY } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider, requiredModulesForUiItem } from "@agilityhub/ui";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -420,6 +421,213 @@ describe("T-01-20 clubs-admin handoff", () => {
     await waitFor(() => {
       expect(exchange).toHaveBeenCalledWith("mock-handoff-code");
     });
+  });
+});
+
+/** `window.location.assign` (a full page load, which jsdom cannot do) recorded; the rest real. */
+function stubFullLoads() {
+  const real = window.location;
+  const assign = vi.fn();
+  vi.stubGlobal("location", {
+    assign,
+    get hash() {
+      return real.hash;
+    },
+    get host() {
+      return real.host;
+    },
+    get href() {
+      return real.href;
+    },
+    get origin() {
+      return real.origin;
+    },
+    get pathname() {
+      return real.pathname;
+    },
+    get search() {
+      return real.search;
+    },
+  });
+  return assign;
+}
+
+describe("E11-W06 W4 (AGENTS rule 3, S01 R-01-06): the back office's user menu", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    window.history.pushState(null, "", "/");
+  });
+
+  async function openShell() {
+    const client = authClient();
+    await client.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/tauler");
+    const assign = stubFullLoads();
+    await renderApplication(client);
+    return { assign, toggle: await screen.findByRole("button", { name: "Menú d’usuari" }) };
+  }
+
+  it("R-01-06 user menu → «Tanca la sessió» revokes (POST /oauth2/revoke) and lands on /entrar", async () => {
+    const revokes: string[] = [];
+    server.use(
+      http.post("*/oauth2/revoke", ({ request }) => {
+        revokes.push(request.headers.get("Authorization") ?? "");
+        return new HttpResponse(null, { status: 200 });
+      }),
+    );
+    const { assign, toggle } = await openShell();
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+
+    fireEvent.click(toggle);
+    const menu = screen.getByRole("menu", { name: "Menú d’usuari" });
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByText("Aina Serra")).toBeVisible();
+    expect(screen.getByText("aina.serra@example.test")).toBeVisible();
+    fireEvent.click(within(menu).getByRole("menuitem", { name: "Tanca la sessió" }));
+
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("/entrar");
+    });
+    expect(revokes).toEqual([expect.stringMatching(/^Bearer /u)]);
+    expect(localStorage.getItem(RETURN_PATH_STORAGE_KEY)).toBeNull();
+  });
+
+  it("the menu's a11y: role=menu, focus moves in and stays, Escape closes and focus returns to the button; the language selector lives in it", async () => {
+    const { toggle } = await openShell();
+    // One language selector, in the menu (no second one in the header).
+    expect(screen.queryByRole("combobox", { name: "Idioma" })).toBeNull();
+
+    fireEvent.click(toggle);
+    const language = screen.getByRole("combobox", { name: "Idioma" });
+    const logout = screen.getByRole("menuitem", { name: "Tanca la sessió" });
+    expect(language).toHaveFocus();
+    // Focus is trapped: Tab from the last control wraps to the first, Shift+Tab the other way.
+    logout.focus();
+    fireEvent.keyDown(logout, { key: "Tab" });
+    expect(language).toHaveFocus();
+    fireEvent.keyDown(language, { key: "Tab", shiftKey: true });
+    expect(logout).toHaveFocus();
+
+    fireEvent.keyDown(logout, { key: "Escape" });
+    expect(screen.queryByRole("menu")).toBeNull();
+    expect(toggle).toHaveFocus();
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+  });
+});
+
+describe("E11-W06 W5 and W6 (CONVENCIONS_I18N §1, AGENTS rule 6): the account's language", () => {
+  afterEach(() => {
+    localStorage.clear();
+    window.history.pushState(null, "", "/");
+  });
+
+  /** The back office opened on another computer: the cookie restores the session. */
+  function adminWithLocale(locale: string) {
+    const admin = currentMockScenario().me;
+    server.use(
+      http.get("*/api/v1/me", () =>
+        HttpResponse.json({ ...admin, account: { ...admin.account, locale } }),
+      ),
+    );
+    window.history.pushState(null, "", "/tauler");
+    return authClient();
+  }
+
+  it("CONVENCIONS_I18N §1: me.account.locale = es, stored ca → renders in es", async () => {
+    localStorage.setItem(LOCALE_STORAGE_KEY, "ca");
+    await renderApplication(adminWithLocale("es"));
+
+    expect(await screen.findByRole("heading", { name: "Configuración" })).toBeVisible();
+    expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe("es");
+  });
+
+  it("CONVENCIONS_I18N §1: a locale the club does not enable is ignored", async () => {
+    localStorage.setItem(LOCALE_STORAGE_KEY, "ca");
+    await renderApplication(adminWithLocale("en"));
+
+    expect(await screen.findByRole("heading", { name: "Configuració" })).toBeVisible();
+    expect(localStorage.getItem(LOCALE_STORAGE_KEY)).toBe("ca");
+  });
+
+  it("E11-W06 W6: changeLanguage('es') sets document.documentElement.lang", async () => {
+    document.documentElement.lang = "";
+    const i18n = await createI18n({
+      branding,
+      browserLanguages: ["ca"],
+      initialNamespaces: ["shell"],
+      storage: undefined,
+    });
+    expect(document.documentElement.lang).toBe("ca");
+    await i18n.changeLanguage("es");
+    expect(document.documentElement.lang).toBe("es");
+  });
+});
+
+describe("E11-W06 W1 (S11 R-11-11): N-01's D2 link survives the back office's sign-in", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    localStorage.clear();
+    window.history.pushState(null, "", "/");
+  });
+
+  const stubPageLoads = stubFullLoads;
+
+  async function visitSignedOut(path: string): Promise<string> {
+    server.use(
+      http.post("*/oauth2/token", async ({ request }) => {
+        const grant = new URLSearchParams(await request.clone().text()).get("grant_type");
+        return grant === "refresh_token"
+          ? HttpResponse.json(
+              { code: "REFRESH_EXPIRED", details: {}, message: "No session", traceId: "t" },
+              { status: 400 },
+            )
+          : undefined;
+      }),
+    );
+    window.history.pushState(null, "", path);
+    const assign = stubPageLoads();
+    await renderApplication(authClient());
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalled();
+    });
+    cleanup();
+    vi.unstubAllGlobals();
+    return String(assign.mock.calls[0]?.[0]);
+  }
+
+  it("anonymous on /preinscripcions/s1 → password login → /preinscripcions/s1", async () => {
+    const access = await visitSignedOut("/preinscripcions/s1");
+    expect(access).toBe("/entrar?next=%2Fpreinscripcions%2Fs1");
+
+    window.history.pushState(null, "", access);
+    const assign = stubPageLoads();
+    await renderApplication(authClient());
+    fireEvent.change(screen.getByLabelText("Correu electrònic"), {
+      target: { value: "aina.serra@example.test" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Tinc contrasenya" }));
+    fireEvent.change(screen.getByLabelText("Contrasenya"), {
+      target: { value: "secret-password" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "ENTRA" }));
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("/preinscripcions/s1");
+    });
+    expect(localStorage.getItem(RETURN_PATH_STORAGE_KEY)).toBeNull();
+  });
+
+  it("the magic link's 03b handoff to the back office opens the kept path, once", async () => {
+    expect(await visitSignedOut("/preinscripcions/s1")).toBe(
+      "/entrar?next=%2Fpreinscripcions%2Fs1",
+    );
+
+    window.history.pushState(null, "", "/entrar?handoff=mock-handoff-code");
+    const assign = stubPageLoads();
+    await renderApplication(authClient());
+    await waitFor(() => {
+      expect(assign).toHaveBeenCalledWith("/preinscripcions/s1");
+    });
+    expect(localStorage.getItem(RETURN_PATH_STORAGE_KEY)).toBeNull();
   });
 });
 

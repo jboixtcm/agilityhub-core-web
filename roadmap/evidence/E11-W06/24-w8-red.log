@@ -1,0 +1,91 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+
+ ❯ src/InfoPage.test.tsx (6 tests | 1 failed) 181ms
+   ❯ E11-W06 W8 (the states matrix of E11-W02): screen 30's failed read (1)
+     × E11-W06 W8: a failed read of 30 offers a retry that reads again 83ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/InfoPage.test.tsx > E11-W06 W8 (the states matrix of E11-W02): screen 30's failed read > E11-W06 W8: a failed read of 30 offers a retry that reads again
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Torna-ho a provar"
+
+Here are the accessible roles:
+
+  heading:
+
+  Name "Info":
+  [36m<h1 />[39m
+
+  Name "No s'ha pogut carregar la informació.":
+  [36m<h2 />[39m
+
+  --------------------------------------------------
+  alert:
+
+  Name "":
+  [36m<section[39m
+    [33mclass[39m=[32m"ah-empty-state ah-empty-state--error"[39m
+    [33mrole[39m=[32m"alert"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33mclass[39m=[32m"info-page"[39m
+    [36m>[39m
+      [36m<h1>[39m
+        [0mInfo[0m
+      [36m</h1>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"ah-empty-state ah-empty-state--error"[39m
+        [33mrole[39m=[32m"alert"[39m
+      [36m>[39m
+        [36m<svg[39m
+          [33maria-hidden[39m=[32m"true"[39m
+          [33mclass[39m=[32m"ah-icon"[39m
+        [36m>[39m
+          [36m<use[39m
+            [33mhref[39m=[32m"http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-warn"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<h2>[39m
+          [0mNo s'ha pogut carregar la informació.[0m
+        [36m</h2>[39m
+        [36m<p />[39m
+      [36m</section>[39m
+    [36m</section>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ ../../node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/InfoPage.test.tsx:77:28
+     75|     );
+     76|     failing = false;
+     77|     fireEvent.click(screen.getByRole("button", { name: "Torna-ho a pro…
+       |                            ^
+     78|
+     79|     expect(await screen.findByRole("tab", { name: "FAQ" })).toBeVisibl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  22:52:12
+   Duration  1.33s (transform 44%, environment 21%, import 16%, tests 14%, setup 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/InfoPage.test.tsx

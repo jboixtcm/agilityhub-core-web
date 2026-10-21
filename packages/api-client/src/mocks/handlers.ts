@@ -158,6 +158,7 @@ import {
   resetNotificationMockState,
 } from "./notification-handlers";
 import { planningHandlers, planningState, resetPlanningState } from "./planning-handlers";
+import { readmissionPendingRefusal } from "./readmission-pending";
 import {
   callerClubOwnsTheWorld,
   currentMockScenario,
@@ -3018,8 +3019,14 @@ export const handlers = [
     const lifecycleOverview = lifecycleMemberOverview(String(params.id));
     if (lifecycleOverview === undefined) return apiError("NOT_FOUND", "Member not found", 404);
     // S03 T-03-34 (R-03-30): with BILLING off the api sends no invoices, next invoice or
-    // payment method.
-    const overview = lifecycleOverview;
+    // payment method. S04 R-04-06: a readmission waiting for D2 is `PENDING` again.
+    const overview =
+      currentMockScenario().memberReadmissionPending === true
+        ? {
+            ...lifecycleOverview,
+            member: { ...lifecycleOverview.member, status: "PENDING" as const },
+          }
+        : lifecycleOverview;
     if (currentMockScenario().branding.modules.includes("BILLING")) {
       return HttpResponse.json(overview);
     }
@@ -3190,6 +3197,8 @@ export const handlers = [
     if (String(params.id) !== censusRecordState.memberOverview.member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
     }
+    const frozen = readmissionPendingRefusal();
+    if (frozen !== undefined) return frozen;
     const body = (await request.json()) as PaymentMethodRequest;
     const submittedIban = body.sepa?.iban;
     const iban =
@@ -3218,6 +3227,8 @@ export const handlers = [
     if (String(params.id) !== censusRecordState.memberOverview.member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
     }
+    const frozen = readmissionPendingRefusal();
+    if (frozen !== undefined) return frozen;
     const body = (await request.json()) as BookingBlockRequest;
     const member = censusRecordState.memberOverview.member;
     if (body.reason.trim() === "") {
@@ -3242,6 +3253,8 @@ export const handlers = [
     if (String(params.id) !== member.id) {
       return apiError("NOT_FOUND", "Member not found", 404);
     }
+    const frozen = readmissionPendingRefusal();
+    if (frozen !== undefined) return frozen;
     // A business rule on valid data: 422, as the snapshot declares it (CATALEG_ERRORS rule 0).
     if (!member.bookingBlock.active) {
       return apiError("BOOKING_BLOCK_NOT_ACTIVE", "Booking block not active", 422);
@@ -3302,7 +3315,7 @@ export const handlers = [
     return HttpResponse.json(clubMemberPreferences());
   }),
   http.put("*/api/v1/members/:id/notification-preferences", async ({ params, request }) => {
-    const refused = memberPreferencesRefusal(String(params.id));
+    const refused = memberPreferencesRefusal(String(params.id)) ?? readmissionPendingRefusal();
     if (refused !== undefined) return refused;
     const body = (await request.json()) as NotificationPreferencesPatch;
     const preferences = censusRecordState.memberOverview

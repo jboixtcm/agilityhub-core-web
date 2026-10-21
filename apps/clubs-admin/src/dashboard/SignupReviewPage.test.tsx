@@ -483,6 +483,57 @@ describe("E3-W07 step 2 · M13 422 codes on their fields (S04 §2 D2)", () => {
   });
 });
 
+describe("E11-W06 W11 (S04 R-04-19, R-04-16): the adopted contract's null proposal and CURRENCY_MISMATCH", () => {
+  it("R-04-19 a null proposal shows no plan option and sends none", async () => {
+    // The requested plan is no longer assignable (INC-39): the api sends both ids as null.
+    const { fetch: over, requests } = recordingFetch((body) => {
+      body.proposals.planId = null;
+      body.proposals.priceId = null;
+    });
+    await renderReview({ fetchOverride: over });
+    const plan = screen.getByRole("combobox", { name: "Modalitat i tarifa" });
+    const values = within(plan)
+      .getAllByRole("option")
+      .map((option) => (option as HTMLOptionElement).value);
+    expect(values.filter((value) => value.includes("null"))).toEqual([]);
+    expect(plan).toHaveValue("");
+
+    validate();
+    await waitFor(() => {
+      expect(sent(requests, "POST", "/validation", false)).toHaveLength(1);
+    });
+    const body = sent(requests, "POST", "/validation", false)[0]?.body as Record<string, unknown>;
+    expect(body).not.toHaveProperty("planId");
+    expect(body).not.toHaveProperty("priceId");
+    expect(hasNull(body)).toBe(false);
+  });
+
+  it("R-04-16 422 CURRENCY_MISMATCH reads on the collected amount", async () => {
+    mockScenario("adminSignupReviewManual");
+    await renderReview();
+    server.use(
+      http.post("*/api/v1/members/:id/validation", ({ request }) =>
+        new URL(request.url).searchParams.get("dryRun") === "true"
+          ? undefined
+          : apiErrorResponse("CURRENCY_MISMATCH", 422, { field: "upfrontAmountPaid" }),
+      ),
+    );
+    fireEvent.change(screen.getByLabelText("Import efectivament cobrat:"), { target: { value: "200" } });
+    validate();
+
+    await waitFor(() => {
+      expect(document.getElementById("signup-upfront-error")).toHaveTextContent(
+        "Les monedes no coincideixen.",
+      );
+    });
+    expect(screen.getByLabelText("Import efectivament cobrat:")).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+    expect(document.querySelector(".signup-review-error")).toBeNull();
+  });
+});
+
 describe("E3-W07 step 3 · M14 both contacts and the full edit drawer (R-04-19, R-04-03)", () => {
   it("editing the first email keeps the second, and the untouched phones are not sent", async () => {
     const { fetch: over, requests } = recordingFetch((body) => {

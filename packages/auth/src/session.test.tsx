@@ -10,6 +10,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest
 
 import { AuthClient, type Me } from "./auth-client";
 import { MemoryRefreshTokenStore } from "./mock-refresh-token";
+import { RETURN_PATH_STORAGE_KEY } from "./return-path";
 import {
   RequireAuth,
   RequireModule,
@@ -143,6 +144,46 @@ describe("T-01-21 session and guards", () => {
       expect(navigate).toHaveBeenCalledWith("/entrar");
     });
     expect(screen.queryByText("Protected content")).not.toBeInTheDocument();
+  });
+
+  it("E11-W06 W1 (S11 R-11-11): RequireAuth passes the requested path to navigate and keeps it for the magic link's tab", async () => {
+    const navigate = vi.fn();
+    server.use(
+      http.post(TOKEN_ENDPOINT, () =>
+        HttpResponse.json(
+          { code: "REFRESH_EXPIRED", details: {}, message: "Refresh unavailable", traceId: "t" },
+          { status: 400 },
+        ),
+      ),
+    );
+    window.history.pushState(null, "", "/espera/e1?origen=N-15");
+    const client = new AuthClient({
+      apiBaseUrl: API_BASE_URL,
+      identityBaseUrl: IDENTITY_BASE_URL,
+      mockMode: true,
+      mockRefreshTokenStore: new MemoryRefreshTokenStore(),
+    });
+
+    render(
+      <SessionProvider client={client}>
+        <RequireAuth navigate={navigate}>
+          <p>Protected content</p>
+        </RequireAuth>
+      </SessionProvider>,
+    );
+
+    await waitFor(() => {
+      expect(navigate).toHaveBeenCalledWith("/entrar?next=%2Fespera%2Fe1%3Forigen%3DN-15");
+    });
+    const kept = JSON.parse(localStorage.getItem(RETURN_PATH_STORAGE_KEY) ?? "{}") as {
+      expiresAt?: number;
+      path?: string;
+    };
+    expect(kept.path).toBe("/espera/e1?origen=N-15");
+    expect(kept.expiresAt).toBeGreaterThan(Date.now() + 14 * 60_000);
+    expect(kept.expiresAt).toBeLessThanOrEqual(Date.now() + 15 * 60_000);
+    localStorage.clear();
+    window.history.pushState(null, "", "/");
   });
 
   it("exposes /me roles and active profile and renders only an allowed role", async () => {

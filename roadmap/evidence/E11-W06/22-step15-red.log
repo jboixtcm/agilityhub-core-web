@@ -1,0 +1,63 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+
+stderr | src/support/support-access.test.tsx > E11-W06 step 15 · D10 offers no «Entra com l'abonat» to a support access (S17 R-17-10, ruling E151) > a support session reads the member's record without «Entra com l'abonat»; the club's own ADMIN has it
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/support/support-access.test.tsx > E11-W06 step 15 · D10 offers no «Entra com l'abonat» to a support access (S17 R-17-10, ruling E151) > a support session reads the member's record without «Entra com l'abonat»; the club's own ADMIN has it
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+stderr | src/support/support-access.test.tsx > E11-W06 step 15 · D10 offers no «Entra com l'abonat» to a support access (S17 R-17-10, ruling E151) > a support session reads the member's record without «Entra com l'abonat»; the club's own ADMIN has it
+Encountered two children with the same key, `member-laura`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+ ❯ src/support/support-access.test.tsx (24 tests | 1 failed | 23 skipped) 227ms
+   ❯ E11-W06 step 15 · D10 offers no «Entra com l'abonat» to a support access (S17 R-17-10, ruling E151) (1)
+     × a support session reads the member's record without «Entra com l'abonat»; the club's own ADMIN has it 226ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/support/support-access.test.tsx > E11-W06 step 15 · D10 offers no «Entra com l'abonat» to a support access (S17 R-17-10, ruling E151) > a support session reads the member's record without «Entra com l'abonat»; the club's own ADMIN has it
+AssertionError: expected <button …(2)>…(1)</button> to be null
+
+- Expected:
+null
+
++ Received:
+<button
+  class="ah-button ah-button--ghost"
+  type="button"
+>
+  <span
+    class="ah-button__content"
+  >
+    <svg
+      aria-hidden="true"
+      class="ah-icon"
+    >
+      <use
+        href="http://localhost:3000/@fs/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui/src/icons/sprite.svg#i-user"
+      />
+    </svg>
+    Entra com l'abonat
+  </span>
+</button>
+
+ ❯ src/support/support-access.test.tsx:874:74
+    872|     expect(screen.getByRole("region", { name: "Accés de suport" })).to…
+    873|     expect(screen.getByRole("button", { name: "Reenvia accés" })).toBe…
+    874|     expect(screen.queryByRole("button", { name: "Entra com l'abonat" }…
+       |                                                                          ^
+    875|
+    876|     cleanup();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 23 skipped (24)
+   Start at  22:51:12
+   Duration  2.03s (transform 58%, import 15%, environment 13%, tests 12%, setup 3%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/support/support-access.test.tsx -t step 15

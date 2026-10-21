@@ -289,8 +289,21 @@ function confirm(
   return HttpResponse.json(bookingResource(created, context, false), { status: 201 });
 }
 
+/**
+ * S01 R-01-07 (E41): a member route authorises `MEMBER` (an impersonation acts as the member); an
+ * ADMIN or INSTRUCTOR without it is `403 FORBIDDEN`, as the api answers.
+ */
+function memberRouteRefused() {
+  const { me } = currentMockScenario();
+  return me.impersonation === undefined && !(me.membership?.roles ?? []).includes("MEMBER")
+    ? apiError("FORBIDDEN", "Forbidden", 403)
+    : undefined;
+}
+
 export const bookingHandlers = [
   http.get("*/api/v1/me/home", ({ request }) => {
+    const refused = memberRouteRefused();
+    if (refused !== undefined) return refused;
     const context = options(request);
     const dogId = new URL(request.url).searchParams.get("dogId");
     const home = meHome(dogId, context, activityRows(context.locale, context.now));
@@ -308,6 +321,8 @@ export const bookingHandlers = [
     });
   }),
   http.get("*/api/v1/me/bookable-classes", ({ request }) => {
+    const refused = memberRouteRefused();
+    if (refused !== undefined) return refused;
     const context = options(request);
     const dogId = new URL(request.url).searchParams.get("dogId");
     const view = bookableClasses(dogId, context);

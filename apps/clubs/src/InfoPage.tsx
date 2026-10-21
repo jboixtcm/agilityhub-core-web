@@ -1,5 +1,7 @@
 import type { ApiClient, components } from "@agilityhub/api-client";
+import { useClubFormats } from "@agilityhub/i18n";
 import {
+  Button,
   Card,
   EmptyState,
   ErrorState,
@@ -88,6 +90,8 @@ function FaqPanel({ items }: { items: FaqItem[] }) {
 function ClubPagePanel({ page }: { page: ClubPage }) {
   const branding = useBranding();
   const { i18n, t } = useTranslation("shell");
+  // CONVENCIONS_I18N §1 (E11-W06 W8): the shared club formats, in the club's time zone.
+  const formats = useClubFormats();
   const locale = i18n.resolvedLanguage ?? i18n.language;
   const title = localized(page.title, locale, branding.defaultLocale);
   const body = localized(page.body, locale, branding.defaultLocale);
@@ -99,14 +103,7 @@ function ClubPagePanel({ page }: { page: ClubPage }) {
       <LimitedMarkdown>{body}</LimitedMarkdown>
       {publishedAt === null ? null : (
         <p className="info-club-page__updated">
-          {t("shell:info.updated", {
-            date: new Intl.DateTimeFormat(locale, {
-              day: "2-digit",
-              month: "2-digit",
-              timeZone: branding.timeZone,
-              year: "numeric",
-            }).format(new Date(publishedAt)),
-          })}
+          {t("shell:info.updated", { date: formats.formatDate(publishedAt) })}
         </p>
       )}
     </article>
@@ -115,11 +112,13 @@ function ClubPagePanel({ page }: { page: ClubPage }) {
 
 export function InfoPage({ client }: { client: ApiClient }) {
   const branding = useBranding();
-  const { i18n, t } = useTranslation("shell");
+  const { i18n, t } = useTranslation(["shell", "common"]);
   const [faq, setFaq] = useState<FaqItem[]>([]);
   const [pages, setPages] = useState<ClubPage[]>([]);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
+  // E11-W06 W8: the error state's retry reads 30 again.
+  const [reload, setReload] = useState(0);
   const [selected, setSelected] = useState("");
   const locale = i18n.resolvedLanguage ?? i18n.language;
 
@@ -153,7 +152,7 @@ export function InfoPage({ client }: { client: ApiClient }) {
     return () => {
       current = false;
     };
-  }, [branding.modules, client]);
+  }, [branding.modules, client, reload]);
 
   const tabItems = useMemo(() => {
     const rules = pages.find((page) => page.key === "RULES");
@@ -187,7 +186,23 @@ export function InfoPage({ client }: { client: ApiClient }) {
     <section className="info-page">
       <h1>{t("shell:nav.info")}</h1>
       {loading ? <Skeleton label={t("shell:info.loading")} /> : null}
-      {failed ? <ErrorState title={t("shell:info.loadError")} /> : null}
+      {failed ? (
+        <ErrorState
+          action={
+            <Button
+              onClick={() => {
+                setFailed(false);
+                setLoading(true);
+                setReload((value) => value + 1);
+              }}
+              variant="secondary"
+            >
+              {t("common:boot.retry")}
+            </Button>
+          }
+          title={t("shell:info.loadError")}
+        />
+      ) : null}
       {!loading && !failed && tabItems.length === 0 ? (
         <EmptyState title={t("shell:info.empty")} />
       ) : null}

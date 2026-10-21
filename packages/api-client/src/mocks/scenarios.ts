@@ -42,6 +42,11 @@ export interface MockScenarioDefinition {
    * refused (at `BOOKING_MOCK_NOW` only Sunday 2's has begun: 06 with its inert row).
    */
   bookingLimit?: "done" | "swap";
+  /**
+   * S12 §6 (INC-68, E138): «Abonat» has two current monthly prices (a legacy twin), so the
+   * simulation and the run answer `409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}`.
+   */
+  billingPriceOverlap?: boolean;
   dashboardNulls?: boolean;
   /** Every list export answers `202 {jobId, statusUrl}`, as above `ExportPolicy.syncMaxRows` (R-14-12). */
   exportsQueued?: boolean;
@@ -57,6 +62,11 @@ export interface MockScenarioDefinition {
   me: Me;
   /** S12/S13 member/D10 variants added by E8-W02. */
   memberBilling?: "cardInvalid" | "deadlinePassed" | "noInactivity" | "packPlan" | "plannedLeave";
+  /**
+   * S04 R-04-06 (INC-39): D10's member is a readmission waiting for D2 (`PENDING` again), so its
+   * record's writes answer `409 INVALID_STATE {reason: READMISSION_PENDING}`.
+   */
+  memberReadmissionPending?: boolean;
   /** S13 admin lifecycle variants used by D10 and `/inactivitats`. */
   lifecycle?:
     | "inactivityNoCancelBookings"
@@ -262,6 +272,18 @@ const scenarios = {
   /** S12 R-12-07 (E8-W01): September's simulation is older than the last change (409 SIMULATION_STALE). */
   billingStale: {
     billing: "stale",
+    branding: { ...canic, locales: ["ca", "es", "en"] },
+    me: meAdmin as Me,
+    sessions: accountSessions,
+  },
+  adminMemberReadmissionPending: {
+    branding: canic,
+    me: meAdmin as Me,
+    memberReadmissionPending: true,
+    sessions: accountSessions,
+  },
+  billingPriceOverlap: {
+    billingPriceOverlap: true,
     branding: { ...canic, locales: ["ca", "es", "en"] },
     me: meAdmin as Me,
     sessions: accountSessions,

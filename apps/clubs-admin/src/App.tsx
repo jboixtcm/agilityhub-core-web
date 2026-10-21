@@ -2,14 +2,16 @@ import { type components, isApiError } from "@agilityhub/api-client";
 import {
   type AuthClient,
   createAuthenticatedApiClient,
+  keepReturnPath,
   OnboardingExperience,
   RequireModule,
   RequirePlatformRole,
   RequireRole,
+  takeReturnPath,
+  useAccountLocale,
   useSession,
 } from "@agilityhub/auth";
 import type { PlatformRole, Role } from "@agilityhub/auth";
-import { LOCALE_STORAGE_KEY, productLocales } from "@agilityhub/i18n";
 import {
   Button,
   Card,
@@ -77,6 +79,7 @@ import { TemplatesPage } from "./planning/TemplatesPage";
 import { SUPPORT_PATH } from "./support/support-access";
 import { SupportBanner, SupportEndedPage, SupportEntryPage } from "./support/SupportPages";
 import { TrainingRegisterPage } from "./training/TrainingRegisterPage";
+import { UserMenu } from "./UserMenu";
 
 // D19 (S17): the platform console is its own chunk; club admins never download it.
 const ConsolePage = lazy(() => import("./console/ConsolePage"));
@@ -175,36 +178,6 @@ function Placeholder() {
       description={t("shell:placeholder.description")}
       title={t("shell:placeholder.title")}
     />
-  );
-}
-
-function LanguageSelector() {
-  const branding = useBranding();
-  const { i18n, t } = useTranslation("shell");
-  const locales = productLocales.filter((locale) => branding.locales.includes(locale));
-
-  return (
-    <label className="shell-language">
-      <span className="ah-sr-only">{t("shell:header.language")}</span>
-      <select
-        aria-label={t("shell:header.language")}
-        onChange={(event) => {
-          localStorage.setItem(LOCALE_STORAGE_KEY, event.currentTarget.value);
-          void i18n.changeLanguage(event.currentTarget.value);
-        }}
-        value={i18n.resolvedLanguage ?? branding.defaultLocale}
-      >
-        {locales.map((locale) => (
-          <option key={locale} value={locale}>
-            {locale === "ca"
-              ? t("shell:language.ca")
-              : locale === "es"
-                ? t("shell:language.es")
-                : t("shell:language.en")}
-          </option>
-        ))}
-      </select>
-    </label>
   );
 }
 
@@ -689,11 +662,13 @@ function gatedRoute(route: AdminRouteDefinition, content: ReactNode): ReactNode 
 }
 
 function AdminShell({
+  authClient,
   children,
   client,
   onNavigate,
   pathname,
 }: {
+  authClient: AuthClient;
   children: ReactNode;
   client: ReturnType<typeof createAuthenticatedApiClient>;
   onNavigate: (path: string) => void;
@@ -754,7 +729,6 @@ function AdminShell({
           <strong>{branding.club.name}</strong>
         </div>
         <div className="admin-shell__actions">
-          <LanguageSelector />
           {/* The exports are a club's (S14): a platform account without a club role has none, and
               a support access never reaches them (R-17-10: `403 SUPPORT_RESTRICTED`). */}
           {session.roles.includes("ADMIN") && session.me?.support === undefined ? (
@@ -768,9 +742,7 @@ function AdminShell({
               <Icon aria-hidden="true" name="export" />
             </button>
           ) : null}
-          <button aria-label={t("shell:header.userMenu")} type="button">
-            <Icon aria-hidden="true" name="user" />
-          </button>
+          <UserMenu authClient={authClient} />
         </div>
       </header>
       <AdminNavigation
@@ -833,8 +805,14 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
   // vàlid o ha caducat».
   const [handoffUnanswered, setHandoffUnanswered] = useState(false);
 
+  // E11-W06 W1 (S11 R-11-11): 01 opened with `?next=` keeps it for a sign-in that leaves this
+  // address (the magic link, 03b's handoff from the members' app).
+  useEffect(() => {
+    keepReturnPath();
+  }, []);
+
   const enterHandoff = useCallback(() => {
-    window.location.assign(landingPath(authClient));
+    window.location.assign(takeReturnPath() ?? landingPath(authClient));
   }, [authClient]);
   const failHandoff = useCallback(
     (cause: unknown) => {
@@ -912,7 +890,7 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
     setPending("login");
     try {
       await authClient.login(email, password);
-      window.location.assign(landingPath(authClient));
+      window.location.assign(takeReturnPath() ?? landingPath(authClient));
     } catch {
       setError(t("auth:access.genericError"));
       setPending(null);
@@ -999,6 +977,8 @@ function AccessPage({ authClient }: { authClient: AuthClient }) {
 
 export function App({ authClient }: { authClient: AuthClient }) {
   const { i18n } = useContext(I18nContext);
+  // E11-W06 W5 (CONVENCIONS_I18N §1): the signed-in account's language.
+  useAccountLocale();
   // `Accept-Language` = the language the admin reads, not the browser's: the api resolves
   // texts such as `displayDescription` («D i sup.» / «D y sup.» / «D and up») from it.
   const client = useMemo(
@@ -1081,7 +1061,12 @@ export function App({ authClient }: { authClient: AuthClient }) {
   return route === undefined ? null : (
     <OnboardingExperience authClient={authClient} presentation="modal">
       <ExportJobsProvider client={client}>
-        <AdminShell client={client} onNavigate={navigate} pathname={pathname}>
+        <AdminShell
+          authClient={authClient}
+          client={client}
+          onNavigate={navigate}
+          pathname={pathname}
+        >
           {gatedRoute(route, routeContent(route, client, navigate, pathname, url.search))}
         </AdminShell>
       </ExportJobsProvider>

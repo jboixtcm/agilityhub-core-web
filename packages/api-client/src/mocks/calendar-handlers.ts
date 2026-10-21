@@ -908,6 +908,7 @@ export const calendarHandlers = [
           at: new Date().toISOString(),
           byAccountId: currentMockScenario().me.account.id,
           reason: body.reason,
+          reviewTime: null,
         },
         counters: { booked: 0, waiting: 0 },
         state: "CANCELLED",

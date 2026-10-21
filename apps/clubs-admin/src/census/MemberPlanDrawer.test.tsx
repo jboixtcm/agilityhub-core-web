@@ -68,6 +68,24 @@ describe("E8-W03 round 2 member plan change", () => {
     });
   });
 
+  it("E11-W06 W10 (R-04-06) 409 READMISSION_PENDING on the plan change points to D2", async () => {
+    mockScenario("adminMemberReadmissionPending");
+    const member = await loadMember();
+    await renderDrawer(member);
+    const drawer = await screen.findByRole("dialog", { name: "Modalitat" });
+    await within(drawer).findByRole("option", { name: "Abonat" });
+    fireEvent.change(within(drawer).getByLabelText("Modalitat nova"), { target: { value: "plan-member" } });
+    fireEvent.change(await within(drawer).findByLabelText("Tarifa"), { target: { value: "price-member" } });
+    await within(drawer).findByRole("option", { name: /60,00.*€/u });
+    fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+
+    const alert = await within(drawer).findByRole("alert");
+    await waitFor(() => {
+      expect(alert).toHaveTextContent("Aquest abonat té una readmissió pendent");
+    });
+    expect(within(alert).getByRole("link", { name: "Preinscripcions pendents" })).toHaveAttribute("href", "/preinscripcions/member-laura");
+  });
+
   it("E8-W06 #7 formats a JPY plan price without dividing it by 100", async () => {
     const member = await loadMember();
     const client = createApiClient({ baseUrl: `${window.location.origin}/api/v1` });

@@ -6,6 +6,7 @@ import { censusMembers, censusRecordState, ERASED_MEMBER_ID, erasedMemberOvervie
 import { adminInactivityPeriods, adminLeaveRequests, inactivityContextFixture, inactivityPreviewFixture, leaveContextFixture, lifecycleMemberId, lifecycleMembers } from "./fixtures/inactivity";
 import { meInvoiceFixtures, packBalanceFixtures } from "./fixtures/member-self-service";
 import { findParameter } from "./fixtures/settings";
+import { readmissionPendingRefusal } from "./readmission-pending";
 import { currentMockScenario, currentMockScenarioName } from "./scenarios";
 
 type ApiError = components["schemas"]["ApiError"];
@@ -808,6 +809,8 @@ export const memberBillingHandlers = [
     if (requestedId === ERASED_MEMBER_ID) return error("MEMBER_ERASED", 409);
     const member = lifecycleMemberOverview(requestedId)?.member;
     if (member === undefined) return error("NOT_FOUND", 404);
+    const frozen = readmissionPendingRefusal();
+    if (frozen !== undefined) return frozen;
     const body = (await request.json()) as PlanChangeRequest;
     updateLifecycleMember(requestedId, (updated) => {
       updated.planId = body.planId;

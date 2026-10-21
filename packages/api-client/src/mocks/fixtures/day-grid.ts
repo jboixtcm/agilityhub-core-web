@@ -303,6 +303,7 @@ export function dayGridClassSessions(): ClassSession[] {
                   at: "2026-08-01T09:00:00Z",
                   byAccountId: "10000000-0000-4000-8000-000000000001",
                   reason: "CLUB_MANUAL" as const,
+                  reviewTime: null,
                 },
               }
             : {}),

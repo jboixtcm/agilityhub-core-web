@@ -12,7 +12,7 @@ import {
 import { type SyntheticEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { loadDogDocumentTypes, signupPerson } from "./readmission";
+import { isReadmissionPending, loadDogDocumentTypes, signupPerson } from "./readmission";
 
 type SignupView = components["schemas"]["MemberSignupView"];
 type Member = SignupView["member"];
@@ -401,12 +401,7 @@ function SignupDogDocuments({
 /** The drawer's message for a failed request: `READMISSION_PENDING` names the frozen dog record. */
 function dogErrorText(cause: unknown, t: ReturnType<typeof useTranslation>["t"]): string {
   if (isApiError(cause, "STALE_VERSION")) return t("admin-census:signupReview.stale");
-  if (
-    isApiError(cause, "INVALID_STATE") &&
-    typeof cause.details === "object" &&
-    cause.details !== null &&
-    (cause.details as Record<string, unknown>).reason === "READMISSION_PENDING"
-  ) {
+  if (isReadmissionPending(cause)) {
     return t("admin-census:signupReview.readmission.dogLocked");
   }
   return isApiError(cause)

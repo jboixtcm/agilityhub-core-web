@@ -6,6 +6,7 @@ import { createI18n } from "@agilityhub/i18n";
 import { type Branding, BrandingProvider } from "@agilityhub/ui";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { getResponse, http, HttpResponse } from "msw";
+import type { ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
@@ -82,7 +83,7 @@ async function renderBlock(preferences?: Preferences, onNavigate?: (path: string
     storage: undefined,
   });
   const onSaved = vi.fn();
-  const onFeedback = vi.fn((feedback: { message: string; tone: "danger" | "success" }) => {
+  const onFeedback = vi.fn((feedback: { message: ReactNode; tone: "danger" | "success" }) => {
     if (feedback.tone === "success") onSaved();
   });
   const view = render(

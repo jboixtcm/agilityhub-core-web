@@ -51,7 +51,9 @@ export function classifySignupReviewError(
     }
     case "NEXT_INVOICE_DATE_REQUIRED":
       return { code, kind: "nextInvoiceDate" };
+    // R-04-16: `422 CURRENCY_MISMATCH {field: upfrontAmountPaid}` — the collected amount's field.
     case "UPFRONT_AMOUNT_EXCEEDS_DUE":
+    case "CURRENCY_MISMATCH":
       return { code, kind: "upfront" };
     case "PLAN_NOT_AVAILABLE":
       return { code, kind: "plan" };

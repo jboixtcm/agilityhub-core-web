@@ -941,3 +941,22 @@ describe("E7-W07 step 6 · «Límit setmanal» only where the api refuses the ho
     });
   });
 });
+
+describe("E11-W06 W2 · member routes need MEMBER (S01 R-01-07, E41)", () => {
+  it("no MEMBER role → 403 on /me/home and /me/bookable-classes", async () => {
+    for (const scenario of ["admin", "instructor"] as const) {
+      mockScenario(scenario);
+      for (const path of ["/me/home", "/me/bookable-classes"]) {
+        const response = await call("GET", path);
+        expect(response.status).toBe(403);
+        expect((response.body as ApiError).code).toBe("FORBIDDEN");
+      }
+    }
+    // An impersonation acts as the member, and a member keeps both reads.
+    for (const scenario of ["impersonated", "member"] as const) {
+      mockScenario(scenario);
+      expect((await call("GET", "/me/home")).status).toBe(200);
+      expect((await call("GET", "/me/bookable-classes")).status).toBe(200);
+    }
+  });
+});

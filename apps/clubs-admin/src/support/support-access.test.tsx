@@ -855,3 +855,30 @@ describe("E11-W01 round 2 #1 · D10 offers no personal-data export to a support 
     ).toBeVisible();
   });
 });
+
+describe("E11-W06 step 15 · D10 offers no «Entra com l'abonat» to a support access (S17 R-17-10, ruling E151)", () => {
+  it("a support session reads the member's record without «Entra com l'abonat»; the club's own ADMIN has it", async () => {
+    mockScenario("adminSupportAccess");
+    const support = authClient();
+    await support.acceptImpersonation(
+      "mock-support-token",
+      new Date(Date.now() + 3_600_000).toISOString(),
+    );
+    window.history.pushState(null, "", "/abonats/member-laura");
+    await renderApplication(support);
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Laura Serra Vidal" }),
+    ).toBeVisible();
+    expect(screen.getByRole("region", { name: "Accés de suport" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Reenvia accés" })).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Entra com l'abonat" })).toBeNull();
+
+    cleanup();
+    sessionStorage.clear();
+    const admin = authClient();
+    await admin.login("aina.serra@example.test", "secret-password");
+    window.history.pushState(null, "", "/abonats/member-laura");
+    await renderApplication(admin);
+    expect(await screen.findByRole("button", { name: "Entra com l'abonat" })).toBeVisible();
+  });
+});

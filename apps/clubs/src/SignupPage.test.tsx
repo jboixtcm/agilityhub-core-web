@@ -1157,6 +1157,66 @@ describe("M1 stable retries (CONVENCIONS_API §7, R-04-26/27)", () => {
   });
 });
 
+describe("E11-W06 W12 (S04 §2 16): the signup codes the published POST /signup adds", () => {
+  it.each([
+    {
+      code: "ID_DOCUMENT_ALREADY_EXISTS",
+      focus: "DNI / NIE",
+      path: "/apuntat-hi",
+      status: 409,
+      text: "Aquest document d'identitat ja està registrat.",
+    },
+    {
+      code: "CHIP_ALREADY_EXISTS",
+      focus: "Núm. de xip",
+      path: "/apuntat-hi/gos",
+      status: 409,
+      text: "Aquest número de xip ja està registrat.",
+    },
+  ])(
+    "S04 §2 16: the three codes route to their step and field — $code ($status) → $path",
+    async ({ code, focus, path, status, text }) => {
+      server.use(http.post("*/api/v1/signup", () => apiErrorResponse(code, status)));
+      const navigate = vi.fn();
+      seedDraft();
+      await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
+      acceptPrivacy();
+      submitSignup();
+
+      expect(await screen.findByText(text)).toBeVisible();
+      expect(navigate).toHaveBeenLastCalledWith(path);
+      const field = screen.getByLabelText(focus, { exact: true });
+      await waitFor(() => {
+        expect(field).toHaveFocus();
+      });
+      expect(window.document.getElementById(field.getAttribute("aria-describedby") ?? "")).toHaveTextContent(text);
+    },
+  );
+
+  it("S04 §2 16: the three codes route to their step and field — PAYMENT_METHOD_NOT_AVAILABLE (422) → the method chooser of the payment step", async () => {
+    server.use(
+      http.post("*/api/v1/signup", () => apiErrorResponse("PAYMENT_METHOD_NOT_AVAILABLE", 422)),
+    );
+    const navigate = vi.fn();
+    seedDraft();
+    await renderSignup({ navigate, path: "/apuntat-hi/pagament" });
+    acceptPrivacy();
+    submitSignup();
+
+    const text = "Aquest mètode de pagament no està disponible.";
+    expect(await screen.findByText(text)).toBeVisible();
+    expect(navigate).not.toHaveBeenCalled();
+    const chooser = document.querySelector<HTMLElement>(".signup-segment");
+    expect(chooser).toHaveAttribute("aria-invalid", "true");
+    expect(window.document.getElementById(chooser?.getAttribute("aria-describedby") ?? "")).toHaveTextContent(text);
+    await waitFor(() => {
+      expect(chooser?.contains(document.activeElement)).toBe(true);
+    });
+    // Not the step's general message.
+    expect(document.querySelector("[data-signup-message]")).toBeNull();
+  });
+});
+
 describe("M2 api errors land on their field and step (§2, CATALEG_ERRORS)", () => {
   const cases: {
     code: string;
@@ -1259,11 +1319,6 @@ describe("M2 api errors land on their field and step (§2, CATALEG_ERRORS)", () 
       headers: { "Retry-After": "120" },
       status: 429,
       text: "Massa intents. Torna-ho a provar d'aquí a 120 s.",
-    },
-    {
-      code: "PAYMENT_METHOD_NOT_AVAILABLE",
-      status: 422,
-      text: "Aquest mètode de pagament no està disponible.",
     },
     // E7-W05 step 4 (CONVENCIONS_API §7, E80): a submission still in progress reads the shared
     // text; another request with the same key keeps the error's own.

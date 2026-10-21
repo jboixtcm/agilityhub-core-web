@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
 
 import type { useListExport } from "../audit/useListExport";
 
+import { PriceOverlapMessage } from "./PriceOverlapMessage";
 import {
   clubToday,
   errorDetails,
@@ -106,7 +107,7 @@ export function GenerateModal({
   onGenerated: (result: BillingRunResult) => void;
   onNavigate: (path: string) => void;
   /** [Simula de nou]: the simulation's error text, `undefined` once it is done. */
-  onSimulateAgain: () => Promise<string | undefined>;
+  onSimulateAgain: () => Promise<ReactNode>;
   period: string;
   simulation: PeriodSimulation;
 }) {
@@ -120,7 +121,7 @@ export function GenerateModal({
   // payload. A retryable failure must not turn the next press back into the original payload.
   const [acceptedCollectionDate, setAcceptedCollectionDate] = useState<string>();
   const [simulating, setSimulating] = useState(false);
-  const [simulateError, setSimulateError] = useState<string>();
+  const [simulateError, setSimulateError] = useState<ReactNode>();
   // R-12-06: the included members' next receipt moves to that day of the following month.
   const nextDay = useNextInvoiceDay(client);
   const nextPeriod = shiftPeriod(period, 1);
@@ -237,6 +238,8 @@ export function GenerateModal({
                     {t("admin-billing:errors.openSettings")}
                   </a>
                 </>
+              ) : code === "PRICE_OVERLAP" ? (
+                <PriceOverlapMessage client={client} error={failure} onNavigate={onNavigate} />
               ) : (
                 errorMessage(failure)
               )}

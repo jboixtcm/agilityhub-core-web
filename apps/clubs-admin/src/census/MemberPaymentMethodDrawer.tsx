@@ -3,6 +3,9 @@ import { Badge, Button, Drawer, FormField, Input, Select } from "@agilityhub/ui"
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { isReadmissionPending } from "../dashboard/readmission";
+import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessage";
+
 type Payment = components["schemas"]["PaymentMethodView"];
 type PaymentType = components["schemas"]["PaymentMethodType"];
 
@@ -63,6 +66,8 @@ export function MemberPaymentMethodDrawer({
       ? t("common:inProgress")
       : isApiError(failure, "PAYMENT_PROVIDER_NOT_ENABLED")
       ? t("admin-census:paymentMethod.providerMissing")
+      : isReadmissionPending(failure)
+      ? <ReadmissionPendingMessage memberId={memberId} />
       : isApiError(failure)
         ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") })
         : t("admin-census:common.genericError");

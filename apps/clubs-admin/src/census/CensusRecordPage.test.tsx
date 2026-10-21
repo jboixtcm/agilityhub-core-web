@@ -906,6 +906,81 @@ describe("T-03-38 dog record", () => {
   });
 });
 
+describe("E11-W06 W10 (S04 R-04-06, INC-39): D10's writes on a record frozen by a pending readmission", () => {
+  const TEXT =
+    "Aquest abonat té una readmissió pendent: valida-la o rebutja-la des del tauler abans de canviar la fitxa.";
+
+  it("R-04-06 409 READMISSION_PENDING on a D10 write points to D2", async () => {
+    mockScenario("adminMemberReadmissionPending");
+    await renderRecord("member");
+    await screen.findByRole("heading", { name: "Laura Serra Vidal" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Bloqueja les reserves" }));
+    const dialog = screen.getByRole("dialog", { name: "Bloqueja les reserves" });
+    fireEvent.change(within(dialog).getByLabelText("Motiu del bloqueig"), {
+      target: { value: "Rebut pendent" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Bloqueja les reserves" }));
+
+    const alert = await within(dialog).findByRole("alert");
+    expect(alert).toHaveTextContent(TEXT);
+    expect(within(alert).getByRole("link", { name: "Preinscripcions pendents" })).toHaveAttribute(
+      "href",
+      "/preinscripcions/member-laura",
+    );
+  });
+
+  it("R-04-06 a refused change of the notification preferences points to D2 too", async () => {
+    mockScenario("adminMemberReadmissionPending");
+    await renderRecord("member");
+    fireEvent.change(await screen.findByLabelText("Recordatori de classe"), {
+      target: { value: "240" },
+    });
+
+    const alert = await screen.findByText(TEXT, { exact: false });
+    expect(
+      within(alert.closest("[role='alert']") ?? alert).getByRole("link", {
+        name: "Preinscripcions pendents",
+      }),
+    ).toHaveAttribute("href", "/preinscripcions/member-laura");
+  });
+});
+
+describe("E11-W06 W7 (CONVENCIONS_I18N §1, R-06-14): D10 shows an instant on the club's day", () => {
+  it("CONVENCIONS_I18N §1: registeredAt 2026-10-04T22:30:00Z with Europe/Madrid reads 05/10/2026", async () => {
+    server.use(
+      http.get("*/api/v1/dogs/dog-duna", async ({ request }) => {
+        const real = await getResponse(handlers, request);
+        const detail = (await real?.json()) as Record<string, unknown> & {
+          dog?: Record<string, unknown>;
+        };
+        // 00:30 on 05/10 in Madrid; the birth date is a plain date, the day it names.
+        const instants = {
+          birthDate: "2020-10-04",
+          levelAssignedAt: "2026-10-04T22:30:00Z",
+          registeredAt: "2026-10-04T22:30:00Z",
+        };
+        return HttpResponse.json({
+          ...detail,
+          ...instants,
+          ...(detail.dog === undefined ? {} : { dog: { ...detail.dog, ...instants } }),
+        });
+      }),
+    );
+    expect(branding.timeZone).toBe("Europe/Madrid");
+    await renderRecord("dog");
+    await screen.findByRole("heading", { name: "Duna" });
+
+    const registered = screen.getByText("Alta", { selector: "dt" }).closest("div");
+    expect(registered).toHaveTextContent("05/10/2026");
+    expect(screen.getByText("04/10/2020")).toBeVisible();
+    expect(document.querySelector(".census-record__level-current")).toHaveTextContent(
+      "05/10/2026",
+    );
+    expect(document.body).not.toHaveTextContent("04/10/2026");
+  });
+});
+
 describe("E11-W02 round 2 (INC-41): no «+34» typed in D10", () => {
   it("a new phone of the member takes the club's country prefix (its countryProfile), not Spain's", async () => {
     server.use(

@@ -89,3 +89,33 @@ it("E8-W06 #6 shows the shared in-progress message and retries the card link wit
   });
   expect(await within(drawer).findByRole("link", { name: /checkout\.example\.test\/retry/u })).toBeVisible();
 });
+
+it("E11-W06 W10 (R-04-06) 409 READMISSION_PENDING on the payment method points to D2", async () => {
+  const current = await paymentMethod();
+  mockScenario("adminMemberReadmissionPending");
+  const i18n = await createI18n({ branding, browserLanguages: ["ca"], initialNamespaces: ["admin-census", "common", "enums", "errors"], storage: undefined });
+  render(
+    <I18nextProvider i18n={i18n}>
+      <BrandingProvider branding={branding}>
+        <MemberPaymentMethodDrawer
+          client={createApiClient({ baseUrl: `${window.location.origin}/api/v1` })}
+          memberId="member-laura"
+          onChanged={() => undefined}
+          onClose={() => undefined}
+          onErased={() => undefined}
+          open
+          paymentMethod={current}
+        />
+      </BrandingProvider>
+    </I18nextProvider>,
+  );
+  const drawer = await screen.findByRole("dialog", { name: "Mètode de pagament" });
+  fireEvent.change(within(drawer).getByLabelText("Tipus"), { target: { value: "MANUAL" } });
+  fireEvent.click(within(drawer).getByRole("button", { name: "Desa" }));
+
+  const alert = await within(drawer).findByRole("alert");
+  await waitFor(() => {
+    expect(alert).toHaveTextContent("Aquest abonat té una readmissió pendent");
+  });
+  expect(within(alert).getByRole("link", { name: "Preinscripcions pendents" })).toHaveAttribute("href", "/preinscripcions/member-laura");
+});

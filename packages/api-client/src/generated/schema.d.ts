@@ -162,7 +162,7 @@ export interface paths {
         head?: never;
         /**
          * patchActivity
-         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES. With rings, startTime, endTime and the ringBlockWindow hours are multiples of classes.slotMinutes (400 INVALID_SLOT_GRANULARITY; INC-40, E11-T10).
          */
         patch: operations["patchActivity"];
         trace?: never;
@@ -196,7 +196,7 @@ export interface paths {
         };
         /**
          * cancellationPreview
-         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES. INC-40 (E11-T10): a registrant whose member is erased (R-14-15) is a row with the neutral memberName (lists.erasedMember), no channels and phoneCount 0.
          */
         get: operations["cancellationPreview"];
         put?: never;
@@ -282,7 +282,7 @@ export interface paths {
         put?: never;
         /**
          * publish
-         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES.
+         * @description Roles: ADMIN.  Tenant comes from the JWT. Requires ACTIVITIES. With rings, startTime, endTime and the ringBlockWindow hours are multiples of classes.slotMinutes (400 INVALID_SLOT_GRANULARITY; INC-40, E11-T10).
          */
         post: operations["publish"];
         /**
@@ -722,7 +722,7 @@ export interface paths {
         put?: never;
         /**
          * createBillingRun
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-11/12 «2 · GENERA REMESA SEPA (XML)»: one Mongo transaction under the club's billing lock (409 BILLING_BUSY) creates the PENDING/COLLECTING invoices numbered {series}-{number:04d} in the members' order (last names, first name, member number), one Collection each, the remittance (pain.008 written and validated before the commit), advances the included members' nextInvoiceDate, marks the PendingCharges; InvoiceIssued per invoice, InvoiceCollecting (SEPA), RemittanceGenerated, BillingRunCreated, one REMITTANCE_GENERATED audit entry with details.invoiceIds. One live run per month (409 RUN_EXISTS); the simulation must be the month's, made after the last change of the members, family groups, plans, prices, billing.* parameters and the club's configuration, with the same unbilled PendingCharges and waiting includeInNextRun receipts (409 SIMULATION_STALE; another club's or an unknown one → 404). Members with an incident are skipped (skipped[]), and so are the waiting receipts the simulation listed as incidents (they stay PENDING); the others join the remittance. collectionDate (SEPA only) defaults to billing.sepa.collectionDayOfMonth of the billed month (0 = its last day) and must leave two business days after today → otherwise 422 COLLECTION_DATE_TOO_SOON {requested, earliest}. Nothing to bill → 422 NO_INVOICES; SEPA members without a SEPA writer → 422 SEPA_NOT_CONFIGURED (until E8-T03). The same Idempotency-Key answers the same run. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-11/12 «2 · GENERA REMESA SEPA (XML)»: one Mongo transaction under the club's billing lock (409 BILLING_BUSY) creates the PENDING/COLLECTING invoices numbered {series}-{number:04d} in the members' order (last names, first name, member number), one Collection each, the remittance (pain.008 written and validated before the commit), advances the included members' nextInvoiceDate, marks the PendingCharges; InvoiceIssued per invoice, InvoiceCollecting (SEPA), RemittanceGenerated, BillingRunCreated, one REMITTANCE_GENERATED audit entry with details.invoiceIds. One live run per month (409 RUN_EXISTS); the simulation must be the month's, made after the last change of the members, family groups, plans, prices, billing.* parameters and the club's configuration, with the same unbilled PendingCharges and waiting includeInNextRun receipts (409 SIMULATION_STALE; another club's or an unknown one → 404). Members with an incident are skipped (skipped[]), and so are the waiting receipts the simulation listed as incidents (they stay PENDING); the others join the remittance. collectionDate (SEPA only) defaults to billing.sepa.collectionDayOfMonth of the billed month (0 = its last day) and must leave two business days after today → otherwise 422 COLLECTION_DATE_TOO_SOON {requested, earliest}. Nothing to bill → 422 NO_INVOICES; SEPA members without a SEPA writer → 422 SEPA_NOT_CONFIGURED (until E8-T03). Two prices of one plan and concept valid on the issue date (INC-68) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}, nothing written. The same Idempotency-Key answers the same run. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["createBillingRun"];
         delete?: never;
@@ -802,7 +802,7 @@ export interface paths {
         put?: never;
         /**
          * simulateBilling
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-07 «1 · SIMULA EL MES»: computes R-12-01…05 without writing business data (incidents NO_BANK_ACCOUNT, NO_PLAN, NO_PRICE, CARD_INVALID, CURRENCY_MISMATCH, PROVIDER_DISABLED; cash members with their planned leave; preview and KPIs) and keeps it as the month's only simulation; RemittanceSimulated. The waiting manual SEPA_DD receipts with includeInNextRun (R-12-19) the run will remit are in the preview (with their invoiceId and displayNumber) and the KPIs; one whose member has left, no longer pays by SEPA_DD, has no account or signed another mandate since is an incident (NO_BANK_ACCOUNT) and is not remitted. A month more than three months ahead → 400 VALIDATION_ERROR (S12 §13). Another simulation, run or rollback holding the club's billing lock → 409 BILLING_BUSY. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-07 «1 · SIMULA EL MES»: computes R-12-01…05 without writing business data (incidents NO_BANK_ACCOUNT, NO_PLAN, NO_PRICE, CARD_INVALID, CURRENCY_MISMATCH, PROVIDER_DISABLED; cash members with their planned leave; preview and KPIs) and keeps it as the month's only simulation; RemittanceSimulated. The waiting manual SEPA_DD receipts with includeInNextRun (R-12-19) the run will remit are in the preview (with their invoiceId and displayNumber) and the KPIs; one whose member has left, no longer pays by SEPA_DD, has no account or signed another mandate since is an incident (NO_BANK_ACCOUNT) and is not remitted. A month more than three months ahead → 400 VALIDATION_ERROR (S12 §13). Another simulation, run or rollback holding the club's billing lock → 409 BILLING_BUSY. Two prices of one plan and concept valid on the issue date (a legacy twin, INC-68) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}: no price is chosen. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["simulateBilling"];
         delete?: never;
@@ -884,7 +884,7 @@ export interface paths {
         };
         /**
          * bookingCalendar
-         * @description Roles: anyone holding the signed token of calendarLinks.ics (no JWT; the club comes from the host). Token valid until classEndsAt; any mismatch is 404.
+         * @description Roles: anyone holding the signed token of calendarLinks.ics (no JWT; the club comes from the host). Token valid until classEndsAt; any mismatch is 404. RFC 5545: stable UID, STATUS CONFIRMED (TENTATIVE while PAYMENT_PENDING, CANCELLED once the booking or its class is cancelled), a SEQUENCE that only grows, DTSTAMP = when it is served.
          */
         get: operations["bookingCalendar"];
         put?: never;
@@ -1186,7 +1186,7 @@ export interface paths {
         put?: never;
         /**
          * createClass
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. In a VALIDATED week the class is ACTIVE; otherwise it is a DRAFT and its week's `version` goes up by one, so a concurrent validation of the week runs again and validates it too (T-06-23, E5-T28). placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. In a VALIDATED week the class is ACTIVE; otherwise it is a DRAFT and its week's `version` goes up by one, so a concurrent validation of the week runs again and validates it too (T-06-23, E5-T28). placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring. References (INC-40, E11-T10): instructorIds empty is 400 VALIDATION_ERROR fieldErrors[{instructorIds, NotEmpty}], repeated ids [{instructorIds, INVALID_VALUE}], more than classes.maxInstructorsPerClass 422 TOO_MANY_INSTRUCTORS; a newly chosen level, instructor or ring must be active (else 400 VALIDATION_ERROR fieldErrors[{levelIds|instructorIds|ringId, INVALID_VALUE}]).
          */
         post: operations["createClass"];
         delete?: never;
@@ -1214,7 +1214,7 @@ export interface paths {
         head?: never;
         /**
          * patchClass
-         * @description Roles: ADMIN. Tenant and role guards apply. The date field is forbidden (400 VALIDATION_ERROR). Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement; without COURSES a new ring drops the hidden planned placement.
+         * @description Roles: ADMIN. Tenant and role guards apply. The date field is forbidden (400 VALIDATION_ERROR). Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement; without COURSES a new ring drops the hidden planned placement. References (INC-40, E11-T10): instructorIds empty is 400 VALIDATION_ERROR fieldErrors[{instructorIds, NotEmpty}], repeated ids [{instructorIds, INVALID_VALUE}], more than classes.maxInstructorsPerClass 422 TOO_MANY_INSTRUCTORS; a newly chosen level, instructor or ring must be active (else 400 VALIDATION_ERROR fieldErrors[{levelIds|instructorIds|ringId, INVALID_VALUE}]), while the ones the class already has may have become inactive and stay (S05 R-05-03, R-06-05). A reorder of instructorIds is stored as sent but is no change: no diff entry, no N-08b (R-06-09).
          */
         patch: operations["patchClass"];
         trace?: never;
@@ -1292,7 +1292,7 @@ export interface paths {
         };
         /**
          * classCancellationPreview
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. INC-40 (E11-T10): a booking whose member is erased (R-14-15) is a row with the neutral memberName (lists.erasedMember), no channels and phoneCount 0; one whose dog is gone has an empty dogName and a null levelName.
          */
         get: operations["classCancellationPreview"];
         put?: never;
@@ -2594,7 +2594,7 @@ export interface paths {
         put?: never;
         /**
          * createManualInvoice
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-19: a MANUAL invoice (ADJUSTMENT lines, positive or negative, base + round_half_even(base × taxPercent / 100)) numbered like the others from the series counter, PENDING, with the member's payment method frozen; collected by hand (R-12-16) or, for SEPA_DD with includeInNextRun, by a later remittance. includeInNextRun with a total of zero or less → 400 VALIDATION_ERROR {field: includeInNextRun} (never direct-debited; settled by hand). INVOICE_CREATED_MANUAL audit, InvoiceIssued. While a run holds the club's billing lock → 409 BILLING_BUSY. A line in another currency → 422 CURRENCY_MISMATCH; another club's member → 404; an erased one → 409 MEMBER_ERASED. Tenant comes from the JWT; another club's resource → 404.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. R-12-19: a MANUAL invoice (ADJUSTMENT lines, positive or negative, base + round_half_even(base × taxPercent / 100)) numbered like the others from the series counter, PENDING, with the member's payment method frozen; collected by hand (R-12-16) or, for SEPA_DD with includeInNextRun, by a later remittance. period (E11-T15): the month it is for — D6's month list and the accounting export (R-12-26) — absent → the issue month; more than three months from the issue month → 400 VALIDATION_ERROR {field: period}, before any number is taken. includeInNextRun with a total of zero or less → 400 VALIDATION_ERROR {field: includeInNextRun} (never direct-debited; settled by hand). INVOICE_CREATED_MANUAL audit, InvoiceIssued. While a run holds the club's billing lock → 409 BILLING_BUSY. A line in another currency → 422 CURRENCY_MISMATCH; another club's member → 404; an erased one → 409 MEMBER_ERASED. Tenant comes from the JWT; another club's resource → 404.
          */
         post: operations["createManualInvoice"];
         delete?: never;
@@ -3050,7 +3050,7 @@ export interface paths {
         head?: never;
         /**
          * Update account language or display name
-         * @description Any valid account token. R-01-14.
+         * @description Account token, never impersonated. R-01-14. INC-37: the language and name are the person's AgilityHub account, shared by every club and app, and no audit action covers them, so an administrator viewing the app as a member cannot change them (403), as with the password, profile and sessions.
          */
         patch: operations["update"];
         trace?: never;
@@ -3104,7 +3104,7 @@ export interface paths {
         };
         /**
          * bookableClasses
-         * @description Roles: MEMBER (also the impersonation token). S08 screen 04, horizon until the end of W2; dogId absent = proposed dog (Member.lastDogForClass while accessible, else the first own dog); no accessible dog → 404 DOG_NOT_ACCESSIBLE. Classes the dog has booked or waits for are left out; row states per R-08-03, decided by the server. The class list and counters come from a 30 s base cache; the per-dog state is live. SINGLE_CLASS off: no price. Tenant comes from the JWT.
+         * @description Roles: MEMBER (also the impersonation token). S08 screen 04, horizon until the end of W2; dogId absent = proposed dog (Member.lastDogForClass while accessible, else the first own dog); no accessible dog → 404 DOG_NOT_ACCESSIBLE. Classes the dog has booked or waits for are left out; row states per R-08-03, decided by the server. The class list and counters come from a 30 s base cache; the per-dog state is live, and so are the open FIFO offers of other dogs, whose seats freeSeats leaves out (R-08-14). SINGLE_CLASS off: no price. Tenant comes from the JWT.
          */
         get: operations["bookableClasses"];
         put?: never;
@@ -3922,7 +3922,7 @@ export interface paths {
         head?: never;
         /**
          * Update member
-         * @description S03 §6, R-03-08. Editable census fields only; plan, price, roles and payment method use their dedicated use cases. Version is required. A pending readmission (S04 R-04-06, E38): the person fields, contacts, address and payment method edit the submitted values, not the LEFT record; the identity document cannot change (the readmission matched on it): 409 INVALID_STATE with details.reason = READMISSION_PENDING. A wrong document is resolved by rejecting the readmission.
+         * @description S03 §6, R-03-08. Editable census fields only; plan, price, roles and payment method use their dedicated use cases. Version is required. A pending readmission (S04 R-04-06, E38): the person fields, contacts, address and payment method edit the submitted values, not the LEFT record; the identity document cannot change (the readmission matched on it): 409 INVALID_STATE with details.reason = READMISSION_PENDING. A wrong document is resolved by rejecting the readmission. The remarks and internal notes stay the LEFT record's: changing them answers the same 409 (READMISSION_PENDING, INC-39); sending the ones it has is no edit.
          */
         patch: operations["updateMember"];
         trace?: never;
@@ -3978,12 +3978,12 @@ export interface paths {
         put?: never;
         /**
          * Activate booking block
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. A pending readmission's LEFT record (S04 R-04-06, INC-39) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         post: operations["activateBookingBlock"];
         /**
          * Remove booking block
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. A pending readmission's LEFT record (S04 R-04-06, INC-39) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         delete: operations["removeBookingBlock"];
         options?: never;
@@ -4119,6 +4119,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/members/{id}/next-invoice-date": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * setNextInvoiceDate
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. E146 (E11-T15; S12 R-12-01/05/06): sets the date the next run bills the member from — a migrated cash member already charged to the end of its half-year, a member without a date (simulation incident NO_NEXT_INVOICE_DATE). Never under impersonation (403). The date: from the first day of the club's current month twelve months back to the last day of the month twelve months ahead, else 400 VALIDATION_ERROR {fieldErrors: [{field: nextInvoiceDate, code: INVALID_VALUE}]}; reason required (≤ 200). The member must be ACTIVE (else 409 INVALID_STATE); a pending readmission's frozen record is 409 INVALID_STATE {reason: READMISSION_PENDING} (INC-39); another club's member 404; an erased one 409 MEMBER_ERASED. Audited MEMBER_UPDATED (changes[].path = nextInvoiceDate, the reason) with MemberUpdated{memberId, diff}; the same date again changes nothing. The next simulation reads the new date (a monthly member is billed every month from month(nextInvoiceDate)). Tenant comes from the JWT; another club's resource → 404.
+         */
+        put: operations["setNextInvoiceDate"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/members/{id}/notification-preferences": {
         parameters: {
             query?: never;
@@ -4133,7 +4153,7 @@ export interface paths {
         get: operations["memberNotificationPreferences"];
         /**
          * saveMemberNotificationPreferences
-         * @description Roles: ADMIN (impersonation → 403). The same block from D10, audited as MEMBER_UPDATED (changes[].path = notificationPreferences.…, the actor's actorAccountId) with NotificationPreferencesChanged. Another club's member → 404. Tenant comes from the JWT.
+         * @description Roles: ADMIN (impersonation → 403). The same block from D10, audited as MEMBER_UPDATED (changes[].path = notificationPreferences.…, the actor's actorAccountId) with NotificationPreferencesChanged. Another club's member → 404. A pending readmission's LEFT record (S04 R-04-06, INC-39) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING. A save that changes nothing writes nothing and answers 200. Tenant comes from the JWT.
          */
         put: operations["saveMemberNotificationPreferences"];
         post?: never;
@@ -4178,7 +4198,7 @@ export interface paths {
         head?: never;
         /**
          * Update payment method
-         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. SEPA_DD → SEPA_DD is partial (S03 R-03-07, E42): the account (`iban`, or a migrated member's encrypted one), `holderName` and `holderTaxId` the request does not send are kept, and so is the mandate; `sepa.iban: null` clears the account («Compte no informat»). Another `type` replaces the method.
+         * @description Tenant comes from the JWT. ADMIN endpoints reject impersonation; erased members reject mutations. SEPA_DD → SEPA_DD is partial (S03 R-03-07, E42): the account (`iban`, or a migrated member's encrypted one), `holderName` and `holderTaxId` the request does not send are kept, and so is the mandate; `sepa.iban: null` clears the account («Compte no informat»). Another `type` replaces the method. A pending readmission's method is edited with PATCH /members/{id}.A pending readmission's LEFT record (S04 R-04-06, INC-39) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         patch: operations["updatePaymentMethod"];
         trace?: never;
@@ -4214,7 +4234,7 @@ export interface paths {
         put?: never;
         /**
          * changeMemberPlan
-         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. Changes the current plan and price without moving nextInvoiceDate. A PACK to MONTHLY change creates a DUE entry fee, discounted once per eligible pack. effectiveMonth, if supplied, must be the current club-local month.
+         * @description Roles: ADMIN (MEMBER, INSTRUCTOR → 403; impersonation → 403 IMPERSONATION_DENIED). BILLING off → 404 MODULE_DISABLED. Changes the current plan and price without moving an existing nextInvoiceDate. A member without one (every pack member) moving to a MONTHLY plan gets its first date (E11-T15, R-12-06): the request's nextInvoiceDate or, without it, billing.nextInvoiceDayOfMonth of next month (club-local), in the MEMBER_PLAN_CHANGED audit diff; a nextInvoiceDate before the first day of the club's current month → 400 VALIDATION_ERROR {fieldErrors: [{field: nextInvoiceDate, code: INVALID_VALUE}]}. A PACK to MONTHLY change creates a DUE entry fee, discounted once per eligible pack. effectiveMonth, if supplied, must be the current club-local month. A pending readmission's LEFT record (S04 R-04-06, INC-39) is frozen until its validation or rejection: 409 INVALID_STATE with details.reason = READMISSION_PENDING.
          */
         post: operations["change"];
         delete?: never;
@@ -4312,7 +4332,7 @@ export interface paths {
         };
         /**
          * Review member signup
-         * @description S04 §6. ADMIN D2 aggregate with masked payment details and signed document downloads. Other-tenant resources return NOT_FOUND. A member with nothing pending answers 409 INVALID_STATE with details.reason = NOT_PENDING; a requested plan that is no longer assignable, 422 PLAN_NOT_AVAILABLE. For an ACTIVE member (add-dog), `signup` is the oldest pending dog's own submission. A pending readmission (R-04-06, E38) adds `readmission`: the LEFT record's values and the submitted ones, with changedFields; validation applies the submitted ones.
+         * @description S04 §6. ADMIN D2 aggregate with masked payment details and signed document downloads. Other-tenant resources return NOT_FOUND. A member with nothing pending answers 409 INVALID_STATE with details.reason = NOT_PENDING. A requested plan that is no longer assignable (R-04-19, INC-39) still loads: proposals.planId and priceId are null, the first month is the one frozen at submission, and the admin chooses a plan in planOptions. For an ACTIVE member (add-dog), `signup` is the oldest pending dog's own submission. A pending readmission (R-04-06, E38) adds `readmission`: the LEFT record's values and the submitted ones, with changedFields; validation applies the submitted ones.
          */
         get: operations["review"];
         put?: never;
@@ -4334,7 +4354,7 @@ export interface paths {
         put?: never;
         /**
          * Validate member signup
-         * @description R-04-13–16, R-04-21/22/25. ADMIN; rejects impersonation. dryRun=true returns proposals without writes; false validates using optimistic version. 409 INVALID_STATE details.reason: NOT_PENDING (nothing pending) or CHECKOUT_PENDING (a plan change while a checkout of the submission is in progress, S04 §5 E39; dryRun warns CHECKOUT_PENDING). nextInvoiceDate before the first-month start → 400 VALIDATION_ERROR on nextInvoiceDate; while the plan is the requested one, that start is the one frozen at submission. The levels are assigned by the validation itself: MemberValidated/DogRegistered carry the stored levelId, and no DogLevelChanged is emitted. A member who has an account (a readmission, R-04-06/R-04-22) keeps it: no second Account, and the account's login email never changes; only a member without one is matched, or given a new one, by its primary email.
+         * @description R-04-13–16, R-04-21/22/25. ADMIN; rejects impersonation. dryRun=true returns proposals without writes; false validates using optimistic version. 409 INVALID_STATE details.reason: NOT_PENDING (nothing pending) or CHECKOUT_PENDING (a plan change, or an upfrontAmountPaid above 0, while a checkout of the submission is in progress, S04 §5 E39 and R-04-16; dryRun warns CHECKOUT_PENDING whenever a line waits for a checkout). upfrontAmountPaid in another currency than the club's → 422 CURRENCY_MISMATCH with details.field = upfrontAmountPaid, before any write. Without planId and priceId, a requested plan that is no longer assignable gives a dryRun of the rows as they are (no price) and a validation 422 PLAN_NOT_AVAILABLE. With BILLING, a plan with two current prices of one concept (a legacy price twin, INC-68, ruling E138) → 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}, dryRun included and nothing written: the details billing answers for that plan. nextInvoiceDate before the first-month start → 400 VALIDATION_ERROR on nextInvoiceDate; while the plan is the requested one, that start is the one frozen at submission. The levels are assigned by the validation itself: MemberValidated/DogRegistered carry the stored levelId, and no DogLevelChanged is emitted. A member who has an account (a readmission, R-04-06/R-04-22) keeps it: no second Account, and the account's login email never changes; only a member without one is matched, or given a new one, by its primary email.
          */
         post: operations["validate"];
         delete?: never;
@@ -5142,7 +5162,7 @@ export interface paths {
         put?: never;
         /**
          * verifyPlatformDomain
-         * @description S17 R-17-03. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Looks up (a) a CNAME from the host to verification.cnameTarget, else (b) the TXT record verification.recordName = verification.recordValue. Found: the domain is VERIFIED (verifiedAt, the challenge removed), the primary one of its app when the app has no verified primary yet, Caddy's ask (GET /internal/domains/allowed) accepts it and GET /branding resolves it; publishes ClubDomainVerified and ClubUpdated, audited CLUB_DOMAIN_CHANGED. Not found: 422 HOST_NOT_VERIFIED {host, cnameTarget, recordName, recordValue} (the records it expects; the TXT pair is null without a challenge), nothing changes and the key is released, so a retry checks again. A VERIFIED domain answers 409 INVALID_STATE {status}. A BROKEN domain (S15 P9's re-check failed three times in a row) also passes when the host shares an address with verification.cnameTarget (method ADDRESS: an apex domain has no CNAME and no challenge left). The DNS lookup runs before the write's transaction. A verified clubs-admin domain gets its certificate at once, but Caddy serves the back-office app on it only after the host is added to CLUB_ADMIN_HOSTS and Caddy is reloaded (docs/DEPLOY.md, «Alta d'un domini de club»; choosing the app from the domain is INC-64); until then the host serves the members' app.
+         * @description S17 R-17-03. Roles: AGILITYHUB_ADMIN. Global, no tenant or module required. Looks up (a) a CNAME from the host to verification.cnameTarget, else (b) the TXT record verification.recordName = verification.recordValue. Found: the domain is VERIFIED (verifiedAt, the challenge removed), the primary one of its app when the app has no verified primary yet, Caddy's ask (GET /internal/domains/allowed) accepts it and GET /branding resolves it; publishes ClubDomainVerified and ClubUpdated, audited CLUB_DOMAIN_CHANGED. Not found: 422 HOST_NOT_VERIFIED {host, cnameTarget, recordName, recordValue} (the records it expects; the TXT pair is null without a challenge), nothing changes and the key is released, so a retry checks again. A VERIFIED domain answers 409 INVALID_STATE {status}. A BROKEN domain (S15 P9's re-check failed three times in a row) also passes when the host shares an address with verification.cnameTarget (method ADDRESS: an apex domain has no CNAME and no challenge left). The DNS lookup runs before the write's transaction. A verified domain gets its certificate at once and Caddy serves it the SPA of its app from the next request (INC-64: the back office for clubs-admin, the members' app for clubs), with no deploy setting and no reload (docs/DEPLOY.md, «Alta d'un domini de club»).
          */
         post: operations["verifyPlatformDomain"];
         delete?: never;
@@ -6202,7 +6222,7 @@ export interface paths {
         put?: never;
         /**
          * holdSeat
-         * @description Roles: MEMBER (also the impersonation token). R-08-07: one Mongo transaction serialised by seat_locks; re-entering refreshes the same hold. waitlistEntryId requires WAITLIST. details: CLASS_FULL{heldOnly}, NOT_YET_OPEN{opensAt}, BOOKING_LIMIT_REACHED{unit, week, limit, current, swappable[], notSelectable[], nextBookableAt}, INACTIVITY_PERIOD{from, to}. Tenant comes from the JWT.
+         * @description Roles: MEMBER (also the impersonation token). R-08-07: one Mongo transaction serialised by seat_locks; re-entering refreshes the same hold; a live hold of the same dog by another account is never taken over (CLASS_FULL{heldOnly: true}, SEAT_TAKEN for a claim's hold), and in FIFO an open offer of another dog keeps its seat until confirmBy (R-08-14). waitlistEntryId requires WAITLIST. details: CLASS_FULL{heldOnly}, NOT_YET_OPEN{opensAt}, BOOKING_LIMIT_REACHED{unit, week, limit, current, swappable[], notSelectable[], nextBookableAt}, INACTIVITY_PERIOD{from, to}. Tenant comes from the JWT.
          */
         post: operations["holdSeat"];
         delete?: never;
@@ -6560,7 +6580,7 @@ export interface paths {
         };
         /**
          * trainingSlots
-         * @description Roles: MEMBER (also the impersonation token; interval cut to the booking window, R-09-04), INSTRUCTOR, ADMIN (at most 31 days; cells add occupants[], block and classSession). R-09-03 computed grid: holidays and days without opening hours are closed; cells BLOCKED/CLASS > BLOCKED/RING_BLOCK > BOOKED/TRAINING (OWN_TRAINING for dogId) > FREE. Requires FREE_TRAINING. Tenant comes from the JWT.
+         * @description Roles: MEMBER (also the impersonation token; interval cut to the booking window, R-09-04), INSTRUCTOR, ADMIN (at most 31 days; cells add occupants[], block and classSession). R-09-03 computed grid: holidays and days without opening hours are closed; cells BLOCKED/CLASS > BLOCKED/RING_BLOCK > BOOKED/TRAINING (OWN_TRAINING for dogId) > FREE. INC-44: INSTRUCTOR and ADMIN also get the active rings without free training (capacity 0: their cells show classes and blocks, are FREE otherwise and never count for anyFree or bookable); with FREE_TRAINING off they get every active ring that way, without training bookings, while a MEMBER gets 404 MODULE_DISABLED. Tenant comes from the JWT.
          */
         get: operations["trainingSlots"];
         put?: never;
@@ -6626,7 +6646,7 @@ export interface paths {
         put?: never;
         /**
          * joinWaitlist
-         * @description Roles: MEMBER (also the impersonation token). R-08-12: the class must be full by bookings alone (CLASS_NOT_FULL otherwise), the booking eligibility chain runs, then waitlist.maxPerClass, waitlist.maxPerDogPerWeek / maxPerDogPerWeekIfAttended (details WAITLIST_LIMIT{scope: CLASS|DOG_WEEK}) and the seat must be acceptable (BOOKING_LIMIT_REACHED). Requires WAITLIST. Joins of one class are serialised by its seat lock, so a dog is never twice on the list (ALREADY_ON_WAITLIST). An optional Idempotency-Key replays the same 201 to a retry whose answer was lost (CONVENCIONS_API §7). Tenant comes from the JWT.
+         * @description Roles: MEMBER (also the impersonation token). R-08-12: the class must be full by bookings alone, in FIFO counting the open offers of other dogs (R-08-14) (CLASS_NOT_FULL otherwise), the booking eligibility chain runs, then waitlist.maxPerClass, waitlist.maxPerDogPerWeek / maxPerDogPerWeekIfAttended (details WAITLIST_LIMIT{scope: CLASS|DOG_WEEK}) and the seat must be acceptable (BOOKING_LIMIT_REACHED). Requires WAITLIST. Joins of one class are serialised by its seat lock, so a dog is never twice on the list (ALREADY_ON_WAITLIST). An optional Idempotency-Key replays the same 201 to a retry whose answer was lost (CONVENCIONS_API §7). Tenant comes from the JWT.
          */
         post: operations["joinWaitlist"];
         delete?: never;
@@ -6798,7 +6818,7 @@ export interface paths {
         put?: never;
         /**
          * createTemplateClass
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring. References (INC-40, E11-T10): instructorIds empty is 400 VALIDATION_ERROR fieldErrors[{instructorIds, NotEmpty}], repeated ids [{instructorIds, INVALID_VALUE}], more than classes.maxInstructorsPerClass 422 TOO_MANY_INSTRUCTORS; a newly chosen level, instructor or ring must be active (else 400 VALIDATION_ERROR fieldErrors[{levelIds|instructorIds|ringId, INVALID_VALUE}]).
          */
         post: operations["createTemplateClass"];
         delete?: never;
@@ -6826,7 +6846,7 @@ export interface paths {
         head?: never;
         /**
          * patchTemplateClass
-         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement; without COURSES a new ring drops the hidden planned placement.
+         * @description Roles: ADMIN. Tenant and role guards apply.  Tenant comes from the JWT. placementId (S16 R-16-13): the planned placement, with COURSES, of the class's ring; a new ring is checked against the kept placement; without COURSES a new ring drops the hidden planned placement. References (INC-40, E11-T10): instructorIds empty is 400 VALIDATION_ERROR fieldErrors[{instructorIds, NotEmpty}], repeated ids [{instructorIds, INVALID_VALUE}], more than classes.maxInstructorsPerClass 422 TOO_MANY_INSTRUCTORS; a newly chosen level, instructor or ring must be active (else 400 VALIDATION_ERROR fieldErrors[{levelIds|instructorIds|ringId, INVALID_VALUE}]), while the ones the class already has may have become inactive and stay (S05 R-05-03, R-06-05).
          */
         patch: operations["patchTemplateClass"];
         trace?: never;
@@ -7942,7 +7962,7 @@ export interface components {
             memberName: string;
         };
         /** @enum {string} */
-        BillingIncidentCode: "NO_BANK_ACCOUNT" | "NO_PLAN" | "NO_PRICE" | "CARD_INVALID" | "CURRENCY_MISMATCH" | "PROVIDER_DISABLED" | "MEMBER_NOT_ACTIVE" | "PAYMENT_METHOD_CHANGED";
+        BillingIncidentCode: "NO_BANK_ACCOUNT" | "NO_PLAN" | "NO_PRICE" | "CARD_INVALID" | "CURRENCY_MISMATCH" | "PROVIDER_DISABLED" | "MEMBER_NOT_ACTIVE" | "PAYMENT_METHOD_CHANGED" | "NO_NEXT_INVOICE_DATE";
         /** @description S12 §6 GET /billing/periods/{period}: the month as D6 shows it; simulation, run and remittance are null until they exist */
         BillingPeriod: {
             counts: components["schemas"]["InvoiceCounts"];
@@ -9018,9 +9038,12 @@ export interface components {
             affectedWaitlist: number;
             /** Format: date-time */
             at: string;
-            byAccountId: string;
+            /** @description The cancelling account; null for the risk review's cancellation (RISK_REVIEW, run by the system, R-06-13), always sent */
+            byAccountId?: string | null;
             /** @enum {string} */
             reason: "CLUB_MANUAL" | "DELETED" | "RISK_REVIEW" | "ACTIVITY";
+            /** @description INC-41 (E11-T13): the club's classes.riskReviewTime (HH:mm, club-local) when the view is read, for the risk review's label (R-06-13); always sent, null unless reason = RISK_REVIEW */
+            reviewTime?: string | null;
         };
         ClassCancellationRequest: {
             adminText?: string | null;
@@ -12094,6 +12117,8 @@ export interface components {
             /** Format: uuid */
             memberId: string;
             note: string;
+            /** @description E11-T15 (R-12-19, R-12-26): the month the receipt is for — D6's month list and the accounting export by period. Absent → the issue month; at most three months either side of it */
+            period?: string;
         };
         MaxAttemptsDetails: {
             /** Format: int32 */
@@ -12604,6 +12629,11 @@ export interface components {
         };
         MemberPlanChangeRequest: {
             effectiveMonth?: string;
+            /**
+             * Format: date
+             * @description E11-T15 (R-12-06): the first invoice date of a member that has none (a pack member moving to a MONTHLY plan); absent → billing.nextInvoiceDayOfMonth of next month. Not before the first day of the club's current month. A member that already has a date keeps it (use PUT /members/{id}/next-invoice-date).
+             */
+            nextInvoiceDate?: string;
             planId: string;
             priceId: string;
         };
@@ -12612,7 +12642,7 @@ export interface components {
             agilityhubLevel?: "EASY" | "MEDIUM" | "HARD" | null;
             /** Format: date-time */
             builtAt: string;
-            /** @description R-16-16 (E9-T07): the course the setup shows, which the member reads with GET /courses/{id}: its own, else its placement's; null when it shows none or that course was deleted */
+            /** @description R-16-16 (E9-T07): the course the setup shows, which the member reads with GET /courses/{id}: its placement's, else its own; null when it shows none or that course was deleted */
             courseId?: string | null;
             /** Format: date-time */
             createdAt: string;
@@ -12628,7 +12658,7 @@ export interface components {
             /** @enum {string} */
             kind: "AGILITY" | "JUMPING" | "FUN" | "OBSTACLE_DRILL" | "EMPTY";
             levelIds: string[];
-            /** @description E9-T07: where the setup's placement stands on the ring, so the members' viewer draws its course in the ring's frame; null for a setup without a placement */
+            /** @description E9-T07: where the setup's placement stands on the ring, so the members' viewer draws its course in the ring's frame; null for a setup without a placement, and when courseId is null (INC-69: the shown course was deleted) */
             placement?: components["schemas"]["MemberSetupPlacement"] | null;
             placementId?: string | null;
             ringId: string;
@@ -12832,6 +12862,20 @@ export interface components {
             amount: components["schemas"]["Money"];
             /** Format: date */
             date: string;
+        };
+        /** @description 200 of PUT /members/{id}/next-invoice-date (E146) */
+        NextInvoiceDate: {
+            /** Format: date */
+            nextInvoiceDate: string;
+        };
+        /** @description E146 (E11-T15): the admin's correction of a member's next invoice date, with its reason (audited) */
+        NextInvoiceDateRequest: {
+            /**
+             * Format: date
+             * @description Any day from the first of the club's current month twelve months back to the last day of the month twelve months ahead
+             */
+            nextInvoiceDate: string;
+            reason: string;
         };
         NoShowNotice: {
             /** Format: date-time */
@@ -13373,11 +13417,15 @@ export interface components {
             /** Format: int32 */
             warnDays: number;
         };
+        /** @description requestedCollectionDate: the remittance's collection date (club-local). submissionDue (E147, E11-T15): still GENERATED and the club-local day is the one before it or later — D6 warns «marca la remesa com a enviada»; from the date itself the run cannot be rolled back (COLLECTION_DATE_PASSED) */
         PeriodRemittance: {
             fileAvailable: boolean;
             /** Format: uuid */
             id: string;
+            /** Format: date */
+            requestedCollectionDate: string;
             status: components["schemas"]["RemittanceStatus"];
+            submissionDue: boolean;
         };
         PeriodRun: {
             byProvider: components["schemas"]["ByProvider"];
@@ -14931,7 +14979,7 @@ export interface components {
             roles: ("MEMBER" | "INSTRUCTOR" | "ADMIN")[];
         };
         /** @enum {string} */
-        RollbackBlocker: "REMITTANCE_SUBMITTED" | "COLLECTION_SUBMITTED" | "INVOICE_PAID" | "MANUAL_INVOICE_AFTER";
+        RollbackBlocker: "REMITTANCE_SUBMITTED" | "COLLECTION_SUBMITTED" | "INVOICE_PAID" | "MANUAL_INVOICE_AFTER" | "COLLECTION_DATE_PASSED";
         RollbackRequest: {
             /** @description The word D6's confirmation dialog asks to type (R-12-14) */
             confirmation: string;
@@ -16079,7 +16127,7 @@ export interface components {
         TrainingRing: {
             /**
              * Format: int32
-             * @description Ring.trainingCapacity ?? training.capacityPerRingSlot
+             * @description Ring.trainingCapacity ?? training.capacityPerRingSlot; 0 for an active ring without free training (or with FREE_TRAINING off), listed for INSTRUCTOR and ADMIN only and never bookable (INC-44)
              */
             capacity: number;
             color: string;
@@ -18600,7 +18648,7 @@ export interface operations {
                     "application/json": components["schemas"]["Activity"];
                 };
             };
-            /** @description VALIDATION_ERROR */
+            /** @description VALIDATION_ERROR, INVALID_SLOT_GRANULARITY */
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -21959,7 +22007,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description RUN_EXISTS, SIMULATION_STALE, BILLING_BUSY, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            /** @description RUN_EXISTS, SIMULATION_STALE, BILLING_BUSY, IDEMPOTENCY_KEY_REUSED, STALE_VERSION, PRICE_OVERLAP */
             409: components["responses"]["StaleVersion"];
             /** @description COLLECTION_DATE_TOO_SOON, NO_INVOICES, SEPA_NOT_CONFIGURED */
             422: {
@@ -22440,7 +22488,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description BILLING_BUSY */
+            /** @description BILLING_BUSY, PRICE_OVERLAP */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -39258,7 +39306,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Forbidden */
+            /** @description FORBIDDEN for impersonated accounts */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -45883,7 +45931,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description BOOKING_BLOCK_ALREADY_ACTIVE, MEMBER_ERASED */
+            /** @description BOOKING_BLOCK_ALREADY_ACTIVE, MEMBER_ERASED, INVALID_STATE */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -46004,7 +46052,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED */
+            /** @description MEMBER_ERASED, INVALID_STATE */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -47068,6 +47116,133 @@ export interface operations {
             };
         };
     };
+    setNextInvoiceDate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NextInvoiceDateRequest"];
+            };
+        };
+        responses: {
+            /** @description NextInvoiceDate */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NextInvoiceDate"];
+                };
+            };
+            /** @description VALIDATION_ERROR */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description NOT_FOUND, MODULE_DISABLED */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description MEMBER_ERASED, INVALID_STATE */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    /** @description Seconds before retrying */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Not Implemented */
+            501: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Client error */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Server error */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+        };
+    };
     memberNotificationPreferences: {
         parameters: {
             query?: never;
@@ -47251,7 +47426,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED */
+            /** @description MEMBER_ERASED, INVALID_STATE */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -47501,7 +47676,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED */
+            /** @description MEMBER_ERASED, INVALID_STATE */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -47751,7 +47926,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, STALE_VERSION */
+            /** @description MEMBER_ERASED, IDEMPOTENCY_KEY_REUSED, INVALID_STATE, STALE_VERSION */
             409: components["responses"]["StaleVersion"];
             /** @description PLAN_NOT_AVAILABLE */
             422: {
@@ -48373,7 +48548,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description PLAN_NOT_AVAILABLE */
+            /** @description Unprocessable Entity */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -48493,7 +48668,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description MEMBER_ERASED, INVALID_STATE, STALE_VERSION, MEMBERSHIP_EXISTS, FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP */
+            /** @description MEMBER_ERASED, INVALID_STATE, STALE_VERSION, MEMBERSHIP_EXISTS, FAMILY_GROUP_MEMBER_ALREADY_IN_GROUP, PRICE_OVERLAP */
             409: {
                 headers: {
                     [name: string]: unknown;
@@ -48502,7 +48677,7 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description LEVEL_REQUIRED, LEVEL_NOT_ACTIVE, NEXT_INVOICE_DATE_REQUIRED, UPFRONT_AMOUNT_EXCEEDS_DUE, PLAN_NOT_AVAILABLE, FAMILY_HOLDER_NOT_FOUND */
+            /** @description LEVEL_REQUIRED, LEVEL_NOT_ACTIVE, NEXT_INVOICE_DATE_REQUIRED, UPFRONT_AMOUNT_EXCEEDS_DUE, PLAN_NOT_AVAILABLE, FAMILY_HOLDER_NOT_FOUND, CURRENCY_MISMATCH */
             422: {
                 headers: {
                     [name: string]: unknown;

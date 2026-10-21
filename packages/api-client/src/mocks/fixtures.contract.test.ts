@@ -15,6 +15,7 @@ import {
   frozenMonth,
   listItem,
   periodCounts,
+  periodRemittance,
   periodRun,
   remittanceListItem,
   runResource,
@@ -923,13 +924,7 @@ describe("E8-W01 billing fixtures follow the S12 contract (BillingPeriod, Billin
       counts: periodCounts(world, period),
       period,
       remittance:
-        remittance === undefined
-          ? null
-          : {
-              fileAvailable: remittance.fileAvailable,
-              id: remittance.id,
-              status: remittance.status,
-            },
+        remittance === undefined ? null : periodRemittance(remittance, "2026-08-26"),
       run:
         run === undefined
           ? null

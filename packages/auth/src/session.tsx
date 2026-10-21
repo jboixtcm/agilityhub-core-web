@@ -3,6 +3,7 @@ import { createContext, type ReactNode, useContext, useEffect, useMemo, useState
 import { useTranslation } from "react-i18next";
 
 import { type AuthClient, type Me, type Role } from "./auth-client";
+import { accessPathFor, dropReturnPath, rememberReturnPath } from "./return-path";
 
 /**
  * `impersonationExpired`: this tab's impersonated session has ended (INC-18); the app says so and
@@ -22,6 +23,12 @@ export interface SessionSnapshot {
    */
   platformRoles: readonly PlatformRole[];
   roles: readonly Role[];
+  /**
+   * An `anonymous` session that was signed in on this page (a sign-out, or a session that ended):
+   * 01 opens plain, with no address to return to (E11-W06 W1). Absent for a visit that never had
+   * a session here.
+   */
+  signedOut?: true;
   status: SessionStatus;
 }
 
@@ -96,10 +103,15 @@ function sessionWithoutMe(client: AuthClient, pending: SessionSnapshot): Session
   return client.isImpersonationExpired() ? impersonationExpiredSession : pending;
 }
 
-function navigateToAccess(): void {
+function navigateToAccess(path: string): void {
   if (typeof window !== "undefined" && window.location.pathname !== "/entrar") {
-    window.location.assign("/entrar");
+    window.location.assign(path);
   }
+}
+
+/** The address the visit asked for (path and query), as 01 returns to it after the sign-in. */
+function requestedPath(): string {
+  return typeof window === "undefined" ? "/" : `${window.location.pathname}${window.location.search}`;
 }
 
 export function SessionProvider({ children, client }: SessionProviderProps) {
@@ -118,7 +130,9 @@ export function SessionProvider({ children, client }: SessionProviderProps) {
     };
     const signedOut = () => {
       if (mounted) {
-        setSession(anonymousSession);
+        setSession((current) =>
+          current.status === "signedIn" ? { ...anonymousSession, signedOut: true } : anonymousSession,
+        );
       }
     };
     const impersonationExpired = () => {
@@ -172,13 +186,24 @@ export function RequireAuth({
   fallback = null,
   navigate = navigateToAccess,
 }: RequireAuthProps) {
-  const { status } = useSession();
+  const { signedOut, status } = useSession();
 
   useEffect(() => {
-    if (status === "anonymous") {
-      navigate("/entrar");
+    if (status !== "anonymous") {
+      return;
     }
-  }, [navigate, status]);
+    if (signedOut === true) {
+      // A sign-out on this page: the next sign-in opens the profile's landing.
+      dropReturnPath();
+      navigate("/entrar");
+      return;
+    }
+    // E11-W06 W1 (S11 R-11-11): an e-mail's deep link survives the sign-in — `?next=` on 01, and
+    // kept for the magic link's own tab.
+    const requested = requestedPath();
+    rememberReturnPath(requested);
+    navigate(accessPathFor(requested));
+  }, [navigate, signedOut, status]);
 
   return status === "signedIn" ? children : fallback;
 }

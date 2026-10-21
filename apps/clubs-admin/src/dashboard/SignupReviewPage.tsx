@@ -344,9 +344,11 @@ export function SignupReviewPage({
   // E38: a readmission shows its submitted person (the api keeps `member` as the LEFT record).
   const member: Member = signupPerson(signup);
   const levelOf = (dog: Dog) => levelChoice[dog.id] ?? dog.levelId ?? "";
-  const selectedPlan = planChoice ?? (signup.proposals.planId === undefined ? undefined : {
+  // R-04-19 (INC-39): a requested plan no longer assignable comes as `planId`/`priceId` null —
+  // no proposal, so no option and nothing sent until the admin chooses one.
+  const selectedPlan = planChoice ?? (signup.proposals.planId == null ? undefined : {
     planId: signup.proposals.planId,
-    ...(signup.proposals.priceId === undefined ? {} : { priceId: signup.proposals.priceId }),
+    ...(signup.proposals.priceId == null ? {} : { priceId: signup.proposals.priceId }),
   });
   const selectedOption: PlanOption | undefined = signup.planOptions.find((plan) => plan.planId === selectedPlan?.planId);
   const selectedPrice = selectedOption?.prices.find((price) => price.priceId === selectedPlan?.priceId);

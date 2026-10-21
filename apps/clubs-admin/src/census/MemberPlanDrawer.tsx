@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { formatMoney, useBillingLocale } from "../billing/shared";
+import { isReadmissionPending } from "../dashboard/readmission";
+import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessage";
 
 type Member = components["schemas"]["Member"];
 type Plan = components["schemas"]["Plan"];
@@ -84,10 +86,12 @@ export function MemberPlanDrawer({ client, member, onChanged, onClose, onErased,
   const error = useMemo(() => {
     if (failure === undefined) return undefined;
     if (isInProgress(failure)) return t("common:inProgress");
+    // S04 R-04-06 (E11-W06 W10): a record frozen by a pending readmission points to D2.
+    if (isReadmissionPending(failure)) return <ReadmissionPendingMessage memberId={member.id} />;
     return isApiError(failure)
       ? t(`errors:${failure.code}`, { defaultValue: t("admin-census:common.genericError") })
       : t("admin-census:common.genericError");
-  }, [failure, t]);
+  }, [failure, member.id, t]);
   const close = () => {
     keys.drop(member.id);
     setFailure(undefined);

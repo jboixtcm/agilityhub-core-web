@@ -1,0 +1,44 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+
+ ❯ src/auth-client.test.ts (31 tests | 1 failed | 30 skipped) 20ms
+   ❯ T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes (5)
+     × S01 R-01-10 (E11-W06 step 14, ruling E151): «Surt» of an impersonated session revokes its grant — RevokeRequest.token is the impersonation JWT 18ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/auth-client.test.ts > T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never refreshes > S01 R-01-10 (E11-W06 step 14, ruling E151): «Surt» of an impersonated session revokes its grant — RevokeRequest.token is the impersonation JWT
+AssertionError: expected [ { …(2) } ] to deeply equal [ { …(2) } ]
+
+- Expected
++ Received
+
+  [
+    {
+      "authorization": "Bearer impersonation-access",
+-     "body": {
+-       "token": "impersonation-access",
+-     },
++     "body": {},
+    },
+  ]
+
+ ❯ src/auth-client.test.ts:796:21
+    794|     await client.logout();
+    795|
+    796|     expect(revokes).toEqual([
+       |                     ^
+    797|       { authorization: "Bearer impersonation-access", body: { token: "…
+    798|     ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 30 skipped (31)
+   Start at  22:37:42
+   Duration  473ms (environment 60%, transform 21%, import 14%, tests 5%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/auth-client.test.ts -t step 14

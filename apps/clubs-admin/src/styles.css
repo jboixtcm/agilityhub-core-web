@@ -88,6 +88,66 @@ select {
   place-items: center;
 }
 
+/* E11-W06 W4: the user menu (name and e-mail, the language, «Tanca la sessió»). */
+.admin-user-menu {
+  position: relative;
+}
+
+.admin-user-menu__panel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + var(--ah-space-2));
+  right: 0;
+  display: grid;
+  min-width: 16rem;
+  gap: var(--ah-space-3);
+  padding: var(--ah-space-3);
+  background: var(--ah-color-surface);
+  border: 1px solid var(--ah-color-border);
+  border-radius: var(--ah-radius-md);
+  box-shadow: var(--ah-shadow-lg);
+}
+
+.admin-user-menu__account {
+  display: grid;
+  gap: var(--ah-space-1);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.admin-user-menu__account span {
+  color: var(--ah-color-text-muted);
+  font-size: 0.875rem;
+}
+
+.admin-user-menu .shell-language select {
+  width: 100%;
+}
+
+.admin-user-menu__items {
+  display: grid;
+  margin: 0;
+  padding: var(--ah-space-2) 0 0;
+  list-style: none;
+  border-top: 1px solid var(--ah-color-border);
+}
+
+.admin-shell__actions .admin-user-menu__items button {
+  display: block;
+  width: 100%;
+  padding: var(--ah-space-2) var(--ah-space-3);
+  color: var(--ah-color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border: 0;
+}
+
+.admin-user-menu__items button:hover,
+.admin-user-menu__items button:focus-visible {
+  background: var(--ah-color-surface-2);
+}
+
 .admin-shell > .ah-sidebar {
   width: 100%;
   min-height: 100%;

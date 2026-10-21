@@ -339,6 +339,7 @@
       "street": "Street and number"
     },
     "imageNotice": "{gender, select, FEMALE {Does not authorise use of her image: do not publish photos showing her.} other {Does not authorise use of his image: do not publish photos showing him.}}",
+    "readmissionPending": "This member has a pending readmission: validate or reject it from the dashboard before changing the record.",
     "impersonate": {
       "description": "The app will open as the member sees it. Actions will be audited with the administrator who performs them.",
       "reason": "Reason (optional)",

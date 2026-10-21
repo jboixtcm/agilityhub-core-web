@@ -154,16 +154,20 @@ const DOG_FIELDS = new Set([
 ]);
 
 const CODE_ROUTES: Readonly<Record<string, { field?: string; step: SignupStep }>> = {
+  // E11-W06 W12 (S04 §2 16): the codes the published `POST /signup` adds, on their step and field.
+  CHIP_ALREADY_EXISTS: { field: "chip", step: "dog" },
   CONSENT_VERSION_OUTDATED: { field: "privacy", step: "payment" },
   DOG_CHIP_ALREADY_REGISTERED: { field: "chip", step: "dog" },
   DOG_DOCUMENT_REQUIRED: { field: "documents", step: "dog" },
   FAMILY_HOLDER_NOT_FOUND: { field: "familyHolder", step: "family" },
   FILE_NOT_FOUND: { field: "documents", step: "dog" },
+  ID_DOCUMENT_ALREADY_EXISTS: { field: "idDocument", step: "person" },
   ID_DOCUMENT_AMBIGUOUS: { field: "idDocument", step: "person" },
   INVALID_IBAN: { field: "iban", step: "payment" },
   INVALID_ID_DOCUMENT: { field: "idDocument", step: "person" },
   INVALID_PHONE: { field: "phones0", step: "person" },
   MEMBER_ALREADY_EXISTS: { step: "person" },
+  PAYMENT_METHOD_NOT_AVAILABLE: { field: "paymentMethod", step: "payment" },
   PLAN_NOT_AVAILABLE: { field: "plan", step: "dog" },
   SIGNUP_ALREADY_PENDING: { step: "person" },
 };
@@ -557,7 +561,9 @@ function formField(path: string): { field: string; step: SignupStep } | undefine
           ? "accountHolder"
           : rest[0] === "holderTaxId"
             ? "holderTaxId"
-            : undefined;
+            : rest[0] === "type"
+              ? "paymentMethod"
+              : undefined;
     return field === undefined ? undefined : { field, step: "payment" };
   }
   if (head === "consents") return { field: "privacy", step: "payment" };
@@ -2333,7 +2339,9 @@ function PaymentStep({
             </FormField>
           ) : (
             <>
+              {/* E11-W06 W12: `422 PAYMENT_METHOD_NOT_AVAILABLE` lands on the chooser itself. */}
               <div
+                {...invalidProps("signup-payment-method", errors.paymentMethod)}
                 className="signup-segment"
                 role="group"
                 aria-label={t("signup:payment.monthlyTitle")}
@@ -2356,6 +2364,11 @@ function PaymentStep({
                   </button>
                 ))}
               </div>
+              {errors.paymentMethod === undefined ? null : (
+                <div className="ah-form-field__error" id="signup-payment-method-error" role="alert">
+                  {errors.paymentMethod}
+                </div>
+              )}
               {draft.payment.type === "SEPA_DD" ? (
                 <>
                   <FormField error={errors.iban} id="signup-iban" label={t("signup:payment.iban")}>

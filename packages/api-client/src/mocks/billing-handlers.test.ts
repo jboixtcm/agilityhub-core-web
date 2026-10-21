@@ -1374,3 +1374,27 @@ describe("S12 the receipt PDF and the accounting export (T-12-19, T-12-20)", () 
     expect(response.headers.get("Content-Disposition")).toContain("_invoices_");
   });
 });
+
+describe("E11-W06 W9 (S12 §6, INC-68, E138) · billingPriceOverlap", () => {
+  const overlap = {
+    code: "PRICE_OVERLAP",
+    details: {
+      concept: "MONTHLY_FEE",
+      conflictingPriceId: "price-member-twin",
+      planId: "plan-member",
+      priceId: "price-member",
+    },
+    status: 409,
+  };
+
+  it("the simulation and the run answer 409 PRICE_OVERLAP {planId, concept, priceId, conflictingPriceId}; the default world simulates", async () => {
+    // October: no run yet, its simulation kept from before the twin price.
+    const october = "2026-10";
+    const kept = await simulationId(october);
+    use("billingPriceOverlap");
+    expect(await failure(simulate(october))).toEqual(overlap);
+    expect(await failure(generate({ period: october, simulationId: kept }))).toEqual(overlap);
+    use("admin");
+    expect((await simulate(october)).response.status).toBe(201);
+  });
+});

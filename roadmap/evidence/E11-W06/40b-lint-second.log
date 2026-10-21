@@ -1,0 +1,113 @@
+• turbo 2.10.12
+
+   • Packages in scope: @agilityhub/api-client, @agilityhub/auth, @agilityhub/config, @agilityhub/course-core, @agilityhub/course-ui, @agilityhub/i18n, @agilityhub/shared-types, @agilityhub/ui, clubs, clubs-admin, id
+   • Running lint in 11 packages
+   • Remote caching disabled
+
+@agilityhub/api-client:lint: cache miss, executing b1520f9c2aad0bf9
+clubs-admin:lint: cache miss, executing 88f5170f28f58a9d
+@agilityhub/ui:lint: cache miss, executing a5c16e378b0f4f99
+clubs:lint: cache miss, executing d8894b5b33a44b53
+@agilityhub/course-ui:lint: cache hit, replaying logs a5a634dee919338b
+id:lint: cache hit, replaying logs 7e476fa5e0e74da3
+@agilityhub/i18n:lint: cache hit, replaying logs a71134c7cf7f483e
+@agilityhub/config:lint: cache hit, replaying logs 72c1d9c821df515c
+@agilityhub/shared-types:lint: cache hit, replaying logs a946566fb9efb741
+@agilityhub/course-ui:lint: 
+@agilityhub/course-ui:lint: > @agilityhub/course-ui@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-ui
+id:lint: 
+id:lint: > id@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/id
+id:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+id:lint: 
+@agilityhub/i18n:lint: 
+@agilityhub/course-ui:lint: > eslint src tests harness e2e playwright.config.ts vite.harness.config.ts --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-ui:lint: 
+@agilityhub/course-core:lint: cache hit, replaying logs 983b4c192821f2d7
+@agilityhub/i18n:lint: > @agilityhub/i18n@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/i18n
+@agilityhub/i18n:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/i18n:lint: 
+@agilityhub/config:lint: 
+@agilityhub/config:lint: > @agilityhub/config@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/config
+@agilityhub/course-core:lint: 
+@agilityhub/course-core:lint: > @agilityhub/course-core@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/course-core
+@agilityhub/shared-types:lint: 
+@agilityhub/shared-types:lint: > @agilityhub/shared-types@0.0.1 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/shared-types
+@agilityhub/shared-types:lint: > eslint src tests scripts --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/shared-types:lint: 
+@agilityhub/course-core:lint: > eslint src tests --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/course-core:lint: 
+@agilityhub/config:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/config:lint: 
+@agilityhub/auth:lint: cache miss, executing 93f53c0dfdf1d31b
+clubs:lint: 
+clubs:lint: > clubs@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs
+clubs:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs:lint: 
+@agilityhub/api-client:lint: 
+@agilityhub/api-client:lint: > @agilityhub/api-client@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/api-client
+@agilityhub/api-client:lint: > eslint src --ignore-pattern src/generated/** --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/api-client:lint: 
+clubs-admin:lint: 
+clubs-admin:lint: > clubs-admin@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin
+clubs-admin:lint: > eslint . --max-warnings 0 --config ../../eslint.config.mjs
+clubs-admin:lint: 
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: > @agilityhub/auth@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth
+@agilityhub/auth:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/auth:lint: 
+@agilityhub/ui:lint: 
+@agilityhub/ui:lint: > @agilityhub/ui@0.0.0 lint /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/ui
+@agilityhub/ui:lint: > eslint src --max-warnings 0 --config ../../eslint.config.mjs
+@agilityhub/ui:lint: 
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: /Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth/src/return-path.ts
+@agilityhub/auth:lint:   40:31  error  Using the spread operator on a string can mishandle special characters, as can `.split("")`.
+@agilityhub/auth:lint: - `...` produces Unicode code points, which will decompose complex emojis into individual emojis
+@agilityhub/auth:lint: - .split("") produces UTF-16 code units, which breaks rich characters in many languages
+@agilityhub/auth:lint: Consider using `Intl.Segmenter` for locale-aware string decomposition.
+@agilityhub/auth:lint: Otherwise, if you don't need to preserve emojis or other non-Ascii characters, disable this lint rule on this line or configure the 'allow' rule option  @typescript-eslint/no-misused-spread
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint: ✖ 1 problem (1 error, 0 warnings)
+@agilityhub/auth:lint: 
+@agilityhub/auth:lint:  ELIFECYCLE  Command failed with exit code 1.
+@agilityhub/auth#lint:  WARNING  command finished with error, but continuing...
+clubs:lint: 
+clubs:lint: /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs/src/App.test.tsx
+clubs:lint:   411:1  error  Async function 'passwordLogin' has no 'await' expression  @typescript-eslint/require-await
+clubs:lint: 
+clubs:lint: ✖ 1 problem (1 error, 0 warnings)
+clubs:lint: 
+clubs:lint:  ELIFECYCLE  Command failed with exit code 1.
+clubs#lint:  WARNING  command finished with error, but continuing...
+clubs-admin:lint: 
+clubs-admin:lint: /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/UserMenu.tsx
+clubs-admin:lint:   145:9  error  Avoid non-native interactive elements. If using native HTML is not possible, add an appropriate role and support for tabbing, mouse, keyboard, and touch inputs to an interactive content element  jsx-a11y/no-static-element-interactions
+clubs-admin:lint: 
+clubs-admin:lint: /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/billing/BillingModals.tsx
+clubs-admin:lint:   26:1  error  There should be no empty line within import group  import/order
+clubs-admin:lint: 
+clubs-admin:lint: /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/census/CensusRecordPage.tsx
+clubs-admin:lint:   1309:9  error  'locale' is assigned a value but never used  @typescript-eslint/no-unused-vars
+clubs-admin:lint:   1938:9  error  'locale' is assigned a value but never used  @typescript-eslint/no-unused-vars
+clubs-admin:lint: 
+clubs-admin:lint: /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/census/NotificationPreferencesBlock.test.tsx
+clubs-admin:lint:   9:1  error  `msw` import should occur before type import of `react`  import/order
+clubs-admin:lint: 
+clubs-admin:lint: /Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin/src/dashboard/signup-review-errors.ts
+clubs-admin:lint:   56:5  error  Expected a 'break' statement before 'case'  no-fallthrough
+clubs-admin:lint: 
+clubs-admin:lint: ✖ 6 problems (6 errors, 0 warnings)
+clubs-admin:lint:   2 errors and 0 warnings potentially fixable with the `--fix` option.
+clubs-admin:lint: 
+clubs-admin:lint:  ELIFECYCLE  Command failed with exit code 1.
+clubs-admin#lint:  WARNING  command finished with error, but continuing...
+@agilityhub/auth#lint:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/packages/auth) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run lint exited (1)
+clubs#lint:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run lint exited (1)
+clubs-admin#lint:  ERROR  command (/Users/jordib/dev/agilityhub/agilityhub-core-web/apps/clubs-admin) /Users/jordib/.nvm/versions/node/v24.15.0/bin/pnpm run lint exited (1)
+
+ Tasks:    8 successful, 11 total
+Cached:    6 cached, 11 total
+  Time:    56.623s 
+Failed:    @agilityhub/auth#lint, clubs#lint, clubs-admin#lint
+
+ ERROR  run failed: command  exited (1)

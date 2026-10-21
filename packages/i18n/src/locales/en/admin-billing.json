@@ -280,6 +280,7 @@
     "sepaNotConfigured": "The SEPA remittance is not configured.",
     "openSettings": "Open Settings",
     "periodTooFar": "You can only simulate up to three months ahead.",
+    "priceOverlap": "The plan {plan} has two current prices for {concept}. Fix it in Modalities and rates.",
     "notRollbackable": "The remittance cannot be rolled back:",
     "staleInvoice": "The receipt has changed. Open it again.",
     "maxAttempts": "{attempts} of the {max} collection attempts have already been made.",

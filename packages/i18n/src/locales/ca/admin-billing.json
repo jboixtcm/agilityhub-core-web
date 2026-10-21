@@ -280,6 +280,7 @@
     "sepaNotConfigured": "La remesa SEPA no està configurada.",
     "openSettings": "Obre Paràmetres",
     "periodTooFar": "Només es pot simular fins a tres mesos endavant.",
+    "priceOverlap": "La modalitat {plan} té dos preus vigents per a {concept}. Corregeix-ho a Modalitats i tarifes.",
     "notRollbackable": "No es pot retrocedir la remesa:",
     "staleInvoice": "El rebut ha canviat. Torna a obrir-lo.",
     "maxAttempts": "Ja s'han fet {attempts} dels {max} intents de cobrament.",

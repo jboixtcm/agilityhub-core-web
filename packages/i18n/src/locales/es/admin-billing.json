@@ -280,6 +280,7 @@
     "sepaNotConfigured": "La remesa SEPA no está configurada.",
     "openSettings": "Abrir Parámetros",
     "periodTooFar": "Solo se puede simular hasta tres meses vista.",
+    "priceOverlap": "La modalidad {plan} tiene dos precios vigentes para {concept}. Corrígelo en Modalidades y tarifas.",
     "notRollbackable": "No se puede retroceder la remesa:",
     "staleInvoice": "El recibo ha cambiado. Vuelve a abrirlo.",
     "maxAttempts": "Ya se han hecho {attempts} de los {max} intentos de cobro.",

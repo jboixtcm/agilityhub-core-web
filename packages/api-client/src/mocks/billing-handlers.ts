@@ -15,6 +15,7 @@ import {
   listItem,
   memberMethod,
   periodCounts,
+  periodRemittance,
   periodRun,
   remittanceListItem,
   resetBillingState,
@@ -83,6 +84,29 @@ function refused() {
 
 function notFound() {
   return apiError("NOT_FOUND", "Not found", 404);
+}
+
+/**
+ * S12 §6 (INC-68, E138): two prices of one plan and concept valid on the issue date — the details
+ * billing answers on the simulation and the run (`billingPriceOverlap`).
+ */
+function priceOverlap() {
+  return currentMockScenario().billingPriceOverlap === true
+    ? HttpResponse.json(
+        {
+          code: "PRICE_OVERLAP",
+          details: {
+            concept: "MONTHLY_FEE",
+            conflictingPriceId: "price-member-twin",
+            planId: "plan-member",
+            priceId: "price-member",
+          },
+          message: "Two current prices of one plan and concept",
+          traceId: "mock-price-overlap",
+        },
+        { status: 409 },
+      )
+    : undefined;
 }
 
 function json(body: unknown, status = 200) {
@@ -467,7 +491,7 @@ function billingPeriod(period: string): BillingPeriod {
     remittance:
       remittance === undefined
         ? null
-        : { fileAvailable: remittance.fileAvailable, id: remittance.id, status: remittance.status },
+        : periodRemittance(remittance, today()),
     run:
       run === undefined
         ? null
@@ -567,6 +591,8 @@ export const billingHandlers = [
     if (period > shiftPeriod(today().slice(0, 7), 3)) {
       return validationError("period", "OUT_OF_RANGE");
     }
+    const overlap = priceOverlap();
+    if (overlap !== undefined) return overlap;
     const target = world();
     const simulation = buildSimulation(target, period, now());
     target.simulations.set(period, { simulation, stale: false });
@@ -593,6 +619,8 @@ export const billingHandlers = [
         return apiError("RUN_EXISTS", "A live run exists for this month", 409);
       }
       if (kept.stale) return apiError("SIMULATION_STALE", "Simulation is stale", 409);
+      const overlap = priceOverlap();
+      if (overlap !== undefined) return overlap;
       const sepa = target.providers.includes("SEPA_XML");
       const requested = payload?.collectionDate ?? `${period}-01`;
       const earliest = businessDaysAfter(today(), 2);

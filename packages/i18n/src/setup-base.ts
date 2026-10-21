@@ -48,6 +48,26 @@ export async function createI18nWithBackend(
       ns: [...initialNamespaces],
       supportedLngs: [...productLocales],
     });
+  followDocumentLanguage(instance);
 
   return instance;
+}
+
+/**
+ * AGENTS rule 6, CONVENCIONS_I18N §1 (E11-W06 W6): `<html lang>` is the language the app shows,
+ * from the start and after every change (the bootstraps' `lang="ca"` is only the first paint).
+ */
+function followDocumentLanguage(instance: i18n): void {
+  if (typeof document === "undefined") {
+    return;
+  }
+  const apply = (language: string | undefined) => {
+    if (language !== undefined && language !== "") {
+      document.documentElement.lang = language;
+    }
+  };
+  apply(instance.resolvedLanguage ?? instance.language);
+  instance.on("languageChanged", (language: string) => {
+    apply(instance.resolvedLanguage ?? language);
+  });
 }

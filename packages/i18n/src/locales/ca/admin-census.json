@@ -347,6 +347,7 @@
       "street": "Carrer i número"
     },
     "imageNotice": "{gender, select, FEMALE {No autoritza l'ús de la seva imatge: no publiqueu fotos on surti ella.} other {No autoritza l'ús de la seva imatge: no publiqueu fotos on surti ell.}}",
+    "readmissionPending": "Aquest abonat té una readmissió pendent: valida-la o rebutja-la des del tauler abans de canviar la fitxa.",
     "impersonate": {
       "description": "S'obrirà l'app tal com la veu l'abonat. Les accions quedaran auditades amb l'administrador que les faci.",
       "reason": "Motiu (opcional)",

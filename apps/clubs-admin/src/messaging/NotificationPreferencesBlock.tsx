@@ -9,8 +9,11 @@ import {
   shownPreferences,
 } from "@agilityhub/api-client";
 import { Button, Card, Icon, Select, Skeleton, Switch } from "@agilityhub/ui";
-import { useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { isReadmissionPending } from "../dashboard/readmission";
+import { ReadmissionPendingMessage } from "../dashboard/ReadmissionPendingMessage";
 
 import "./messaging.css";
 
@@ -46,7 +49,7 @@ export function NotificationPreferencesBlock({
 }: {
   client: ApiClient;
   memberId: string;
-  onFeedback: (feedback: { message: string; tone: "danger" | "success" }) => void;
+  onFeedback: (feedback: { message: ReactNode; tone: "danger" | "success" }) => void;
   onNavigate?: ((path: string) => void) | undefined;
 }) {
   const { t } = useTranslation(["admin-census", "errors"]);
@@ -99,9 +102,14 @@ export function NotificationPreferencesBlock({
           return;
         }
         onFeedback({
-          message: isApiError(error)
-            ? t(`errors:${error.code}`, { defaultValue: t("admin-census:common.genericError") })
-            : t("admin-census:common.genericError"),
+          // S04 R-04-06 (E11-W06 W10): a record frozen by a pending readmission points to D2.
+          message: isReadmissionPending(error) ? (
+            <ReadmissionPendingMessage memberId={memberId} />
+          ) : isApiError(error) ? (
+            t(`errors:${error.code}`, { defaultValue: t("admin-census:common.genericError") })
+          ) : (
+            t("admin-census:common.genericError")
+          ),
           tone: "danger",
         });
       },
@@ -109,7 +117,7 @@ export function NotificationPreferencesBlock({
         onFeedback({ message: t("admin-census:member.feedback.preferences"), tone: "success" });
       },
     });
-  }, [onFeedback, saver, t]);
+  }, [memberId, onFeedback, saver, t]);
 
   const change = (patch: PreferencesPatch) => {
     saver.edit(patch);

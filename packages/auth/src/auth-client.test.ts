@@ -423,6 +423,139 @@ describe("T-01-21 AuthClient session flow", () => {
     expect(meRequests).toBe(1);
   });
 
+  /**
+   * The browser's cookie jar shared by the tabs, and the api's refresh family (R-01-06, INC-36):
+   * a live token rotates; a rotated one whose child is still live gets one grace sibling; anything
+   * else is a reuse that revokes the family (`400 REFRESH_REUSED`).
+   */
+  function sharedCookieFamily() {
+    const jar = { cookie: "r0" };
+    const live = new Set(["r0"]);
+    const childOf = new Map<string, string>();
+    const graceUsed = new Set<string>();
+    const state = { inFlight: 0, issued: 0, maxInFlight: 0, refreshes: 0, revoked: false };
+    server.use(
+      http.post(TOKEN_ENDPOINT, async () => {
+        // The cookie the request carries is the jar's when it is sent.
+        const presented = jar.cookie;
+        state.refreshes += 1;
+        state.inFlight += 1;
+        state.maxInFlight = Math.max(state.maxInFlight, state.inFlight);
+        await delay(25);
+        state.inFlight -= 1;
+        const next = () => {
+          state.issued += 1;
+          const token = `r${String(state.issued)}`;
+          live.add(token);
+          jar.cookie = token;
+          return HttpResponse.json(tokens(`access-${String(state.issued)}`));
+        };
+        if (!state.revoked && live.has(presented)) {
+          live.delete(presented);
+          const response = next();
+          childOf.set(presented, jar.cookie);
+          return response;
+        }
+        const child = childOf.get(presented);
+        if (!state.revoked && child !== undefined && live.has(child) && !graceUsed.has(presented)) {
+          graceUsed.add(presented);
+          return next();
+        }
+        state.revoked = true;
+        live.clear();
+        return HttpResponse.json(
+          { code: "REFRESH_REUSED", details: {}, message: "Reused", traceId: "t" },
+          { status: 400 },
+        );
+      }),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+    );
+    return state;
+  }
+
+  it("R-01-06 (E11-W06 W3) three clients sharing one cookie jar restore together → the token endpoint is called sequentially, never two in flight, and all three end signed in", async () => {
+    const family = sharedCookieFamily();
+    const tabs = [1, 2, 3].map(
+      () => new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL }),
+    );
+
+    const restored = await Promise.all(tabs.map((tab) => tab.restoreSession()));
+
+    expect(restored).toEqual([memberMe, memberMe, memberMe]);
+    expect(family.refreshes).toBe(3);
+    expect(family.maxInFlight).toBe(1);
+    expect(family.revoked).toBe(false);
+    expect(new Set(tabs.map((tab) => tab.getAccessToken())).size).toBe(3);
+    // The lease of the fallback is released.
+    expect(localStorage).toHaveLength(0);
+  });
+
+  it("R-01-06 (E11-W06 W3) with Web Locks, the refresh runs inside the lock «agilityhub.refresh:<clientId>»", async () => {
+    const family = sharedCookieFamily();
+    const names: string[] = [];
+    let queue = Promise.resolve();
+    Object.defineProperty(navigator, "locks", {
+      configurable: true,
+      value: {
+        request: (name: string, callback: () => Promise<unknown>) => {
+          names.push(name);
+          const run = queue.then(callback);
+          queue = run.then(
+            () => undefined,
+            () => undefined,
+          );
+          return run;
+        },
+      },
+    });
+    try {
+      const tabs = [1, 2, 3].map(
+        () =>
+          new AuthClient({
+            apiBaseUrl: API_BASE_URL,
+            clientId: "clubs-admin",
+            identityBaseUrl: IDENTITY_BASE_URL,
+          }),
+      );
+      const restored = await Promise.all(tabs.map((tab) => tab.restoreSession()));
+      expect(restored).toEqual([memberMe, memberMe, memberMe]);
+      expect(names).toEqual([
+        "agilityhub.refresh:clubs-admin",
+        "agilityhub.refresh:clubs-admin",
+        "agilityhub.refresh:clubs-admin",
+      ]);
+      expect(family.maxInFlight).toBe(1);
+      expect(localStorage).toHaveLength(0);
+    } finally {
+      Reflect.deleteProperty(navigator, "locks");
+    }
+  });
+
+  it("R-01-06 (E11-W06 W3) a tab that waited for another tab's refresh and meanwhile got a live token skips its own", async () => {
+    let refreshes = 0;
+    server.use(
+      http.post(TOKEN_ENDPOINT, async ({ request }) => {
+        const grant = (await request.formData()).get("grant_type");
+        if (grant === "refresh_token") refreshes += 1;
+        return HttpResponse.json(tokens(grant === "password" ? "access-login" : "access-refresh"));
+      }),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(memberMe)),
+    );
+    // Another tab holds the refresh lease.
+    localStorage.setItem(
+      "agilityhub.refresh:clubs-app",
+      JSON.stringify({ expiresAt: Date.now() + 10_000, owner: "other-tab" }),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    const waiting = client.refresh();
+    await client.login("biel.roca@example.test", "secret-password");
+    localStorage.removeItem("agilityhub.refresh:clubs-app");
+
+    await expect(waiting).resolves.toMatchObject({ access_token: "access-login" });
+    expect(refreshes).toBe(0);
+    expect(client.getAccessToken()).toBe("access-login");
+  });
+
   it.each([400, 401])(
     "T-01-04 treats a %i cookie refresh response as an anonymous session",
     async (status) => {
@@ -631,6 +764,39 @@ describe("T-01-11 E4-W16 step 2 (INC-18, E47): an impersonated session never ref
     await expect(client.logout()).resolves.toBeUndefined();
     expect(revokes).toEqual(["Bearer impersonation-access"]);
     expect(tokenRequests).toBe(0);
+    expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
+  });
+
+  it("S01 R-01-10 (E11-W06 step 14, ruling E151): «Surt» of an impersonated session revokes its grant — RevokeRequest.token is the impersonation JWT", async () => {
+    const revokes: { authorization: string; body: unknown }[] = [];
+    server.use(
+      http.post(TOKEN_ENDPOINT, () =>
+        HttpResponse.json({
+          access_token: "impersonation-access",
+          expires_in: 3600,
+          scope: "",
+          token_type: "Bearer",
+        }),
+      ),
+      http.get(`${API_BASE_URL}/me`, () => HttpResponse.json(impersonatedMe)),
+      http.post(REVOKE_ENDPOINT, async ({ request }) => {
+        revokes.push({
+          authorization: request.headers.get("Authorization") ?? "",
+          body: await request.json(),
+        });
+        return new HttpResponse(null, { status: 200 });
+      }),
+    );
+    const client = new AuthClient({ apiBaseUrl: API_BASE_URL, identityBaseUrl: IDENTITY_BASE_URL });
+    await client.exchangeHandoff("impersonation-code");
+    expect(client.isImpersonated()).toBe(true);
+
+    await client.logout();
+
+    expect(revokes).toEqual([
+      { authorization: "Bearer impersonation-access", body: { token: "impersonation-access" } },
+    ]);
+    expect(client.getAccessToken()).toBeNull();
     expect(sessionStorage.getItem(IMPERSONATION_STORAGE_KEY)).toBeNull();
   });
 });
