@@ -1,0 +1,4 @@
+Checking formatting...
+[warn] packages/i18n/src/locales/es/console.json
+[warn] packages/i18n/src/locales/es/enums.json
+[warn] Code style issues found in 2 files. Run Prettier with --write to fix.

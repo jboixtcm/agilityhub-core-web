@@ -1,0 +1,279 @@
+check-es-actions: node_modules/.cache/E11-W04-es-before/es
+  kept admin-billing:confirm.rollbackKeywordLabel · «Escribe {keyword} para confirmarlo» — D6's rollback field label: an instruction
+  kept admin-catalogs:common.active · «Activa» — the adjective: a catalog switch's state («Active»)
+  kept admin-catalogs:plans.columns.active · «Activa» — the adjective: D8's column header («Active»)
+  kept admin-census:common.choose · «Elige una opción» — a select's empty option: an instruction
+  kept admin-census:signupReview.confirmNothingPaid · «Confirma que no se ha cobrado ningún importe» — D2's checkbox statement, not an action
+  kept admin-courses:import.file · «Elige el archivo .txt que exporta Smarter» — a file input's label: an instruction
+  kept admin-courses:doors.active · «Activa» — the adjective: the door in use
+  kept admin-messaging:templates.choose · «Elige una plantilla» — D9's empty-state title: an instruction
+  kept admin-scheduling:templates.gridFooter · «Haz clic en el nombre de un día para verlo por pista o por instructor · color = pista · gris = sin pista» — D3's grid legend: an instruction
+  kept auth:profile.pushDenied · «Activa las notificaciones en el navegador para recibirlas en el móvil» — 12's hint to allow notifications: an instruction
+  kept auth:profile.iosInstall · «Añade la app a la pantalla de inicio para recibir notificaciones» — 12's hint to add the app to the home screen: an instruction
+  kept auth:profile.learnLink · «Aprende con AgilityHub» — 12's row to the AgilityHub learning site: a call to another product
+  kept booking:confirm.swapTitle · «Elige cuál anulas para hacerle sitio» — 06's swap title: an instruction
+  kept common:gallery.active · «Activa» — the adjective: the dev gallery's state chip
+  kept console:theme.logoAlt.mark · «Marca» — the noun: the alt text of the club's mark
+  kept console:theme.logos.mark · «Marca (versión pequeña)» — the noun: a logo slot's name
+  kept id:login.title · «Entra en AgilityHub» — the login page's title
+  kept id:password.repeat · «Repite la contraseña nueva» — the second password field's label: an instruction
+  kept notifications:unsubscribe.toPreferences · «Cambia tus avisos en el perfil» — a navigation link written as a sentence
+  kept signup:person.reviewEmailTitle · «Revisa el correo» — the signup's heading after the verification mail: an instruction
+  kept signup:success.addDogTitle · «Añade un perro» — the add-dog flow's title on its success screen
+admin-activities:list.search · «Busca una actividad»
+admin-activities:form.chooseDocument · «Elige un documento»
+admin-activities:registrants.search · «Busca un abonado»
+admin-audit:drawer.close · «Cierra el detalle del cambio»
+admin-audit:exports.close · «Cierra las exportaciones»
+admin-audit:exports.download · «Descarga {fileName}»
+admin-audit:rowLabel · «Abre el cambio «{action}»»
+admin-audit:search · «Busca por acción, actor o entidad»
+admin-billing:actions.retry · «Vuelve a intentarlo»
+admin-census:inactivity.modify · «Modifica los meses»
+admin-census:inactivity.terminate · «Finaliza el periodo»
+admin-census:inactivity.approve · «Aprueba»
+admin-census:inactivity.deny · «Deniega»
+admin-census:inactivity.overrideDeadline · «Omite el plazo del día {day}»
+admin-census:inactivity.createApprove · «Crea y aprueba»
+admin-census:inactivity.approveConfirmTitle · «Aprueba el periodo»
+admin-census:inactivity.errors.openExisting · «Abre el periodo existente»
+admin-census:leave.cancelPlanned · «Cancela la baja prevista»
+admin-census:leave.direct · «Programa la baja»
+admin-census:leave.approve · «Aprueba»
+admin-census:leave.deny · «Deniega»
+admin-census:leave.confirm · «Programa la baja»
+admin-census:reactivation.title · «Reactiva al abonado»
+admin-census:reactivation.action · «Reactiva al abonado»
+admin-census:paymentMethod.sendCardLink · «Envía el enlace para actualizar la tarjeta»
+admin-census:paymentMethod.copy · «Copia el enlace»
+admin-census:inactivityLeavePage.addFilter · «Añade el filtro»
+admin-census:inactivityLeavePage.clearFilters · «Limpia los filtros»
+admin-census:inactivityLeavePage.createView · «Crea la vista»
+admin-census:inactivityLeavePage.deleteView · «Elimina la vista»
+admin-census:inactivityLeavePage.export · «Exporta»
+admin-census:inactivityLeavePage.filter · «Filtra»
+admin-census:inactivityLeavePage.removeFilter · «Elimina el filtro {field}»
+admin-census:inactivityLeavePage.renameView · «Cambia el nombre»
+admin-census:inactivityLeavePage.selectAll · «Selecciona todo»
+admin-census:inactivityLeavePage.sortAscending · «Ordena {column} ascendente»
+admin-census:inactivityLeavePage.sortDescending · «Ordena {column} descendente»
+admin-census:inactivityLeavePage.openMember · «Abre la ficha de {name}»
+admin-census:inactivityLeavePage.inactivity.search · «Busca inactividades»
+admin-census:inactivityLeavePage.leave.search · «Busca bajas»
+admin-census:member.preferences.retry · «Vuelve a intentarlo»
+admin-census:signupReview.actions.edit · «EDITA LOS DATOS»
+admin-census:signupReview.actions.reject · «RECHAZA (con motivo)»
+admin-census:signupReview.actions.validate · «VALIDA EL ALTA»
+admin-census:signupReview.actions.save · «GUARDA LOS CAMBIOS»
+admin-census:signupReview.actions.reload · «Vuelve a cargar»
+admin-census:signupReview.editTitle · «Edita los datos de la preinscripción»
+admin-census:signupReview.rejectTitle · «Rechaza la preinscripción»
+admin-census:signupReview.familySearch · «Busca el titular»
+admin-census:signupReview.familyAttach · «Añade al grupo de {name}»
+admin-census:signupReview.familyChange · «Cambia»
+admin-census:signupReview.resolvedLink · «Abre la ficha del abonado»
+admin-census:bookings.showMore · «Muestra más»
+admin-census:bookings.retry · «Vuelve a intentarlo»
+admin-census:followup.search · «Busca en el seguimiento»
+admin-census:followup.selectRow · «Abre la ficha de {name}»
+admin-census:followup.dismiss · «Cierra»
+admin-census:followup.readRetry · «Vuelve a intentarlo»
+admin-courses:common.retry · «Vuelve a intentarlo»
+admin-courses:list.search · «Busca un recorrido»
+admin-courses:setups.review · «Revísala»
+admin-dashboard:signups.validate · «VALIDA»
+admin-dashboard:signups.validateLabel · «VALIDA: {name}»
+admin-messaging:templates.retry · «Vuelve a intentarlo»
+admin-messaging:templates.create · «Crea»
+admin-messaging:templates.cancel · «Cancela»
+admin-messaging:templates.close · «Cierra»
+admin-messaging:templates.insertVariable · «Inserta [[{label}]]»
+admin-messaging:templates.save · «GUARDA»
+admin-messaging:templates.reset · «Restaura el texto por defecto»
+admin-messaging:templates.resetAction · «Restaura»
+admin-messaging:templates.disable · «Desactiva»
+admin-messaging:templates.enable · «Activa»
+admin-messaging:templates.delete · «Elimina»
+admin-messaging:templates.deleteAction · «Elimina»
+admin-messaging:templates.reload · «Recarga»
+admin-messaging:preview.close · «Cierra»
+admin-messaging:send.submit · «ENVÍA»
+admin-messaging:send.cancel · «Cancela»
+admin-messaging:send.close · «Cierra»
+admin-messaging:log.search · «Busca por código o destinatario»
+admin-messaging:log.selectRow · «Selecciona el aviso de {name}»
+admin-messaging:log.detail.close · «Cierra»
+admin-scheduling:common.retry · «Vuelve a intentarlo»
+admin-scheduling:templates.duplicate · «Duplica»
+admin-scheduling:templates.form.duplicateTitle · «Duplica la plantilla»
+admin-scheduling:templates.bandForm.remove · «Borra la franja»
+admin-scheduling:classCard.submit · «CREA LA CLASE»
+admin-scheduling:classCard.remove · «Quita de la plantilla»
+admin-scheduling:calendar.selected.accept · «ACEPTA»
+admin-scheduling:calendar.selected.cancel · «ANULA LA CLASE»
+admin-scheduling:calendar.selected.delete · «ELIMINA»
+admin-scheduling:calendar.selected.deleteDraft · «Elimina»
+admin-scheduling:calendar.selected.close · «Cierra»
+admin-scheduling:calendar.ringBookings.confirm · «Anula las reservas y guarda»
+admin-scheduling:calendar.ringBookings.back · «Vuelve atrás»
+admin-scheduling:calendar.createForm.submit · «CREA LA CLASE»
+admin-scheduling:calendar.blockForm.submit · «GUARDA EL BLOQUEO»
+admin-scheduling:calendar.blockForm.cancel · «Anula el bloqueo»
+admin-scheduling:calendar.blockForm.openActivity · «Abre la actividad»
+admin-scheduling:cancelModal.back · «Vuelve atrás»
+admin-scheduling:cancelModal.confirmWaitlist · «ANULA Y AVISA A LA LISTA DE ESPERA»
+admin-scheduling:registrants.retry · «Vuelve a intentarlo»
+admin-scheduling:registrants.remove · «Quita de la lista»
+admin-scheduling:registrants.removeLabel · «Quita {name} de la lista de espera»
+admin-scheduling:registrants.removeConfirm.confirm · «Quita de la lista»
+admin-scheduling:registrants.removeConfirm.cancel · «Cancela»
+admin-settings:clubPages.deactivate · «Desactiva»
+admin-settings:clubPages.editorTitle · «Edita la página»
+admin-settings:clubPages.publish · «Publica»
+admin-settings:clubPages.publishTitle · «Publica la página»
+admin-settings:clubPages.saveDraft · «Guarda el borrador»
+admin-settings:jobs.dryRun · «Simula»
+admin-settings:jobs.dryRunLabel · «Simula {name}»
+admin-settings:jobs.run · «Ejecuta ahora»
+admin-settings:jobs.runLabel · «Ejecuta ahora {name}»
+admin-settings:jobs.disable · «Desactiva»
+admin-settings:jobs.cancel · «Cancela»
+admin-settings:jobs.retry · «Vuelve a intentarlo»
+admin-settings:jobs.runs.filters · «Filtra las ejecuciones»
+admin-settings:jobs.runs.clear · «Quita los filtros»
+admin-training:list.dismiss · «Cierra el aviso»
+admin-training:bookings.search · «Busca por abonado, perro o pista»
+admin-training:blocks.search · «Busca por pista o nota»
+admin-training:blocks.cancel · «Anula el bloqueo»
+admin-training:blocks.cancelLabel · «Anula el bloqueo de {when}»
+auth:access.enter · «ENTRA»
+auth:activation.savePassword · «GUARDA LA CONTRASEÑA»
+auth:activation.recover · «Recupérala»
+auth:activation.retry · «Vuelve a intentarlo»
+auth:profileChoice.remember · «Recuerda mi elección»
+auth:profile.password · «Cambia la contraseña»
+auth:profile.retry · «Vuelve a intentarlo»
+auth:profile.logout · «Cierra la sesión»
+auth:profile.passwordTitle · «Cambia la contraseña»
+auth:profile.savePassword · «GUARDA LA CONTRASEÑA»
+auth:onboarding.retry · «Vuelve a intentarlo»
+billing:cardBanner.action · «Actualiza la tarjeta»
+booking:classes.retry · «Vuelve a intentarlo»
+booking:waitlist.claim · «COGE LA PLAZA»
+booking:waitlist.leave · «SAL DE LA LISTA DE ESPERA»
+booking:confirm.swapButton · «ANULA {oldDay} Y CONFIRMA {newDay}»
+booking:confirm.retry · «Vuelve a intentarlo»
+booking:detail.cancel · «ANULA LA RESERVA»
+booking:detail.cancelConfirm · «ANULA»
+booking:detail.retry · «Vuelve a intentarlo»
+census:myDogs.addDog · «＋ AÑADE UN PERRO»
+console:catalogs.clone · «Clona de un club plantilla»
+console:checklist.goToStatus · «Activa el club»
+console:common.cancel · «Cancela»
+console:common.close · «Cierra»
+console:common.discard · «Descarta los cambios»
+console:common.retry · «Vuelve a intentarlo»
+console:common.save · «GUARDA»
+console:legal.publish · «Publica una versión nueva»
+console:legal.publishConfirm · «PUBLICA»
+console:legal.publishTitle · «Publica una versión nueva de los textos legales»
+console:list.openRecord · «Abre la ficha de {name}»
+console:list.search · «Busca por nombre o slug»
+console:localization.confirm · «GUARDA LOS CAMBIOS»
+console:payments.remove · «Retira el proveedor»
+console:payments.removeTitle · «Retira {name}»
+console:payments.stripe.test · «Prueba la conexión»
+console:statusTab.actions.ACTIVE · «Suspende el club»
+console:statusTab.actions.ONBOARDING · «Activa el club»
+console:statusTab.actions.SUSPENDED · «Reactiva el club»
+console:team.invite · «INVITA»
+console:team.inviteTitle · «Invita a un administrador»
+console:team.remove · «Retira»
+console:team.removeTitle · «Retira a {name}»
+console:theme.addRingColor · «Añade un color»
+console:theme.chooseLogo · «Elige una imagen»
+console:theme.chooseLogoLabel · «Elige una imagen: {logo}»
+console:theme.preview.book · «RESERVA»
+console:theme.removeLogo · «Quita la imagen»
+console:theme.removeRingColor · «Quita el color {index}»
+console:wizard.create · «CREA EL CLUB»
+console:wizard.discardDraft · «Descarta el borrador»
+console:wizard.enableProvider · «Activa {name}»
+console:wizard.saveDraft · «Guarda como borrador»
+courses:retry · «Vuelve a intentarlo»
+courses:viewer.register · «Registra qué hay montado»
+courses:viewer.dismantle · «Marca como desmontado»
+courses:viewer.join.submit · «Únete»
+courses:viewer.zoomIn · «Amplía»
+courses:viewer.zoomOut · «Reduce»
+courses:viewer.rotate · «Gira un cuarto de vuelta»
+courses:register.title · «Registra qué hay montado»
+courses:register.takePhoto · «Haz una foto o elige una»
+courses:register.changePhoto · «Cambia la foto»
+courses:register.search · «Busca un recorrido»
+courses:register.searchSubmit · «Busca»
+courses:register.submit · «REGISTRA»
+courses:session.openSetup · «Abre el montaje»
+courses:session.finish · «FINALIZA»
+courses:blocks.columnRegister · «Registra qué hay montado en {ring}»
+courses:blocks.registerOn · «Registra qué hay montado en {ring}»
+courses:blocks.openCourse · «Abre el recorrido»
+history:close · «Cierra»
+history:retry · «Vuelve a intentarlo»
+home:reservations.bookClass · «RESERVA UNA CLASE»
+id:account.products · «Consulta tus productos»
+id:products.openConsole · «ABRE LA CONSOLA»
+inactivity:form.submit · «ENVÍA LA SOLICITUD»
+inactivity:form.modify · «MODIFICA»
+inactivity:form.withdraw · «RETIRA LA SOLICITUD»
+instructor:day.retry · «Vuelve a intentarlo»
+instructor:attendance.photoOpen · «Muestra la foto de {dog} a pantalla completa»
+instructor:attendance.photoClose · «Cierra la foto de {dog}»
+instructor:attendance.save · «Guarda»
+instructor:attendance.dismiss · «Cierra»
+instructor:attendance.retry · «Vuelve a intentarlo»
+instructor:card.search · «Busca un alumno»
+instructor:card.retry · «Vuelve a intentarlo»
+instructor:students.search · «Busca un alumno»
+instructor:students.retry · «Vuelve a intentarlo»
+instructor:students.more · «Muestra más»
+instructor:overview.blockDrawer.cancel · «Anula el bloqueo»
+instructor:overview.registrants.retry · «Vuelve a intentarlo»
+instructor:ringBlock.submit.RESERVATION · «Reserva la pista»
+instructor:ringBlock.submit.BLOCK · «Bloquea la pista»
+instructor:ringBlock.retry · «Vuelve a intentarlo»
+instructor:ringBlock.card.submit.RESERVATION · «Reserva»
+instructor:ringBlock.card.submit.BLOCK · «Bloquea»
+instructor:tasks.create · «Añade»
+instructor:tasks.cancel · «Cancela»
+instructor:tasks.edit · «Edita la tarea»
+instructor:tasks.save · «Guarda»
+instructor:tasks.remove · «Elimina la tarea»
+instructor:tasks.deleteAction · «Elimina»
+instructor:tasks.complete · «Márcala como hecha»
+instructor:tasks.reopen · «Vuelve a dejarla pendiente»
+instructor:tasks.attach · «Adjunta un archivo»
+instructor:tasks.removeFile · «Quita {name}»
+instructor:tasks.retry · «Vuelve a intentarlo»
+instructor:tasks.close · «Cierra»
+instructor:tasks.more · «Muestra más»
+instructor:tasks.recover · «Recupera mi texto»
+instructor:agenda.retry · «Vuelve a intentarlo»
+instructor:agenda.saveSheet · «Guarda la lista»
+leave:form.submit · «ENVÍA LA SOLICITUD»
+leave:form.withdraw · «RETIRA LA SOLICITUD»
+notifications:feed.retry · «Vuelve a intentarlo»
+notifications:feed.action.CHANGE_CLASS · «CAMBIA DE CLASE»
+notifications:feed.action.CLAIM_SEAT · «COGE LA PLAZA»
+notifications:unsubscribe.retry · «Vuelve a intentarlo»
+signup:common.continue · «CONTINÚA»
+signup:common.back · «Vuelve al paso anterior»
+signup:dog.selectPlan · «Selecciona {plan}»
+signup:payment.submit · «ENVÍA LA SOLICITUD»
+signup:payment.payNow · «PAGA AHORA»
+signup:success.backToDogs · «VUELVE A MIS PERROS»
+training:confirm.button · «Confirma {day} · {from}–{to} · {ring}»
+training:confirm.idle · «Confirma»
+training:retry · «Vuelve a intentarlo»
+check-es-actions: 255 flagged, 21 kept
+check-es-actions: an es action label is written in the infinitive (ruling E137): «Guardar», «Volver a intentarlo»; add a key to KEEP only with its reason

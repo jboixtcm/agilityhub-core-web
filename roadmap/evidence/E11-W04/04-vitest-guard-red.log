@@ -1,0 +1,186 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n
+
+ ❯ src/index.test.ts (5 tests | 1 failed) 39ms
+   ❯ @agilityhub/i18n (5)
+     × E11-W04 (E137): the es action labels are infinitives 15ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/index.test.ts > @agilityhub/i18n > E11-W04 (E137): the es action labels are infinitives
+AssertionError: expected [ { …(2) }, { …(2) }, { …(2) }, …(34) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "key": "admin-census:inactivity.modify",
++     "value": "Modifica los meses",
++   },
++   {
++     "key": "admin-census:inactivity.terminate",
++     "value": "Finaliza el periodo",
++   },
++   {
++     "key": "admin-census:inactivity.overrideDeadline",
++     "value": "Omite el plazo del día {day}",
++   },
++   {
++     "key": "admin-census:leave.direct",
++     "value": "Programa la baja",
++   },
++   {
++     "key": "admin-census:leave.confirm",
++     "value": "Programa la baja",
++   },
++   {
++     "key": "admin-census:inactivityLeavePage.filter",
++     "value": "Filtra",
++   },
++   {
++     "key": "admin-courses:setups.review",
++     "value": "Revísala",
++   },
++   {
++     "key": "admin-messaging:templates.insertVariable",
++     "value": "Inserta [[{label}]]",
++   },
++   {
++     "key": "admin-messaging:templates.reload",
++     "value": "Recarga",
++   },
++   {
++     "key": "admin-settings:jobs.runs.filters",
++     "value": "Filtra las ejecuciones",
++   },
++   {
++     "key": "auth:access.forgot.action",
++     "value": "Recupérala",
++   },
++   {
++     "key": "auth:activation.recover",
++     "value": "Recupérala",
++   },
++   {
++     "key": "console:catalogs.clone",
++     "value": "Clona de un club plantilla",
++   },
++   {
++     "key": "console:statusTab.actions.ACTIVE",
++     "value": "Suspende el club",
++   },
++   {
++     "key": "console:team.inviteTitle",
++     "value": "Invita a un administrador",
++   },
++   {
++     "key": "courses:retry",
++     "value": "Vuelve a intentarlo",
++   },
++   {
++     "key": "courses:viewer.register",
++     "value": "Registra qué hay montado",
++   },
++   {
++     "key": "courses:viewer.dismantle",
++     "value": "Marca como desmontado",
++   },
++   {
++     "key": "courses:viewer.join.submit",
++     "value": "Únete",
++   },
++   {
++     "key": "courses:viewer.zoomIn",
++     "value": "Amplía",
++   },
++   {
++     "key": "courses:viewer.zoomOut",
++     "value": "Reduce",
++   },
++   {
++     "key": "courses:viewer.rotate",
++     "value": "Gira un cuarto de vuelta",
++   },
++   {
++     "key": "courses:register.title",
++     "value": "Registra qué hay montado",
++   },
++   {
++     "key": "courses:register.takePhoto",
++     "value": "Haz una foto o elige una",
++   },
++   {
++     "key": "courses:register.changePhoto",
++     "value": "Cambia la foto",
++   },
++   {
++     "key": "courses:register.search",
++     "value": "Busca un recorrido",
++   },
++   {
++     "key": "courses:register.searchSubmit",
++     "value": "Busca",
++   },
++   {
++     "key": "courses:register.submit",
++     "value": "REGISTRA",
++   },
++   {
++     "key": "courses:session.openSetup",
++     "value": "Abre el montaje",
++   },
++   {
++     "key": "courses:session.finish",
++     "value": "FINALIZA",
++   },
++   {
++     "key": "courses:blocks.columnRegister",
++     "value": "Registra qué hay montado en {ring}",
++   },
++   {
++     "key": "courses:blocks.registerOn",
++     "value": "Registra qué hay montado en {ring}",
++   },
++   {
++     "key": "courses:blocks.openCourse",
++     "value": "Abre el recorrido",
++   },
++   {
++     "key": "id:account.products",
++     "value": "Consulta tus productos",
++   },
++   {
++     "key": "instructor:tasks.complete",
++     "value": "Márcala como hecha",
++   },
++   {
++     "key": "instructor:tasks.attach",
++     "value": "Adjunta un archivo",
++   },
++   {
++     "key": "instructor:tasks.recover",
++     "value": "Recupera mi texto",
++   },
++ ]
+
+ ❯ src/index.test.ts:33:37
+     31|     const catalog = await readCatalog(resolve(import.meta.dirname, "lo…
+     32|     expect(Object.keys(catalog).length).toBeGreaterThan(30);
+     33|     expect(flaggedActions(catalog)).toEqual([]);
+       |                                     ^
+     34|   });
+     35|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  20:45:55
+   Duration  323ms (transform 63%, import 19%, tests 17%, worker 1%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/packages/i18n:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/index.test.ts

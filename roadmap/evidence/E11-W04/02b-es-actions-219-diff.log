@@ -1,0 +1,42 @@
+table keys (roadmap/evidence/E11-W02/20-es-en-review.md): 219 (219 unique)
+flagged by log 02 (the es catalog of 85c4b469~1): 255
+219 of 219 flagged, 0 missing
+flagged value = the table's «before»: 219 of 219
+current value = the table's «after»: 219 of 219
+flagged before round 1 but not in the table: 36
+  admin-census:inactivity.modify · «Modifica los meses» → now «Modifica los meses»
+  admin-census:inactivity.terminate · «Finaliza el periodo» → now «Finaliza el periodo»
+  admin-census:inactivity.overrideDeadline · «Omite el plazo del día {day}» → now «Omite el plazo del día {day}»
+  admin-census:leave.direct · «Programa la baja» → now «Programa la baja»
+  admin-census:leave.confirm · «Programa la baja» → now «Programa la baja»
+  admin-census:inactivityLeavePage.filter · «Filtra» → now «Filtra»
+  admin-courses:setups.review · «Revísala» → now «Revísala»
+  admin-messaging:templates.insertVariable · «Inserta [[{label}]]» → now «Inserta [[{label}]]»
+  admin-messaging:templates.reload · «Recarga» → now «Recarga»
+  admin-settings:jobs.runs.filters · «Filtra las ejecuciones» → now «Filtra las ejecuciones»
+  auth:activation.recover · «Recupérala» → now «Recupérala»
+  console:catalogs.clone · «Clona de un club plantilla» → now «Clona de un club plantilla»
+  console:statusTab.actions.ACTIVE · «Suspende el club» → now «Suspende el club»
+  console:team.inviteTitle · «Invita a un administrador» → now «Invita a un administrador»
+  courses:retry · «Vuelve a intentarlo» → now «Vuelve a intentarlo»
+  courses:viewer.register · «Registra qué hay montado» → now «Registra qué hay montado»
+  courses:viewer.dismantle · «Marca como desmontado» → now «Marca como desmontado»
+  courses:viewer.join.submit · «Únete» → now «Únete»
+  courses:viewer.zoomIn · «Amplía» → now «Amplía»
+  courses:viewer.zoomOut · «Reduce» → now «Reduce»
+  courses:viewer.rotate · «Gira un cuarto de vuelta» → now «Gira un cuarto de vuelta»
+  courses:register.title · «Registra qué hay montado» → now «Registra qué hay montado»
+  courses:register.takePhoto · «Haz una foto o elige una» → now «Haz una foto o elige una»
+  courses:register.changePhoto · «Cambia la foto» → now «Cambia la foto»
+  courses:register.search · «Busca un recorrido» → now «Busca un recorrido»
+  courses:register.searchSubmit · «Busca» → now «Busca»
+  courses:register.submit · «REGISTRA» → now «REGISTRA»
+  courses:session.openSetup · «Abre el montaje» → now «Abre el montaje»
+  courses:session.finish · «FINALIZA» → now «FINALIZA»
+  courses:blocks.columnRegister · «Registra qué hay montado en {ring}» → now «Registra qué hay montado en {ring}»
+  courses:blocks.registerOn · «Registra qué hay montado en {ring}» → now «Registra qué hay montado en {ring}»
+  courses:blocks.openCourse · «Abre el recorrido» → now «Abre el recorrido»
+  id:account.products · «Consulta tus productos» → now «Consulta tus productos»
+  instructor:tasks.complete · «Márcala como hecha» → now «Márcala como hecha»
+  instructor:tasks.attach · «Adjunta un archivo» → now «Adjunta un archivo»
+  instructor:tasks.recover · «Recupera mi texto» → now «Recupera mi texto»

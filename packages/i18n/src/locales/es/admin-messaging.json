@@ -34,7 +34,7 @@
     "localeVersions": "(con versión {others})",
     "body": "Texto",
     "variables": "Variables:",
-    "insertVariable": "Inserta [[{label}]]",
+    "insertVariable": "Insertar [[{label}]]",
     "smsBody": "SMS (texto corto)",
     "smsCounter": "{count}/160",
     "staffNote": "Los textos para instructores y administración son del producto y no se editan",
@@ -50,7 +50,7 @@
     "deleteConfirm": "¿Quieres eliminar esta plantilla?",
     "deleteAction": "Eliminar",
     "stale": "Alguien ha modificado esta plantilla; recárgala",
-    "reload": "Recarga",
+    "reload": "Recargar",
     "missingVariables": "Falta la variable {vars} en el texto",
     "genericError": "No se ha podido guardar la plantilla. Vuelve a intentarlo."
   },

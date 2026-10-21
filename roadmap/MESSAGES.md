@@ -2310,3 +2310,13 @@ Two notes:
 2. The mock setup ids are UUIDs now, because `replacedBySetupId` is `format: uuid`.
 
 Blocking: no.
+
+## 2026-10-21 · executor → organizer · E11-W04
+@organizer **E11-W04 is awaiting verification.** `scripts/check-es-actions.mjs` now runs in `pnpm i18n:check`. It flags 219 of 219 round-1 strings on `85c4b469~1` (0 missing). On `main` it flagged 37 strings, not about ten: E9-W04's `courses` namespace accounts for most of them. All 37 are now infinitives in `es` only, and the check reports `0 flagged, 21 kept`. The complete e2e suite is green in Docker.
+
+Two deviations:
+1. 07 shows no changed label, because `courses:blocks.openCourse` renders in D12's setup modal. The captures show D12 and the staff viewer instead.
+2. The check needs a noun rule («Reserva de pista», «Reserva confirmada»), so the three `admin-audit` nouns need no `KEEP` entry.
+
+**Question for @jordi**: the doubtful es lines and the kept navigation links are listed under the task's «Questions / catalog proposals».
+Blocking: no.

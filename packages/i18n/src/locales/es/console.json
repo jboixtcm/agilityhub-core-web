@@ -13,7 +13,7 @@
     "title": "Auditoría"
   },
   "catalogs": {
-    "clone": "Clona de un club plantilla",
+    "clone": "Clonar de un club plantilla",
     "cloning": "Clonando",
     "copied": "Se ha copiado: {summary}.",
     "copiedPart": "{part} {count}",
@@ -438,7 +438,7 @@
   },
   "statusTab": {
     "actions": {
-      "ACTIVE": "Suspende el club",
+      "ACTIVE": "Suspender el club",
       "ONBOARDING": "Activar el club",
       "SUSPENDED": "Reactivar el club"
     },
@@ -488,7 +488,7 @@
     "invite": "INVITAR",
     "invited": "Se ha enviado la invitación a {email}.",
     "inviteHelp": "Se crea la cuenta si hace falta, se le da el rol de administrador y recibe un enlace de acceso por correo.",
-    "inviteTitle": "Invita a un administrador",
+    "inviteTitle": "Invitar a un administrador",
     "inviting": "Invitando",
     "membership": {
       "ACTIVE": "activo",

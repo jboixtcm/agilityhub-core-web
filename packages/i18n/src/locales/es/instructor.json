@@ -234,9 +234,9 @@
     "remove": "Eliminar la tarea",
     "deleteConfirm": "¿Quieres eliminar esta tarea?",
     "deleteAction": "Eliminar",
-    "complete": "Márcala como hecha",
+    "complete": "Marcarla como hecha",
     "reopen": "Volver a dejarla pendiente",
-    "attach": "Adjunta un archivo",
+    "attach": "Adjuntar un archivo",
     "removeFile": "Quitar {name}",
     "fileRefused": "{name}: {reason}",
     "meta": "{date} · {author}",
@@ -254,7 +254,7 @@
     "memberNotesHint": "· del alumno · solo lectura",
     "noValue": "—",
     "staleNotice": "Alguien ha guardado las observaciones hace un momento: revísalas.",
-    "recover": "Recupera mi texto",
+    "recover": "Recuperar mi texto",
     "heading": "Tareas y notas"
   },
   "agenda": {

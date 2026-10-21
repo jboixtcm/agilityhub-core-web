@@ -1,0 +1,34 @@
+
+> agilityhub-core-web@0.0.0 i18n:check /Users/jordib/dev/agilityhub/agilityhub-core-web-c
+> node scripts/i18n-check.mjs && node scripts/check-error-codes.mjs && node scripts/check-parameter-keys.mjs && node scripts/check-es-actions.mjs
+
+i18n check passed
+ca: 5148 keys
+es: 5148 keys
+en: 5148 keys
+3972 statically used keys, 0 unused
+251 codes, 0 missing
+150 catalog parameters (118 in D11, 32 system-only), 11 blocks, 0 missing
+check-es-actions: packages/i18n/src/locales/es
+  kept admin-billing:confirm.rollbackKeywordLabel · «Escribe {keyword} para confirmarlo» — D6's rollback field label: an instruction
+  kept admin-catalogs:common.active · «Activa» — the adjective: a catalog switch's state («Active»)
+  kept admin-catalogs:plans.columns.active · «Activa» — the adjective: D8's column header («Active»)
+  kept admin-census:common.choose · «Elige una opción» — a select's empty option: an instruction
+  kept admin-census:signupReview.confirmNothingPaid · «Confirma que no se ha cobrado ningún importe» — D2's checkbox statement, not an action
+  kept admin-courses:import.file · «Elige el archivo .txt que exporta Smarter» — a file input's label: an instruction
+  kept admin-courses:doors.active · «Activa» — the adjective: the door in use
+  kept admin-messaging:templates.choose · «Elige una plantilla» — D9's empty-state title: an instruction
+  kept admin-scheduling:templates.gridFooter · «Haz clic en el nombre de un día para verlo por pista o por instructor · color = pista · gris = sin pista» — D3's grid legend: an instruction
+  kept auth:profile.pushDenied · «Activa las notificaciones en el navegador para recibirlas en el móvil» — 12's hint to allow notifications: an instruction
+  kept auth:profile.iosInstall · «Añade la app a la pantalla de inicio para recibir notificaciones» — 12's hint to add the app to the home screen: an instruction
+  kept auth:profile.learnLink · «Aprende con AgilityHub» — 12's row to the AgilityHub learning site: a call to another product
+  kept booking:confirm.swapTitle · «Elige cuál anulas para hacerle sitio» — 06's swap title: an instruction
+  kept common:gallery.active · «Activa» — the adjective: the dev gallery's state chip
+  kept console:theme.logoAlt.mark · «Marca» — the noun: the alt text of the club's mark
+  kept console:theme.logos.mark · «Marca (versión pequeña)» — the noun: a logo slot's name
+  kept id:login.title · «Entra en AgilityHub» — the login page's title
+  kept id:password.repeat · «Repite la contraseña nueva» — the second password field's label: an instruction
+  kept notifications:unsubscribe.toPreferences · «Cambia tus avisos en el perfil» — a navigation link written as a sentence
+  kept signup:person.reviewEmailTitle · «Revisa el correo» — the signup's heading after the verification mail: an instruction
+  kept signup:success.addDogTitle · «Añade un perro» — the add-dog flow's title on its success screen
+check-es-actions: 0 flagged, 21 kept

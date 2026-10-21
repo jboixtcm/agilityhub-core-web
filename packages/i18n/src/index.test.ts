@@ -1,4 +1,8 @@
+import { resolve } from "node:path";
+
 import { describe, expect, it } from "vitest";
+
+import { flaggedActions, readCatalog } from "../../../scripts/check-es-actions.mjs";
 
 import { createI18n, t } from "./index";
 
@@ -20,6 +24,13 @@ describe("@agilityhub/i18n", () => {
     // The message shown right above that button on 01 (E4-W16's retry after a handoff) is a
     // sentence to the reader: it keeps the imperative.
     expect(es.access.genericError).toMatch(/Vuelve a intentarlo\.$/u);
+  });
+
+  it("E11-W04 (E137): the es action labels are infinitives", async () => {
+    // The guard of `pnpm i18n:check` (scripts/check-es-actions.mjs) on the real es catalog.
+    const catalog = await readCatalog(resolve(import.meta.dirname, "locales"));
+    expect(Object.keys(catalog).length).toBeGreaterThan(30);
+    expect(flaggedActions(catalog)).toEqual([]);
   });
 
   it("loads namespaces on demand", async () => {

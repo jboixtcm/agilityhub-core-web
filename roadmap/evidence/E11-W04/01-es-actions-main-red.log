@@ -1,0 +1,61 @@
+check-es-actions: packages/i18n/src/locales/es
+  kept admin-billing:confirm.rollbackKeywordLabel · «Escribe {keyword} para confirmarlo» — D6's rollback field label: an instruction
+  kept admin-catalogs:common.active · «Activa» — the adjective: a catalog switch's state («Active»)
+  kept admin-catalogs:plans.columns.active · «Activa» — the adjective: D8's column header («Active»)
+  kept admin-census:common.choose · «Elige una opción» — a select's empty option: an instruction
+  kept admin-census:signupReview.confirmNothingPaid · «Confirma que no se ha cobrado ningún importe» — D2's checkbox statement, not an action
+  kept admin-courses:import.file · «Elige el archivo .txt que exporta Smarter» — a file input's label: an instruction
+  kept admin-courses:doors.active · «Activa» — the adjective: the door in use
+  kept admin-messaging:templates.choose · «Elige una plantilla» — D9's empty-state title: an instruction
+  kept admin-scheduling:templates.gridFooter · «Haz clic en el nombre de un día para verlo por pista o por instructor · color = pista · gris = sin pista» — D3's grid legend: an instruction
+  kept auth:profile.pushDenied · «Activa las notificaciones en el navegador para recibirlas en el móvil» — 12's hint to allow notifications: an instruction
+  kept auth:profile.iosInstall · «Añade la app a la pantalla de inicio para recibir notificaciones» — 12's hint to add the app to the home screen: an instruction
+  kept auth:profile.learnLink · «Aprende con AgilityHub» — 12's row to the AgilityHub learning site: a call to another product
+  kept booking:confirm.swapTitle · «Elige cuál anulas para hacerle sitio» — 06's swap title: an instruction
+  kept common:gallery.active · «Activa» — the adjective: the dev gallery's state chip
+  kept console:theme.logoAlt.mark · «Marca» — the noun: the alt text of the club's mark
+  kept console:theme.logos.mark · «Marca (versión pequeña)» — the noun: a logo slot's name
+  kept id:login.title · «Entra en AgilityHub» — the login page's title
+  kept id:password.repeat · «Repite la contraseña nueva» — the second password field's label: an instruction
+  kept notifications:unsubscribe.toPreferences · «Cambia tus avisos en el perfil» — a navigation link written as a sentence
+  kept signup:person.reviewEmailTitle · «Revisa el correo» — the signup's heading after the verification mail: an instruction
+  kept signup:success.addDogTitle · «Añade un perro» — the add-dog flow's title on its success screen
+admin-census:inactivity.modify · «Modifica los meses»
+admin-census:inactivity.terminate · «Finaliza el periodo»
+admin-census:inactivity.overrideDeadline · «Omite el plazo del día {day}»
+admin-census:leave.direct · «Programa la baja»
+admin-census:leave.confirm · «Programa la baja»
+admin-census:inactivityLeavePage.filter · «Filtra»
+admin-courses:setups.review · «Revísala»
+admin-messaging:templates.insertVariable · «Inserta [[{label}]]»
+admin-messaging:templates.reload · «Recarga»
+admin-settings:jobs.runs.filters · «Filtra las ejecuciones»
+auth:access.forgot.action · «Recupérala»
+auth:activation.recover · «Recupérala»
+console:catalogs.clone · «Clona de un club plantilla»
+console:statusTab.actions.ACTIVE · «Suspende el club»
+console:team.inviteTitle · «Invita a un administrador»
+courses:retry · «Vuelve a intentarlo»
+courses:viewer.register · «Registra qué hay montado»
+courses:viewer.dismantle · «Marca como desmontado»
+courses:viewer.join.submit · «Únete»
+courses:viewer.zoomIn · «Amplía»
+courses:viewer.zoomOut · «Reduce»
+courses:viewer.rotate · «Gira un cuarto de vuelta»
+courses:register.title · «Registra qué hay montado»
+courses:register.takePhoto · «Haz una foto o elige una»
+courses:register.changePhoto · «Cambia la foto»
+courses:register.search · «Busca un recorrido»
+courses:register.searchSubmit · «Busca»
+courses:register.submit · «REGISTRA»
+courses:session.openSetup · «Abre el montaje»
+courses:session.finish · «FINALIZA»
+courses:blocks.columnRegister · «Registra qué hay montado en {ring}»
+courses:blocks.registerOn · «Registra qué hay montado en {ring}»
+courses:blocks.openCourse · «Abre el recorrido»
+id:account.products · «Consulta tus productos»
+instructor:tasks.complete · «Márcala como hecha»
+instructor:tasks.attach · «Adjunta un archivo»
+instructor:tasks.recover · «Recupera mi texto»
+check-es-actions: 37 flagged, 21 kept
+check-es-actions: an es action label is written in the infinitive (ruling E137): «Guardar», «Volver a intentarlo»; add a key to KEEP only with its reason

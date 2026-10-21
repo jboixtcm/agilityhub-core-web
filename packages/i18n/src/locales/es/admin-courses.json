@@ -368,7 +368,7 @@
     "activeLine": "Montado el {built} · hasta el {until}",
     "pastLine": "Del {built} al {ended}",
     "replaced": "Sustituido",
-    "review": "Revísala"
+    "review": "Revisarla"
   },
   "files": {
     "fallback": "recorrido",

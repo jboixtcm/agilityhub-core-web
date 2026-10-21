@@ -21,6 +21,20 @@
       "inputs": ["$TURBO_DEFAULT$", "../../scripts/check-clubs-bundle*.mjs"],
       "outputs": []
     },
+    "@agilityhub/i18n#test": {
+      "dependsOn": ["^typecheck"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../scripts/check-es-actions*.mjs",
+        "../../scripts/check-es-actions.d.mts"
+      ],
+      "outputs": []
+    },
+    "@agilityhub/i18n#typecheck": {
+      "dependsOn": ["^typecheck"],
+      "inputs": ["$TURBO_DEFAULT$", "../../scripts/check-es-actions.d.mts"],
+      "outputs": []
+    },
     "clubs#build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", "../../scripts/check-clubs-bundle*.mjs"],

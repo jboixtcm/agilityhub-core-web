@@ -1,0 +1,35 @@
+
+ RUN  v5.0.0 /Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin
+
+ ❯ src/census/MemberLeaveDrawer.test.tsx (17 tests | 1 failed | 14 skipped) 179ms
+   ❯ T-13-32 ca/es/en drawer literals (3)
+     × renders es 36ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/census/MemberLeaveDrawer.test.tsx > T-13-32 ca/es/en drawer literals > renders es
+Error: Snapshot `T-13-32 ca/es/en drawer literals > renders es > es 1` mismatched
+
+Expected: ""Baja (con fecha)Programa la bajaSi existe una solicitud pendiente, quedará cancelada.Fecha de efectoMotivo (opcional)Elige una opciónYa he aprendido todo lo que queríaNo encuentro tiempo para irNo es lo que esperabaCircunstancias mías ajenas al clubOtrosDecisión del clubNota (opcional)Programa la baja""
+Received: ""Baja (con fecha)Programar la bajaSi existe una solicitud pendiente, quedará cancelada.Fecha de efectoMotivo (opcional)Elige una opciónYa he aprendido todo lo que queríaNo encuentro tiempo para irNo es lo que esperabaCircunstancias mías ajenas al clubOtrosDecisión del clubNota (opcional)Programar la baja""
+
+ ❯ src/census/MemberLeaveDrawer.test.tsx:305:32
+    303|     expect(screen.getAllByText(action).length).toBeGreaterThan(0);
+    304|     await waitFor(() => { expect(within(drawer).queryByRole("status"))…
+    305|     expect(drawer.textContent).toMatchSnapshot(language);
+       |                                ^
+    306|   });
+    307| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+  Snapshots  1 failed
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed | 14 skipped (17)
+   Start at  20:47:42
+   Duration  1.41s (transform 46%, environment 20%, import 17%, tests 13%, setup 4%)
+
+undefined
+/Users/jordib/dev/agilityhub/agilityhub-core-web-c/apps/clubs-admin:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: vitest run src/census/MemberLeaveDrawer.test.tsx -t T-13-32

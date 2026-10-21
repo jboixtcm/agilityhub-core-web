@@ -292,7 +292,8 @@ describe("T-13-31 admin leave lifecycle", () => {
 describe("T-13-32 ca/es/en drawer literals", () => {
   it.each([
     ["ca", "Baixa (amb data)", "Programa la baixa"],
-    ["es", "Baja (con fecha)", "Programa la baja"],
+    // E11-W04 (E137): the es action is an infinitive; ca keeps the mockup's imperative.
+    ["es", "Baja (con fecha)", "Programar la baja"],
     ["en", "Leave (with date)", "Schedule leave"],
   ])("renders %s", async (language, title, action) => {
     const member = await loadMember();
